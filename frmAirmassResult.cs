@@ -247,7 +247,14 @@ namespace T8SuitePro
                 {
                     int[] injConstant = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(m_symbols, "InjCorrCal.InjectorConst"));
                     m_injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
-                    fuelVEMap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.LambdaOneFacMap"), GetSymbolLength(m_symbols, "BFuelCal.LambdaOneFacMap"));
+                    if (checkEdit2.Checked)
+                    {
+                        fuelVEMap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "FFFuelCal.TempEnrichFacMAP"), GetSymbolLength(m_symbols, "FFFuelCal.TempEnrichFacMAP"));
+                    }
+                    else
+                    {
+                        fuelVEMap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.TempEnrichFacMap"), GetSymbolLength(m_symbols, "BFuelCal.TempEnrichFacMap"));
+                    }
                     fuelVExaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.AirXSP"), GetSymbolLength(m_symbols, "BFuelCal.AirXSP"));
                     fuelVEyaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.RpmYSP"), GetSymbolLength(m_symbols, "BFuelCal.RpmYSP"));
 
