@@ -9103,42 +9103,20 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     symName = sh.Userdescription;
                 }
 
-                switch (sh.Varname)
+                switch (symName)
                 {
-                    case "Torque.M_MaxEngAndGear":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    case "BFuelProt.t_InjActual":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.001, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
                     case "ActualIn.v_Vehicle2":
                         AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
                         break;
                     case "In.v_Vehicle":
                         AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
                         break;
-                    case "ActualIn.U_LambdaCat":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 1200, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                    case "FFTrqProt.Trq_MaxEngineBefComp":
+                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
                         break;
-                    case "ActualIn.U_LambdaEng":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 1200, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                    case "FFTrqProt.Trq_MaxEngine":
+                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
                         break;
-                    case "TorqueProt.m_AirTMasLim":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 1800, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    case "AirctlData.Actual":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 1800, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    /*                    case "KnkDet.KnockCyl":         // 8 length
-                                            break;
-                                        case "KnkDetAdap.KnkCntCyl":    // 8 length
-                                            break;
-                                        case "MissfAdap.MissfCntCyl": // 12 length
-                                            break;
-                                        //TODO: add misfire per cylinder 
-                                            //TODO: add knock per cylinder
-                     * */
-
                     default:
                         if (sh.Length == 1)
                         {
@@ -9150,16 +9128,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         break;
                 }
-            }
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            frmEditRealtimeSymbol frmeditsymbol = new frmEditRealtimeSymbol();
-            frmeditsymbol.Symbols = m_symbols;
-            if (frmeditsymbol.ShowDialog() == DialogResult.OK)
-            {
-                AddSymbolToRealTimeList(frmeditsymbol.Varname, frmeditsymbol.Symbolnumber, frmeditsymbol.MinimumValue, frmeditsymbol.MaximumValue, frmeditsymbol.OffsetValue, frmeditsymbol.CorrectionValue, frmeditsymbol.Description, (uint)GetSymbolAddressSRAM(m_symbols, frmeditsymbol.Varname), true);
             }
         }
 
