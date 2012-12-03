@@ -202,7 +202,6 @@ namespace T8SuitePro
                     checkEdit2.Checked = false;
                     checkEdit2.Enabled = false;
                 }
-                checkEdit3.Enabled = false; // convertable, to be removed
                 if (IsOverboostEnabled())
                 {
                     checkEdit4.Enabled = true;
@@ -888,11 +887,6 @@ namespace T8SuitePro
             Calculate();
         }
 
-        private void checkEdit3_CheckedChanged(object sender, EventArgs e)
-        {
-            Calculate();
-        }
-
         private void comboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
         {
             gridControl1.Refresh();
@@ -1371,131 +1365,6 @@ namespace T8SuitePro
             }
             return retval;
         }
-
-        private DataTable CalculateDataTable(string filename, SymbolCollection symbols)
-        {
-            // do the math!
-
-            if (IsBinaryBiopower())
-            {
-                checkEdit2.Enabled = true;
-            }
-            else
-            {
-                checkEdit2.Checked = false;
-                checkEdit2.Enabled = false;
-            }
-            checkEdit3.Enabled = false; // convertable, to be removed
-            if (IsOverboostEnabled())
-            {
-                checkEdit4.Enabled = true;
-            }
-            else
-            {
-                checkEdit4.Enabled = false;
-            }
-
-            int[] pedalrequestmap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "PedalMapCal.Trq_RequestMap"), GetSymbolLength(m_symbols, "PedalMapCal.Trq_RequestMap"));
-            limitermap = new int[pedalrequestmap.Length];
-            int[] resulttable = new int[pedalrequestmap.Length]; // result 
-            rows = GetSymbolLength(m_symbols, "PedalMapCal.n_EngineMap") / 2;
-            columns = GetSymbolLength(m_symbols, "PedalMapCal.X_PedalMap") / 2;
-            int[] pedalXAxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "PedalMapCal.n_EngineMap"), GetSymbolLength(m_symbols, "PedalMapCal.n_EngineMap"));
-            int[] pedalYAxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "PedalMapCal.X_PedalMap"), GetSymbolLength(m_symbols, "PedalMapCal.X_PedalMap"));
-            y_axisvalues = pedalYAxis;
-            x_axisvalues = pedalXAxis;
-
-            airtorquemap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.m_AirTorqMap"), GetSymbolLength(m_symbols, "TrqMastCal.m_AirTorqMap"));
-            xairtorque = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.Trq_EngXSP"), GetSymbolLength(m_symbols, "TrqMastCal.Trq_EngXSP"));
-            yaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.n_EngineYSP"), GetSymbolLength(m_symbols, "TrqMastCal.n_EngineYSP"));
-            bstknk = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmass"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmass"));
-            if (SymbolExists("BstKnkCal.MaxAirmassAu"))
-            {
-                bstknkau = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmassAu"));
-            }
-            else
-            {
-                bstknkau = bstknk;
-            }
-            turbospeed = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "LimEngCal.TurboSpeedTab"), GetSymbolLength(m_symbols, "LimEngCal.TurboSpeedTab"));
-            nominaltorque = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.Trq_NominalMap"), GetSymbolLength(m_symbols, "TrqMastCal.Trq_NominalMap"));
-            nominaltorquexaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.m_AirXSP"), GetSymbolLength(m_symbols, "TrqMastCal.m_AirXSP"));
-            nominaltorqueyaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.n_EngineYSP"), GetSymbolLength(m_symbols, "TrqMastCal.n_EngineYSP"));
-            fuelcutlimit = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(m_symbols, "FCutCal.m_AirInletLimit"));
-
-            try
-            {
-                int[] injConstant = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(m_symbols, "InjCorrCal.InjectorConst"));
-                m_injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
-                fuelVEMap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.LambdaOneFacMap"), GetSymbolLength(m_symbols, "BFuelCal.LambdaOneFacMap"));
-                fuelVExaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.AirXSP"), GetSymbolLength(m_symbols, "BFuelCal.AirXSP"));
-                fuelVEyaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.RpmYSP"), GetSymbolLength(m_symbols, "BFuelCal.RpmYSP"));
-
-                if (SymbolExists("ExhaustCal.T_Lambda1Map"))
-                {
-                    EGTMap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "ExhaustCal.T_Lambda1Map"), GetSymbolLength(m_symbols, "ExhaustCal.T_Lambda1Map"));
-                }
-            }
-            catch (Exception E)
-            {
-                Console.WriteLine(E.Message);
-            }
-
-            for (int a = 0; a < nominaltorque.Length; a++)
-            {
-                int val = (int)nominaltorque.GetValue(a);
-                if (val > 32000) val = -(65536 - val);
-                nominaltorque.SetValue(val, a);
-            }
-
-            // also get the axis for pedalrequestmap
-            // x = PedalMapCal.n_EngineMap (1x) rpm
-            // y = PedalMapCal.X_PedalMap (10x) pedalposition (%)
-            for (int colcount = 0; colcount < columns; colcount++)
-            {
-                for (int rowcount = 0; rowcount < rows; rowcount++)
-                {
-                    // get the current value from the request map
-                    int rpm = (int)pedalXAxis.GetValue(rowcount);
-                    int requestedtorque = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
-                    int airmassrequestforcell = TorqueToAirmass(requestedtorque, rpm, false);
-
-                    limitType limiterType = limitType.None;
-                    int resultingAirMass = CalculateMaxAirmassforcell(/*pedalpos*/((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit4.Checked, out limiterType);
-                    if (peakAirmass < resultingAirMass) peakAirmass = resultingAirMass;
-                    resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
-                    limitermap.SetValue(limiterType, (colcount * rows) + rowcount);
-                }
-            }
-            
-            // now show resulttable
-            DataTable dt = new DataTable();
-            foreach (int xvalue in pedalXAxis)
-            {
-                dt.Columns.Add(xvalue.ToString());
-            }
-            // now fill the table rows
-            m_MaxValueInTable = 0;
-            for (int r = pedalYAxis.Length - 1; r >= 0; r--)
-            {
-                object[] values = new object[columns];
-                for (int t = 0; t < pedalXAxis.Length; t++)
-                {
-                    int currValue = (int)resulttable.GetValue((r * columns) + t);
-                    if (currValue > m_MaxValueInTable) m_MaxValueInTable = currValue;
-                    values.SetValue(resulttable.GetValue((r * columns) + t), t);
-                }
-                dt.Rows.Add(values);
-            }
-            //gridControl1.DataSource = dt;
-            //if (xtraTabControl1.SelectedTabPage.Name == xtraTabPage2.Name)
-            //{
-            //LoadGraphWithDetails();
-            //}
-
-            return dt;
-        }
-
 
         private void UpdateGraphVisibility()
         {

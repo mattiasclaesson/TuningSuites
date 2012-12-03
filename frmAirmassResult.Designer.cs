@@ -74,7 +74,6 @@ namespace T8SuitePro
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.checkEdit3 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
@@ -111,7 +110,6 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             this.SuspendLayout();
@@ -300,7 +298,6 @@ namespace T8SuitePro
             this.groupControl2.Controls.Add(this.labelControl1);
             this.groupControl2.Controls.Add(this.comboBoxEdit2);
             this.groupControl2.Controls.Add(this.comboBoxEdit1);
-            this.groupControl2.Controls.Add(this.checkEdit3);
             this.groupControl2.Controls.Add(this.checkEdit2);
             this.groupControl2.Controls.Add(this.checkEdit1);
             this.groupControl2.Location = new System.Drawing.Point(12, 418);
@@ -365,7 +362,7 @@ namespace T8SuitePro
             // 
             // checkEdit4
             // 
-            this.checkEdit4.Location = new System.Drawing.Point(14, 120);
+            this.checkEdit4.Location = new System.Drawing.Point(14, 95);
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.Caption = "View in overboost";
             this.checkEdit4.Size = new System.Drawing.Size(150, 18);
@@ -613,19 +610,11 @@ namespace T8SuitePro
             "Second gear",
             "Third gear",
             "Fourth gear",
-            "Fifth gear"});
+            "Fifth gear",
+            "Sixth gear"});
             this.comboBoxEdit1.Size = new System.Drawing.Size(195, 20);
             this.comboBoxEdit1.TabIndex = 3;
             this.comboBoxEdit1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);
-            // 
-            // checkEdit3
-            // 
-            this.checkEdit3.Location = new System.Drawing.Point(14, 95);
-            this.checkEdit3.Name = "checkEdit3";
-            this.checkEdit3.Properties.Caption = "Car is a convertible";
-            this.checkEdit3.Size = new System.Drawing.Size(150, 18);
-            this.checkEdit3.TabIndex = 2;
-            this.checkEdit3.CheckedChanged += new System.EventHandler(this.checkEdit3_CheckedChanged);
             // 
             // checkEdit2
             // 
@@ -711,7 +700,6 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
@@ -726,7 +714,6 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.GroupControl groupControl2;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
-        private DevExpress.XtraEditors.CheckEdit checkEdit3;
         private DevExpress.XtraEditors.CheckEdit checkEdit2;
         private DevExpress.XtraEditors.CheckEdit checkEdit1;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit1;
