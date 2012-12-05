@@ -174,8 +174,6 @@ namespace T8SuitePro
                 Console.WriteLine(E.Message);
             }
 
-            SetDefaultFilters();
-
             try
             {
                 RegistryKey TempKeyCM = null;
@@ -732,6 +730,8 @@ namespace T8SuitePro
             //m_appSettings.Lastfilename = m_currentfile;
 
             //gridViewSymbols.BestFitColumns();
+
+            SetDefaultFilters();
 
             SetProgressIdle();
             //UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
