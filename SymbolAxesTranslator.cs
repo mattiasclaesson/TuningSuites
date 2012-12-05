@@ -2043,7 +2043,7 @@ namespace T8SuitePro
                     break;
                 case"TrqLimCal.Trq_ManGear":
                     x_axis ="";
-                    y_axis ="8 : 0 1 2 3 4 5 6 7";
+                    y_axis ="8 : 0 1 2 3 4 5 6 7"; // Undefined First Second Third Fourth Fifth Sixth Reverse";
                     x_axis_description ="";
                     y_axis_description ="";
                     z_axis_description ="";
