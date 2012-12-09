@@ -88,24 +88,17 @@ namespace T8SuitePro
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
-                case"AirCtrlCal.Ppart_BoostLimTab":
-                    x_axis ="";
-                    y_axis ="AirCtrlCal.n_EngYSP";
-                    x_axis_description ="";
-                    y_axis_description ="";
-                    z_axis_description ="";
-                    break;
-                case"AirCtrlCal.Ipart_BoostLimTab":
-                    x_axis ="";
-                    y_axis ="16 : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16";
-                    x_axis_description ="";
-                    y_axis_description ="";
-                    z_axis_description ="";
-                    break;
                 case"AirCtrlCal.PIDXSP":
-                    x_axis ="AirCtrlCal.PIDYSP";
+                    x_axis ="";
                     y_axis ="";
-                    x_axis_description ="";
+                    x_axis_description ="mg/c";
+                    y_axis_description ="";
+                    z_axis_description ="";
+                    break;
+                case "AirCtrlCal.PIDYSP":
+                    x_axis = "";
+                    y_axis = "";
+                    x_axis_description ="rpm";
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
@@ -201,9 +194,9 @@ namespace T8SuitePro
                     z_axis_description ="";
                     break;
                 case"AirMassMastCal.Trq_MBTXSP":
-                    x_axis ="AirMassMastCal.n_EngMBTYSP";
+                    x_axis ="";
                     y_axis ="";
-                    x_axis_description ="";
+                    x_axis_description = "Torque(Nm)";
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
@@ -708,9 +701,9 @@ namespace T8SuitePro
                     break;
                
                 case"InjAnglCal.AirXSP":
-                    x_axis ="InjAnglCal.RpmYSP";
+                    x_axis ="";
                     y_axis ="";
-                    x_axis_description ="";
+                    x_axis_description ="mg/c";
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
@@ -1073,9 +1066,9 @@ namespace T8SuitePro
                     z_axis_description ="";
                     break;
                 case"IgnAbsCal.T_EngStartXSP":
-                    x_axis ="IgnAbsCal.n_EngStartYSP";
+                    x_axis ="";
                     y_axis ="";
-                    x_axis_description ="";
+                    x_axis_description ="°C";
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
@@ -2077,11 +2070,11 @@ namespace T8SuitePro
                     z_axis_description ="";
                     break;
                 case"TrqLimCal.Trq_OverBoostTab":
-                    x_axis ="";
-                    y_axis ="TrqLimCal.n_EngYSP";
+                    x_axis = "";
+                    y_axis = "TrqLimCal.n_EngYSP";
                     x_axis_description ="";
-                    y_axis_description ="";
-                    z_axis_description ="";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Torque(Nm * 10)";
                     break;
                 case"MaxEngSpdCal.n_EngLimTab":
                     x_axis ="";
@@ -2091,11 +2084,18 @@ namespace T8SuitePro
                     z_axis_description ="";
                     break;
                 case"TrqLimCal.CompressorNoiseXSP":
-                    x_axis ="TrqLimCal.CompressorNoiseYSP";
+                    x_axis ="";
                     y_axis ="";
-                    x_axis_description ="";
+                    x_axis_description ="kpa";
                     y_axis_description ="";
                     z_axis_description ="";
+                    break;
+                case"TrqLimCal.CompressorNoiseYSP":
+                    x_axis = "";
+                    y_axis = "";
+                    x_axis_description = "rpm";
+                    y_axis_description = "";
+                    z_axis_description = "";
                     break;
                 case"TrqMastCal.n_EngineXSP":
                     x_axis ="TrqMastCal.Trq_PedYSP";
@@ -2152,7 +2152,7 @@ namespace T8SuitePro
                     y_axis = "TrqMastCal.n_EngineYSP";
                     x_axis_description = "mg/c";
                     y_axis_description = "rpm";
-                    z_axis_description = "Torque (Nm * 10)";
+                    z_axis_description = "Torque (Nm)";
                     break;
                 case "TrqMastCal.Trq_MBTMAP":
                     x_axis = "TrqMastCal.m_AirXSP";
@@ -2327,9 +2327,9 @@ namespace T8SuitePro
                 case"InjAnglCal.Map":
                     x_axis ="InjAnglCal.AirXSP";
                     y_axis ="InjAnglCal.RpmYSP";
-                    x_axis_description ="mg/c (* 10)";
+                    x_axis_description ="mg/c";
                     y_axis_description ="rpm";
-                    z_axis_description ="0 (* 10)";
+                    z_axis_description ="angle (°)";
                     break;
                 case"EmLimCal.m_MaxIncrMap":
                     x_axis ="EmLimCal.GearXSP";
@@ -2817,8 +2817,8 @@ namespace T8SuitePro
                 case"KnkFuelCal.EnrichmentMap":
                     x_axis ="IgnKnkCal.m_AirXSP";
                     y_axis ="IgnKnkCal.n_EngYSP";
-                    x_axis_description ="mg/c (* 10)";
-                    y_axis_description ="rpm (* 10)";
+                    x_axis_description ="mg/c";
+                    y_axis_description ="rpm";
                     z_axis_description ="Factor";
                     break;
                 case"KnkFuelCal.fi_MapMaxOffs":
@@ -3752,22 +3752,22 @@ namespace T8SuitePro
                 case "AirCtrlCal.Ppart_BoostMap":
                     x_axis = "AirCtrlCal.PIDXSP";
                     y_axis = "AirCtrlCal.PIDYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
                     z_axis_description = "constant";
                     break;
                 case "AirCtrlCal.Ipart_BoostMap":
                     x_axis = "AirCtrlCal.PIDXSP";
                     y_axis = "AirCtrlCal.PIDYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
                     z_axis_description = "constant";
                     break;
                 case "AirCtrlCal.Dpart_BoostMap":
                     x_axis = "AirCtrlCal.PIDXSP";
                     y_axis = "AirCtrlCal.PIDYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
                     z_axis_description = "constant";
                     break;
                 case "AirCtrlCal.RegMap":
@@ -4429,15 +4429,15 @@ namespace T8SuitePro
                 case "IgnAbsCal.fi_FuelCutMAP":
                     x_axis = "IgnAbsCal.T_EngFuelCutXSP";
                     y_axis = "IgnAbsCal.n_EngFuelCutYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
+                    x_axis_description = "°C";
+                    y_axis_description = "rpm";
                     z_axis_description = "°";
                     break;
                 case "IgnAbsCal.fi_StartMAP":
                     x_axis = "IgnAbsCal.T_EngStartXSP";
                     y_axis = "IgnAbsCal.n_EngStartYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
+                    x_axis_description = "°C";
+                    y_axis_description = "rpm";
                     z_axis_description = "°";
                     break;
                 case "IgnMastCal.MinMap":
@@ -4751,10 +4751,10 @@ namespace T8SuitePro
                 case "TrqLimCal.Trq_CompressorNoiseRedLimMAP":
                     x_axis = "TrqLimCal.CompressorNoiseXSP";
                     y_axis = "TrqLimCal.CompressorNoiseYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
-                    z_axis_description = "Nm";
-                    break;
+                    x_axis_description = "Ambient pressure(kPa * 10)";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Torque(Nm)";
+                    break; 
                 case "TrqMastCal.X_AccPedalMAP":
                     x_axis = "TrqMastCal.n_EngineXSP";
                     y_axis = "TrqMastCal.Trq_PedYSP";
