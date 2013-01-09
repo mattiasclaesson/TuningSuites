@@ -200,7 +200,6 @@ namespace T8SuitePro
             toolTipItem1.Text = "Allows you to display all tables upside down.";
             superToolTip1.Items.Add(toolTipTitleItem1);
             superToolTip1.Items.Add(toolTipItem1);
-            superToolTip1.OwnerAllowHtmlText = false;
             this.checkEdit17.SuperTip = superToolTip1;
             this.checkEdit17.TabIndex = 19;
             // 
@@ -225,7 +224,6 @@ namespace T8SuitePro
                 "r or not.";
             superToolTip2.Items.Add(toolTipTitleItem2);
             superToolTip2.Items.Add(toolTipItem2);
-            superToolTip2.OwnerAllowHtmlText = false;
             this.checkEdit16.SuperTip = superToolTip2;
             this.checkEdit16.TabIndex = 18;
             // 
@@ -264,7 +262,6 @@ namespace T8SuitePro
                 ". E.g. changing viewtype";
             superToolTip3.Items.Add(toolTipTitleItem3);
             superToolTip3.Items.Add(toolTipItem3);
-            superToolTip3.OwnerAllowHtmlText = false;
             this.checkEdit15.SuperTip = superToolTip3;
             this.checkEdit15.TabIndex = 15;
             // 
@@ -303,7 +300,6 @@ namespace T8SuitePro
                 "when the program starts up.";
             superToolTip4.Items.Add(toolTipTitleItem4);
             superToolTip4.Items.Add(toolTipItem4);
-            superToolTip4.OwnerAllowHtmlText = false;
             this.checkEdit14.SuperTip = superToolTip4;
             this.checkEdit14.TabIndex = 12;
             // 
@@ -320,7 +316,6 @@ namespace T8SuitePro
                 " time.";
             superToolTip5.Items.Add(toolTipTitleItem5);
             superToolTip5.Items.Add(toolTipItem5);
-            superToolTip5.OwnerAllowHtmlText = false;
             this.checkEdit13.SuperTip = superToolTip5;
             this.checkEdit13.TabIndex = 11;
             // 
@@ -336,7 +331,6 @@ namespace T8SuitePro
                 "king them to the right side of the screen.";
             superToolTip6.Items.Add(toolTipTitleItem6);
             superToolTip6.Items.Add(toolTipItem6);
-            superToolTip6.OwnerAllowHtmlText = false;
             this.checkEdit12.SuperTip = superToolTip6;
             this.checkEdit12.TabIndex = 10;
             // 
@@ -351,7 +345,6 @@ namespace T8SuitePro
             toolTipItem7.Text = "When checked shows mapviewers in seperate windows in stead of docked panels.";
             superToolTip7.Items.Add(toolTipTitleItem7);
             superToolTip7.Items.Add(toolTipItem7);
-            superToolTip7.OwnerAllowHtmlText = false;
             this.checkEdit11.SuperTip = superToolTip7;
             this.checkEdit11.TabIndex = 9;
             // 
@@ -367,7 +360,6 @@ namespace T8SuitePro
                 "y display the same symbol.";
             superToolTip8.Items.Add(toolTipTitleItem8);
             superToolTip8.Items.Add(toolTipItem8);
-            superToolTip8.OwnerAllowHtmlText = false;
             this.checkEdit10.SuperTip = superToolTip8;
             this.checkEdit10.TabIndex = 8;
             // 
@@ -383,7 +375,6 @@ namespace T8SuitePro
                 "y are from the same binary file.";
             superToolTip9.Items.Add(toolTipTitleItem9);
             superToolTip9.Items.Add(toolTipItem9);
-            superToolTip9.OwnerAllowHtmlText = false;
             this.checkEdit9.SuperTip = superToolTip9;
             this.checkEdit9.TabIndex = 7;
             // 
@@ -399,7 +390,6 @@ namespace T8SuitePro
                 "s will be disabled.";
             superToolTip10.Items.Add(toolTipTitleItem10);
             superToolTip10.Items.Add(toolTipItem10);
-            superToolTip10.OwnerAllowHtmlText = false;
             this.checkEdit8.SuperTip = superToolTip10;
             this.checkEdit8.TabIndex = 6;
             // 
@@ -413,7 +403,6 @@ namespace T8SuitePro
             toolTipItem11.LeftIndent = 6;
             superToolTip11.Items.Add(toolTipTitleItem11);
             superToolTip11.Items.Add(toolTipItem11);
-            superToolTip11.OwnerAllowHtmlText = false;
             this.checkEdit7.SuperTip = superToolTip11;
             this.checkEdit7.TabIndex = 5;
             // 
@@ -429,7 +418,6 @@ namespace T8SuitePro
                 " to view from the dropdownl list in the system menu.";
             superToolTip12.Items.Add(toolTipTitleItem12);
             superToolTip12.Items.Add(toolTipItem12);
-            superToolTip12.OwnerAllowHtmlText = false;
             this.checkEdit6.SuperTip = superToolTip12;
             this.checkEdit6.TabIndex = 4;
             // 
@@ -445,7 +433,6 @@ namespace T8SuitePro
                 "yed. This consumes more system memory en cpu time.";
             superToolTip13.Items.Add(toolTipTitleItem13);
             superToolTip13.Items.Add(toolTipItem13);
-            superToolTip13.OwnerAllowHtmlText = false;
             this.checkEdit5.SuperTip = superToolTip13;
             this.checkEdit5.TabIndex = 3;
             // 
@@ -461,7 +448,6 @@ namespace T8SuitePro
                 "maps will  be displayed in easy mode when they are opened.";
             superToolTip14.Items.Add(toolTipTitleItem14);
             superToolTip14.Items.Add(toolTipItem14);
-            superToolTip14.OwnerAllowHtmlText = false;
             this.checkEdit4.SuperTip = superToolTip14;
             this.checkEdit4.TabIndex = 2;
             // 
@@ -477,7 +463,6 @@ namespace T8SuitePro
                 "tables. This is a guesstimate routine.";
             superToolTip15.Items.Add(toolTipTitleItem15);
             superToolTip15.Items.Add(toolTipItem15);
-            superToolTip15.OwnerAllowHtmlText = false;
             this.checkEdit2.SuperTip = superToolTip15;
             this.checkEdit2.TabIndex = 1;
             // 
@@ -492,7 +477,6 @@ namespace T8SuitePro
             toolTipItem16.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
             superToolTip16.Items.Add(toolTipTitleItem16);
             superToolTip16.Items.Add(toolTipItem16);
-            superToolTip16.OwnerAllowHtmlText = false;
             this.checkEdit1.SuperTip = superToolTip16;
             this.checkEdit1.TabIndex = 0;
             // 

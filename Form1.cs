@@ -9065,7 +9065,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 3, 1)[0]);
             return retval;
         }
-        /*
+        
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             string outputfile = Path.GetDirectoryName(m_currentfile);
@@ -9088,46 +9088,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 SetProgress("Loading assembler file");
                 StartAssemblerViewer(outputfile);
                 SetProgressIdle();
-            }
-        }*/
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (gridViewSymbols.FocusedRowHandle >= 0)
-            {
-                SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
-                // add to realtime table
-                string symName = sh.Varname;
-                if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
-                {
-                    symName = sh.Userdescription;
-                }
-
-                switch (symName)
-                {
-                    case "ActualIn.v_Vehicle2":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    case "In.v_Vehicle":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    case "FFTrqProt.Trq_MaxEngineBefComp":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    case "FFTrqProt.Trq_MaxEngine":
-                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        break;
-                    default:
-                        if (sh.Length == 1)
-                        {
-                            AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        }
-                        else
-                        {
-                            AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
-                        }
-                        break;
-                }
             }
         }
 
@@ -15712,6 +15672,46 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void btnFlexFuelLimiter_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartTableViewer("FFTrqCal.M_maxMAP");
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            if (gridViewSymbols.FocusedRowHandle >= 0)
+            {
+                SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
+                // add to realtime table
+                string symName = sh.Varname;
+                if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
+                {
+                    symName = sh.Userdescription;
+                }
+
+                switch (symName)
+                {
+                    case "ActualIn.v_Vehicle2":
+                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                        break;
+                    case "In.v_Vehicle":
+                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                        break;
+                    case "FFTrqProt.Trq_MaxEngineBefComp":
+                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                        break;
+                    case "FFTrqProt.Trq_MaxEngine":
+                        AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 0.1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                        break;
+                    default:
+                        if (sh.Length == 1)
+                        {
+                            AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 255, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                        }
+                        else
+                        {
+                            AddSymbolToRealTimeList(symName, sh.Symbol_number, 0, 65535, 0, 1, sh.Description, (uint)GetSymbolAddressSRAM(m_symbols, symName), true);
+                        }
+                        break;
+                }
+            }
         }
     }
 }

@@ -975,7 +975,6 @@ namespace T8SuitePro
             this.popupContainerEdit1.Size = new System.Drawing.Size(161, 20);
             toolTipTitleItem1.Text = "Click here for table details";
             superToolTip1.Items.Add(toolTipTitleItem1);
-            superToolTip1.OwnerAllowHtmlText = false;
             this.popupContainerEdit1.SuperTip = superToolTip1;
             this.popupContainerEdit1.TabIndex = 11;
             this.popupContainerEdit1.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.popupContainerEdit1_CustomDisplayText);
