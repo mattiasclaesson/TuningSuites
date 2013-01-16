@@ -45,7 +45,19 @@ namespace T7
         B258I,
         B308I,
         B204I,
-        B204S
+        B204S,
+        D223L,
+        D308L,
+        B207E,
+        B207L,
+        B207R,
+        Z18XE,
+        Z19DT,
+        Z19DTH,
+        B284L,
+        B284E,
+        B284R,
+        Z19DTR
     }
 
     public enum VINTurboModel : int
@@ -134,11 +146,14 @@ namespace T7
         private string DecodeTransmissionType(string VINNumber)
         {
             if (VINNumber.Length < 7) return string.Empty;
+            else if (VINNumber[6] == '1') return "6 speed automatic / front wheel drive";
+            else if (VINNumber[6] == '2') return "6 speed automatic / all wheel drive";
             else if (VINNumber[6] == '4') return "4 speed manual";
-            else if (VINNumber[6] == '5') return "5-speed manual / front wheel drive";
-            else if (VINNumber[6] == '6') return "3 speed automatic";
-            else if (VINNumber[6] == '8') return "4-speed automatic";
-            else if (VINNumber[6] == '9') return "5 speed automatic";
+            else if (VINNumber[6] == '5') return "5 speed manual / front wheel drive";
+            else if (VINNumber[6] == '6') return "6 speed manual / front wheel drive";
+            else if (VINNumber[6] == '7') return "6 speed manual / all wheel drive";
+            else if (VINNumber[6] == '8') return "4 speed automatic";
+            else if (VINNumber[6] == '9') return "5 speed automatic / front wheel drive";
             else if (VINNumber[6] == 'A') return "6 speed automatic / front wheel drive";
             else if (VINNumber[6] == 'B') return "6 speed automatic / all wheel drive";
             else if (VINNumber[6] == 'C') return "5 speed automatic / front wheel drive";
@@ -151,22 +166,11 @@ namespace T7
         private string DecodeBodyType(string VINNumber)
         {
             if (VINNumber.Length < 6) return string.Empty;
-            else if (VINNumber[5] == '2') return "2 door sedan";
             else if (VINNumber[5] == '3') return "3 door combi coupe (CK)";
             else if (VINNumber[5] == '4') return "4 door sedan (SN)";
             else if (VINNumber[5] == '5') return "5 door combi coupe";
-            else if (VINNumber[5] == '6') return "5-door 9000 CS (5CS)";
             else if (VINNumber[5] == '7') return "2 door convertible (CV)";
             else return string.Empty;
-            /*
-2 = 2-door sedan 
-3 = 3-door Combi Coupe (CK) 
-4 = 4-door Sedan (SN) 
-5 = 5-door Combi Coupe 
-6 = 4-door Sedan, Extended Length (CD) 
-7 = 2-door Convertible (CV) 
-
-             * */
         }
 
         private string DecodeSeries(string VINNumber)
@@ -184,6 +188,7 @@ namespace T7
             else if (VINNumber[4] == 'M') return "Model series V, Driver and passenger airbags";
             else if (VINNumber[4] == 'N') return "Model series VI, Driver airbag";
             else if (VINNumber[4] == 'P') return "Model series VI, Driver and passenger airbags";
+            else if (VINNumber[4] == 'Y') return "All cars without passive restraint system";
             else if (VINNumber[4] == 'K') return "Linear, Driver and passenger airbags";
             else if (VINNumber[4] == 'L') return "Vector, Driver and passenger airbags";
             else return string.Empty;
@@ -192,24 +197,14 @@ namespace T7
         private string DecodePlantInfo(string VINNumber)
         {
             if (VINNumber.Length < 11) return string.Empty;
-            else if (VINNumber[10] == '1') return "Trollhättan line A";
+            else if (VINNumber[10] == '1') return "Trollhättan line A (9-3)";
             else if (VINNumber[10] == '2') return "Trollhättan line B (900 / 9-3)";
-            else if (VINNumber[10] == '3') return "Trollhättan line A";
+            else if (VINNumber[10] == '3') return "Trollhättan line A (9-5)";
             else if (VINNumber[10] == '5') return "Malmö, Sweden";
-            else if (VINNumber[10] == '6') return "Nystad, Finland";
+            else if (VINNumber[10] == '6') return "Graz, Austria (9-3 convertible)";
             else if (VINNumber[10] == '7') return "Nystad, Finland (900 / 9-3)";
             else if (VINNumber[10] == '8') return "Nystad, Finland (9000)";
             else if (VINNumber[10] == '9') return "Trollhättan, Sweden, Pre-production workshop";
-            /*
-1 = Trollhättan line A 
-2 = Trollhättan line B 
-3 = Arlöv, Sweden 
-5 = Malmö, Sweden 
-6 = Nystad, Finland 
-7 = Nystad, Finland 
-8 = Nystad, Finland (9000) 
-9 = Trollhättan Line C 
-             * */
             return string.Empty;
         }
 
@@ -219,50 +214,34 @@ namespace T7
             else if (VINNumber[3] == 'A') return VINCarModel.Saab900;
             else if (VINNumber[3] == 'B') return VINCarModel.Saab99;
             else if (VINNumber[3] == 'C') return VINCarModel.Saab9000;
-            else if (VINNumber[3] == 'D') return VINCarModel.Saab93; // 9000
-            else if (VINNumber[3] == 'E') return VINCarModel.Saab95; // 9-5
-            else if (VINNumber[3] == 'F') return VINCarModel.Saab93; // 9400
-            else if (VINNumber[3] == 'G') return VINCarModel.Saab95; // 650
+            else if (VINNumber[3] == 'D') return VINCarModel.Saab93; // code=9000
+            else if (VINNumber[3] == 'E') return VINCarModel.Saab95; // code=9600
+            else if (VINNumber[3] == 'F') return VINCarModel.Saab93; // code=9400
+            else if (VINNumber[3] == 'G') return VINCarModel.Saab95; // code=650
             else return VINCarModel.Unknown;
         }
 
         private VINEngineType DecodeEngineType(string VINNumber)
         {
             if (VINNumber.Length < 8) return VINEngineType.Unknown;
-            else if (VINNumber[7] == 'A') return VINEngineType.B206I;
-            else if (VINNumber[7] == 'B') return VINEngineType.B234I;
+            else if (VINNumber[7] == 'A') return VINEngineType.B235L;
+            else if (VINNumber[7] == 'B') return VINEngineType.Z18XE;
             else if (VINNumber[7] == 'C') return VINEngineType.B205E;
-            // A = B206I 4-inline, Fuel injection, PETROL, I (B206 I) 
-            // B = B234I 4-inline, Fuel injection, PETROL, I (B234 I) 
-            // C = B205E 4-inline, Turbo, PETROL, TURBO (B205 E)
-            // D = D223L 4-in line, Turbo Diesel, DIESEL, TURBO (D223 L) 
-            // E = B235E 4-inline, Turbo, PETROL, TURBO (B235 E) 
-            // G = B235R 4-inline, Turbo, PETROL, TURBO (B235 R) 
-            // H = B205L 4-inline, Turbo, PETROL, TURBO (B205 L)
-            // J = B204I 4-inline, Fuel injection, PETROL, I (B204 I)
-            // K = B205R 4-inline, Turbo, PETROL, TURBO (B205 R)
-            // M = B234L 4-inline, Turbo, PETROL, TURBO (B234 L) 
-            // N = B204L 4-inline, Turbo, PETROL, TURBO (B204 L)
-            // P = B204S 4-inline, Turbo, PETROL, TURBO (B204 S)
-            // R = B234R 4-inline, Turbo, PETROL, TURBO (B234 R)
-            // U = B234E 4-inline, Turbo, PETROL, TURBO (B234 E) 
-            // V = B258I V6, Fuel injection, PETROL, I (B258 I)
-            // W = B308I V6, Fuel injection, PETROL, I (B308 I) 
-            else if (VINNumber[7] == 'D') return VINEngineType.B202I;
+            else if (VINNumber[7] == 'D') return VINEngineType.D223L;
             else if (VINNumber[7] == 'E') return VINEngineType.B235E;
+            else if (VINNumber[7] == 'F') return VINEngineType.B207E;
             else if (VINNumber[7] == 'G') return VINEngineType.B235R;
             else if (VINNumber[7] == 'H') return VINEngineType.B205L;
-            else if (VINNumber[7] == 'J') return VINEngineType.B204I;
             else if (VINNumber[7] == 'K') return VINEngineType.B205R;
-            else if (VINNumber[7] == 'L') return VINEngineType.B202L;
-            else if (VINNumber[7] == 'M') return VINEngineType.B234L;
-            else if (VINNumber[7] == 'N') return VINEngineType.B204L;
-            else if (VINNumber[7] == 'P') return VINEngineType.B204S;
-            else if (VINNumber[7] == 'R') return VINEngineType.B234R;
-            else if (VINNumber[7] == 'S') return VINEngineType.B202E;
-            else if (VINNumber[7] == 'U') return VINEngineType.B234E;
-            else if (VINNumber[7] == 'V') return VINEngineType.B258I;
-            else if (VINNumber[7] == 'W') return VINEngineType.B308I;
+            else if (VINNumber[7] == 'L') return VINEngineType.D308L;
+            else if (VINNumber[7] == 'M') return VINEngineType.B284E;
+            else if (VINNumber[7] == 'P') return VINEngineType.Z19DTR;
+            else if (VINNumber[7] == 'R') return VINEngineType.B284R;
+            else if (VINNumber[7] == 'S') return VINEngineType.B207L;
+            else if (VINNumber[7] == 'U') return VINEngineType.B284L;
+            else if (VINNumber[7] == 'V') return VINEngineType.B207L;
+            else if (VINNumber[7] == 'W') return VINEngineType.Z19DT;
+            else if (VINNumber[7] == 'Y') return VINEngineType.Z19DTH;
             else if (VINNumber[7] == 'Z') return VINEngineType.B308E;
             return VINEngineType.Unknown;
         }
@@ -270,6 +249,11 @@ namespace T7
         private int DecodeMakeyear(string VINNumber)
         {
             if (VINNumber.Length < 10) return 0;
+            else if (VINNumber[9] == 'M') return 1991;
+            else if (VINNumber[9] == 'N') return 1992;
+            else if (VINNumber[9] == 'P') return 1993;
+            else if (VINNumber[9] == 'R') return 1994;
+            else if (VINNumber[9] == 'S') return 1995;
             else if (VINNumber[9] == 'T') return 1996;
             else if (VINNumber[9] == 'V') return 1997;
             else if (VINNumber[9] == 'W') return 1998;
