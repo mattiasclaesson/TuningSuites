@@ -32,13 +32,13 @@ namespace T7
             DevExpress.XtraGrid.GridLevelNode gridLevelNode1 = new DevExpress.XtraGrid.GridLevelNode();
             DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
             DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.SplineSeriesView splineSeriesView1 = new DevExpress.XtraCharts.SplineSeriesView();
             DevExpress.XtraCharts.PointSeriesLabel pointSeriesLabel1 = new DevExpress.XtraCharts.PointSeriesLabel();
+            DevExpress.XtraCharts.SplineSeriesView splineSeriesView1 = new DevExpress.XtraCharts.SplineSeriesView();
             DevExpress.XtraCharts.Series series2 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.SplineSeriesView splineSeriesView2 = new DevExpress.XtraCharts.SplineSeriesView();
             DevExpress.XtraCharts.PointSeriesLabel pointSeriesLabel2 = new DevExpress.XtraCharts.PointSeriesLabel();
-            DevExpress.XtraCharts.SplineSeriesView splineSeriesView3 = new DevExpress.XtraCharts.SplineSeriesView();
+            DevExpress.XtraCharts.SplineSeriesView splineSeriesView2 = new DevExpress.XtraCharts.SplineSeriesView();
             DevExpress.XtraCharts.PointSeriesLabel pointSeriesLabel3 = new DevExpress.XtraCharts.PointSeriesLabel();
+            DevExpress.XtraCharts.SplineSeriesView splineSeriesView3 = new DevExpress.XtraCharts.SplineSeriesView();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
@@ -56,6 +56,8 @@ namespace T7
             this.tabCompressormap = new DevExpress.XtraTab.XtraTabPage();
             this.ctrlCompressorMap1 = new T7.ctrlCompressorMap();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.checkEdit7 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit6 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit5 = new DevExpress.XtraEditors.CheckEdit();
@@ -99,13 +101,13 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(splineSeriesView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(pointSeriesLabel1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(splineSeriesView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(series2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(splineSeriesView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(pointSeriesLabel2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(splineSeriesView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(splineSeriesView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(pointSeriesLabel3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(splineSeriesView3)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tabCompressormap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
@@ -130,7 +132,7 @@ namespace T7
             this.xtraTabControl1.Location = new System.Drawing.Point(8, 8);
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage1;
-            this.xtraTabControl1.Size = new System.Drawing.Size(799, 378);
+            this.xtraTabControl1.Size = new System.Drawing.Size(799, 340);
             this.xtraTabControl1.TabIndex = 2;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1,
@@ -142,7 +144,7 @@ namespace T7
             // 
             this.xtraTabPage1.Controls.Add(this.gridControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(790, 348);
+            this.xtraTabPage1.Size = new System.Drawing.Size(793, 312);
             this.xtraTabPage1.Text = "Table view";
             // 
             // gridControl1
@@ -154,7 +156,7 @@ namespace T7
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(790, 348);
+            this.gridControl1.Size = new System.Drawing.Size(793, 312);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -182,16 +184,16 @@ namespace T7
             this.xtraTabPage2.Controls.Add(this.checkEdit8);
             this.xtraTabPage2.Controls.Add(this.chartControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(790, 347);
+            this.xtraTabPage2.Size = new System.Drawing.Size(793, 312);
             this.xtraTabPage2.Text = "Dyno graph view";
             // 
             // checkEdit12
             // 
             this.checkEdit12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkEdit12.Location = new System.Drawing.Point(575, 324);
+            this.checkEdit12.Location = new System.Drawing.Point(575, 286);
             this.checkEdit12.Name = "checkEdit12";
             this.checkEdit12.Properties.Caption = "Show EGT estimate curve";
-            this.checkEdit12.Size = new System.Drawing.Size(155, 18);
+            this.checkEdit12.Size = new System.Drawing.Size(155, 19);
             this.checkEdit12.TabIndex = 5;
             this.checkEdit12.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -199,10 +201,10 @@ namespace T7
             // 
             this.checkEdit11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit11.EditValue = true;
-            this.checkEdit11.Location = new System.Drawing.Point(414, 324);
+            this.checkEdit11.Location = new System.Drawing.Point(414, 286);
             this.checkEdit11.Name = "checkEdit11";
             this.checkEdit11.Properties.Caption = "Show target lambda curve";
-            this.checkEdit11.Size = new System.Drawing.Size(155, 18);
+            this.checkEdit11.Size = new System.Drawing.Size(155, 19);
             this.checkEdit11.TabIndex = 4;
             this.checkEdit11.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -210,10 +212,10 @@ namespace T7
             // 
             this.checkEdit10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit10.EditValue = true;
-            this.checkEdit10.Location = new System.Drawing.Point(263, 324);
+            this.checkEdit10.Location = new System.Drawing.Point(263, 286);
             this.checkEdit10.Name = "checkEdit10";
             this.checkEdit10.Properties.Caption = "Show injector DC curve";
-            this.checkEdit10.Size = new System.Drawing.Size(145, 18);
+            this.checkEdit10.Size = new System.Drawing.Size(145, 19);
             this.checkEdit10.TabIndex = 3;
             this.checkEdit10.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -221,10 +223,10 @@ namespace T7
             // 
             this.checkEdit9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit9.EditValue = true;
-            this.checkEdit9.Location = new System.Drawing.Point(133, 324);
+            this.checkEdit9.Location = new System.Drawing.Point(133, 286);
             this.checkEdit9.Name = "checkEdit9";
             this.checkEdit9.Properties.Caption = "Show torque curve";
-            this.checkEdit9.Size = new System.Drawing.Size(124, 18);
+            this.checkEdit9.Size = new System.Drawing.Size(124, 19);
             this.checkEdit9.TabIndex = 2;
             this.checkEdit9.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -232,10 +234,10 @@ namespace T7
             // 
             this.checkEdit8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit8.EditValue = true;
-            this.checkEdit8.Location = new System.Drawing.Point(3, 324);
+            this.checkEdit8.Location = new System.Drawing.Point(3, 286);
             this.checkEdit8.Name = "checkEdit8";
             this.checkEdit8.Properties.Caption = "Show power curve";
-            this.checkEdit8.Size = new System.Drawing.Size(124, 18);
+            this.checkEdit8.Size = new System.Drawing.Size(124, 19);
             this.checkEdit8.TabIndex = 1;
             this.checkEdit8.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -245,30 +247,30 @@ namespace T7
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.chartControl1.ContextMenuStrip = this.contextMenuStrip1;
-            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisX.Range.SideMarginsEnabled = true;
             xyDiagram1.AxisX.Range.ScrollingRange.SideMarginsEnabled = true;
-            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisY.Range.SideMarginsEnabled = true;
+            xyDiagram1.AxisX.Range.SideMarginsEnabled = true;
+            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
             xyDiagram1.AxisY.Range.ScrollingRange.SideMarginsEnabled = true;
+            xyDiagram1.AxisY.Range.SideMarginsEnabled = true;
+            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
             this.chartControl1.Diagram = xyDiagram1;
             this.chartControl1.Location = new System.Drawing.Point(0, 0);
             this.chartControl1.Name = "chartControl1";
-            series1.Name = "Series 1";
-            series1.View = splineSeriesView1;
             pointSeriesLabel1.LineVisible = true;
             series1.Label = pointSeriesLabel1;
-            series2.Name = "Series 2";
-            series2.View = splineSeriesView2;
+            series1.Name = "Series 1";
+            series1.View = splineSeriesView1;
             pointSeriesLabel2.LineVisible = true;
             series2.Label = pointSeriesLabel2;
+            series2.Name = "Series 2";
+            series2.View = splineSeriesView2;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1,
         series2};
-            this.chartControl1.SeriesTemplate.View = splineSeriesView3;
             pointSeriesLabel3.LineVisible = true;
             this.chartControl1.SeriesTemplate.Label = pointSeriesLabel3;
-            this.chartControl1.Size = new System.Drawing.Size(789, 318);
+            this.chartControl1.SeriesTemplate.View = splineSeriesView3;
+            this.chartControl1.Size = new System.Drawing.Size(789, 280);
             this.chartControl1.TabIndex = 0;
             // 
             // contextMenuStrip1
@@ -298,7 +300,7 @@ namespace T7
             // 
             this.tabCompressormap.Controls.Add(this.ctrlCompressorMap1);
             this.tabCompressormap.Name = "tabCompressormap";
-            this.tabCompressormap.Size = new System.Drawing.Size(790, 347);
+            this.tabCompressormap.Size = new System.Drawing.Size(793, 312);
             this.tabCompressormap.Text = "Compressor map";
             // 
             // ctrlCompressorMap1
@@ -343,7 +345,7 @@ namespace T7
         5500,
         6000,
         6500};
-            this.ctrlCompressorMap1.Size = new System.Drawing.Size(790, 347);
+            this.ctrlCompressorMap1.Size = new System.Drawing.Size(793, 312);
             this.ctrlCompressorMap1.TabIndex = 0;
             this.ctrlCompressorMap1.onRefreshData += new T7.ctrlCompressorMap.RefreshData(this.ctrlCompressorMap1_onRefreshData);
             // 
@@ -351,6 +353,8 @@ namespace T7
             // 
             this.groupControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupControl2.Controls.Add(this.labelControl17);
+            this.groupControl2.Controls.Add(this.labelControl18);
             this.groupControl2.Controls.Add(this.checkEdit7);
             this.groupControl2.Controls.Add(this.checkEdit6);
             this.groupControl2.Controls.Add(this.checkEdit5);
@@ -377,18 +381,40 @@ namespace T7
             this.groupControl2.Controls.Add(this.checkEdit3);
             this.groupControl2.Controls.Add(this.checkEdit2);
             this.groupControl2.Controls.Add(this.checkEdit1);
-            this.groupControl2.Location = new System.Drawing.Point(8, 390);
+            this.groupControl2.Location = new System.Drawing.Point(8, 371);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(799, 156);
+            this.groupControl2.Size = new System.Drawing.Size(799, 175);
             this.groupControl2.TabIndex = 3;
             this.groupControl2.Text = "Options";
+            // 
+            // labelControl17
+            // 
+            this.labelControl17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelControl17.Appearance.BackColor = System.Drawing.Color.Red;
+            this.labelControl17.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.labelControl17.Location = new System.Drawing.Point(775, 22);
+            this.labelControl17.Name = "labelControl17";
+            this.labelControl17.Size = new System.Drawing.Size(15, 13);
+            this.labelControl17.TabIndex = 28;
+            this.labelControl17.Text = "     ";
+            // 
+            // labelControl18
+            // 
+            this.labelControl18.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelControl18.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.labelControl18.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.labelControl18.Location = new System.Drawing.Point(627, 22);
+            this.labelControl18.Name = "labelControl18";
+            this.labelControl18.Size = new System.Drawing.Size(142, 13);
+            this.labelControl18.TabIndex = 27;
+            this.labelControl18.Text = "E85Auto engine torque limiter";
             // 
             // checkEdit7
             // 
             this.checkEdit7.Location = new System.Drawing.Point(455, 76);
             this.checkEdit7.Name = "checkEdit7";
             this.checkEdit7.Properties.Caption = "Use trionic calculation for torque";
-            this.checkEdit7.Size = new System.Drawing.Size(184, 18);
+            this.checkEdit7.Size = new System.Drawing.Size(184, 19);
             this.checkEdit7.TabIndex = 26;
             this.checkEdit7.CheckedChanged += new System.EventHandler(this.checkEdit7_CheckedChanged);
             // 
@@ -397,7 +423,7 @@ namespace T7
             this.checkEdit6.Location = new System.Drawing.Point(363, 129);
             this.checkEdit6.Name = "checkEdit6";
             this.checkEdit6.Properties.Caption = "torque in lbft";
-            this.checkEdit6.Size = new System.Drawing.Size(86, 18);
+            this.checkEdit6.Size = new System.Drawing.Size(86, 19);
             this.checkEdit6.TabIndex = 25;
             this.checkEdit6.CheckedChanged += new System.EventHandler(this.checkEdit6_CheckedChanged);
             // 
@@ -406,7 +432,7 @@ namespace T7
             this.checkEdit5.Location = new System.Drawing.Point(252, 129);
             this.checkEdit5.Name = "checkEdit5";
             this.checkEdit5.Properties.Caption = "power in kW";
-            this.checkEdit5.Size = new System.Drawing.Size(86, 18);
+            this.checkEdit5.Size = new System.Drawing.Size(86, 19);
             this.checkEdit5.TabIndex = 24;
             this.checkEdit5.CheckedChanged += new System.EventHandler(this.checkEdit5_CheckedChanged);
             // 
@@ -415,9 +441,7 @@ namespace T7
             this.labelControl15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl15.Appearance.BackColor = System.Drawing.Color.CornflowerBlue;
             this.labelControl15.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl15.Appearance.Options.UseBackColor = true;
-            this.labelControl15.Appearance.Options.UseForeColor = true;
-            this.labelControl15.Location = new System.Drawing.Point(775, 136);
+            this.labelControl15.Location = new System.Drawing.Point(775, 155);
             this.labelControl15.Name = "labelControl15";
             this.labelControl15.Size = new System.Drawing.Size(15, 13);
             this.labelControl15.TabIndex = 22;
@@ -427,10 +451,8 @@ namespace T7
             // 
             this.labelControl16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl16.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl16.Appearance.Options.UseForeColor = true;
-            this.labelControl16.Appearance.Options.UseTextOptions = true;
             this.labelControl16.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl16.Location = new System.Drawing.Point(687, 137);
+            this.labelControl16.Location = new System.Drawing.Point(687, 156);
             this.labelControl16.Name = "labelControl16";
             this.labelControl16.Size = new System.Drawing.Size(82, 13);
             this.labelControl16.TabIndex = 21;
@@ -442,7 +464,7 @@ namespace T7
             this.checkEdit4.Location = new System.Drawing.Point(14, 120);
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.Caption = "View in overboost";
-            this.checkEdit4.Size = new System.Drawing.Size(150, 18);
+            this.checkEdit4.Size = new System.Drawing.Size(150, 19);
             this.checkEdit4.TabIndex = 20;
             this.checkEdit4.CheckedChanged += new System.EventHandler(this.checkEdit4_CheckedChanged);
             // 
@@ -451,9 +473,7 @@ namespace T7
             this.labelControl13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl13.Appearance.BackColor = System.Drawing.Color.DarkGray;
             this.labelControl13.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl13.Appearance.Options.UseBackColor = true;
-            this.labelControl13.Appearance.Options.UseForeColor = true;
-            this.labelControl13.Location = new System.Drawing.Point(775, 117);
+            this.labelControl13.Location = new System.Drawing.Point(775, 136);
             this.labelControl13.Name = "labelControl13";
             this.labelControl13.Size = new System.Drawing.Size(15, 13);
             this.labelControl13.TabIndex = 19;
@@ -463,10 +483,8 @@ namespace T7
             // 
             this.labelControl14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl14.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl14.Appearance.Options.UseForeColor = true;
-            this.labelControl14.Appearance.Options.UseTextOptions = true;
             this.labelControl14.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl14.Location = new System.Drawing.Point(703, 118);
+            this.labelControl14.Location = new System.Drawing.Point(703, 137);
             this.labelControl14.Name = "labelControl14";
             this.labelControl14.Size = new System.Drawing.Size(66, 13);
             this.labelControl14.TabIndex = 18;
@@ -478,9 +496,7 @@ namespace T7
             this.labelControl11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl11.Appearance.BackColor = System.Drawing.Color.SaddleBrown;
             this.labelControl11.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl11.Appearance.Options.UseBackColor = true;
-            this.labelControl11.Appearance.Options.UseForeColor = true;
-            this.labelControl11.Location = new System.Drawing.Point(775, 98);
+            this.labelControl11.Location = new System.Drawing.Point(775, 117);
             this.labelControl11.Name = "labelControl11";
             this.labelControl11.Size = new System.Drawing.Size(15, 13);
             this.labelControl11.TabIndex = 17;
@@ -490,10 +506,8 @@ namespace T7
             // 
             this.labelControl12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl12.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl12.Appearance.Options.UseForeColor = true;
-            this.labelControl12.Appearance.Options.UseTextOptions = true;
             this.labelControl12.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl12.Location = new System.Drawing.Point(680, 99);
+            this.labelControl12.Location = new System.Drawing.Point(680, 118);
             this.labelControl12.Name = "labelControl12";
             this.labelControl12.Size = new System.Drawing.Size(89, 13);
             this.labelControl12.TabIndex = 16;
@@ -548,9 +562,7 @@ namespace T7
             this.labelControl7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl7.Appearance.BackColor = System.Drawing.Color.Black;
             this.labelControl7.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl7.Appearance.Options.UseBackColor = true;
-            this.labelControl7.Appearance.Options.UseForeColor = true;
-            this.labelControl7.Location = new System.Drawing.Point(775, 22);
+            this.labelControl7.Location = new System.Drawing.Point(775, 41);
             this.labelControl7.Name = "labelControl7";
             this.labelControl7.Size = new System.Drawing.Size(15, 13);
             this.labelControl7.TabIndex = 12;
@@ -560,10 +572,8 @@ namespace T7
             // 
             this.labelControl8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl8.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl8.Appearance.Options.UseForeColor = true;
-            this.labelControl8.Appearance.Options.UseTextOptions = true;
             this.labelControl8.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl8.Location = new System.Drawing.Point(681, 23);
+            this.labelControl8.Location = new System.Drawing.Point(681, 42);
             this.labelControl8.Name = "labelControl8";
             this.labelControl8.Size = new System.Drawing.Size(88, 13);
             this.labelControl8.TabIndex = 11;
@@ -575,9 +585,7 @@ namespace T7
             this.labelControl4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl4.Appearance.BackColor = System.Drawing.Color.Yellow;
             this.labelControl4.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl4.Appearance.Options.UseBackColor = true;
-            this.labelControl4.Appearance.Options.UseForeColor = true;
-            this.labelControl4.Location = new System.Drawing.Point(775, 79);
+            this.labelControl4.Location = new System.Drawing.Point(775, 98);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(15, 13);
             this.labelControl4.TabIndex = 10;
@@ -588,9 +596,7 @@ namespace T7
             this.labelControl5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl5.Appearance.BackColor = System.Drawing.Color.Purple;
             this.labelControl5.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl5.Appearance.Options.UseBackColor = true;
-            this.labelControl5.Appearance.Options.UseForeColor = true;
-            this.labelControl5.Location = new System.Drawing.Point(775, 60);
+            this.labelControl5.Location = new System.Drawing.Point(775, 61);
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(15, 13);
             this.labelControl5.TabIndex = 9;
@@ -601,9 +607,7 @@ namespace T7
             this.labelControl6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl6.Appearance.BackColor = System.Drawing.Color.Blue;
             this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl6.Appearance.Options.UseBackColor = true;
-            this.labelControl6.Appearance.Options.UseForeColor = true;
-            this.labelControl6.Location = new System.Drawing.Point(775, 41);
+            this.labelControl6.Location = new System.Drawing.Point(775, 79);
             this.labelControl6.Name = "labelControl6";
             this.labelControl6.Size = new System.Drawing.Size(15, 13);
             this.labelControl6.TabIndex = 8;
@@ -613,10 +617,8 @@ namespace T7
             // 
             this.labelControl3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl3.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl3.Appearance.Options.UseForeColor = true;
-            this.labelControl3.Appearance.Options.UseTextOptions = true;
             this.labelControl3.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl3.Location = new System.Drawing.Point(671, 80);
+            this.labelControl3.Location = new System.Drawing.Point(671, 99);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(98, 13);
             this.labelControl3.TabIndex = 7;
@@ -627,10 +629,8 @@ namespace T7
             // 
             this.labelControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl2.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl2.Appearance.Options.UseForeColor = true;
-            this.labelControl2.Appearance.Options.UseTextOptions = true;
             this.labelControl2.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl2.Location = new System.Drawing.Point(650, 60);
+            this.labelControl2.Location = new System.Drawing.Point(650, 61);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(119, 13);
             this.labelControl2.TabIndex = 6;
@@ -641,10 +641,8 @@ namespace T7
             // 
             this.labelControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl1.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl1.Appearance.Options.UseForeColor = true;
-            this.labelControl1.Appearance.Options.UseTextOptions = true;
             this.labelControl1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl1.Location = new System.Drawing.Point(701, 42);
+            this.labelControl1.Location = new System.Drawing.Point(701, 80);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Size = new System.Drawing.Size(68, 13);
             this.labelControl1.TabIndex = 5;
@@ -693,7 +691,7 @@ namespace T7
             this.checkEdit3.Location = new System.Drawing.Point(14, 95);
             this.checkEdit3.Name = "checkEdit3";
             this.checkEdit3.Properties.Caption = "Car is a convertible";
-            this.checkEdit3.Size = new System.Drawing.Size(150, 18);
+            this.checkEdit3.Size = new System.Drawing.Size(150, 19);
             this.checkEdit3.TabIndex = 2;
             this.checkEdit3.CheckedChanged += new System.EventHandler(this.checkEdit3_CheckedChanged);
             // 
@@ -702,7 +700,7 @@ namespace T7
             this.checkEdit2.Location = new System.Drawing.Point(14, 69);
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.Caption = "Car runs E85";
-            this.checkEdit2.Size = new System.Drawing.Size(150, 18);
+            this.checkEdit2.Size = new System.Drawing.Size(150, 19);
             this.checkEdit2.TabIndex = 1;
             this.checkEdit2.CheckedChanged += new System.EventHandler(this.checkEdit2_CheckedChanged);
             // 
@@ -711,7 +709,7 @@ namespace T7
             this.checkEdit1.Location = new System.Drawing.Point(14, 43);
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Car has automatic gearbox";
-            this.checkEdit1.Size = new System.Drawing.Size(177, 18);
+            this.checkEdit1.Size = new System.Drawing.Size(177, 19);
             this.checkEdit1.TabIndex = 0;
             this.checkEdit1.CheckedChanged += new System.EventHandler(this.checkEdit1_CheckedChanged);
             // 
@@ -768,14 +766,14 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit9.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit8.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(splineSeriesView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pointSeriesLabel1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(splineSeriesView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(splineSeriesView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pointSeriesLabel2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(splineSeriesView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(series2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(splineSeriesView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pointSeriesLabel3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(splineSeriesView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.tabCompressormap.ResumeLayout(false);
@@ -844,5 +842,7 @@ namespace T7
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
+        private DevExpress.XtraEditors.LabelControl labelControl17;
+        private DevExpress.XtraEditors.LabelControl labelControl18;
     }
 }

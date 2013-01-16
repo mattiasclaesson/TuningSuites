@@ -11,6 +11,20 @@ using DevExpress.XtraCharts;
 
 namespace T7
 {
+    public enum limitType : int
+    {
+        None,
+        TorqueLimiterEngine,
+        TorqueLimiterEngineE85,
+        TorqueLimiterGear,
+        AirmassLimiter,
+        TurboSpeedLimiter,
+        FuelCutLimiter,
+        OverBoostLimiter,
+        AirTorqueCalibration,
+        TorqueLimiterEngineE85Auto
+    }
+
     public partial class ctrlAirmassResult : DevExpress.XtraEditors.XtraUserControl
     {
         int rows;
@@ -242,6 +256,7 @@ namespace T7
             }
             return false;
         }
+
         private bool IsBinaryConvertable(SymbolCollection symbols)
         {
             foreach (SymbolHelper sh in symbols)
@@ -254,6 +269,17 @@ namespace T7
             return false;
         }
 
+        private bool IsBinaryBiopowerAuto(SymbolCollection symbols)
+        {
+            foreach (SymbolHelper sh in symbols)
+            {
+                if (sh.Varname == "TorqueCal.M_EngMaxE85TabAut" || sh.Userdescription == "TorqueCal.M_EngMaxE85TabAut")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public void Calculate(string filename, SymbolCollection symbols)
         {
@@ -285,6 +311,9 @@ namespace T7
             {
                 checkEdit4.Enabled = false;
             }
+
+            bool e85automatic = IsBinaryBiopowerAuto(symbols);
+            
             int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
             try
             {
@@ -328,7 +357,7 @@ namespace T7
                     // get the current value from the request map
                     int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
                     limitType limiterType = limitType.None;
-                    int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit3.Checked, checkEdit4.Checked, out limiterType);
+                    int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit3.Checked, checkEdit4.Checked, e85automatic, out limiterType);
                     resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
                     limitermap.SetValue(limiterType, (colcount * rows) + rowcount);
                 }
@@ -372,7 +401,7 @@ namespace T7
             return false;
         }
 
-        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, out limitType limiterType)
+        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, out limitType limiterType)
         {
             int retval = requestairmass;
             //Console.WriteLine("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
@@ -383,7 +412,7 @@ namespace T7
             limiterType = limitType.None;
 
             limitType TrqLimiterType = limitType.None;
-            retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, out TrqLimiterType);
+            retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, out TrqLimiterType);
             if (retval < requestairmass) limiterType = TrqLimiterType;
             // finally check agains fuelcut limiter???
             limitType AirmassLimiterType = limitType.None;
@@ -421,7 +450,7 @@ namespace T7
             return true;
         }
 
-        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, out limitType TrqLimiter)
+        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, out limitType TrqLimiter)
         {
             //only if torquelimiters are enabled
             // first convert airmass torque to torque using TorqueCal.M_NominalMap
@@ -451,13 +480,21 @@ namespace T7
                 
                 // check against TorqueCal.M_EngMaxTab, TorqueCal.M_ManGearLim and TorqueCal.M_5GearLimTab
                 int[] enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxTab"));
-                if (Automatic)
+                if (E85Automatic && E85 && Automatic)
                 {
-                    enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxAutTab"));
+                    enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85TabAut"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85TabAut"));
                 }
-                if (E85)
+                else
                 {
-                    enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85Tab"));
+                    // Old style binary where there are no dedicated TorqueCal.M_EngMaxE85TabAut
+                    if (Automatic)
+                    {
+                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxAutTab"));
+                    }
+                    if (E85)
+                    {
+                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85Tab"));
+                    }
                 }
                 if (OverboostEnabled)
                 {
@@ -472,7 +509,11 @@ namespace T7
                 {
                     //Console.WriteLine("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
                     torque = torquelimit1;
-                    if (E85)
+                    if (E85Automatic && E85 && Automatic)
+                    {
+                        TrqLimiter = limitType.TorqueLimiterEngineE85Auto;
+                    }
+                    else if (E85)
                     {
                         TrqLimiter = limitType.TorqueLimiterEngineE85;
                     }
@@ -1367,6 +1408,9 @@ namespace T7
             {
                 checkEdit4.Enabled = false;
             }
+
+            bool e85automatic = IsBinaryBiopowerAuto(symbols);
+
             int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
             //limitermap = new int[pedalrequestmap.Length];
             int[] resulttable = new int[pedalrequestmap.Length]; // result 
@@ -1387,7 +1431,7 @@ namespace T7
                     int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
                     //Console.WriteLine("Current request = " + airmassrequestforcell.ToString() + " mg/c");
                     limitType limiterType = limitType.None;
-                    int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit3.Checked, checkEdit4.Checked, out limiterType);
+                    int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit3.Checked, checkEdit4.Checked, e85automatic, out limiterType);
                     resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
                     //limitermap.SetValue(limiterType, (colcount * rows) + rowcount);
                 }
@@ -1799,6 +1843,10 @@ namespace T7
                         else if (curLimit == limitType.OverBoostLimiter)
                         {
                             e.Graphics.FillPolygon(Brushes.CornflowerBlue, pnts, System.Drawing.Drawing2D.FillMode.Winding);
+                        }
+                        else if (curLimit == limitType.TorqueLimiterEngineE85Auto)
+                        {
+                            e.Graphics.FillPolygon(Brushes.Red, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
                         if (comboBoxEdit2.SelectedIndex == 1)
                         {

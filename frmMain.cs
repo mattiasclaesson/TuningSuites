@@ -14789,12 +14789,6 @@ dt.Columns.Add("SymbolName");
             StartAViewer(e.SymbolName);
         }
 
-        void airmassresult_onStartTableViewer(object sender, frmAirmassResult.StartTableViewerEventArgs e)
-        {
-            // start the table viewer
-            StartAViewer(e.SymbolName);
-        }
-
         private bool SymbolExists(string symbolname)
         {
             foreach (SymbolHelper sh in m_symbols)
