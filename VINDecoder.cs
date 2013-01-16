@@ -62,6 +62,11 @@ namespace T7
     {
         public VINCarInfo DecodeVINNumber(string VINNumber)
         {
+            // Pos 1-3 World Manufacturer Identifier
+            // Pos 1 Geographical Area: Y=Northern Europe
+            // Pos 2 Country: S=Sweden
+            // Pos 3 Car Manuacturer: 3=Saab Automobile AB
+            // 
             VINCarInfo _carInfo = new VINCarInfo();
             if (VINNumber.StartsWith("YK1")) // finland?
             {
@@ -134,13 +139,13 @@ namespace T7
             else if (VINNumber[6] == '6') return "3 speed automatic";
             else if (VINNumber[6] == '8') return "4-speed automatic";
             else if (VINNumber[6] == '9') return "5 speed automatic";
+            else if (VINNumber[6] == 'A') return "6 speed automatic / front wheel drive";
+            else if (VINNumber[6] == 'B') return "6 speed automatic / all wheel drive";
+            else if (VINNumber[6] == 'C') return "5 speed automatic / front wheel drive";
+            else if (VINNumber[6] == 'M') return "6 speed manual / front wheel drive";
+            else if (VINNumber[6] == 'N') return "6 speed manual / all wheel drive";
+            else if (VINNumber[6] == 'P') return "5 speed manual / front wheel drive";
             return string.Empty;
-            /*
-4 = 4-speed manual 
-5 = 5-speed manual 
-6 = 3-speed Automatic 
-8 = 4-speed Automatic 
-             * */
         }
 
         private string DecodeBodyType(string VINNumber)
@@ -179,12 +184,9 @@ namespace T7
             else if (VINNumber[4] == 'M') return "Model series V, Driver and passenger airbags";
             else if (VINNumber[4] == 'N') return "Model series VI, Driver airbag";
             else if (VINNumber[4] == 'P') return "Model series VI, Driver and passenger airbags";
+            else if (VINNumber[4] == 'K') return "Linear, Driver and passenger airbags";
+            else if (VINNumber[4] == 'L') return "Vector, Driver and passenger airbags";
             else return string.Empty;
-            /*
-            B = i 
-            C = i16 
-            D = Turbo 
-             * */
         }
 
         private string DecodePlantInfo(string VINNumber)
@@ -217,9 +219,10 @@ namespace T7
             else if (VINNumber[3] == 'A') return VINCarModel.Saab900;
             else if (VINNumber[3] == 'B') return VINCarModel.Saab99;
             else if (VINNumber[3] == 'C') return VINCarModel.Saab9000;
-            else if (VINNumber[3] == 'D') return VINCarModel.Saab93;
+            else if (VINNumber[3] == 'D') return VINCarModel.Saab93; // 9000
             else if (VINNumber[3] == 'E') return VINCarModel.Saab95; // 9-5
-            else if (VINNumber[3] == 'F') return VINCarModel.Saab93;
+            else if (VINNumber[3] == 'F') return VINCarModel.Saab93; // 9400
+            else if (VINNumber[3] == 'G') return VINCarModel.Saab95; // 650
             else return VINCarModel.Unknown;
         }
 
@@ -261,41 +264,12 @@ namespace T7
             else if (VINNumber[7] == 'V') return VINEngineType.B258I;
             else if (VINNumber[7] == 'W') return VINEngineType.B308I;
             else if (VINNumber[7] == 'Z') return VINEngineType.B308E;
-
-            /*
-B = Fuel Injection, B234 (2.3 liter 16v) 
-D = Fuel Injection, B202 (16-v) 
-E = Fuel Injection, B212 (2.1 liter 16v) 
-J = Fuel Injection, B201 (8-v) 
-L = Turbo, B202 & intercooler (16-valve) 
-M = Turbo, B234 
-N = Turbo, B204 & intercooler (2.0 liter 16v with balance shafts) 
-S = Turbo, B201 (8-valve) 
-S = Turbo, B202 Low-pressure turbo (16-valve) 
-V = 2.5 liter V-6 
-             * */
             return VINEngineType.Unknown;
         }
 
         private int DecodeMakeyear(string VINNumber)
         {
             if (VINNumber.Length < 10) return 0;
-            else if (VINNumber[9] == 'A') return 1980;
-            else if (VINNumber[9] == 'B') return 1981;
-            else if (VINNumber[9] == 'C') return 1982;
-            else if (VINNumber[9] == 'D') return 1983;
-            else if (VINNumber[9] == 'E') return 1984;
-            else if (VINNumber[9] == 'F') return 1985;
-            else if (VINNumber[9] == 'G') return 1986;
-            else if (VINNumber[9] == 'H') return 1987;
-            else if (VINNumber[9] == 'J') return 1988;
-            else if (VINNumber[9] == 'K') return 1989;
-            else if (VINNumber[9] == 'L') return 1990;
-            else if (VINNumber[9] == 'M') return 1991;
-            else if (VINNumber[9] == 'N') return 1992;
-            else if (VINNumber[9] == 'P') return 1993;
-            else if (VINNumber[9] == 'R') return 1994;
-            else if (VINNumber[9] == 'S') return 1995;
             else if (VINNumber[9] == 'T') return 1996;
             else if (VINNumber[9] == 'V') return 1997;
             else if (VINNumber[9] == 'W') return 1998;
@@ -310,6 +284,7 @@ V = 2.5 liter V-6
             else if (VINNumber[9] == '7') return 2007;
             else if (VINNumber[9] == '8') return 2008;
             else if (VINNumber[9] == '9') return 2009;
+            else if (VINNumber[9] == 'A') return 2010;
             return 0;
         }
     }
