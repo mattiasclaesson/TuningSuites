@@ -79,7 +79,6 @@ namespace T8SuitePro
             // lblCarModel
             // 
             this.lblCarModel.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblCarModel.Appearance.Options.UseForeColor = true;
             this.lblCarModel.Location = new System.Drawing.Point(196, 47);
             this.lblCarModel.Name = "lblCarModel";
             this.lblCarModel.Size = new System.Drawing.Size(12, 13);
@@ -89,7 +88,6 @@ namespace T8SuitePro
             // lblEngineType
             // 
             this.lblEngineType.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblEngineType.Appearance.Options.UseForeColor = true;
             this.lblEngineType.Location = new System.Drawing.Point(196, 66);
             this.lblEngineType.Name = "lblEngineType";
             this.lblEngineType.Size = new System.Drawing.Size(12, 13);
@@ -99,7 +97,6 @@ namespace T8SuitePro
             // lblTurbo
             // 
             this.lblTurbo.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblTurbo.Appearance.Options.UseForeColor = true;
             this.lblTurbo.Location = new System.Drawing.Point(196, 85);
             this.lblTurbo.Name = "lblTurbo";
             this.lblTurbo.Size = new System.Drawing.Size(12, 13);
@@ -109,7 +106,6 @@ namespace T8SuitePro
             // lblMakeyear
             // 
             this.lblMakeyear.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblMakeyear.Appearance.Options.UseForeColor = true;
             this.lblMakeyear.Location = new System.Drawing.Point(196, 104);
             this.lblMakeyear.Name = "lblMakeyear";
             this.lblMakeyear.Size = new System.Drawing.Size(12, 13);
@@ -159,7 +155,6 @@ namespace T8SuitePro
             // lblPlant
             // 
             this.lblPlant.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblPlant.Appearance.Options.UseForeColor = true;
             this.lblPlant.Location = new System.Drawing.Point(196, 123);
             this.lblPlant.Name = "lblPlant";
             this.lblPlant.Size = new System.Drawing.Size(12, 13);
@@ -177,7 +172,6 @@ namespace T8SuitePro
             // lblSeries
             // 
             this.lblSeries.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblSeries.Appearance.Options.UseForeColor = true;
             this.lblSeries.Location = new System.Drawing.Point(196, 142);
             this.lblSeries.Name = "lblSeries";
             this.lblSeries.Size = new System.Drawing.Size(12, 13);
@@ -195,7 +189,6 @@ namespace T8SuitePro
             // lblBody
             // 
             this.lblBody.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblBody.Appearance.Options.UseForeColor = true;
             this.lblBody.Location = new System.Drawing.Point(196, 161);
             this.lblBody.Name = "lblBody";
             this.lblBody.Size = new System.Drawing.Size(12, 13);
@@ -223,7 +216,6 @@ namespace T8SuitePro
             // lblGearbox
             // 
             this.lblGearbox.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblGearbox.Appearance.Options.UseForeColor = true;
             this.lblGearbox.Location = new System.Drawing.Point(196, 180);
             this.lblGearbox.Name = "lblGearbox";
             this.lblGearbox.Size = new System.Drawing.Size(12, 13);

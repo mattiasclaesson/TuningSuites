@@ -406,7 +406,7 @@ namespace T8SuitePro
             int torquelimit1 = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
             if (torque > torquelimit1)
             {
-                Console.WriteLine("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
+                //Console.WriteLine("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
                 torque = torquelimit1;
                 if (E85)
                 {
