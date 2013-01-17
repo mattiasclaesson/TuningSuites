@@ -199,7 +199,8 @@
     </Reference>
     <Reference Include="PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\PSTaskDialog.dll</HintPath>
+      <HintPath>..\..\PSTaskDialog.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="RealtimeGraph, Version=1.8.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
