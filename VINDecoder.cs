@@ -12,7 +12,10 @@ namespace T7
         Saab900SE = 3,
         Saab93 = 4,
         Saab95 = 5,
-        Saab99 = 6
+        Saab99 = 6,
+        OpelSignum,
+        OpelVectra,
+        CadillacBTS
     }
 
     public enum VINEngineType : int
@@ -46,18 +49,19 @@ namespace T7
         B308I,
         B204I,
         B204S,
+        B207R,
+        B207L,
+        B207E,
+        Z20NET,
         D223L,
         D308L,
-        B207E,
-        B207L,
-        B207R,
         Z18XE,
         Z19DT,
         Z19DTH,
+        Z19DTR,
         B284L,
         B284E,
-        B284R,
-        Z19DTR
+        B284R
     }
 
     public enum VINTurboModel : int
@@ -104,7 +108,40 @@ namespace T7
                 _carInfo.GearboxDescription = DecodeTransmissionType(VINNumber);
                 _carInfo.Valid = true;
             }
+            else if (VINNumber.StartsWith("YSC")) // Cadillac?
+            {
+                _carInfo.Makeyear = DecodeMakeyear(VINNumber);
+                _carInfo.CarModel = VINCarModel.CadillacBTS;//DecodeCarModel(VINNumber);
+                _carInfo.EngineType = DecodeEngineType(VINNumber);
+                _carInfo.PlantInfo = "";// DecodePlantInfo(VINNumber);
+                _carInfo.Series = "";// DecodeSeries(VINNumber);
+                _carInfo.Body = "";// DecodeBodyType(VINNumber);
+                _carInfo.TurboModel = VINTurboModel.None;// DecodeTurboModel(_carInfo.EngineType, _carInfo.CarModel);
+                _carInfo.GearboxDescription = ""; //DecodeTransmissionType(VINNumber);
+                _carInfo.Valid = true;
+            }
+
+            else if (VINNumber.StartsWith("W0L")) // Opel
+            {
+                _carInfo.Makeyear = DecodeMakeyear(VINNumber);
+                _carInfo.CarModel = DecodeCarModelOpel(VINNumber);
+                _carInfo.EngineType = VINEngineType.Z20NET;// DecodeEngineType(VINNumber);
+                _carInfo.PlantInfo = "";// DecodePlantInfo(VINNumber);
+                _carInfo.Series = DecodeSeries(VINNumber);
+                _carInfo.Body = DecodeBodyType(VINNumber);
+                _carInfo.TurboModel = DecodeTurboModel(_carInfo.EngineType, _carInfo.CarModel);
+                _carInfo.GearboxDescription = DecodeTransmissionType(VINNumber);
+                _carInfo.Valid = true;
+            }
             return _carInfo;
+        }
+
+        private VINCarModel DecodeCarModelOpel(string VINNumber)
+        {
+            if (VINNumber.Length < 8) return VINCarModel.Unknown;
+            else if (VINNumber[7] == '3') return VINCarModel.OpelVectra;
+            else if (VINNumber[7] == '4') return VINCarModel.OpelSignum;
+            else return VINCarModel.Unknown;
         }
 
         private VINTurboModel DecodeTurboModel(VINEngineType vINEngineType, VINCarModel carModel)
@@ -269,6 +306,8 @@ namespace T7
             else if (VINNumber[9] == '8') return 2008;
             else if (VINNumber[9] == '9') return 2009;
             else if (VINNumber[9] == 'A') return 2010;
+            else if (VINNumber[9] == 'B') return 2011;
+            else if (VINNumber[9] == 'C') return 2012;
             return 0;
         }
     }

@@ -146,7 +146,7 @@ namespace T7
             }
             catch (Exception ex1)
             {
-                MessageBox.Show(ex1.Message, "T5Suite 2.0", MessageBoxButtons.OK,
+                MessageBox.Show(ex1.Message, "T7Suite", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
             finally
@@ -334,7 +334,7 @@ namespace T7
 
             if (res == -1) // -1 = no match
             {
-                MessageBox.Show("Find reached end of file", "T5Suite 2.0",
+                MessageBox.Show("Find reached end of file", "T7Suite",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (res == -2) // -2 = find was aborted
