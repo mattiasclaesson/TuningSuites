@@ -21740,6 +21740,29 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
+        private void barButtonItem92_ItemClick_1(object sender, ItemClickEventArgs e)
+        {
+            // show ESP calibration value from this bin and give the user the option to alter the setting
+
+            // so, now get the current settings from the binary
+            T7EspEdit t7EspEdit = new T7EspEdit();
+            if (!t7EspEdit.loadFile(m_currentfile))
+            {
+                frmInfoBox info = new frmInfoBox("File not compatible!");
+            }
+            else
+            {
+                frmEspSelection frmEsp = new frmEspSelection();
+                frmEsp.Esp = t7EspEdit.getEspValue();
+                if (frmEsp.ShowDialog() == DialogResult.OK)
+                {
+                    t7EspEdit.setEspValue(frmEsp.Esp);
+                    t7EspEdit.saveFile();
+                    UpdateChecksum(m_currentfile);
+                }
+            }
+        }
+
         //L Trunk locking delay (-,0,1..254 sec)
         //R Trunk re-locking delay (-,0,1...254 sec)
         //V Trunk speed locking (0,2,4,6,8,10,12,14)

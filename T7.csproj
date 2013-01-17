@@ -263,6 +263,13 @@
     <Compile Include="CompareResultSelector.designer.cs">
       <DependentUpon>CompareResultSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmEspSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmEspSelection.designer.cs">
+      <DependentUpon>frmEspSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="T7EspEdit.cs" />
     <Compile Include="ctrlAirmassResult.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -835,6 +842,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmEditTuningPackage.resx">
       <DependentUpon>frmEditTuningPackage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmEspSelection.resx">
+      <DependentUpon>frmEspSelection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFileToExportSelection.resx">
       <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
