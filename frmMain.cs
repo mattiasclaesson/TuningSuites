@@ -6152,9 +6152,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 SetCatalystLightOff(false);
                             }
-
                         }
-                        /* Wait with this until Janus0070 confirms operation 
                         if (IsBinaryBiopower())
                         {
                             if (frminfo.BioPowerEnabled && !IsBioPowerEnabled())
@@ -6165,7 +6163,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 SetBioPowerEnabled(false);
                             }
-                        }*/
+                        }
                         t7InfoHeader.save(m_currentfile);
 
                         if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
