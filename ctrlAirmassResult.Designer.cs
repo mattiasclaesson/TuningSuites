@@ -390,7 +390,7 @@ namespace T7
             // labelControl17
             // 
             this.labelControl17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelControl17.Appearance.BackColor = System.Drawing.Color.Red;
+            this.labelControl17.Appearance.BackColor = System.Drawing.Color.White;
             this.labelControl17.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl17.Location = new System.Drawing.Point(775, 22);
             this.labelControl17.Name = "labelControl17";

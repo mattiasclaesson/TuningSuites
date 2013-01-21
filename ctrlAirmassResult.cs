@@ -1846,7 +1846,7 @@ namespace T7
                         }
                         else if (curLimit == limitType.TorqueLimiterEngineE85Auto)
                         {
-                            e.Graphics.FillPolygon(Brushes.Red, pnts, System.Drawing.Drawing2D.FillMode.Winding);
+                            e.Graphics.FillPolygon(Brushes.White, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
                         if (comboBoxEdit2.SelectedIndex == 1)
                         {
