@@ -519,12 +519,26 @@ namespace T7
             {
                 if (sh.Flash_start_address == caddr)
                 {
-                    symbol = "ROM_" + sh.Varname  ;
+                    if (sh.Userdescription != "")
+                    {
+                        symbol = "ROM_" + sh.Userdescription;
+                    }
+                    else
+                    {
+                        symbol = "ROM_" + sh.Varname;
+                    }
                     retval = 1;
                 }
                 else if (sh.Start_address == caddr)
                 {
-                    symbol = "RAM_" + sh.Varname ;
+                    if(sh.Userdescription != "")
+                    {
+                        symbol = "RAM_" + sh.Userdescription;
+                    }
+                    else
+                    {
+                        symbol = "RAM_" + sh.Varname;
+                    }
                     retval = 1;
                 }
             }
