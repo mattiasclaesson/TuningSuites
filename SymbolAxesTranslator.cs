@@ -510,6 +510,10 @@ namespace T7
                     y_axis = "TorqueCal.n_EngYSP";
                     y_axis_description = "rpm";
                     break;
+                case "TorqueCal.M_EngMaxE85TabAut":
+                    y_axis = "TorqueCal.n_EngYSP";
+                    y_axis_description = "rpm";
+                    break;
                 case "TEngDiagCal.m_AirperDegA":
                     x_axis = "TEngDiagCal.T_AirInletSP";
                     y_axis = "TEngDiagCal.n_CombSP";

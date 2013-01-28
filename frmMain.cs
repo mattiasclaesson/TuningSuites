@@ -21761,6 +21761,12 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
+        private void barButtonItem95_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // E85 and Automatic
+            StartAViewer("TorqueCal.M_EngMaxE85TabAut");
+        }
+
         //L Trunk locking delay (-,0,1..254 sec)
         //R Trunk re-locking delay (-,0,1...254 sec)
         //V Trunk speed locking (0,2,4,6,8,10,12,14)
