@@ -1122,7 +1122,24 @@ namespace T8SuitePro
                                 //progress.SetProgress("Adding names to symbols");
                                 //CastProgressEvent("Adding names to symbols", 50);
 
-                                if (File.Exists(/*Application.StartupPath*/Path.GetTempPath() + "\\COMPR.TXT"))
+                                Console.WriteLine("Adding names to symbols");
+                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
+                                {
+                                    File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
+                                }
+                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
+                                {
+                                    File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
+                                }
+                                if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
+                                {
+                                    File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
+                                }
+                                if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
+                                {
+                                    File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
+                                }
+                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
                                 {
                                     //AddNamesToSymbols(symbol_collection);
                                     AddNamesToSymbolsFromTableTmp(symbol_collection);
@@ -1399,7 +1416,7 @@ namespace T8SuitePro
             }
             SetProgress("Combining...");
 
-            string[] comprlines = File.ReadAllLines(Path.Combine(System.Windows.Forms.Application.StartupPath, "COMPR.TXT"));
+            string[] comprlines = File.ReadAllLines(Path.Combine(Path.GetTempPath(), "COMPR.TXT"));
             line = string.Empty;
             flashaddress = 0;
             length = 0;
