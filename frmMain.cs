@@ -2179,14 +2179,6 @@ namespace T7
                 {
                     yaxislength = GetSymbolLength(curSymbols, y_axis);
                     yaxisaddress = (int)GetSymbolAddress(curSymbols, y_axis);
-
-                    if (yaxisaddress >= 0x0F00000)
-                    {
-                        if (IsSoftwareOpen()/*length > 0x10*/)
-                        {
-                            yaxisaddress = yaxisaddress - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
-                        }
-                    }
                 }
             }
             multiplier = GetMapCorrectionFactor(y_axis);
@@ -2286,14 +2278,6 @@ namespace T7
                 {
                     xaxislength = GetSymbolLength(curSymbols, x_axis);
                     xaxisaddress = (int)GetSymbolAddress(curSymbols, x_axis);
-
-                    if (xaxisaddress >= 0x0F00000)
-                    {
-                        if (IsSoftwareOpen()/*length > 0x10*/)
-                        {
-                            xaxisaddress = xaxisaddress - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
-                        }
-                    }
                 }
             }
             multiplier = GetMapCorrectionFactor(x_axis);
@@ -2385,7 +2369,16 @@ namespace T7
             {
                 if (sh.Varname == symbolname || sh.Userdescription == symbolname)
                 {
-                    if (IsSoftwareOpen() && IsSymbolCalibration(sh.Varname) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
+                    string name = string.Empty;
+                    if (sh.Userdescription != "")
+                    {
+                        name = sh.Userdescription;
+                    }
+                    else
+                    {
+                        name = sh.Varname;
+                    }
+                    if (IsSoftwareOpen() && IsSymbolCalibration(name) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
                     {
                         return sh.Flash_start_address - GetOpenFileOffset(); 
                     }
