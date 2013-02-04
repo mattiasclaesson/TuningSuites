@@ -144,7 +144,7 @@ namespace T7
             // 
             this.xtraTabPage1.Controls.Add(this.gridControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(793, 312);
+            this.xtraTabPage1.Size = new System.Drawing.Size(797, 315);
             this.xtraTabPage1.Text = "Table view";
             // 
             // gridControl1
@@ -156,7 +156,7 @@ namespace T7
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(793, 312);
+            this.gridControl1.Size = new System.Drawing.Size(797, 315);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
