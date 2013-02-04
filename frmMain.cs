@@ -585,7 +585,8 @@ namespace T7
             {
                 if (sh.Flash_start_address > m_currentfile_size && sh.Length > 0x100 && sh.Length < 0x400)
                 {
-                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map")
+                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
+                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
                     {
                         retval = true; // found maps > 0x100 in size in sram
                         _softwareIsOpen = true;
@@ -614,7 +615,8 @@ namespace T7
             {
                 if (sh.Flash_start_address > m_currentfile_size && sh.Length > 0x100 && sh.Length < 0x400)
                 {
-                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map")
+                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
+                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
                     {
                         retval = true; // found maps > 0x100 in size in sram
                     }
@@ -2177,6 +2179,14 @@ namespace T7
                 {
                     yaxislength = GetSymbolLength(curSymbols, y_axis);
                     yaxisaddress = (int)GetSymbolAddress(curSymbols, y_axis);
+
+                    if (yaxisaddress >= 0x0F00000)
+                    {
+                        if (IsSoftwareOpen()/*length > 0x10*/)
+                        {
+                            yaxisaddress = yaxisaddress - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
+                        }
+                    }
                 }
             }
             multiplier = GetMapCorrectionFactor(y_axis);
@@ -2276,6 +2286,14 @@ namespace T7
                 {
                     xaxislength = GetSymbolLength(curSymbols, x_axis);
                     xaxisaddress = (int)GetSymbolAddress(curSymbols, x_axis);
+
+                    if (xaxisaddress >= 0x0F00000)
+                    {
+                        if (IsSoftwareOpen()/*length > 0x10*/)
+                        {
+                            xaxisaddress = xaxisaddress - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
+                        }
+                    }
                 }
             }
             multiplier = GetMapCorrectionFactor(x_axis);
@@ -13785,7 +13803,14 @@ dt.Columns.Add("SymbolName");
                 if (selrows.Length > 0)
                 {
                     SymbolHelper dr = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    symbolname = dr.Varname;
+                    if (dr.Userdescription != "")
+                    {
+                        symbolname = dr.Userdescription;
+                    }
+                    else
+                    {
+                        symbolname = dr.Varname;
+                    }
                 }
             }
             DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));

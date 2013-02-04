@@ -68,9 +68,17 @@ namespace T7
             string zaxisdescr = "";
             foreach (SymbolHelper sh in sc)
             {
-
-                sat.GetAxisSymbols(sh.Varname, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                string symboldescr = symtrans.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out subcat, m_ApplicationLanguage);
+                string name = String.Empty;
+                if (sh.Userdescription != "")
+                {
+                    name = sh.Userdescription;
+                }
+                else
+                {
+                    name = sh.Varname;
+                }
+                sat.GetAxisSymbols(name, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+                string symboldescr = symtrans.TranslateSymbolToHelpText(name, out helptext, out cat, out subcat, m_ApplicationLanguage);    
                 if (xaxis != "")
                 {
                     xaxisdescr = symtrans.TranslateSymbolToHelpText(xaxis, out helptext, out cat, out subcat, m_ApplicationLanguage);
@@ -81,7 +89,7 @@ namespace T7
                 }
                 if (xaxis != "" || yaxis != "")
                 {
-                    dt.Rows.Add(sh.Varname, symboldescr, xaxis, xaxisdescr, yaxis, yaxisdescr);
+                    dt.Rows.Add(name, symboldescr, xaxis, xaxisdescr, yaxis, yaxisdescr);
                 }
             }
             gridControl1.DataSource = dt;
