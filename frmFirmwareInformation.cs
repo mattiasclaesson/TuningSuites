@@ -148,6 +148,22 @@ namespace T7
             }
         }
 
+        public bool EmissionLimitation
+        {
+            get
+            {
+                return checkEdit14.Checked;
+            }
+            set
+            {
+                checkEdit14.Checked = value;
+            }
+        }
+
+        public void EnableEmissionLimitation(bool enabled)
+        {
+            checkEdit14.Enabled = enabled;
+        }
 
 
         public bool CatalystLightOff

@@ -76,13 +76,13 @@ namespace T7
             this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
-            this.hexViewer1 = new T7.HexViewer();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar2 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.hexViewer1 = new T7.HexViewer();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
             this.splitContainerControl1.SuspendLayout();
@@ -99,7 +99,7 @@ namespace T7
             this.editor.IsReadOnly = false;
             this.editor.Location = new System.Drawing.Point(0, 49);
             this.editor.Name = "editor";
-            this.editor.Size = new System.Drawing.Size(258, 383);
+            this.editor.Size = new System.Drawing.Size(256, 387);
             this.editor.TabIndent = 8;
             this.editor.TabIndex = 0;
             this.editor.Text = "...";
@@ -145,7 +145,7 @@ namespace T7
             this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 25);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(258, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(256, 24);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -376,7 +376,7 @@ namespace T7
             this.toolStripButton12});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(258, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(256, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -510,19 +510,6 @@ namespace T7
             this.toolStripButton12.Text = "Previous bookmark";
             this.toolStripButton12.Click += new System.EventHandler(this.toolStripButton12_Click);
             // 
-            // hexViewer1
-            // 
-            this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hexViewer1.FileName = "";
-            this.hexViewer1.Issramviewer = false;
-            this.hexViewer1.LastFilename = "";
-            this.hexViewer1.Location = new System.Drawing.Point(0, 0);
-            this.hexViewer1.Name = "hexViewer1";
-            this.hexViewer1.Size = new System.Drawing.Size(569, 432);
-            this.hexViewer1.TabIndex = 0;
-            this.hexViewer1.Load += new System.EventHandler(this.hexViewer1_Load);
-            this.hexViewer1.onSelectionChanged += new HexViewer.SelectionChanged(this.hexViewer1_onSelectionChanged);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -564,6 +551,19 @@ namespace T7
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(19, 17);
             this.toolStripStatusLabel3.Text = "...";
+            // 
+            // hexViewer1
+            // 
+            this.hexViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hexViewer1.FileName = "";
+            this.hexViewer1.Issramviewer = false;
+            this.hexViewer1.LastFilename = "";
+            this.hexViewer1.Location = new System.Drawing.Point(0, 0);
+            this.hexViewer1.Name = "hexViewer1";
+            this.hexViewer1.Size = new System.Drawing.Size(573, 436);
+            this.hexViewer1.TabIndex = 0;
+            this.hexViewer1.Load += new System.EventHandler(this.hexViewer1_Load);
+            this.hexViewer1.onSelectionChanged += new T7.HexViewer.SelectionChanged(this.hexViewer1_onSelectionChanged);
             // 
             // ctrlDisassembler
             // 

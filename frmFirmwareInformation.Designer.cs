@@ -66,6 +66,7 @@ namespace T7
             this.groupControl3 = new DevExpress.XtraEditors.GroupControl();
             this.checkEdit13 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit12 = new DevExpress.XtraEditors.CheckEdit();
+            this.checkEdit14 = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).BeginInit();
@@ -95,6 +96,7 @@ namespace T7
             this.groupControl3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -402,6 +404,7 @@ namespace T7
             // 
             // groupControl2
             // 
+            this.groupControl2.Controls.Add(this.checkEdit14);
             this.groupControl2.Controls.Add(this.checkEdit11);
             this.groupControl2.Controls.Add(this.checkEdit8);
             this.groupControl2.Controls.Add(this.checkEdit10);
@@ -453,6 +456,14 @@ namespace T7
             this.checkEdit12.Size = new System.Drawing.Size(162, 19);
             this.checkEdit12.TabIndex = 26;
             // 
+            // checkEdit14
+            // 
+            this.checkEdit14.Location = new System.Drawing.Point(377, 83);
+            this.checkEdit14.Name = "checkEdit14";
+            this.checkEdit14.Properties.Caption = "Disable emission limiting function";
+            this.checkEdit14.Size = new System.Drawing.Size(179, 19);
+            this.checkEdit14.TabIndex = 27;
+            // 
             // frmFirmwareInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -500,6 +511,7 @@ namespace T7
             this.groupControl3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -544,5 +556,6 @@ namespace T7
         private DevExpress.XtraEditors.ButtonEdit buttonEdit1;
         private DevExpress.XtraEditors.TextEdit textEdit4;
         private DevExpress.XtraEditors.LabelControl labelControl9;
+        private DevExpress.XtraEditors.CheckEdit checkEdit14;
     }
 }

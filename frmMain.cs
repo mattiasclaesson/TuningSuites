@@ -6015,6 +6015,30 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     {
                         frminfo.EnableSIDAdvancedOptions(false);
                     }
+
+                    // Pavel Angelov created this modification. 
+                    // Disable effect of the emission limitation function.
+                    if (swVersion.Trim().StartsWith("EU0AF01C"))
+                    {
+                        if (CheckBytesInFile(m_currentfile, 0x13837, 0x03, 1))
+                        {
+                            frminfo.EmissionLimitation = true;
+                            frminfo.EnableEmissionLimitation(true);
+                        }
+                        else if (CheckBytesInFile(m_currentfile, 0x13837, 0x02, 1))
+                        {
+                            frminfo.EmissionLimitation = false;
+                            frminfo.EnableEmissionLimitation(true);
+                        }
+                        else
+                        {
+                            frminfo.EnableEmissionLimitation(false);
+                        }
+                    }
+                    else
+                    {
+                        frminfo.EnableEmissionLimitation(false);
+                    }
                     
 
                     frminfo.SoftwareID = t7InfoHeader.getSoftwareVersion();
@@ -6256,6 +6280,22 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                         }
 
+                        // Disable effect of the emission limitation function.
+                        if (swVersion.Trim().StartsWith("EU0AF01C"))
+                        {
+                            if (frminfo.EmissionLimitation)
+                            {
+                                byte[] data2write = new byte[1];
+                                data2write.SetValue((byte)0x03, 0);
+                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
+                            }
+                            else
+                            {
+                                byte[] data2write = new byte[1];
+                                data2write.SetValue((byte)0x02, 0);
+                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
+                            }
+                        }
 
                         UpdateChecksum(m_currentfile);
                     }
