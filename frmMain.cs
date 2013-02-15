@@ -15963,13 +15963,17 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 if (sh.Start_address > 0)
                 {
-                    plotsel.AddItemToList(sh.Varname);
+                    if (sh.Userdescription != "")
+                    {
+                        plotsel.AddItemToList(sh.Userdescription);
+                    }
+                    else
+                    {
+                        plotsel.AddItemToList(sh.Varname);
+                    }
                 }
             }
-            plotsel.ShowDialog();
-               
-            
-            
+            plotsel.ShowDialog(); 
         }
 
         private void ImportXMLDescriptor()
