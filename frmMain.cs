@@ -10778,10 +10778,10 @@ If boost regulation reports errors you can increase the difference between boost
                                 int miscountcyl4 = 0;
                                 if (buffer.Length == 12)
                                 {
-                                    miscountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256 * 256) + (Convert.ToInt32(buffer.GetValue(1)) * 256) + Convert.ToInt32(buffer.GetValue(2));
-                                    miscountcyl2 = (Convert.ToInt32(buffer.GetValue(3)) * 256 * 256) + (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
-                                    miscountcyl3 = (Convert.ToInt32(buffer.GetValue(6)) * 256 * 256) + (Convert.ToInt32(buffer.GetValue(7)) * 256) + Convert.ToInt32(buffer.GetValue(8));
-                                    miscountcyl4 = (Convert.ToInt32(buffer.GetValue(9)) * 256 * 256) + (Convert.ToInt32(buffer.GetValue(10)) * 256) + Convert.ToInt32(buffer.GetValue(11));
+                                    miscountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                                    miscountcyl2 = (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                                    miscountcyl3 = (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
+                                    miscountcyl4 = (Convert.ToInt32(buffer.GetValue(6)) * 256) + Convert.ToInt32(buffer.GetValue(7));
                                     UpdateRealtimeInformationInTable(dt, "MisfCyl1", (float)miscountcyl1);
                                     UpdateRealtimeInformationInTable(dt, "MisfCyl2", (float)miscountcyl2);
                                     UpdateRealtimeInformationInTable(dt, "MisfCyl3", (float)miscountcyl3);
