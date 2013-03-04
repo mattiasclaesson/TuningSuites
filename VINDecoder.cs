@@ -203,16 +203,33 @@ namespace T8SuitePro
             else if (VINNumber[6] == 'N') return "6 speed manual / all wheel drive";
             else if (VINNumber[6] == 'P') return "5 speed manual / front wheel drive";
             return string.Empty;
+            /*
+4 = 4-speed manual 
+5 = 5-speed manual 
+6 = 3-speed Automatic 
+8 = 4-speed Automatic 
+             * */
         }
 
         private string DecodeBodyType(string VINNumber)
         {
             if (VINNumber.Length < 6) return string.Empty;
+            else if (VINNumber[5] == '2') return "2 door sedan";
             else if (VINNumber[5] == '3') return "3 door combi coupe (CK)";
             else if (VINNumber[5] == '4') return "4 door sedan (SN)";
             else if (VINNumber[5] == '5') return "5 door combi coupe";
+            else if (VINNumber[5] == '6') return "5-door 9000 CS (5CS)";
             else if (VINNumber[5] == '7') return "2 door convertible (CV)";
             else return string.Empty;
+            /*
+2 = 2-door sedan 
+3 = 3-door Combi Coupe (CK) 
+4 = 4-door Sedan (SN) 
+5 = 5-door Combi Coupe 
+6 = 4-door Sedan, Extended Length (CD) 
+7 = 2-door Convertible (CV) 
+
+             * */
         }
 
         private string DecodeSeries(string VINNumber)
@@ -234,6 +251,11 @@ namespace T8SuitePro
             else if (VINNumber[4] == 'K') return "Linear, Driver and passenger airbags";
             else if (VINNumber[4] == 'L') return "Vector, Driver and passenger airbags";
             else return string.Empty;
+            /*
+            B = i 
+            C = i16 
+            D = Turbo 
+             * */
         }
 
         private string DecodePlantInfo(string VINNumber)
@@ -247,6 +269,16 @@ namespace T8SuitePro
             else if (VINNumber[10] == '7') return "Nystad, Finland (900 / 9-3)";
             else if (VINNumber[10] == '8') return "Nystad, Finland (9000)";
             else if (VINNumber[10] == '9') return "Trollhättan, Sweden, Pre-production workshop";
+            /*
+1 = Trollhättan line A 
+2 = Trollhättan line B 
+3 = Arlöv, Sweden 
+5 = Malmö, Sweden 
+6 = Nystad, Finland 
+7 = Nystad, Finland 
+8 = Nystad, Finland (9000) 
+9 = Trollhättan Line C 
+             * */
             return string.Empty;
         }
 
@@ -289,6 +321,19 @@ namespace T8SuitePro
             else if (VINNumber[7] == 'W') return VINEngineType.Z19DTH;
             else if (VINNumber[7] == 'Y') return VINEngineType.B207R;
             else if (VINNumber[7] == 'Z') return VINEngineType.B308E;
+
+            /*
+B = Fuel Injection, B234 (2.3 liter 16v) 
+D = Fuel Injection, B202 (16-v) 
+E = Fuel Injection, B212 (2.1 liter 16v) 
+J = Fuel Injection, B201 (8-v) 
+L = Turbo, B202 & intercooler (16-valve) 
+M = Turbo, B234 
+N = Turbo, B204 & intercooler (2.0 liter 16v with balance shafts) 
+S = Turbo, B201 (8-valve) 
+S = Turbo, B202 Low-pressure turbo (16-valve) 
+V = 2.5 liter V-6 
+             * */
             return VINEngineType.Unknown;
         }
 
