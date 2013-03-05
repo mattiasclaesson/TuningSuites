@@ -1057,7 +1057,6 @@ namespace T8SuitePro
                         if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
                         {
                             File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                            //File.Delete(Application.StartupPath + "\\T8SuitePro.decode.exe");
                         }
 
                         // <GS-18062012> support for x64
@@ -1106,7 +1105,7 @@ namespace T8SuitePro
                             startinfo.Arguments = "-noconsole -conf t8dosb.conf";
                             startinfo.WorkingDirectory = DosBoxPath;
                             System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                            conv_proc.WaitForExit(20000);
+                            conv_proc.WaitForExit(30000);
 
                             if (!conv_proc.HasExited)
                             {
@@ -1116,9 +1115,6 @@ namespace T8SuitePro
                             else
                             {
                                 // nu door compr.txt lopen
-                                //progress.SetProgress("Adding names to symbols");
-                                //CastProgressEvent("Adding names to symbols", 50);
-
                                 Console.WriteLine("Adding names to symbols");
                                 if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
                                 {
@@ -1138,17 +1134,12 @@ namespace T8SuitePro
                                 }
                                 if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
                                 {
-                                    //AddNamesToSymbols(symbol_collection);
                                     AddNamesToSymbolsFromTableTmp(symbol_collection);
                                 }
-                                //progress.SetProgress("Cleaning up");
-                                //CastProgressEvent("Cleaning up", 55);
                             }
                         }
                         else
                         {
-
-
                             mRecreateAllExecutableResources();
                             if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
                             {
@@ -1162,7 +1153,6 @@ namespace T8SuitePro
                             ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
                             startinfo.CreateNoWindow = true;
                             startinfo.WindowStyle = ProcessWindowStyle.Hidden;
-                            //startinfo.UseShellExecute = false;
                             startinfo.WorkingDirectory = Path.GetTempPath();
                             System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
                             conv_proc.WaitForExit(10000); // wait for 10 seconds max
@@ -1197,30 +1187,11 @@ namespace T8SuitePro
                                 }
                                 if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
                                 {
-                                    //AddNamesToSymbols(symbol_collection);
                                     SetProgress("Finalizing list... ");
                                     SetProgressPercentage(85);
                                     System.Windows.Forms.Application.DoEvents();
                                     AddNamesToSymbolsFromTableTmp(symbol_collection);
                                 }
-
-                                /*string[] allSymbolNames = File.ReadAllLines(Path.GetTempPath() + "\\COMPR.TXT");
-                                foreach (SymbolHelper sh in symbol_collection)
-                                {
-                                    foreach (string symName in allSymbolNames)
-                                    {
-                                        if (symName.Length >= 24)
-                                        {
-                                            if (sh.Varname == symName.Substring(0, 24) && sh.Varname != symName)
-                                            {
-                                                Console.WriteLine(sh.Varname + " becomes " + symName);
-                                                sh.Varname = symName;
-
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }*/
                             }
                         }
                         if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
@@ -9079,7 +9050,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 3, 1)[0]);
             return retval;
         }
-        
+
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             string outputfile = Path.GetDirectoryName(m_currentfile);
