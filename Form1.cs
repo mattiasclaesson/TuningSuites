@@ -1083,13 +1083,10 @@ namespace T8SuitePro
                             }
                             File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
                             File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
-                            string Exename = Path.Combine(Path.GetTempPath(), "decode.exe");
 
-
-
-                            Exename = Path.Combine(Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "DOSBox-0.74"), "DOSBox.exe");
+                            string DosBoxPath = Path.Combine(System.Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "DOSBox-0.74");  
                             // write a dosbox.conf first
-                            string confFile = Path.Combine(Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "DOSBox-0.74"), "t8dosb.conf");
+                            string confFile = Path.Combine(DosBoxPath, "t8dosb.conf");
                             if (!File.Exists(confFile))
                             {
                                 using (StreamWriter sw = new StreamWriter(confFile, false))
@@ -1102,12 +1099,12 @@ namespace T8SuitePro
                                 }
                             }
 
-                            string argument = "-noconsole -conf t8dosb.conf";
+                            string Exename = Path.Combine(DosBoxPath, "DOSBox.exe");
                             ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
                             startinfo.CreateNoWindow = true; // TRUE
                             startinfo.WindowStyle = ProcessWindowStyle.Hidden; // hidden
-                            startinfo.Arguments = argument;
-                            startinfo.WorkingDirectory = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "DOSBox-0.74");
+                            startinfo.Arguments = "-noconsole -conf t8dosb.conf";
+                            startinfo.WorkingDirectory = DosBoxPath;
                             System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
                             conv_proc.WaitForExit(20000);
 
