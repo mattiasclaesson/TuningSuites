@@ -6187,6 +6187,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 SetCatalystLightOff(false);
                             }
+
                         }
                         if (IsBinaryBiopower())
                         {
@@ -8434,31 +8435,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
         private void barButtonItem24_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            // ask for another bin file
-        //    if (m_currentfile != string.Empty)
-        //    {
-        //        frmTransferDataWizard transWiz = new frmTransferDataWizard();
-        //        if (transWiz.ShowDialog() == DialogResult.OK)
-        //        {
-        //            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-        //            {
-        //                TransferMapsToNewBinary(openFileDialog1.FileName);
-        //                if (resumeTuning.Rows.Count > 0)
-        //                {
-        //                    TuningReport tuningrep = new TuningReport();
-        //                    tuningrep.ReportTitle = "Data transfer report";
-        //                    tuningrep.DataSource = resumeTuning;
-        //                    tuningrep.CreateReport();
-        //                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return;
-        //            }
-        //        }
-        //    }
-        //}
             // ask for another bin file
             if (m_currentfile != string.Empty)
             {
@@ -12386,6 +12362,7 @@ dt.Columns.Add("SymbolName");
             }
 
         }
+        
         private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
         {
             byte[] mapdatanew = new byte[mapdata.Length];
@@ -12401,6 +12378,7 @@ dt.Columns.Add("SymbolName");
             }
             return mapdatanew;
         }
+
         private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
         {
             //en-US
@@ -14842,6 +14820,12 @@ dt.Columns.Add("SymbolName");
 
         void airmassResult_onStartTableViewer(object sender, ctrlAirmassResult.StartTableViewerEventArgs e)
         {
+            StartAViewer(e.SymbolName);
+        }
+
+        void airmassresult_onStartTableViewer(object sender, frmAirmassResult.StartTableViewerEventArgs e)
+        {
+            // start the table viewer
             StartAViewer(e.SymbolName);
         }
 
