@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dilemma")]
 [assembly: AssemblyProduct("T7")]
-[assembly: AssemblyCopyright("Copyright ©  2012 Dilemma")]
+[assembly: AssemblyCopyright("Copyright ©  2013 Dilemma")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.5.9.0")]
-[assembly: AssemblyFileVersion("2.5.9.0")]
+[assembly: AssemblyVersion("2.6.0.0")]
+[assembly: AssemblyFileVersion("2.6.0.0")]
