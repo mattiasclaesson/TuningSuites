@@ -114,7 +114,7 @@ namespace T8SuitePro
             this.labelControl4.Size = new System.Drawing.Size(269, 47);
             this.labelControl4.TabIndex = 4;
             this.labelControl4.Text = "Actitis H., Steve Hayes, Hook, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcod" +
-                "e, J.K Nilsson, G-ice and General Failure.";
+                "e, J.K Nilsson, G-ice, General Failure and Mattias Claesson";
             // 
             // labelControl5
             // 
