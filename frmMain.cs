@@ -14713,7 +14713,7 @@ dt.Columns.Add("SymbolName");
 
         private void barButtonItem79_ItemClick(object sender, ItemClickEventArgs e)
         {
-            
+
         }
 
         private void barButtonItem80_ItemClick(object sender, ItemClickEventArgs e)
@@ -21811,6 +21811,25 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             // E85 and Automatic
             StartAViewer("TorqueCal.M_EngMaxE85TabAut");
+        }
+
+        private void exportSymbollistAsCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // export as CSV
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "CSV files|*.csv";
+            sfd.Title = "Select a filename to save the symbollist";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                using (StreamWriter sw = new StreamWriter(sfd.FileName, false))
+                {
+                    foreach (SymbolHelper sh in m_symbols)
+                    {
+                        sw.WriteLine(sh.Varname.Replace(',', '.') + "," + sh.Flash_start_address.ToString() + "," + sh.Start_address.ToString() + "," + sh.Length + "," + sh.Symbol_number.ToString());
+                    }
+                }
+                frmInfoBox info = new frmInfoBox("Export done");
+            }
         }
 
         //L Trunk locking delay (-,0,1..254 sec)
