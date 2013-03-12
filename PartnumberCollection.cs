@@ -13,7 +13,7 @@ namespace T7
             PartNumberConverter pnc = new PartNumberConverter();
             ECUInformation ecuinfo = new ECUInformation();
             ecuinfo = pnc.GetECUInfo(part, "");
-            dt.Rows.Add(ecuinfo.Carmodel.ToString(), ecuinfo.Enginetype.ToString(), part, ecuinfo.Turbomodel.ToString(), ecuinfo.Isturbo.ToString(), ecuinfo.Bhp.ToString(), ecuinfo.Torque.ToString(), ecuinfo.Softwareversion, my);
+            dt.Rows.Add(ecuinfo.Carmodel.ToString(), ecuinfo.Enginetype.ToString(), part, ecuinfo.Turbomodel.ToString(), ecuinfo.Isturbo.ToString(), ecuinfo.Bhp.ToString(), ecuinfo.Torque.ToString(), ecuinfo.Softwareversion, ecuinfo.EmissionVariant, my);
 
         }
 
@@ -28,7 +28,9 @@ namespace T7
             dt.Columns.Add("Power");
             dt.Columns.Add("Torque");
             dt.Columns.Add("SoftwareVersion");
+            dt.Columns.Add("EmissionVariant");
             dt.Columns.Add("Makeyear");
+            
 
             AddPartNumber("5169446", "2001");
             AddPartNumber("5387923", "2001-2002");
@@ -386,45 +388,23 @@ namespace T7
             AddPartNumber("55560000", "2005");
             AddPartNumber("55559503", "2005");
             AddPartNumber("5388665", "2005");
-            AddPartNumber("5387527", "2005");
             AddPartNumber("5386917", "2004");
-            AddPartNumber("5387048", "2003");
             AddPartNumber("5385034", "2005");
             AddPartNumber("5386446", "2004");
             AddPartNumber("5386107", "2003");
             AddPartNumber("5385752", "2003");
-            AddPartNumber("5385612", "2004");
-            AddPartNumber("5385455", "2003");
-            AddPartNumber("5385299", "2003");
             AddPartNumber("5384227", "2003");
-            AddPartNumber("55560000", "2005");
-            AddPartNumber("55559503", "2005");
-            AddPartNumber("5388665", "2005");
             AddPartNumber("5387527", "2005");
-            AddPartNumber("5386917", "2004");
             AddPartNumber("5387048", "2003");
-            AddPartNumber("5385034", "2005");
-            AddPartNumber("5386446", "2004");
-            AddPartNumber("5386107", "2003");
-            AddPartNumber("5385752", "2003");
             AddPartNumber("5385612", "2004");
             AddPartNumber("5385455", "2003");
             AddPartNumber("5385299", "2003");
-            AddPartNumber("5384227", "2003");
             AddPartNumber("55563630", "2002");
             AddPartNumber("5387675", "2002");
             AddPartNumber("5386313", "2002");
             AddPartNumber("5385695", "2002");
             AddPartNumber("5384409", "2002");
-            AddPartNumber("5387675", "2002");
-            AddPartNumber("5386313", "2002");
-            AddPartNumber("5385695", "2002");
-            AddPartNumber("5384409", "2002");
             AddPartNumber("55563631", "2002");
-            AddPartNumber("5387709", "2002");
-            AddPartNumber("5386271", "2002");
-            AddPartNumber("5385711", "2002");
-            AddPartNumber("5384540", "2002");
             AddPartNumber("5387709", "2002");
             AddPartNumber("5386271", "2002");
             AddPartNumber("5385711", "2002");
