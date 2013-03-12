@@ -119,7 +119,7 @@ namespace T7
             this.labelControl4.Size = new System.Drawing.Size(269, 47);
             this.labelControl4.TabIndex = 4;
             this.labelControl4.Text = "Steve Hayes, Hook, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcode, J.K Nilss" +
-                "on and General Failure, Mattias Claesson";
+                "on, General Failure and Mattias Claesson";
             this.labelControl4.DoubleClick += new System.EventHandler(this.labelControl4_DoubleClick);
             // 
             // labelControl5

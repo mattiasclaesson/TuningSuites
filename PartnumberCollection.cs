@@ -30,7 +30,6 @@ namespace T7
             dt.Columns.Add("SoftwareVersion");
             dt.Columns.Add("EmissionVariant");
             dt.Columns.Add("Makeyear");
-            
 
             AddPartNumber("5169446", "2001");
             AddPartNumber("5387923", "2001-2002");

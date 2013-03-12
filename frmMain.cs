@@ -14713,7 +14713,7 @@ dt.Columns.Add("SymbolName");
 
         private void barButtonItem79_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            
         }
 
         private void barButtonItem80_ItemClick(object sender, ItemClickEventArgs e)
