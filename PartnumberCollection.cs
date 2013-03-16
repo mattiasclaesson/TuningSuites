@@ -13,7 +13,7 @@ namespace T7
             PartNumberConverter pnc = new PartNumberConverter();
             ECUInformation ecuinfo = new ECUInformation();
             ecuinfo = pnc.GetECUInfo(part, "");
-            dt.Rows.Add(ecuinfo.Carmodel.ToString(), ecuinfo.Enginetype.ToString(), part, ecuinfo.Turbomodel.ToString(), ecuinfo.Isturbo.ToString(), ecuinfo.Bhp.ToString(), ecuinfo.Torque.ToString(), ecuinfo.Softwareversion, ecuinfo.EmissionVariant, my);
+            dt.Rows.Add(ecuinfo.Carmodel.ToString(), ecuinfo.Enginetype.ToString(), part, ecuinfo.Turbomodel.ToString(), ecuinfo.Isturbo.ToString(), ecuinfo.Bhp.ToString(), ecuinfo.Torque.ToString(), ecuinfo.Softwareversion, ecuinfo.EmissionVariant.ToString().Replace('_',' ').Replace("x"," ").Replace("None",""), my);
 
         }
 
