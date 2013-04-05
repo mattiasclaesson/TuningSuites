@@ -1588,15 +1588,15 @@ namespace T7
                         startinfo.Arguments = "/S";
                         startinfo.WorkingDirectory = /*Application.StartupPath*/Path.GetTempPath();
                         System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                        conv_proc.WaitForExit(); // wait for 10 seconds max
+                        conv_proc.WaitForExit();
                         m_appSettings.DosBoxInstalled = true;
                     }
                     return true;
                 }
             }
-            catch (Exception)
+            catch (Exception E)
             {
-
+                Console.WriteLine("Failed to install dosbox: " + E.Message);
             }
             return false;
         }
