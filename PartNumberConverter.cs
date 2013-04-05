@@ -26,6 +26,12 @@ namespace T7
                 #region SAAB95
 
                 #region B205E
+                case "5169610":
+                    returnvalue.Enginetype = EngineType.B205E;
+                    returnvalue.Carmodel = CarModel.Saab95;
+                    returnvalue.Softwareversion = "EA1WF10C.47D";
+                    returnvalue.EmissionVariant = EmissionVariant.EU;
+                    break;
                 case "5381728":
                     returnvalue.Enginetype = EngineType.B205E;
                     returnvalue.Carmodel = CarModel.Saab95;
@@ -444,6 +450,18 @@ namespace T7
                 #endregion
 
                 #region B235E
+                case "5381678":
+                    returnvalue.Enginetype = EngineType.B235E;
+                    returnvalue.Carmodel = CarModel.Saab95;
+                    returnvalue.Softwareversion = "EC0RXJCC.53J";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
+                case "5382866":
+                    returnvalue.Enginetype = EngineType.B235E;
+                    returnvalue.Carmodel = CarModel.Saab95;
+                    returnvalue.Softwareversion = "ED0TY3AC.53Q";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
 
                 case "5380803":
                     returnvalue.Enginetype = EngineType.B235E;
@@ -871,7 +889,24 @@ namespace T7
                 #endregion
 
                 #region B235R
-
+                case "5382676":
+                    returnvalue.Enginetype = EngineType.B235R;
+                    returnvalue.Carmodel = CarModel.Saab95;
+                    returnvalue.Softwareversion = "ED0SC41C.56H";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
+                case "5381702":
+                    returnvalue.Enginetype = EngineType.B235R;
+                    returnvalue.Carmodel = CarModel.Saab95;
+                    returnvalue.Softwareversion = "EC0RXECC.56E";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
+                case "5381926":
+                    returnvalue.Enginetype = EngineType.B235R;
+                    returnvalue.Carmodel = CarModel.Saab95;
+                    returnvalue.Softwareversion = "EC0SZA1C.56E";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
                 case "5380555":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
@@ -1291,7 +1326,12 @@ namespace T7
                 #region SAAB93
 
                 #region B205E
-
+                case "5382544":
+                    returnvalue.Enginetype = EngineType.B205E;
+                    returnvalue.Carmodel = CarModel.Saab93;
+                    returnvalue.Softwareversion = "EC0SC3TC.48H";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
                 case "5381843":
                     returnvalue.Enginetype = EngineType.B205E;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1445,7 +1485,12 @@ namespace T7
                 #endregion
 
                 #region B205R
-
+                case "5381637":
+                    returnvalue.Enginetype = EngineType.B205R;
+                    returnvalue.Carmodel = CarModel.Saab93;
+                    returnvalue.Softwareversion = "EC0RB54C.50A";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
+                    break;
                 case "5380472":
                     returnvalue.Enginetype = EngineType.B205R;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1533,6 +1578,12 @@ namespace T7
                 #endregion
 
                 #region B235R
+                case "5380217":
+                    returnvalue.Enginetype = EngineType.B235R;
+                    returnvalue.Carmodel = CarModel.Saab93;
+                    returnvalue.Softwareversion = "EB2US6QC.41D";
+                    returnvalue.EmissionVariant = EmissionVariant.LEV_EU;
+                    break;
                 case "5169677":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1654,12 +1705,14 @@ namespace T7
                 case "5383658":
                     returnvalue.Enginetype = EngineType.B205L;
                     returnvalue.Carmodel = CarModel.Saab93;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EC0XY3RC.45H";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5381587":
                     returnvalue.Enginetype = EngineType.B205L;
                     returnvalue.Carmodel = CarModel.Saab93;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EC0RB4TC.45H";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5169719":
                     returnvalue.Enginetype = EngineType.B205L;
@@ -1704,7 +1757,8 @@ namespace T7
                 case "5383682":
                     returnvalue.Enginetype = EngineType.B205R;
                     returnvalue.Carmodel = CarModel.Saab93;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EC0XY3RC.50A";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5383690":
                     returnvalue.Enginetype = EngineType.B205R;
@@ -1969,7 +2023,8 @@ namespace T7
                 case "5385232":
                     returnvalue.Enginetype = EngineType.B205E;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EE06Y4PC.475";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_GB;
                     break;
                 case "5384169":
                     returnvalue.Enginetype = EngineType.B205E;
@@ -2604,7 +2659,8 @@ namespace T7
                 case "5383849":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EC0X633C.56E";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "55559503":
                     returnvalue.Enginetype = EngineType.B235R;
@@ -2629,12 +2685,14 @@ namespace T7
                 case "5386107":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EE08Y51C.56Q";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5385752":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EE078G1C.56Q";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5385612":
                     returnvalue.Enginetype = EngineType.B235R;
@@ -2644,17 +2702,20 @@ namespace T7
                 case "5385455":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EE06C51C.56Q";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5385299":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EE06Y4PC.56Q";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5384227":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "EE04B0EC.56Q";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5386313":
                     returnvalue.Enginetype = EngineType.B235R;
@@ -2669,7 +2730,8 @@ namespace T7
                 case "5384409":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "ED0WZB2C.56H";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5386271":
                     returnvalue.Enginetype = EngineType.B235R;
@@ -2684,7 +2746,8 @@ namespace T7
                 case "5384540":
                     returnvalue.Enginetype = EngineType.B235R;
                     returnvalue.Carmodel = CarModel.Saab95;
-                    returnvalue.Softwareversion = "";
+                    returnvalue.Softwareversion = "ED0WY4KC.56T";
+                    returnvalue.EmissionVariant = EmissionVariant.EC2000_EU;
                     break;
                 case "5383856":
                     returnvalue.Enginetype = EngineType.B235R;
