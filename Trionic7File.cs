@@ -1409,6 +1409,7 @@ namespace T7
                                 using (StreamWriter sw = new StreamWriter(confFile, false))
                                 {
                                     sw.WriteLine("[autoexec]");
+                                    sw.WriteLine("cycles=max");
                                     sw.WriteLine("mount c \"" + Path.GetTempPath() + "\"");
                                     sw.WriteLine("c:");
                                     sw.WriteLine("decode.exe");
