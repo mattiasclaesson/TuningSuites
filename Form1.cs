@@ -1552,7 +1552,7 @@ namespace T8SuitePro
             searchsequence.SetValue((byte)0x00, 7);
             searchsequence.SetValue((byte)0x20, 8);
             int symboltableoffset = 0x30000;
-            int AddressTableOffset = 0;//GetAddressTableOffset(searchsequence);
+            int AddressTableOffset = 0;
             FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
             using (BinaryReader br = new BinaryReader(fsread))
             {
@@ -1666,8 +1666,8 @@ namespace T8SuitePro
             searchsequence.SetValue((byte)0x42, 8);
             searchsequence.SetValue((byte)0x4C, 9);
             searchsequence.SetValue((byte)0x45, 10);
-            int symboltableoffset = 0x2f000;
-            int AddressTableOffset = 0;//GetAddressTableOffset(searchsequence);
+            int symboltableoffset = 0;
+            int AddressTableOffset = 0;
             FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
             using (BinaryReader br = new BinaryReader(fsread))
             {
