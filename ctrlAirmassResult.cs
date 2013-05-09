@@ -651,26 +651,19 @@ namespace T7
 
         private int CheckAgainstTurboSpeedLimiter(SymbolCollection symbols, string filename, int rpm, int requestedairmass, ref limitType AirmassLimiter)
         {
-            //
-            //AirmassLimiter = limitType.None;
-            //Y axis = LimEngCal.n_EngSP needed for interpolation (16)
-            //X axis = none: needed for length (16)
-            // check against LimEngCal.TurboSpeedTab
-            //int cols = GetSymbolLength(m_symbols, "LimEngCal.n_EngSP") / 2;
-            int cols = GetSymbolLength(symbols, "LimEngCal.p_AirSP") / 2;
-            //int rows = 1;//GetSymbolLength(m_symbols, "BstKnkCal.n_EngYSP") / 2;
-            // only the right-most column (no knock)
-
-            //int address = (int)GetSymbolAddress(symbols, "LimEngCal.TurboSpeedTab");
-            //Console.WriteLine("TurboSpeedTab address: " + address.ToString("X8"));
-
             int[] turbospeed = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.TurboSpeedTab"), GetSymbolLength(symbols, "LimEngCal.TurboSpeedTab"));
-            int[] xaxis = new int[1];
-            xaxis.SetValue(0, 0);
-            // just get the last value (100kPa)
+            int[] nullvalue = new int[1];
+            nullvalue.SetValue(0, 0);
             int[] yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.p_AirSP"), GetSymbolLength(symbols, "LimEngCal.p_AirSP"));
-            int ambientpressure = /*1000*/ Convert.ToInt32(spinEdit1.EditValue) * 10;
-            int airmasslimit = Convert.ToInt32(GetInterpolatedTableValue(turbospeed, xaxis, yaxis, /*rpm*/ ambientpressure, 0));
+            int ambientpressure = Convert.ToInt32(spinEdit1.EditValue) * 10; // 100.0 kPa = 1000 as table value unit is 0.1 kPa
+            int airmasslimit = Convert.ToInt32(GetInterpolatedTableValue(turbospeed, nullvalue, yaxis, ambientpressure, 0));
+
+            // Second limitation is based on engine rpm to prevent the turbo from overspeeding at high rpm.
+            // Interpolated correction factor applied to the calculated airmass value from main turbospeed table LimEngCal.TurboSpeedTab.
+            int[] turbospeed2 = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.TurboSpeedTab2"), GetSymbolLength(symbols, "LimEngCal.TurboSpeedTab2"));
+            int[] yaxis2 = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.n_EngSP"), GetSymbolLength(symbols, "LimEngCal.n_EngSP"));
+            int correctionfactor = Convert.ToInt32(GetInterpolatedTableValue(turbospeed2, nullvalue, yaxis2, rpm, 0));
+            airmasslimit = airmasslimit * correctionfactor / 1000; // correction factor value unit is 0.001
             if (airmasslimit < requestedairmass)
             {
                 requestedairmass = airmasslimit;
