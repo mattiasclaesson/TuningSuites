@@ -1735,7 +1735,13 @@ namespace T8SuitePro
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
-               
+                case "DNCompCal.T_EngSP":
+                    x_axis = "";
+                    y_axis = "";
+                    x_axis_description = "";
+                    y_axis_description = "";
+                    z_axis_description = "";
+                    break;
                 case"DNCompCal.n_EngNomDriveTAB":
                     x_axis ="";
                     y_axis ="DNCompCal.T_EngSP";
@@ -1749,6 +1755,13 @@ namespace T8SuitePro
                     x_axis_description ="";
                     y_axis_description ="";
                     z_axis_description ="";
+                    break;
+                case "DNCompCal.n_EngNomManualTAB":
+                    x_axis = "";
+                    y_axis = "DNCompCal.T_EngSP";
+                    x_axis_description = "";
+                    y_axis_description = "";
+                    z_axis_description = "";
                     break;
                 case"DNCompCal.n_DeltaTAB":
                     x_axis ="";
