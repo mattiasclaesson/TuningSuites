@@ -100,8 +100,8 @@ namespace T7
             {
                 if (sh.Flash_start_address > m_currentfile_size && sh.Length > 0x100 && sh.Length < 0x400)
                 {
-                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
-                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
+                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map"
+                        || sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map")
                     {
                         retval = true; // found maps > 0x100 in size in sram
                         _softwareIsOpen = true;

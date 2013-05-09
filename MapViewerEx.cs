@@ -643,22 +643,6 @@ namespace T7
             set
             {
                 m_OnlineMode = value;
-                Console.WriteLine("RefreshMeshGraph on online mode");
-                if (m_OnlineMode)
-                {
-                    //                    surfaceGraphViewer1.ShowinBlue = true;
-
-                    RefreshMeshGraph();
-                    UpdateChartControlSlice(GetDataFromGridView(false));
-                    ShowTable(m_TableWidth, m_issixteenbit);
-                }
-                else
-                {
-                    //                    surfaceGraphViewer1.ShowinBlue = false;
-                    RefreshMeshGraph();
-                    UpdateChartControlSlice(GetDataFromGridView(false));
-                    ShowTable(m_TableWidth, m_issixteenbit);
-                }
             }
         }
 

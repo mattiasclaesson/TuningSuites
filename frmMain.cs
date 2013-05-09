@@ -1826,7 +1826,6 @@ namespace T7
                             if (m_connectedToECU)
                             {
                                 sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                //ReadMapFromSRAM(sh);
                                 ShowRealtimeMapFromECU(sh.Varname);
                             }
                             else
@@ -4570,8 +4569,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 if (m_connectedToECU)
                                 {
                                     sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                    //ReadMapFromSRAM(sh);
-                                    //ShowRealtimeMapFromECU(sh.Varname); //<GS-07102010>
                                     StartTableViewer(ECUMode.Auto);
                                 }
                                 else
@@ -4619,8 +4616,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     if (m_connectedToECU)
                                     {
                                         sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                        //ReadMapFromSRAM(sh);
-                                        ShowRealtimeMapFromECU(sh.Varname);
+                                        StartTableViewer(ECUMode.Auto);
                                     }
                                     else
                                     {
@@ -4672,8 +4668,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 if (m_connectedToECU)
                                 {
                                     sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                    //ReadMapFromSRAM(sh);
-                                    ShowRealtimeMapFromECU(sh.Varname);
+                                    StartTableViewer(ECUMode.Auto);
                                 }
                                 else
                                 {
@@ -8162,7 +8157,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symName), symName);
                         sh.Symbol_number = symbolnumber;
 
-                        Console.WriteLine("Got symnolnumber: " + symbolnumber.ToString() + " for map: " + symName);
+                        Console.WriteLine("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symName);
                         if (symbolnumber >= 0)
                         {
                             //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
@@ -9977,7 +9972,7 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void StartAViewer(string symbolname)
         {
-            if (/*CheckCANConnectivity()*/ m_connectedToECU)
+            if (m_connectedToECU)
             {
                 ShowRealtimeMapFromECU(symbolname);
             }
@@ -16223,7 +16218,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symbolname), symbolname);
                         sh.Symbol_number = symbolnumber;
 
-                        Console.WriteLine("Got symnolnumber: " + symbolnumber.ToString() + " for map: " + symbolname);
+                        Console.WriteLine("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symbolname);
                         if (symbolnumber >= 0)
                         {
                             //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
