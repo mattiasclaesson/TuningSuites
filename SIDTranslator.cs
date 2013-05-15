@@ -188,7 +188,7 @@ PrSt  Purge.Status  Status of the purge function.
                     break;
                 case "Mode":
                     sidhelper.Info = "Mode settings to see different values";
-                    sidhelper.T7Symbol = "SIDType";//"SID.ST_Mode";
+                    sidhelper.T7Symbol = "SID.ST_Mode";
                     break;
                 case "Me85":
                     sidhelper.Info = "In.X_EthanolSensor";
