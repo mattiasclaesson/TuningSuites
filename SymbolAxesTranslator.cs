@@ -1653,13 +1653,13 @@ namespace T7
                     z_axis_description = "g/s";
                     break;
                 case "JerkCal.T_AirInletTab":
-                    y_axis = "JerkCal.p_AirAmbientSP";
-                    y_axis_description = "kPa";
+                    y_axis = "JerkCal.T_AirInletSP";
+                    y_axis_description = "°C";
                     z_axis_description = "0";
                     break;
                 case "JerkCal.n_EngineTab":
-                    y_axis = "JerkCal.p_AirAmbientSP";
-                    y_axis_description = "kPa";
+                    y_axis = "JerkCal.n_EngineSP";
+                    y_axis_description = "rpm";
                     z_axis_description = "0";
                     break;
                 case "JerkCal.p_AirAmbientTab":
