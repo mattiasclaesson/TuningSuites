@@ -1310,7 +1310,7 @@ namespace T7
                                     sh.Start_address = internal_address;
                                     sh.Length = symbollength;
                                     symb_count++;
-                                    if (symbollength < 0x1000 /*&& symbollength > 0*/)
+                                    if (symbollength < 0x2500)
                                     {
                                         symbol_collection.Add(sh);
                                         if (symb_count % 500 == 0)
@@ -1321,7 +1321,7 @@ namespace T7
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Length > 0x1000: " + sh.Varname);
+                                        Console.WriteLine("Length > 0x2500: " + sh.Varname + " " + sh.Length);
                                     }
                                 }
                             }
@@ -1511,7 +1511,7 @@ namespace T7
                                 }
                             }
                         }
-
+                        /*
                         if (File.Exists(Path.GetTempPath() + "\\T7.decode.exe"))
                         {
                             File.Delete(Path.GetTempPath() + "\\T7.decode.exe");
@@ -1551,7 +1551,7 @@ namespace T7
                         if (File.Exists(Path.GetTempPath() + "\\COMPR"))
                         {
                             File.Delete(Path.GetTempPath() + "\\COMPR");
-                        }
+                        }*/
                     }
                 }
                 else
@@ -1833,9 +1833,13 @@ namespace T7
                 sw.WriteLine("");
                 foreach (SymbolHelper sh in symbol_collection)
                 {
-                    if (sh.Length < 0x1000)
+                    if (sh.Length < 0x2500)
                     {
                         sw.WriteLine(sh.Flash_start_address.ToString("X6") + " " + sh.Length.ToString("X4") + " " + sh.Symbol_type.ToString("X2"));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Length > 0x2500: " + sh.Varname + " " + sh.Length);
                     }
                 }
             }
