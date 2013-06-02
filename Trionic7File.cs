@@ -1310,7 +1310,7 @@ namespace T7
                                     sh.Start_address = internal_address;
                                     sh.Length = symbollength;
                                     symb_count++;
-                                    if (symbollength < 0x2500)
+                                    if (symbollength <= 10000)
                                     {
                                         symbol_collection.Add(sh);
                                         if (symb_count % 500 == 0)
@@ -1321,7 +1321,7 @@ namespace T7
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Length > 0x2500: " + sh.Varname + " " + sh.Length);
+                                        Console.WriteLine("Length > 10000: " + sh.Varname + " " + sh.Length);
                                     }
                                 }
                             }
@@ -1833,13 +1833,13 @@ namespace T7
                 sw.WriteLine("");
                 foreach (SymbolHelper sh in symbol_collection)
                 {
-                    if (sh.Length < 0x2500)
+                    if (sh.Length <= 10000)
                     {
                         sw.WriteLine(sh.Flash_start_address.ToString("X6") + " " + sh.Length.ToString("X4") + " " + sh.Symbol_type.ToString("X2"));
                     }
                     else
                     {
-                        Console.WriteLine("Length > 0x2500: " + sh.Varname + " " + sh.Length);
+                        Console.WriteLine("Length > 10000: " + sh.Varname + " " + sh.Length);
                     }
                 }
             }
