@@ -19046,7 +19046,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     result.SetTable(dtresult);
                     string typedescr = " (Mean values)";
                     if (type == 1) typedescr = " (Minimum values)";
-                    else if (type == 1) typedescr = " (Maximum values)";
+                    else if (type == 2) typedescr = " (Maximum values)";
                     result.Text = "Matrix [" + x + " : " + y + " : " + z + "]" + typedescr;
                     result.Show();
                 }
