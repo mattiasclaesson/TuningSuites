@@ -1815,7 +1815,6 @@ namespace T7
                     if (selrows.Length > 0)
                     {
                         SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                        //DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                         if (sh == null) return;
 
                         
@@ -1848,17 +1847,13 @@ namespace T7
                                 if (CheckCANConnectivity())
                                 {
                                     sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, symName);
-                                    ReadMapFromSRAM(sh, true);
+                                    ShowRealtimeMapFromECU(sh.Varname);
                                 }
                             }
 
                             else
                             {
                                 StartTableViewer(ECUMode.Auto);
-                                /*if (CheckCANConnectivity())
-                                {
-                                    // refresh with SRAM values?
-                                }*/
                             }
                         }
                     }
