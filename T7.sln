@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Canlibtester", "Canlibteste
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "T7SuiteLite", "T7SuiteLite\T7SuiteLite.vdproj", "{B33ED856-7138-48BB-957C-4646B42D189D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T7UnitTests", "T7\UnitTests\T7UnitTests.csproj", "{2CCA21B1-A82F-456B-A531-311E2A9318ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -237,6 +239,12 @@ Global
 		{B33ED856-7138-48BB-957C-4646B42D189D}.Debug|x86.ActiveCfg = Debug
 		{B33ED856-7138-48BB-957C-4646B42D189D}.Release|Any CPU.ActiveCfg = Release
 		{B33ED856-7138-48BB-957C-4646B42D189D}.Release|x86.ActiveCfg = Release
+		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
