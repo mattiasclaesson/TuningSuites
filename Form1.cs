@@ -2357,7 +2357,7 @@ namespace T8SuitePro
             else if (GetSymbolLength(curSymbols, symbolname) == 192) columns = 8;
             else if (GetSymbolLength(curSymbols, symbolname) == 168) columns = 7;
             else if (GetSymbolLength(curSymbols, symbolname) == 140) columns = 7;
-            else if (GetSymbolLength(curSymbols, symbolname) == 130) columns = 5;
+            else if (GetSymbolLength(curSymbols, symbolname) == 130) columns = 1;
             else if (GetSymbolLength(curSymbols, symbolname) == 128) columns = 8;
             else if (GetSymbolLength(curSymbols, symbolname) == 112) columns = 14;
             else if (GetSymbolLength(curSymbols, symbolname) == 100) columns = 10;
@@ -2726,6 +2726,7 @@ namespace T8SuitePro
             else if (symbolname == "VIOSSensorCal.p_SAITAB") returnvalue = 0.1;
             else if (symbolname == "VIOSSensorCal.V_FuelTankEUTAB") returnvalue = 0.1;
             else if (symbolname == "VIOSSensorCal.V_FuelTankUSTAB") returnvalue = 0.1;
+            else if (symbolname == "VIOSMAFCal.Q_AirInletTab") returnvalue = 0.01;
             else if (symbolname == "FFIgnCal.o_octaneTAB") returnvalue = 0.01;
             else if (symbolname == "FFIgnCal.X_hystOffsetMAP") returnvalue = 0.0009765625;
             else if (symbolname == "FFIgnCal.X_ignTAB") returnvalue = 0.0078125;
@@ -3025,6 +3026,20 @@ namespace T8SuitePro
             bool issixteenbit = true;
             int multiplier = 1;
             if (symbolname == "FuelDynCal.FuelModFacTab") issixteenbit = false;
+
+            if (symbolname == "TrqLimCal.Trq_ManGear")
+            {
+                retval = new int[8];
+                retval.SetValue(0, 0);
+                retval.SetValue(1, 1);
+                retval.SetValue(2, 2);
+                retval.SetValue(3, 3);
+                retval.SetValue(4, 4);
+                retval.SetValue(5, 5);
+                retval.SetValue(6, 6);
+                retval.SetValue(-1, 7);
+                return retval;
+            }
 
             SymbolAxesTranslator axistranslator = new SymbolAxesTranslator();
             string x_axis = string.Empty;

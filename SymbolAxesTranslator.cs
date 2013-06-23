@@ -1455,11 +1455,9 @@ namespace T8SuitePro
                     z_axis_description ="";
                     break;
                 case"VIOSMAFCal.Q_AirInletTab":
-                    x_axis ="";
-                    y_axis ="VIOSMAFCal.TicksSP";
-                    x_axis_description ="";
-                    y_axis_description ="";
-                    z_axis_description ="";
+                    y_axis = "VIOSMAFCal.TicksSP";
+                    y_axis_description ="TPU Ticks";
+                    z_axis_description ="g/s";
                     break;
                 case"AC_ControlCal.K_MinClutchDsblTmeTAB":
                     x_axis ="";
