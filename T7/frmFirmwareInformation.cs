@@ -88,7 +88,8 @@ namespace T7
             }
             set
             {
-                checkEdit2.Enabled = value;
+                // Commented out because disabling this on a biopower binary will throw the car into limp home mode.
+                //checkEdit2.Enabled = value;
             }
         }
 
