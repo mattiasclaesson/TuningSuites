@@ -10712,7 +10712,8 @@ If boost regulation reports errors you can increase the difference between boost
                                 symbolName == "ECMStat.P_Engine" ||
                                 symbolName == "IgnProt.fi_Offset" ||
                                 symbolName == "Lambda.LambdaInt" ||
-                                symbolName == "MAF.m_AirInlet")
+                                symbolName == "MAF.m_AirInlet" ||
+                                symbolName == "AdpFuelProt.MulFuelAdapt")
                             {
                                 if (value > 32000) value = -(65536 - value); // negatief maken
                             }
