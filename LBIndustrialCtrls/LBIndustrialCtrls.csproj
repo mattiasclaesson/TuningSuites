@@ -119,12 +119,15 @@
     <Compile Include="Utils\MathFunc.cs" />
     <EmbeddedResource Include="Button\LBButton.resx">
       <DependentUpon>LBButton.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Knob\LBKnob.resx">
       <DependentUpon>LBKnob.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Led\LBLed.resx">
       <DependentUpon>LBLed.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Knob\Knob.bmp" />
   </ItemGroup>

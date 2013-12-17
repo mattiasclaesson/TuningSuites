@@ -34,11 +34,15 @@
     <Reference Include="Accessibility" />
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.2.0.14173, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Be.Windows.Forms.HexBox.dll</HintPath>
+      <HintPath>..\..\Be.Windows.Forms.HexBox.dll</HintPath>
+    </Reference>
+    <Reference Include="canusbdrv_net, Version=2.0.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\canusbdrv_net.dll</HintPath>
     </Reference>
     <Reference Include="combilib-net, Version=1.0.4093.28460, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\combilib-net.dll</HintPath>
+      <HintPath>..\..\combilib-net.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.BonusSkins.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=95fc6c5621878f0a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Charts.v11.2.Core, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -67,21 +71,21 @@
     <Reference Include="DevExpress.XtraTreeList.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraVerticalGrid.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraWizard.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="FTD2XX_NET, Version=1.0.10.0, Culture=neutral, PublicKeyToken=61a8105588f51b1f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\FTD2XX_NET.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.RSS2HTMLScoutLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\obj\x86\Debug\Interop.RSS2HTMLScoutLib.dll</HintPath>
+      <HintPath>..\..\..\..\bin\Debug\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="LBIndustrialCtrls, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\LBIndustrialCtrls.dll</HintPath>
+      <HintPath>..\..\LBIndustrialCtrls\bin\Debug\LBIndustrialCtrls.dll</HintPath>
     </Reference>
     <Reference Include="LibUsbDotNet, Version=2.2.8.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\LibUsbDotNet.dll</HintPath>
+      <HintPath>..\..\LibUsbDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="Microsoft.Office.Tools.Excel.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -93,23 +97,23 @@
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
     <Reference Include="Owf.Controls.DigitalDisplayControl, Version=1.0.3433.14805, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Owf.Controls.DigitalDisplayControl.dll</HintPath>
+      <HintPath>..\..\Owf.Controls.DigitalDisplayControl\bin\Debug\Owf.Controls.DigitalDisplayControl.dll</HintPath>
     </Reference>
     <Reference Include="ProCharts, Version=1.0.4807.24515, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ProCharts.dll</HintPath>
+      <HintPath>..\..\ProCharts\bin\Debug\ProCharts.dll</HintPath>
     </Reference>
     <Reference Include="ProGauges, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ProGauges.dll</HintPath>
+      <HintPath>..\..\ProGauges\bin\Debug\ProGauges.dll</HintPath>
     </Reference>
     <Reference Include="PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\PSTaskDialog.dll</HintPath>
+      <HintPath>..\..\PSTaskDialog.dll</HintPath>
     </Reference>
     <Reference Include="RealtimeGraph, Version=1.8.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RealtimeGraph.dll</HintPath>
+      <HintPath>..\..\RealtimeGraph\bin\Debug\RealtimeGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -134,6 +138,16 @@
   </ItemGroup>
   <ItemGroup>
     <Shadow Include="Test References\T7.accessor" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="RSS2HTMLScoutLib">
+      <Guid>{26A4EA26-4358-4255-A8F9-08E12426E9C1}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

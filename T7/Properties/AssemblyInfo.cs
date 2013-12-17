@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("T7 Suite")]
 [assembly: AssemblyDescription("T7 Suite")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dilemma")]
+[assembly: AssemblyCompany("MattiasC")]
 [assembly: AssemblyProduct("T7")]
-[assembly: AssemblyCopyright("Copyright ©  2013 Dilemma")]
+[assembly: AssemblyCopyright("Copyright © 2013 Dilemma/Mattias Claesson")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("99904d4a-395b-4c82-af87-07a469fb191d")]
+[assembly: Guid("C4996994-1BE4-4c6d-8AC4-651A2B4E888A")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.6.1.0")]
-[assembly: AssemblyFileVersion("2.6.1.0")]
+[assembly: AssemblyVersion("0.0.0.1")]
+[assembly: AssemblyFileVersion("0.0.0.1")]

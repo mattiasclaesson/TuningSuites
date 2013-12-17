@@ -43,11 +43,11 @@ namespace T7
 
         private void LoadAndSelectRegistryValues()
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
 
-
-            using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\TransferSettings"))
+            using (RegistryKey Settings = SuiteKey.CreateSubKey("TransferSettings"))
             {
                 if (Settings != null)
                 {
@@ -83,9 +83,12 @@ namespace T7
         private void ClearRegistrySettings()
         {
             //TODO: Implement
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-            TempKey.DeleteSubKeyTree("T7SuitePro\\TransferSettings");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            using (RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro"))
+            {
+                SuiteKey.DeleteSubKeyTree("TransferSettings");
+            }
         }
 
         public frmTransferSelectionSymbolsSelection()
@@ -167,10 +170,11 @@ namespace T7
 
         private void SaveRegistrySetting(string key, bool value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T7SuitePro\\TransferSettings"))
+            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("TransferSettings"))
             {
                 saveSettings.SetValue(key, value);
             }

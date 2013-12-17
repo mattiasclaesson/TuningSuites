@@ -19,12 +19,12 @@ namespace T7
         public LogFilterCollection GetFiltersFromRegistry()
         {
             LogFilterCollection filters = new LogFilterCollection();
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
             try
             {
-                RegistryKey testKey = TempKey.OpenSubKey("T7SuitePro");
-                using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\LogFilters"))
+                using (RegistryKey Settings = SuiteKey.CreateSubKey("LogFilters"))
                 {
                     if (Settings != null)
                     {
@@ -54,11 +54,13 @@ namespace T7
 
         private void SaveFilter(LogFilter filter)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
+
             if (filter.Symbol != "")
             {
-                using (RegistryKey saveSettings = TempKey.CreateSubKey("T7SuitePro\\LogFilters\\" + filter.Index.ToString()))
+                using (RegistryKey saveSettings = SuiteKey.CreateSubKey("LogFilters\\" + filter.Index.ToString()))
                 {
                     saveSettings.SetValue("value", filter.Value.ToString());
                     saveSettings.SetValue("type", (int)filter.Type);
@@ -73,11 +75,12 @@ namespace T7
         private LogFilter LoadFilter(string index)
         {
             LogFilter filter = new LogFilter();
-            RegistryKey TempKey = null;
             if (index != "")
             {
-                TempKey = Registry.CurrentUser.CreateSubKey("Software");
-                using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\LogFilters\\" + index))
+                RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+                RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+                RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
+                using (RegistryKey Settings = SuiteKey.CreateSubKey("LogFilters\\" + index))
                 {
                     try
                     {

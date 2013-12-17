@@ -11846,10 +11846,12 @@ dt.Columns.Add("SymbolName");
 
         private Int32 GetValueFromRegistry(string symbolname)
         {
-            RegistryKey TempKey = null;
             Int32 win32color = 0;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-            using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\SymbolColors"))
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
+
+            using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
             {
                 if (Settings != null)
                 {
@@ -15897,10 +15899,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
         private void SaveRegistryColor(string key, int value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T7SuitePro\\SymbolColors"))
+            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("SymbolColors"))
             {
                 saveSettings.SetValue(key, value.ToString(), RegistryValueKind.String);
             }

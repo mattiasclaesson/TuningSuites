@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3FD286B8-0E90-44EF-861E-490D16A8ABD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -17,6 +17,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,10 +31,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,11 +79,15 @@
     <Reference Include="Accessibility" />
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.2.0.14173, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Be.Windows.Forms.HexBox.dll</HintPath>
+      <HintPath>..\Be.Windows.Forms.HexBox.dll</HintPath>
+    </Reference>
+    <Reference Include="canusbdrv_net, Version=2.0.0.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\canusbdrv_net.dll</HintPath>
     </Reference>
     <Reference Include="combilib-net, Version=1.0.4051.28177, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\combilib-net.dll</HintPath>
+      <HintPath>..\combilib-net.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.BonusSkins.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=95fc6c5621878f0a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Charts.v11.2.Core, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -112,17 +116,17 @@
     <Reference Include="DevExpress.XtraTreeList.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraVerticalGrid.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraWizard.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="FTD2XX_NET, Version=1.0.10.0, Culture=neutral, PublicKeyToken=61a8105588f51b1f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FTD2XX_NET.dll</HintPath>
+    </Reference>
     <Reference Include="LibUsbDotNet, Version=2.2.8.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\LibUsbDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ICSharpCode.TextEditor.dll</HintPath>
+      <HintPath>..\LibUsbDotNet.dll</HintPath>
     </Reference>
     <Reference Include="LBIndustrialCtrls, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\LBIndustrialCtrls.dll</HintPath>
+      <HintPath>..\LBIndustrialCtrls\obj\x86\Release\LBIndustrialCtrls.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="Microsoft.Office.Tools.Excel.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -133,16 +137,16 @@
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
     <Reference Include="Owf.Controls.DigitalDisplayControl, Version=1.0.3433.14805, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Owf.Controls.DigitalDisplayControl.dll</HintPath>
+      <HintPath>..\Owf.Controls.DigitalDisplayControl\bin\Debug\Owf.Controls.DigitalDisplayControl.dll</HintPath>
     </Reference>
     <Reference Include="PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\PSTaskDialog.dll</HintPath>
+      <HintPath>..\PSTaskDialog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ProGauges, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ProGauges.dll</HintPath>
+      <HintPath>..\ProGauges\obj\x86\Release\ProGauges.dll</HintPath>
     </Reference>
     <Reference Include="RealtimeGraph, Version=1.8.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -676,7 +680,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="55P_46T_rev9_csv.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -759,90 +762,119 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ctrlAirmassResult.resx">
       <DependentUpon>ctrlAirmassResult.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ctrlCompressorMap.resx">
       <DependentUpon>ctrlCompressorMap.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ctrlDisassembler.resx">
       <DependentUpon>ctrlDisassembler.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ctrlReleaseNotes.resx">
       <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FindAndReplaceForm.resx">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmADCInputConfig.resx">
       <DependentUpon>frmADCInputConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmAutoLoggingSettings.resx">
       <DependentUpon>frmAutoLoggingSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmAutotuneSettings.resx">
       <DependentUpon>frmAutotuneSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmChangeNote.resx">
       <DependentUpon>frmChangeNote.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmComportSelection.resx">
       <DependentUpon>frmComportSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.nl.resx">
       <DependentUpon>frmDefineMyMaps.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.resx">
       <DependentUpon>frmDefineMyMaps.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEast.resx">
       <DependentUpon>frmEast.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEditTuningPackage.resx">
       <DependentUpon>frmEditTuningPackage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEspSelection.resx">
       <DependentUpon>frmEspSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFileToExportSelection.resx">
       <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFuelMapAccept.resx">
       <DependentUpon>frmFuelMapAccept.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmInfoBox.resx">
       <DependentUpon>frmInfoBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmLogFilters.resx">
       <DependentUpon>frmLogFilters.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMaintainanceResult.resx">
       <DependentUpon>frmMaintainanceResult.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixResult.resx">
       <DependentUpon>frmMatrixResult.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixSelection.resx">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMultiAdapterConfig.resx">
       <DependentUpon>frmMultiAdapterConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmNotifications.resx">
       <DependentUpon>frmNotifications.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectLogbook.resx">
       <DependentUpon>frmProjectLogbook.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectProperties.resx">
       <DependentUpon>frmProjectProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectSelection.resx">
       <DependentUpon>frmProjectSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectTransactionPurge.resx">
       <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRebuildFileParameters.resx">
       <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSymbolSelection.resx">
       <DependentUpon>frmSymbolSelection.cs</DependentUpon>
@@ -875,6 +907,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmBrowseTunes.resx">
       <DependentUpon>frmBrowseTunes.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmChecksumIncorrect.resx">
       <DependentUpon>frmChecksumIncorrect.cs</DependentUpon>
@@ -890,21 +923,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmFaultcodes.resx">
       <DependentUpon>frmFaultcodes.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmImportResults.resx">
       <DependentUpon>frmImportResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartNumberList.nl.resx">
       <DependentUpon>frmPartNumberList.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartNumberList.resx">
       <DependentUpon>frmPartNumberList.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartnumberLookup.nl.resx">
       <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartnumberLookup.resx">
       <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPeMicroParameters.resx">
       <DependentUpon>frmPeMicroParameters.cs</DependentUpon>
@@ -936,9 +975,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmTransactionLog.resx">
       <DependentUpon>frmTransactionLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTransferDataWizard.resx">
       <DependentUpon>frmTransferDataWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTransferSelectionSymbolsSelection.resx">
       <SubType>Designer</SubType>
@@ -950,6 +991,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmTuningWizard.resx">
       <DependentUpon>frmTuningWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmUpdateAvailable.resx">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
@@ -957,9 +999,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmVectorlist.resx">
       <DependentUpon>frmVectorlist.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmWidebandConfig.resx">
       <DependentUpon>frmWidebandConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="HexViewer.resx">
       <DependentUpon>HexViewer.cs</DependentUpon>
@@ -967,19 +1011,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="IMapViewer.resx">
       <DependentUpon>IMapViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MapViewerEx.resx">
       <DependentUpon>MapViewerEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Measurement.resx">
       <DependentUpon>Measurement.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="SRAMCompareResults.nl.resx">
       <DependentUpon>SRAMCompareResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SRAMCompareResults.resx">
       <DependentUpon>SRAMCompareResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="TuningReport.resx">
       <DependentUpon>TuningReport.cs</DependentUpon>
@@ -1005,11 +1054,6 @@
     <Content Include="quick_restart.ico" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -1025,18 +1069,17 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AquaGauge\AquaGauge.csproj">
       <Project>{0E5542E0-FC5D-4F67-950D-9F28C5D1225A}</Project>
       <Name>AquaGauge</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj">
+    <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
+      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
       <Name>ICSharpCode.TextEditor</Name>
     </ProjectReference>

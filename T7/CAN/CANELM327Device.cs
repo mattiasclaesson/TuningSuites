@@ -508,10 +508,10 @@ namespace T7.KWP
 
         private void SaveRegistrySetting(string key, string value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T7SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T7SuitePro"))
             {
                 saveSettings.SetValue(key, value);
             }

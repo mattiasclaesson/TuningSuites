@@ -205,11 +205,12 @@ namespace RealtimeGraph
 
         private bool GetRegistryValue(string key)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
             bool retval = true;
 
-            using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\Channels"))
+            using (RegistryKey Settings = SuiteKey.CreateSubKey("Channels"))
             {
                 if (Settings != null)
                 {
@@ -695,10 +696,11 @@ namespace RealtimeGraph
 
         private void SaveRegistrySetting(string key, bool value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T7SuitePro\\Channels"))
+            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("Channels"))
             {
                 saveSettings.SetValue(key.ToUpper(), value);
             }
@@ -912,10 +914,11 @@ namespace RealtimeGraph
 
         private Int32 GetValueFromRegistry(string symbolname)
         {
-            RegistryKey TempKey = null;
             Int32 win32color = 0;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-            using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\SymbolColors"))
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
+            using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
             {
                 if (Settings != null)
                 {
@@ -947,9 +950,10 @@ namespace RealtimeGraph
             Color retval = Color.White;
             if (_colorCollection.Count == 0)
             {
-                RegistryKey TempKey = null;
-                TempKey = Registry.CurrentUser.CreateSubKey("Software");
-                using (RegistryKey Settings = TempKey.CreateSubKey("T7SuitePro\\SymbolColors"))
+                RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+                RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+                RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
+                using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
                 {
                     if (Settings != null)
                     {

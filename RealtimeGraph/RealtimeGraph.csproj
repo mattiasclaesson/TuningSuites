@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -147,6 +147,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSectionSelection.resx">
       <DependentUpon>frmSectionSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RealtimeGraphControl.resx">
       <SubType>Designer</SubType>
