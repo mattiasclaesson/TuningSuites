@@ -1024,30 +1024,30 @@ namespace T8SuitePro
 
         private void SaveRegistrySetting(string key, string value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T8SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T8SuitePro"))
             {
                 saveSettings.SetValue(key, value);
             }
         }
         private void SaveRegistrySetting(string key, Int32 value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T8SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T8SuitePro"))
             {
                 saveSettings.SetValue(key, value);
             }
         }
         private void SaveRegistrySetting(string key, bool value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T8SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T8SuitePro"))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1055,10 +1055,10 @@ namespace T8SuitePro
 
         public void SaveSettings()
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T8SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T8SuitePro"))
             {
                 saveSettings.SetValue("PanelMode", (int)_panelmode);
                 saveSettings.SetValue("MeasureAFRInLambda", m_MeasureAFRInLambda);
@@ -1345,11 +1345,10 @@ namespace T8SuitePro
         public AppSettings()
         {
             // laad alle waarden uit het register
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-            
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey Settings = TempKey.CreateSubKey("T8SuitePro"))
+            using (RegistryKey Settings = ManufacturerKey.CreateSubKey("T8SuitePro"))
             {
                 if (Settings != null)
                 {
