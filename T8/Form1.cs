@@ -4510,7 +4510,6 @@ namespace T8SuitePro
                     if ((byte)curdata.GetValue(offset) != (byte)compdata.GetValue(offset))
                     {
                         retval = false;
-                        //Console.WriteLine("Difference detected in: " + symbolname + " offset=" + offset.ToString() + " value1: " + curdata[offset].ToString("X2") + " value2: " + compdata[offset].ToString("X2"));
                         diffabs++;
                     }
                     totalvalue1 += (byte)curdata.GetValue(offset);
@@ -4522,11 +4521,13 @@ namespace T8SuitePro
                     totalvalue2 /= compdata.Length;
                 }
             }
-            diffavg = totalvalue1;
+            diffavg = totalvalue1 - totalvalue2;
             if (isSixteenBitTable(symbolname))
             {
                 diffabs /= 2;
             }
+
+            diffperc = (diffabs * 100) / length;
 
             return retval;
         }
@@ -4598,8 +4599,6 @@ namespace T8SuitePro
                             cr.SetFilterMode(m_appSettings.ShowAddressesInHex);
                             SymbolTranslator st = new SymbolTranslator();
                             int symidx = 0;
-                            //Int64 compareStartAddress = 0;
-                            //Int64 orgStartAddress = 0;
 
                             foreach (SymbolHelper sh_compare in compare_symbols)
                             {
@@ -4617,19 +4616,22 @@ namespace T8SuitePro
                                 {
                                     Console.WriteLine(E.Message);
                                 }
+                                
+                                string compareName = sh_compare.Varname;
+                                if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
+
                                 foreach (SymbolHelper sh_org in m_symbols)
                                 {
-                                    if (sh_compare.Varname == sh_org.Varname || sh_compare.Varname == sh_org.Userdescription || (sh_compare.Userdescription == sh_org.Userdescription && sh_compare.Userdescription != string.Empty) || sh_compare.Userdescription == sh_org.Varname)
-                                    {
-                                        // compare
+                                    string originalName = sh_org.Varname;
+                                    if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
 
+                                    if (compareName.Equals(originalName) && compareName != String.Empty)
+                                    {
                                         if (sh_compare.Flash_start_address > 0 && sh_compare.Flash_start_address < 0x100000)
                                         {
                                             if (sh_org.Flash_start_address > 0 && sh_org.Flash_start_address < 0x100000)
                                             {
-                                                //[Flash_start_address] > 0 AND [Flash_start_address] < 524288
-                                                //if(sh_compare.Symbol_number == 
-                                                if (!CompareSymbolToCurrentFile(sh_compare.Varname, (int)sh_compare.Flash_start_address, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
+                                                if (!CompareSymbolToCurrentFile(compareName, (int)sh_compare.Flash_start_address, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
                                                 {
                                                     category = "";
                                                     if (sh_org.Varname.Contains("."))
@@ -4655,22 +4657,11 @@ namespace T8SuitePro
                                                         }
                                                     }
 
-                                                    string userdescr = sh_org.Userdescription;
-                                                    if (userdescr == string.Empty && sh_compare.Userdescription != string.Empty) userdescr = sh_compare.Userdescription;
-                                                    if (sh_compare.Varname.StartsWith("Symbol") && userdescr != string.Empty) sh_compare.Varname = userdescr;
-                                                    if (sh_org.Varname.StartsWith("Symbol") && userdescr != string.Empty) sh_org.Varname = userdescr;
-                                                    dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(sh_compare.Varname, out ht, out cat, out subcat), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, userdescr);
-                                                    SetProgress("Difference: " + sh_compare.Varname);
-                                                    int percentage = (symidx * 100) / compare_symbols.Count;
-                                                    SetProgressPercentage(percentage);
-                                                    /*if (sh_org.Length >= 512)
-                                                    {
-                                                        Console.WriteLine("Symbol difference: " + sh_compare.Varname + " comp_len: " + sh_compare.Length.ToString("X4") + " orig_len: " + sh_org.Length.ToString("X4"));
-                                                    }*/
+                                                    dt.Rows.Add(originalName, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(compareName, out ht, out cat, out subcat), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription);
+                                                    break;
                                                 }
                                             }
                                         }
-                                        break;
                                     }
                                 }
                                 symidx++;
