@@ -150,7 +150,7 @@ namespace T8SuitePro
         public CompareResults()
         {
             InitializeComponent();
-            gridView1.RestoreLayoutFromRegistry("HKEY_CURRENT_USER\\Software\\T8SuitePro\\CompareView");
+            gridView1.RestoreLayoutFromRegistry("HKEY_CURRENT_USER\\Software\\MattiasC\\T8SuitePro\\CompareView");
         }
 
         public void SetGridWidth()
@@ -162,7 +162,7 @@ namespace T8SuitePro
         {
             if (onSymbolSelect != null)
             {
-                // haal eerst de data uit de tabel van de gridview
+                // First remove the data from the table of the gridview
                 onSymbolSelect(this, new SelectSymbolEventArgs(m_map_address, m_map_length, m_map_name, m_filename, false, m_compareSymbolCollection, symbolnumber1, symbolnumber2));
             }
         }
@@ -171,7 +171,7 @@ namespace T8SuitePro
         {
             if (onSymbolSelect != null)
             {
-                // haal eerst de data uit de tabel van de gridview
+                // First remove the data from the table of the gridview
                 onSymbolSelect(this, new SelectSymbolEventArgs(m_map_address, m_map_length, m_map_name, m_filename, true, m_compareSymbolCollection, symbolnumber1, symbolnumber2));
             }
         }
@@ -220,14 +220,14 @@ namespace T8SuitePro
                     int length = Convert.ToInt32(dr.Row["LENGTHBYTES"].ToString());
                     int symbolnumber1 = 0;
                     int symbolnumber2 = 0;
-                    /*if (dr.Row["SymbolNumber1"] != DBNull.Value)
+                    if (dr.Row["SymbolNumber1"] != DBNull.Value)
                     {
                         symbolnumber1 = Convert.ToInt32(dr.Row["SymbolNumber1"]);
                     }
                     if (dr.Row["SymbolNumber2"] != DBNull.Value)
                     {
                         symbolnumber2 = Convert.ToInt32(dr.Row["SymbolNumber2"]);
-                    }*/
+                    }
                     CastSelectEvent(address, length, Map_name, symbolnumber1, symbolnumber2);
                 }
             }
@@ -415,14 +415,14 @@ namespace T8SuitePro
                     int length = Convert.ToInt32(dr.Row["LENGTHBYTES"].ToString());
                     int symbolnumber1 = 0;
                     int symbolnumber2 = 0;
-                    /*if (dr.Row["SymbolNumber1"] != DBNull.Value)
+                    if (dr.Row["SymbolNumber1"] != DBNull.Value)
                     {
                         symbolnumber1 = Convert.ToInt32(dr.Row["SymbolNumber1"]);
                     }
                     if (dr.Row["SymbolNumber2"] != DBNull.Value)
                     {
                         symbolnumber2 = Convert.ToInt32(dr.Row["SymbolNumber2"]);
-                    }*/
+                    }
 
                     CastDifferenceEvent(address, length, Map_name, symbolnumber1, symbolnumber2);
                 }
@@ -437,7 +437,7 @@ namespace T8SuitePro
 
         private void saveLayoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            gridView1.SaveLayoutToRegistry("HKEY_CURRENT_USER\\Software\\T8SuitePro\\CompareView");
+            gridView1.SaveLayoutToRegistry("HKEY_CURRENT_USER\\Software\\MattiasC\\T8SuitePro\\CompareView");
         }
 
         private void exportAsTuningPackageToolStripMenuItem_Click(object sender, EventArgs e)
