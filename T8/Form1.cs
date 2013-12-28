@@ -4598,7 +4598,6 @@ namespace T8SuitePro
                             cr.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
                             cr.SetFilterMode(m_appSettings.ShowAddressesInHex);
                             SymbolTranslator st = new SymbolTranslator();
-                            int symidx = 0;
 
                             foreach (SymbolHelper sh_compare in compare_symbols)
                             {
@@ -4664,7 +4663,6 @@ namespace T8SuitePro
                                         }
                                     }
                                 }
-                                symidx++;
                             }
                             symNumber = 0;
                             string varnameori = string.Empty;
