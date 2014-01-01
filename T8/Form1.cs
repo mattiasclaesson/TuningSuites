@@ -5420,19 +5420,19 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 switch (engineMY)
                                 {
                                     case 'b':
-                                        retval += " MY03";
+                                        retval += " MY2003";
                                         break;
                                     case 'c':
                                     case 'd':
                                     case 'e':
-                                        retval += " MY04/05";
+                                        retval += " MY2004/2005";
                                         break;
                                     case 'f':
                                     case 'h':
-                                        retval += " MY07/08";
+                                        retval += " MY2007/2008";
                                         break;
                                     case 'g':
-                                        retval += " MY07/08 Biopower";
+                                        retval += " MY2007/2008 Biopower";
                                         break;
                                 }
                                 break;
@@ -5441,28 +5441,28 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 switch (engineMY)
                                 {
                                     case 'b':
-                                        retval += " MY03";
+                                        retval += " MY2003";
                                         break;
                                     case 'c':
                                     case 'd':
                                     case 'e':
-                                        retval += " MY04/05";
+                                        retval += " MY2004/2005";
                                         break;
                                     case 'f':
                                     case 'h':
-                                        retval += " MY05";
+                                        retval += " MY2005";
                                         break;
                                     case 'i':
-                                        retval += " MY06";
+                                        retval += " MY2006";
                                         break;
                                     case 'j':
-                                        retval += " MY07";
+                                        retval += " MY2007";
                                         break;
                                     case 'l':
-                                        retval += " MY08 Biopower";
+                                        retval += " MY2008 Biopower";
                                         break;
                                     case 'm':
-                                        retval += " MY09";
+                                        retval += " MY2009";
                                         break;
                                 }
                                 break;
@@ -5471,32 +5471,33 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 switch (engineMY)
                                 {
                                     case 'b':
-                                        retval += " MY03";
+                                        retval += " MY2003";
                                         break;
                                     case 'c':
                                     case 'd':
                                     case 'e':
-                                        retval += " MY04/05";
+                                        retval += " MY2004/2005";
                                         break;
                                     case 'f':
                                     case 'h':
-                                        retval += " MY05";
+                                        retval += " MY2005";
                                         break;
                                     case 'n':
-                                        retval += " MY06";
+                                        retval += " MY2006";
                                         break;
                                     case 's':
-                                        retval += " MY07";
+                                        retval += " MY2007";
                                         break;
                                     case 'r':
-                                        retval += " MY07/08";
+                                        retval += " MY2007/2008";
                                         break;
                                     case 'x':
                                     case 'v':
-                                        retval += " MY09";
+                                        retval += " MY2009";
                                         break;
+                                    case '6':
                                     case '8':
-                                        retval += " MY10";
+                                        retval += " MY2010";
                                         break;
                                 }
                                 break;
@@ -5506,25 +5507,45 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 {
                                     
                                     case 'e':
-                                        retval += " MY03";
+                                        retval += " MY2003";
                                         break;
                                     case 'f':
-                                        retval += " MY04";
+                                        retval += " MY2004";
                                         break;
                                     case 'g':
-                                        retval += " MY05";
+                                        retval += " MY2005";
                                         break;
                                     case 'h':
-                                        retval += " MY06";
+                                        retval += " MY2006";
                                         break;
                                     case 'i':
-                                        retval += " MY08";
+                                        retval += " MY2008";
                                         break;
                                     
                                 }
                                 break;
+                            case 85:
+                                retval = "B207R";
+                                switch (engineMY)
+                                {
+                                    case 'd':
+                                    case 'f':
+                                        retval += " MY2011";
+                                        break;
+                                }
+                                break;
                         }
                         
+                    }
+
+                    string swLabel = ids.GetValue(0).ToString();
+                    if (swLabel.Length == 4)
+                    {
+                        if (swLabel.StartsWith("FA")) retval += " MY03-06 Gasoline / front wheel drive";
+                        if (swLabel.StartsWith("FC")) retval += " MY07-11 Gasoline / front wheel drive";
+                        if (swLabel.StartsWith("FD")) retval += " MY07-10 BioPower / front wheel drive";
+                        if (swLabel.StartsWith("FE")) retval += " MY09-11 Gasoline / all wheel drive";
+                        if (swLabel.StartsWith("FF")) retval += " MY10 BioPower AWD or MY11 Gasoline/BioPower FWD/AWD";
                     }
                 }
             }
@@ -12355,6 +12376,23 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     //int symbolnumber = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
                     string symbolName = dr["SymbolName"].ToString();
+
+                    if (symbolName == "KnockCyl1" ||
+                        symbolName == "KnockCyl2" ||
+                        symbolName == "KnockCyl3" ||
+                        symbolName == "KnockCyl4" ||
+                        symbolName == "KnkCntCyl1" ||
+                        symbolName == "KnkCntCyl2" ||
+                        symbolName == "KnkCntCyl3" ||
+                        symbolName == "KnkCntCyl4" ||
+                        symbolName == "MisfCyl11" ||
+                        symbolName == "MisfCyl12" ||
+                        symbolName == "MisfCyl13" ||
+                        symbolName == "MisfCyl14")
+                    {
+                        break;
+                    }
+
                     //Console.WriteLine("Start reading " + symbolName + " at address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8"));
                     //if (symbolnumber > 0)
                     {
@@ -12409,7 +12447,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 if (value > 32000) value = -(65536 - value); // negatief maken
                             }
 
-                            else if (symbolName == "KnkDet.KnockCyl" || symbolName == "KnkDetAdap.KnkCntCyl")         // 4 length
+                            else if (symbolName == "KnkDet.KnockCyl") // 4 length
                             {
                                 int knkcountcyl1 = 0;
                                 int knkcountcyl2 = 0;
@@ -12428,8 +12466,26 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
 
                             }
-                            // 
-                            else if (symbolName == "MisfAdap.N_MisfCountCyl")         // 8 length
+                            else if (symbolName == "KnkDetAdap.KnkCntCyl") // 8 length
+                            {
+                                int knkcountcyl1 = 0;
+                                int knkcountcyl2 = 0;
+                                int knkcountcyl3 = 0;
+                                int knkcountcyl4 = 0;
+                                if (buffer.Length == 8)
+                                {
+                                    knkcountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                                    knkcountcyl2 = (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                                    knkcountcyl3 = (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
+                                    knkcountcyl4 = (Convert.ToInt32(buffer.GetValue(6)) * 256) + Convert.ToInt32(buffer.GetValue(7));
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl1", (float)knkcountcyl1);
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl2", (float)knkcountcyl2);
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl3", (float)knkcountcyl3);
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl4", (float)knkcountcyl4);
+                                }
+
+                            }
+                            else if (symbolName == "MisfAdap.N_MisfCountCyl") // 8 length
                             {
                                 int miscountcyl1 = 0;
                                 int miscountcyl2 = 0;
@@ -12473,7 +12529,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         else
                         {
-                            Console.WriteLine("Failed to read SRAM");
+                            Console.WriteLine("Failed to read SRAM, symbol: " + symbolName);
                             System.Windows.Forms.Application.DoEvents();
                         }
                     }
@@ -14219,6 +14275,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (gridViewSymbols.FocusedRowHandle >= 0)
             {
                 SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
+                // 0x100000 - 0x108000 = SRAM
                 StartSRAMTableViewer(m_currentsramfile, sh.Varname, sh.Length, (int)sh.Flash_start_address, (int)(sh.Start_address & 0x00FFFF));
             }
         }
