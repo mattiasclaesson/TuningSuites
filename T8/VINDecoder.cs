@@ -49,9 +49,14 @@ namespace T8SuitePro
         B308I,
         B204I,
         B204S,
+        B207F,
+        B207G,
+        B207H,
         B207R,
+        B207S,
         B207L,
         B207E,
+        B207M,
         Z20NET,
         D223L,
         D308L,
@@ -234,7 +239,19 @@ namespace T8SuitePro
 
         private string DecodeSeries(string VINNumber)
         {
+            bool is93MY08andafter = ((DecodeMakeyear(VINNumber) > 2007) && (VINNumber[3] == 'F'));
+
+
             if (VINNumber.Length < 5) return string.Empty;
+            else if (is93MY08andafter && VINNumber[4] == 'A') return "Saab 9-3 Linear";
+            else if (is93MY08andafter && VINNumber[4] == 'B') return "Saab 9-3 Vector";
+            else if (is93MY08andafter && VINNumber[4] == 'C') return "Saab 9-3 Aero";
+            else if (is93MY08andafter && VINNumber[4] == 'D') return "Saab 9-3 X";
+            else if (is93MY08andafter && VINNumber[4] == 'E') return "Saab 9-3 Linear Convertible";
+            else if (is93MY08andafter && VINNumber[4] == 'F') return "Saab 9-3 Vector Convertible";
+            else if (is93MY08andafter && VINNumber[4] == 'G') return "Saab 9-3 Aero Convertible";
+            
+
             else if (VINNumber[4] == 'A') return "Model series I, Driver airbag";
             else if (VINNumber[4] == 'B') return "Model series I, Driver and passenger airbags";
             else if (VINNumber[4] == 'C') return "Model series II, Driver airbag";
@@ -297,8 +314,40 @@ namespace T8SuitePro
 
         private VINEngineType DecodeEngineType(string VINNumber)
         {
+
+
+            bool is93MY08andafter = ((DecodeMakeyear(VINNumber) > 2007) && (VINNumber[3] == 'F'));
+
             if (VINNumber.Length < 8) return VINEngineType.Unknown;
 
+            //For 9.3 model after 2008 we use special decoder as engine number is reused
+            /*
+             
+A = Diesel biturbo (Z19DTR) 130 HP
+B = Diesel biturbo (Z19DTR) 160 HP
+D = Diesel biturbo (Z19DTR) 180 HP
+F = 1.8t (B207E)
+N = 2.0 T/163/BP (B207H)
+M = 2.0 T/163 (B207G)
+S = 2.0t (B207L)
+T = 2.0 TS/BP (B207S)
+U = 2.0 T/BP (B207M)
+X = 2.0 LPT/BP (B207F)
+Y = 2.0 Turbo (B207R)
+             */
+            else if (is93MY08andafter && VINNumber[7] == 'A') return VINEngineType.Z19DTR;
+            else if (is93MY08andafter && VINNumber[7] == 'B') return VINEngineType.Z19DTR;
+            else if (is93MY08andafter && VINNumber[7] == 'D') return VINEngineType.Z19DTR;
+            else if (is93MY08andafter && VINNumber[7] == 'F') return VINEngineType.B207E;
+            else if (is93MY08andafter && VINNumber[7] == 'N') return VINEngineType.B207H;
+            else if (is93MY08andafter && VINNumber[7] == 'M') return VINEngineType.B207G;
+            else if (is93MY08andafter && VINNumber[7] == 'S') return VINEngineType.B207L;
+            else if (is93MY08andafter && VINNumber[7] == 'T') return VINEngineType.B207S;
+            else if (is93MY08andafter && VINNumber[7] == 'U') return VINEngineType.B207M;
+            else if (is93MY08andafter && VINNumber[7] == 'X') return VINEngineType.B207F;
+            else if (is93MY08andafter && VINNumber[7] == 'Y') return VINEngineType.B207R;
+
+            // For all models and 9-3 before MY8
             else if (VINNumber[7] == 'A') return VINEngineType.B235L;
             else if (VINNumber[7] == 'B') return VINEngineType.Z18XE;
             else if (VINNumber[7] == 'C') return VINEngineType.B205E;
@@ -322,7 +371,7 @@ namespace T8SuitePro
             else if (VINNumber[7] == 'Y') return VINEngineType.B207R;
             else if (VINNumber[7] == 'Z') return VINEngineType.B308E;
 
-            /*
+        /*
 B = Fuel Injection, B234 (2.3 liter 16v) 
 D = Fuel Injection, B202 (16-v) 
 E = Fuel Injection, B212 (2.1 liter 16v) 
@@ -333,7 +382,7 @@ N = Turbo, B204 & intercooler (2.0 liter 16v with balance shafts)
 S = Turbo, B201 (8-valve) 
 S = Turbo, B202 Low-pressure turbo (16-valve) 
 V = 2.5 liter V-6 
-             * */
+         * */
             return VINEngineType.Unknown;
         }
 
