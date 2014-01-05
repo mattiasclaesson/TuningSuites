@@ -85,5 +85,27 @@ namespace T8Test
             Assert.AreEqual("Model series I, Driver and passenger airbags", actual.Series);
             // Serialnumber not decoded 012475
         }
+
+                /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EH55GX63510826()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EH55GX63510826";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235R, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series IV, Driver and passenger airbags", actual.Series);
+            // Serialnumber not decoded 510826
+        }
+        
     }
 }
