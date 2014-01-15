@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -154,10 +154,6 @@
     <Reference Include="Nevron.Chart.WinForm, Version=9.5.11.12, Culture=neutral, PublicKeyToken=c9bd8998e981e4ee, processorArchitecture=MSIL" />
     <Reference Include="Nevron.Presentation, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6656c5d1103e75cc, processorArchitecture=MSIL" />
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
-    <Reference Include="PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\PSTaskDialog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -835,6 +831,10 @@
     <ProjectReference Include="..\ProGauges\ProGauges.csproj">
       <Project>{A53A3F2C-5553-405D-BAF0-DE5C779D3E7B}</Project>
       <Name>ProGauges</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj">
+      <Project>{0253E98B-6374-48AA-8740-89BC2939FF77}</Project>
+      <Name>PSTaskDialog</Name>
     </ProjectReference>
     <ProjectReference Include="..\RealtimeGraph\RealtimeGraph.csproj">
       <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>
