@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3FD286B8-0E90-44EF-861E-490D16A8ABD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -138,11 +138,6 @@
     <Reference Include="Owf.Controls.DigitalDisplayControl, Version=1.0.3433.14805, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Owf.Controls.DigitalDisplayControl\bin\Debug\Owf.Controls.DigitalDisplayControl.dll</HintPath>
-    </Reference>
-    <Reference Include="PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\PSTaskDialog.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="ProGauges, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -1094,6 +1089,10 @@
     <ProjectReference Include="..\ProGauges\ProGauges.csproj">
       <Project>{A53A3F2C-5553-405D-BAF0-DE5C779D3E7B}</Project>
       <Name>ProGauges</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj">
+      <Project>{0253E98B-6374-48AA-8740-89BC2939FF77}</Project>
+      <Name>PSTaskDialog</Name>
     </ProjectReference>
     <ProjectReference Include="..\RealtimeGraph\RealtimeGraph.csproj">
       <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>

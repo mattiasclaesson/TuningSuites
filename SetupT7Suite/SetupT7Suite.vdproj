@@ -759,12 +759,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_312EDC04A98A076C142A55B167844EEF"
-        "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_31A6D6782FD74F68854CA3E21373F14B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1011,6 +1005,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4D98E8480567833EC458CAAE9792467F"
+        "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_4DF9BCFE124FC3FEC244473D4589E0DF"
         "OwnerKey" = "8:_7FB485998D37C246AA3D0FA0C020E3CD"
         "MsmSig" = "8:_UNDEFINED"
@@ -1229,6 +1229,18 @@
         {
         "MsmKey" = "8:_647B4C123AFA4484A6DBC3DE4D6569A0"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_660C07350D9FD5202ECF4EF56DD940D6"
+        "OwnerKey" = "8:_9EFA59BB91C40B2D4E530F403EFFC2FF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_660C07350D9FD5202ECF4EF56DD940D6"
+        "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2362,7 +2374,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C881AA8EA9BF118D080515AD50060B02"
-        "OwnerKey" = "8:_9EFA59BB91C40B2D4E530F403EFFC2FF"
+        "OwnerKey" = "8:_660C07350D9FD5202ECF4EF56DD940D6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2387,6 +2399,12 @@
         {
         "MsmKey" = "8:_C881AA8EA9BF118D080515AD50060B02"
         "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C881AA8EA9BF118D080515AD50060B02"
+        "OwnerKey" = "8:_9EFA59BB91C40B2D4E530F403EFFC2FF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2890,6 +2908,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4D98E8480567833EC458CAAE9792467F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E4C12AB5F7CEAFB7019116AC7606B57B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2951,6 +2975,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9EFA59BB91C40B2D4E530F403EFFC2FF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_660C07350D9FD5202ECF4EF56DD940D6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3161,12 +3191,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AD48A93735FF1C79FC0BAF87BAADE2A7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_312EDC04A98A076C142A55B167844EEF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -4987,37 +5011,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_312EDC04A98A076C142A55B167844EEF"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_312EDC04A98A076C142A55B167844EEF"
-                    {
-                    "Name" = "8:PSTaskDialog.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:PSTaskDialog.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_31A6D6782FD74F68854CA3E21373F14B"
             {
             "SourcePath" = "8:..\\Binaries\\55564156.bin"
@@ -6419,6 +6412,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_660C07350D9FD5202ECF4EF56DD940D6"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_660C07350D9FD5202ECF4EF56DD940D6"
+                    {
+                    "Name" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.VisualStudio.Tools.Applications.Hosting.v9.0.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_678213F5790448CBA6930E087A6549EC"
@@ -9873,7 +9897,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5100.730, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5128.19076, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E3C7BE6293D6DC1D9018221CD7AF4A24"
@@ -10765,7 +10789,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
         "ProductCode" = "8:{5A943E46-DFAC-4CB2-A7F2-BA668818B0C2}"
-        "PackageCode" = "8:{87A3C70E-6AD0-476D-9556-43DE16ABFD62}"
+        "PackageCode" = "8:{64C55403-4C3B-424F-9C25-6E47EBFC2E5E}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
