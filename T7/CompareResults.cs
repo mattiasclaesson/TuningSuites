@@ -144,7 +144,7 @@ namespace T7
         public CompareResults()
         {
             InitializeComponent();
-            gridView1.RestoreLayoutFromRegistry("HKEY_CURRENT_USER\\Software\\T7SuitePro\\CompareView");
+            gridView1.RestoreLayoutFromRegistry("HKEY_CURRENT_USER\\Software\\MattiasC\\T7SuitePro\\CompareView");
         }
 
         public void SetGridWidth()
@@ -431,7 +431,7 @@ namespace T7
 
         private void saveLayoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            gridView1.SaveLayoutToRegistry("HKEY_CURRENT_USER\\Software\\T7SuitePro\\CompareView");
+            gridView1.SaveLayoutToRegistry("HKEY_CURRENT_USER\\Software\\MattiasC\\T7SuitePro\\CompareView");
         }
 
         private void exportAsTuningPackageToolStripMenuItem_Click(object sender, EventArgs e)
