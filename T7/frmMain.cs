@@ -796,14 +796,12 @@ namespace T7
 
             }
             // <GS-14032011> auto add symbols for 55P / 46T files
-            //EU0AF01C.55P
-            //EU0AF01C.46T
-            if (m_current_softwareversion.Trim() == "EU0AF01C.55P" || m_current_softwareversion.Trim() == "EU0AF01C.46T")
+            if (m_current_softwareversion.Trim().StartsWith("EU0AF01C",StringComparison.OrdinalIgnoreCase))
             {
                 // only if there are less symbols described then in the known file
                 if (NamedSymbolCount() < 2000)
                 {
-                    if (MessageBox.Show("Do you want to load the known symbollist for .55P / .46T files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Do you want to load the known symbollist for EU0AF01C files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         ImportCSVDescriptor(System.Windows.Forms.Application.StartupPath + "\\55P_46T_rev9_csv.csv");
                     }
@@ -4162,7 +4160,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             foreach (SymbolHelper sh_org in m_symbols)
                             {
-                                if ((sh_compare.Varname == sh_org.Varname && !sh_compare.Varname.StartsWith("Symbolnumber")) || sh_compare.Varname == sh_org.Userdescription || sh_org.Varname == sh_compare.Userdescription || (sh_org.Userdescription == sh_compare.Userdescription && sh_compare.Userdescription != ""))
+                                if ((sh_compare.Varname == sh_org.Varname && !sh_compare.Varname.StartsWith("Symbolnumber")) || 
+                                    sh_compare.Varname == sh_org.Userdescription || 
+                                    sh_org.Varname == sh_compare.Userdescription || 
+                                    (sh_org.Userdescription == sh_compare.Userdescription && sh_compare.Userdescription != ""))
                                 {
                                     // compare
 
