@@ -15,6 +15,9 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,11 +30,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -202,6 +202,12 @@
       <DependentUpon>CompareResultSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="crc64.cs" />
+    <Compile Include="ctrlDisassembler.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctrlDisassembler.designer.cs">
+      <DependentUpon>ctrlDisassembler.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctrlReleaseNotes.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -211,6 +217,12 @@
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
     <Compile Include="EngineStatus.cs" />
+    <Compile Include="FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindAndReplaceForm.designer.cs">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FlashBlock.cs" />
     <Compile Include="FlashBlockCollection.cs" />
     <Compile Include="Form1.cs">
@@ -496,6 +508,9 @@
     <Compile Include="IMapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="LogFilter.cs" />
     <Compile Include="LogFilterCollection.cs" />
     <Compile Include="LogFilters.cs" />
@@ -517,6 +532,8 @@
     <Compile Include="Measurement.designer.cs">
       <DependentUpon>Measurement.cs</DependentUpon>
     </Compile>
+    <Compile Include="MNemonicCollection.cs" />
+    <Compile Include="MNemonicHelper.cs" />
     <Compile Include="msiupdater.cs" />
     <Compile Include="PackageExporter.cs" />
     <Compile Include="PartnumberCollection.cs" />
@@ -636,6 +653,7 @@
     <Compile Include="T8Header.cs" />
     <Compile Include="TransactionCollection.cs" />
     <Compile Include="TransactionEntry.cs" />
+    <Compile Include="TrionicFile.cs" />
     <Compile Include="TrionicProjectLog.cs" />
     <Compile Include="TrionicTransactionLog.cs" />
     <Compile Include="TuningReport.cs">
@@ -650,16 +668,21 @@
   <ItemGroup>
     <EmbeddedResource Include="AsmViewer.resx">
       <DependentUpon>AsmViewer.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="AxisBrowser.resx">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ctrlDisassembler.resx">
+      <DependentUpon>ctrlDisassembler.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctrlReleaseNotes.resx">
       <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Decode.exe" />
+    <EmbeddedResource Include="FindAndReplaceForm.resx">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmADCInputConfig.resx">
       <DependentUpon>frmADCInputConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -824,6 +847,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
+      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Owf.Controls.DigitalDisplayControl\Owf.Controls.DigitalDisplayControl.csproj">
       <Project>{5D082F88-4290-4049-9984-FCB126A7BD4E}</Project>
       <Name>Owf.Controls.DigitalDisplayControl</Name>

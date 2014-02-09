@@ -9008,6 +9008,40 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
+        private long GetStartVectorAddress(string filename, int number)
+        {
+            // startvector = second 4 byte word in the file
+            long retval = 0;
+            Int32 start_address = number * 4;
+            retval = Convert.ToInt64(readdatafromfile(m_currentfile, start_address, 1)[0]) * 256 * 256 * 256;
+            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 1, 1)[0]) * 256 * 256;
+            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 2, 1)[0]) * 256;
+            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 3, 1)[0]);
+            return retval;
+        }
+
+        private void showDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (m_currentfile != null)
+            {
+                string outputfile = Path.GetDirectoryName(m_currentfile);
+                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + ".asm");
+                System.Windows.Forms.Application.DoEvents();
+                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
+                panel.Width = this.ClientSize.Width - dockSymbols.Width;
+                long start_address = GetStartVectorAddress(m_currentfile, 1);
+                ctrlDisassembler disasmcontrol = new ctrlDisassembler();
+                disasmcontrol.Filename = m_currentfile;
+                disasmcontrol.Symbols = m_symbols;
+
+                disasmcontrol.Dock = DockStyle.Fill;
+                panel.Controls.Add(disasmcontrol);
+                panel.Text = "T8Suite Disassembler";
+                System.Windows.Forms.Application.DoEvents();
+                disasmcontrol.DisassembleFile(outputfile);
+            }
+        }
+
         private bool AssemblerViewerActive(bool ShowIfActive, string filename)
         {
             bool retval = false;
@@ -9055,10 +9089,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
                     dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
-                    //HexViewer hv = new HexViewer();
                     AsmViewer av = new AsmViewer();
                     av.Dock = DockStyle.Fill;
-                    dockPanel.Width = 700;
+                    dockPanel.Width = 800;
                     dockPanel.Controls.Add(av);
                     SetProgress("Loading assembler file ...");
                     av.LoadDataFromFile(filename, m_symbols);
@@ -9073,23 +9106,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-
-        private long GetStartVectorAddress(string filename, int number)
-        {
-            // startvector = second 4 byte word in the file
-            long retval = 0;
-            Int32 start_address = number * 4;
-            retval = Convert.ToInt64(readdatafromfile(m_currentfile, start_address, 1)[0]) * 256 * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 1, 1)[0]) * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 2, 1)[0]) * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 3, 1)[0]);
-            return retval;
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void showFullDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string outputfile = Path.GetDirectoryName(m_currentfile);
-            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + ".asm");
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
             if (!AssemblerViewerActive(true, outputfile))
             {
                 SetProgress("Start disassembler");
