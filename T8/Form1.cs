@@ -667,7 +667,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine("TryOpenFile filed: " + filename + " err: " + E.Message);
+                Console.WriteLine("TryOpenFile failed: " + filename + " err: " + E.Message);
             }
             foreach (SymbolHelper sh in /*m_symbols*/ symbol_collection)
             {
@@ -5464,6 +5464,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                     case 'm':
                                         retval += " MY2009";
                                         break;
+                                    case 't':
+                                        retval = "B207M/F MY2011";
+                                        break;
                                 }
                                 break;
                             case 82:
@@ -5497,6 +5500,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                         break;
                                     case '6':
                                     case '8':
+                                    case 'z':
                                         retval += " MY2010";
                                         break;
                                 }
@@ -5528,6 +5532,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 retval = "B207R";
                                 switch (engineMY)
                                 {
+                                    case 'b':
+                                        retval = "B207S MY2011";
+                                        break;
                                     case 'd':
                                     case 'f':
                                         retval += " MY2011";
@@ -9000,6 +9007,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 dockPanel.Width = 700;
             }
         }
+
         private bool AssemblerViewerActive(bool ShowIfActive, string filename)
         {
             bool retval = false;
@@ -9064,6 +9072,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 dockManager1.EndUpdate();
             }
         }
+
 
         private long GetStartVectorAddress(string filename, int number)
         {
