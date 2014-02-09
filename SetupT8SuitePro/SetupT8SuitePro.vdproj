@@ -2502,6 +2502,11 @@
             "AssemblyAsmDisplayName" = "8:ProGauges, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_3149D7768FB1DC6E8E130B49B07F971B"
+                    {
+                    "Name" = "8:ProGauges.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ProGauges.dll"
             "TargetName" = "8:"
@@ -2834,6 +2839,11 @@
             "AssemblyAsmDisplayName" = "8:RealtimeGraph, Version=1.8.7.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_542BF347E33541DF1C794C6F69E2FCF3"
+                    {
+                    "Name" = "8:RealtimeGraph.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:RealtimeGraph.dll"
             "TargetName" = "8:"
@@ -4981,6 +4991,11 @@
             "AssemblyAsmDisplayName" = "8:Interop.RSS2HTMLScoutLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_F6C587C12C01CDFA6F579972E006FDCC"
+                    {
+                    "Name" = "8:Interop.RSS2HTMLScoutLib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Interop.RSS2HTMLScoutLib.dll"
             "TargetName" = "8:"
@@ -5231,14 +5246,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{D3137197-469E-4DE1-BF88-FFDED158D47C}"
-        "PackageCode" = "8:{3248469B-051B-4C68-BFBB-E4A4CAB69756}"
+        "ProductCode" = "8:{390A3316-E918-4F77-AEEA-53E8262F07C3}"
+        "PackageCode" = "8:{F230628B-9AE7-4A53-9B16-FADA8B92004A}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.1"
+        "ProductVersion" = "8:0.0.2"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
