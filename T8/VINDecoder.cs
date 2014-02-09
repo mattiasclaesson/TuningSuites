@@ -88,7 +88,9 @@ namespace T8SuitePro
         GarretTB2529,
         GarretTB2531,
         MitsubishiTD04,
-        GarrettT17
+        GarrettT17,
+        GarrettGT2052,
+        MitsubishiTD04L_11TK
     }
 
     public class VINDecoder
@@ -110,7 +112,7 @@ namespace T8SuitePro
                 _carInfo.PlantInfo = DecodePlantInfo(VINNumber);
                 _carInfo.Series = DecodeSeries(VINNumber, _carInfo.CarModel, _carInfo.Makeyear);
                 _carInfo.Body = DecodeBodyType(VINNumber);
-                _carInfo.TurboModel = DecodeTurboModel(_carInfo.EngineType, _carInfo.CarModel);
+                _carInfo.TurboModel = DecodeTurboModel(_carInfo.EngineType, _carInfo.CarModel, _carInfo.Makeyear);
                 _carInfo.GearboxDescription = DecodeTransmissionType(VINNumber);
                 _carInfo.Valid = true;
             }
@@ -144,7 +146,7 @@ namespace T8SuitePro
                 _carInfo.PlantInfo = "";
                 _carInfo.Series = DecodeSeries(VINNumber, _carInfo.CarModel, _carInfo.Makeyear);
                 _carInfo.Body = DecodeBodyType(VINNumber);
-                _carInfo.TurboModel = DecodeTurboModel(_carInfo.EngineType, _carInfo.CarModel);
+                _carInfo.TurboModel = DecodeTurboModel(_carInfo.EngineType, _carInfo.CarModel, _carInfo.Makeyear);
                 _carInfo.GearboxDescription = DecodeTransmissionType(VINNumber);
                 _carInfo.Valid = true;
             }
@@ -159,7 +161,7 @@ namespace T8SuitePro
             else return VINCarModel.Unknown;
         }
 
-        private VINTurboModel DecodeTurboModel(VINEngineType vINEngineType, VINCarModel carModel)
+        private VINTurboModel DecodeTurboModel(VINEngineType vINEngineType, VINCarModel carModel, int makeYear)
         {
             // depending on enginetype and vehicletype, determine turbo type
             switch (vINEngineType)
@@ -193,7 +195,10 @@ namespace T8SuitePro
                     return VINTurboModel.MitsubishiTD04;
                 case VINEngineType.B207E:
                 case VINEngineType.B207L:
-                    return VINTurboModel.GarrettT17;
+                    if (makeYear > 2006)
+                        return VINTurboModel.MitsubishiTD04L_11TK;
+                    else
+                        return VINTurboModel.GarrettGT2052;
                 case VINEngineType.B207R:
                     return VINTurboModel.MitsubishiTD04;
                 case VINEngineType.B284R:
