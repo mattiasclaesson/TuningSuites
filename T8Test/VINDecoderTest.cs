@@ -237,6 +237,27 @@ namespace T8Test
         ///A test for DecodeVINNumber
         ///</summary>
         [TestMethod()]
+        public void DecodeVINNumberTestYSCFD56S782300776()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YSCFD56S782300776";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.CadillacBTS, actual.CarModel);
+            Assert.AreEqual(2008, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B207L, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.Unknown, actual.TurboModel);
+            Assert.AreEqual("6 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line B (900 / 9-3)", actual.PlantInfo);
+            Assert.AreEqual("Model series II, Driver and passenger airbags", actual.Series);
+            // Serialnumber not decoded 300776
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
         public void DecodeVINNumberTestW0L0ZCF3551095720()
         {
             VINDecoder target = new VINDecoder();
