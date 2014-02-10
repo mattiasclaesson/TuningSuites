@@ -1622,7 +1622,6 @@ namespace T7
                 saveSettings.SetValue("AreaCorrectionPercentage", m_AreaCorrectionPercentage);
                 saveSettings.SetValue("AutoUpdateFuelMap", m_AutoUpdateFuelMap);
                 saveSettings.SetValue("CellStableTime_ms", m_CellStableTime_ms);
-                //saveSettings.SetValue("UseNewMapViewer", m_UseNewMapViewer);
                 saveSettings.SetValue("RequestProjectNotes", m_RequestProjectNotes);
                 saveSettings.SetValue("CorrectionPercentage", m_CorrectionPercentage);
                 saveSettings.SetValue("DiscardClosedThrottleMeasurements", m_DiscardClosedThrottleMeasurements);
