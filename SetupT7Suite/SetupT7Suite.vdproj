@@ -2253,12 +2253,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B925EAC341F14D5CA6A384E0AC0F1E7C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B963B5D458A44BEFAF01CD3F2C1E52C8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2908,12 +2902,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4D98E8480567833EC458CAAE9792467F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E4C12AB5F7CEAFB7019116AC7606B57B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3191,6 +3179,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AD48A93735FF1C79FC0BAF87BAADE2A7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4D98E8480567833EC458CAAE9792467F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -5700,6 +5694,37 @@
                     }
                 }
             "SourcePath" = "8:DevExpress.XtraPivotGrid.v11.2.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4D98E8480567833EC458CAAE9792467F"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:PSTaskDialog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_4D98E8480567833EC458CAAE9792467F"
+                    {
+                    "Name" = "8:PSTaskDialog.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:PSTaskDialog.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
@@ -8774,26 +8799,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B925EAC341F14D5CA6A384E0AC0F1E7C"
-            {
-            "SourcePath" = "8:..\\Binaries\\5383302.bin"
-            "TargetName" = "8:5383302.bin"
-            "Tag" = "8:"
-            "Folder" = "8:_DED708C7692C44C4BA82A8B43730473A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B963B5D458A44BEFAF01CD3F2C1E52C8"
             {
             "SourcePath" = "8:..\\Binaries\\5380779.bin"
@@ -9897,7 +9902,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5128.19076, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5169.37958, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E3C7BE6293D6DC1D9018221CD7AF4A24"
