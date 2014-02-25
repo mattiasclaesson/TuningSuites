@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace T7
 {
     class SymbolAxesTranslator
     {
-       
-        //                AirCompCal.AirTab heeft dezelfde y as als AirCompCal.AirLimTab
+        // AirCompCal.AirTab same y axis as AirCompCal.AirLimTab
 
         public bool GetAxisSymbols(string symbolname, out string x_axis, out string y_axis, out string x_axis_description, out string y_axis_description, out string z_axis_description)
         {
