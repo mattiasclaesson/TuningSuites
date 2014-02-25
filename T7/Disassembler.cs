@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-
 namespace T7
 {
     public class Disassembler
     {
-
         public enum ProgressType : int
         {
             DisassemblingVectors,
@@ -56,7 +54,6 @@ namespace T7
 
         public delegate void Progress(object sender, ProgressEventArgs e);
         public event Disassembler.Progress onProgress;
-
 
         uint swap = 0;
         //FILE *IN, *OUT, *TST;
@@ -517,7 +514,7 @@ namespace T7
             symbol = string.Empty;
             foreach(SymbolHelper sh in m_symbols)
             {
-                if (sh.Flash_start_address == caddr)
+                if (caddr != 0 && sh.Flash_start_address == caddr)
                 {
                     if (sh.Userdescription != "")
                     {
@@ -529,9 +526,9 @@ namespace T7
                     }
                     retval = 1;
                 }
-                else if (sh.Start_address == caddr)
+                else if (caddr != 0 && sh.Start_address == caddr)
                 {
-                    if(sh.Userdescription != "")
+                    if (sh.Userdescription != "")
                     {
                         symbol = "RAM_" + sh.Userdescription;
                     }
@@ -953,7 +950,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                     switch (dstmod)
                     {
                         case 0x01:
-//                            sprintf(str, "MOVEA.%c\t%s,%s\0", movesize[itype][0], sour, dest);
+                            //sprintf(str, "MOVEA.%c\t%s,%s\0", movesize[itype][0], sour, dest);
                             str = "MOVEA." + (string)movesize.GetValue(itype) + "\t" + sour + "," + dest;
                             ilen++;
                             if (souraddr != 0) A_reg.SetValue(souraddr, dstreg);
@@ -1836,7 +1833,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
         private void CastProgressEvent(string info, int percentage, ProgressType type)
         {
-            if(onProgress != null)
+            if (onProgress != null)
             {
                 onProgress(this, new ProgressEventArgs(info, percentage, type));
             }
@@ -1844,7 +1841,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
         private MNemonicCollection _labels = new MNemonicCollection();
 
-        private MNemonicCollection findLabels(Trionic7File m_trionicFile, string inputfile)
+        private MNemonicCollection findLabels(string inputfile)
         {
             _labels = new MNemonicCollection();
             uint i, t, seg, adr;
@@ -1884,17 +1881,18 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             func_count = 0;
             FileInfo fi = new FileInfo(inputfile);
             CastProgressEvent("Start analyzing", 0, ProgressType.PassOne);
-            for (int vec = 1; vec <= 127; vec++)
+            long[] adresses = Trionic7File.GetVectorAddresses(inputfile);
+            for (int vec = 1; vec < adresses.Length; vec++)
             {
-                int percentage = (vec * 100) / 127;
+                int percentage = (vec * 100) / adresses.Length;
                 CastProgressEvent("Analyzing", percentage, ProgressType.PassOne);
-                long vector = m_trionicFile.GetStartVectorAddress(inputfile, vec);
-                long len = fi.Length;
-                if (vector != 0 && vector < len * 2)
+                long vector = adresses[vec];
+
+                if (vector != 0 && vector < fi.Length)
                 {
                     try
                     {
-                        LoadLabels(vector, fsbr, br, 0);//len);
+                        LoadLabels(vector, fsbr, br, 0);
                     }
                     catch (Exception E)
                     {
@@ -1902,21 +1900,22 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                     }
                 }
             }
+
             Console.WriteLine("Found " + _labels.Count.ToString() + " in pass one");
             foreach (MNemonicHelper label in _labels)
             {
-                if (label.Address == 0x4C76E) Console.WriteLine("Found start pointer!");
+                if (label.Address == adresses[1]) Console.WriteLine("Found start pointer!");
             }
             return _labels;
         }
 
-        public bool DisassembleFile(Trionic7File m_trionicFile, string inputfile, string outputfile/*, long startaddress*/, SymbolCollection symbols)
+        public bool DisassembleFile(Trionic7File m_trionicFile, string inputfile, string outputfile, SymbolCollection symbols)
         {
             // recursive method when jsr was found
             mnemonics = new MNemonicCollection();
             labels = new MNemonicCollection();
 
-            /*labels = */findLabels(m_trionicFile, inputfile);
+            findLabels(inputfile);
 
             _passOne = false;
 
@@ -1966,21 +1965,18 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             func_count = 0;
             FileInfo fi = new FileInfo(inputfile);
             CastProgressEvent("Starting disassembly", 0, ProgressType.DisassemblingVectors);
-            for (int vec = 1; vec <= 127; vec++)
+            long[] vectors = Trionic7File.GetVectorAddresses(inputfile);
+            for (int vec = 0; vec < vectors.Length; vec++)
             {
-                int percentage = (vec * 100) / 127;
+                int percentage = ((vec+1) * 100) / vectors.Length;
                 CastProgressEvent("Disassembling vectors", percentage, ProgressType.DisassemblingVectors);
-                long vector = m_trionicFile.GetStartVectorAddress(inputfile, vec);
+                long vector = Convert.ToInt64(vectors.GetValue(vec));
 
-                long len = fi.Length;
-                //if (len == 0x20000) len = 0x60000;
-
-                if (vector != 0 && vector < len * 2)
+                if (vector != 0 && vector < fi.Length)
                 {
-                    //Console.WriteLine("Vector: " + vec.ToString() + " addr: " + vector.ToString("X8"));
                     try
                     {
-                        DisassembleFunction(vector, symbols, fsbr, br, 0);//len);
+                        DisassembleFunction(vector, symbols, fsbr, br, 0);
                     }
                     catch (Exception E)
                     {
@@ -1992,152 +1988,18 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             CastProgressEvent("Translating vector labels", 0, ProgressType.TranslatingVectors);
             //Console.WriteLine("Translating vector labels");
             
-            long[] vectors = m_trionicFile.GetVectorAddresses(m_trionicFile.FileName);
             int lblcount = 0;
+            string[] names = Trionic7File.GetVectorNames();
             foreach (MNemonicHelper label in labels)
             {
                 //Console.WriteLine("label: " + label.Address.ToString("X8") + " " + label.Mnemonic);
                 int percentage = (lblcount++ * 100) / labels.Count;
                 CastProgressEvent("Translating vector labels", percentage, ProgressType.TranslatingVectors);
-                for (i = 0; i < 128; i++)
+                for (i = 0; i < vectors.Length; i++)
                 {
-                    if (label.Address == /*m_trionicFile.GetStartVectorAddress(m_trionicFileInformation.Filename, i)*/ Convert.ToInt64(vectors.GetValue(i)))
+                    if (label.Address == Convert.ToInt64(vectors.GetValue(i)))
                     {
-                        switch (i)
-                        {
-                            case 1:
-                                label.Mnemonic = "INIT_PROGRAM:";
-                                break;
-                            case 2:
-                                label.Mnemonic = "BUS_ERROR:";
-                                break;
-                            case 3:
-                                label.Mnemonic = "ADDRESS_ERROR:";
-                                break;
-                            case 4:
-                                label.Mnemonic = "ILLEGAL_INSTRUCTION:";
-                                break;
-                            case 5:
-                                label.Mnemonic = "DIVIDE_BY_ZERO:";
-                                break;
-                            case 6:
-                                label.Mnemonic = "CHK12_INSTR:";
-                                break;
-                            case 7:
-                                label.Mnemonic = "TRAPx_INSTR:";
-                                break;
-                            case 8:
-                                label.Mnemonic = "PRIV_VIOLATION:";
-                                break;
-                            case 9:
-                                label.Mnemonic = "TRACE:";
-                                break;
-                            case 10:
-                                label.Mnemonic = "L1010_EMUL:";
-                                break;
-                            case 11:
-                                label.Mnemonic = "L1111_EMUL:";
-                                break;
-                            case 12:
-                                label.Mnemonic = "HW_BREAKPOINT:";
-                                break;
-                            case 13:
-                                label.Mnemonic = "RESERVED:";
-                                break;
-                            case 14:
-                                label.Mnemonic = "FMT_ERR1:";
-                                break;
-                            case 15:
-                            case 16:
-                            case 17:
-                            case 18:
-                            case 19:
-                            case 20:
-                            case 21:
-                            case 22:
-                                label.Mnemonic = "UNASSIGNED:";
-                                break;
-                            case 23:
-                                label.Mnemonic = "FFFFFFFF:";
-                                break;
-                            case 24:
-                                label.Mnemonic = "SPURIOUS_INTERRUPT:";
-                                break;
-                            case 25:
-                                label.Mnemonic = "LEVEL1_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 26:
-                                label.Mnemonic = "LEVEL2_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 27:
-                                label.Mnemonic = "LEVEL3_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 28:
-                                label.Mnemonic = "LEVEL4_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 29:
-                                label.Mnemonic = "LEVEL5_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 30:
-                                label.Mnemonic = "LEVEL6_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 31:
-                                label.Mnemonic = "LEVEL7_INTERUPT_AUTOVECTOR:";
-                                break;
-                            case 32:
-                                label.Mnemonic = "TAP0_INSTRUCTION_VECTOR:";
-                                break;
-                            case 33:
-                                label.Mnemonic = "TAP1_INSTRUCTION_VECTOR:";
-                                break;
-                            case 34:
-                                label.Mnemonic = "TAP2_INSTRUCTION_VECTOR:";
-                                break;
-                            case 35:
-                                label.Mnemonic = "TAP3_INSTRUCTION_VECTOR:";
-                                break;
-                            case 36:
-                                label.Mnemonic = "TAP4_INSTRUCTION_VECTOR:";
-                                break;
-                            case 37:
-                                label.Mnemonic = "TAP5_INSTRUCTION_VECTOR:";
-                                break;
-                            case 38:
-                                label.Mnemonic = "TAP6_INSTRUCTION_VECTOR:";
-                                break;
-                            case 39:
-                                label.Mnemonic = "TAP7_INSTRUCTION_VECTOR:";
-                                break;
-                            case 40:
-                                label.Mnemonic = "TAP8_INSTRUCTION_VECTOR:";
-                                break;
-                            case 41:
-                                label.Mnemonic = "TAP9_INSTRUCTION_VECTOR:";
-                                break;
-                            case 42:
-                                label.Mnemonic = "TAP10_INSTRUCTION_VECTOR:";
-                                break;
-                            case 43:
-                                label.Mnemonic = "TAP11_INSTRUCTION_VECTOR:";
-                                break;
-                            case 44:
-                                label.Mnemonic = "TAP12_INSTRUCTION_VECTOR:";
-                                break;
-                            case 45:
-                                label.Mnemonic = "TAP13_INSTRUCTION_VECTOR:";
-                                break;
-                            case 46:
-                                label.Mnemonic = "TAP14_INSTRUCTION_VECTOR:";
-                                break;
-                            case 47:
-                                label.Mnemonic = "TAP15_INSTRUCTION_VECTOR:";
-                                break;
-                            default:
-                                label.Mnemonic = "VECTOR_" + i.ToString() + ":";
-                                break;
-                        }
-
-                        break;
+                        label.Mnemonic = names[i].Replace(" ","_").ToUpper() + ":";
                     }
                 }
             }
@@ -2223,7 +2085,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             return true;
 
         }
-
+        
         private MNemonicCollection labels;
 
         public MNemonicCollection Labels
@@ -2241,8 +2103,6 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
         }
 
         private int func_count = 0;
-
-        
 
         private void TranslateLabels(MNemonicHelper mnemonic)
         {
@@ -2426,48 +2286,6 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 }
             }
 
-            // assign a meaningful name to the function if we can
-            // we know what the rom->ram copy routine looks like
-            /*bool _has_Rom_IgnitionMap = false;
-            bool _has_Ram_IgnitionMap = false;
-            bool _has_Rom_FuelMap = false;
-            bool _has_Ram_FuelMap = false;
-            bool _has_KontrollOrd = false;
-            bool _has_Da_insp = false;
-            bool _has_Tq = false;
-            bool _has_EB = false;
-            bool _has_IdleNeutral = false;
-            string _functionName = string.Empty;
-            foreach (MNemonicHelper functionHelper in functionList)
-            {
-                //Console.WriteLine(functionHelper.Address.ToString("X8") + " " + functionHelper.Mnemonic);
-                if (functionHelper.Mnemonic.Contains("ROM_Ign_map_0!")) _has_Rom_IgnitionMap = true;
-                if (functionHelper.Mnemonic.Contains("RAM_Ign_map_0!")) _has_Ram_IgnitionMap = true;
-                if (functionHelper.Mnemonic.Contains("RAM_Insp_mat!")) _has_Ram_FuelMap = true;
-                if (functionHelper.Mnemonic.Contains("ROM_Insp_mat!")) _has_Rom_FuelMap = true;
-                if (functionHelper.Mnemonic.Contains("#ABCD")) _has_KontrollOrd = true;
-                if (functionHelper.Mnemonic.Contains("Da_insp")) _has_Da_insp = true;
-                if (functionHelper.Mnemonic.Contains("#EB")) _has_EB = true;
-                if (functionHelper.Mnemonic.Contains("Tq")) _has_Tq = true;
-                if (functionHelper.Mnemonic.Contains("Idle_rpm_offNeutral")) _has_IdleNeutral = true;
-                //Idle_rpm_offNeutral
-            }
-
-
-            if (_has_Ram_IgnitionMap && _has_Rom_IgnitionMap) _functionName = "CopyIgnitionRomToRam:";
-            else if (_has_Ram_FuelMap && _has_Rom_FuelMap) _functionName = "CopyFuelRomToRam:";
-            else if (_has_Ram_IgnitionMap) _functionName = "CalculateIgnitionAngle:";
-            else if (_has_Ram_FuelMap && !_has_Rom_FuelMap) _functionName = "CalculateInjectionDuration:";
-            else if (_has_KontrollOrd) _functionName = "CheckSRAMIntegrity:";
-            else if (_has_Da_insp) _functionName = "CalcInjectionForCylinder:";
-            else if (_has_EB && _has_Tq) _functionName = "CalculateTorque:";
-            else if (_has_IdleNeutral) _functionName = "DetermineIdleStatus:";
-            
-            if (_functionName != string.Empty)
-            {
-                label.Mnemonic = _functionName;                
-            }*/
-            
 
             //Console.WriteLine("Done with function: " + mnemonics.Count.ToString());
         }
@@ -2576,49 +2394,6 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 {
                 }
             }
-
-            // assign a meaningful name to the function if we can
-            // we know what the rom->ram copy routine looks like
-           /* bool _has_Rom_IgnitionMap = false;
-            bool _has_Ram_IgnitionMap = false;
-            bool _has_Rom_FuelMap = false;
-            bool _has_Ram_FuelMap = false;
-            bool _has_KontrollOrd = false;
-            bool _has_Da_insp = false;
-            bool _has_Tq = false;
-            bool _has_EB = false;
-            bool _has_IdleNeutral = false;
-            string _functionName = string.Empty;
-            foreach (MNemonicHelper functionHelper in functionList)
-            {
-                //Console.WriteLine(functionHelper.Address.ToString("X8") + " " + functionHelper.Mnemonic);
-                if (functionHelper.Mnemonic.Contains("ROM_Ign_map_0!")) _has_Rom_IgnitionMap = true;
-                if (functionHelper.Mnemonic.Contains("RAM_Ign_map_0!")) _has_Ram_IgnitionMap = true;
-                if (functionHelper.Mnemonic.Contains("RAM_Insp_mat!")) _has_Ram_FuelMap = true;
-                if (functionHelper.Mnemonic.Contains("ROM_Insp_mat!")) _has_Rom_FuelMap = true;
-                if (functionHelper.Mnemonic.Contains("#ABCD")) _has_KontrollOrd = true;
-                if (functionHelper.Mnemonic.Contains("Da_insp")) _has_Da_insp = true;
-                if (functionHelper.Mnemonic.Contains("#EB")) _has_EB = true;
-                if (functionHelper.Mnemonic.Contains("Tq")) _has_Tq = true;
-                if (functionHelper.Mnemonic.Contains("Idle_rpm_offNeutral")) _has_IdleNeutral = true;
-                //Idle_rpm_offNeutral
-            }
-
-
-            if (_has_Ram_IgnitionMap && _has_Rom_IgnitionMap) _functionName = "CopyIgnitionRomToRam:";
-            else if (_has_Ram_FuelMap && _has_Rom_FuelMap) _functionName = "CopyFuelRomToRam:";
-            else if (_has_Ram_IgnitionMap) _functionName = "CalculateIgnitionAngle:";
-            else if (_has_Ram_FuelMap && !_has_Rom_FuelMap) _functionName = "CalculateInjectionDuration:";
-            else if (_has_KontrollOrd) _functionName = "CheckSRAMIntegrity:";
-            else if (_has_Da_insp) _functionName = "CalcInjectionForCylinder:";
-            else if (_has_EB && _has_Tq) _functionName = "CalculateTorque:";
-            else if (_has_IdleNeutral) _functionName = "DetermineIdleStatus:";
-
-            if (_functionName != string.Empty)
-            {
-                label.Mnemonic = _functionName;
-            }*/
-           
         }
 
         private bool AddressInMnemonicList(long trgdata)
@@ -2630,8 +2405,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             return false;
         }
 
-
-        public bool DisassembleFile(bool AddOffset, long OffSetAddress, string inputfile, string outputfile, long startaddress, long endaddress, SymbolCollection symbols)
+        public bool DisassembleFileRtf(string inputfile, string outputfile, long endaddress, SymbolCollection symbols)
         {
             uint i, t, seg, adr;
             long addr, endaddr, adrcntr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
@@ -2640,7 +2414,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             //byte n1, n2, n3, n4;
             //uint infile = 0, outfile = 0, 
             uint addoff = 0;
-            string inname, outname, offsetval;
+            string inname, outname;
             //byte inname[80], outname[80], offsetval[40];
             //byte str[80],cmd[80];
             string str, cmd;
@@ -2658,15 +2432,9 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             //infile = 1;
             outname = outputfile;
             //outfile = 1;
-            if (AddOffset)
-            {
-                addoff = 1;
-                offaddr = OffSetAddress;
-            }
 
             endaddr = endaddress;
-            addr = startaddress;
-            if (addr > endaddress) return false;
+            addr = 0;
             /********************* DISASSEMBLY STARTS HERE *********************/
             /* Read all the preceding words first */
             adrcntr = 0L;

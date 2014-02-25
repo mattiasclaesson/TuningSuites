@@ -12,6 +12,73 @@ namespace T7
 {
     public class Trionic7File
     {
+        public enum VectorType : int
+        {
+            Reset_initial_stack_pointer,
+            Reset_initial_program_counter,
+            Bus_error,
+            Address_error,
+            Illegal_instruction,
+            Zero_division,
+            CHK_CHK2_instructions,
+            TRAPcc_TRAPV_instructions,
+            Privilege_violation,
+            Trace,
+            Line_1010_emulator,
+            Line_1111_emulator,
+            Hardware_breakpoint,
+            Coprocessor_protocol_violation,
+            Format_error_and_uninitialized_interrupt_1,
+            Format_error_and_uninitialized_interrupt_2,
+            Unassigned_reserved_1,
+            Unassigned_reserved_2,
+            Unassigned_reserved_3,
+            Unassigned_reserved_4,
+            Unassigned_reserved_5,
+            Unassigned_reserved_6,
+            Unassigned_reserved_7,
+            Unassigned_reserved_8,
+            Spurious_interrupt,
+            Level_1_interrupt_autovector,
+            Level_2_interrupt_autovector,
+            Level_3_interrupt_autovector,
+            Level_4_interrupt_autovector,
+            Level_5_interrupt_autovector,
+            Level_6_interrupt_autovector,
+            Level_7_interrupt_autovector,
+            Trap_instruction_vector_0,
+            Trap_instruction_vector_1,
+            Trap_instruction_vector_2,
+            Trap_instruction_vector_3,
+            Trap_instruction_vector_4,
+            Trap_instruction_vector_5,
+            Trap_instruction_vector_6,
+            Trap_instruction_vector_7,
+            Trap_instruction_vector_8,
+            Trap_instruction_vector_9,
+            Trap_instruction_vector_10,
+            Trap_instruction_vector_11,
+            Trap_instruction_vector_12,
+            Trap_instruction_vector_13,
+            Trap_instruction_vector_14,
+            Trap_instruction_vector_15,
+            Reserved_coprocessor_0,
+            Reserved_coprocessor_1,
+            Reserved_coprocessor_2,
+            Reserved_coprocessor_3,
+            Reserved_coprocessor_4,
+            Reserved_coprocessor_5,
+            Reserved_coprocessor_6,
+            Reserved_coprocessor_7,
+            Reserved_coprocessor_8,
+            Reserved_coprocessor_9,
+            Reserved_coprocessor_10,
+            Unassigned_reserved_9,
+            Unassigned_reserved_10,
+            Unassigned_reserved_11,
+            Unassigned_reserved_12,
+            Unassigned_reserved_13
+        }
 
         private int m_sramOffsetForOpenFile = 0;
 
@@ -103,34 +170,60 @@ namespace T7
             return retval;
         }
 
-        public long GetStartVectorAddress(string filename, int number)
+        static public long GetStartVectorAddress(string filename)
         {
-            long retval = 0;
-            Int32 start_address = number * 4;
-            retval = Convert.ToInt64(readdatafromfile(filename, start_address, 1)[0]) * 256 * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(filename, start_address + 1, 1)[0]) * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(filename, start_address + 2, 1)[0]) * 256;
-            retval += Convert.ToInt64(readdatafromfile(filename, start_address + 3, 1)[0]);
-            return retval;
+            // startvector = second 4 byte word in the file
+            byte[] vector_data = readdatafromfile(filename, 4, 4);
+
+            long address = Convert.ToInt64(vector_data[0]) * 256 * 256 * 256;
+            address += Convert.ToInt64(vector_data[1]) * 256 * 256;
+            address += Convert.ToInt64(vector_data[2]) * 256;
+            address += Convert.ToInt64(vector_data[3]);
+            return address;
         }
 
-        public long[] GetVectorAddresses(string filename)
+        static public long[] GetVectorAddresses(string filename)
         {
-            long[] vectors = new long[256];
+            byte[] vector_data = readdatafromfile(filename, 0, 1024);
+            long[] vector_addresses = new long[256];
+            Int32 offset = 0;
+
             for (int i = 0; i < 256; i++)
             {
-                vectors.SetValue(GetStartVectorAddress(filename, i), i);
+                offset = i * 4;
+                long address = Convert.ToInt64(vector_data[offset]) * 256 * 256 * 256;
+                address += Convert.ToInt64(vector_data[offset + 1]) * 256 * 256;
+                address += Convert.ToInt64(vector_data[offset + 2]) * 256;
+                address += Convert.ToInt64(vector_data[offset + 3]);
+                vector_addresses.SetValue(address, i);
             }
-            return vectors;
+            return vector_addresses;
         }
 
-        public byte[] readdatafromfile(string filename, int address, int length)
+        static public string[] GetVectorNames()
+        {
+            string[] vector_names = new string[256];
+            for (int i = 0; i < 256; i++)
+            {
+                if (i <= 63)
+                {
+                    vector_names[i] = ((Trionic7File.VectorType)i).ToString();
+                }
+                else
+                {
+                    int number = i - 64;
+                    vector_names[i] = "User defined vector " + number;
+                }
+            }
+            return vector_names;
+        }
+
+        static public byte[] readdatafromfile(string filename, int address, int length)
         {
             byte[] retval = new byte[length];
             try
             {
                 FileStream fsi1 = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                //FileStream fsi1 = File.OpenRead(filename);
                 while (address > fsi1.Length) address -= (int)fsi1.Length;
                 BinaryReader br1 = new BinaryReader(fsi1);
                 fsi1.Position = address;

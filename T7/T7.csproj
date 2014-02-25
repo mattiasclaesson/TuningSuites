@@ -676,6 +676,9 @@
     </Compile>
     <None Include="55P_46T_rev9_csv.csv">
     </None>
+    <None Include="ASM-Mode.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

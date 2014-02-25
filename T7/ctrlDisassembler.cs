@@ -540,7 +540,6 @@ namespace T7
         public void DisassembleFile(string outputfile)
         {
             bool _skipDisassembly = false;
-            //Trionic5FileInformation fileinfo = _trionicFile.GetFileInfo();
 
             if (File.Exists(outputfile))
             {
@@ -553,12 +552,8 @@ namespace T7
             {
                 Disassembler disasm = new Disassembler();
                 disasm.onProgress += new Disassembler.Progress(disasm_onProgress);
-                //Trionic5File m_trionicFile = new Trionic5File();
-                //Trionic5FileInformation m_trionicFileInformation = m_trionicFile.ParseFile();
-                //            long address = m_trionicFile.GetStartVectorAddress(m_trionicFileInformation.Filename, 1);
                 Console.WriteLine("Starting disassembly");
-                disasm.DisassembleFile(_trionicFile, _trionicFile.FileName, outputfile, /*address,*/ _trionicFile.Symbol_collection);
-
+				disasm.DisassembleFile(_trionicFile, _trionicFile.FileName, outputfile, _trionicFile.Symbol_collection);
                 Console.WriteLine("Done disassembling: " + disasm.Mnemonics.Count.ToString());
                 using (StreamWriter sw = new StreamWriter(outputfile))
                 {
@@ -586,7 +581,6 @@ namespace T7
             string copyFile = _trionicFile.FileName + DateTime.Now.Ticks.ToString();
             File.Copy(_trionicFile.FileName, copyFile);
             LoadBinaryFile(copyFile, _trionicFile.Symbol_collection);
-
         }
 
         void disasm_onProgress(object sender, Disassembler.ProgressEventArgs e)

@@ -44,13 +44,14 @@ namespace T7
             //richTextBox1.Text = totaltext;
         }
 
-        public void FindStartAddress()
+        public void FindStartAddress(string filename)
         {
-            int offset = richTextBox1.Find("#2700");
+            long address = Trionic7File.GetStartVectorAddress(filename);
+            int offset = richTextBox1.Find(address.ToString("X8"));
             if (offset > 0)
             {
                 richTextBox1.SelectionStart = offset;
-                richTextBox1.SelectionLength = 6;
+                richTextBox1.SelectionLength = 8;
                 richTextBox1.ScrollToCaret();
             }
         }

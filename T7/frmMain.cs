@@ -640,7 +640,7 @@ namespace T7
                 if (File.Exists(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html"))
                 {
                     AddDebugLog("HTML file exists");
-                    DevExpress.XtraBars.Docking.DockPanel panel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
                     panel.Text = "Change history";
                     WebBrowser wb = new WebBrowser();
                     panel.Width = 600;
@@ -2668,14 +2668,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             MessageBox.Show("Symbol outside of flash boundary, probably SRAM only symbol");
                             return;
                         }*/
-                        DevExpress.XtraBars.Docking.DockPanel dockPanel;
-                        DevExpress.XtraBars.Docking.DockPanel sramdockPanel;
+                        DockPanel dockPanel;
+                        DockPanel sramdockPanel;
                         bool pnlfound = false;
                         //bool srampnlfound = false;
 
                         try
                         {
-                            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                            foreach (DockPanel pnl in dockManager1.Panels)
                             {
                                 if (pnl.Text == "Symbol: " + varname + " [" + Path.GetFileName(m_currentfile) + "]")
                                 {
@@ -2686,13 +2686,13 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         dockPanel.Show();
                                     }
                                 }
-                               /* if (pnl.Text == "SRAM Symbol: " + varname + " [" + Path.GetFileName(m_currentfile) + "]")
-                                {
-                                    sramdockPanel = pnl;
-                                    srampnlfound = true;
-                                    //sramdockPanel.Show();
-                                    // nog data verversen?
-                                }*/
+                                /* if (pnl.Text == "SRAM Symbol: " + varname + " [" + Path.GetFileName(m_currentfile) + "]")
+                                 {
+                                     sramdockPanel = pnl;
+                                     srampnlfound = true;
+                                     //sramdockPanel.Show();
+                                     // nog data verversen?
+                                 }*/
                             }
                         }
                         catch (Exception E)
@@ -2706,7 +2706,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             dockManager1.BeginUpdate();
                             try
                             {
-                                IMapViewer tabdet ;//= new MapViewer();
+                                IMapViewer tabdet;//= new MapViewer();
                                 if (m_appSettings.UseNewMapViewer)
                                 {
                                     tabdet = new MapViewerEx();
@@ -2729,7 +2729,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 tabdet.Map_name = varname;
                                 tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
                                 tabdet.Map_cat = XDFCategories.Undocumented; //TranslateSymbolNameToCategory(tabdet.Map_name);
-                                
+
                                 SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
                                 string x_axis = string.Empty;
                                 string y_axis = string.Empty;
@@ -2749,7 +2749,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 // z, y and z axis to do
                                 if (!m_appSettings.NewPanelsFloating)
                                 {
-                                    dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                                     if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                                     {
                                         int dw = 650;
@@ -2882,7 +2882,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
                                 }
                                 dockPanel.Tag = m_currentfile;
-                                dockPanel.ClosedPanel += new DevExpress.XtraBars.Docking.DockPanelEventHandler(dockPanel_ClosedPanel);
+                                dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                                 /*string xdescr = string.Empty;
                                 string ydescr = string.Empty;
                                 string zdescr = string.Empty;
@@ -2895,7 +2895,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
                                 int address = Convert.ToInt32(sh.Flash_start_address);
                                 int sramaddress = 0;// Convert.ToInt32(dr.Row["SRAMADDRESS"].ToString());
-                                if (address != 0 )
+                                if (address != 0)
                                 {
                                     Console.WriteLine("address: " + address.ToString("X8"));
 
@@ -2931,7 +2931,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                                     tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
 
-//                                    m_connectedToECU = true;
+                                    //                                    m_connectedToECU = true;
 
                                     //<GS-07102010>
                                     if (mode == ECUMode.Auto || mode == ECUMode.Online)
@@ -2985,9 +2985,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     bool isDocked = false;
                                     if (m_appSettings.AutoDockSameSymbol)
                                     {
-                                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                        foreach (DockPanel pnl in dockManager1.Panels)
                                         {
-                                            if (pnl.Text.StartsWith("Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                            if (pnl.Text.StartsWith("Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                             {
                                                 dockPanel.DockAsTab(pnl, 0);
                                                 isDocked = true;
@@ -2999,9 +2999,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     {
                                         if (m_appSettings.AutoDockSameFile)
                                         {
-                                            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                            foreach (DockPanel pnl in dockManager1.Panels)
                                             {
-                                                if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                                if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                                 {
                                                     dockPanel.DockAsTab(pnl, 0);
                                                     isDocked = true;
@@ -3116,7 +3116,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             if (m_appSettings.SynchronizeMapviewers)
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -3132,9 +3132,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -3151,9 +3151,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -3180,7 +3180,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             if (m_appSettings.SynchronizeMapviewers)
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -3196,9 +3196,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -3215,9 +3215,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -3247,7 +3247,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             if (m_appSettings.SynchronizeMapviewers)
             {
                 // andere cell geselecteerd, doe dat ook bij andere viewers met hetzelfde symbool (mapname)
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -3263,9 +3263,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -3282,9 +3282,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -3417,7 +3417,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         byte[] result = ReadMapFromSRAM(shs, true);
                                         int rows = 0;
                                         int cols = 0;
-                                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                        foreach (DockPanel pnl in dockManager1.Panels)
                                         {
                                             if (pnl.Text.StartsWith("Symbol: ") || pnl.Text.StartsWith("SRAM"))
                                             {
@@ -3451,9 +3451,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                             }
                                                         }
                                                     }
-                                                    else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                                                    else if (c is DockPanel)
                                                     {
-                                                        DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                                        DockPanel tpnl = (DockPanel)c;
                                                         foreach (Control c2 in tpnl.Controls)
                                                         {
                                                             if (c2 is IMapViewer)
@@ -3486,9 +3486,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                             }
                                                         }
                                                     }
-                                                    else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                                                    else if (c is ControlContainer)
                                                     {
-                                                        DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                                        ControlContainer cntr = (ControlContainer)c;
                                                         foreach (Control c3 in cntr.Controls)
                                                         {
                                                             if (c3 is IMapViewer)
@@ -3802,8 +3802,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 string dockpanelname5 = "Tuning package symbol: " + tabdet.Map_name;
                 //string dockpanelname4 = "SRAM <> BIN Compare results: " + Path.GetFileName(tabdet.Filename);
                 //else if (dp.Text == "Symbol difference: " + tabdet.Map_name + " [" + Path.GetFileName(tabdet.Filename) + "]")
-                
-                foreach (DevExpress.XtraBars.Docking.DockPanel dp in dockManager1.Panels)
+
+                foreach (DockPanel dp in dockManager1.Panels)
                 {
                     Console.WriteLine(dp.Text);
                     if (dp.Text == dockpanelname)
@@ -3884,7 +3884,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             if (tmrDummyRealtime.Enabled)
             {
                 // show realtime panel
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+                dockRealtime.Visibility = DockVisibility.Visible;
                 int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
                 int height = dockManager1.Form.ClientSize.Height;
                 if (width > 660) width = 660;
@@ -3905,7 +3905,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             else
             {
                 // hide realtime panel
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+                dockRealtime.Visibility = DockVisibility.Hidden;
             }
         }
 
@@ -4059,7 +4059,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 dockManager1.BeginUpdate();
                 try
                 {
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                    DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     CompareResults tabdet = new CompareResults();
                     tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
                     tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
@@ -4068,7 +4068,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
                     dockPanel.Controls.Add(tabdet);
                     dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                    dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                    dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
 
                     dockPanel.Width = 700;
 
@@ -4160,9 +4160,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             foreach (SymbolHelper sh_org in m_symbols)
                             {
-                                if ((sh_compare.Varname == sh_org.Varname && !sh_compare.Varname.StartsWith("Symbolnumber")) || 
-                                    sh_compare.Varname == sh_org.Userdescription || 
-                                    sh_org.Varname == sh_compare.Userdescription || 
+                                if ((sh_compare.Varname == sh_org.Varname && !sh_compare.Varname.StartsWith("Symbolnumber")) ||
+                                    sh_compare.Varname == sh_org.Userdescription ||
+                                    sh_org.Varname == sh_compare.Userdescription ||
                                     (sh_org.Userdescription == sh_compare.Userdescription && sh_compare.Userdescription != ""))
                                 {
                                     // compare
@@ -4182,7 +4182,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                             if (!CompareSymbolToCurrentFile(compareName, (int)compareStartAddress, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
                                             {
                                                 category = "";
-                                                
+
                                                 if (sh_org.Varname.Contains("."))
                                                 {
                                                     try
@@ -4353,9 +4353,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         }
                     }
                 }
-                DevExpress.XtraBars.Docking.DockPanel dockPanel;
+                DockPanel dockPanel;
                 bool pnlfound = false;
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
 
                     if (pnl.Text == "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]")
@@ -4375,7 +4375,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     {
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
-                        IMapViewer tabdet ;//= new MapViewer();
+                        IMapViewer tabdet;//= new MapViewer();
                         if (m_appSettings.UseNewMapViewer)
                         {
                             tabdet = new MapViewerEx();
@@ -4454,9 +4454,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             bool isDocked = false;
                             if (m_appSettings.AutoDockSameSymbol)
                             {
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
-                                    if (pnl.Text.StartsWith("Symbol: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                    if (pnl.Text.StartsWith("Symbol: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                     {
                                         dockPanel.DockAsTab(pnl, 0);
                                         isDocked = true;
@@ -4468,9 +4468,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 if (m_appSettings.AutoDockSameFile)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if ((string)pnl.Tag == Filename && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if ((string)pnl.Tag == Filename && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -4481,7 +4481,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -4791,12 +4791,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
             StartTableViewer(e.SymbolName, e.Symbolnumber1);
         }
 
-        
+
         private void StartCompareDifferenceViewer(string SymbolName, string Filename, int SymbolAddress, int SymbolLength)
         {
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
 
                 if (pnl.Text == "Symbol difference: " + SymbolName + " [" + Path.GetFileName(Filename) + "]")
@@ -4813,7 +4813,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 {
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
-                    IMapViewer tabdet ;//= new MapViewer();
+                    IMapViewer tabdet;//= new MapViewer();
                     if (m_appSettings.UseNewMapViewer)
                     {
                         tabdet = new MapViewerEx();
@@ -4929,9 +4929,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             bool isDocked = false;
                             if (m_appSettings.AutoDockSameSymbol)
                             {
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
-                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                     {
                                         dockPanel.DockAsTab(pnl, 0);
                                         isDocked = true;
@@ -4943,9 +4943,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 if (m_appSettings.AutoDockSameFile)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -4956,7 +4956,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -7536,7 +7536,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             //review all open editors and save the data still pending
             bool _datasaved = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
                 foreach (Control c in pnl.Controls)
                 {
@@ -7545,9 +7545,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         IMapViewer vwr = (IMapViewer)c;
                         if (vwr.SaveData()) _datasaved = true;
                     }
-                    else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                    else if (c is DockPanel)
                     {
-                        DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                        DockPanel tpnl = (DockPanel)c;
                         foreach (Control c2 in tpnl.Controls)
                         {
                             if (c2 is IMapViewer)
@@ -7557,9 +7557,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                         }
                     }
-                    else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                    else if (c is ControlContainer)
                     {
-                        DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                        ControlContainer cntr = (ControlContainer)c;
                         foreach (Control c3 in cntr.Controls)
                         {
                             if (c3 is IMapViewer)
@@ -8165,7 +8165,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 int rows = 0;
                                 int cols = 0;
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
                                     if (pnl.Text.StartsWith("Symbol: ") || pnl.Text.StartsWith("SRAM"))
                                     {
@@ -8181,9 +8181,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                     vwr.ShowTable(cols, isSixteenBitTable(symName));
                                                 }
                                             }
-                                            else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                                            else if (c is DockPanel)
                                             {
-                                                DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                                DockPanel tpnl = (DockPanel)c;
                                                 foreach (Control c2 in tpnl.Controls)
                                                 {
                                                     if (c2 is IMapViewer)
@@ -8198,9 +8198,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                     }
                                                 }
                                             }
-                                            else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                                            else if (c is ControlContainer)
                                             {
-                                                DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                                ControlContainer cntr = (ControlContainer)c;
                                                 foreach (Control c3 in cntr.Controls)
                                                 {
                                                     if (c3 is IMapViewer)
@@ -10312,9 +10312,9 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void barButtonItem43_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (dockRealtime.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible)
+            if (dockRealtime.Visibility == DockVisibility.Visible)
             {
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+                dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
                 //TODO: should be parameter
                 /*KWPHandler.stopLogging();
@@ -10388,7 +10388,7 @@ If boost regulation reports errors you can increase the difference between boost
                         //Console.WriteLine("SW version : " + swversion);
                         if (m_swversion.Length > 12)
                         {
-                            m_swversion = m_swversion.Substring(m_swversion.Length - 12, 12); 
+                            m_swversion = m_swversion.Substring(m_swversion.Length - 12, 12);
 
                         }
                         Console.WriteLine("Version II: " + m_swversion);
@@ -10428,7 +10428,7 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                 }
                 // <GS-24062010> always show realtime panel, to make it available for configuration even if not online
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+                dockRealtime.Visibility = DockVisibility.Visible;
                 int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
                 int height = dockManager1.Form.ClientSize.Height;
                 if (width > 660) width = 660;
@@ -11232,7 +11232,7 @@ dt.Columns.Add("SymbolName");
         {
             try
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -11244,9 +11244,9 @@ dt.Columns.Add("SymbolName");
                                 vwr.HighlightCell(xindex, yindex);
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -11260,9 +11260,9 @@ dt.Columns.Add("SymbolName");
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -11563,7 +11563,7 @@ dt.Columns.Add("SymbolName");
                 int cols = 0;
                 GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out cols, out rows);
                 byte[] current_map = m_AFRMap.GetFeedbackMapInBytes(cols * rows);
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     if (pnl.Text.StartsWith("Symbol: "))
                     {
@@ -11579,9 +11579,9 @@ dt.Columns.Add("SymbolName");
                                     UpdateViewer(vwr, cols, true);
                                 }
                             }
-                            else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                            else if (c is DockPanel)
                             {
-                                DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                DockPanel tpnl = (DockPanel)c;
                                 foreach (Control c2 in tpnl.Controls)
                                 {
                                     if (c2 is IMapViewer)
@@ -11596,9 +11596,9 @@ dt.Columns.Add("SymbolName");
                                     }
                                 }
                             }
-                            else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                            else if (c is ControlContainer)
                             {
-                                DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                ControlContainer cntr = (ControlContainer)c;
                                 foreach (Control c3 in cntr.Controls)
                                 {
                                     if (c3 is IMapViewer)
@@ -12872,9 +12872,9 @@ dt.Columns.Add("SymbolName");
                 if (selrows.Length > 0)
                 {
                     SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel;
+                    DockPanel dockPanel;
                     bool pnlfound = false;
-                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                    foreach (DockPanel pnl in dockManager1.Panels)
                     {
                         if (pnl.Text == "SRAM Symbol: " + sh.Varname + " [" + Path.GetFileName(m_currentsramfile) + "]")
                         {
@@ -12898,7 +12898,7 @@ dt.Columns.Add("SymbolName");
                                 dockPanel.FloatSize = new Size(650, 450);
                             }
                             dockPanel.Tag = m_currentsramfile;
-                            IMapViewer tabdet ;//= new MapViewer();
+                            IMapViewer tabdet;//= new MapViewer();
                             if (m_appSettings.UseNewMapViewer)
                             {
                                 tabdet = new MapViewerEx();
@@ -12931,7 +12931,7 @@ dt.Columns.Add("SymbolName");
                             /** NEW 12/11/2008 **/
                             if (!m_appSettings.NewPanelsFloating)
                             {
-                                dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                                dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                                 if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                                 {
                                     int dw = 650;
@@ -13122,9 +13122,9 @@ dt.Columns.Add("SymbolName");
                                 bool isDocked = false;
                                 if (m_appSettings.AutoDockSameSymbol)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -13136,9 +13136,9 @@ dt.Columns.Add("SymbolName");
                                 {
                                     if (m_appSettings.AutoDockSameFile)
                                     {
-                                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                        foreach (DockPanel pnl in dockManager1.Panels)
                                         {
-                                            if ((string)pnl.Tag == m_currentsramfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                            if ((string)pnl.Tag == m_currentsramfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                             {
                                                 dockPanel.DockAsTab(pnl, 0);
                                                 isDocked = true;
@@ -13150,7 +13150,7 @@ dt.Columns.Add("SymbolName");
 
                                 if (!isDocked)
                                 {
-                                    dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                    dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                     if (m_appSettings.AutoSizeNewWindows)
                                     {
                                         if (tabdet.X_axisvalues.Length > 0)
@@ -13201,9 +13201,9 @@ dt.Columns.Add("SymbolName");
         private void StartSRAMTableViewer(string filename, string symbolname, int length, int flashaddress, int sramaddress)
         {
             if (!File.Exists(filename)) return;
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
                 if (pnl.Text == "SRAM Symbol: " + symbolname + " [" + Path.GetFileName(m_currentsramfile) + "]")
                 {
@@ -13217,9 +13217,9 @@ dt.Columns.Add("SymbolName");
                 dockManager1.BeginUpdate();
                 try
                 {
-                    dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
-                    IMapViewer tabdet ;//= new MapViewer();
+                    IMapViewer tabdet;//= new MapViewer();
                     if (m_appSettings.UseNewMapViewer)
                     {
                         tabdet = new MapViewerEx();
@@ -13252,7 +13252,7 @@ dt.Columns.Add("SymbolName");
                     /** new 12/11/2008 **/
                     if (!m_appSettings.NewPanelsFloating)
                     {
-                       // dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                        // dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
                         if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                         {
                             int dw = 650;
@@ -13287,7 +13287,7 @@ dt.Columns.Add("SymbolName");
                                 dockPanel.FloatSize = new Size(dw, 450);
                             }
                         }
-                        else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView )
+                        else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
                         {
                             int dw = 450;
                             if (tabdet.X_axisvalues.Length > 0)
@@ -13305,7 +13305,7 @@ dt.Columns.Add("SymbolName");
                             }
                         }
                     }
-                   
+
                     /** end NEW 12/11/2008 **/
 
                     // z, y and z axis to do
@@ -13335,7 +13335,7 @@ dt.Columns.Add("SymbolName");
                     //int sramaddress = sramaddress;
                     if (sramaddress != 0)
                     {
-                       // while (address > m_currentfile_size) address -= m_currentfile_size;
+                        // while (address > m_currentfile_size) address -= m_currentfile_size;
                         tabdet.Map_address = address;
                         tabdet.Map_sramaddress = sramaddress;
                         tabdet.Map_length = length;
@@ -13371,9 +13371,9 @@ dt.Columns.Add("SymbolName");
                         bool isDocked = false;
                         if (m_appSettings.AutoDockSameSymbol)
                         {
-                            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                            foreach (DockPanel pnl in dockManager1.Panels)
                             {
-                                if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                 {
                                     dockPanel.DockAsTab(pnl, 0);
                                     isDocked = true;
@@ -13399,7 +13399,7 @@ dt.Columns.Add("SymbolName");
 
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                            dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                             if (m_appSettings.AutoSizeNewWindows)
                             {
                                 if (tabdet.X_axisvalues.Length > 0)
@@ -13471,11 +13471,11 @@ dt.Columns.Add("SymbolName");
                 dockManager1.BeginUpdate();
                 try
                 {
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel;
+                    DockPanel dockPanel;
                     //= dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
                     if (!m_appSettings.NewPanelsFloating)
                     {
-                        dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                        dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     }
                     else
                     {
@@ -13489,7 +13489,7 @@ dt.Columns.Add("SymbolName");
                     hv.Dock = DockStyle.Fill;
                     dockPanel.Width = 580;
                     hv.LoadDataFromFile(m_currentfile, m_symbols);
-                    dockPanel.ClosedPanel += new DevExpress.XtraBars.Docking.DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                     dockPanel.Controls.Add(hv);
                 }
                 catch (Exception E)
@@ -13500,7 +13500,7 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-        void dockPanel_ClosedPanel(object sender, DevExpress.XtraBars.Docking.DockPanelEventArgs e)
+        void dockPanel_ClosedPanel(object sender, DockPanelEventArgs e)
         {
             // force close of the file that the hexviewer had open!
             if (sender is DockPanel)
@@ -13515,9 +13515,9 @@ dt.Columns.Add("SymbolName");
                         vwr.CloseFile();
                         //UpdateChecksum(m_currentfile);
                     }
-                    else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                    else if (c is DockPanel)
                     {
-                        DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                        DockPanel tpnl = (DockPanel)c;
                         foreach (Control c2 in tpnl.Controls)
                         {
                             if (c2 is HexViewer)
@@ -13528,9 +13528,9 @@ dt.Columns.Add("SymbolName");
                             }
                         }
                     }
-                    else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                    else if (c is ControlContainer)
                     {
-                        DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                        ControlContainer cntr = (ControlContainer)c;
                         foreach (Control c3 in cntr.Controls)
                         {
                             if (c3 is HexViewer)
@@ -13546,7 +13546,7 @@ dt.Columns.Add("SymbolName");
                 dockManager1.RemovePanel(pnl);
             }
         }
-       
+
 
         private void StartSRAMHexViewer()
         {
@@ -13555,9 +13555,9 @@ dt.Columns.Add("SymbolName");
                 dockManager1.BeginUpdate();
                 try
                 {
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Text = "SRAM Hexviewer: " + Path.GetFileName(m_currentfile);
-                    dockPanel.ClosedPanel+=new DevExpress.XtraBars.Docking.DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                     HexViewer hv = new HexViewer();
                     hv.Issramviewer = true;
                     hv.Dock = DockStyle.Fill;
@@ -13655,9 +13655,9 @@ dt.Columns.Add("SymbolName");
                                 }
                                 else
                                 {
-                                    for (int i = 0; i < symboldata.Length; i ++)
+                                    for (int i = 0; i < symboldata.Length; i++)
                                     {
-                                        float value = Convert.ToInt32(symboldata.GetValue(i)) ;
+                                        float value = Convert.ToInt32(symboldata.GetValue(i));
                                         value *= (float)GetMapCorrectionFactor(sh.Varname);
                                         value += (float)GetMapCorrectionOffset(sh.Varname);
                                         if (value == (float)searchoptions.NumericValueToSearchFor)
@@ -13700,7 +13700,7 @@ dt.Columns.Add("SymbolName");
                         try
                         {
                             SymbolTranslator st = new SymbolTranslator();
-                            DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                             CompareResults tabdet = new CompareResults();
                             tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
                             tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
@@ -13710,7 +13710,7 @@ dt.Columns.Add("SymbolName");
                             tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectForFind);
                             dockPanel.Controls.Add(tabdet);
                             dockPanel.Text = "Search results: " + Path.GetFileName(m_currentfile);
-                            dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
 
                             dockPanel.Width = 700;
 
@@ -13763,7 +13763,7 @@ dt.Columns.Add("SymbolName");
                             Console.WriteLine(E.Message);
                         }
                         dockManager1.EndUpdate();
-                        
+
                     }
 
 
@@ -13818,9 +13818,9 @@ dt.Columns.Add("SymbolName");
                     }
                 }
             }
-            DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
             AxisBrowser tabdet = new AxisBrowser();
-            tabdet.onStartSymbolViewer +=new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
+            tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
             tabdet.ApplicationLanguage = m_appSettings.ApplicationLanguage;
             tabdet.Dock = DockStyle.Fill;
             dockPanel.Controls.Add(tabdet);
@@ -13828,9 +13828,9 @@ dt.Columns.Add("SymbolName");
             tabdet.SetCurrentSymbol(symbolname);
             dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
             bool isDocked = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
-                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                 {
                     dockPanel.DockAsTab(pnl, 0);
                     isDocked = true;
@@ -13839,14 +13839,14 @@ dt.Columns.Add("SymbolName");
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
 
         private void barButtonItem58_ItemClick(object sender, ItemClickEventArgs e)
         {
-            DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
             AxisBrowser tabdet = new AxisBrowser();
             tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
             tabdet.ApplicationLanguage = m_appSettings.ApplicationLanguage;
@@ -13855,9 +13855,9 @@ dt.Columns.Add("SymbolName");
             tabdet.ShowSymbolCollection(m_symbols);
             dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
             bool isDocked = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
-                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                 {
                     dockPanel.DockAsTab(pnl, 0);
                     isDocked = true;
@@ -13866,7 +13866,7 @@ dt.Columns.Add("SymbolName");
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -14210,10 +14210,27 @@ dt.Columns.Add("SymbolName");
             StartAViewer("IgnE85Cal.fi_AbsMap");
         }
 
+        private void showDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (t7file != null)
+            {
+                string outputfile = Path.GetDirectoryName(t7file.FileName);
+                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(t7file.FileName) + ".asm");
+                System.Windows.Forms.Application.DoEvents();
+                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
+                ctrlDisassembler disasmcontrol = new ctrlDisassembler() { TrionicFile = t7file, Dock = DockStyle.Fill };
+                panel.Controls.Add(disasmcontrol);
+                panel.Text = "T7Suite Disassembler";
+                panel.Width = this.ClientSize.Width - dockSymbols.Width;
+                System.Windows.Forms.Application.DoEvents();
+                disasmcontrol.DisassembleFile(outputfile);
+            }
+        }
+
         private bool AssemblerViewerActive(bool ShowIfActive, string filename)
         {
             bool retval = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
                 if (pnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
                 {
@@ -14228,9 +14245,9 @@ dt.Columns.Add("SymbolName");
                 {
                     foreach (Control c in pnl.Controls)
                     {
-                        if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             if (tpnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
                             {
                                 retval = true;
@@ -14245,7 +14262,6 @@ dt.Columns.Add("SymbolName");
                 }
             }
             return retval;
-
         }
 
         private void StartAssemblerViewer(string filename, frmProgress progress)
@@ -14255,17 +14271,15 @@ dt.Columns.Add("SymbolName");
                 dockManager1.BeginUpdate();
                 try
                 {
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
-                    //HexViewer hv = new HexViewer();
-                    AsmViewer av = new AsmViewer();
-                    av.Dock = DockStyle.Fill;
-                    dockPanel.Width = 700;
+                    AsmViewer av = new AsmViewer() { Dock = DockStyle.Fill };
+                    dockPanel.Width = 800;
                     dockPanel.Controls.Add(av);
                     progress.SetProgress("Loading assembler file ...");
                     av.LoadDataFromFile(filename, m_symbols);
                     progress.SetProgress("Finding starting address in file");
-                    av.FindStartAddress();
+                    av.FindStartAddress(m_currentfile);
                 }
                 catch (Exception E)
                 {
@@ -14275,44 +14289,25 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-
-        private void showDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showFullDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*string outputfile = Path.GetDirectoryName(m_currentfile);
-            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + ".asm");
+            string outputfile = Path.GetDirectoryName(m_currentfile);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
             if (!AssemblerViewerActive(true, outputfile))
             {
-                frmProgress progress = new frmProgress();
-                progress.Show();
-                progress.SetProgress("Start disassembler");
-                if (!File.Exists(outputfile))
-                {
-                    progress.SetProgress("Disassembler running...");
-                    Disassembler dis = new Disassembler();
-                    dis.DisassembleFile(true, 0, m_currentfile, outputfile, 0, m_currentfile_size, m_symbols);
-                    progress.SetProgress("Disassembler done...");
-                }
-                progress.SetProgress("Loading assembler file");
-                StartAssemblerViewer(outputfile, progress);
-                progress.Close();
-            }*/
-            if (t7file != null)
-            {
-                string outputfile = Path.GetDirectoryName(t7file.FileName);
-                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(t7file.FileName) + ".asm");
-                System.Windows.Forms.Application.DoEvents();
-                //Console.WriteLine("Starting with " + outputfile);
-                //Process.Start(Application.StartupPath + "\\TextEditor.exe", "\"" + outputfile + "\"");
-                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
-                panel.Width = this.ClientSize.Width - dockSymbols.Width;
-                ctrlDisassembler disasmcontrol = new ctrlDisassembler();
-                disasmcontrol.TrionicFile = t7file;
-                disasmcontrol.Dock = DockStyle.Fill;
-                panel.Controls.Add(disasmcontrol);
-                panel.Text = "T7Suite Disassembler";
-                System.Windows.Forms.Application.DoEvents();
-                disasmcontrol.DisassembleFile(outputfile);
-
+               frmProgress progress = new frmProgress();
+               progress.Show();
+               progress.SetProgress("Start disassembler");
+               if (!File.Exists(outputfile))
+               {
+                   progress.SetProgress("Disassembler running...");
+                   Disassembler dis = new Disassembler();
+                   dis.DisassembleFileRtf(m_currentfile, outputfile, m_currentfile_size, m_symbols);
+                   progress.SetProgress("Disassembler done...");
+               }
+               progress.SetProgress("Loading assembler file");
+               StartAssemblerViewer(outputfile, progress);
+               progress.Close();
             }
         }
 
@@ -14746,8 +14741,8 @@ dt.Columns.Add("SymbolName");
         {
 
             // start a dockview for this <GS-26012011>
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
-            DevExpress.XtraBars.Docking.DockPanel sramdockPanel;
+            DockPanel dockPanel;
+            DockPanel sramdockPanel;
             bool pnlfound = false;
             //bool srampnlfound = false;
 
@@ -14759,9 +14754,9 @@ dt.Columns.Add("SymbolName");
                 {
                     ctrlAirmassResult airmassResult = new ctrlAirmassResult();
                     airmassResult.Dock = DockStyle.Fill;
-                    dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = m_currentfile;
-                    dockPanel.ClosedPanel += new DevExpress.XtraBars.Docking.DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                     dockPanel.Text = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
                     dockPanel.Width = 800;
                     airmassResult.onStartTableViewer += new ctrlAirmassResult.StartTableViewer(airmassResult_onStartTableViewer);
@@ -14801,7 +14796,7 @@ dt.Columns.Add("SymbolName");
             if (sender is ctrlAirmassResult)
             {
                 string dockpanelname = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
-                foreach (DevExpress.XtraBars.Docking.DockPanel dp in dockManager1.Panels)
+                foreach (DockPanel dp in dockManager1.Panels)
                 {
                     if (dp.Text == dockpanelname)
                     {
@@ -15861,7 +15856,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             // create a new dock with a graph view in it
             //dockManager1.BeginUpdate();
-            DevExpress.XtraBars.Docking.DockPanel dp = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Left);
+            DockPanel dp = dockManager1.AddPanel(DockingStyle.Left);
             dp.Size = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width, dockSymbols.Height);
             dp.Hide();
             //dp.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
@@ -15989,6 +15984,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 bool _success = false;
                 string faultCodes = string.Empty;
                 int symbolnumber = GetSymbolNumber(m_symbols, "obdFaults");
+                if(symbolnumber == 0)
+                {
+                    // not connected to ECU
+                    frmInfoBox info = new frmInfoBox("Cannot find symbolnumber for symbol obdFaults, ECU binary must be loaded");
+                }
                 byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, "obdFaults", (uint)GetSymbolAddressSRAM(m_symbols, "obdFaults"), GetSymbolLength(m_symbols,"obdFaults"), out _success);
                 if (_success)
                 {
@@ -16013,6 +16013,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             else
             {
                 // not connected to ECU
+                frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to read faultcodes");
             }
         }
 
@@ -16035,6 +16036,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         bool _success = false;
                         frmfaults.ClearCodes();
                         int symbolnumber = GetSymbolNumber(m_symbols, "obdFaults");
+                        if (symbolnumber == 0)
+                        {
+                            // not connected to ECU
+                            frmInfoBox info = new frmInfoBox("Cannot find symbolnumber for symbol obdFaults, ECU binary must be loaded");
+                        }
                         byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, "obdFaults", (uint)GetSymbolAddressSRAM(m_symbols, "obdFaults"), GetSymbolLength(m_symbols, "obdFaults"), out _success);
                         if (_success)
                         {
@@ -16150,7 +16156,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     btnSportMode.Visible = false;
 
                 }
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+                dockRealtime.Visibility = DockVisibility.Visible;
                 int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
                 int height = dockManager1.Form.ClientSize.Height;
                 if (width > 660) width = 660;
@@ -16169,7 +16175,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             else
             {
                 // hide realtime panel
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+                dockRealtime.Visibility = DockVisibility.Hidden;
             }
 
             // write data to SRAM, check for valid connection first
@@ -16229,7 +16235,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             {
                                 int rows = 0;
                                 int cols = 0;
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
                                     if (pnl.Text.StartsWith("Symbol: ") || pnl.Text.StartsWith("SRAM"))
                                     {
@@ -16245,9 +16251,9 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                                                     vwr.ShowTable(cols, isSixteenBitTable(symbolname));
                                                 }
                                             }
-                                            else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                                            else if (c is DockPanel)
                                             {
-                                                DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                                DockPanel tpnl = (DockPanel)c;
                                                 foreach (Control c2 in tpnl.Controls)
                                                 {
                                                     if (c2 is IMapViewer)
@@ -16262,9 +16268,9 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                                                     }
                                                 }
                                             }
-                                            else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                                            else if (c is ControlContainer)
                                             {
-                                                DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                                ControlContainer cntr = (ControlContainer)c;
                                                 foreach (Control c3 in cntr.Controls)
                                                 {
                                                     if (c3 is IMapViewer)
@@ -16774,12 +16780,12 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private void ShowAfrMAP(string mapname, string filename)
         {
             // show seperate mapviewer for AFR target map
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
             string symbolname = mapname;
             try
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     if (pnl.Text == "Symbol: " + symbolname + " [" + Path.GetFileName(m_currentfile) + "]")
                     {
@@ -16799,7 +16805,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 dockManager1.BeginUpdate();
                 try
                 {
-                    IMapViewer tabdet ;//= new MapViewer();
+                    IMapViewer tabdet;//= new MapViewer();
                     if (m_appSettings.UseNewMapViewer)
                     {
                         tabdet = new MapViewerEx();
@@ -16832,7 +16838,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
                     if (!m_appSettings.NewPanelsFloating)
                     {
-                        dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                        dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                         if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                         {
                             int dw = 650;
@@ -17132,7 +17138,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                                 if (width < 450) width = 450;
 
                             }
-                            else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView )
+                            else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
                             {
                                 if (tabdet.X_axisvalues.Length > 0)
                                 {
@@ -18305,29 +18311,21 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void btnVectors_ItemClick(object sender, ItemClickEventArgs e)
         {
-            frmVectorlist vectors = new frmVectorlist();
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("Vector");
-            dt.Columns.Add("Address", System.Type.GetType("System.Int64"));
-            string description = string.Empty;
-            for (int i = 0; i < 256; i++)
+            using (frmVectorlist vectorlist = new frmVectorlist())
             {
+                System.Data.DataTable dt = new System.Data.DataTable();
+                dt.Columns.Add("Vector");
+                dt.Columns.Add("Address", System.Type.GetType("System.Int64"));
 
-                long address = GetStartVectorAddress(m_currentfile, i);
-                if (i <= 63)
+                long[] adresses = Trionic7File.GetVectorAddresses(m_currentfile);
+                string[] names = Trionic7File.GetVectorNames();
+                for (int i = 0; i < 256; i++)
                 {
-                    // get description
-                    description = ((VectorType)i).ToString().Replace("_", " ");
+                    dt.Rows.Add(names[i].Replace("_", " "), Convert.ToInt64(adresses.GetValue(i)));
                 }
-                else
-                {
-                    int number = i - 64;
-                    description = "User defined vector " + number.ToString();
-                }
-                dt.Rows.Add(description, address);
+                vectorlist.SetDataTable(dt);
+                vectorlist.ShowDialog();
             }
-            vectors.SetDataTable(dt);
-            vectors.ShowDialog();
         }
 
         private void editAnExistingTuningPackageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -18451,9 +18449,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void StartTableViewerFromTuningPackage(string symbolname, byte[] data, string filename)
         {
             if (!File.Exists(filename)) return;
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
                 if (pnl.Text == "Tuning package symbol: " + symbolname + " [" + Path.GetFileName(filename) + "]")
                 {
@@ -18467,7 +18465,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 dockManager1.BeginUpdate();
                 try
                 {
-                    dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
                     IMapViewer tabdet;//= new MapViewer();
                     if (m_appSettings.UseNewMapViewer)
@@ -18599,9 +18597,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     bool isDocked = false;
                     if (m_appSettings.AutoDockSameSymbol)
                     {
-                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                        foreach (DockPanel pnl in dockManager1.Panels)
                         {
-                            if (pnl.Text.Contains(tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                            if (pnl.Text.Contains(tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                             {
                                 dockPanel.DockAsTab(pnl, 0);
                                 isDocked = true;
@@ -18611,7 +18609,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     if (!isDocked)
                     {
-                        dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                        dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                         if (m_appSettings.AutoSizeNewWindows)
                         {
                             if (tabdet.X_axisvalues.Length > 0)
@@ -20042,9 +20040,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             rect = new System.Drawing.Rectangle(0, 0, 10, 10);
             foreach (Control c in dockPanel.Controls)
             {
-                if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                if (c is ControlContainer)
                 {
-                    DevExpress.XtraBars.Docking.ControlContainer cc = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                    ControlContainer cc = (ControlContainer)c;
                     foreach (Control c2 in cc.Controls)
                     {
                         if (c2 is T7.MapViewerEx)
@@ -20074,7 +20072,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                                         }
                                                     }
                                                 }
-                                                
+
                                             }
                                             foreach (Control c5 in sc.Panel2.Controls)
                                             {
@@ -20088,10 +20086,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                                 }
                                             }
                                         }
-                                        
+
                                     }
                                 }
-                                
+
                             }
                         }
                         else if (c2 is T7.MapViewer)
@@ -20161,7 +20159,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                         }
                                     }
                                 }
-                                
+
                             }
                         }
                         else if (c2 is DevExpress.XtraGrid.GridControl)
@@ -20600,9 +20598,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void TerminateOnlineProcesses()
         {
-            if (dockRealtime.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible)
+            if (dockRealtime.Visibility == DockVisibility.Visible)
             {
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+                dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
             }
             m_connectedToECU = false;
@@ -20622,7 +20620,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             canUsbDevice = null;
             kwpCanDevice = null;
             flash = null;
-            
+
         }
 
         private void SpawnSaabOpenTech(string arguments, bool showWindow)
@@ -20807,7 +20805,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             dockManager1.BeginUpdate();
             try
             {
-                DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                 CompareResults tabdet = new CompareResults();
                 tabdet.HideMissingSymbolIndicators();
                 tabdet.Dock = DockStyle.Fill;
@@ -20817,7 +20815,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 dockPanel.Controls.Add(tabdet);
                 //dockPanel.DockAsTab(dockPanel1);
                 dockPanel.Text = "SRAM <> BIN Compare results: " + Path.GetFileName(sramfilename);
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
                 dockPanel.Width = 700;
                 //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
                 tabdet.CompareSymbolCollection = scdiff;
@@ -20841,7 +20839,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
                 dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
                 dt.Columns.Add("Userdescription");
-                
+
 
                 foreach (SymbolHelper sh in scdiff)
                 {
@@ -20879,9 +20877,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         }
         private void StartSRAMToFlashCompareDifferenceViewer(string SymbolName, string SRAMFilename, string FlashFilename, int SymbolLength, int SymbolAddressSRAM, int SymbolAddress)
         {
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
 
                 if (pnl.Text == "Symbol difference: " + SymbolName + " [" + Path.GetFileName(SRAMFilename) + "]")
@@ -21014,9 +21012,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             bool isDocked = false;
                             if (m_appSettings.AutoDockSameSymbol)
                             {
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
-                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                     {
                                         dockPanel.DockAsTab(pnl, 0);
                                         isDocked = true;
@@ -21028,9 +21026,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             {
                                 if (m_appSettings.AutoDockSameFile)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -21041,7 +21039,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -21191,7 +21189,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     dockManager1.BeginUpdate();
                     try
                     {
-                        DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                        DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         SRAMCompareResults tabdet = new SRAMCompareResults();
                         tabdet.Dock = DockStyle.Fill;
                         tabdet.Filename1 = filename_1;
@@ -21201,9 +21199,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         //dockPanel.DockAsTab(dockPanel1);
                         dockPanel.Text = "SRAM compare results: " + Path.GetFileName(filename_1) + " " + Path.GetFileName(filename_2);
                         bool isDocked = false;
-                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                        foreach (DockPanel pnl in dockManager1.Panels)
                         {
-                            if (pnl.Text.StartsWith("SRAM compare results: ") && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                            if (pnl.Text.StartsWith("SRAM compare results: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                             {
                                 dockPanel.DockAsTab(pnl, 0);
                                 isDocked = true;
@@ -21212,7 +21210,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         }
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
                             dockPanel.Width = 700;
                         }
                         //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
@@ -21251,9 +21249,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void StartSRAMCompareDifferenceViewer(string symbolname, string filename1, string filename2, int length, int sramaddress, string symbolDescription)
         {
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
 
                 if (pnl.Text == "SRAM symbol difference: " + symbolname + " [" + Path.GetFileName(filename1) + " vs " + Path.GetFileName(filename2) + "]")
@@ -21277,15 +21275,15 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     {
                         tabdet = new MapViewerEx();
                     }
-                    else 
+                    else
                     {
                         tabdet = new MapViewer();
                     }
-                    
+
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     tabdet.IsCompareViewer = true;
 
-                    
+
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
@@ -21356,7 +21354,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             tabdet.IsUpsideDown = true;//GetMapUpsideDown(tabdet.Map_name);
                             tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
                             tabdet.Dock = DockStyle.Fill;
-                            
+
                             tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
                             tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                             tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
@@ -21364,9 +21362,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             bool isDocked = false;
                             if (m_appSettings.AutoDockSameSymbol)
                             {
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
-                                    if (pnl.Text.StartsWith("SRAM symbol difference: " + symbolname) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                    if (pnl.Text.StartsWith("SRAM symbol difference: " + symbolname) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                     {
                                         dockPanel.DockAsTab(pnl, 0);
                                         pnl.Options.ShowCloseButton = false;
@@ -21379,9 +21377,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             {
                                 if (m_appSettings.AutoDockSameFile)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             pnl.Options.ShowCloseButton = false;
@@ -21393,7 +21391,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -21523,7 +21521,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 int cols = 0;
                 GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out cols, out rows);
                 byte[] current_map = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname));
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     if (pnl.Text.StartsWith("Symbol: "))
                     {
@@ -21538,9 +21536,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                     UpdateViewer(vwr, cols, isSixteenBitTable(symbolname));
                                 }
                             }
-                            else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                            else if (c is DockPanel)
                             {
-                                DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                DockPanel tpnl = (DockPanel)c;
                                 foreach (Control c2 in tpnl.Controls)
                                 {
                                     if (c2 is IMapViewer)
@@ -21554,9 +21552,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                     }
                                 }
                             }
-                            else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                            else if (c is ControlContainer)
                             {
-                                DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                ControlContainer cntr = (ControlContainer)c;
                                 foreach (Control c3 in cntr.Controls)
                                 {
                                     if (c3 is IMapViewer)
