@@ -552,7 +552,6 @@ namespace T8SuitePro
         public void DisassembleFile(string outputfile)
         {
             bool _skipDisassembly = false;
-            //Trionic5FileInformation fileinfo = _trionicFile.GetFileInfo();
 
             if (File.Exists(outputfile))
             {
@@ -565,41 +564,35 @@ namespace T8SuitePro
             {
                 Disassembler disasm = new Disassembler();
                 disasm.onProgress += new Disassembler.Progress(disasm_onProgress);
-                //Trionic5File m_trionicFile = new Trionic5File();
-                //Trionic5FileInformation m_trionicFileInformation = m_trionicFile.ParseFile();
-                //            long address = m_trionicFile.GetStartVectorAddress(m_trionicFileInformation.Filename, 1);
                 Console.WriteLine("Starting disassembly");
-                //disasm.DisassembleFile(filename, outputfile, m_symbols);
-                disasm.DisassembleFile(true, 0x100000, filename, outputfile, startaddress, 0x100000, m_symbols);
-                
-                //Console.WriteLine("Done disassembling: " + disasm.Mnemonics.Count.ToString());
-                //using (StreamWriter sw = new StreamWriter(outputfile))
-                //{
-                //    foreach (MNemonicHelper helper in disasm.Mnemonics)
-                //    {
-                //        if (helper.Mnemonic.Contains(":"))
-                //        {
-                //            //listBox1.Items.Add(helper.Mnemonic);
-                //            if (!helper.Mnemonic.Contains("LBL_"))
-                //            {
-                //                sw.WriteLine();
-                //            }
-                //            sw.WriteLine(helper.Mnemonic);
-                //        }
-                //        else
-                //        {
-                //            //listBox1.Items.Add(helper.Address.ToString("X8") + " " + helper.Mnemonic);
-                //            sw.WriteLine("0x" + helper.Address.ToString("X8") + "\t" + helper.Mnemonic);
-                //        }
-                //    }
-                //}
+                disasm.DisassembleFile(filename, m_symbols);
+                Console.WriteLine("Done disassembling: " + disasm.Mnemonics.Count.ToString());
+                using (StreamWriter sw = new StreamWriter(outputfile))
+                {
+                    foreach (MNemonicHelper helper in disasm.Mnemonics)
+                    {
+                        if (helper.Mnemonic.Contains(":"))
+                        {
+                            //listBox1.Items.Add(helper.Mnemonic);
+                            if (!helper.Mnemonic.Contains("LBL_"))
+                            {
+                                sw.WriteLine();
+                            }
+                            sw.WriteLine(helper.Mnemonic);
+                        }
+                        else
+                        {
+                            //listBox1.Items.Add(helper.Address.ToString("X8") + " " + helper.Mnemonic);
+                            sw.WriteLine("0x" + helper.Address.ToString("X8") + "\t" + helper.Mnemonic);
+                        }
+                    }
+                }
                 // start the external viewer with the file
             }
             LoadFile(outputfile);
             string copyFile = filename + DateTime.Now.Ticks.ToString();
             File.Copy(filename, copyFile);
             LoadBinaryFile(copyFile, m_symbols);
-
         }
 
         void disasm_onProgress(object sender, Disassembler.ProgressEventArgs e)

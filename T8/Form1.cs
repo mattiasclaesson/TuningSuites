@@ -481,7 +481,7 @@ namespace T8SuitePro
             dockManager1.EndUpdate();
         }
 
-        void dockPanel_ClosedPanel(object sender, DevExpress.XtraBars.Docking.DockPanelEventArgs e)
+        void dockPanel_ClosedPanel(object sender, DockPanelEventArgs e)
         {
             // force close of the file that the hexviewer had open!
             if (sender is DockPanel)
@@ -496,9 +496,9 @@ namespace T8SuitePro
                         vwr.CloseFile();
                         //UpdateChecksum(m_currentfile);
                     }
-                    else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                    else if (c is DockPanel)
                     {
-                        DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                        DockPanel tpnl = (DockPanel)c;
                         foreach (Control c2 in tpnl.Controls)
                         {
                             if (c2 is HexViewer)
@@ -509,9 +509,9 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                    else if (c is ControlContainer)
                     {
-                        DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                        ControlContainer cntr = (ControlContainer)c;
                         foreach (Control c3 in cntr.Controls)
                         {
                             if (c3 is HexViewer)
@@ -3263,7 +3263,7 @@ namespace T8SuitePro
                 string dockpanelname = "Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(tabdet.Filename) + "]";
                 string dockpanelname2 = "SRAM Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(tabdet.Filename) + "]";
                 string dockpanelname3 = "Symbol difference: " + tabdet.Map_name + " [" + Path.GetFileName(tabdet.Filename) + "]";
-                foreach (DevExpress.XtraBars.Docking.DockPanel dp in dockManager1.Panels)
+                foreach (DockPanel dp in dockManager1.Panels)
                 {
                     if (dp.Text == dockpanelname)
                     {
@@ -3324,15 +3324,15 @@ namespace T8SuitePro
                         return;
                     }
 
-                    
-                    
 
 
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel;
+
+
+                    DockPanel dockPanel;
                     bool pnlfound = false;
                     try
                     {
-                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                        foreach (DockPanel pnl in dockManager1.Panels)
                         {
                             if (pnl.Text == "Symbol: " + varname + " [" + Path.GetFileName(m_currentfile) + "]")
                             {
@@ -3387,7 +3387,7 @@ namespace T8SuitePro
                             // z, y and z axis to do
                             if (!m_appSettings.NewPanelsFloating)
                             {
-                                dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                                dockPanel = dockManager1.AddPanel(DockingStyle.Right);
 
                                 if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                                 {
@@ -3579,9 +3579,9 @@ namespace T8SuitePro
                                 dockPanel.Text = "Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(m_currentfile) + "]";
                                 if (m_appSettings.AutoDockSameSymbol)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if (pnl.Text.StartsWith("Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if (pnl.Text.StartsWith("Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -3593,9 +3593,9 @@ namespace T8SuitePro
                                 {
                                     if (m_appSettings.AutoDockSameFile)
                                     {
-                                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                        foreach (DockPanel pnl in dockManager1.Panels)
                                         {
-                                            if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                            if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                             {
                                                 dockPanel.DockAsTab(pnl, 0);
                                                 isDocked = true;
@@ -3806,7 +3806,7 @@ namespace T8SuitePro
         {
             if (m_appSettings.SynchronizeMapviewers)
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -3822,9 +3822,9 @@ namespace T8SuitePro
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -3841,9 +3841,9 @@ namespace T8SuitePro
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -3873,7 +3873,7 @@ namespace T8SuitePro
             if (m_appSettings.SynchronizeMapviewers)
             {
                 // andere cell geselecteerd, doe dat ook bij andere viewers met hetzelfde symbool (mapname)
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -3889,9 +3889,9 @@ namespace T8SuitePro
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -3908,9 +3908,9 @@ namespace T8SuitePro
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -4105,9 +4105,9 @@ namespace T8SuitePro
         {
             try
             {
-                DevExpress.XtraBars.Docking.DockPanel dockPanel;
+                DockPanel dockPanel;
                 bool pnlfound = false;
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
 
                     if (pnl.Text == "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]")
@@ -4197,9 +4197,9 @@ namespace T8SuitePro
                             bool isDocked = false;
                             if (m_appSettings.AutoDockSameSymbol)
                             {
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
-                                    if (pnl.Text.StartsWith("Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                    if (pnl.Text.StartsWith("Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                     {
                                         dockPanel.DockAsTab(pnl, 0);
                                         isDocked = true;
@@ -4211,9 +4211,9 @@ namespace T8SuitePro
                             {
                                 if (m_appSettings.AutoDockSameFile)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -4275,7 +4275,7 @@ namespace T8SuitePro
                                     }
                                 }
                                 dockPanel.Width = width;
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                             }
                             dockPanel.Controls.Add(tabdet);
                             // dock to another panel?
@@ -4297,9 +4297,9 @@ namespace T8SuitePro
 
         private void StartCompareDifferenceViewer(string SymbolName, string Filename, int SymbolAddress, int SymbolLength)
         {
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
 
                 if (pnl.Text == "Symbol difference: " + SymbolName + " [" + Path.GetFileName(Filename) + "]")
@@ -4391,7 +4391,7 @@ namespace T8SuitePro
                             tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
                             tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                             tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                            
+
                             //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
                             //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
                             //tabdet.onSelectionChanged += new MapViewer.SelectionChanged(tabdet_onSelectionChanged);
@@ -4406,9 +4406,9 @@ namespace T8SuitePro
                             bool isDocked = false;
                             if (m_appSettings.AutoDockSameSymbol)
                             {
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
-                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                     {
                                         dockPanel.DockAsTab(pnl, 0);
                                         isDocked = true;
@@ -4420,9 +4420,9 @@ namespace T8SuitePro
                             {
                                 if (m_appSettings.AutoDockSameFile)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -4433,7 +4433,7 @@ namespace T8SuitePro
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -4541,14 +4541,14 @@ namespace T8SuitePro
                     dockManager1.BeginUpdate();
                     try
                     {
-                        DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                        DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         CompareResults tabdet = new CompareResults();
                         tabdet.Dock = DockStyle.Fill;
                         tabdet.Filename = filename;
                         tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
                         dockPanel.Controls.Add(tabdet);
                         dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                        dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                        dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
 
                         dockPanel.Width = 700;
 
@@ -4615,7 +4615,7 @@ namespace T8SuitePro
                                 {
                                     Console.WriteLine(E.Message);
                                 }
-                                
+
                                 string compareName = sh_compare.Varname;
                                 if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
 
@@ -6797,11 +6797,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 dockManager1.BeginUpdate();
                 try
                 {
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel;
+                    DockPanel dockPanel;
                     //= dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
                     if (!m_appSettings.NewPanelsFloating)
                     {
-                        dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                        dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     }
                     else
                     {
@@ -6815,7 +6815,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     hv.Dock = DockStyle.Fill;
                     dockPanel.Width = 580;
                     hv.LoadDataFromFile(m_currentfile, m_symbols);
-                    dockPanel.ClosedPanel += new DevExpress.XtraBars.Docking.DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                     dockPanel.Controls.Add(hv);
                 }
                 catch (Exception E)
@@ -6967,7 +6967,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         try
                         {
                             SymbolTranslator st = new SymbolTranslator();
-                            DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                             CompareResults tabdet = new CompareResults();
                             tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
                             tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
@@ -6987,7 +6987,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             }
                             dockPanel.Text = resultText;
 
-                            dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
 
                             dockPanel.Width = 700;
 
@@ -7199,7 +7199,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 GetRSSFeeds(newversion);
                 if (File.Exists(System.Windows.Forms.Application.UserAppDataPath + "\\T8Suite.html"))
                 {
-                    DevExpress.XtraBars.Docking.DockPanel panel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
                     panel.Text = "Change history";
                     WebBrowser wb = new WebBrowser();
                     panel.Width = 600;
@@ -8952,7 +8952,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     symbolname = dr.Varname;
                 }
             }
-            DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
             AxisBrowser tabdet = new AxisBrowser();
             tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
             tabdet.Dock = DockStyle.Fill;
@@ -8961,9 +8961,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             tabdet.SetCurrentSymbol(symbolname);
             dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
             bool isDocked = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
-                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                 {
                     dockPanel.DockAsTab(pnl, 0);
                     isDocked = true;
@@ -8972,7 +8972,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -8984,7 +8984,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void barButtonItem31_ItemClick(object sender, ItemClickEventArgs e)
         {
-            DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
             AxisBrowser tabdet = new AxisBrowser();
             tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
             tabdet.Dock = DockStyle.Fill;
@@ -8992,9 +8992,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             tabdet.ShowSymbolCollection(m_symbols);
             dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
             bool isDocked = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
-                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                 {
                     dockPanel.DockAsTab(pnl, 0);
                     isDocked = true;
@@ -9003,21 +9003,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
-        }
-
-        private long GetStartVectorAddress(string filename, int number)
-        {
-            // startvector = second 4 byte word in the file
-            long retval = 0;
-            Int32 start_address = number * 4;
-            retval = Convert.ToInt64(readdatafromfile(m_currentfile, start_address, 1)[0]) * 256 * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 1, 1)[0]) * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 2, 1)[0]) * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 3, 1)[0]);
-            return retval;
         }
 
         private void showDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -9028,24 +9016,20 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + ".asm");
                 System.Windows.Forms.Application.DoEvents();
                 DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
-                panel.Width = this.ClientSize.Width - dockSymbols.Width;
-                long start_address = GetStartVectorAddress(m_currentfile, 1);
-                ctrlDisassembler disasmcontrol = new ctrlDisassembler();
-                disasmcontrol.Filename = m_currentfile;
-                disasmcontrol.Symbols = m_symbols;
-
-                disasmcontrol.Dock = DockStyle.Fill;
+                ctrlDisassembler disasmcontrol = new ctrlDisassembler() { Filename = m_currentfile, Symbols = m_symbols, Dock = DockStyle.Fill };
                 panel.Controls.Add(disasmcontrol);
                 panel.Text = "T8Suite Disassembler";
+                panel.Width = this.ClientSize.Width - dockSymbols.Width;
                 System.Windows.Forms.Application.DoEvents();
                 disasmcontrol.DisassembleFile(outputfile);
+                SetProgressIdle();
             }
         }
 
         private bool AssemblerViewerActive(bool ShowIfActive, string filename)
         {
             bool retval = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
                 if (pnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
                 {
@@ -9060,9 +9044,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     foreach (Control c in pnl.Controls)
                     {
-                        if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             if (tpnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
                             {
                                 retval = true;
@@ -9080,23 +9064,22 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         }
 
-        private void StartAssemblerViewer(string filename)
+        private void StartAssemblerViewer(string filename, frmProgress progress)
         {
             if (m_currentfile != "")
             {
                 dockManager1.BeginUpdate();
                 try
                 {
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
-                    AsmViewer av = new AsmViewer();
-                    av.Dock = DockStyle.Fill;
+                    AsmViewer av = new AsmViewer() { Dock = DockStyle.Fill };
                     dockPanel.Width = 800;
                     dockPanel.Controls.Add(av);
-                    SetProgress("Loading assembler file ...");
+                    progress.SetProgress("Loading assembler file ...");
                     av.LoadDataFromFile(filename, m_symbols);
-                    SetProgress("Finding starting address in file");
-                    av.FindStartAddress();
+                    progress.SetProgress("Finding starting address in file");
+                    av.FindStartAddress(m_currentfile);
                 }
                 catch (Exception E)
                 {
@@ -9112,22 +9095,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
             if (!AssemblerViewerActive(true, outputfile))
             {
-                SetProgress("Start disassembler");
+                frmProgress progress = new frmProgress();
+                progress.Show();
+                progress.SetProgress("Start disassembler");
                 if (!File.Exists(outputfile))
                 {
-                    SetProgress("Disassembler running...");
+                    progress.SetProgress("Disassembler running...");
                     Disassembler dis = new Disassembler();
-                    long start_address = 0;
-
-                    // Test
-                    start_address = GetStartVectorAddress(m_currentfile, 1);
-
-                    dis.DisassembleFile(true, m_currentfile_size, m_currentfile, outputfile, start_address, m_currentfile_size, m_symbols);
-                    SetProgress("Disassembler done...");
+                    dis.DisassembleFileRtf(m_currentfile, outputfile, m_currentfile_size, m_symbols);
+                    progress.SetProgress("Disassembler done...");
                 }
-                SetProgress("Loading assembler file");
-                StartAssemblerViewer(outputfile);
-                SetProgressIdle();
+                progress.SetProgress("Loading assembler file");
+                StartAssemblerViewer(outputfile, progress);
+                progress.Close();
             }
         }
 
@@ -9557,99 +9537,23 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        public enum VectorType : int
-        {
-            Reset_initial_stack_pointer,
-            Reset_initial_program_counter,
-            Bus_error,
-            Address_error,
-            Illegal_instruction,
-            Zero_division,
-            CHK_CHK2_instructions,
-            TRAPcc_TRAPV_instructions,
-            Privilege_violation,
-            Trace,
-            Line_1010_emulator,
-            Line_1111_emulator,
-            Hardware_breakpoint,
-            Coprocessor_protocol_violation,
-            Format_error_and_uninitialized_interrupt_1,
-            Format_error_and_uninitialized_interrupt_2,
-            Unassigned_reserved_1,
-            Unassigned_reserved_2,
-            Unassigned_reserved_3,
-            Unassigned_reserved_4,
-            Unassigned_reserved_5,
-            Unassigned_reserved_6,
-            Unassigned_reserved_7,
-            Unassigned_reserved_8,
-            Spurious_interrupt,
-            Level_1_interrupt_autovector,
-            Level_2_interrupt_autovector,
-            Level_3_interrupt_autovector,
-            Level_4_interrupt_autovector,
-            Level_5_interrupt_autovector,
-            Level_6_interrupt_autovector,
-            Level_7_interrupt_autovector,
-            Trap_instruction_vectors_0,
-            Trap_instruction_vectors_1,
-            Trap_instruction_vectors_2,
-            Trap_instruction_vectors_3,
-            Trap_instruction_vectors_4,
-            Trap_instruction_vectors_5,
-            Trap_instruction_vectors_6,
-            Trap_instruction_vectors_7,
-            Trap_instruction_vectors_8,
-            Trap_instruction_vectors_9,
-            Trap_instruction_vectors_10,
-            Trap_instruction_vectors_11,
-            Trap_instruction_vectors_12,
-            Trap_instruction_vectors_13,
-            Trap_instruction_vectors_14,
-            Trap_instruction_vectors_15,
-            Reserved_coprocessor_0,
-            Reserved_coprocessor_1,
-            Reserved_coprocessor_2,
-            Reserved_coprocessor_3,
-            Reserved_coprocessor_4,
-            Reserved_coprocessor_5,
-            Reserved_coprocessor_6,
-            Reserved_coprocessor_7,
-            Reserved_coprocessor_8,
-            Reserved_coprocessor_9,
-            Reserved_coprocessor_10,
-            Unassigned_reserved_9,
-            Unassigned_reserved_10,
-            Unassigned_reserved_11,
-            Unassigned_reserved_12,
-            Unassigned_reserved_13
-        }
-
         private void btnShowVectors_ItemClick(object sender, ItemClickEventArgs e)
         {
-            frmVectorlist vectors = new frmVectorlist();
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("Vector");
-            dt.Columns.Add("Address", System.Type.GetType("System.Int64"));
-            string description = string.Empty;
-            for (int i = 0; i < 256; i++)
+            using (frmVectorlist vectorlist = new frmVectorlist())
             {
-                long address = GetStartVectorAddress(m_currentfile, i);
-                if (i <= 63)
-                {
-                    // get description
-                    description = ((VectorType)i).ToString().Replace("_", " ");
-                }
-                else
-                {
-                    int number = i - 64;
-                    description = "User defined vector " + number.ToString();
-                }
-                dt.Rows.Add(description, address);
-            }
-            vectors.SetDataTable(dt);
-            vectors.ShowDialog();
+                System.Data.DataTable dt = new System.Data.DataTable();
+                dt.Columns.Add("Vector");
+                dt.Columns.Add("Address", System.Type.GetType("System.Int64"));
 
+                long[] adresses = TrionicFile.GetVectorAddresses(m_currentfile);
+                string[] names = TrionicFile.GetVectorNames();
+                for (int i = 0; i < adresses.Length; i++)
+                {
+                    dt.Rows.Add(names[i].Replace("_", " "), Convert.ToInt64(adresses.GetValue(i)));
+                }
+                vectorlist.SetDataTable(dt);
+                vectorlist.ShowDialog();
+            }
         }
 
         private void DumpThisData(byte[] data, string filename)
@@ -10854,9 +10758,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void btnToggleRealtime_ItemClick(object sender, ItemClickEventArgs e)
         {
             // start realtime mode
-            if (dockRealtime.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible)
+            if (dockRealtime.Visibility == DockVisibility.Visible)
             {
-                dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+                dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
                 barConnectedECUName.Caption = string.Empty;
 
@@ -10913,7 +10817,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         FillRealtimeTable(MonitorType.Dashboard); // default
                     }
-                    dockRealtime.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+                    dockRealtime.Visibility = DockVisibility.Visible;
                     int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
                     int height = dockManager1.Form.ClientSize.Height;
                     if (width > 660) width = 660;
@@ -12734,7 +12638,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             try
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -12746,9 +12650,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 vwr.HighlightCell(xindex, yindex);
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -12762,9 +12666,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -13494,9 +13398,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void StartSRAMTableViewer(string filename, string symbolname, int length, int flashaddress, int sramaddress)
         {
             if (!File.Exists(filename)) return;
-            DevExpress.XtraBars.Docking.DockPanel dockPanel;
+            DockPanel dockPanel;
             bool pnlfound = false;
-            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+            foreach (DockPanel pnl in dockManager1.Panels)
             {
                 if (pnl.Text == "SRAM Symbol: " + symbolname + " [" + Path.GetFileName(m_currentsramfile) + "]")
                 {
@@ -13510,7 +13414,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 dockManager1.BeginUpdate();
                 try
                 {
-                    dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
                     IMapViewer tabdet;//= new MapViewer();
                     tabdet = new MapViewerEx();
@@ -13651,9 +13555,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         bool isDocked = false;
                         if (m_appSettings.AutoDockSameSymbol)
                         {
-                            foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                            foreach (DockPanel pnl in dockManager1.Panels)
                             {
-                                if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                 {
                                     dockPanel.DockAsTab(pnl, 0);
                                     isDocked = true;
@@ -13679,7 +13583,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                            dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                             if (m_appSettings.AutoSizeNewWindows)
                             {
                                 if (tabdet.X_axisvalues.Length > 0)
@@ -13709,7 +13613,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             if (m_appSettings.SynchronizeMapviewers)
             {
-                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                foreach (DockPanel pnl in dockManager1.Panels)
                 {
                     foreach (Control c in pnl.Controls)
                     {
@@ -13725,9 +13629,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                        else if (c is DockPanel)
                         {
-                            DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                            DockPanel tpnl = (DockPanel)c;
                             foreach (Control c2 in tpnl.Controls)
                             {
                                 if (c2 is IMapViewer)
@@ -13744,9 +13648,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
                             }
                         }
-                        else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                        else if (c is ControlContainer)
                         {
-                            DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                            ControlContainer cntr = (ControlContainer)c;
                             foreach (Control c3 in cntr.Controls)
                             {
                                 if (c3 is IMapViewer)
@@ -13838,7 +13742,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                         byte[] result = ReadMapFromSRAM(shs);
                                         int rows = 0;
                                         int cols = 0;
-                                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                        foreach (DockPanel pnl in dockManager1.Panels)
                                         {
                                             if (pnl.Text.StartsWith("Symbol: ") || pnl.Text.StartsWith("SRAM"))
                                             {
@@ -13864,9 +13768,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                             }
                                                         }
                                                     }
-                                                    else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                                                    else if (c is DockPanel)
                                                     {
-                                                        DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                                        DockPanel tpnl = (DockPanel)c;
                                                         foreach (Control c2 in tpnl.Controls)
                                                         {
                                                             if (c2 is IMapViewer)
@@ -13891,9 +13795,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                             }
                                                         }
                                                     }
-                                                    else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                                                    else if (c is ControlContainer)
                                                     {
-                                                        DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                                        ControlContainer cntr = (ControlContainer)c;
                                                         foreach (Control c3 in cntr.Controls)
                                                         {
                                                             if (c3 is IMapViewer)
@@ -13995,9 +13899,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (selrows.Length > 0)
                 {
                     SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    DevExpress.XtraBars.Docking.DockPanel dockPanel;
+                    DockPanel dockPanel;
                     bool pnlfound = false;
-                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                    foreach (DockPanel pnl in dockManager1.Panels)
                     {
                         if (pnl.Text == "SRAM Symbol: " + sh.Varname + " [" + Path.GetFileName(m_currentsramfile) + "]")
                         {
@@ -14046,7 +13950,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             /** NEW 12/11/2008 **/
                             if (!m_appSettings.NewPanelsFloating)
                             {
-                                dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                                dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                                 if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                                 {
                                     int dw = 650;
@@ -14242,9 +14146,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 bool isDocked = false;
                                 if (m_appSettings.AutoDockSameSymbol)
                                 {
-                                    foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                    foreach (DockPanel pnl in dockManager1.Panels)
                                     {
-                                        if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                        if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                         {
                                             dockPanel.DockAsTab(pnl, 0);
                                             isDocked = true;
@@ -14256,9 +14160,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 {
                                     if (m_appSettings.AutoDockSameFile)
                                     {
-                                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                        foreach (DockPanel pnl in dockManager1.Panels)
                                         {
-                                            if ((string)pnl.Tag == m_currentsramfile && pnl != dockPanel && (pnl.Visibility == DevExpress.XtraBars.Docking.DockVisibility.Visible))
+                                            if ((string)pnl.Tag == m_currentsramfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
                                             {
                                                 dockPanel.DockAsTab(pnl, 0);
                                                 isDocked = true;
@@ -14270,7 +14174,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                                 if (!isDocked)
                                 {
-                                    dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                    dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
                                     if (m_appSettings.AutoSizeNewWindows)
                                     {
                                         if (tabdet.X_axisvalues.Length > 0)
@@ -14572,7 +14476,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             // create a new dock with a graph view in it
             //dockManager1.BeginUpdate();
-            DevExpress.XtraBars.Docking.DockPanel dp = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Left);
+            DockPanel dp = dockManager1.AddPanel(DockingStyle.Left);
             dp.Size = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width, dockSymbols.Height);
             dp.Hide();
             //dp.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
@@ -15023,7 +14927,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             {
                                 int rows = 0;
                                 int cols = 0;
-                                foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
+                                foreach (DockPanel pnl in dockManager1.Panels)
                                 {
                                     if (pnl.Text.StartsWith("Symbol: ") || pnl.Text.StartsWith("SRAM"))
                                     {
@@ -15041,9 +14945,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     vwr.ShowTable(cols, isSixteenBitTable(sh.Varname));
                                                 }
                                             }
-                                            else if (c is DevExpress.XtraBars.Docking.DockPanel)
+                                            else if (c is DockPanel)
                                             {
-                                                DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
+                                                DockPanel tpnl = (DockPanel)c;
                                                 foreach (Control c2 in tpnl.Controls)
                                                 {
                                                     if (c2 is IMapViewer)
@@ -15060,9 +14964,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     }
                                                 }
                                             }
-                                            else if (c is DevExpress.XtraBars.Docking.ControlContainer)
+                                            else if (c is ControlContainer)
                                             {
-                                                DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
+                                                ControlContainer cntr = (ControlContainer)c;
                                                 foreach (Control c3 in cntr.Controls)
                                                 {
                                                     if (c3 is IMapViewer)
