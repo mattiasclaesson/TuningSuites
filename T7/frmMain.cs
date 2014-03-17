@@ -2450,6 +2450,7 @@ namespace T7
             else if (symbolname == "KnkAdaptCal.WeightMap2") columns = 4;
             else if (symbolname == "KnkAdaptCal.MaxRef") columns = 3;
             else if (symbolname == "MissfAdap.MissfCntMap") columns = 18;
+            else if (symbolname == "TorqueCal.M_PumpLossMap") columns = 2;
                 
 /*
 Maps met lengte 242 hebben 11 hoogte en breedte 22

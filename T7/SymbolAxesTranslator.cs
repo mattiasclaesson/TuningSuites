@@ -512,6 +512,22 @@ namespace T7
                     y_axis = "TorqueCal.n_EngYSP";
                     y_axis_description = "rpm";
                     break;
+                case "TorqueCal.M_EngTempE85Tab":
+                    y_axis = "TorqueCal.n_EngYSP";
+                    y_axis_description = "rpm"; 
+                    break;
+                case "TorqueCal.X_EngTempTab":
+                    y_axis = "TorqueCal.T_EngTempSP";
+                    y_axis_description = "°C";
+                    z_axis_description = "%";
+                    break;
+                case "TorqueCal.M_PumpLossMap":
+                    x_axis = "TorqueCal.m_AirPumpXSP";
+                    y_axis = "TorqueCal.n_EngPumpYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Nm";
+                    break;
                 case "TEngDiagCal.m_AirperDegA":
                     x_axis = "TEngDiagCal.T_AirInletSP";
                     y_axis = "TEngDiagCal.n_CombSP";
