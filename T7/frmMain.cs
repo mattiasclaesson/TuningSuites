@@ -6368,7 +6368,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 gridViewSymbols_DoubleClick(this, EventArgs.Empty);
             }
-
+            else if (e.Control && e.KeyCode == Keys.C)
+            {
+                Clipboard.SetText(gridViewSymbols.GetFocusedDisplayText());
+                e.Handled = true;
+            }
         }
 
         private void AddToCanTrace(string line)
