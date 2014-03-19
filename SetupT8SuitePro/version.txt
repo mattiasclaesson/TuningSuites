@@ -1,4 +1,4 @@
-T8SuitePro.version=v0.0.0.3
+T8SuitePro.version=v0.0.0.4
 T8CANLib.version=v1.4.8.0
 AquaGauge.version=v1.5.7.0
 ICSharpCode.TextEditor.version=v3.0.0.3437
