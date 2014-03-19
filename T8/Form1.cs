@@ -5810,7 +5810,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
             {
                 StartTableViewer();
             }
-
+            else if (e.Control && e.KeyCode == Keys.C)
+            {
+                Clipboard.SetText(gridViewSymbols.GetFocusedDisplayText());
+                e.Handled = true;
+            }
         }
 
         private void barButtonItem12_ItemClick(object sender, ItemClickEventArgs e)
@@ -15013,17 +15017,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void btnCreateFromTISFile_ItemClick(object sender, ItemClickEventArgs e)
         {
             // we need to decode a file from TIS and generate a .BIN file for that
-            OpenFileDialog ofd = new OpenFileDialog() { Multiselect = false };
-            ofd.Filter = "Binary files|*.bin";
-            ofd.Title = "Select a binary file to base the new file on";
+            OpenFileDialog ofd = new OpenFileDialog() { Multiselect = false, Filter = "Binary files|*.bin", Title = "Select a binary file to base the new file on" };
             try
             {
                 ofd.InitialDirectory = Path.Combine(System.Windows.Forms.Application.StartupPath, "Binaries");
             }
-            catch (Exception)
-            {
+            catch (Exception) {}
 
-            }
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FileInfo fi = new FileInfo(ofd.FileName);
@@ -15093,7 +15093,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             return (byte)(((footerByte ^ 0x21) - 0xD6) & 0xFF);
         }
-
+         
         // TODO: refactor bytecoder
         private byte decodeGbfData(byte gbfDataByte, int decoderIndex)
         {
@@ -15105,19 +15105,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void exportSymbollistAsCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // export as CSV
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "CSV files|*.csv";
-            sfd.Title = "Select a filename to save the symbollist";
-            if (sfd.ShowDialog() == DialogResult.OK)
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "CSV files|*.csv", Title = "Select a filename to save the symbollist" })
             {
-                using (StreamWriter sw = new StreamWriter(sfd.FileName, false))
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    foreach (SymbolHelper sh in m_symbols)
+                    using (StreamWriter sw = new StreamWriter(sfd.FileName, false))
                     {
-                        sw.WriteLine(sh.Varname.Replace(',', '.') + "," + sh.Flash_start_address.ToString() + "," + sh.Start_address.ToString() + "," + sh.Length + "," + sh.Symbol_number.ToString());
+                        foreach (SymbolHelper sh in m_symbols)
+                        {     
+                            sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5}",sh.Varname.Replace(',', '.'),sh.Flash_start_address,sh.Start_address,sh.Length,sh.Symbol_number,sh.Symbol_type));
+                        }
                     }
+                    frmInfoBox info = new frmInfoBox("Export done");
                 }
-                frmInfoBox info = new frmInfoBox("Export done");
             }
         }
 
