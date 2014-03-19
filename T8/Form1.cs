@@ -15013,9 +15013,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void btnCreateFromTISFile_ItemClick(object sender, ItemClickEventArgs e)
         {
             // we need to decode a file from TIS and generate a .BIN file for that
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Multiselect = false;
-            ByteCoder bc = new ByteCoder();
+            OpenFileDialog ofd = new OpenFileDialog() { Multiselect = false };
             ofd.Filter = "Binary files|*.bin";
             ofd.Title = "Select a binary file to base the new file on";
             try
@@ -15031,40 +15029,54 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 FileInfo fi = new FileInfo(ofd.FileName);
                 if (fi.Length == 0x100000)
                 {
-                    byte[] newFile = new byte[0x100000];
+                    // Read the entire base file into a temporary RAM buffer
                     byte[] binFile = File.ReadAllBytes(ofd.FileName);
+                    // Create another temporary buffer in RAM for the new T8 BIN file
+                    byte[] newFile = new byte[0x100000];
+                    // Initialise all addresses to 0xff
+                    for (int i = 0; i < 0x100000; i++)
+                    {
+                        newFile[i] = 0xFF;
+                    }
+                    // Copy recovery bootloader and adaption data from base file
                     for (int i = 0; i < 0x020000; i++)
                     {
                         newFile[i] = binFile[i];
                     }
-
                     // open gbf file
-                    OpenFileDialog ofd2 = new OpenFileDialog();
-                    ofd2.Filter = "TIS T8 files|*.gbf";
-                    ofd2.Title = "Choose a TIS T8 file to build the new file with";
-                    ofd2.Multiselect = false;
+                    OpenFileDialog ofd2 = new OpenFileDialog() { Filter = "TIS T8 files|*.gbf", Title = "Choose a TIS T8 file to build the new file with", Multiselect = false };
                     if (ofd2.ShowDialog() == DialogResult.OK)
                     {
+                        // Start updating FLASH from address 0x020000 
+                        int address = 0x020000;
                         byte[] gbfbytes = File.ReadAllBytes(ofd2.FileName);
-                        int idx = 0;
                         for(int gbft = 0; gbft < gbfbytes.Length ; gbft ++)
                         {
-                            newFile[0x020000 + gbft] = bc.codeByte(gbfbytes[gbft]);
-                            idx++;
-                            if (idx == 0xEA)
-                            {
-                                idx = 0;
-                                bc.ResetCounter();
-                            }
+                            newFile[address + gbft] = decodeGbfData((gbfbytes[gbft]), gbft);
                         }
+
+                        address += gbfbytes.Length;
+                        // Add a 'Programming Station' string to the footer
+                        const string programmingStationString = "forum.ecuproject.com";
+                        newFile[address++] = encodeFooterData((byte)programmingStationString.Length);
+                        newFile[address++] = encodeFooterData(0x10);    // programmingStationStringIdentifier
+                        for (int i = 0; i < programmingStationString.Length; i++)
+                        {
+                            newFile[address + i] = encodeFooterData((byte)programmingStationString[i]);
+                        }
+                        address += programmingStationString.Length;
+                        // Add an adaption data flag to the footer
+                        newFile[address++] = encodeFooterData(0x01);
+                        newFile[address++] = encodeFooterData(0xF9);    // adaptionRegionFlagIdentifier
+                        newFile[address++] = encodeFooterData(0x01);
                     }
-                    SaveFileDialog sfd = new SaveFileDialog();
-                    sfd.Title = "Choose a filename for the new binary file";
-                    sfd.Filter = "Binary files|*.bin";
-                    if (sfd.ShowDialog() == DialogResult.OK)
+                    using (SaveFileDialog sfd = new SaveFileDialog() { Title = "Choose a filename for the new binary file", Filter = "Binary files|*.bin" })
                     {
-                        File.WriteAllBytes(sfd.FileName, newFile);
-                        frmInfoBox info = new frmInfoBox("New file created");
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            File.WriteAllBytes(sfd.FileName, newFile);
+                            frmInfoBox info = new frmInfoBox("New file created");
+                        }
                     }
 
                 }
@@ -15075,6 +15087,20 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
 
         }
+
+        // TODO: refactor bytecoder
+        private byte encodeFooterData(byte footerByte)
+        {
+            return (byte)(((footerByte ^ 0x21) - 0xD6) & 0xFF);
+        }
+
+        // TODO: refactor bytecoder
+        private byte decodeGbfData(byte gbfDataByte, int decoderIndex)
+        {
+            byte[] key = { 0x39, 0x68, 0x77, 0x6D, 0x47, 0x39 };
+            return (byte)(gbfDataByte ^ key[(decoderIndex % 6)]);
+        }
+
 
         private void exportSymbollistAsCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
