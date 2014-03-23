@@ -796,14 +796,16 @@ namespace T7
 
             }
             // <GS-14032011> auto add symbols for 55P / 46T files
-            if (m_current_softwareversion.Trim().StartsWith("EU0AF01C",StringComparison.OrdinalIgnoreCase))
+            if (m_current_softwareversion.Trim().StartsWith("EU0AF01C",StringComparison.OrdinalIgnoreCase) ||
+                m_current_softwareversion.Trim().StartsWith("EU0BF01C", StringComparison.OrdinalIgnoreCase) ||
+                m_current_softwareversion.Trim().StartsWith("EU0CF01C", StringComparison.OrdinalIgnoreCase))
             {
                 // only if there are less symbols described then in the known file
                 if (NamedSymbolCount() < 2000)
                 {
-                    if (MessageBox.Show("Do you want to load the known symbollist for EU0AF01C files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Do you want to load the known symbollist for EU0AF01C/EU0BF01C/EU0CF01C files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        ImportCSVDescriptor(System.Windows.Forms.Application.StartupPath + "\\55P_46T_rev9_csv.csv");
+                        ImportCSVDescriptor(System.Windows.Forms.Application.StartupPath + "\\EU0AF01C.csv");
                     }
                 }
             }
@@ -21814,25 +21816,20 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void exportSymbollistAsCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // export as CSV
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "CSV files|*.csv";
-            sfd.Title = "Select a filename to save the symbollist";
-            if (sfd.ShowDialog() == DialogResult.OK)
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "CSV files|*.csv", Title = "Select a filename to save the symbollist" })
             {
-                using (StreamWriter sw = new StreamWriter(sfd.FileName, false))
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    foreach (SymbolHelper sh in m_symbols)
+                    using (StreamWriter sw = new StreamWriter(sfd.FileName, false))
                     {
-                        sw.WriteLine(sh.Varname.Replace(',', '.') + "," + sh.Flash_start_address.ToString() + "," + sh.Start_address.ToString() + "," + sh.Length + "," + sh.Symbol_number.ToString());
+                        foreach (SymbolHelper sh in m_symbols)
+                        {
+                            sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5}", sh.Varname.Replace(',', '.'), sh.Flash_start_address, sh.Start_address, sh.Length, sh.Symbol_number, sh.Symbol_type));
+                        }
                     }
+                    frmInfoBox info = new frmInfoBox("Export done");
                 }
-                frmInfoBox info = new frmInfoBox("Export done");
             }
         }
-
-        //L Trunk locking delay (-,0,1..254 sec)
-        //R Trunk re-locking delay (-,0,1...254 sec)
-        //V Trunk speed locking (0,2,4,6,8,10,12,14)
-        //B - brake lights test
     }
 }
