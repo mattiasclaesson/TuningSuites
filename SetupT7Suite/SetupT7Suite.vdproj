@@ -681,6 +681,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_29A2E3570F09493A827AEA47631403DF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2A3F5590D8294CE683D6D5496F585829"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2272,12 +2278,6 @@
         "Entry"
         {
         "MsmKey" = "8:_BBC22899D0C44BC9ADA9B69ABF7CFA3C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BD9B8BE1B76741169F86578F4CE39EC0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -4761,6 +4761,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_29A2E3570F09493A827AEA47631403DF"
+            {
+            "SourcePath" = "8:..\\T7\\EU0AF01C.csv"
+            "TargetName" = "8:EU0AF01C.csv"
+            "Tag" = "8:"
+            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2A3F5590D8294CE683D6D5496F585829"
@@ -8879,26 +8899,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD9B8BE1B76741169F86578F4CE39EC0"
-            {
-            "SourcePath" = "8:..\\T7\\55P_46T_rev9_csv.csv"
-            "TargetName" = "8:55P_46T_rev9_csv.csv"
-            "Tag" = "8:"
-            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BDCADA1320A34306A7E4FA4D4F7B35E1"
             {
             "SourcePath" = "8:..\\usb_bdm.dll"
@@ -9902,7 +9902,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5191.42933, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5191.43003, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E3C7BE6293D6DC1D9018221CD7AF4A24"
@@ -10793,14 +10793,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{D1E84EAF-6997-4825-8E7E-131D35B8DF18}"
-        "PackageCode" = "8:{78660CC7-326A-4352-A410-FC1F315710B5}"
+        "ProductCode" = "8:{19FB5D7F-8A81-48B3-A7EC-4FEEA0240552}"
+        "PackageCode" = "8:{63AE866F-3279-44AE-9639-2AAE4796DDA4}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.1"
+        "ProductVersion" = "8:0.0.2"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -11342,7 +11342,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_05C48D82EB884B4BABC3E3524EF1D26A"
             {
-            "SourcePath" = "8:..\\WakeupCANbus\\obj\\x86\\Release\\WakeupCANbus.exe"
+            "SourcePath" = "8:..\\WakeupCANbus\\obj\\x86\\Debug\\WakeupCANbus.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
@@ -11398,7 +11398,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6F820B8014DE4A9F9FA66725E3B6203E"
             {
-            "SourcePath" = "8:..\\T7\\obj\\x86\\Release\\T7.exe"
+            "SourcePath" = "8:..\\T7\\obj\\x86\\Debug\\T7.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
