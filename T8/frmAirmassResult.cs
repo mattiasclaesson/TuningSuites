@@ -1295,7 +1295,7 @@ namespace T8SuitePro
                 if (fuelVEMap != null)
                 {
                     double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
-                    vecorr /= 100;
+                    vecorr /= 128;
                     vecorr = 1 / vecorr;
                     int[] nullvalue = new int[1];
                     nullvalue.SetValue(0, 0);
@@ -1329,7 +1329,7 @@ namespace T8SuitePro
             if (fuelVEMap != null)
             {
                 double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
-                vecorr /= 100;
+                vecorr /= 128;
                 vecorr = 1 / vecorr;
                 vecorr *= 100; // range correction
                 retval = Convert.ToInt32(vecorr);
@@ -1361,7 +1361,7 @@ namespace T8SuitePro
 
                 // get correct data from fuelVEmap ... by airmass and rpm
                 double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
-                vecorr /= 100;
+                vecorr /= 128; //table is a byte value, with range 0.00-2.55 , 1.00 is 128
                 m_requiredFuelForLambda *= (float)vecorr;
 
                 float injectorDC = m_requiredFuelForLambda / (float)m_injectorConstant;
