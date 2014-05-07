@@ -4033,11 +4033,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     totalvalue2 /= compdata.Length;
                 }
             }
-            diffavg = totalvalue1;
+
+            diffavg = totalvalue1 - totalvalue2;
             if (isSixteenBitTable(symbolname))
             {
                 diffabs /= 2;
             }
+
+            diffperc = (diffabs * 100) / length;
 
             return retval;
         }
@@ -4152,40 +4155,35 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 Console.WriteLine(E.Message);
                             }
+                            
+                            string compareName = sh_compare.Varname;
+                            if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
+
                             compareStartAddress = sh_compare.Flash_start_address;
                             if (IsSoftwareOpen(compare_symbols))
                             {
                                 // get address
-                                if (IsSymbolCalibration(sh_compare.Varname) && sh_compare.Length < 0x400 && sh_compare.Flash_start_address > m_currentfile_size)
+                                if (IsSymbolCalibration(compareName) && sh_compare.Length < 0x400 && sh_compare.Flash_start_address > m_currentfile_size)
                                 {
                                     compareStartAddress = sh_compare.Flash_start_address - m_sramOffset;
                                 }
                             }
+
                             foreach (SymbolHelper sh_org in m_symbols)
                             {
-                                if ((sh_compare.Varname == sh_org.Varname && !sh_compare.Varname.StartsWith("Symbolnumber")) ||
-                                    sh_compare.Varname == sh_org.Userdescription ||
-                                    sh_org.Varname == sh_compare.Userdescription ||
-                                    (sh_org.Userdescription == sh_compare.Userdescription && sh_compare.Userdescription != ""))
-                                {
-                                    // compare
+                                string originalName = sh_org.Varname;
+                                if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
 
+                                if (compareName.Equals(originalName) && compareName != String.Empty)
+                                {
                                     if (compareStartAddress > 0 && compareStartAddress < 0x80000)
                                     {
                                         orgStartAddress = (int)GetSymbolAddress(m_symbols, sh_org.Varname);
                                         if (orgStartAddress > 0 && orgStartAddress < 0x80000)
                                         {
-                                            //[Flash_start_address] > 0 AND [Flash_start_address] < 524288
-                                            //if(sh_compare.Symbol_number == 
-                                            string userdescription = sh_compare.Userdescription;
-                                            if (userdescription == string.Empty) userdescription = sh_org.Userdescription;
-
-                                            string compareName = sh_compare.Varname;
-                                            if (compareName.StartsWith("Symbolnumber")) compareName = userdescription;
                                             if (!CompareSymbolToCurrentFile(compareName, (int)compareStartAddress, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
                                             {
                                                 category = "";
-
                                                 if (sh_org.Varname.Contains("."))
                                                 {
                                                     try
@@ -4209,26 +4207,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                     }
                                                 }
 
-                                                dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, compareStartAddress, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(sh_compare.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, userdescription, false, false);
-                                                if (!sh_compare.Varname.StartsWith("Symbolnumber"))
-                                                {
-                                                    //progress.SetProgress("Difference: " + sh_compare.Varname);
-                                                    //barEditItem3.Caption = "Difference: " + sh_compare.Varname;
-                                                }
-                                                else if (!sh_org.Varname.StartsWith("Symbolnumber"))
-                                                {
-                                                    //barEditItem3.Caption = "Difference: " + sh_org.Varname;
-                                                    //progress.SetProgress("Difference: " + sh_org.Varname);
-                                                }
-                                                else
-                                                {
-                                                    //barEditItem3.Caption = "Difference: " + userdescription;
-                                                    //progress.SetProgress("Difference: " + userdescription);
-                                                }
-                                                /*if (sh_org.Length >= 512)
-                                                {
-                                                    Console.WriteLine("Symbol difference: " + sh_compare.Varname + " comp_len: " + sh_compare.Length.ToString("X4") + " orig_len: " + sh_org.Length.ToString("X4"));
-                                                }*/
+                                                dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, compareStartAddress, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(sh_compare.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription, false, false);
                                             }
                                         }
                                     }
@@ -4236,9 +4215,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
                         }
-                        //TODO: Validate whether all symbols are present in both files.
-                        // if there are symbols in the ori file and not in the compare file -> Blue
-                        // if there are symbols in the compare file and not in the ori file -> Red
+
                         symNumber = 0;
                         string varnameori = string.Empty;
                         string varnamecomp = string.Empty;
@@ -4327,7 +4304,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         tabdet.CompareFilename = filename;
                         tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
                         tabdet.gridControl1.DataSource = dt.Copy();
-                        //progress.Close();
                         barEditItem3.Visibility = BarItemVisibility.Never;
                         barEditItem3.Caption = "Done";
 
