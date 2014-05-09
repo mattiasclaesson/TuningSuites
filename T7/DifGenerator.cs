@@ -832,23 +832,23 @@ namespace T7
                 default:
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
-                        retval = m_appSettings.Adc1highvalue.ToString();
+                        retval = (m_appSettings.Adc1highvalue/1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {
-                        retval = m_appSettings.Adc2highvalue.ToString();
+                        retval = (m_appSettings.Adc2highvalue/1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc3channelname)
                     {
-                        retval = m_appSettings.Adc3highvalue.ToString();
+                        retval = (m_appSettings.Adc3highvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc4channelname)
                     {
-                        retval = m_appSettings.Adc4highvalue.ToString();
+                        retval = (m_appSettings.Adc4highvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc5channelname)
                     {
-                        retval = m_appSettings.Adc5highvalue.ToString();
+                        retval = (m_appSettings.Adc5highvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Thermochannelname)
                     {
@@ -1004,23 +1004,23 @@ namespace T7
                 default:
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
-                        retval = m_appSettings.Adc1lowvalue.ToString();
+                        retval = (m_appSettings.Adc1lowvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {
-                        retval = m_appSettings.Adc2lowvalue.ToString();
+                        retval = (m_appSettings.Adc2lowvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc3channelname)
                     {
-                        retval = m_appSettings.Adc3lowvalue.ToString();
+                        retval = (m_appSettings.Adc3lowvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc4channelname)
                     {
-                        retval = m_appSettings.Adc4lowvalue.ToString();
+                        retval = (m_appSettings.Adc4lowvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Adc5channelname)
                     {
-                        retval = m_appSettings.Adc5lowvalue.ToString();
+                        retval = (m_appSettings.Adc5lowvalue / 1000).ToString();
                     }
                     else if (symbolname == m_appSettings.Thermochannelname)
                     {

@@ -10776,35 +10776,35 @@ If boost regulation reports errors you can increase the difference between boost
                         float adc = canUsbDevice.GetADCValue(0);
                         double convertedADvalue = Math.Round(ConvertADCValue(0, adc),2);
                         string channelName = m_appSettings.Adc1channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 1", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc1lowvalue, m_appSettings.Adc1highvalue, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, channelName, "ADC channel 1", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc1lowvalue/1000, m_appSettings.Adc1highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc2)
                     {
                         float adc = canUsbDevice.GetADCValue(1);
                         double convertedADvalue = Math.Round(ConvertADCValue(1, adc),2);
                         string channelName = m_appSettings.Adc2channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 2", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc2lowvalue, m_appSettings.Adc2highvalue, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, channelName, "ADC channel 2", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc2lowvalue/1000, m_appSettings.Adc2highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc3)
                     {
                         float adc = canUsbDevice.GetADCValue(2);
                         double convertedADvalue = Math.Round(ConvertADCValue(2, adc),2);
                         string channelName = m_appSettings.Adc3channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 3", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc3lowvalue, m_appSettings.Adc3highvalue, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, channelName, "ADC channel 3", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc3lowvalue/1000, m_appSettings.Adc3highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc4)
                     {
                         float adc = canUsbDevice.GetADCValue(3);
                         double convertedADvalue = Math.Round(ConvertADCValue(3, adc),2);
                         string channelName = m_appSettings.Adc4channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 4", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc4lowvalue, m_appSettings.Adc4highvalue, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, channelName, "ADC channel 4", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc4lowvalue/1000, m_appSettings.Adc4highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc5)
                     {
                         float adc = canUsbDevice.GetADCValue(4);
                         double convertedADvalue = Math.Round(ConvertADCValue(4, adc),2);
                         string channelName = m_appSettings.Adc5channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 5", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc5lowvalue, m_appSettings.Adc5highvalue, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, channelName, "ADC channel 5", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc5lowvalue/1000, m_appSettings.Adc5highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Usethermo)
                     {
