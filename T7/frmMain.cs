@@ -2453,7 +2453,9 @@ namespace T7
             else if (symbolname == "KnkAdaptCal.MaxRef") columns = 3;
             else if (symbolname == "MissfAdap.MissfCntMap") columns = 18;
             else if (symbolname == "TorqueCal.M_PumpLossMap") columns = 2;
-                
+            else if (symbolname == "HotStCal2.RestartMap") columns = 6;
+            else if (symbolname == "StartCal.ScaleFacRpmE85Map") columns = 8;
+            else if (symbolname == "StartCal.ScaleFacRpmMap") columns = 8;
 /*
 Maps met lengte 242 hebben 11 hoogte en breedte 22
 Maps met lengte 200 hebben 10 hoogte en breedte 20
@@ -2607,6 +2609,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 else if (symbolname == "BstKnkCal.OffsetXSP") returnvalue = 0.1;
                 //else if (symbolname == "IgnNormCal.Map") returnvalue = 0.1;
                 else if (symbolname == "MAFCal.cd_ThrottleMap") returnvalue = 0.0009765625;
+                else if (symbolname == "HotStCal2.RestartMap") returnvalue = 0.001;
             }
             return returnvalue;
         }

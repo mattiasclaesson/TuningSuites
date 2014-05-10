@@ -29,9 +29,6 @@ namespace T7
         private void InitializeComponent()
         {
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
-            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
@@ -40,13 +37,16 @@ namespace T7
             this.txtHighVoltage = new DevExpress.XtraEditors.TextEdit();
             this.txtLowValue = new DevExpress.XtraEditors.TextEdit();
             this.txtLowVoltage = new DevExpress.XtraEditors.TextEdit();
+            this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtHighValue.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtHighVoltage.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLowValue.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLowVoltage.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -69,31 +69,6 @@ namespace T7
             this.groupControl1.Size = new System.Drawing.Size(399, 125);
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "AD channel config";
-            // 
-            // simpleButton1
-            // 
-            this.simpleButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.simpleButton1.Location = new System.Drawing.Point(336, 143);
-            this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Size = new System.Drawing.Size(75, 23);
-            this.simpleButton1.TabIndex = 1;
-            this.simpleButton1.Text = "Ok";
-            this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
-            // 
-            // labelControl1
-            // 
-            this.labelControl1.Location = new System.Drawing.Point(14, 39);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(60, 13);
-            this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "Symbolname";
-            // 
-            // textEdit1
-            // 
-            this.textEdit1.Location = new System.Drawing.Point(119, 32);
-            this.textEdit1.Name = "textEdit1";
-            this.textEdit1.Size = new System.Drawing.Size(257, 20);
-            this.textEdit1.TabIndex = 1;
             // 
             // labelControl6
             // 
@@ -171,6 +146,31 @@ namespace T7
             this.txtLowVoltage.Size = new System.Drawing.Size(60, 20);
             this.txtLowVoltage.TabIndex = 16;
             // 
+            // textEdit1
+            // 
+            this.textEdit1.Location = new System.Drawing.Point(119, 32);
+            this.textEdit1.Name = "textEdit1";
+            this.textEdit1.Size = new System.Drawing.Size(257, 20);
+            this.textEdit1.TabIndex = 1;
+            // 
+            // labelControl1
+            // 
+            this.labelControl1.Location = new System.Drawing.Point(14, 39);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(60, 13);
+            this.labelControl1.TabIndex = 0;
+            this.labelControl1.Text = "Symbolname";
+            // 
+            // simpleButton1
+            // 
+            this.simpleButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.simpleButton1.Location = new System.Drawing.Point(336, 143);
+            this.simpleButton1.Name = "simpleButton1";
+            this.simpleButton1.Size = new System.Drawing.Size(75, 23);
+            this.simpleButton1.TabIndex = 1;
+            this.simpleButton1.Text = "Ok";
+            this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
+            // 
             // frmADCInputConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -185,11 +185,11 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
             this.groupControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtHighValue.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtHighVoltage.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLowValue.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLowVoltage.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }

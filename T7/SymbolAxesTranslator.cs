@@ -227,7 +227,14 @@ namespace T7
                     y_axis = "StartCal.n_EngineYSP";
                     x_axis_description = "°C";
                     y_axis_description = "rpm";
-                    z_axis_description = "0";
+                    z_axis_description = "Fuelfactor";
+                    break;
+                case "StartCal.ScaleFacRpmE85Map":
+                    x_axis = "StartCal.T_EngineXSP";
+                    y_axis = "StartCal.n_EngineYSP";
+                    x_axis_description = "Temp °C";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Fuelfactor";
                     break;
                 case "StartCal.HighAltFacMap":
                     x_axis = "StartCal.T_EngineSP";
@@ -790,16 +797,16 @@ namespace T7
                 case "AftSt1ExtraCal.EnrFacMap":
                     x_axis = "AftStCal1.T_EngineSP";
                     y_axis = "AftSt1ExtraCal.p_AirAmbSP";
-                    x_axis_description = "°C";
-                    y_axis_description = "kPa";
-                    z_axis_description = "0";
+                    x_axis_description = "Temp °C";
+                    y_axis_description = "Pressure kPa";
+                    z_axis_description = "";
                     break;
                 case "AftSt2ExtraCal.EnrFacMap":
-                    x_axis = "AftStCal1.T_EngineSP";
+                    x_axis = "AftStCal2.T_EngineSP";
                     y_axis = "AftSt2ExtraCal.p_AirAmbSP";
-                    x_axis_description = "°C";
-                    y_axis_description = "kPa";
-                    z_axis_description = "0";
+                    x_axis_description = "Temp °C";
+                    y_axis_description = "Pressure kPa";
+                    z_axis_description = "";
                     break;
                 case "PurgeCal.ValveMap16":
                     x_axis = "PurgeCal.p_Diff16XSp";
@@ -1091,7 +1098,7 @@ namespace T7
                     z_axis_description = "g/s";
                     break;
                 case "IdleCal.C_PartNeutral":
-                    y_axis = "IdleCal.T_EngineSP";
+                    y_axis = "IdleCal.T_EngSP";
                     y_axis_description = "°C";
                     z_axis_description = "g/s";
                     break;
@@ -1746,7 +1753,61 @@ namespace T7
                     y_axis_description = "°";
                     z_axis_description = "°";
                     break;
-
+                case "VIOSMAFCal.Q_AirInletTab":
+                    y_axis = "VIOSMAFCal.TicsSP";
+                    y_axis_description = "CPUTics: frequency = 13107800/VIOSMAFCal.TicsSP";
+                    z_axis_description = "g/s";
+                    break;
+                case "E85FSCal.V_IncTrigLim":
+                    y_axis = "E85FSCal.V_IncTrigSP";
+                    y_axis_description = "DL";
+                    z_axis_description = "Volume DL";
+                    break;
+                case "E85FSCal.V_IncStaLimTab":
+                    y_axis = "E85FSCal.V_IncStableSP";
+                    y_axis_description = "DL";
+                    z_axis_description = "Volume DL";
+                    break;
+                case "HotStCal2.RestartMap":
+                    x_axis = "HotStCal2.t_RestartSP";
+                    y_axis = "HotStCal2.RestartFacTab";
+                    x_axis_description = "Time/Seconds";
+                    y_axis_description = "SoakTime";
+                    z_axis_description = "EnrFactor";
+                    break;
+                case "LoadCoCal.Q_DynElLoadTab":
+                    y_axis = "LoadCoCal.I_LoadSP";
+                    y_axis_description = "Current Amp";
+                    z_axis_description = "Electric load";
+                    break;
+                case "IgnLOffCal.n_CombAftSt":
+                    y_axis = "IgnLOffCal.T_CombAftStSP";
+                    y_axis_description = "temp °C /10";
+                    z_axis_description = "combustions";
+                    break;
+                case "TorqueTab.m_01": // KurtMW
+                    y_axis = "TorqueCal.n_EngYSP";
+                    y_axis_description = "rpm";
+                    break;
+                case "TorqueTab.m_02": // KurtMW
+                    y_axis = "TorqueCal.n_EngYSP";
+                    y_axis_description = "rpm";
+                    break;
+                case "TorqueTab.m_03": // KurtMW
+                    y_axis = "TorqueCal.n_EngYSP";
+                    y_axis_description = "rpm";
+                    break;
+                case "TorqueTab.m_Actual": // KurtMW
+                    y_axis = "TorqueCal.n_EngYSP";
+                    y_axis_description = "rpm";
+                    break;
+                case "E85CldStCal.EnrMap":
+                    x_axis = "E85CldStCal.T_EngineSP";
+                    y_axis = "E85CldStCal.n_CombustionTab";
+                    x_axis_description = "Temp °C";
+                    y_axis_description = "Number of combustions";
+                    z_axis_description = "";
+                    break;
             }
             if(z_axis_description.StartsWith("0")) z_axis_description = "z-axis";
             if(x_axis_description.StartsWith("0")) x_axis_description = "x-axis";
