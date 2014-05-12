@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -11,6 +12,7 @@ namespace T7
         public event DifGenerator.ExportProgress onExportProgress;
 
         private AppSettings m_appSettings;
+        private NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
         public AppSettings AppSettings
         {
@@ -832,23 +834,23 @@ namespace T7
                 default:
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
-                        retval = (m_appSettings.Adc1highvalue/1000).ToString();
+                        retval = (m_appSettings.Adc1highvalue/1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {
-                        retval = (m_appSettings.Adc2highvalue/1000).ToString();
+                        retval = (m_appSettings.Adc2highvalue/1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc3channelname)
                     {
-                        retval = (m_appSettings.Adc3highvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc3highvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc4channelname)
                     {
-                        retval = (m_appSettings.Adc4highvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc4highvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc5channelname)
                     {
-                        retval = (m_appSettings.Adc5highvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc5highvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Thermochannelname)
                     {
@@ -1004,23 +1006,23 @@ namespace T7
                 default:
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
-                        retval = (m_appSettings.Adc1lowvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc1lowvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {
-                        retval = (m_appSettings.Adc2lowvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc2lowvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc3channelname)
                     {
-                        retval = (m_appSettings.Adc3lowvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc3lowvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc4channelname)
                     {
-                        retval = (m_appSettings.Adc4lowvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc4lowvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Adc5channelname)
                     {
-                        retval = (m_appSettings.Adc5lowvalue / 1000).ToString();
+                        retval = (m_appSettings.Adc5lowvalue / 1000).ToString(nfi);
                     }
                     else if (symbolname == m_appSettings.Thermochannelname)
                     {
