@@ -15958,6 +15958,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 // and save the data to the repository
                 SaveAdditionalSymbols();
 
+                try
+                {
+                    _softwareIsOpenDetermined = false;
+                    IsSoftwareOpen();
+                }
+                catch (Exception E3)
+                {
+                    Console.WriteLine(E3.Message);
+                }
             }
         }
 
@@ -19525,6 +19534,15 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 // and save the data to the repository
                 SaveAdditionalSymbols();
 
+                try
+                {
+                    _softwareIsOpenDetermined = false;
+                    IsSoftwareOpen();
+                }
+                catch (Exception E3)
+                {
+                    Console.WriteLine(E3.Message);
+                }
             }
         }
 
