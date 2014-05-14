@@ -1817,15 +1817,18 @@ namespace T7
                         SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                         if (sh == null) return;
 
+                        string symName = sh.Varname;
+                        if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
+                        {
+                            symName = sh.Userdescription;
+                        }
                         
                         if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash in stead of sram
-                        {
-                            
+                        {   
                             // Should we start a viewer in realtime mode or in offline mode?
                             if (m_connectedToECU)
                             {
-                                sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                ShowRealtimeMapFromECU(sh.Varname);
+                                ShowRealtimeMapFromECU(symName);
                             }
                             else
                             {
@@ -1834,20 +1837,12 @@ namespace T7
                         }
                         else
                         {
-
-
                             if (sh.Flash_start_address > m_currentfile_size)
                             {
-                                string symName = sh.Varname;
-                                if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
-                                {
-                                    symName = sh.Userdescription;
-                                }
                                 Console.WriteLine("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
                                 if (CheckCANConnectivity())
                                 {
-                                    sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, symName);
-                                    ShowRealtimeMapFromECU(sh.Varname);
+                                    ShowRealtimeMapFromECU(symName);
                                 }
                             }
 
@@ -2953,7 +2948,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                             tabdet.IsRAMViewer = false;
                                         }
                                     }
-                                    tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
 
                                     //<GS-07102010>
                                     if (mode == ECUMode.Auto || mode == ECUMode.Online)
@@ -2968,6 +2962,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                             tabdet.IsRAMViewer = false;
                                         }
                                     }
+
+                                    tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
+
                                     TryToAddOpenLoopTables(tabdet);
                                     tabdet.Dock = DockStyle.Fill;
                                     tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
