@@ -2637,6 +2637,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
             else if (symbolname == "MissfAdap.MissfCntMap") retval = false;
             else if (symbolname == "WriteProtectedECU") retval = false;
             else if (symbolname == "Data_name") retval = false;
+            else if (symbolname == "MAFCal.ConstT_EngineTab") retval = false;
+            else if (symbolname == "MAFCal.ConstT_AirInlTab") retval = false;
             int symlen = GetSymbolLength(m_symbols, symbolname);
             if ((symlen % 2) == 1) retval = false;
             return retval;
