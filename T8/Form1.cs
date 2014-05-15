@@ -4521,6 +4521,7 @@ namespace T8SuitePro
                     totalvalue2 /= compdata.Length;
                 }
             }
+
             diffavg = totalvalue1 - totalvalue2;
             if (isSixteenBitTable(symbolname))
             {
@@ -4664,6 +4665,7 @@ namespace T8SuitePro
                                     }
                                 }
                             }
+
                             symNumber = 0;
                             string varnameori = string.Empty;
                             string varnamecomp = string.Empty;
