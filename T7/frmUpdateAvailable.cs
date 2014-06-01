@@ -126,7 +126,8 @@ namespace T7
             AddDebugLog("Starting explorer");
             //ShowRSSFeeds();
             //Application.DoEvents();
-            System.Diagnostics.Process.Start("IEXPLORE.EXE","http://trionic.mobixs.eu/t7suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
+            //System.Diagnostics.Process.Start("IEXPLORE.EXE","http://trionic.mobixs.eu/t7suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T7Suite/Notes.xml");
         }
 
 

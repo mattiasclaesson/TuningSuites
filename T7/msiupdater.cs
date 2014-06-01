@@ -187,7 +187,8 @@ namespace T7
         public void ExecuteUpdate(Version ver)
         {
             //http://reverse-that-trionic.googlecode.com/svn/trunk/T7Suite/
-            string command = "http://trionic.mobixs.eu/t7suite/" + ver.ToString() + "/T7Suite.msi";
+            //string command = "http://trionic.mobixs.eu/t7suite/" + ver.ToString() + "/T7Suite.msi";
+            string command = "http://develop.trionictuning.com/T7Suite/" + ver.ToString() + "/T7Suite.msi";
             try
             {
                 System.Diagnostics.Process.Start(command);
@@ -320,7 +321,7 @@ namespace T7
             bool m_updateavailable = false;
             bool m_version_toohigh = false;
             bool _info = false;
-            Version maxversion = new Version("1.0.0.0");
+            Version maxversion = new Version("0.0.0.0");
             File.Delete(Apppath + "\\input.xml");
             File.Delete(Apppath + "\\Notes.xml");
 
@@ -328,14 +329,16 @@ namespace T7
             {
                 if (m_customer.Length > 0)
                 {
-                    URLString = "http://trionic.mobixs.eu/t7suite/version.xml";
+                    //URLString = "http://trionic.mobixs.eu/t7suite/version.xml";
+                    URLString = "http://develop.trionictuning.com/T7Suite/version.xml";
                     XMLResult = GetPageHTML(URLString, 10);
                     using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\input.xml", false, System.Text.Encoding.ASCII, 2048))
                     {
                         xmlfile.Write(XMLResult);
                         xmlfile.Close();
                     }
-                    URLString = "http://trionic.mobixs.eu/t7suite/Notes.xml";
+                    //URLString = "http://trionic.mobixs.eu/t7suite/Notes.xml";
+                    URLString = "http://develop.trionictuning.com/T7Suite/Notes.xml";
                     XMLResult = GetPageHTML(URLString, 10);
                     using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
                     {
@@ -436,7 +439,8 @@ namespace T7
 
         internal string GetReleaseNotes()
         {
-            string URLString = "http://trionic.mobixs.eu/t7suite/Notes.xml";
+            //string URLString = "http://trionic.mobixs.eu/t7suite/Notes.xml";
+            string URLString = "http://develop.trionictuning.com/T7Suite/Notes.xml";
             string XMLResult = GetPageHTML(URLString, 10);
             using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
             {

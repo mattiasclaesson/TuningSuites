@@ -16588,7 +16588,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private void barUpdateText_ItemDoubleClick(object sender, ItemClickEventArgs e)
         {
             // TEST
-            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://trionic.mobixs.eu/t7suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
+            //System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://trionic.mobixs.eu/t7suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T7Suite/Notes.xml");
             // END TEST
 
         }
