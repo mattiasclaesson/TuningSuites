@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -12,7 +11,6 @@ namespace T8SuitePro
         public event DifGenerator.ExportProgress onExportProgress;
 
         private AppSettings m_appSettings;
-        private NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
         public AppSettings AppSettings
         {
@@ -843,27 +841,27 @@ namespace T8SuitePro
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
                         double temp1 = m_appSettings.Adc1highvalue / 1000;
-                        retval = temp1.ToString(nfi);
+                        retval = temp1.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {
                         double temp2 = m_appSettings.Adc2highvalue / 1000;
-                        retval = temp2.ToString(nfi);
+                        retval = temp2.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc3channelname)
                     {
                         double temp3 = m_appSettings.Adc3highvalue / 1000;
-                        retval = temp3.ToString(nfi);
+                        retval = temp3.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc4channelname)
                     {
                         double temp4 = m_appSettings.Adc4highvalue / 1000;
-                        retval = temp4.ToString(nfi);
+                        retval = temp4.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc5channelname)
                     {
                         double temp5 = m_appSettings.Adc5highvalue / 1000;
-                        retval = temp5.ToString(nfi);
+                        retval = temp5.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Thermochannelname)
                     {
@@ -1028,27 +1026,27 @@ namespace T8SuitePro
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
                         double temp1 = m_appSettings.Adc1lowvalue / 1000;
-                        retval = temp1.ToString(nfi);
+                        retval = temp1.ToString().Replace(",",".");
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {
                         double temp2 = m_appSettings.Adc2lowvalue / 1000;
-                        retval = temp2.ToString(nfi);
+                        retval = temp2.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc3channelname)
                     {
                         double temp3 = m_appSettings.Adc3lowvalue / 1000;
-                        retval = temp3.ToString(nfi);
+                        retval = temp3.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc4channelname)
                     {
                         double temp4 = m_appSettings.Adc4lowvalue / 1000;
-                        retval = temp4.ToString(nfi);
+                        retval = temp4.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc5channelname)
                     {
                         double temp5 = m_appSettings.Adc5lowvalue / 1000;
-                        retval = temp5.ToString(nfi);
+                        retval = temp5.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Thermochannelname)
                     {
