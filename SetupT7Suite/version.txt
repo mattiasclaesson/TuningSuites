@@ -1,4 +1,4 @@
-T7.version=v0.0.0.6
+T7.version=v0.0.0.7
 AquaGauge.version=v1.5.7.0
 ICSharpCode.TextEditor.version=v3.0.0.3437
 LBIndustrialCtrls.version=v1.5.7.0
