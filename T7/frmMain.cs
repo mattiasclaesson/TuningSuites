@@ -2436,12 +2436,12 @@ namespace T7
             //else if (symbolname == "TorqueCal.M_IgnInflTorqMap") columns = 18;
             else if (symbolname == "TCompCal.EnrFacMap") columns = 8;
             else if (symbolname == "TCompCal.EnrFacE85Map") columns = 8;
-            
+
             else if (symbolname == "TCompCal.EnrFacAutMap") columns = 8;
             else if (symbolname == "AftSt2ExtraCal.EnrFacMap") columns = 15;
+            else if (symbolname == "AftSt2ExtraCal.EnrMapE85") columns = 15;
             else if (symbolname == "AftSt1ExtraCal.EnrFacMap") columns = 15;
             else if (symbolname == "StartCal.HighAltFacMap") columns = 15;
-            else if (symbolname == "AirCtrlCal.m_MaxAirTab") columns = 4;
             else if (symbolname == "BoostCal.p_DiffILimMap") columns = 4;
             else if (symbolname == "MissfCal.outOfLimDelayMAT") columns = 4;
             else if (symbolname == "KnkAdaptCal.WeightMap2") columns = 4;
@@ -2451,18 +2451,18 @@ namespace T7
             else if (symbolname == "HotStCal2.RestartMap") columns = 6;
             else if (symbolname == "StartCal.ScaleFacRpmE85Map") columns = 8;
             else if (symbolname == "StartCal.ScaleFacRpmMap") columns = 8;
-/*
-Maps met lengte 242 hebben 11 hoogte en breedte 22
-Maps met lengte 200 hebben 10 hoogte en breedte 20
-Maps met lengte 198 hebben 11 hoogte en breedte 18
-Maps met lengte 100 hebben 5 hoogte en breedte 20                 * */
+            /*
+            Maps met lengte 242 hebben 11 hoogte en breedte 22
+            Maps met lengte 200 hebben 10 hoogte en breedte 20
+            Maps met lengte 198 hebben 11 hoogte en breedte 18
+            Maps met lengte 100 hebben 5 hoogte en breedte 20                 * */
 
 /* 16 
 TorqueCal.M_NominalMap 18
 TorqueCal.M_IgnInflTroqMap 8*/
             else if (GetSymbolLength(curSymbols, symbolname) == 576) columns = 18;
             else if (GetSymbolLength(curSymbols, symbolname) == 512) columns = 16;
-            
+
             else if (GetSymbolLength(curSymbols, symbolname) == 336) columns = 12;
 
             else if (GetSymbolLength(curSymbols, symbolname) == 288) columns = 9;
@@ -3415,7 +3415,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             System.Windows.Forms.Application.DoEvents();
                             foreach (SymbolHelper shs in m_symbols)
                             {
-                                if (shs.Varname == e.Mapname)
+                                if (shs.Varname == e.Mapname || shs.Userdescription == e.Mapname)
                                 {
                                     try
                                     {
