@@ -802,10 +802,17 @@ namespace T7
                     z_axis_description = "";
                     break;
                 case "AftSt2ExtraCal.EnrFacMap":
-                    x_axis = "AftStCal2.T_EngineSP";
+                    x_axis = "AftSt2ExtraCal.ActualE85SP";
                     y_axis = "AftSt2ExtraCal.p_AirAmbSP";
                     x_axis_description = "Temp °C";
                     y_axis_description = "Pressure kPa";
+                    z_axis_description = "";
+                    break;
+                case "AftSt2ExtraCal.EnrMapE85":
+                    x_axis = "AftStCal2.T_EngineSP";
+                    y_axis = "AftStCal2.T_EngineSP";
+                    x_axis_description = "E85 percentage";
+                    y_axis_description = "Temp °C";
                     z_axis_description = "";
                     break;
                 case "PurgeCal.ValveMap16":
@@ -914,7 +921,9 @@ namespace T7
                     z_axis_description = "Nm";
                     break;
                 case "AirCtrlCal.m_MaxAirTab":
-                    y_axis = "TempLimPosCal.Airmass";
+                case "AirCtrlCal.m_MaxAirE85Ta":
+                case "AirCtrlCal.m_MaxAirPetTa":
+                    y_axis = "AirCtrlCal.y_axis";
                     y_axis_description = "mg/c";
                     z_axis_description = "mg/c";
                     break;
@@ -990,7 +999,8 @@ namespace T7
                     z_axis_description = "0";
                     break;
                 case "AftStCal1.DecrDelayTab":
-                    y_axis = "AftStCal2.T_EngineSP";
+                case "AftStCal1.DecrDelayE85Tab":
+                    y_axis = "AftStCal1.T_EngineSP";
                     y_axis_description = "°C";
                     z_axis_description = "0";
                     break;
