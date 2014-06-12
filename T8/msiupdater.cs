@@ -307,7 +307,7 @@ namespace T8SuitePro
             //string VehicleString;
             bool m_updateavailable = false;
             bool m_version_toohigh = false;
-            Version maxversion = new Version("1.0.0.0");
+            Version maxversion = new Version("0.0.0.0");
             File.Delete(Apppath + "\\input.xml");
             File.Delete(Apppath + "\\Notes.xml");
 
@@ -315,14 +315,14 @@ namespace T8SuitePro
             {
                 if (m_customer.Length > 0)
                 {
-                    URLString = "http://trionic.mobixs.eu/t8suite//version.xml";
+                    URLString = "http://develop.trionictuning.com/T8Suite/version.xml";
                     XMLResult = GetPageHTML(URLString, 10);
                     using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\input.xml", false, System.Text.Encoding.ASCII, 2048))
                     {
                         xmlfile.Write(XMLResult);
                         xmlfile.Close();
                     }
-                    URLString = "http://trionic.mobixs.eu/t8suite/notes.xml";
+                    URLString = "http://develop.trionictuning.com/T8Suite/Notes.xml";
                     XMLResult = GetPageHTML(URLString, 10);
                     using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
                     {
@@ -413,7 +413,7 @@ namespace T8SuitePro
 
         internal string GetReleaseNotes()
         {
-            string URLString = "http://trionic.mobixs.eu/t8suite/notes.xml";
+            string URLString = "http://develop.trionictuning.com/T8Suite/Notes.xml";
             string XMLResult = GetPageHTML(URLString, 10);
             using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
             {

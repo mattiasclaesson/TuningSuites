@@ -108,9 +108,9 @@ namespace T8SuitePro
 
         private void simpleButton3_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://trionic.mobixs.eu/t8suite/Notes.xml" );
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T8Suite/Notes.xml" );
         }
-
+        
 
         public void ShowRSSFeeds()
         {

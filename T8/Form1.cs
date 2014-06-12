@@ -7166,6 +7166,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
         }
 
+        private void barUpdateText_ItemDoubleClick(object sender, ItemClickEventArgs e)
+        {
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T8Suite/Notes.xml");
+        }
+
         public void GetRSSFeeds(Version newversion)
         {
             try
