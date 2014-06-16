@@ -118,7 +118,7 @@ namespace T7
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(269, 47);
             this.labelControl4.TabIndex = 4;
-            this.labelControl4.Text = "Steve Hayes, Hook, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcode, J.K Nilss" +
+            this.labelControl4.Text = "Dilemma, Steve Hayes, Hook, mackan, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcode, J.K Nilss" +
                 "on, General Failure and Mattias Claesson";
             this.labelControl4.DoubleClick += new System.EventHandler(this.labelControl4_DoubleClick);
             // 
@@ -134,7 +134,7 @@ namespace T7
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(188, 36);
             this.labelControl5.TabIndex = 5;
-            this.labelControl5.Text = "You can send an email for support to t5suite@home.nl";
+            this.labelControl5.Text = "No e-mail support currently, check out www.trionictuning.com and www.ecuproject.com";
             this.labelControl5.DoubleClick += new System.EventHandler(this.labelControl5_DoubleClick);
             // 
             // frmAbout

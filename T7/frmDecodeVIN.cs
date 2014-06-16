@@ -41,7 +41,7 @@ namespace T7
             lblMakeyear.Text = carinfo.Makeyear.ToString();
             lblPlant.Text = carinfo.PlantInfo;
             lblSeries.Text = carinfo.Series;
-            lblTurbo.Text = carinfo.TurboModel.ToString();
+            lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_", "-");
             lblGearbox.Text = carinfo.GearboxDescription;
             
         }
