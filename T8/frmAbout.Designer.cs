@@ -113,7 +113,7 @@ namespace T8SuitePro
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(269, 47);
             this.labelControl4.TabIndex = 4;
-            this.labelControl4.Text = "Actitis H., Steve Hayes, Hook, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcod" +
+            this.labelControl4.Text = "Actitis H., Steve Hayes, Hook, mackan, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcod" +
                 "e, J.K Nilsson, G-ice, General Failure and Mattias Claesson";
             // 
             // labelControl5
@@ -128,7 +128,7 @@ namespace T8SuitePro
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(188, 36);
             this.labelControl5.TabIndex = 5;
-            this.labelControl5.Text = "You can send an email for support to t5suite@home.nl";
+            this.labelControl5.Text = "Currently no e-mail support, check out www.trionictuning.com and www.ecuproject.com";
             // 
             // labelControl6
             // 
