@@ -231,6 +231,7 @@ namespace T8SuitePro
                     return VINTurboModel.BorgWarnerK04_2277DCB;
                 case VINEngineType.A16LET_LLU:
                     return VINTurboModel.Unknown;
+                case VINEngineType.A20NFT_LHU_BP:
                     return VINTurboModel.BorgWarnerK04_2277DCB;
                 case VINEngineType.Z20NET:
                     if (makeYear > 2006)
@@ -387,8 +388,8 @@ namespace T8SuitePro
         private VINEngineType DecodeEngineType(string VINNumber, VINCarModel carModel, int makeYear)
         {
             if (VINNumber.Length < 8) return VINEngineType.Unknown;
-            else if (makeYear > 2010 && carModel == VINCarModel.Saab93new)
-            {
+            // else if (makeYear > 2010 && carModel == VINCarModel.Saab93new)
+          //  {
                 //For 9-3 model after 2010 we use special decoder as engine number is reused
                 /*             
         A = Diesel biturbo (Z19DTR) 130 HP
@@ -403,34 +404,42 @@ namespace T8SuitePro
         X = 2.0 LPT/BP (B207F)
         Y = 2.0 Turbo (B207R)
                      */
-                if (VINNumber[7] == 'A') return VINEngineType.Z19DTR_130HP;
-                else if (VINNumber[7] == 'B') return VINEngineType.Z19DTR_160HP;
-                else if (VINNumber[7] == 'D') return VINEngineType.Z19DTR_180HP;
-                else if (VINNumber[7] == 'F') return VINEngineType.B207E;
-                else if (VINNumber[7] == 'N') return VINEngineType.B207H;
-                else if (VINNumber[7] == 'M') return VINEngineType.B207G;
-                else if (VINNumber[7] == 'S') return VINEngineType.B207L;
-                else if (VINNumber[7] == 'T') return VINEngineType.B207S;
-                else if (VINNumber[7] == 'U') return VINEngineType.B207M;
-                else if (VINNumber[7] == 'X') return VINEngineType.B207F;
-                else if (VINNumber[7] == 'Y') return VINEngineType.B207R;
-                else return VINEngineType.Unknown;
-            }
+              //  if (VINNumber[7] == 'A') return VINEngineType.Z19DTR_130HP;
+              //  else if (VINNumber[7] == 'B') return VINEngineType.Z19DTR_160HP;
+              //  else if (VINNumber[7] == 'D') return VINEngineType.Z19DTR_180HP;
+              //  else if (VINNumber[7] == 'F') return VINEngineType.B207E;
+              //  else if (VINNumber[7] == 'N') return VINEngineType.B207H;
+              //  else if (VINNumber[7] == 'M') return VINEngineType.B207G;
+              //  else if (VINNumber[7] == 'S') return VINEngineType.B207L;
+              //  else if (VINNumber[7] == 'T') return VINEngineType.B207S;
+              //  else if (VINNumber[7] == 'U') return VINEngineType.B207M;
+              //  else if (VINNumber[7] == 'X') return VINEngineType.B207F;
+              //  else if (VINNumber[7] == 'Y') return VINEngineType.B207R;
+              //  else return VINEngineType.Unknown;
+          //  }
             else if (makeYear == 2010)
             {
-                if (VINNumber[7] == 'C') return VINEngineType.B205E;
+                if (VINNumber[7] == 'A') return VINEngineType.Z19DTR_130HP;
+                else if (VINNumber[7] == 'B') return VINEngineType.Z19DTR_160HP;
+                else if (VINNumber[7] == 'C') return VINEngineType.B205E;
+                else if (VINNumber[7] == 'D') return VINEngineType.Z19DTR_180HP;
                 else if (VINNumber[7] == 'E') return VINEngineType.B235E;
                 else if (VINNumber[7] == 'F') return VINEngineType.B207E;
                 else if (VINNumber[7] == 'G') return VINEngineType.B235R;
                 else if (VINNumber[7] == 'H') return VINEngineType.A28NET_LBW;
                 else if (VINNumber[7] == 'J') return VINEngineType.A28NER_LAU;
                 else if (VINNumber[7] == 'L') return VINEngineType.A20DTR_LBY;
+                else if (VINNumber[7] == 'N') return VINEngineType.B207H;
+                else if (VINNumber[7] == 'M') return VINEngineType.B207G;
                 else if (VINNumber[7] == 'P') return VINEngineType.Z19DTR;
                 else if (VINNumber[7] == 'R') return VINEngineType.B284R;
                 else if (VINNumber[7] == 'S') return VINEngineType.B207L;
-                else if (VINNumber[7] == 'Y') return VINEngineType.B207R;
+                else if (VINNumber[7] == 'T') return VINEngineType.B207S;
+                else if (VINNumber[7] == 'U') return VINEngineType.B207M;
                 else if (VINNumber[7] == 'V') return VINEngineType.Z19DT;
                 else if (VINNumber[7] == 'W') return VINEngineType.Z19DTH;
+                else if (VINNumber[7] == 'X') return VINEngineType.B207F;
+                else if (VINNumber[7] == 'Y') return VINEngineType.B207R;
                 else if (VINNumber[7] == 'Z') return VINEngineType.A20NFT_LHU;
                 
             }
