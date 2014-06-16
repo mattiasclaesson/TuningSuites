@@ -91,7 +91,7 @@ namespace T8SuitePro
             }
         }
 
-        private bool m_MapDetectionActive = true;
+        private bool m_MapDetectionActive = false;
 
         public bool MapDetectionActive
         {
@@ -127,7 +127,7 @@ namespace T8SuitePro
             }
         }
 
-        private bool m_MeasureAFRInLambda = false;
+        private bool m_MeasureAFRInLambda = true;
 
         public bool MeasureAFRInLambda
         {
@@ -576,7 +576,7 @@ namespace T8SuitePro
             }
         }
 
-        private bool m_OnlyPBus = false;
+        private bool m_OnlyPBus = true;
 
         public bool OnlyPBus
         {
@@ -694,7 +694,7 @@ namespace T8SuitePro
             }
         }
 
-        private bool m_ShowAddressesInHex = false;
+        private bool m_ShowAddressesInHex = true;
 
         public bool ShowAddressesInHex
         {
