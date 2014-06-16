@@ -85,12 +85,15 @@ namespace T8SuitePro
         Unknown,
         None,
         GarretT25,
-        GarretTB2529,
-        GarretTB2531,
-        MitsubishiTD04,
-        GarrettT17,
+        MitsubishiTD04HL_15T,
+        GarrettGT1752,
         GarrettGT2052,
-        MitsubishiTD04L_11TK
+        MitsubishiTD04L_11TK,
+        MitsubishiTD04L_14T,
+        MitsubishiTD04HL_15TK,
+        MitsubishiTD04HL_19TK3,
+        MitsubishiTD04L6_04H_19TK3S,
+        BorgWarnerK04_2277DCB,
     }
 
     public class VINDecoder
@@ -167,54 +170,69 @@ namespace T8SuitePro
             switch (vINEngineType)
             {
                 case VINEngineType.B204E:
+                    return VINTurboModel.GarretT25;
                 case VINEngineType.B204L:
                     return VINTurboModel.GarretT25;
                 case VINEngineType.B204R:
                     return VINTurboModel.GarretT25;
                 case VINEngineType.B205E:
+                    return VINTurboModel.GarrettGT1752;
                 case VINEngineType.B205L:
-                    if (carModel == VINCarModel.Saab95)
-                    {
-                        return VINTurboModel.GarrettT17;
-                    }
-                    else
-                    {
-                        return VINTurboModel.GarretT25;
-                    }
+                    return VINTurboModel.GarrettGT1752;
                 case VINEngineType.B205R:
-                    return VINTurboModel.MitsubishiTD04;
+                    return VINTurboModel.MitsubishiTD04HL_15T;
                 case VINEngineType.B234E:
+                    return VINTurboModel.GarretT25;
                 case VINEngineType.B234L:
                     return VINTurboModel.GarretT25;
                 case VINEngineType.B234R:
-                    return VINTurboModel.MitsubishiTD04;
+                    return VINTurboModel.MitsubishiTD04HL_15T;
                 case VINEngineType.B235E:
-                    return VINTurboModel.GarrettT17;
+                    return VINTurboModel.GarrettGT1752;
                 case VINEngineType.B235L:
+                    return VINTurboModel.MitsubishiTD04HL_15T;
                 case VINEngineType.B235R:
-                    return VINTurboModel.MitsubishiTD04;
+                    return VINTurboModel.MitsubishiTD04HL_15T;
                 case VINEngineType.B207E:
-                case VINEngineType.B207L:
+                    {
                     if (makeYear > 2006)
                         return VINTurboModel.MitsubishiTD04L_11TK;
                     else
                         return VINTurboModel.GarrettGT2052;
+                    }
+                case VINEngineType.B207L:
+                    {
+                    if (makeYear > 2006)
+                        return VINTurboModel.MitsubishiTD04L_11TK;
+                    else
+                        return VINTurboModel.GarrettGT2052;
+                    }
                 case VINEngineType.B207R:
-                    return VINTurboModel.MitsubishiTD04;
+                    return VINTurboModel.MitsubishiTD04L_14T;
                 case VINEngineType.B284R:
-                    return VINTurboModel.MitsubishiTD04;
+                    return VINTurboModel.MitsubishiTD04HL_15TK;
                 case VINEngineType.A28NER_LAU:
-                    return VINTurboModel.Unknown;
+                    return VINTurboModel.MitsubishiTD04HL_19TK3;
                 case VINEngineType.B207H:
+                    return VINTurboModel.MitsubishiTD04L_14T;
                 case VINEngineType.B207G:
+                    return VINTurboModel.MitsubishiTD04L_14T;
                 case VINEngineType.B207S:
+                    return VINTurboModel.MitsubishiTD04L_14T;
                 case VINEngineType.B207M:
+                    return VINTurboModel.MitsubishiTD04L_11TK;
                 case VINEngineType.B207F:
-                    return VINTurboModel.Unknown;
+                    return VINTurboModel.MitsubishiTD04L_11TK;
                 case VINEngineType.A20NFT:
-                    return VINTurboModel.Unknown;
+                    return VINTurboModel.BorgWarnerK04_2277DCB;
+                case VINEngineType.A20NHT_LDK:
+                    return VINTurboModel.BorgWarnerK04_2277DCB;
                 case VINEngineType.Z20NET:
-                    return VINTurboModel.Unknown;
+                    {
+                    if (makeYear > 2006)
+                        return VINTurboModel.MitsubishiTD04L_11TK;
+                    else
+                        return VINTurboModel.GarrettGT2052;
             }
             return VINTurboModel.None;
         }
