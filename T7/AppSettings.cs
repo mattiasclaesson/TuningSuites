@@ -1435,7 +1435,7 @@ namespace T7
             }
         }
 
-        private bool m_ShowAddressesInHex = false;
+        private bool m_ShowAddressesInHex = true;
 
         public bool ShowAddressesInHex
         {
