@@ -9902,7 +9902,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5266.41498, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5289.46, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E3C7BE6293D6DC1D9018221CD7AF4A24"
@@ -10793,14 +10793,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{B706768F-71E7-462E-8750-D794A0333186}"
-        "PackageCode" = "8:{7CE8CA4D-00BD-47DD-A764-980A166C1400}"
+        "ProductCode" = "8:{4D99F136-06AB-4141-B9C6-A13A569AAFD0}"
+        "PackageCode" = "8:{EA5FD2E2-F232-4D8B-BB55-7D8D493686B3}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.7"
+        "ProductVersion" = "8:0.0.8"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
