@@ -27636,7 +27636,12 @@ namespace T7
                         subcategory = XDFSubCategory.Undocumented;
                         break;
                     case "AftSt2ExtraCal.EnrFacMap":
-                        description = helptext = "Afterstart enrichment extra offset factor depending on engine temperature and ambient pressure. Resolution is 0.01 (1%).";
+                        description = helptext = "Afterstart enrichment extra offset factor depending on engine temperature and ambient pressure. Resolution is 0.1 (1%).";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "AftSt2ExtraCal.ActualE85SP":
+                        description = helptext = "Ethanol percent support points for afterstart enrichment extra offset. Resolution is 0.1 (1%).";
                         category = XDFCategories.Undocumented;
                         subcategory = XDFSubCategory.Undocumented;
                         break;

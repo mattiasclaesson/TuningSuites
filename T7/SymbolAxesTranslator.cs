@@ -36,7 +36,7 @@ namespace T7
                 case "EngTipCal.X_TipInRFM3Tab":
                 case "EngTipCal.X_TipInRFM4Tab":
                 case "EngTipCal.X_TipInRFM5Tab":
-                    x_axis = "EngTipCal.X_IndAccXSP";
+                    y_axis = "EngTipCal.X_IndAccXSP";
                     break;
                 case "EngTipCal.m_TipInMan1Map":
                 case "EngTipCal.m_TipInMan2Map":
@@ -802,14 +802,14 @@ namespace T7
                     z_axis_description = "";
                     break;
                 case "AftSt2ExtraCal.EnrFacMap":
-                    x_axis = "AftSt2ExtraCal.ActualE85SP";
+                    x_axis = "AftStCal2.T_EngineSP";
                     y_axis = "AftSt2ExtraCal.p_AirAmbSP";
                     x_axis_description = "Temp °C";
                     y_axis_description = "Pressure kPa";
                     z_axis_description = "";
                     break;
                 case "AftSt2ExtraCal.EnrMapE85":
-                    x_axis = "AftStCal2.T_EngineSP";
+                    x_axis = "AftSt2ExtraCal.ActualE85SP";
                     y_axis = "AftStCal2.T_EngineSP";
                     x_axis_description = "E85 percentage";
                     y_axis_description = "Temp °C";
@@ -1310,6 +1310,20 @@ namespace T7
                     y_axis_description = "0";
                     z_axis_description = "0";
                     break;
+                case "EvapDiagCal.LeakFacTest1MAT":
+                    x_axis = "EvapDiagCal.Test2Ramp1ResSP";
+                    y_axis = "EvapDiagCal.V_Test1FuelSP";
+                    x_axis_description = "";
+                    y_axis_description = "0";
+                    z_axis_description = "mg/c";
+                    break;
+                case "EvapDiagCal.LeakFacTest2MAT":
+                    x_axis = "EvapDiagCal.Test2Ramp2ResSP";
+                    y_axis = "EvapDiagCal.V_Test2FuelSP";
+                    x_axis_description = "";
+                    y_axis_description = "0";
+                    z_axis_description = "mg/c";
+                    break;
                 case "IdleCal.NeutralAirPartTAB":
                     y_axis = "EvapDiagCal.RampSumTab";
                     y_axis_description = "0";
@@ -1739,12 +1753,12 @@ namespace T7
                     z_axis_description = "mg/c";
                     break;
                 case "ExhaustCal.m_AirTau1Tab":
-                    y_axis = "ExhaustCal.T_LimitSP";
+                    y_axis = "ExhaustCal.m_AirSP";
                     y_axis_description = "°C";
                     z_axis_description = "s";
                     break;
                 case "ExhaustCal.m_AirTau2Tab":
-                    y_axis = "ExhaustCal.T_LimitSP";
+                    y_axis = "ExhaustCal.m_AirSP";
                     y_axis_description = "°C";
                     z_axis_description = "s";
                     break;

@@ -2439,7 +2439,7 @@ namespace T7
 
             else if (symbolname == "TCompCal.EnrFacAutMap") columns = 8;
             else if (symbolname == "AftSt2ExtraCal.EnrFacMap") columns = 15;
-            else if (symbolname == "AftSt2ExtraCal.EnrMapE85") columns = 15;
+            else if (symbolname == "AftSt2ExtraCal.EnrMapE85") columns = 7;
             else if (symbolname == "AftSt1ExtraCal.EnrFacMap") columns = 15;
             else if (symbolname == "StartCal.HighAltFacMap") columns = 15;
             else if (symbolname == "BoostCal.p_DiffILimMap") columns = 4;
