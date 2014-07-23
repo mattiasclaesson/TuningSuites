@@ -84,7 +84,7 @@ namespace T8SuitePro
             // 
             // comboBoxEdit2
             // 
-            this.comboBoxEdit2.EditValue = "38400";
+            this.comboBoxEdit2.EditValue = "230400";
             this.comboBoxEdit2.Location = new System.Drawing.Point(142, 48);
             this.comboBoxEdit2.Name = "comboBoxEdit2";
             this.comboBoxEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
@@ -92,7 +92,8 @@ namespace T8SuitePro
             this.comboBoxEdit2.Properties.Items.AddRange(new object[] {
             "9600",
             "38400",
-            "115200"});
+            "115200",
+            "230400"});
             this.comboBoxEdit2.Size = new System.Drawing.Size(216, 20);
             this.comboBoxEdit2.TabIndex = 4;
             // 

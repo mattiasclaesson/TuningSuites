@@ -132,7 +132,7 @@ namespace T8SuitePro
         private bool m_WriteLogMarker = false;
         private string m_currentsramfile = string.Empty;
 
-        private T8CANLib.T8Can t8can = new T8CANLib.T8Can();
+        private TrionicCANLib.TrionicCan t8can = new TrionicCANLib.TrionicCan();
         System.Data.DataTable m_realtimeAddresses;
         private Stopwatch _sw = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
@@ -223,9 +223,9 @@ namespace T8SuitePro
             try
             {
                 sndplayer = new System.Media.SoundPlayer();
-                t8can.onReadProgress += new T8CANLib.T8Can.ReadProgress(t8can_onReadProgress);
-                t8can.onWriteProgress += new T8CANLib.T8Can.WriteProgress(t8can_onWriteProgress);
-                t8can.onCanInfo += new T8CANLib.T8Can.CanInfo(t8can_onCanInfo);
+                t8can.onReadProgress += new TrionicCANLib.TrionicCan.ReadProgress(t8can_onReadProgress);
+                t8can.onWriteProgress += new TrionicCANLib.TrionicCan.WriteProgress(t8can_onWriteProgress);
+                t8can.onCanInfo += new TrionicCANLib.TrionicCan.CanInfo(t8can_onCanInfo);
             }
             catch (Exception E)
             {
@@ -236,19 +236,19 @@ namespace T8SuitePro
             splash.Close();
         }
 
-        void t8can_onWriteProgress(object sender, T8CANLib.T8Can.WriteProgressEventArgs e)
+        void t8can_onWriteProgress(object sender, TrionicCANLib.TrionicCan.WriteProgressEventArgs e)
         {
             SetProgress("Sending " + e.Percentage.ToString("F2") + " %");
             SetProgressPercentage(Convert.ToInt32(e.Percentage));
         }
 
 
-        void t8can_onCanInfo(object sender, T8CANLib.T8Can.CanInfoEventArgs e)
+        void t8can_onCanInfo(object sender, TrionicCANLib.TrionicCan.CanInfoEventArgs e)
         {
             SetProgress(e.Info);
         }
 
-        void t8can_onReadProgress(object sender, T8CANLib.T8Can.ReadProgressEventArgs e)
+        void t8can_onReadProgress(object sender, TrionicCANLib.TrionicCan.ReadProgressEventArgs e)
         {
             SetProgress("Downloading " + e.Percentage.ToString("F2") + " %");
             SetProgressPercentage(Convert.ToInt32(e.Percentage));
@@ -1083,7 +1083,7 @@ namespace T8SuitePro
                             File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
                             File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
 
-                            string DosBoxPath = Path.Combine(System.Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "DOSBox-0.74");  
+                            string DosBoxPath = Path.Combine(System.Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "DOSBox-0.74");
                             // write a dosbox.conf first
                             string confFile = Path.Combine(DosBoxPath, "t8dosb.conf");
                             if (!File.Exists(confFile))
@@ -4019,7 +4019,7 @@ namespace T8SuitePro
             {
                 ribbonDebug.Visible = true;
             }
-            
+
             LoadMyMaps();
         }
 
@@ -4774,7 +4774,7 @@ namespace T8SuitePro
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 CompareToFile(openFileDialog1.FileName);
-                
+
             }
         }
 
@@ -5509,7 +5509,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 retval = "Z20NET";
                                 switch (engineMY)
                                 {
-                                    
+
                                     case 'e':
                                         retval += " MY2003";
                                         break;
@@ -5525,7 +5525,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                     case 'i':
                                         retval += " MY2008";
                                         break;
-                                    
+
                                 }
                                 break;
                             case 85:
@@ -5542,7 +5542,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                 }
                                 break;
                         }
-                        
+
                     }
 
                     string swLabel = ids.GetValue(0).ToString();
@@ -8027,8 +8027,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 if (isSixteenBitTable(limitername)) rows /= 2;
                 for (int rt = 0; rt < rows; rt++)
                 {
-                    int offset1 = (rt *  2);
-                    int offset2 = (rt *  2) + 1;
+                    int offset1 = (rt * 2);
+                    int offset2 = (rt * 2) + 1;
                     int boostcalvalue = Convert.ToInt32(maxtorqueaut[offset1]) * 256 + Convert.ToInt32(maxtorqueaut[offset2]);
                     boostcalvalue = maxtorque * 10;
                     byte b1 = Convert.ToByte(boostcalvalue / 256);
@@ -9497,7 +9497,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             return retval;
         }
-        
+
 
         private void SaveAdditionalSymbols()
         {
@@ -9534,7 +9534,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             ImportXMLDescriptorFile();
         }
 
-       
+
 
         private void gridViewSymbols_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
@@ -10772,28 +10772,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
                 barConnectedECUName.Caption = string.Empty;
-
+                if (t8can.isOpen())
+                    t8can.Cleanup();
             }
             else
             {
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-                {
-                    t8can.setCANDevice("LAWICEL");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-                {
-                    t8can.setCANDevice("COMBI");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                {
-                    Console.WriteLine("Setting ELM327 comport: " + m_appSettings.ELM327Port);
-                    t8can.ForcedComport = m_appSettings.ELM327Port;
-                    t8can.setCANDevice("ELM327");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
-                {
-                    t8can.setCANDevice("JUST4TRIONIC");
-                }
+                SetCanAdapter();
+
+                t8can.EnableCanLog = true;
                 //t8can.EnableCanLog = true; // for testing only
                 if (!t8can.isOpen())
                 {
@@ -10847,23 +10833,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             sfd.Filter = "Snapshots|*.RAM";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-                {
-                    t8can.setCANDevice("LAWICEL");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-                {
-                    t8can.setCANDevice("COMBI");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                {
-                    t8can.ForcedComport = m_appSettings.ELM327Port;
-                    t8can.setCANDevice("ELM327");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
-                {
-                    t8can.setCANDevice("JUST4TRIONIC");
-                }
+                SetCanAdapter();
                 SetProgress("Starting snapshot download");
                 if (!t8can.isOpen())
                 {
@@ -10873,12 +10843,34 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
 
                     m_prohibitReading = true;
-                    byte[] snapshot = t8can.getSRAMSnapshotWithBootloader();
+                    byte[] snapshot = t8can.ReadT8SRAMSnapshot();
                     File.WriteAllBytes(sfd.FileName, snapshot);
                     frmInfoBox info = new frmInfoBox("Snapshot done");
                     m_prohibitReading = false;
                     SetProgressIdle();
                 }
+            }
+        }
+
+        private void SetCanAdapter()
+        {
+            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+            {
+                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.LAWICEL);
+            }
+            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
+            {
+                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.COMBI);
+            }
+            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
+            {
+                t8can.ForcedComport = m_appSettings.ELM327Port;
+                t8can.ForcedBaudrate = m_appSettings.Baudrate;
+                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.ELM327);
+            }
+            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
+            {
+                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.JUST4TRIONIC);
             }
         }
 
@@ -12290,10 +12282,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 _sw.Reset();
                 _sw.Start();
                 System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
+                dt.BeginLoadData();
                 //Console.WriteLine("Fetch the datatable: " + dt.Rows.Count.ToString() + " rows");
                 foreach (DataRow dr in dt.Rows)
                 {
-
+                    Debug.WriteLine("loop: "+_sw.ElapsedMilliseconds);
                     double value = 0;
                     if (m_prohibitReading) return;
                     try
@@ -12344,7 +12337,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     //if (symbolnumber > 0)
                     {
                         byte[] buffer = new byte[1];
-                        
+
                         bool _success = false;
                         //buffer = ReadSymbolFromSRAM((uint)symbolnumber, symbolName, Convert.ToUInt32(dr["SRAMAddress"]), Convert.ToInt32(dr["Length"]), out _success);
                         if (Convert.ToInt32(dr["SRAMAddress"]) > 0)
@@ -12531,7 +12524,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
 
                 //Console.WriteLine("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                
                 LogRealTimeInformation(dt);
+                
                 //UpdateOpenViewers();
                 //<GS-06012011> maybe move the fps counter timer here!
                 _sw.Stop();
@@ -12540,6 +12535,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 secs = 1 / secs;
                 if (float.IsInfinity(secs)) secs = 1;
                 UpdateRealtimeInformation("FPSCounter", secs);
+
+                dt.EndLoadData();
             }
         }
 
@@ -13259,23 +13256,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (sfd.ShowDialog() == DialogResult.OK)
             {
 
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-                {
-                    t8can.setCANDevice("LAWICEL");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-                {
-                    t8can.setCANDevice("COMBI");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                {
-                    t8can.ForcedComport = m_appSettings.ELM327Port;
-                    t8can.setCANDevice("ELM327");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
-                {
-                    t8can.setCANDevice("JUST4TRIONIC");
-                }
+                SetCanAdapter();
                 SetProgress("Starting flash download");
                 if (!t8can.isOpen())
                 {
@@ -13284,10 +13265,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (t8can.isOpen())
                 {
                     m_prohibitReading = true;
-                    //byte[] snapshot = t8can.getFlashContent();
-                    byte[] snapshot = t8can.getFlashWithBootloader();
-                    File.WriteAllBytes(sfd.FileName, snapshot);
-                    frmInfoBox info = new frmInfoBox("Download done");
+                    //byte[] snapshot = t8can.getFlashContent();                    
+                    DoWorkEventArgs args = new DoWorkEventArgs(sfd.FileName);
+
+                    t8can.ReadFlashT8(this, args);
+                    while (args.Result == null)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        Thread.Sleep(10);
+                    }
+                    if ((bool)args.Result == true)
+                    {
+                        frmInfoBox info = new frmInfoBox("Download done");
+                    }
                     m_prohibitReading = false;
                     SetProgressIdle();
                 }
@@ -13295,36 +13285,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         }
 
         private void btnFlashECU_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-            {
-                frmInfoBox info = new frmInfoBox("Flashing with an ELM327 device is not supported");
-                return;
-            }
+        {            
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Binary files|*.bin";
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-                {
-                    t8can.setCANDevice("LAWICEL");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-                {
-                    t8can.setCANDevice("COMBI");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                {
-                    t8can.ForcedComport = m_appSettings.ELM327Port;
-                    t8can.setCANDevice("ELM327");
-                    frmInfoBox info = new frmInfoBox("Flashing with an ELM327 device is not supported");
-                    return;
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
-                {
-                    t8can.setCANDevice("JUST4TRIONIC");
-                }
+
+                SetCanAdapter();
+
                 SetProgress("Starting flash download");
                 if (!t8can.isOpen())
                 {
@@ -13335,7 +13304,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     m_prohibitReading = true;
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
-                    if (t8can.UpdateFlash(ofd.FileName))
+                    DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
+                    t8can.WriteFlashT8(this, args);
+                    while (args.Result == null)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        Thread.Sleep(10);
+                    }
+                    if ((bool)args.Result == true)
                     {
                         frmInfoBox info = new frmInfoBox("Flash sequence done");
                     }
@@ -13345,7 +13321,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             if (MessageBox.Show("Flash was erased but programming failed, do you which to attempt to recover the ECU?", "Warning!", MessageBoxButtons.YesNo) == DialogResult.OK)
                             {
-                                t8can.RecoverECU(ofd.FileName);
+                                t8can.RecoverECUT8(this, args);
+                                while (args.Result == null)
+                                {
+                                    System.Windows.Forms.Application.DoEvents();
+                                    Thread.Sleep(10);
+                                }
                             }
                         }
                         else
@@ -14229,23 +14210,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnGetECUInfo_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-            {
-                t8can.setCANDevice("LAWICEL");
-            }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-            {
-                t8can.setCANDevice("COMBI");
-            }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-            {
-                t8can.ForcedComport = m_appSettings.ELM327Port;
-                t8can.setCANDevice("ELM327");
-            }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
-            {
-                t8can.setCANDevice("JUST4TRIONIC");
-            }
+            SetCanAdapter();
             SetProgress("Starting ECU info retrieval");
             if (!t8can.isOpen())
             {
@@ -14374,7 +14339,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 else if (map_name == "feedbackvstargetafr")
                     btnAFRErrormap_ItemClick(sender, e); // start 'feedback vs target afr' mapviewer
                 else*/
-                    StartTableViewer(e.Item.Tag.ToString().Trim());
+                StartTableViewer(e.Item.Tag.ToString().Trim());
             }
             catch { }
         }
@@ -14388,10 +14353,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             ofd.Title = "Select binary file to transfer the address table to...";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                
+
 
                 int addrtaboffset = GetAddrTableOffsetBySymbolTable(m_currentfile) + 7;
-                int addrtaboffset_newfile = GetAddrTableOffsetBySymbolTable(ofd.FileName) + 7; 
+                int addrtaboffset_newfile = GetAddrTableOffsetBySymbolTable(ofd.FileName) + 7;
                 Console.WriteLine("Addresstable offset 1: " + addrtaboffset.ToString());
                 Console.WriteLine("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
                 bool _allow = false;
@@ -15032,7 +14997,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 ofd.InitialDirectory = Path.Combine(System.Windows.Forms.Application.StartupPath, "Binaries");
             }
-            catch (Exception) {}
+            catch (Exception) { }
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -15060,7 +15025,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         // Start updating FLASH from address 0x020000 
                         int address = 0x020000;
                         byte[] gbfbytes = File.ReadAllBytes(ofd2.FileName);
-                        for(int gbft = 0; gbft < gbfbytes.Length ; gbft ++)
+                        for (int gbft = 0; gbft < gbfbytes.Length; gbft++)
                         {
                             newFile[address + gbft] = decodeGbfData((gbfbytes[gbft]), gbft);
                         }
@@ -15103,7 +15068,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             return (byte)(((footerByte ^ 0x21) - 0xD6) & 0xFF);
         }
-         
+
         // TODO: refactor bytecoder
         private byte decodeGbfData(byte gbfDataByte, int decoderIndex)
         {
@@ -15122,8 +15087,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     using (StreamWriter sw = new StreamWriter(sfd.FileName, false))
                     {
                         foreach (SymbolHelper sh in m_symbols)
-                        {     
-                            sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5}",sh.Varname.Replace(',', '.'),sh.Flash_start_address,sh.Start_address,sh.Length,sh.Symbol_number,sh.Symbol_type));
+                        {
+                            sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5}", sh.Varname.Replace(',', '.'), sh.Flash_start_address, sh.Start_address, sh.Length, sh.Symbol_number, sh.Symbol_type));
                         }
                     }
                     frmInfoBox info = new frmInfoBox("Export done");
@@ -15143,23 +15108,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-                {
-                    t8can.setCANDevice("LAWICEL");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-                {
-                    t8can.setCANDevice("COMBI");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                {
-                    t8can.ForcedComport = m_appSettings.ELM327Port;
-                    t8can.setCANDevice("ELM327");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
-                {
-                    t8can.setCANDevice("JUST4TRIONIC");
-                }
+                SetCanAdapter();
                 SetProgress("Starting recovery procedure");
                 if (!t8can.isOpen())
                 {
@@ -15170,7 +15119,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     m_prohibitReading = true;
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
-                    if (t8can.RecoverECU(ofd.FileName))
+                    DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
+                    t8can.RecoverECUT8(this, args);
+                    while (args.Result == null)
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        Thread.Sleep(10);
+                    }
+                    if ((bool)args.Result == true)
                     {
                         frmInfoBox info = new frmInfoBox("Recovery done");
                     }
@@ -15199,7 +15155,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     CloseProject();
                     m_appSettings.Lastprojectname = "";
-                    
+
                     OpenFile(filename);
                     m_appSettings.LastOpenedType = 0;
 
@@ -15348,7 +15304,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void TryToLoadAdditionalAS2Symbols(string filename)
         {
             // convert to AS2 file format
-            
+
             try
             {
                 SymbolTranslator st = new SymbolTranslator();
@@ -15371,8 +15327,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             int idxSymTab = 0;
                             foreach (SymbolHelper sh in m_symbols)
                             {
-                                if(sh.Length > 0) idxSymTab++;
-                                if(idxSymTab == symbolnumber)
+                                if (sh.Length > 0) idxSymTab++;
+                                if (idxSymTab == symbolnumber)
                                 //if (sh.Symbol_number == symbolnumber)
                                 {
                                     sh.Userdescription = varname;
@@ -15407,7 +15363,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             Console.WriteLine("Failed to import a symbol from AS2 file " + line + ": " + lineE.Message);
                         }
-                        
+
                     }
                 }
             }
@@ -15491,7 +15447,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 string ht = string.Empty;
                                 XDFCategories cat = XDFCategories.Undocumented;
                                 XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                              //  if (st.TranslateSymbolToHelpText(symbolName, out ht, out cat, out subcat) == string.Empty)
+                                //  if (st.TranslateSymbolToHelpText(symbolName, out ht, out cat, out subcat) == string.Empty)
                                 {
                                     DumpSymbolToSourceFile(symbolName, xaxisSymbol, yaxisSymbol, description, divisor, type);
                                     //Console.WriteLine(symbolName + Environment.NewLine + xaxisSymbol + Environment.NewLine + yaxisSymbol + Environment.NewLine + description);
@@ -15506,12 +15462,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             yaxisSymbol = "";
 
                         }
-                        else if(line.StartsWith("Description:["))
+                        else if (line.StartsWith("Description:["))
                         {
                             xaxislineCount = -1;
                             yaxislineCount = -1;
                             resinfolinecount = -1;
-                            if(!line.Contains("\"]")) readingDescription = true;
+                            if (!line.Contains("\"]")) readingDescription = true;
                             description = line;
                         }
                         else if (readingDescription)
@@ -15538,8 +15494,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         else
                         {
-                            if(xaxislineCount >= 0) xaxislineCount--;
-                            if(yaxislineCount >= 0) yaxislineCount--;
+                            if (xaxislineCount >= 0) xaxislineCount--;
+                            if (yaxislineCount >= 0) yaxislineCount--;
                             if (resinfolinecount >= 0) resinfolinecount--;
                             if (resinfolinecount == 0)
                             {
