@@ -12,7 +12,7 @@ namespace T8SuitePro
     {
         private Version m_currentversion;
         private string m_customer = "Global";
-        private string m_server = "http://trionic.mobixs.eu/t8suite/";
+        private string m_server = "http://develop.trionictuning.com/T8Suite/";
         private string m_username = "";
         private string m_password = "";
         private Version m_NewVersion;
@@ -156,7 +156,7 @@ namespace T8SuitePro
         public msiupdater(Version CurrentVersion)
         {
             m_currentversion = CurrentVersion;
-            m_NewVersion = new Version("1.0.0.0");
+            m_NewVersion = new Version("0.0.0.0");
         }
 
         public void CheckForUpdates(string customer, string server, string username, string password, bool FromFile)
@@ -175,7 +175,7 @@ namespace T8SuitePro
 
         public void ExecuteUpdate(Version ver)
         {
-            string command = "http://trionic.mobixs.eu/t8suite/" + ver.ToString() + "/T8Suite.msi";
+            string command = "http://develop.trionictuning.com/T8Suite/" + ver.ToString() + "/T8Suite.msi";
             try
             {
                 System.Diagnostics.Process.Start(command);
