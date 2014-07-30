@@ -88,7 +88,6 @@ using Microsoft.Win32;
 using DevExpress.XtraBars.Docking;
 using System.Threading;
 using RealtimeGraph;
-using T8CANLib;
 using DevExpress.Skins;
 
 namespace T8SuitePro
@@ -11237,7 +11236,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             SetColorForMeasurement(measurementPedalPosition, backColor, foreColor, labelColor);
             SetColorForMeasurement(measurementSpeed, backColor, foreColor, labelColor);
 
-            foreach (Control c in panel2.Controls)
+            foreach (Control c in panelBottom.Controls)
             {
                 if (c is Owf.Controls.DigitalDisplayControl)
                 {
@@ -11868,6 +11867,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 // remove the symbols again ??
             }
+
+            panelBottom.Visible = (e.Page != xtraTabPageEmpty);
         }
 
 
@@ -12257,6 +12258,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         t8can.StallKeepAlive = true;
                         GetSRAMVarsFromTable();
+                        Debug.WriteLine("Getting data pack: "+DateTime.Now.Ticks);
                         // t8can.StallKeepAlive = false;
                         // keep alive every time? ... ?
                     }
@@ -12286,7 +12288,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 //Console.WriteLine("Fetch the datatable: " + dt.Rows.Count.ToString() + " rows");
                 foreach (DataRow dr in dt.Rows)
                 {
-                    Debug.WriteLine("loop: "+_sw.ElapsedMilliseconds);
+                    //Debug.WriteLine("loop: "+_sw.ElapsedMilliseconds);
                     double value = 0;
                     if (m_prohibitReading) return;
                     try

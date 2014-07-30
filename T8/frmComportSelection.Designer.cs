@@ -44,6 +44,7 @@ namespace T8SuitePro
             this.comboBoxEdit1.Name = "comboBoxEdit1";
             this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit1.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.comboBoxEdit1.Size = new System.Drawing.Size(216, 20);
             this.comboBoxEdit1.TabIndex = 0;
             // 
@@ -93,7 +94,9 @@ namespace T8SuitePro
             "9600",
             "38400",
             "115200",
-            "230400"});
+            "230400",
+            "2Mbit"});
+            this.comboBoxEdit2.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.comboBoxEdit2.Size = new System.Drawing.Size(216, 20);
             this.comboBoxEdit2.TabIndex = 4;
             // 

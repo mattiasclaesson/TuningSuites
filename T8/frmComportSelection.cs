@@ -58,6 +58,9 @@ namespace T8SuitePro
                     case 3:
                         retval = 230400;
                         break;
+                    case 4 :
+                        retval = 2000000;
+                        break;
                     default:
                         retval = 38400;
                         break;
@@ -69,6 +72,7 @@ namespace T8SuitePro
                 if (value == 9600) comboBoxEdit2.SelectedIndex = 0;
                 else if (value == 115200) comboBoxEdit2.SelectedIndex = 2;
                 else if (value == 230400) comboBoxEdit2.SelectedIndex = 3;
+                else if (value == 2000000) comboBoxEdit2.SelectedIndex = 4;
                 else comboBoxEdit2.SelectedIndex = 1;
             }
         }

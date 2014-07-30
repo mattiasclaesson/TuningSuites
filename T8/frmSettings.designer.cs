@@ -627,6 +627,7 @@ namespace T8SuitePro
             "CombiAdapter (www.ecuproject.com)",
             "ELM327 (version 1.2 and higher)",
             "Just4Trionic"});
+            this.comboBoxEdit3.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.comboBoxEdit3.Size = new System.Drawing.Size(203, 20);
             this.comboBoxEdit3.TabIndex = 26;
             this.comboBoxEdit3.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
