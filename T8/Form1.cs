@@ -10777,8 +10777,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             else
             {
                 SetCanAdapter();
-
+                #if (DEBUG)
                 t8can.EnableCanLog = true;
+                #endif
                 //t8can.EnableCanLog = true; // for testing only
                 if (!t8can.isOpen())
                 {
