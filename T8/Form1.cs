@@ -10770,6 +10770,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
+                m_enableRealtimeTimer = false;
                 barConnectedECUName.Caption = string.Empty;
                 if (t8can.isOpen())
                     t8can.Cleanup();
@@ -10823,6 +10824,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     SwitchRealtimePanelMode(m_appSettings.Panelmode);
                     m_connectedToECU = true;
                     tmrRealtime.Enabled = true;
+                    m_enableRealtimeTimer = true;
                 }
             }
         }
@@ -12243,6 +12245,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private bool m_connectedToECU = false;
         private bool m_prohibitReading = false;
+        private bool m_enableRealtimeTimer = false;
         private bool _soundAllowed = true;
         private System.Media.SoundPlayer sndplayer;
 
@@ -12273,7 +12276,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 Console.WriteLine("Failed to run realtime timer code: " + E.Message);
             }
-            tmrRealtime.Enabled = true;
+            tmrRealtime.Enabled = m_enableRealtimeTimer;
         }
 
         //TODO: Adjust for Trionic 8
@@ -15101,11 +15104,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnRecoverECU_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-            {
-                frmInfoBox info = new frmInfoBox("Flashing with an ELM327 device is not supported");
-                return;
-            }
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Binary files|*.bin";
             ofd.Multiselect = false;
