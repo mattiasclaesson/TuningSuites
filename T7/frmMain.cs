@@ -263,6 +263,7 @@ namespace T7
         private IKWPDevice kwpCanDevice = null;
         //private KWPHandler kwpHandler = null;
         private bool m_connectedToECU = false;
+        private bool m_enableRealtimeTimer = false;
         msiupdater m_msiUpdater;
         public DelegateShowChangeLog m_DelegateShowChangeLog;
         public DelegateUpdateBDMProgress m_DelegateUpdateBDMProgress;
@@ -1792,11 +1793,19 @@ namespace T7
 
         private void SetDefaultFilters()
         {
-            DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo(@"([Flash_start_address] > 0 AND [Flash_start_address] < 524288)", "Only symbols within binary");
-            gridViewSymbols.ActiveFilter.Clear();
-            gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
-            /*** set filter ***/
-            gridViewSymbols.ActiveFilterEnabled = true;
+            if (IsBinaryFileOpen())
+            {
+                gridViewSymbols.ActiveFilter.Clear(); // clear filter
+                gridViewSymbols.ActiveFilterEnabled = false;
+            }
+            else
+            {
+                DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo(@"([Flash_start_address] > 0 AND [Flash_start_address] < 524288)", "Only symbols within binary");
+                gridViewSymbols.ActiveFilter.Clear();
+                gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
+                /*** set filter ***/
+                gridViewSymbols.ActiveFilterEnabled = true;
+            }
         }
 
 
@@ -1968,7 +1977,7 @@ namespace T7
                 }
                 else
                 {
-                    //Console.WriteLine("Writing " + symbolindex.ToString() + " " + symbolname + " SRAM: " + sramAddress.ToString("X8"));
+                    Console.WriteLine("Writing " + symbolindex.ToString() + " " + symbolname + " SRAM: " + sramAddress.ToString("X8"));
                     // if data length > 64 then split the messages
                     uint m_nrBytes = 64;
                     uint m_nrOfWrites = 0;
@@ -2451,6 +2460,8 @@ namespace T7
             else if (symbolname == "HotStCal2.RestartMap") columns = 6;
             else if (symbolname == "StartCal.ScaleFacRpmE85Map") columns = 8;
             else if (symbolname == "StartCal.ScaleFacRpmMap") columns = 8;
+            else if (symbolname == "SwitchCal.A_AmbPresMap") columns = 2;
+
             /*
             Maps met lengte 242 hebben 11 hoogte en breedte 22
             Maps met lengte 200 hebben 10 hoogte en breedte 20
@@ -10301,6 +10312,7 @@ If boost regulation reports errors you can increase the difference between boost
             {
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
+                m_enableRealtimeTimer = false;
                 //TODO: should be parameter
                 /*KWPHandler.stopLogging();
                 try
@@ -10329,6 +10341,7 @@ If boost regulation reports errors you can increase the difference between boost
             }
             else
             {
+                m_enableRealtimeTimer = true;
                 bool _start_Timer = false;
                 if (m_appSettings.ResetRealtimeSymbolOnTabPageSwitch)
                 {
@@ -10409,7 +10422,7 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                     if (_start_Timer)
                     {
-                        tmrRealtime.Enabled = true;
+                        tmrRealtime.Enabled = m_enableRealtimeTimer;
                     }
                 }
                 // <GS-24062010> always show realtime panel, to make it available for configuration even if not online
@@ -12004,7 +12017,7 @@ dt.Columns.Add("SymbolName");
             {
                 Console.WriteLine("Failed to run realtime timer code: " + E.Message);
             }
-            tmrRealtime.Enabled = true;
+            tmrRealtime.Enabled = m_enableRealtimeTimer;
         }
 
         private void UpdatePerformanceMode()
@@ -21826,7 +21839,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     {
                         foreach (SymbolHelper sh in m_symbols)
                         {
-                            sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5}", sh.Varname.Replace(',', '.'), sh.Flash_start_address, sh.Start_address, sh.Length, sh.Symbol_number, sh.Symbol_type));
+                            sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6}", sh.Varname.Replace(',', '.'), sh.Flash_start_address, sh.Start_address, sh.Length, sh.Symbol_number, sh.Symbol_type, sh.Userdescription));
                         }
                     }
                     frmInfoBox info = new frmInfoBox("Export done");
