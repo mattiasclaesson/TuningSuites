@@ -43,11 +43,6 @@ namespace T7
                 case "EngTipCal.m_TipInMan3Map":
                 case "EngTipCal.m_TipInMan4Map":
                 case "EngTipCal.m_TipInMan5Map":
-                case "EngTipCal.m_TipOutMan1Ma":
-                case "EngTipCal.m_TipOutMan2Ma":
-                case "EngTipCal.m_TipOutMan3Ma":
-                case "EngTipCal.m_TipOutMan4Ma":
-                case "EngTipCal.m_TipOutMan5Ma":
                 case "EngTipCal.m_TipOutMan1Map":
                 case "EngTipCal.m_TipOutMan2Map":
                 case "EngTipCal.m_TipOutMan3Map":
@@ -57,46 +52,31 @@ namespace T7
                     y_axis = "EngTipCal.n_EngineYSP";
                     y_axis_description = "rpm";
                     break;
-                case "EngTipCal.X_TipInRFA3Tab":
-                case "EngTipCal.X_TipInRFA4Tab":
-                case "EngTipCal.X_TipInRFA5Tab":
-                case "EngTipCal.X_TipInRFA1OTa":
-                case "EngTipCal.X_TipInRFA2OTa":
-                case "EngTipCal.X_TipInRFA3OTa":
-                case "EngTipCal.X_TipInRFA4OTa":
-                case "EngTipCal.X_TipInRFA5OTa":
                 case "EngTipCal.X_TipInRFA1OTab":
                 case "EngTipCal.X_TipInRFA2OTab":
                 case "EngTipCal.X_TipInRFA3OTab":
                 case "EngTipCal.X_TipInRFA4OTab":
                 case "EngTipCal.X_TipInRFA5OTab":
-                    x_axis = "EngTipCal.X_IndAccXSP";
+                case "EngTipCal.X_TipInRFA3Tab":
+                case "EngTipCal.X_TipInRFA4Tab":
+                case "EngTipCal.X_TipInRFA5Tab":
+                    y_axis = "EngTipCal.X_IndAccXSP";
                     break;
-                case "EngTipCal.m_TipInAut1BMa":
-                case "EngTipCal.m_TipInAut2BMa":
+
                 case "EngTipCal.m_TipInAut1BMap":
                 case "EngTipCal.m_TipInAut2BMap":
                 case "EngTipCal.m_TipInAut3Map":
                 case "EngTipCal.m_TipInAut4Map":
                 case "EngTipCal.m_TipInAut5Map":
-                case "EngTipCal.m_TipInAut1OMa":
-                case "EngTipCal.m_TipInAut2OMa":
-                case "EngTipCal.m_TipInAut3OMa":
-                case "EngTipCal.m_TipInAut4OMa":
-                case "EngTipCal.m_TipInAut5OMa":
-                case "EngTipCal.m_TipOutAut3Ma":
-                case "EngTipCal.m_TipOutAut4Ma":
-                case "EngTipCal.m_TipOutAut5Ma":
-
                 case "EngTipCal.m_TipInAut1OMap":
                 case "EngTipCal.m_TipInAut2OMap":
                 case "EngTipCal.m_TipInAut3OMap":
                 case "EngTipCal.m_TipInAut4OMap":
                 case "EngTipCal.m_TipInAut5OMap":
+
                 case "EngTipCal.m_TipOutAut3Map":
                 case "EngTipCal.m_TipOutAut4Map":
                 case "EngTipCal.m_TipOutAut5Map":
-
                 case "EngTipCal.m_TipOutAut1OM":
                 case "EngTipCal.m_TipOutAut2OM":
                 case "EngTipCal.m_TipOutAut3OM":
@@ -1311,17 +1291,17 @@ namespace T7
                     z_axis_description = "0";
                     break;
                 case "EvapDiagCal.LeakFacTest1MAT":
-                    x_axis = "EvapDiagCal.Test2Ramp1ResSP";
+                    x_axis = "EvapDiagCal.Test1Ramp2ResSP";
                     y_axis = "EvapDiagCal.V_Test1FuelSP";
                     x_axis_description = "";
-                    y_axis_description = "0";
+                    y_axis_description = "Volume (milliLiter)";
                     z_axis_description = "mg/c";
                     break;
                 case "EvapDiagCal.LeakFacTest2MAT":
                     x_axis = "EvapDiagCal.Test2Ramp2ResSP";
                     y_axis = "EvapDiagCal.V_Test2FuelSP";
                     x_axis_description = "";
-                    y_axis_description = "0";
+                    y_axis_description = "Volume (milliLiter)";
                     z_axis_description = "mg/c";
                     break;
                 case "IdleCal.NeutralAirPartTAB":
@@ -1421,13 +1401,9 @@ namespace T7
                     break;*/
                 case "HotStCal1.EnrFacTab":
                 case "HotStCal1.EnrFacE85Tab":
-                    y_axis = "HotStCal2.t_RestartSP";
-                    y_axis_description = "sec";
-                    z_axis_description = "0";
-                    break;
                 case "HotStCal1.DecrDelayTab":
-                    y_axis = "HotStCal2.t_RestartSP";
-                    y_axis_description = "sec";
+                    y_axis = "HotStCal1.T_EngineSP";
+                    y_axis_description = "Temp °C";
                     z_axis_description = "0";
                     break;
                 case "HotStCal2.RestartFacTab":
@@ -1607,7 +1583,7 @@ namespace T7
                     z_axis_description = "°";
                     break;
                 case "IgnJerkCal.n_LimTab":
-                    y_axis = "IgnJerkCal.n_DiffXSP";
+                    y_axis = "IgnJerkCal.n_LimTabSP";
                     y_axis_description = "rpm";
                     z_axis_description = "0";
                     break;
@@ -1831,6 +1807,49 @@ namespace T7
                     x_axis_description = "Temp °C";
                     y_axis_description = "Number of combustions";
                     z_axis_description = "";
+                    break;
+                case "TorqueCal.X_IgnEfficTab":
+                    y_axis = "TorqueCal.fi_MBTOffsYSP";
+                    y_axis_description = "";
+                    break;
+                case "BoostCal.pwm_E85adjTab":
+                    y_axis = "BoostCal.PIDYSP";
+                    y_axis_description = "";
+                    break;
+                case "IdleCal.X_FirstDrvFuelTAB":
+                    y_axis = "IdleCal.T_EngFirstDrvSP";
+                    y_axis_description = "Temp °C";
+                    break;
+                case "IdleCal.X_FirstDrvE85FuelTAB":
+                    y_axis = "IdleCal.T_EngFirstDrvSP";
+                    y_axis_description = "Temp °C";
+                    break;
+                case "IdleCal.n_DeltaTAB":
+                    y_axis = "IdleCal.n_DeltaSP";
+                    y_axis_description = "";
+                    break;
+                case "E85Cal.X_EthanolActEnrFacMap":
+                    x_axis = "E85Cal.X_EthanolActualXSP";
+                    y_axis = "E85Cal.T_EngTempYSP";
+                    x_axis_description = "E85 percentage";
+                    y_axis_description = "Temp °C";
+                    z_axis_description = "";
+                    break;
+                case "BFuelCal.WWPressCompBetaTab":
+                    y_axis = "BFuelCal.p_WWPressCompSP";
+                    y_axis_description = "";
+                    break;
+                case "BFuelCal.WWCompRampTab":
+                    y_axis = "BFuelCal.T_WWCompSP";
+                    y_axis_description = "Temp °C";
+                    break;
+                case "BFuelCal.WWTempCompBetaTab":
+                    y_axis = "BFuelCal.T_WWCompSP";
+                    y_axis_description = "Temp °C";
+                    break;
+                case "BFuelCal.WWCompAlphaTab":
+                    y_axis = "BFuelCal.T_WWCompSP";
+                    y_axis_description = "Temp °C";
                     break;
             }
             if(z_axis_description.StartsWith("0")) z_axis_description = "z-axis";
