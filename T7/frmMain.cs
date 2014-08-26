@@ -806,7 +806,7 @@ namespace T7
                 {
                     if (MessageBox.Show("Do you want to load the known symbollist for EU0AF01C/EU0BF01C/EU0CF01C files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        ImportCSVDescriptor(System.Windows.Forms.Application.StartupPath + "\\EU0AF01C.csv");
+                        ImportXMLDescriptor(System.Windows.Forms.Application.StartupPath + "\\EU0AF01C.xml");
                     }
                 }
             }
@@ -15978,6 +15978,16 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     Console.WriteLine(E3.Message);
                 }
             }
+        }
+
+        private void ImportXMLDescriptor(string filename)
+        {
+            TryToLoadAdditionalSymbols(filename, false);
+            gridControlSymbols.DataSource = m_symbols;
+            SetDefaultFilters();
+            gridControlSymbols.RefreshDataSource();
+            // and save the data to the repository
+            SaveAdditionalSymbols();
         }
 
         private void btnImportXML_ItemClick(object sender, ItemClickEventArgs e)

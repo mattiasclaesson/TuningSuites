@@ -1047,6 +1047,9 @@
     <EmbeddedResource Include="Compressormaps\td04h-19t-raw.gif" />
     <EmbeddedResource Include="Compressormaps\td06h-20g-cfm.gif" />
     <EmbeddedResource Include="Compressormaps\GT17.jpg" />
+    <Content Include="EU0AF01C.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="quick_restart.ico" />
   </ItemGroup>
   <ItemGroup>
