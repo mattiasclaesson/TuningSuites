@@ -1793,7 +1793,7 @@ namespace T7
 
         private void SetDefaultFilters()
         {
-            if (IsBinaryFileOpen())
+            if (IsSoftwareOpen())
             {
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
                 gridViewSymbols.ActiveFilterEnabled = false;
