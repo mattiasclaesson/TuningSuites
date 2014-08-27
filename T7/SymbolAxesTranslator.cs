@@ -1769,8 +1769,8 @@ namespace T7
                     z_axis_description = "Volume DL";
                     break;
                 case "HotStCal2.RestartMap":
-                    x_axis = "HotStCal2.t_RestartSP";
-                    y_axis = "HotStCal2.RestartFacTab";
+                    x_axis = "HotStCal2.t_RestartYSP";
+                    y_axis = "HotStCal2.RestartE85XSP";
                     x_axis_description = "Time/Seconds";
                     y_axis_description = "SoakTime";
                     z_axis_description = "EnrFactor";
