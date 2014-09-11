@@ -127,7 +127,7 @@ namespace T8SuitePro
                 RSS2HTML.ItemTemplate = "<div class=\"ItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"ItemDescription\">{DESCRIPTION}</div><div class=\"ItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
                 RSS2HTML.NewItemTemplate = "<div style=\"font-style: italic; background-color: #ead2d9\" class=\"NewItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"NewItemDescription\">{DESCRIPTION}</div><div class=\"NewItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
                 RSS2HTML.MainFooter = "</body></html>";
-                RSS2HTML.AddFeed("http://trionic.mobixs.eu/t8suite/Notes.xml", 180); // ' update every 180 minutes (3 hours)
+                RSS2HTML.AddFeed("http://develop.trionictuning.com/T8Suite/Notes.xml", 180); // ' update every 180 minutes (3 hours)
                 RSS2HTML.Execute();
                 RSS2HTML.SaveOutputToFile(Application.UserAppDataPath + "\\T8Suite.html");
             }
