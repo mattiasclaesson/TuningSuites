@@ -563,7 +563,7 @@ namespace T7
                 RSS2HTML.ItemTemplate = "<div class=\"ItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"ItemDescription\">{DESCRIPTION}</div><div class=\"ItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
                 RSS2HTML.NewItemTemplate = "<div style=\"font-style: italic; background-color: #ead2d9\" class=\"NewItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"NewItemDescription\">{DESCRIPTION}</div><div class=\"NewItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
                 RSS2HTML.MainFooter = "</body></html>";
-                RSS2HTML.AddFeed("http://trionic.mobixs.eu/t7suite/" + newversion.ToString() + "/Notes.xml", 180); // ' update every 180 minutes (3 hours)
+                RSS2HTML.AddFeed("http://develop.trionictuning.com/T7Suite/" + newversion.ToString() + "/Notes.xml", 180); // ' update every 180 minutes (3 hours)
                 RSS2HTML.Execute();
                 RSS2HTML.SaveOutputToFile(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html");
             }
@@ -7860,7 +7860,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 if (m_msiUpdater != null)
                 {
-                    m_msiUpdater.CheckForUpdates("Global", "http://trionic.mobixs.eu/t7suite/", "", "", false);
+                    m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T7Suite/", "", "", false);
                 }
             }
             catch (Exception E)
@@ -7955,7 +7955,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 m_msiUpdater.Apppath = System.Windows.Forms.Application.UserAppDataPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
-                m_msiUpdater.CheckForUpdates("Global", "http://trionic.mobixs.eu/t7suite/", "", "", false);
+                m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T7Suite/", "", "", false);
             }
             catch (Exception E)
             {
@@ -16611,7 +16611,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private void barUpdateText_ItemDoubleClick(object sender, ItemClickEventArgs e)
         {
             // TEST
-            //System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://trionic.mobixs.eu/t7suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
+            //System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T7Suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
             System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T7Suite/Notes.xml");
             // END TEST
 

@@ -12,7 +12,7 @@ namespace T7
     {
         private Version m_currentversion;
         private string m_customer = "Global";
-        private string m_server = "http://trionic.mobixs.eu/t7suite/";
+        private string m_server = "http://develop.trionictuning.com/T7Suite/";
         private string m_username = "";
         private string m_password = "";
         private Version m_NewVersion;
