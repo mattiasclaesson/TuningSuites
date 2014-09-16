@@ -204,7 +204,7 @@ namespace T8Test
             Assert.AreEqual(VINCarModel.Saab95new, actual.CarModel);
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("4 door sedan (SN)", actual.Body);
-            Assert.AreEqual(VINEngineType.A20NFT, actual.EngineType);
+            Assert.AreEqual(VINEngineType.A20NFT_LHU, actual.EngineType);
             Assert.AreEqual(VINTurboModel.Unknown, actual.TurboModel);
             Assert.AreEqual("6 speed automatic / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan (9-5)", actual.PlantInfo);
