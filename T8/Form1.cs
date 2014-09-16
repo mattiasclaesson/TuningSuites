@@ -131,7 +131,7 @@ namespace T8SuitePro
         private bool m_WriteLogMarker = false;
         private string m_currentsramfile = string.Empty;
 
-        private TrionicCANLib.TrionicCan t8can = new TrionicCANLib.TrionicCan();
+        private TrionicCANLib.Trionic8 t8can = new TrionicCANLib.Trionic8();
         System.Data.DataTable m_realtimeAddresses;
         private Stopwatch _sw = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
@@ -222,9 +222,9 @@ namespace T8SuitePro
             try
             {
                 sndplayer = new System.Media.SoundPlayer();
-                t8can.onReadProgress += new TrionicCANLib.TrionicCan.ReadProgress(t8can_onReadProgress);
-                t8can.onWriteProgress += new TrionicCANLib.TrionicCan.WriteProgress(t8can_onWriteProgress);
-                t8can.onCanInfo += new TrionicCANLib.TrionicCan.CanInfo(t8can_onCanInfo);
+                t8can.onReadProgress += new TrionicCANLib.ITrionic.ReadProgress(t8can_onReadProgress);
+                t8can.onWriteProgress += new TrionicCANLib.ITrionic.WriteProgress(t8can_onWriteProgress);
+                t8can.onCanInfo += new TrionicCANLib.ITrionic.CanInfo(t8can_onCanInfo);
             }
             catch (Exception E)
             {
@@ -235,22 +235,22 @@ namespace T8SuitePro
             splash.Close();
         }
 
-        void t8can_onWriteProgress(object sender, TrionicCANLib.TrionicCan.WriteProgressEventArgs e)
+        void t8can_onWriteProgress(object sender, TrionicCANLib.ITrionic.WriteProgressEventArgs e)
         {
-            SetProgress("Sending " + e.Percentage.ToString("F2") + " %");
-            SetProgressPercentage(Convert.ToInt32(e.Percentage));
+            SetProgress("Sending " + e.Percentage + " %");
+            SetProgressPercentage(e.Percentage);
         }
 
 
-        void t8can_onCanInfo(object sender, TrionicCANLib.TrionicCan.CanInfoEventArgs e)
+        void t8can_onCanInfo(object sender, TrionicCANLib.ITrionic.CanInfoEventArgs e)
         {
             SetProgress(e.Info);
         }
 
-        void t8can_onReadProgress(object sender, TrionicCANLib.TrionicCan.ReadProgressEventArgs e)
+        void t8can_onReadProgress(object sender, TrionicCANLib.ITrionic.ReadProgressEventArgs e)
         {
-            SetProgress("Downloading " + e.Percentage.ToString("F2") + " %");
-            SetProgressPercentage(Convert.ToInt32(e.Percentage));
+            SetProgress("Downloading " + e.Percentage + " %");
+            SetProgressPercentage(e.Percentage);
         }
 
         private void UpdateRealtimeInformationValue(string symbolname, float value)
@@ -10779,9 +10779,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 SetCanAdapter();
                 #if (DEBUG)
-                t8can.EnableCanLog = true;
+                t8can.EnableLog = true;
                 #endif
-                //t8can.EnableCanLog = true; // for testing only
                 if (!t8can.isOpen())
                 {
                     t8can.openDevice(true);
@@ -10845,7 +10844,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
 
                     m_prohibitReading = true;
-                    byte[] snapshot = t8can.ReadT8SRAMSnapshot();
+                    byte[] snapshot = t8can.ReadSRAMSnapshot();
                     File.WriteAllBytes(sfd.FileName, snapshot);
                     frmInfoBox info = new frmInfoBox("Snapshot done");
                     m_prohibitReading = false;
@@ -13274,7 +13273,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     //byte[] snapshot = t8can.getFlashContent();                    
                     DoWorkEventArgs args = new DoWorkEventArgs(sfd.FileName);
 
-                    t8can.ReadFlashT8(this, args);
+                    t8can.ReadFlash(this, args);
                     while (args.Result == null)
                     {
                         System.Windows.Forms.Application.DoEvents();
@@ -13311,7 +13310,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
                     DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
-                    t8can.WriteFlashT8(this, args);
+                    t8can.WriteFlash(this, args);
                     while (args.Result == null)
                     {
                         System.Windows.Forms.Application.DoEvents();
@@ -13327,7 +13326,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             if (MessageBox.Show("Flash was erased but programming failed, do you which to attempt to recover the ECU?", "Warning!", MessageBoxButtons.YesNo) == DialogResult.OK)
                             {
-                                t8can.RecoverECUT8(this, args);
+                                t8can.RecoverECU(this, args);
                                 while (args.Result == null)
                                 {
                                     System.Windows.Forms.Application.DoEvents();
@@ -15121,7 +15120,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
                     DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
-                    t8can.RecoverECUT8(this, args);
+                    t8can.RecoverECU(this, args);
                     while (args.Result == null)
                     {
                         System.Windows.Forms.Application.DoEvents();
