@@ -237,7 +237,7 @@ namespace T8SuitePro
 
         void t8can_onWriteProgress(object sender, TrionicCANLib.ITrionic.WriteProgressEventArgs e)
         {
-            SetProgress("Sending " + e.Percentage + " %");
+            SetProgress(String.Format("Sending {0} %", e.Percentage));
             SetProgressPercentage(e.Percentage);
         }
 
@@ -249,7 +249,7 @@ namespace T8SuitePro
 
         void t8can_onReadProgress(object sender, TrionicCANLib.ITrionic.ReadProgressEventArgs e)
         {
-            SetProgress("Downloading " + e.Percentage + " %");
+            SetProgress(String.Format("Downloading {0} %", e.Percentage));
             SetProgressPercentage(e.Percentage);
         }
 
