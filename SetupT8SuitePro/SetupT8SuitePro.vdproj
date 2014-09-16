@@ -5344,14 +5344,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{046E8E4C-85B6-4CB7-A9CA-B68D5A14A7E7}"
-        "PackageCode" = "8:{63C26D0E-B752-4603-ACEC-9FFE3548AD57}"
+        "ProductCode" = "8:{B5FDECD2-EA0F-4605-A8D6-38C5D3F35F64}"
+        "PackageCode" = "8:{F012A2DB-8E13-48FA-AE8E-60F6609229AF}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.7"
+        "ProductVersion" = "8:0.0.8"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -5893,7 +5893,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2501F8CD56F14E15861AA14CF71FB1C9"
             {
-            "SourcePath" = "8:..\\T8\\obj\\x86\\Release\\T8SuitePro.exe"
+            "SourcePath" = "8:..\\T8\\obj\\x86\\Debug\\T8SuitePro.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
