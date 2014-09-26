@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using System.IO;
 
 namespace T7
@@ -109,52 +104,9 @@ namespace T7
             }
         }
 
-        private void AddDebugLog(string line)
-        {
-            Console.WriteLine(line);
-            if (Directory.Exists("C:\\debug"))
-            {
-                using (StreamWriter sw = new StreamWriter("c:\\debug\\t7suite.log", true))
-                {
-                    sw.WriteLine(line);
-                }
-            }
-        }
-
         private void simpleButton3_Click(object sender, EventArgs e)
         {
-            AddDebugLog("Starting explorer");
-            //ShowRSSFeeds();
-            //Application.DoEvents();
-            //System.Diagnostics.Process.Start("IEXPLORE.EXE","http://develop.trionictuning.com/T7Suite/Notes.xml" /*Application.UserAppDataPath + "\\T7Suite.html"*/);
             System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T7Suite/Notes.xml");
-        }
-
-
-        public void ShowRSSFeeds()
-        {
-            try
-            {
-                RSS2HTMLScoutLib.RSS2HTMLScout RSS2HTML = new RSS2HTMLScoutLib.RSS2HTMLScout();
-                //RSS2HTML.ForceRefresh = true;
-                RSS2HTML.ItemsPerFeed = 10; // limit 5 latest items per feed
-                RSS2HTML.MainHeader = "<html><head><title>T7Suite changelog</title><!-- CSS source code will be inserted here -->{CSS}<!-- HTML page encoding. please change if needed --><!-- <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"> --></head><body>";
-                //RSS2HTML.ChannelHeader = "<div class=\"ChannelHeader\"><table width=\"100%\" border=\"0\"><tr><td valign=\"middle\" align=\"left\"><a href=\"{LINK}\">{IMAGE}</a></td>      <td width=\"99%\" vAlign=middle align=middle><br><h3>{TITLE}</h3></td></tr></table></div>";
-                RSS2HTML.ChannelHeader = "<div class=\"ChannelHeader\"><table width=\"100%\" border=\"0\"><tr><td valign=\"middle\" align=\"left\"><a href=\"{LINK}\"> {IMAGE}</a></td>      <td width=\"99%\" vAlign=middle align=middle><br><h2>{TITLE}</h2></td></tr></table>{DESCRIPTION}</div>";
-                RSS2HTML.EnclosureTemplate = "<a href=\"{LINK}\">Image: {TITLE} ({LENGTH})</a>";
-                RSS2HTML.ErrorMessageTemplate = "<p>Following feeds can not be displayed:<br>{FAILEDFEEDS}<br></p>";
-                RSS2HTML.ItemTemplate = "<div class=\"ItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"ItemDescription\">{DESCRIPTION}</div><div class=\"ItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
-                RSS2HTML.NewItemTemplate = "<div style=\"font-style: italic; background-color: #ead2d9\" class=\"NewItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"NewItemDescription\">{DESCRIPTION}</div><div class=\"NewItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
-                RSS2HTML.MainFooter = "</body></html>";
-                RSS2HTML.AddFeed("http://develop.trionictuning.com/T7Suite/Notes.xml", 180); // ' update every 180 minutes (3 hours)
-                RSS2HTML.Execute();
-                RSS2HTML.SaveOutputToFile(Application.UserAppDataPath + "\\T7Suite.html");
-            }
-            catch (Exception E)
-            {
-                Console.WriteLine("Error getting RSS feeds: " + E.Message);
-            }
-
         }
 
         private void frmUpdateAvailable_Load(object sender, EventArgs e)

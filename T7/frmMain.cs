@@ -191,7 +191,6 @@ namespace T7
     public delegate void FIOCallback(int value);
     internal delegate void FIOInvokeDelegate();
 
-    public delegate void DelegateShowChangeLog(Version v);
     public delegate void DelegateUpdateBDMProgress(uint bytes);
     public delegate void DelegateUpdateRealTimeValue(string symbolname, float value);
     public delegate void DelegateUpdateMapViewer(IMapViewer viewer, int tabwidth, bool sixteenbits);
@@ -265,7 +264,6 @@ namespace T7
         private bool m_connectedToECU = false;
         private bool m_enableRealtimeTimer = false;
         msiupdater m_msiUpdater;
-        public DelegateShowChangeLog m_DelegateShowChangeLog;
         public DelegateUpdateBDMProgress m_DelegateUpdateBDMProgress;
         public DelegateUpdateRealTimeValue m_DelegateUpdateRealTimeValue;
 
@@ -370,7 +368,6 @@ namespace T7
             
             try
             {
-                m_DelegateShowChangeLog = new DelegateShowChangeLog(this.ShowChangeLog);
                 m_DelegateUpdateBDMProgress = new DelegateUpdateBDMProgress(this.ReportBDMProgress);
                 m_DelegateUpdateRealTimeValue = new DelegateUpdateRealTimeValue(this.UpdateRealtimeInformationValue);
                 m_DelegateUpdateMapViewer = new DelegateUpdateMapViewer(this.UpdateMapViewer);
@@ -548,32 +545,6 @@ namespace T7
             }
         }
 
-        public void GetRSSFeeds(Version newversion)
-        {
-            try
-            {
-                RSS2HTMLScoutLib.RSS2HTMLScout RSS2HTML = new RSS2HTMLScoutLib.RSS2HTMLScout();
-                //RSS2HTML.ForceRefresh = true;
-                RSS2HTML.ItemsPerFeed = 10; // limit 5 latest items per feed
-                RSS2HTML.MainHeader = "<html><head><title>T7Suite changelog</title><!-- CSS source code will be inserted here -->{CSS}<!-- HTML page encoding. please change if needed --><!-- <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"> --></head><body>";
-                //RSS2HTML.ChannelHeader = "<div class=\"ChannelHeader\"><table width=\"100%\" border=\"0\"><tr><td valign=\"middle\" align=\"left\"><a href=\"{LINK}\">{IMAGE}</a></td>      <td width=\"99%\" vAlign=middle align=middle><br><h3>{TITLE}</h3></td></tr></table></div>";
-                RSS2HTML.ChannelHeader = "<div class=\"ChannelHeader\"><table width=\"100%\" border=\"0\"><tr><td valign=\"middle\" align=\"left\"><a href=\"{LINK}\"> {IMAGE}</a></td>      <td width=\"99%\" vAlign=middle align=middle><br><h2>{TITLE}</h2></td></tr></table>{DESCRIPTION}</div>";
-                RSS2HTML.EnclosureTemplate = "<a href=\"{LINK}\">Image: {TITLE} ({LENGTH})</a>";
-                RSS2HTML.ErrorMessageTemplate = "<p>Following feeds can not be displayed:<br>{FAILEDFEEDS}<br></p>";
-                RSS2HTML.ItemTemplate = "<div class=\"ItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"ItemDescription\">{DESCRIPTION}</div><div class=\"ItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
-                RSS2HTML.NewItemTemplate = "<div style=\"font-style: italic; background-color: #ead2d9\" class=\"NewItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"NewItemDescription\">{DESCRIPTION}</div><div class=\"NewItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
-                RSS2HTML.MainFooter = "</body></html>";
-                RSS2HTML.AddFeed("http://develop.trionictuning.com/T7Suite/" + newversion.ToString() + "/Notes.xml", 180); // ' update every 180 minutes (3 hours)
-                RSS2HTML.Execute();
-                RSS2HTML.SaveOutputToFile(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html");
-            }
-            catch (Exception E)
-            {
-                AddDebugLog("Error getting RSS feeds: " + E.Message);
-            }
-
-        }
-
         private bool _softwareIsOpen = false;
         private bool _softwareIsOpenDetermined = false;
 
@@ -625,43 +596,6 @@ namespace T7
             }
             return retval;
         }
-
-        private void ShowChangeLog(Version newversion)
-        {
-            try
-            {
-                AddDebugLog("ShowChangeLog");
-                if (File.Exists(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html"))
-                {
-                    File.Delete(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html");
-                }
-                AddDebugLog("Getting RSS feed");
-                GetRSSFeeds(newversion);
-                AddDebugLog("Checking result");
-                if (File.Exists(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html"))
-                {
-                    AddDebugLog("HTML file exists");
-                    DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
-                    panel.Text = "Change history";
-                    WebBrowser wb = new WebBrowser();
-                    panel.Width = 600;
-                    wb.Dock = DockStyle.Fill;
-                    panel.Controls.Add(wb);
-                    panel.Show();
-                    wb.Navigate(System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html");
-                }
-                else
-                {
-                    AddDebugLog("HTML file does not exist: " + System.Windows.Forms.Application.UserAppDataPath + "\\T7Suite.html");
-                }
-            }
-            catch (Exception E)
-            {
-                AddDebugLog("Failed to show the changelog: " + E.Message);
-            }
-
-        }
-
 
         private bool ValidateFile()
         {
@@ -8010,7 +7944,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     }
                 }
 
-                //this.Invoke(m_DelegateShowChangeLog, e.Version);
                 frmUpdateAvailable frmUpdate = new frmUpdateAvailable();
                 frmUpdate.SetVersionNumber(e.Version.ToString());
                 if (m_msiUpdater != null)
@@ -15825,7 +15758,13 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     {
                         long curaddress = (0xF00000 + i * blockSize);
                         byte[] data = ReadMapFromSRAM(curaddress, blockSize, out _success);
-                        if (!_success) Console.WriteLine("Failed to read data: " + curaddress.ToString("X8"));
+                        if (!_success)
+                        {
+                            frmInfoBox error = new frmInfoBox("Failed to read data: " + curaddress.ToString("X8"));
+                            progress.Close();
+                            m_prohibitReading = false;
+                            return;
+                        }
                         //Console.WriteLine("Read data");
                         int prec = (i * 100) / (0x10000 / blockSize);
                         float kbsread = (float)(i * blockSize)/1024F;
@@ -19565,16 +19504,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     Console.WriteLine(E3.Message);
                 }
             }
-        }
-
-        private void ImportCSVDescriptor(string filename)
-        {
-            TryToLoadAdditionalCSVSymbols(filename);
-            gridControlSymbols.DataSource = m_symbols;
-            SetDefaultFilters();
-            gridControlSymbols.RefreshDataSource();
-            // and save the data to the repository
-            SaveAdditionalSymbols();
         }
 
         private void TryToLoadAdditionalCSVSymbols(string filename)

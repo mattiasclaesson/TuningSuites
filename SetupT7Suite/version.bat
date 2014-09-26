@@ -1,6 +1,6 @@
 @echo off
-set T7.version=0.0.0.11
-set SetupT7Suite.version=0.0.10
+set T7.version=0.0.0.12
+set SetupT7Suite.version=0.0.11
 set AquaGauge.version=1.5.7.0
 set ICSharpCode.TextEditor.version=3.0.0.3437
 set LBIndustrialCtrls.version=1.5.7.0
