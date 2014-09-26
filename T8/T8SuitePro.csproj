@@ -815,16 +815,6 @@
     <Content Include="T8.ico" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="RSS2HTMLScoutLib">
-      <Guid>{26A4EA26-4358-4255-A8F9-08E12426E9C1}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>

@@ -147,12 +147,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1BD2DC9C2F9E3F97B2146B2D499C2429"
-        "OwnerKey" = "8:_F6C587C12C01CDFA6F579972E006FDCC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1BDD6B8C3FDA90A0E354A4104D21FD61"
         "OwnerKey" = "8:_354B7174754D46438FD39EA4C86F6928"
         "MsmSig" = "8:_UNDEFINED"
@@ -1551,12 +1545,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F6C587C12C01CDFA6F579972E006FDCC"
-        "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FA5149F8F4CD4A4FB699615826F8344F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1829,12 +1817,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_08EAC4FE62EE250154CA56FD2956B405"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F6C587C12C01CDFA6F579972E006FDCC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2302,26 +2284,6 @@
                 }
             "SourcePath" = "8:DevExpress.XtraBars.v11.2.dll"
             "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1BD2DC9C2F9E3F97B2146B2D499C2429"
-            {
-            "SourcePath" = "8:RSS2HTMLScout.DLL"
-            "TargetName" = "8:RSS2HTMLScout.DLL"
             "Tag" = "8:"
             "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
             "Condition" = "8:"
@@ -5082,37 +5044,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F6C587C12C01CDFA6F579972E006FDCC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Interop.RSS2HTMLScoutLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F6C587C12C01CDFA6F579972E006FDCC"
-                    {
-                    "Name" = "8:Interop.RSS2HTMLScoutLib.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Interop.RSS2HTMLScoutLib.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FA5149F8F4CD4A4FB699615826F8344F"
             {
             "SourcePath" = "8:..\\Binaries\\55353231_FA56_C_FMEP_37_FIEF_81c.BIN"
@@ -5344,14 +5275,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{FF17F6F9-3FE7-4BAA-B0FE-D037E4C8327F}"
-        "PackageCode" = "8:{29B2FA89-5114-4C73-A87D-E624F290476B}"
+        "ProductCode" = "8:{3732BF07-4956-495F-B5E5-2098AAD4F2F1}"
+        "PackageCode" = "8:{CCDEB670-032C-4FFD-9591-4F16DC5D5216}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.9"
+        "ProductVersion" = "8:0.0.10"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

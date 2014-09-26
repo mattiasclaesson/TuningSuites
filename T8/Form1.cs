@@ -92,7 +92,6 @@ using DevExpress.Skins;
 
 namespace T8SuitePro
 {
-    public delegate void DelegateShowChangeLog(Version v);
     public delegate void DelegateStartReleaseNotePanel(string filename, string version);
     public delegate void DelegateUpdateRealTimeValue(string symbolname, float value);
 
@@ -145,7 +144,6 @@ namespace T8SuitePro
         private string m_currentMapname = string.Empty;
         private Microsoft.Office.Interop.Excel.Application xla;
         msiupdater m_msiUpdater;
-        public DelegateShowChangeLog m_DelegateShowChangeLog;
         private bool _isFullScreenEnabled = false;
         private FormWindowState _oldWindowState;
         private System.Drawing.Rectangle _oldDesktopBounds;
@@ -163,15 +161,6 @@ namespace T8SuitePro
             splash.Show();
             System.Windows.Forms.Application.DoEvents();
             InitializeComponent();
-
-            try
-            {
-                m_DelegateShowChangeLog = new DelegateShowChangeLog(this.ShowChangeLog);
-            }
-            catch (Exception E)
-            {
-                Console.WriteLine(E.Message);
-            }
 
             try
             {
@@ -7139,7 +7128,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     }
                 }
 
-                //this.Invoke(m_DelegateShowChangeLog, e.Version);
                 frmUpdateAvailable frmUpdate = new frmUpdateAvailable();
                 frmUpdate.SetVersionNumber(e.Version.ToString());
                 if (m_msiUpdater != null)
@@ -7168,60 +7156,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
         private void barUpdateText_ItemDoubleClick(object sender, ItemClickEventArgs e)
         {
             System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T8Suite/Notes.xml");
-        }
-
-        public void GetRSSFeeds(Version newversion)
-        {
-            try
-            {
-                RSS2HTMLScoutLib.RSS2HTMLScout RSS2HTML = new RSS2HTMLScoutLib.RSS2HTMLScout();
-                //RSS2HTML.ForceRefresh = true;
-                RSS2HTML.ItemsPerFeed = 10; // limit 5 latest items per feed
-                RSS2HTML.MainHeader = "<html><head><title>T8Suite changelog</title><!-- CSS source code will be inserted here -->{CSS}<!-- HTML page encoding. please change if needed --><!-- <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"> --></head><body>";
-                //RSS2HTML.ChannelHeader = "<div class=\"ChannelHeader\"><table width=\"100%\" border=\"0\"><tr><td valign=\"middle\" align=\"left\"><a href=\"{LINK}\">{IMAGE}</a></td>      <td width=\"99%\" vAlign=middle align=middle><br><h3>{TITLE}</h3></td></tr></table></div>";
-                RSS2HTML.ChannelHeader = "<div class=\"ChannelHeader\"><table width=\"100%\" border=\"0\"><tr><td valign=\"middle\" align=\"left\"><a href=\"{LINK}\"> {IMAGE}</a></td>      <td width=\"99%\" vAlign=middle align=middle><br><h2>{TITLE}</h2></td></tr></table>{DESCRIPTION}</div>";
-                RSS2HTML.EnclosureTemplate = "<a href=\"{LINK}\">Image: {TITLE} ({LENGTH})</a>";
-                RSS2HTML.ErrorMessageTemplate = "<p>Following feeds can not be displayed:<br>{FAILEDFEEDS}<br></p>";
-                RSS2HTML.ItemTemplate = "<div class=\"ItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"ItemDescription\">{DESCRIPTION}</div><div class=\"ItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
-                RSS2HTML.NewItemTemplate = "<div style=\"font-style: italic; background-color: #ead2d9\" class=\"NewItemHeader\"><a href=\"{LINK}\">{TITLE}</a></div><div class=\"NewItemDescription\">{DESCRIPTION}</div><div class=\"NewItemFooter\">{AUTHOR} {DATE} {TIME} <a href=\"{COMMENTS}\">{COMMENTS} {ENCLOSURE}</a></div>";
-                RSS2HTML.MainFooter = "</body></html>";
-                RSS2HTML.AddFeed("http://develop.trionictuning.com/T8Suite/" + newversion.ToString() + "/Notes.xml", 180); // ' update every 180 minutes (3 hours)
-                RSS2HTML.Execute();
-                RSS2HTML.SaveOutputToFile(System.Windows.Forms.Application.UserAppDataPath + "\\T8Suite.html");
-            }
-            catch (Exception E)
-            {
-                Console.WriteLine("Error getting RSS feeds: " + E.Message);
-            }
-
-        }
-
-        private void ShowChangeLog(Version newversion)
-        {
-            try
-            {
-                if (File.Exists(System.Windows.Forms.Application.UserAppDataPath + "\\T8Suite.html"))
-                {
-                    File.Delete(System.Windows.Forms.Application.UserAppDataPath + "\\T8Suite.html");
-                }
-                GetRSSFeeds(newversion);
-                if (File.Exists(System.Windows.Forms.Application.UserAppDataPath + "\\T8Suite.html"))
-                {
-                    DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
-                    panel.Text = "Change history";
-                    WebBrowser wb = new WebBrowser();
-                    panel.Width = 600;
-                    wb.Dock = DockStyle.Fill;
-                    panel.Controls.Add(wb);
-                    panel.Show();
-                    wb.Navigate(System.Windows.Forms.Application.UserAppDataPath + "\\T8Suite.html");
-                }
-            }
-            catch (Exception E)
-            {
-                Console.WriteLine(E.Message);
-            }
-
         }
 
         /// <summary>
