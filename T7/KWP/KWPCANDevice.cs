@@ -72,12 +72,40 @@ namespace T7.KWP
         KWPCANListener m_kwpCanListener = new KWPCANListener();
         const int timeoutPeriod = 1000; // if timeout <GS-11022010> changed from 1000 to 250 to not intefere with the keepalive timer
 
-        private bool m_EnableCanLog = false;
+        private bool m_EnableKwpLog = false;
 
-        public override bool EnableCanLog
+        public override bool EnableLog
         {
-            get { return m_EnableCanLog; }
-            set { m_EnableCanLog = value; }
+            get { return m_EnableKwpLog; }
+            set { m_EnableKwpLog = value; }
+        }
+
+        private int m_forcedBaudrate = 38400;
+
+        public override int ForcedBaudrate
+        {
+            get
+            {
+                return m_forcedBaudrate;
+            }
+            set
+            {
+                m_forcedBaudrate = value;
+            }
+        }
+
+        private string m_forcedComport = string.Empty;
+
+        public override string ForcedComport
+        {
+            get
+            {
+                return m_forcedComport;
+            }
+            set
+            {
+                m_forcedComport = value;
+            }
         }
 
         /// <summary>
@@ -167,7 +195,7 @@ namespace T7.KWP
         {
             Console.WriteLine("KWPCANDevice: " + line);
             DateTime dtnow = DateTime.Now;
-            if (m_EnableCanLog)
+            if (m_EnableKwpLog)
             {
                 using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\CanTraceKWPCANDevice.txt", true))
                 {
@@ -208,24 +236,6 @@ namespace T7.KWP
                 AddToCanTrace("Didn't receive 0x238 message as reply on 0x000040021100813F message");
                 return false;
             }
-
-/*          if (!m_canDevice.sendMessage(msg)) 
-            {
-                AddToCanTrace("Unable to send 0x000040021100813F message");
-                return false;
-            }
-            Console.WriteLine("Init msg sent");
-            if (m_kwpCanListener.waitForMessage(0x238, timeoutPeriod).getID() == 0x238)
-            {
-                AddToCanTrace("Successfully sent 0x000040021100813F message and received reply 0x238");
-                return true;
-            }
-            else
-            {
-                AddToCanTrace("Didn't receive 0x238 message as reply on 0x000040021100813F message");
-                return false;
-            }
-*/
         }
 
         /// <summary>
@@ -236,15 +246,23 @@ namespace T7.KWP
         /// <returns>The status of the request.</returns>
         public override RequestResult sendRequest(KWPRequest a_request, out KWPReply r_reply)
         {
-            CANMessage msg = new CANMessage(0x240, 0, 8);
-            uint row = nrOfRowsToSend(a_request.getData());
+            uint row;
+            uint all_rows = row = nrOfRowsToSend(a_request.getData());
 
             m_kwpCanListener.setupWaitMessage(0x258);
 
             // Send one or several request messages.
             for (; row > 0; row--)
             {
+                CANMessage msg = new CANMessage(0x240, 0, 8);
+                msg.elmExpectedResponses = a_request.ElmExpectedResponses;
                 msg.setData(createCanMessage(a_request.getData(), row - 1));
+                if ((msg.getData() & 0xFFFFUL) == 0xA141UL)
+                    msg.elmExpectedResponses = 0;
+                if (all_rows == 22)
+                {
+                    msg.elmExpectedResponses = row == 1 ? 1 : 0; // on last message (expect 1 reply)
+                }
                 if (!m_canDevice.sendMessage(msg))
                 {
                     r_reply = new KWPReply();
@@ -252,19 +270,18 @@ namespace T7.KWP
                 }
             }
 
-            msg = m_kwpCanListener.waitMessage(timeoutPeriod);          
- //         msg = m_kwpCanListener.waitForMessage(0x258, timeoutPeriod);    
+            var response = m_kwpCanListener.waitMessage(timeoutPeriod);          
             
             // Receive one or several replys and send an ack for each reply.
-            if (msg.getID() == 0x258)
+            if (response.getID() == 0x258)
             {
-                uint nrOfRows = (uint)(msg.getCanData(0) & 0x3F)+ 1;
+                uint nrOfRows = (uint)(response.getCanData(0) & 0x3F) + 1;
                 row = 0;
                 if (nrOfRows == 0)
                     throw new Exception("Wrong nr of rows");
                 //Assume that no KWP reply contains more than 0x200 bytes
                 byte[] reply = new byte[0x200];
-                reply = collectReply(reply, msg.getData(), row);
+                reply = collectReply(reply, response.getData(), row);
                 sendAck(nrOfRows - 1);
                 nrOfRows--;
 
@@ -272,12 +289,11 @@ namespace T7.KWP
 
                 while (nrOfRows > 0)
                 {
-//                    msg = m_kwpCanListener.waitForMessage(0x258, timeoutPeriod);
-                    msg = m_kwpCanListener.waitMessage(timeoutPeriod);
-                    if (msg.getID() == 0x258)
+                    response = m_kwpCanListener.waitMessage(timeoutPeriod);
+                    if (response.getID() == 0x258)
                     {
                         row++;
-                        reply = collectReply(reply, msg.getData(), row);
+                        reply = collectReply(reply, response.getData(), row);
                         sendAck(nrOfRows - 1);
                         nrOfRows--;
                     }
@@ -409,7 +425,8 @@ namespace T7.KWP
         /// <param name="a_rowNr">The row number that should be acknowledged.</param>
         private void sendAck(uint a_rowNr)
         {
-            CANMessage msg = new CANMessage(0x266,0,8);
+            CANMessage msg = new CANMessage(0x266,0,5);
+            msg.elmExpectedResponses =(a_rowNr==0)?0:1;
             uint i = 0;
             ulong data = 0;
             data = setCanData(data, (byte)0x40, i++);
@@ -418,7 +435,7 @@ namespace T7.KWP
             data = setCanData(data, (byte)(0x80 | (int)(a_rowNr)), i++);
             msg.setData(data);
             if (!m_canDevice.sendMessage(msg))
-                Console.WriteLine("Error sending ack");
+                throw new Exception("Error sending ack");
 
         }
     }

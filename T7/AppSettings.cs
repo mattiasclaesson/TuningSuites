@@ -16,6 +16,19 @@ namespace T7
 {
     public class AppSettings
     {
+
+        private int _Baudrate = 38400;
+
+        public int Baudrate
+        {
+            get { return _Baudrate; }
+            set
+            {
+                _Baudrate = value;
+                SaveRegistrySetting("Baudrate", _Baudrate);
+            }
+        }
+
         private string _ELM327Port = "Autodetect";
 
         public string ELM327Port

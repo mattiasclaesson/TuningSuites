@@ -52,6 +52,7 @@ namespace T7.CAN
                 this._message = message;
             }
         }
+
         public class InformationEventArgs : System.EventArgs
         {
             private string _info;
@@ -73,6 +74,7 @@ namespace T7.CAN
                 this._info = info;
             }
         }
+
         public delegate void ReceivedAdditionalInformation(object sender, InformationEventArgs e);
         public event ReceivedAdditionalInformation onReceivedAdditionalInformation;
 

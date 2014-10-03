@@ -31,7 +31,19 @@ namespace T7.KWP
         /// <returns>true on success, otherwise false.</returns>
         public abstract bool startSession();
 
-        public abstract bool EnableCanLog
+        public abstract bool EnableLog
+        {
+            get;
+            set;
+        }
+
+        abstract public int ForcedBaudrate
+        {
+            get;
+            set;
+        }
+
+        abstract public string ForcedComport
         {
             get;
             set;

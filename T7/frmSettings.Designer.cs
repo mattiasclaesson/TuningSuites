@@ -128,7 +128,7 @@ namespace T7
             this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
             this.comboBoxEdit5 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.btnNotifications = new DevExpress.XtraEditors.SimpleButton();
-            this.btnMultiAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
+            this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.checkEdit28 = new DevExpress.XtraEditors.CheckEdit();
@@ -669,7 +669,7 @@ namespace T7
             this.groupControl3.Controls.Add(this.simpleButton3);
             this.groupControl3.Controls.Add(this.comboBoxEdit5);
             this.groupControl3.Controls.Add(this.btnNotifications);
-            this.groupControl3.Controls.Add(this.btnMultiAdapterConfiguration);
+            this.groupControl3.Controls.Add(this.btnAdapterConfiguration);
             this.groupControl3.Controls.Add(this.labelControl5);
             this.groupControl3.Controls.Add(this.comboBoxEdit3);
             this.groupControl3.Controls.Add(this.checkEdit28);
@@ -729,15 +729,15 @@ namespace T7
             this.btnNotifications.Text = "Notifications";
             this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
             // 
-            // btnMultiAdapterConfiguration
+            // btnAdapterConfiguration
             // 
-            this.btnMultiAdapterConfiguration.Enabled = false;
-            this.btnMultiAdapterConfiguration.Location = new System.Drawing.Point(347, 137);
-            this.btnMultiAdapterConfiguration.Name = "btnMultiAdapterConfiguration";
-            this.btnMultiAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
-            this.btnMultiAdapterConfiguration.TabIndex = 25;
-            this.btnMultiAdapterConfiguration.Text = "Configuration";
-            this.btnMultiAdapterConfiguration.Click += new System.EventHandler(this.btnMultiAdapterConfiguration_Click);
+            this.btnAdapterConfiguration.Enabled = false;
+            this.btnAdapterConfiguration.Location = new System.Drawing.Point(347, 137);
+            this.btnAdapterConfiguration.Name = "btnAdapterConfiguration";
+            this.btnAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
+            this.btnAdapterConfiguration.TabIndex = 25;
+            this.btnAdapterConfiguration.Text = "Configuration";
+            this.btnAdapterConfiguration.Click += new System.EventHandler(this.btnAdapterConfiguration_Click);
             // 
             // labelControl5
             // 
@@ -756,8 +756,8 @@ namespace T7
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit3.Properties.Items.AddRange(new object[] {
             "Lawicel CANUSB (www.lawicel.com)",
-            "MultiAdapter (www.ecuproject.com)",
-            "Mictronics (test)"});
+            "CombiAdapter (www.ecuproject.com)",
+            "ELM327 (version 1.2 and higher)"});
             this.comboBoxEdit3.Size = new System.Drawing.Size(203, 20);
             this.comboBoxEdit3.TabIndex = 23;
             this.comboBoxEdit3.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
@@ -1005,7 +1005,7 @@ namespace T7
         private DevExpress.XtraEditors.ButtonEdit buttonEdit1;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit3;
-        private DevExpress.XtraEditors.SimpleButton btnMultiAdapterConfiguration;
+        private DevExpress.XtraEditors.SimpleButton btnAdapterConfiguration;
         private DevExpress.XtraEditors.SimpleButton btnNotifications;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit4;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit5;

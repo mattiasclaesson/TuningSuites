@@ -180,8 +180,8 @@ namespace T7
     {
         Lawicel,
         MultiAdapter,
-        Mitronics,
-        EasySync,
+        //Mitronics,
+        //EasySync,
         ELM327
     }
 
@@ -259,7 +259,7 @@ namespace T7
 
         //private CANUSBDevice canUsbDevice = null;
         private ICANDevice canUsbDevice = null;
-        private IKWPDevice kwpCanDevice = null;
+        private IKWPDevice kwpDevice = null;
         //private KWPHandler kwpHandler = null;
         private bool m_connectedToECU = false;
         private bool m_enableRealtimeTimer = false;
@@ -332,19 +332,9 @@ namespace T7
             {
                 canUsbDevice = new CANUSBDevice();
             }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-            {
-                canUsbDevice = new CANUSBDirectDevice();
-                //canUsbDevice = new EasySyncUSBDevice();
-            }
             else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
             {
                 canUsbDevice = new CANELM327Device();
-                canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
-            }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
-            {
-                canUsbDevice = new Mictronics();
                 canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
             }
             else
@@ -353,18 +343,20 @@ namespace T7
             }
             canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrame);
             canUsbDevice.onReceivedAdditionalInformation += new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-            //canUsbDevice = new EasySyncUSBDevice();
             canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
             canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
-/*            if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
+            if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
             {
-                kwpCanDevice = new ELM327Device();
+                kwpDevice = new ELM327Device();
+                kwpDevice.EnableLog = m_appSettings.EnableCanLog;
+                kwpDevice.ForcedComport = m_appSettings.ELM327Port;
+                kwpDevice.ForcedBaudrate = m_appSettings.Baudrate;
             }
             else
-            {*/
-                kwpCanDevice = new KWPCANDevice();
-                kwpCanDevice.EnableCanLog = m_appSettings.EnableCanLog;
-            //}
+            {
+                kwpDevice = new KWPCANDevice();
+                kwpDevice.EnableLog = m_appSettings.EnableCanLog;
+            }
             
             try
             {
@@ -6289,114 +6281,114 @@ TorqueCal.M_IgnInflTroqMap 8*/
         }
 
 
-        private bool CheckCANConnectivityNew()
-        {
-            // write log information to "CanTrace.txt"
-            //if (flash == null)
-            {
-                AddToCanTrace("Initializing CANbus interface");
-                System.Windows.Forms.Application.DoEvents();
-                Console.WriteLine("Initializing CAN interface, please stand by...");
-                AddToCanTrace("Creating new connection to CANUSB device!");
+        //private bool CheckCANConnectivityNew()
+        //{
+        //    // write log information to "CanTrace.txt"
+        //    //if (flash == null)
+        //    {
+        //        AddToCanTrace("Initializing CANbus interface");
+        //        System.Windows.Forms.Application.DoEvents();
+        //        Console.WriteLine("Initializing CAN interface, please stand by...");
+        //        AddToCanTrace("Creating new connection to CANUSB device!");
 
 
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-                {
-                    // connect to adapter
-                    //<GS-25012011> removed due to issues in the flashing compatibility
-                    LPCCANDevice_T7 lpc = (LPCCANDevice_T7)this.canUsbDevice;
-                    if (!lpc.connect()) return false;
-                    // get flasher object
-                    this.flash = lpc.createFlasher();
-                    flash.EnableCanLog = false;
-                    AddToCanTrace("T7CombiFlasher object created");
-                    Console.WriteLine("CombiAdapter ready");
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-                {
-                    // connect to adapter
-                    //flash = new T7.Flasher.T7Flasher();
-                    //flash.EnableCanLog = false;
-                    //AddToCanTrace("Object T7.Flasher.T7Flasher created");
-                    kwpCanDevice.setCANDevice(canUsbDevice);
-                    KWPHandler.setKWPDevice(kwpCanDevice);
-                    try
-                    {
-                        T7.Flasher.T7Flasher.setKWPHandler(KWPHandler.getInstance());
-                    }
-                    catch (Exception E)
-                    {
-                        Console.WriteLine(E.Message);
-                        AddToCanTrace("Failed to set flasher object to KWPHandler");
+        //        if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
+        //        {
+        //            // connect to adapter
+        //            //<GS-25012011> removed due to issues in the flashing compatibility
+        //            LPCCANDevice_T7 lpc = (LPCCANDevice_T7)this.canUsbDevice;
+        //            if (!lpc.connect()) return false;
+        //            // get flasher object
+        //            this.flash = lpc.createFlasher();
+        //            flash.EnableCanLog = false;
+        //            AddToCanTrace("T7CombiFlasher object created");
+        //            Console.WriteLine("CombiAdapter ready");
+        //        }
+        //        //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
+        //        //{
+        //        //    // connect to adapter
+        //        //    //flash = new T7.Flasher.T7Flasher();
+        //        //    //flash.EnableCanLog = false;
+        //        //    //AddToCanTrace("Object T7.Flasher.T7Flasher created");
+        //        //    kwpCanDevice.setCANDevice(canUsbDevice);
+        //        //    KWPHandler.setKWPDevice(kwpCanDevice);
+        //        //    try
+        //        //    {
+        //        //        T7.Flasher.T7Flasher.setKWPHandler(KWPHandler.getInstance());
+        //        //    }
+        //        //    catch (Exception E)
+        //        //    {
+        //        //        Console.WriteLine(E.Message);
+        //        //        AddToCanTrace("Failed to set flasher object to KWPHandler");
 
-                    }
-                    flash = T7.Flasher.T7Flasher.getInstance();
-                    if (KWPHandler.getInstance().openDevice())
-                    {
-                        Console.WriteLine("Canbus channel opened");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unable to open canbus channel");
-                        KWPHandler.getInstance().closeDevice();
-                        return false;
-                    }
-                    if (KWPHandler.getInstance().startSession())
-                    {
-                        Console.WriteLine("Session started");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unable to start session");
-                        KWPHandler.getInstance().closeDevice();
-                        return false;
-                    }
-                }
-                else
-                {
+        //        //    }
+        //        //    flash = T7.Flasher.T7Flasher.getInstance();
+        //        //    if (KWPHandler.getInstance().openDevice())
+        //        //    {
+        //        //        Console.WriteLine("Canbus channel opened");
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        Console.WriteLine("Unable to open canbus channel");
+        //        //        KWPHandler.getInstance().closeDevice();
+        //        //        return false;
+        //        //    }
+        //        //    if (KWPHandler.getInstance().startSession())
+        //        //    {
+        //        //        Console.WriteLine("Session started");
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        Console.WriteLine("Unable to start session");
+        //        //        KWPHandler.getInstance().closeDevice();
+        //        //        return false;
+        //        //    }
+        //        //}
+        //        else
+        //        {
 
-                    //flash = new T7.Flasher.T7Flasher();
-                    //flash.EnableCanLog = false;
-                    //AddToCanTrace("Object T7.Flasher.T7Flasher created");
-                    kwpCanDevice.setCANDevice(canUsbDevice);
-                    KWPHandler.setKWPDevice(kwpCanDevice);
-                    try
-                    {
-                        T7.Flasher.T7Flasher.setKWPHandler(KWPHandler.getInstance());
-                    }
-                    catch (Exception E)
-                    {
-                        Console.WriteLine(E.Message);
-                        AddToCanTrace("Failed to set flasher object to KWPHandler");
+        //            //flash = new T7.Flasher.T7Flasher();
+        //            //flash.EnableCanLog = false;
+        //            //AddToCanTrace("Object T7.Flasher.T7Flasher created");
+        //            kwpCanDevice.setCANDevice(canUsbDevice);
+        //            KWPHandler.setKWPDevice(kwpCanDevice);
+        //            try
+        //            {
+        //                T7.Flasher.T7Flasher.setKWPHandler(KWPHandler.getInstance());
+        //            }
+        //            catch (Exception E)
+        //            {
+        //                Console.WriteLine(E.Message);
+        //                AddToCanTrace("Failed to set flasher object to KWPHandler");
 
-                    }
-                    flash = T7.Flasher.T7Flasher.getInstance();
-                    if (KWPHandler.getInstance().openDevice())
-                    {
-                        Console.WriteLine("Canbus channel opened");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unable to open canbus channel");
-                        KWPHandler.getInstance().closeDevice();
-                        return false;
-                    }
-                    if (KWPHandler.getInstance().startSession())
-                    {
-                        Console.WriteLine("Session started");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unable to start session");
-                        KWPHandler.getInstance().closeDevice();
-                        return false;
-                    }
-                }
+        //            }
+        //            flash = T7.Flasher.T7Flasher.getInstance();
+        //            if (KWPHandler.getInstance().openDevice())
+        //            {
+        //                Console.WriteLine("Canbus channel opened");
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("Unable to open canbus channel");
+        //                KWPHandler.getInstance().closeDevice();
+        //                return false;
+        //            }
+        //            if (KWPHandler.getInstance().startSession())
+        //            {
+        //                Console.WriteLine("Session started");
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("Unable to start session");
+        //                KWPHandler.getInstance().closeDevice();
+        //                return false;
+        //            }
+        //        }
 
-            }
-            m_connectedToECU = true;
-            return m_connectedToECU;
-        }
+        //    }
+        //    m_connectedToECU = true;
+        //    return m_connectedToECU;
+        //}
 
 
         private bool CheckCANConnectivity()
@@ -6430,52 +6422,37 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     {
                         canUsbDevice = new CANUSBDevice();
                     }
-                    else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                    {
-                        canUsbDevice = new CANELM327Device();
-                        canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
-                    }
-                    else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-                    {
-                        //canUsbDevice = new EasySyncUSBDevice();
-                        canUsbDevice = new CANUSBDirectDevice();
-                    }
-                    else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
-                    {
-                        canUsbDevice = new Mictronics();
-                    }
                     else
                     {
                         canUsbDevice = new LPCCANDevice_T7();
                     }
                     canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrame);
                     canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-                    //canUsbDevice = new EasySyncUSBDevice();
                     Console.WriteLine("Created new CANUSBDevice instance");
                 }
                 canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
                 canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
                 
-                if (kwpCanDevice == null)
+                if (kwpDevice == null)
                 {
-                    /*if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
+                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
                     {
-                        kwpCanDevice = new ELM327Device();
+                        kwpDevice = new ELM327Device();
                     }
                     else
-                    {*/
-                        kwpCanDevice = new KWPCANDevice();
-                    //} 
+                    {
+                        kwpDevice = new KWPCANDevice();
+                    } 
                     Console.WriteLine("Created new KWPCANDevice instance");
                 }
-                kwpCanDevice.EnableCanLog = m_appSettings.EnableCanLog;
-                kwpCanDevice.setCANDevice(canUsbDevice);
+                kwpDevice.EnableLog = m_appSettings.EnableCanLog;
+                kwpDevice.setCANDevice(canUsbDevice);
                 AddToCanTrace("CANDevice set/checked");
                 //progress.SetProgressPercentage(30);
                 barEditItem3.EditValue = 30;
                 System.Windows.Forms.Application.DoEvents();
 
-                KWPHandler.setKWPDevice(kwpCanDevice);
+                KWPHandler.setKWPDevice(kwpDevice);
                 if (m_appSettings.EnableCanLog)
                 {
                     KWPHandler.startLogging();
@@ -7268,7 +7245,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     exit_hardstyle = true;
                 }
                 canUsbDevice = null;
-                kwpCanDevice = null;
+                kwpDevice = null;
                 flash = null;
             }
             catch (Exception E)
@@ -16104,7 +16081,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 m_prohibitReading = true;
                 KWPHandler.getInstance().requestSequrityAccess(false);
                 //KWPHandler.getInstance().ReadFreezeFrameData(framenumber);
-                KWPHandler.getInstance().ReadDTCCodes();
+                List<string> codes;
+                KWPHandler.getInstance().ReadDTCCodes(out codes);
                 KWPHandler.getInstance().ClearDTCCodes();
                 m_prohibitReading = false;
             }
@@ -20104,52 +20082,51 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         
 
-
-        private bool CheckCANConnectivityDirectAccess()
-        {
-            if (canUsbDevice.isOpen()) return true;
-            AddToCanTrace("Initializing CANbus interface");
-            System.Windows.Forms.Application.DoEvents();
-            System.Windows.Forms.Application.DoEvents();
-/*            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-            {
-                CheckCanwakeup();
-            }*/
-            AddToCanTrace("Creating new connection to CANUSB device!");
-            if (canUsbDevice == null)
-            {
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-                {
-                    canUsbDevice = new CANUSBDevice();
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                {
-                    canUsbDevice = new CANELM327Device();
-                    canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-                {
-                    //canUsbDevice = new EasySyncUSBDevice();
-                    canUsbDevice = new CANUSBDirectDevice();
-                }
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
-                {
-                    canUsbDevice = new Mictronics();
-                }
-                else
-                {
-                    canUsbDevice = new LPCCANDevice_T7();
-                }
-                canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrameDebug);
-                canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-                //canUsbDevice = new EasySyncUSBDevice();
-                Console.WriteLine("Created new CANUSBDevice instance");
-            }
-            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
-            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
-            if (canUsbDevice.open() == OpenResult.OpenError) return false;
-            return true;
-        }
+//        private bool CheckCANConnectivityDirectAccess()
+//        {
+//            if (canUsbDevice.isOpen()) return true;
+//            AddToCanTrace("Initializing CANbus interface");
+//            System.Windows.Forms.Application.DoEvents();
+//            System.Windows.Forms.Application.DoEvents();
+///*            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+//            {
+//                CheckCanwakeup();
+//            }*/
+//            AddToCanTrace("Creating new connection to CANUSB device!");
+//            if (canUsbDevice == null)
+//            {
+//                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+//                {
+//                    canUsbDevice = new CANUSBDevice();
+//                }
+//                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
+//                {
+//                    canUsbDevice = new CANELM327Device();
+//                    canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
+//                }
+//                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
+//                //{
+//                //    //canUsbDevice = new EasySyncUSBDevice();
+//                //    canUsbDevice = new CANUSBDirectDevice();
+//                //}
+//                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
+//                //{
+//                //    canUsbDevice = new Mictronics();
+//                //}
+//                else
+//                {
+//                    canUsbDevice = new LPCCANDevice_T7();
+//                }
+//                canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrameDebug);
+//                canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
+//                //canUsbDevice = new EasySyncUSBDevice();
+//                Console.WriteLine("Created new CANUSBDevice instance");
+//            }
+//            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
+//            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
+//            if (canUsbDevice.open() == OpenResult.OpenError) return false;
+//            return true;
+//        }
 
         void canUsbDevice_onReceivedAdditionalInformationFrameDebug(object sender, ICANDevice.InformationFrameEventArgs e)
         {
@@ -20528,7 +20505,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
 
             canUsbDevice = null;
-            kwpCanDevice = null;
+            kwpDevice = null;
             flash = null;
 
         }

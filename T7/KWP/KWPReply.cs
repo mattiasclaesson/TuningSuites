@@ -162,6 +162,8 @@ namespace T7.KWP
 
         override public String ToString()
         {
+            if(m_reply == null)
+                return "Empty reply";
             if(m_reply.Length == 0)
                 return "Empty reply";
             StringBuilder hex = new StringBuilder();

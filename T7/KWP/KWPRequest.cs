@@ -19,6 +19,12 @@ namespace T7.KWP
         /// <returns>The number of PIDs.</returns>
         public uint getNrOfPID() { return m_nrOfPid; }
 
+        private int elmResponseResponses = -1;
+        /// <summary>
+        /// Tells elm how many responses to expect back
+        /// </summary>
+        public int ElmExpectedResponses { get { return elmResponseResponses; } set { elmResponseResponses = value; } }
+
         /// <summary>
         /// Constructor for request with one PID.
         /// </summary>
@@ -80,7 +86,7 @@ namespace T7.KWP
             byte length = (byte)(2 + a_data.Length);
             if(a_mode == 0x3D && a_pid == 0x80)
             {
-                //Console.WriteLine("KWPRequest length: " + length.ToString("X8"));
+                Console.WriteLine("KWPRequest length: " + length.ToString("X8"));
             }
             m_request = new byte[length + 1];
             //Set length of request

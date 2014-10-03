@@ -35,15 +35,7 @@ namespace T7.KWP
         public static void setKWPDevice(IKWPDevice a_kwpDevice)
         {
             Console.WriteLine("******* KWPHandler: KWP device set");
-            if (m_kwpDevice == null)
-            {
-                m_kwpDevice = a_kwpDevice;
-            }
-            else
-            {
-                Console.WriteLine("KWPHandler KWPDevice was already set");
-            }
-
+            m_kwpDevice = a_kwpDevice;
         }
 
         public static KWPHandler getInstance()
@@ -183,8 +175,7 @@ namespace T7.KWP
             }
         }
 
-       
-
+        // This function work well to reset the T7 ECU, but doing so in car will cause limphome of throttlebody. 
         public bool ResetECU()
         {
             LogDataString("ResetECU");
@@ -193,10 +184,18 @@ namespace T7.KWP
             byte[] data = new byte[1];
             data[0] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x11, 0x01, data);
-            //Console.WriteLine(req.ToString());
+            Console.WriteLine(req.ToString());
             result = sendRequest(req, out reply);
-            //Console.WriteLine(reply.ToString());
-            return true;
+            if (reply.getMode() == 0x51)
+            {
+                Console.WriteLine("Reset Success: " + reply.ToString());
+                return true;
+            }
+            else if (reply.getMode() == 0x7F)
+            {
+                Console.WriteLine("Reset Failed: " + reply.ToString());
+            }
+            return false;
         }
 
         public bool ReadFreezeFrameData(uint frameNumber)
@@ -209,14 +208,15 @@ namespace T7.KWP
             //data[1] = (byte)0x00;
             //data[2] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x12, Convert.ToByte(frameNumber), data);
-            //Console.WriteLine(req.ToString());
+            Console.WriteLine(req.ToString());
             result = sendRequest(req, out reply);
-            //Console.WriteLine(reply.ToString());
+            Console.WriteLine(reply.ToString());
             return true;
         }
 
-        public bool ReadDTCCodes()
+        public bool ReadDTCCodes(out List<string> list)
         {
+            list = new List<string>();
             LogDataString("ReadDTCCodes");
             KWPReply reply = new KWPReply();
             KWPResult result;
@@ -224,11 +224,71 @@ namespace T7.KWP
             data[0] = (byte)0xFF;
             data[1] = (byte)0xFF;
             //data[2] = (byte)0x00;
-            KWPRequest req = new KWPRequest(0x18, 0x02/*, data*/);
-            //Console.WriteLine(req.ToString());
+            // Status byte
+            // 7 Warning lamp illuminated for this code
+            // 6 Warning lamp pending for this code, not illuminate but malfunction was detected
+            // 5 Warning lamp was previously illuminated for this code, malfunction not currently detected, code not yet erased
+            // 4 Stored trouble code
+            // 3 Manufacturer specific status
+            // 2 Manufacturer specific status
+            // 1 Current code - present at time of request
+            // 0 Maturing/intermittent code - insufficient data to consider as a malfunction
+            KWPRequest req = new KWPRequest(0x18 , 0x02); // Request Diagnostic Trouble Codes by Status
+            Console.WriteLine(req.ToString());
             result = sendRequest(req, out reply);
-            //Console.WriteLine(reply.ToString());
-            return true;
+            Console.WriteLine(reply.ToString());
+            // J2190
+            // Multiple Mode $58 response messages may be reported to a single request, depending on the number of diagnostic 
+            // trouble codes stored in the module. Each response message will report up to three DTCs for
+            // which at least one of the requested status bits is set. If no codes are stored in the module that meet the
+            // requested status, then the module will respond with the following:
+            // Reply: 58,00
+            if (reply.getMode() == 0x58)
+            {
+                if (reply.getPid() == 0x00)
+                {
+                    Console.WriteLine("No DTC's");
+                    list.Add("No DTC's");
+                    return true;
+                }
+                else
+                {
+                    //P0605
+                    //P1231
+                    //P1230
+                    //P1530
+                    //P1606
+                    //P1460
+                    //+		reply	{Reply:   14,58,
+                    // 06,
+                    // 06,05,E4,
+                    // 12,31,48,
+                    // 12,30,E8,
+                    // 15,30,E1,
+                    // 16,06,E8,
+                    // 14,60,41}	TrionicCANLib.KWP.KWPReply
+                    uint number = reply.getPid();
+                    byte[] dtc = new byte[number*2];
+
+                    byte[] read = reply.getData();
+                    int j = 0;
+                    int i = 0;
+                    while(i < read.Length)
+                    {
+                        dtc[j++] = read[i++];
+                        dtc[j++] = read[i++];
+                        i++;
+                    }
+
+                    for (int n = 0; n < dtc.Length; n = n + 2)
+                    {
+                        list.Add("DTC: P" + dtc[n].ToString("X2") + dtc[n+1].ToString("X2"));
+                    }
+                }
+                
+            }
+
+            return false;
         }
 
         public bool ClearDTCCode(int dtccode)
@@ -241,9 +301,9 @@ namespace T7.KWP
             //data[1] = (byte)0xFF;
             //data[2] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x14, (byte)(dtccode >> 8), data);
-            //Console.WriteLine(req.ToString());
+            Console.WriteLine(req.ToString());
             result = sendRequest(req, out reply);
-            //Console.WriteLine(reply.ToString());
+            Console.WriteLine(reply.ToString());
             return true;
         }
 
@@ -257,9 +317,9 @@ namespace T7.KWP
             //data[1] = (byte)0xFF;
             //data[2] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x14, 0xFF, data);
-            //Console.WriteLine(req.ToString());
+            Console.WriteLine(req.ToString());
             result = sendRequest(req, out reply);
-            //Console.WriteLine(reply.ToString());
+            Console.WriteLine(reply.ToString());
             return true;
         }
 
@@ -340,6 +400,111 @@ namespace T7.KWP
             }
         }
 
+        /// <summary>
+        /// Get E85 adaption status.
+        /// </summary>          
+        /// <param name="r_status">The adaptino status for E85.</param>
+        /// <returns>KWPResult</returns>
+        public KWPResult getE85AdaptionStatus(out string r_status)
+        {
+            KWPReply reply = new KWPReply();
+            KWPResult result;
+            r_status = "Error";
+            result = sendRequest(new KWPRequest(0x21, 0xA5), out reply);
+            if (result == KWPResult.OK)
+            {
+                byte[] res = reply.getData();
+                if(reply.getData()[0] == 1)
+                    r_status = "Forced";
+                if(reply.getData()[0] == 2)
+                    r_status = "Ongoing";
+                if(reply.getData()[0] == 3)
+                    r_status = "Completed";
+                if(reply.getData()[0] == 4)
+                    r_status = "Unknown";
+                if(reply.getData()[0] == 5)
+                    r_status = "Not started";
+                return KWPResult.OK;
+            }
+            else
+            {
+                r_status = "";
+                return KWPResult.Timeout;
+            }
+        }
+
+        /// <summary>
+        /// Force adaption for E85.
+        /// </summary>
+        /// <returns>KWPResult</returns>
+        public KWPResult forceE85Adaption()
+        {
+            KWPReply reply = new KWPReply();
+            KWPResult result;
+            byte[] data = new byte[2];
+            data[0] = 0;
+            data[1] = 0;
+            result = sendRequest(new KWPRequest(0x3B, 0xA6, data), out reply);
+            if (result != KWPResult.OK)
+                return result;
+            byte[] data2 = new byte[1];
+            data2[0] = 1;
+            result = sendRequest(new KWPRequest(0x3B, 0xA5, data2), out reply);
+            return result;
+        }
+
+        /// <summary>
+        /// This method requests the E85 level.
+        /// </summary>
+        /// <param name="r_level">The requested E85 level.</param>
+        /// <returns>KWPResult</returns>
+        public KWPResult getE85Level(out float r_level)
+        {
+            KWPReply reply = new KWPReply();
+            KWPResult result;
+            float level;
+
+            result = sendRequest(new KWPRequest(0x21, 0xA7), out reply); // Request Diagnostic Data Mode $21 - Offset (1 byte)
+            if (reply.getMode() == 0x61 && reply.getPid() == 0xA7 && reply.getLength() == 4)
+            {
+                level = (reply.getData()[0] << 8) | reply.getData()[1];
+                r_level = level / 10;
+                return KWPResult.OK;
+            }
+            else if (reply.getMode() == 0x7F && reply.getPid() == 0x21 && reply.getLength() == 3)
+            {
+                Console.WriteLine(TranslateErrorCode(reply.getData()[0]));
+            }
+            r_level = 0;
+            return KWPResult.NOK;
+        }
+        
+        /// <summary>
+        /// This method sets the E85 level.
+        /// </summary>
+        /// <param name="a_level">The E85 level.</param>
+        /// <returns>KWPResult</returns>
+        public KWPResult setE85Level(int a_level)
+        {
+            KWPReply reply = new KWPReply();
+            KWPResult result;
+            int sendlevel = a_level * 10;
+            byte[] level = new byte[2];
+            level[0] = (byte)(sendlevel >> 8);
+            level[1] = (byte)sendlevel;
+            result = sendRequest(new KWPRequest(0x3B, 0xA7, level), out reply);
+            if(reply.getMode() == 0x7B && reply.getPid() == 0xA7)
+            {                
+                return KWPResult.OK;
+            }
+            else if(reply.getMode() == 0x7F && reply.getPid() == 0x3B && reply.getLength() == 3)
+            {
+                Console.WriteLine(TranslateErrorCode(reply.getData()[0]));
+            }
+
+            return KWPResult.NOK;
+        }  
+        
         /// <summary>
         /// This method sends a request for the immobilizer ID.
         /// </summary>
@@ -467,7 +632,6 @@ namespace T7.KWP
             KWPReply reply = new KWPReply();
             KWPReply reply2 = new KWPReply();
             KWPResult result = KWPResult.Timeout;
-            int i = 0;
 
             //First erase message. Up to 5 retries.
             //Mode = 0x31
@@ -718,7 +882,9 @@ namespace T7.KWP
             lengthAndAddress[2] = (byte)(a_address >> 16);
             lengthAndAddress[3] = (byte)(a_address >> 8);
             lengthAndAddress[4] = (byte)(a_address);
-            result = sendRequest(new KWPRequest(0x2C, 0xF0, 0x03, lengthAndAddress), out reply);
+            var request = new KWPRequest(0x2C, 0xF0, 0x03, lengthAndAddress);
+            request.ElmExpectedResponses = 1;
+            result = sendRequest(request, out reply);
             if (result == KWPResult.OK)
                 return true;
             else
@@ -795,24 +961,24 @@ namespace T7.KWP
             for (int i = 0; i < a_data.Length; i++)
                 symbolNumberAndData[i + 4] = a_data[i];
 
-            //string requestString = "RequestString: ";
-            //foreach (byte b in symbolNumberAndData)
-            //{
-            //    requestString += b.ToString("X2") + " ";
-            //}
-            //Console.WriteLine(requestString);
+            string requestString = "RequestString: ";
+            foreach (byte b in symbolNumberAndData)
+            {
+                requestString += b.ToString("X2") + " ";
+            }
+            Console.WriteLine(requestString);
             // end dump to console
-            //Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
+            Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
             KWPRequest t_request = new KWPRequest(0x3D, /*0x81, */symbolNumberAndData);
-            //Console.WriteLine(t_request.ToString());
+            Console.WriteLine(t_request.ToString());
             result = sendRequest(t_request, out reply);
             if (result != KWPResult.OK)
             {
                 Console.WriteLine("Result != KWPResult.OK");
                 return false;
             }
-           // Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
-            //Console.WriteLine("Result-total = " + reply.ToString());
+            Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
+            Console.WriteLine("Result-total = " + reply.ToString());
             if (reply.getData()[0] == 0x7D)
             {
                 return true;
@@ -849,24 +1015,24 @@ namespace T7.KWP
             for (int i = 0; i < /*a_data.Length*/ LengthToTx; i++)
                 symbolNumberAndData[i + 3] = a_data[i];
 
-            //string requestString = "RequestString: ";
-            //foreach (byte b in symbolNumberAndData)
-            //{
-            //    requestString += b.ToString("X2") + " ";
-            //}
-            //Console.WriteLine(requestString);
+            string requestString = "RequestString: ";
+            foreach (byte b in symbolNumberAndData)
+            {
+                requestString += b.ToString("X2") + " ";
+            }
+            Console.WriteLine(requestString);
             // end dump to console
-            //Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
+            Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
             KWPRequest t_request = new KWPRequest(0x3D, 0x80, symbolNumberAndData);
-           // Console.WriteLine(t_request.ToString());
+            Console.WriteLine(t_request.ToString());
             result = sendRequest(t_request, out reply);
             if (result != KWPResult.OK)
             {
                 Console.WriteLine("Result != KWPResult.OK");
                 return false;
             }
-            //Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
-            //Console.WriteLine("Resulttotal = " + reply.ToString());
+            Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
+            Console.WriteLine("Resulttotal = " + reply.ToString());
             if (reply.getData()[0] == 0x7D)
             {
                 return true;
@@ -903,23 +1069,23 @@ namespace T7.KWP
             for (int i = 0; i < /*a_data.Length*/ LengthToTx; i++)
                 symbolNumberAndData[i + 3] = a_data[i];
 
-            //string requestString = "RequestString: ";
-            //foreach (byte b in symbolNumberAndData)
-            //{
-            //    requestString += b.ToString("X2") + " ";
-            //}
-            //Console.WriteLine(requestString);
+            string requestString = "RequestString: ";
+            foreach (byte b in symbolNumberAndData)
+            {
+                requestString += b.ToString("X2") + " ";
+            }
+            Console.WriteLine(requestString);
             // end dump to console
-            //Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
+            Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
             KWPRequest t_request = new KWPRequest(0x3D, 0x80, symbolNumberAndData);
-            //Console.WriteLine(t_request.ToString());
+            Console.WriteLine(t_request.ToString());
             result = sendRequest(t_request, out reply);
             if (result != KWPResult.OK)
             {
                 Console.WriteLine("Result != KWPResult.OK");
                 return false;
             }
-            //Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
+            Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
             if (reply.getData()[0] == 0x7D)
             {
                 return true;
@@ -960,12 +1126,19 @@ namespace T7.KWP
 
             KWPReply reply = new KWPReply();
             KWPResult result;
-            result = sendRequest(new KWPRequest(0x21, 0xF0), out reply);
-            r_data = reply.getData();
+            var request = new KWPRequest(0x21, 0xF0);
+            request.ElmExpectedResponses=1;
+            result = sendRequest(request, out reply);
             if (result == KWPResult.OK)
+            {
+                r_data = reply.getData();
                 return true;
-            else 
+            }
+            else
+            {
+                r_data = new byte[0];
                 return false;
+            }
         }
 
         public static void startLogging()
@@ -1045,6 +1218,7 @@ namespace T7.KWP
             m_requestMutex.ReleaseMutex();
             return KWPResult.Timeout;
         }
+
         /// <summary>
         /// This method sends a KWPRequest and returns a KWPReply.
         /// </summary>
@@ -1148,6 +1322,124 @@ namespace T7.KWP
             return returnKey;
         }
 
+        private string TranslateErrorCode(byte p)
+        {
+            string retval = "code " + p.ToString("X2");
+            switch (p)
+            {
+                case 0x00:
+                    retval = "Affirmative response";
+                    break;
+                case 0x10:
+                    retval = "General reject";
+                    break;
+                case 0x11:
+                    retval = "Mode not supported";
+                    break;
+                case 0x12:
+                    retval = "Sub-function not supported - invalid format";
+                    break;
+                case 0x21:
+                    retval = "Busy, repeat request";
+                    break;
+                case 0x22:
+                    retval = "conditions not correct or request sequence error";
+                    break;
+                case 0x23:
+                    retval = "Routine not completed or service in progress";
+                    break;
+                case 0x31:
+                    retval = "Request out of range or session dropped";
+                    break;
+                case 0x33:
+                    retval = "Security access denied";
+                    break;
+                case 0x34:
+                    retval = "Security access allowed";
+                    break;
+                case 0x35:
+                    retval = "Invalid key supplied";
+                    break;
+                case 0x36:
+                    retval = "Exceeded number of attempts to get security access";
+                    break;
+                case 0x37:
+                    retval = "Required time delay not expired, you cannot gain security access at this moment";
+                    break;
+                case 0x40:
+                    retval = "Download (PC -> ECU) not accepted";
+                    break;
+                case 0x41:
+                    retval = "Improper download (PC -> ECU) type";
+                    break;
+                case 0x42:
+                    retval = "Unable to download (PC -> ECU) to specified address";
+                    break;
+                case 0x43:
+                    retval = "Unable to download (PC -> ECU) number of bytes requested";
+                    break;
+                case 0x44:
+                    retval = "Ready for download";
+                    break;
+                case 0x50:
+                    retval = "Upload (ECU -> PC) not accepted";
+                    break;
+                case 0x51:
+                    retval = "Improper upload (ECU -> PC) type";
+                    break;
+                case 0x52:
+                    retval = "Unable to upload (ECU -> PC) for specified address";
+                    break;
+                case 0x53:
+                    retval = "Unable to upload (ECU -> PC) number of bytes requested";
+                    break;
+                case 0x54:
+                    retval = "Ready for upload";
+                    break;
+                case 0x61:
+                    retval = "Normal exit with results available";
+                    break;
+                case 0x62:
+                    retval = "Normal exit without results available";
+                    break;
+                case 0x63:
+                    retval = "Abnormal exit with results";
+                    break;
+                case 0x64:
+                    retval = "Abnormal exit without results";
+                    break;
+                case 0x71:
+                    retval = "Transfer suspended";
+                    break;
+                case 0x72:
+                    retval = "Transfer aborted";
+                    break;
+                case 0x74:
+                    retval = "Illegal address in block transfer";
+                    break;
+                case 0x75:
+                    retval = "Illegal byte count in block transfer";
+                    break;
+                case 0x76:
+                    retval = "Illegal block transfer type";
+                    break;
+                case 0x77:
+                    retval = "Block transfer data checksum error";
+                    break;
+                case 0x78:
+                    retval = "Response pending";
+                    break;
+                case 0x79:
+                    retval = "Incorrect byte count during block transfer";
+                    break;
+                case 0x80:
+                default:
+                    retval = "Service not supported in current diagnostics session";
+                    break;
+            }
+            return retval;
+        }
+
         private static bool m_logginEnabled = false;
         //private static StreamWriter m_logFileStream;
         private static KWPHandler m_instance;
@@ -1156,4 +1448,6 @@ namespace T7.KWP
         private System.Threading.Timer stateTimer;
 
     }
+
+
 }

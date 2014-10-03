@@ -541,34 +541,14 @@ namespace T7
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == 1)
+            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter || 
+                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
             {
-                // multiadapter
-                btnMultiAdapterConfiguration.Enabled = true;
-                checkEdit23.Enabled = true;
-            }
-            else if (comboBoxEdit3.SelectedIndex == 2) // mitronics
-            {
-                btnMultiAdapterConfiguration.Enabled = true;
-                //checkEdit23.Checked = true;
-                //checkEdit23.Enabled = false;
-            }
-            else if (comboBoxEdit3.SelectedIndex == 3) // easysync
-            {
-                btnMultiAdapterConfiguration.Enabled = false;
-                checkEdit23.Checked = true;
-                checkEdit23.Enabled = false;
-            }
-            else if (comboBoxEdit3.SelectedIndex == 4) // ELM327
-            {
-                btnMultiAdapterConfiguration.Enabled = true;
-                checkEdit23.Checked = true;             // only P-bus
-                checkEdit23.Enabled = false;
+                btnAdapterConfiguration.Enabled = true;
             }
             else
             {
-                btnMultiAdapterConfiguration.Enabled = false;
-                checkEdit23.Enabled = true;
+                btnAdapterConfiguration.Enabled = false;
             }
         }
 
@@ -580,24 +560,14 @@ namespace T7
             set { m_appSettings = value; }
         }
 
-        private void btnMultiAdapterConfiguration_Click(object sender, EventArgs e)
+        private void btnAdapterConfiguration_Click(object sender, EventArgs e)
         {
-            // open the config screen for additional configuration of the adapter
-            // which ADC channels mean what
-            // use ADC 1-5 & assign symbolname, max & min value
-            // use thermo & assign symbolname, max & min value
-            if (comboBoxEdit3.SelectedIndex == 2 || comboBoxEdit3.SelectedIndex == 4) // ELM327
+            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter)
             {
-                frmComportSelection comportSel = new frmComportSelection();
-                comportSel.PortName = m_appSettings.ELM327Port;
-                if (comportSel.ShowDialog() == DialogResult.OK)
-                {
-                    m_appSettings.ELM327Port = comportSel.PortName;
-                }
-                DialogResult = DialogResult.None;
-            }
-            else
-            {
+                // open the config screen for additional configuration of the adapter
+                // which ADC channels mean what
+                // use ADC 1-5 & assign symbolname, max & min value
+                // use thermo & assign symbolname, max & min value
                 frmMultiAdapterConfig multiconfig = new frmMultiAdapterConfig();
                 multiconfig.AppSettings = m_appSettings;
                 if (multiconfig.ShowDialog() == DialogResult.OK)
@@ -605,6 +575,18 @@ namespace T7
                     DialogResult = DialogResult.None;
                     // nothing really.. all is saved in appsettings already ... 
                 }
+            }
+            else if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
+            {
+                frmComportSelection comportSel = new frmComportSelection();
+                comportSel.PortName = m_appSettings.ELM327Port;
+                comportSel.Baudrate = m_appSettings.Baudrate;
+                if (comportSel.ShowDialog() == DialogResult.OK)
+                {
+                    m_appSettings.ELM327Port = comportSel.PortName;
+                    m_appSettings.Baudrate = comportSel.Baudrate;
+                }
+                DialogResult = DialogResult.None;
             }
         }
 

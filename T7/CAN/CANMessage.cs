@@ -11,29 +11,35 @@ namespace T7.CAN
     public class CANMessage
     {
 
-            /// <summary>
-            /// m_id is the CAN id
-            /// </summary>
-            private uint m_id;			// 11/29 bit Identifier
-            /// <summary>
-            /// m_timestamp is the time stamp for the message set by the CAN device
-            /// </summary>
-            private uint m_timestamp;   // Hardware Timestamp (0-9999mS)
-            /// <summary>
-            /// m_flags is flags set by the CAN device (vendor dependent)
-            /// </summary>
-            private byte m_flags;		// Message Flags
-            /// <summary>
-            /// m_length is the number of bytes in the message
-            /// </summary>
-            private byte m_length;		// Number of data bytes 0-8.
-            /// <summary>
-            /// m_data is the data contained in the CAN message.
-            /// Data is ordered in reverse orded compared to the CAN message. If the message should
-            /// contain [0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88] m_data should have the 
-            /// value 0x887766554432211.
-            /// </summary>
-            private ulong m_data;		// Data Bytes 0..7
+        /// <summary>
+        /// m_id is the CAN id
+        /// </summary>
+        private uint m_id;			// 11/29 bit Identifier
+        /// <summary>
+        /// m_timestamp is the time stamp for the message set by the CAN device
+        /// </summary>
+        private uint m_timestamp;   // Hardware Timestamp (0-9999mS)
+        /// <summary>
+        /// m_flags is flags set by the CAN device (vendor dependent)
+        /// </summary>
+        private byte m_flags;		// Message Flags
+        /// <summary>
+        /// m_length is the number of bytes in the message
+        /// </summary>
+        private byte m_length;		// Number of data bytes 0-8.
+        /// <summary>
+        /// m_data is the data contained in the CAN message.
+        /// Data is ordered in reverse orded compared to the CAN message. If the message should
+        /// contain [0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88] m_data should have the 
+        /// value 0x887766554432211.
+        /// </summary>
+        private ulong m_data;		// Data Bytes 0..7
+
+
+        /// <summary>
+        /// Used by ELM to indicate number of expected responses
+        /// </summary>
+        public int elmExpectedResponses=-1;
 
         /// <summary>
         /// Constructor for CANMessage
@@ -114,5 +120,26 @@ namespace T7.CAN
             return (byte)(m_data >> (int)(a_index * 8));
         }
 
+        public ulong getDataEasySync()
+        {
+            ulong _data = 0;
+            _data |= (ulong)((ulong)((m_data & 0xFF00000000000000)) >> (7 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x00FF000000000000)) >> (5 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x0000FF0000000000)) >> (3 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x000000FF00000000)) >> (1 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x00000000FF000000)) << (1 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x0000000000FF0000)) << (3 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x000000000000FF00)) << (5 * 8));
+            _data |= (ulong)((ulong)((m_data & 0x00000000000000FF)) << (7 * 8));
+            return _data;
+        }
+
+        public CANMessage Clone()
+        {
+            return new CANMessage(m_id, m_timestamp, m_flags, m_length, m_data);
+        }
+
+        public bool NeedRepeat { get; set; }
+        public bool ForceSend { get; set; }
     }
 }
