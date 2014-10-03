@@ -54,11 +54,18 @@ namespace T7
 
         private void labelControl5_DoubleClick(object sender, EventArgs e)
         {
-            if (_step == 4)
+            if (_step == 4) _step++;
+            else _step = 0;
+        }
+
+        private void labelControl6_DoubleClick(object sender, EventArgs e)
+        {
+            if (_step == 5)
             {
                 // show easter egg (easy to find isn't it, once you got the sourcecode ;))
                 frmEast east = new frmEast();
                 east.ShowDialog();
+                east.Dispose();
                 _step = 0;
             }
         }

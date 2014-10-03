@@ -920,8 +920,9 @@ namespace T7
             }
             return retval;
         }
-        private void TryToOpenFile(string filename, out SymbolCollection symbol_collection, int filename_size)
+        private void TryToOpenFile(/*string filename, out SymbolCollection symbol_collection, int filename_size*/)
         {
+            /*
             SymbolTranslator translator = new SymbolTranslator();
             string help = string.Empty;
             XDFCategories category = XDFCategories.Undocumented;
@@ -971,7 +972,7 @@ namespace T7
                                 FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
                                 using (BinaryReader br = new BinaryReader(fsread))
                                 {
-                                    fsread.Seek(/*0x15F9*/ SymbolListOffSet, SeekOrigin.Begin);
+                                    fsread.Seek(SymbolListOffSet, SeekOrigin.Begin);     // 0x15F9 <SymbolListOffSet>
                                     bool endoftable = false;
                                     int state = 0;
                                     int internal_address = 0;
@@ -1015,10 +1016,10 @@ namespace T7
                                                     }
                                                     sh.Internal_address = internal_address - 1;
                                                     sh.Symbol_number = sym_count;
-                                                    /*if (sh.Varname == "IgnNormCal.Map")
-                                                    {
-                                                        Console.WriteLine("IgnNormCal.Map: " + sh.Internal_address.ToString("X4"));
-                                                    }*/
+                                                    //if (sh.Varname == "IgnNormCal.Map")
+                                                    //{
+                                                    //    Console.WriteLine("IgnNormCal.Map: " + sh.Internal_address.ToString("X4"));
+                                                    //}
                                                     symbol_collection.Add(sh);
                                                     symbolname = "";
                                                     internal_address = 0;
@@ -1120,7 +1121,7 @@ namespace T7
                                         {
                                             AddDebugLog("Opening file resulted in AddressTableOffset: " + AddressTableOffset.ToString("X8"));
 
-                                            fsread.Seek(/*0x588f0*/ AddressTableOffset-8, SeekOrigin.Begin);
+                                            fsread.Seek(AddressTableOffset-8, SeekOrigin.Begin);        // 0x588f0 <AddressTableOffset-8>
                                             endoftable = false;
                                             internal_address = 0;
                                             int sramaddress = 0;
@@ -1151,8 +1152,8 @@ namespace T7
                                                                 //Console.WriteLine("Symbol address: " + internal_address.ToString("X8") + " sram: " + sramaddress.ToString("X8") + " ind " + indicator.ToString("X2") + " len " + symbollength.ToString());
                                                             }
                                                             
-//                                                            if (sramaddress < 0xF00000) Console.WriteLine("Flash Indicator = " + indicator.ToString("X2"));
-//                                                            else if (sramaddress >= 0xF00000) Console.WriteLine("SRAM Indicator = " + indicator.ToString("X2"));
+                                                            //if (sramaddress < 0xF00000) Console.WriteLine("Flash Indicator = " + indicator.ToString("X2"));
+                                                            //else if (sramaddress >= 0xF00000) Console.WriteLine("SRAM Indicator = " + indicator.ToString("X2"));
                                                             
                                                            
                                                             int realromaddress = 0;
@@ -1167,7 +1168,7 @@ namespace T7
                                                                     //DumpToDebugTable(bytes, sh);
                                                                     if (realromaddress > 0)
                                                                     {
-//                                                                        Console.WriteLine(sh.Varname + " " + sh.Internal_address.ToString("X6") + " " + sramaddress.ToString("X6") + " " +realromaddress.ToString("X6") + " " + symbollength.ToString("X4"));
+                                                                        //Console.WriteLine(sh.Varname + " " + sh.Internal_address.ToString("X6") + " " + sramaddress.ToString("X6") + " " +realromaddress.ToString("X6") + " " + symbollength.ToString("X4"));
                                                                         if (sramaddress > highestsramaddress) highestsramaddress = sramaddress;
                                                                     }
 
@@ -1179,10 +1180,10 @@ namespace T7
                                                                             Console.WriteLine("BfuelCal.map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString() + " " + sramaddress.ToString("X8"));
                                                                         }
                                                                         sh.Start_address = sramaddress; // TEST
-                                                                        /*  if (internal_address == 0xE71A)
-                                                                          {
-                                                                              Console.WriteLine("IgnNormCal.Map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString());
-                                                                          }*/
+                                                                        //if (internal_address == 0xE71A)
+                                                                        //{
+                                                                        //    Console.WriteLine("IgnNormCal.Map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString());
+                                                                        //}
                                                                         sh.Flash_start_address = sramaddress;
                                                                         //sh.Flash_start_address = realromaddress;
                                                                         //TODO: VERIFY TEST WITH OTHER BINS
@@ -1206,19 +1207,19 @@ namespace T7
                                                     }
                                                 }
                                                 //Console.WriteLine("Highest SRAM: " + highestsramaddress.ToString("X6"));
-                                                /*foreach (SymbolHelper sh in symbol_collection)
-                                                {
-                                                    Console.WriteLine(sh.Varname + " at " + sh.Flash_start_address.ToString("X6"));
-                                                }*/
+                                                //foreach (SymbolHelper sh in symbol_collection)
+                                                //{
+                                                //    Console.WriteLine(sh.Varname + " at " + sh.Flash_start_address.ToString("X6"));
+                                                //}
                                             }
                                         }
                                         else
                                         {
-/*                                            if (progress != null)
-                                            {
-                                                progress.Close();
-                                                Application.DoEvents();
-                                            }*/
+                                            //if (progress != null)
+                                            //{
+                                            //    progress.Close();
+                                            //    Application.DoEvents();
+                                            //}
                                             fsread.Close();
                                             if (!TryToExtractPackedBinary(filename, progress, sym_count, filename_size,out symbol_collection))
                                             {
@@ -1258,7 +1259,7 @@ namespace T7
                 Console.WriteLine("TryOpenFile filed: " + filename + " err: " + E.Message);
                 
             }
-          
+        */  
         }
 
         private void TuneToStage_OLD(int stage, double maxairmass, double maxtorque, EngineType enginetype)

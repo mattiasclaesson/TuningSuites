@@ -730,20 +730,6 @@ namespace T7
                 //GetPageHTML("http://trionic.mobixs.eu/InfoBrowser/Default.aspx?trionicversion=7&filename=" + Path.GetFileName(filename) + "&computer=" + Environment.MachineName + "&username=" + Environment.UserName + "&appversion=" + System.Windows.Forms.Application.ProductVersion, 10);
 
             }
-            // <GS-14032011> auto add symbols for 55P / 46T files
-            if (m_current_softwareversion.Trim().StartsWith("EU0AF01C",StringComparison.OrdinalIgnoreCase) ||
-                m_current_softwareversion.Trim().StartsWith("EU0BF01C", StringComparison.OrdinalIgnoreCase) ||
-                m_current_softwareversion.Trim().StartsWith("EU0CF01C", StringComparison.OrdinalIgnoreCase))
-            {
-                // only if there are less symbols described then in the known file
-                if (NamedSymbolCount() < 2000)
-                {
-                    if (MessageBox.Show("Do you want to load the known symbollist for EU0AF01C/EU0BF01C/EU0CF01C files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        ImportXMLDescriptor(System.Windows.Forms.Application.StartupPath + "\\EU0AF01C.xml");
-                    }
-                }
-            }
             if (IsBinaryBiopower())
             {
                 foreach (SymbolHelper sh in symbol_collection)
@@ -760,7 +746,7 @@ namespace T7
                         sh.Userdescription = "BFuelCal.E85Map";
                         XDFCategories cat = XDFCategories.Undocumented;
                         XDFSubCategory sub = XDFSubCategory.Undocumented;
-                        sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out cat, out sub, m_appSettings.ApplicationLanguage);
+                        sh.Description = translator.TranslateSymbolToHelpText(sh.Userdescription, out help, out cat, out sub, m_appSettings.ApplicationLanguage);
                     }
                 }
             }
@@ -896,88 +882,68 @@ namespace T7
             return retval;
         }
 
-        private void TryToLoadAdditionalSymbols(string filename, bool ImportFromRepository)
+        private void TryToLoadAdditionalSymbols(string filename)
         {
-            SymbolTranslator st = new SymbolTranslator();
-            System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(filename));
-            dt.Columns.Add("SYMBOLNAME");
-            dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-            dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-            dt.Columns.Add("DESCRIPTION");
-            if (ImportFromRepository)
+            System.Data.DataTable dt;
+            string binname = GetFileDescriptionFromFile(filename);
+            if (binname != string.Empty)
             {
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(filename, false);
-                string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
-                string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(filename) + File.GetCreationTime(filename).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
-                if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\repository"))
+                dt = new System.Data.DataTable(binname);
+                dt.Columns.Add("SYMBOLNAME");
+                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                dt.Columns.Add("DESCRIPTION");
+                if (File.Exists(filename))
                 {
-                    Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
+                    dt.ReadXml(filename);
                 }
-                if (File.Exists(xmlfilename))
+                foreach (SymbolHelper sh in m_symbols)
                 {
-                    dt.ReadXml(xmlfilename);
-                }
-            }
-            else
-            {
-                string binname = GetFileDescriptionFromFile(filename);
-                if (binname != string.Empty)
-                {
-                    dt = new System.Data.DataTable(binname);
-                    dt.Columns.Add("SYMBOLNAME");
-                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DESCRIPTION");
-                    if (File.Exists(filename))
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        dt.ReadXml(filename);
-                    }
-                }
-            }
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                foreach (DataRow dr in dt.Rows)
-                {
-                    try
-                    {
-                        if (dr["SYMBOLNAME"].ToString() == sh.Varname)
+                        try
                         {
-                            if (sh.Symbol_number == Convert.ToInt32(dr["SYMBOLNUMBER"]))
+                            //SymbolHelper sh = m_symbols[Convert.ToInt32(dr["SYMBOLNUMBER"])];
+                            if (dr["SYMBOLNAME"].ToString() == sh.Varname)
                             {
                                 if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
                                 {
-                                    sh.Userdescription = dr["DESCRIPTION"].ToString();
+                                    if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                                    {
+                                        sh.Userdescription = sh.Varname;
+                                        sh.Varname = dr["DESCRIPTION"].ToString();
+                                    }
+                                    else
+                                    {
+                                        sh.Userdescription = dr["DESCRIPTION"].ToString();
+                                    }
                                     string helptext = string.Empty;
                                     XDFCategories cat = XDFCategories.Undocumented;
                                     XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub, m_appSettings.ApplicationLanguage);
-                                    //if(sh.Category == 
+                                    SymbolTranslator st = new SymbolTranslator();
+                                    sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub, m_appSettings.ApplicationLanguage);
                                     if (sh.Category == "Undocumented" || sh.Category == "")
                                     {
-                                        if (sh.Userdescription.Contains("."))
+                                        if (sh.Varname.Contains("."))
                                         {
                                             try
                                             {
-                                                sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                                //Console.WriteLine("Set cat to " + sh.Category + " for " + sh.Userdescription);
+                                                sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
+                                                //Console.WriteLine(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
                                             }
                                             catch (Exception cE)
                                             {
-                                                Console.WriteLine("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                                Console.WriteLine(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                                             }
                                         }
-
                                     }
-                                        
-                                    break;
                                 }
                             }
                         }
-                    }
-                    catch (Exception E)
-                    {
-                        Console.WriteLine(E.Message);
+                        catch (Exception E)
+                        {
+                            Console.WriteLine(E.Message);
+                        }
                     }
                 }
             }
@@ -1572,33 +1538,21 @@ namespace T7
             if (ValidateFile())
             {
                 m_symbols = new SymbolCollection();
-                //t7file = new Trionic7File();
                 t7file = TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
-                barEditItem3.EditValue = 60;
-                barEditItem3.Caption = "Filling symbols";
-                System.Windows.Forms.Application.DoEvents();
-
-                SymbolFiller sf = new SymbolFiller();
-                sf.CheckAndFillCollection(m_symbols);
                 barEditItem3.EditValue = 70;
                 barEditItem3.Caption = "Sorting data";
                 System.Windows.Forms.Application.DoEvents();
-
                 m_symbols.SortColumn = "Length";
                 m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
                 m_symbols.Sort();
-                barEditItem3.EditValue = 90;
+                barEditItem3.EditValue = 80;
                 barEditItem3.Caption = "Loading data into view";
-                System.Windows.Forms.Application.DoEvents();
                 gridControlSymbols.DataSource = m_symbols;
                 //gridViewSymbols.BestFitColumns();
                 SetDefaultFilters();
-                this.Text = "T7 Suite professional [ " + Path.GetFileName(m_currentfile) + " ]";
-                barEditItem3.EditValue = 95;
+                Text = String.Format("T7 Suite professional [ {0} ]", Path.GetFileName(m_currentfile));
+                barEditItem3.EditValue = 90;
                 barEditItem3.Caption = "Loading realtime info";
-                System.Windows.Forms.Application.DoEvents();
-                gridControlSymbols.DataSource = m_symbols;
-
                 // also rearrange the symbolnumbers in the realtime view
                 UpdateRealTimeDataTableWithNewSRAMValues();
                 barEditItem3.Visibility = BarItemVisibility.Never;
@@ -1610,8 +1564,7 @@ namespace T7
             {
                 m_symbols = new SymbolCollection();
                 gridControlSymbols.DataSource = m_symbols;
-                this.Text = "T7 Suite professional [ none ]";
-
+                Text = "T7 Suite professional [ none ]";
                 if (showmessage)
                 {
                     frmInfoBox info = new frmInfoBox("File is not a Trionic 7 binary file!");
@@ -1644,8 +1597,6 @@ namespace T7
                     btnCompareToOriginal.Enabled = true;
                 }
                 else btnCompareToOriginal.Enabled = false;
-
-
             }
             catch (Exception E)
             {
@@ -1727,19 +1678,15 @@ namespace T7
 
         private void SetDefaultFilters()
         {
-            if (IsSoftwareOpen())
+            gridViewSymbols.ActiveFilter.Clear(); // clear filter
+            if (!IsSoftwareOpen())
             {
-                gridViewSymbols.ActiveFilter.Clear(); // clear filter
-                gridViewSymbols.ActiveFilterEnabled = false;
-            }
-            else
-            {
-                DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo(@"([Flash_start_address] > 0 AND [Flash_start_address] < 524288)", "Only symbols within binary");
-                gridViewSymbols.ActiveFilter.Clear();
-                gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
                 /*** set filter ***/
-                gridViewSymbols.ActiveFilterEnabled = true;
+                //DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo(@"([Flash_start_address] > 0 AND [Flash_start_address] < 524288)", "Only symbols within binary");
+                DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000'", "Only symbols within binary");
+                gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
             }
+            gridViewSymbols.ActiveFilterEnabled = false;
         }
 
 
@@ -14478,12 +14425,6 @@ dt.Columns.Add("SymbolName");
             return buffer;
         }
 
- 
-
- 
-
-
-
         private SIDICollection GetSidCollectionFromBinary(string m_currentfile)
         {
             SIDICollection m_sidcollection = new SIDICollection();
@@ -14558,7 +14499,6 @@ dt.Columns.Add("SymbolName");
                 stream.Close();
             }
             return m_sidcollection;
-
         }
 
         private void gridViewSymbols_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
@@ -14567,39 +14507,48 @@ dt.Columns.Add("SymbolName");
             {
                 // save a new repository item
                 SaveAdditionalSymbols();
-
             }
-
         }
 
         private void SaveAdditionalSymbols()
         {
-            System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(m_currentfile));
-            dt.Columns.Add("SYMBOLNAME");
-            dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-            dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-            dt.Columns.Add("DESCRIPTION");
-
-            T7FileHeader fh = new T7FileHeader();
-            fh.init(m_currentfile, false);
-            string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
-            string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(m_currentfile) + File.GetCreationTime(m_currentfile).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
-            if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\repository"))
+            using (System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(m_currentfile)))
             {
-                Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
-            }
-            if (File.Exists(xmlfilename))
-            {
-                File.Delete(xmlfilename);
-            }
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                if (sh.Userdescription != "")
+                dt.Columns.Add("SYMBOLNAME");
+                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                dt.Columns.Add("DESCRIPTION");
+                T7FileHeader fh = new T7FileHeader();
+                fh.init(m_currentfile, false);
+                string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
+                string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
+                if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
                 {
-                    dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
+                    if (File.Exists(xmlfilename))
+                    {
+                        File.Delete(xmlfilename);
+                    }
                 }
+                else
+                {
+                    Directory.CreateDirectory(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath));
+                }
+                foreach (SymbolHelper sh in m_symbols)
+                {
+                    if (sh.Userdescription != "")
+                    {
+                        if (sh.Userdescription == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                        {
+                            dt.Rows.Add(sh.Userdescription, sh.Symbol_number, sh.Flash_start_address, sh.Varname);
+                        }
+                        else
+                        {
+                            dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
+                        }
+                    }
+                }
+                dt.WriteXml(xmlfilename);
             }
-            dt.WriteXml(xmlfilename);
         }
 
         private void tmrSymbolReadProcessChecker_Tick(object sender, EventArgs e)
@@ -15900,13 +15849,12 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                TryToLoadAdditionalSymbols(ofd.FileName, false);
+                TryToLoadAdditionalSymbols(ofd.FileName);
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
                 // and save the data to the repository
                 SaveAdditionalSymbols();
-
                 try
                 {
                     _softwareIsOpenDetermined = false;
@@ -15917,16 +15865,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     Console.WriteLine(E3.Message);
                 }
             }
-        }
-
-        private void ImportXMLDescriptor(string filename)
-        {
-            TryToLoadAdditionalSymbols(filename, false);
-            gridControlSymbols.DataSource = m_symbols;
-            SetDefaultFilters();
-            gridControlSymbols.RefreshDataSource();
-            // and save the data to the repository
-            SaveAdditionalSymbols();
         }
 
         private void btnImportXML_ItemClick(object sender, ItemClickEventArgs e)
@@ -19488,12 +19426,23 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 TryToLoadAdditionalCSVSymbols(ofd.FileName);
+                foreach (SymbolHelper sh in m_symbols)
+                {
+                    if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                    {
+                        if (sh.Userdescription != "")
+                        {
+                            string temp = sh.Varname;
+                            sh.Varname = sh.Userdescription;
+                            sh.Userdescription = temp;
+                        }
+                    }
+                }
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
                 // and save the data to the repository
                 SaveAdditionalSymbols();
-
                 try
                 {
                     _softwareIsOpenDetermined = false;

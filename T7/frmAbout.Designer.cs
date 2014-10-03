@@ -35,6 +35,7 @@ namespace T7
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.SuspendLayout();
@@ -58,8 +59,6 @@ namespace T7
             this.labelControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 21.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControl1.Appearance.Options.UseFont = true;
-            this.labelControl1.Appearance.Options.UseTextOptions = true;
             this.labelControl1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.labelControl1.Location = new System.Drawing.Point(6, 10);
@@ -81,11 +80,10 @@ namespace T7
             // 
             // labelControl2
             // 
-            this.labelControl2.Appearance.Options.UseTextOptions = true;
             this.labelControl2.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.labelControl2.AutoEllipsis = true;
             this.labelControl2.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labelControl2.Location = new System.Drawing.Point(11, 72);
+            this.labelControl2.Location = new System.Drawing.Point(11, 63);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(269, 47);
             this.labelControl2.TabIndex = 2;
@@ -95,11 +93,10 @@ namespace T7
             // 
             // labelControl3
             // 
-            this.labelControl3.Appearance.Options.UseTextOptions = true;
             this.labelControl3.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.labelControl3.AutoEllipsis = true;
             this.labelControl3.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labelControl3.Location = new System.Drawing.Point(11, 115);
+            this.labelControl3.Location = new System.Drawing.Point(12, 105);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(269, 25);
             this.labelControl3.TabIndex = 3;
@@ -109,39 +106,50 @@ namespace T7
             // labelControl4
             // 
             this.labelControl4.Appearance.ForeColor = System.Drawing.Color.Green;
-            this.labelControl4.Appearance.Options.UseForeColor = true;
-            this.labelControl4.Appearance.Options.UseTextOptions = true;
             this.labelControl4.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.labelControl4.AutoEllipsis = true;
             this.labelControl4.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labelControl4.Location = new System.Drawing.Point(11, 146);
+            this.labelControl4.Location = new System.Drawing.Point(11, 127);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(269, 47);
             this.labelControl4.TabIndex = 4;
-            this.labelControl4.Text = "Dilemma, Steve Hayes, Hook, mackan, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, sourcode, J.K Nilss" +
-                "on, General Failure and Mattias Claesson";
+            this.labelControl4.Text = "Dilemma, Steve Hayes, Hook, mackan, MrAze, Sandy_rus, T5_Germany, Seb, Tomili, so" +
+                "urcode, J.K Nilsson, General Failure, Mattias Claesson and...";
             this.labelControl4.DoubleClick += new System.EventHandler(this.labelControl4_DoubleClick);
             // 
             // labelControl5
             // 
-            this.labelControl5.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl5.Appearance.Options.UseForeColor = true;
-            this.labelControl5.Appearance.Options.UseTextOptions = true;
+            this.labelControl5.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(31)))), ((int)(((byte)(191)))));
             this.labelControl5.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.labelControl5.AutoEllipsis = true;
             this.labelControl5.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labelControl5.Location = new System.Drawing.Point(11, 199);
+            this.labelControl5.Location = new System.Drawing.Point(11, 168);
             this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(188, 36);
-            this.labelControl5.TabIndex = 5;
-            this.labelControl5.Text = "No e-mail support currently, check out www.trionictuning.com and www.ecuproject.com";
+            this.labelControl5.Size = new System.Drawing.Size(269, 25);
+            this.labelControl5.TabIndex = 6;
+            this.labelControl5.Text = "Just4pLeisure ;-)";
             this.labelControl5.DoubleClick += new System.EventHandler(this.labelControl5_DoubleClick);
+            // 
+            // labelControl6
+            // 
+            this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.labelControl6.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
+            this.labelControl6.AutoEllipsis = true;
+            this.labelControl6.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.labelControl6.Location = new System.Drawing.Point(11, 199);
+            this.labelControl6.Name = "labelControl6";
+            this.labelControl6.Size = new System.Drawing.Size(188, 36);
+            this.labelControl6.TabIndex = 5;
+            this.labelControl6.Text = "No e-mail support currently, check out www.trionictuning.com and www.ecuproject.c" +
+                "om";
+            this.labelControl6.DoubleClick += new System.EventHandler(this.labelControl6_DoubleClick);
             // 
             // frmAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 247);
+            this.Controls.Add(this.labelControl6);
             this.Controls.Add(this.labelControl5);
             this.Controls.Add(this.labelControl4);
             this.Controls.Add(this.labelControl3);
@@ -168,6 +176,7 @@ namespace T7
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.LabelControl labelControl6;
         private DevExpress.XtraEditors.LabelControl labelControl5;
     }
 }
