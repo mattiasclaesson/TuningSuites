@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -185,6 +185,7 @@
     <Compile Include="AxisBrowser.Designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="BitStream.cs" />
     <Compile Include="CellHelper.cs" />
     <Compile Include="CellHelperCollection.cs" />
     <Compile Include="ColorHsl.cs" />
@@ -660,6 +661,7 @@
     <Compile Include="TransactionEntry.cs" />
     <Compile Include="TrionicFile.cs" />
     <Compile Include="TrionicProjectLog.cs" />
+    <Compile Include="TrionicSymbolDecompressor.cs" />
     <Compile Include="TrionicTransactionLog.cs" />
     <Compile Include="TuningReport.cs">
       <SubType>Component</SubType>
@@ -673,32 +675,43 @@
   <ItemGroup>
     <EmbeddedResource Include="AsmViewer.resx">
       <DependentUpon>AsmViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="AxisBrowser.resx">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="BitStream.resx">
+      <DependentUpon>BitStream.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctrlDisassembler.resx">
       <DependentUpon>ctrlDisassembler.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ctrlReleaseNotes.resx">
       <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Decode.exe" />
     <EmbeddedResource Include="FindAndReplaceForm.resx">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmADCInputConfig.resx">
       <DependentUpon>frmADCInputConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmAirmassResult.resx">
       <DependentUpon>frmAirmassResult.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmBitmaskViewer.resx">
       <DependentUpon>frmBitmaskViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmChangeNote.resx">
       <DependentUpon>frmChangeNote.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmChecksum.resx">
       <SubType>Designer</SubType>
@@ -706,105 +719,139 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmComportSelection.resx">
       <DependentUpon>frmComportSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDecodeVIN.resx">
       <DependentUpon>frmDecodeVIN.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.nl.resx">
       <DependentUpon>frmDefineMyMaps.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.resx">
       <DependentUpon>frmDefineMyMaps.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmECUInformation.resx">
       <DependentUpon>frmECUInformation.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEditRealtimeSymbol.resx">
       <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEditTuningPackage.resx">
       <DependentUpon>frmEditTuningPackage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFileToExportSelection.resx">
       <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFlashBlockBrowser.resx">
       <DependentUpon>frmFlashBlockBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmImportResults.resx">
       <DependentUpon>frmImportResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmInfoBox.resx">
       <DependentUpon>frmInfoBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmLogFilters.resx">
       <DependentUpon>frmLogFilters.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixResult.resx">
       <DependentUpon>frmMatrixResult.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixSelection.resx">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMultiAdapterConfig.resx">
       <DependentUpon>frmMultiAdapterConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmNotifications.resx">
       <DependentUpon>frmNotifications.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartNumberList.nl.resx">
       <DependentUpon>frmPartNumberList.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartNumberList.resx">
       <DependentUpon>frmPartNumberList.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartnumberLookup.nl.resx">
       <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartnumberLookup.resx">
       <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPlotSelection.resx">
       <DependentUpon>frmPlotSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectLogbook.resx">
       <DependentUpon>frmProjectLogbook.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectProperties.resx">
       <DependentUpon>frmProjectProperties.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectSelection.resx">
       <DependentUpon>frmProjectSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectTransactionPurge.resx">
       <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRebuildFileParameters.resx">
       <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSymbolSelection.resx">
       <DependentUpon>frmSymbolSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTransactionLog.resx">
       <DependentUpon>frmTransactionLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTransferSelectionSymbolsSelection.resx">
       <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTuneBinary.resx">
       <DependentUpon>frmTuneBinary.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmVectorlist.resx">
       <DependentUpon>frmVectorlist.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="IMapViewer.resx">
       <DependentUpon>IMapViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MapViewerEx.resx">
       <DependentUpon>MapViewerEx.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Measurement.resx">
       <DependentUpon>Measurement.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="TuningReport.resx">

@@ -89,6 +89,7 @@ using DevExpress.XtraBars.Docking;
 using System.Threading;
 using RealtimeGraph;
 using DevExpress.Skins;
+using T7;
 
 namespace T8SuitePro
 {
@@ -1038,158 +1039,211 @@ namespace T8SuitePro
                         {
                             File.Delete(Path.GetTempPath() + "\\table.tmp");
                         }
-                        if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe"))
-                        {
-                            File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        }
-                        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
-                        {
-                            File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        }
+                        //if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe"))
+                        //{
+                        //    File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
+                        //}
+                        //if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
+                        //{
+                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
+                        //}
 
                         // <GS-18062012> support for x64
-                        bool x64 = Detectx64Architecture();
-                        if (x64)
+                        //bool x64 = Detectx64Architecture();
+                        //if (x64)
+                        //{
+                        //    mRecreateAllExecutableResources();
+
+                        //    // rename T7.decode.exe to decode.exe
+                        //    if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\decode.exe"))
+                        //    {
+                        //        File.Delete(System.Windows.Forms.Application.StartupPath + "\\decode.exe");
+                        //    }
+                        //    File.Move(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", System.Windows.Forms.Application.StartupPath + "\\decode.exe");
+
+                        //    if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\decode.exe"))
+                        //    {
+                        //        if (File.Exists(Path.GetTempPath() + "\\decode.exe"))
+                        //        {
+                        //            File.Delete(Path.GetTempPath() + "\\decode.exe");
+                        //        }
+                        //        File.Copy(System.Windows.Forms.Application.StartupPath + "\\decode.exe", Path.GetTempPath() + "\\decode.exe");
+                        //    }
+                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
+                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
+
+                        //    string DosBoxPath = Path.Combine(System.Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "DOSBox-0.74");
+                        //    // write a dosbox.conf first
+                        //    string confFile = Path.Combine(DosBoxPath, "t8dosb.conf");
+                        //    if (!File.Exists(confFile))
+                        //    {
+                        //        using (StreamWriter sw = new StreamWriter(confFile, false))
+                        //        {
+                        //            sw.WriteLine("[autoexec]");
+                        //            sw.WriteLine("cycles=max");
+                        //            sw.WriteLine("mount c \"" + Path.GetTempPath() + "\"");
+                        //            sw.WriteLine("c:");
+                        //            sw.WriteLine("decode.exe");
+                        //            sw.WriteLine("exit");
+                        //        }
+                        //    }
+
+                        //    string Exename = Path.Combine(DosBoxPath, "DOSBox.exe");
+                        //    ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
+                        //    startinfo.CreateNoWindow = true; // TRUE
+                        //    startinfo.WindowStyle = ProcessWindowStyle.Hidden; // hidden
+                        //    startinfo.Arguments = "-noconsole -conf t8dosb.conf";
+                        //    startinfo.WorkingDirectory = DosBoxPath;
+                        //    System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
+                        //    conv_proc.WaitForExit(30000);
+
+                        //    if (!conv_proc.HasExited)
+                        //    {
+                        //        conv_proc.Kill();
+                        //        retval = false;
+                        //    }
+                        //    else
+                        //    {
+                        //        // nu door compr.txt lopen
+                        //        Console.WriteLine("Adding names to symbols");
+                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
+                        //        {
+                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
+                        //        }
+                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
+                        //        {
+                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
+                        //        }
+                        //        if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
+                        //        {
+                        //            File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
+                        //        }
+                        //        if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
+                        //        {
+                        //            File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
+                        //        }
+                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
+                        //        {
+                        //            AddNamesToSymbolsFromTableTmp(symbol_collection);
+                        //        }
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    mRecreateAllExecutableResources();
+                        //    if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
+                        //    {
+                        //        if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe")) File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
+                        //        File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
+                        //    }
+                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
+                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
+                        //    string Exename = Path.Combine(Path.GetTempPath(), "T8SuitePro.decode.exe");
+
+                        //    ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
+                        //    startinfo.CreateNoWindow = true;
+                        //    startinfo.WindowStyle = ProcessWindowStyle.Hidden;
+                        //    startinfo.WorkingDirectory = Path.GetTempPath();
+                        //    System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
+                        //    conv_proc.WaitForExit(10000); // wait for 10 seconds max
+                        //    if (!conv_proc.HasExited)
+                        //    {
+                        //        conv_proc.Kill();
+                        //        retval = false;
+                        //    }
+                        //    else
+                        //    {
+                        //        // nu door compr.txt lopen
+                        //        SetProgress("Arranging symbol list... ");
+                        //        SetProgressPercentage(70);
+                        //        System.Windows.Forms.Application.DoEvents();
+
+                        //        Console.WriteLine("Adding names to symbols");
+                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
+                        //        {
+                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
+                        //        }
+                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
+                        //        {
+                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
+                        //        }
+                        //        if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
+                        //        {
+                        //            File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
+                        //        }
+                        //        if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
+                        //        {
+                        //            File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
+                        //        }
+                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
+                        //        {
+                        //            SetProgress("Finalizing list... ");
+                        //            SetProgressPercentage(85);
+                        //            System.Windows.Forms.Application.DoEvents();
+                        //            AddNamesToSymbolsFromTableTmp(symbol_collection);
+                        //        }
+                        //    }
+                        //}
+                        //if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
+                        //{
+                        //    File.Delete(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe");
+                        //}
+                        //if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe"))
+                        //{
+                        //    File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
+                        //}
+                        string comprFilename = System.Windows.Forms.Application.StartupPath + @".\COMPR";
+                        string symbolNamesFilename = System.Windows.Forms.Application.StartupPath + @".\COMPR.TXT";
+                        string addressTableFilename = System.Windows.Forms.Application.StartupPath + @".\table.tmp";
+                        string combinedTableFilename = System.Windows.Forms.Application.StartupPath + @".\XTABLE.TMP";
+                        // Delete any files present from previous use
+                        if (File.Exists(symbolNamesFilename))
+                            File.Delete(symbolNamesFilename);
+                        if (File.Exists(combinedTableFilename))
+                            File.Delete(combinedTableFilename);
+                        // Try to decode compressed symbol table
+                        if (File.Exists(comprFilename))
                         {
-                            mRecreateAllExecutableResources();
-
-                            // rename T7.decode.exe to decode.exe
-                            if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\decode.exe"))
+                            if (File.Exists(addressTableFilename))
                             {
-                                File.Delete(System.Windows.Forms.Application.StartupPath + "\\decode.exe");
-                            }
-                            File.Move(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", System.Windows.Forms.Application.StartupPath + "\\decode.exe");
-
-                            if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\decode.exe"))
-                            {
-                                if (File.Exists(Path.GetTempPath() + "\\decode.exe"))
+                                SetProgress("Arranging symbol list... ");
+                                SetProgressPercentage(70);
+                                System.Windows.Forms.Application.DoEvents();
+                                // Read the compressed symbol table file
+                                byte[] bytes = File.ReadAllBytes(comprFilename);
+                                string[] symbols;
+                                // Decompress the symbol table
+                                TrionicSymbolDecompressor.ExpandComprStream(bytes, out symbols);
+                                // Write the symbols to a file. 
+                                File.WriteAllLines(symbolNamesFilename, symbols, Encoding.UTF8);
+                                // Open the addresses file to read from.
+                                string[] addresses = File.ReadAllLines(addressTableFilename, Encoding.UTF8);
+                                // Combine symbol names and addresses
+                                List<string> addressesAndSymbols = new List<string>();
+                                addressesAndSymbols.Add(addresses[0]);
+                                for (int i = 0; i < symbols.Length; i++)
                                 {
-                                    File.Delete(Path.GetTempPath() + "\\decode.exe");
+                                    if (i < addresses.Length)
+                                        addressesAndSymbols.Add(addresses[i + 1]);
+                                    addressesAndSymbols.Add(symbols[i]);
                                 }
-                                File.Copy(System.Windows.Forms.Application.StartupPath + "\\decode.exe", Path.GetTempPath() + "\\decode.exe");
-                            }
-                            File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
-                            File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
-
-                            string DosBoxPath = Path.Combine(System.Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "DOSBox-0.74");
-                            // write a dosbox.conf first
-                            string confFile = Path.Combine(DosBoxPath, "t8dosb.conf");
-                            if (!File.Exists(confFile))
-                            {
-                                using (StreamWriter sw = new StreamWriter(confFile, false))
-                                {
-                                    sw.WriteLine("[autoexec]");
-                                    sw.WriteLine("cycles=max");
-                                    sw.WriteLine("mount c \"" + Path.GetTempPath() + "\"");
-                                    sw.WriteLine("c:");
-                                    sw.WriteLine("decode.exe");
-                                    sw.WriteLine("exit");
-                                }
-                            }
-
-                            string Exename = Path.Combine(DosBoxPath, "DOSBox.exe");
-                            ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
-                            startinfo.CreateNoWindow = true; // TRUE
-                            startinfo.WindowStyle = ProcessWindowStyle.Hidden; // hidden
-                            startinfo.Arguments = "-noconsole -conf t8dosb.conf";
-                            startinfo.WorkingDirectory = DosBoxPath;
-                            System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                            conv_proc.WaitForExit(30000);
-
-                            if (!conv_proc.HasExited)
-                            {
-                                conv_proc.Kill();
-                                retval = false;
+                                File.WriteAllLines(combinedTableFilename, addressesAndSymbols.ToArray(), Encoding.UTF8);
                             }
                             else
                             {
-                                // nu door compr.txt lopen
-                                Console.WriteLine("Adding names to symbols");
-                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                                {
-                                    File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                                }
-                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
-                                {
-                                    File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                                }
-                                if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
-                                {
-                                    File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                                }
-                                if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
-                                {
-                                    File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                                }
-                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                                {
-                                    AddNamesToSymbolsFromTableTmp(symbol_collection);
-                                }
+                                Console.WriteLine("!!! Could not find table.tmp file :-(");
                             }
                         }
                         else
                         {
-                            mRecreateAllExecutableResources();
-                            if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
-                            {
-                                if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe")) File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                                File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                            }
-                            File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
-                            File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
-                            string Exename = Path.Combine(Path.GetTempPath(), "T8SuitePro.decode.exe");
-
-                            ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
-                            startinfo.CreateNoWindow = true;
-                            startinfo.WindowStyle = ProcessWindowStyle.Hidden;
-                            startinfo.WorkingDirectory = Path.GetTempPath();
-                            System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                            conv_proc.WaitForExit(10000); // wait for 10 seconds max
-                            if (!conv_proc.HasExited)
-                            {
-                                conv_proc.Kill();
-                                retval = false;
-                            }
-                            else
-                            {
-                                // nu door compr.txt lopen
-                                SetProgress("Arranging symbol list... ");
-                                SetProgressPercentage(70);
-                                System.Windows.Forms.Application.DoEvents();
-
-                                Console.WriteLine("Adding names to symbols");
-                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                                {
-                                    File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                                }
-                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
-                                {
-                                    File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                                }
-                                if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
-                                {
-                                    File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                                }
-                                if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
-                                {
-                                    File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                                }
-                                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                                {
-                                    SetProgress("Finalizing list... ");
-                                    SetProgressPercentage(85);
-                                    System.Windows.Forms.Application.DoEvents();
-                                    AddNamesToSymbolsFromTableTmp(symbol_collection);
-                                }
-                            }
+                            Console.WriteLine("!!! Could not find COMPR file :-(");
                         }
-                        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
+                        if (File.Exists(combinedTableFilename))
                         {
-                            File.Delete(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe");
-                        }
-                        if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe"))
-                        {
-                            File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
+                            SetProgress("Finalizing list... ");
+                            SetProgressPercentage(85);
+                            System.Windows.Forms.Application.DoEvents();
+                            AddNamesToSymbolsFromTableTmp(symbol_collection);
                         }
                     }
                 }
