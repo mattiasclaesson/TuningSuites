@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Diagnostics;
+using CommonSuite;
 
 namespace T7
 {

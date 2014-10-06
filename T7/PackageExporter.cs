@@ -5,6 +5,7 @@ using System.Text;
 using T7;
 using System.IO;
 using System.Windows.Forms;
+using CommonSuite;
 
 namespace T7
 {

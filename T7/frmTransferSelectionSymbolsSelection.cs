@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using T7;
 using Microsoft.Win32;
+using CommonSuite;
 
 namespace T7
 {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
-
+using CommonSuite;
 
 namespace T7
 {

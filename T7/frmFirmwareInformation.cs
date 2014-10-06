@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
+using CommonSuite;
 
 namespace T7
 {
@@ -19,8 +19,8 @@ namespace T7
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         public DateTime ProgrammingDateTime

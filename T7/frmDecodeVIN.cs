@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmDecodeVIN : DevExpress.XtraEditors.XtraForm
     {
@@ -41,19 +36,13 @@ namespace T7
             lblMakeyear.Text = carinfo.Makeyear.ToString();
             lblPlant.Text = carinfo.PlantInfo;
             lblSeries.Text = carinfo.Series;
-            lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_", "-");
+            lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_","-");
             lblGearbox.Text = carinfo.GearboxDescription;
-            
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
             DecodeVIN();
-            
-        }
-
-        private void frmDecodeVIN_Load(object sender, EventArgs e)
-        {
             
         }
 

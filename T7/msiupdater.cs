@@ -1,24 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.IO;
 
 
 
-namespace T7
+namespace CommonSuite
 {
     class msiupdater
     {
         private Version m_currentversion;
-        private string m_customer = "Global";
-        private string m_server = "http://develop.trionictuning.com/T7Suite/";
-        private string m_username = "";
-        private string m_password = "";
+        private string m_server = "";
         private Version m_NewVersion;
         private string m_apppath = "";
-        private bool m_fromFileLocation = false;
         private bool m_blockauto_updates = false;
+        private string m_tagName = "";
 
         public bool Blockauto_updates
         {
@@ -91,11 +87,11 @@ namespace T7
 
             public MSIUpdateProgressEventArgs(Int32 NoFiles, Int32 NoFilesDone, Int32 PercentageDone, Int32 NoBytes, Int32 NoBytesDone)
             {
-                this._NoFiles = NoFiles;
-                this._NoFilesDone = NoFilesDone;
-                this._PercentageDone = PercentageDone;
-                this._NoBytes = NoBytes;
-                this._NoBytesDone = NoBytesDone;
+                _NoFiles = NoFiles;
+                _NoFilesDone = NoFilesDone;
+                _PercentageDone = PercentageDone;
+                _NoBytes = NoBytes;
+                _NoBytesDone = NoBytesDone;
             }
         }
 
@@ -105,7 +101,7 @@ namespace T7
             private string _Data;
             private bool _UpdateAvailable;
             private bool _Version2High;
-            private bool _info;
+            private Version _Version;
             private string _xmlFile;
 
             public string XMLFile
@@ -115,16 +111,6 @@ namespace T7
                     return _xmlFile;
                 }
             }
-
-            public bool Info
-            {
-                get
-                {
-                    return _info;
-                }
-            }
-
-            private Version _Version;
             public string Data
             {
                 get
@@ -153,30 +139,26 @@ namespace T7
                     return _Version;
                 }
             }
-            public MSIUpdaterEventArgs(string Data, bool Update, bool mVersion2High, Version NewVersion, bool info, string xmlfile)
+            public MSIUpdaterEventArgs(string Data, bool Update, bool mVersion2High, Version NewVersion, string xmlfile)
             {
-                this._Data = Data;
-                this._info = info;
-                this._UpdateAvailable = Update;
-                this._Version2High = mVersion2High;
-                this._Version = NewVersion;
-                this._xmlFile = xmlfile;
+                _Data = Data;
+                _UpdateAvailable = Update;
+                _Version2High = mVersion2High;
+                _Version = NewVersion;
+                _xmlFile = xmlfile;
             }
         }
 
         public msiupdater(Version CurrentVersion)
         {
             m_currentversion = CurrentVersion;
-            m_NewVersion = new Version("1.0.0.0");
+            m_NewVersion = new Version("0.0.0.0");
         }
 
-        public void CheckForUpdates(string customer, string server, string username, string password, bool FromFile)
+        public void CheckForUpdates(string server, string tagName)
         {
             m_server = server;
-            m_customer = customer;
-            m_username = username;
-            m_password = password;
-            m_fromFileLocation = FromFile;
+            m_tagName = tagName;
             if (!m_blockauto_updates)
             {
                 System.Threading.Thread t = new System.Threading.Thread(updatecheck);
@@ -186,23 +168,21 @@ namespace T7
 
         public void ExecuteUpdate(Version ver)
         {
-            //http://reverse-that-trionic.googlecode.com/svn/trunk/T7Suite/
-            //string command = "http://trionic.mobixs.eu/t7suite/" + ver.ToString() + "/T7Suite.msi";
-            string command = "http://develop.trionictuning.com/T7Suite/" + ver.ToString() + "/T7Suite.msi";
+            string command = m_server + ver.ToString() + "/T8Suite.msi";
             try
             {
                 System.Diagnostics.Process.Start(command);
             }
             catch (Exception E)
             {
-                PumpString("Exception when checking new update(s): " + E.Message, false, false, new Version(), false, "");
+                PumpString("Exception when checking new update(s): " + E.Message, false, false, new Version(), "");
             }
         }
 
 
-        private void PumpString(string text, bool updateavailable, bool version2high, Version newver, bool info, string xmlfile)
+        private void PumpString(string text, bool updateavailable, bool version2high, Version newver, string xmlfile)
         {
-            onDataPump(new MSIUpdaterEventArgs(text, updateavailable, version2high, newver, info, xmlfile));
+            onDataPump(new MSIUpdaterEventArgs(text, updateavailable, version2high, newver, xmlfile));
         }
 
         private void NotifyProgress(Int32 NoFiles, Int32 NoFilesDone, Int32 PercentageDone, Int32 NoBytes, Int32 NoBytesDone)
@@ -221,12 +201,11 @@ namespace T7
 
                 try
                 {
-                    //request.Proxy = System.Net.WebProxy.GetDefaultProxy();
                     request.Proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
                 }
                 catch (Exception proxyE)
                 {
-                    PumpString("Error setting proxy server: " + proxyE.Message, false, false, new Version(), false, "");
+                    PumpString("Error setting proxy server: " + proxyE.Message, false, false, new Version(), "");
                 }
 
 /*                if (UseDefaultProxy)
@@ -257,7 +236,7 @@ namespace T7
             catch (Exception ex)
             {
                 // Error occured grabbing data, return empty string.
-                PumpString("An error occurred while retrieving the HTML content. " + ex.Message, false, false, new Version(), false, "");
+                PumpString("An error occurred while retrieving the HTML content. " + ex.Message, false, false, new Version(), "");
                 /*using (StreamWriter logfile = new StreamWriter("update.log", true, System.Text.Encoding.ASCII, 2048))
                 {
                     logfile.WriteLine("An error occurred while retrieving the HTML content. " + ex.Message);
@@ -317,45 +296,37 @@ namespace T7
         {
             string URLString="";
             string XMLResult="";
-            //string VehicleString;
             bool m_updateavailable = false;
             bool m_version_toohigh = false;
-            bool _info = false;
             Version maxversion = new Version("0.0.0.0");
             File.Delete(Apppath + "\\input.xml");
             File.Delete(Apppath + "\\Notes.xml");
 
             try
             {
-                if (m_customer.Length > 0)
+                URLString = m_server + "version.xml";
+                XMLResult = GetPageHTML(URLString, 10);
+                using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\input.xml", false, System.Text.Encoding.ASCII, 2048))
                 {
-                    //URLString = "http://trionic.mobixs.eu/t7suite/version.xml";
-                    URLString = "http://develop.trionictuning.com/T7Suite/version.xml";
-                    XMLResult = GetPageHTML(URLString, 10);
-                    using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\input.xml", false, System.Text.Encoding.ASCII, 2048))
-                    {
-                        xmlfile.Write(XMLResult);
-                        xmlfile.Close();
-                    }
-                    //URLString = "http://trionic.mobixs.eu/t7suite/Notes.xml";
-                    URLString = "http://develop.trionictuning.com/T7Suite/Notes.xml";
-                    XMLResult = GetPageHTML(URLString, 10);
-                    using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
-                    {
-                        xmlfile.Write(XMLResult);
-                        xmlfile.Close();
-                    }
+                    xmlfile.Write(XMLResult);
+                    xmlfile.Close();
+                }
+                URLString = m_server + "Notes.xml";
+                XMLResult = GetPageHTML(URLString, 10);
+                using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
+                {
+                    xmlfile.Write(XMLResult);
+                    xmlfile.Close();
                 }
 
-               /* using (StreamWriter logfile = new StreamWriter(Apppath + "\\update.log", true, System.Text.Encoding.ASCII, 2048))
+                using (StreamWriter logfile = new StreamWriter(Apppath + "\\update.log", true, System.Text.Encoding.ASCII, 2048))
                 {
                     logfile.WriteLine("Current version: " + m_currentversion);
-                    logfile.WriteLine("Customer: " + "Global");
                     logfile.WriteLine("Server: " + m_server);
                     logfile.WriteLine("URLString: " + URLString);
                     logfile.WriteLine("XMLResult: " + XMLResult);
                     logfile.Close();
-                }*/
+                }
 
                 XmlDocument doc;
                 try
@@ -366,7 +337,7 @@ namespace T7
                     // Add any other properties that would be useful to store
                     //foreach (
                     System.Xml.XmlNodeList Nodes;
-                    Nodes = doc.GetElementsByTagName("t7suitepro");
+                    Nodes = doc.GetElementsByTagName(m_tagName);
                     foreach (System.Xml.XmlNode Item in Nodes)
                     {
                         System.Xml.XmlAttributeCollection XMLColl;
@@ -376,11 +347,11 @@ namespace T7
                             if (myAttr.Name == "version")
                             {
                                 Version v = new Version(myAttr.Value);
-                                if (v > m_currentversion) 
+                                if (v > m_currentversion)
                                 {
                                     if (v > maxversion) maxversion = v;
                                     m_updateavailable = true;
-                                    PumpString("Available version: " + myAttr.Value, false, false, new Version(), false, Apppath + "\\Notes.xml");
+                                    PumpString("Available version: " + myAttr.Value, false, false, new Version(), Apppath + "\\Notes.xml");
                                 }
                                 else if (v.Major < m_currentversion.Major || (v.Major == m_currentversion.Major && v.Minor < m_currentversion.Minor) || (v.Major == m_currentversion.Major && v.Minor == m_currentversion.Minor && v.Build < m_currentversion.Build))
                                 {
@@ -391,46 +362,36 @@ namespace T7
                                     m_version_toohigh = true;
                                 }
                             }
-                            else if (myAttr.Name == "info")
-                            {
-                                try
-                                {
-                                    _info = Convert.ToBoolean(myAttr.Value);
-                                }
-                                catch (Exception sendIE)
-                                {
-                                    Console.WriteLine(sendIE.Message);
-                                }
-                            }
                         }
 
                     }
                 }
                 catch (Exception E)
                 {
-                    PumpString(E.Message, false, false, new Version(), false, "");
+                    PumpString(E.Message, false, false, new Version(), "");
                 }
+                
                 if (m_updateavailable)
                 {
 
                     //Console.WriteLine("An update is available: " + maxversion.ToString());
-                    PumpString("A newer version is available: " + maxversion.ToString(), m_updateavailable, m_version_toohigh, maxversion, _info, Apppath + "\\Notes.xml");
+                    PumpString("A newer version is available: " + maxversion.ToString(), m_updateavailable, m_version_toohigh, maxversion, Apppath + "\\Notes.xml");
                     m_NewVersion = maxversion;
 
                 }
                 else if (m_version_toohigh)
                 {
-                    PumpString("Versionnumber is too high: " + maxversion.ToString(), m_updateavailable, m_version_toohigh, maxversion, _info, Apppath + "\\Notes.xml");
+                    PumpString("Versionnumber is too high: " + maxversion.ToString(), m_updateavailable, m_version_toohigh, maxversion, Apppath + "\\Notes.xml");
                     m_NewVersion = maxversion;
                 }
                 else
                 {
-                    PumpString("No new version(s) found...", false, false, new Version(), _info, Apppath + "\\Notes.xml");
+                    PumpString("No new version(s) found...", false, false, new Version(), Apppath + "\\Notes.xml");
                 }
             }
             catch (Exception tuE)
             {
-                PumpString(tuE.Message, false, false, new Version(), _info, "");
+                PumpString(tuE.Message, false, false, new Version(), "");
             }
             
         }
@@ -439,8 +400,7 @@ namespace T7
 
         internal string GetReleaseNotes()
         {
-            //string URLString = "http://trionic.mobixs.eu/t7suite/Notes.xml";
-            string URLString = "http://develop.trionictuning.com/T7Suite/Notes.xml";
+            string URLString = m_server + "Notes.xml";
             string XMLResult = GetPageHTML(URLString, 10);
             using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
             {

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
 using DevExpress.XtraCharts;
+using CommonSuite;
 
 namespace T7
 {

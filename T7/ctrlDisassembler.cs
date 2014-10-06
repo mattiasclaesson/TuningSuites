@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor;
 using System.IO;
+using CommonSuite;
 
 
 namespace T7

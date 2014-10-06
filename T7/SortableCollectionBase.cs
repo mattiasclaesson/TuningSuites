@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 
-namespace T7
+namespace CommonSuite
 {
 	/// <summary>
 	/// Author : Sree Krishna.S 

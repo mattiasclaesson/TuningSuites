@@ -1,4 +1,4 @@
-namespace T7
+namespace CommonSuite
 {
     partial class frmInfoBox
     {
@@ -74,7 +74,7 @@ namespace T7
             this.Name = "frmInfoBox";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "T7Suite information";
+            this.Text = "Information";
             this.TopMost = true;
             this.ResumeLayout(false);
 

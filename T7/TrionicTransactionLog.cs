@@ -30,7 +30,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 
-namespace T7
+namespace CommonSuite
 {
     public class TrionicTransactionLog
     {

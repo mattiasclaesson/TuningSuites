@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
-using T7;
+using CommonSuite;
 
 namespace T7
 {

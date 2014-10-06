@@ -7,8 +7,9 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
+using T7;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class AsmViewer : DevExpress.XtraEditors.XtraUserControl
     {

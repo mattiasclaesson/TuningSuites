@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
 using System.Xml;
-
+using CommonSuite;
 
 namespace T7
 {

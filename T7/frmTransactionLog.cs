@@ -6,11 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-//using Trionic5Tools;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-//using Trionic5Controls;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmTransactionLog : DevExpress.XtraEditors.XtraForm
     {

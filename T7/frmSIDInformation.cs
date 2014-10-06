@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
-using T7;
 using System.IO;
+using CommonSuite;
 
 namespace T7
 {
@@ -57,9 +55,9 @@ namespace T7
             m_sidcollection = new SIDICollection();
         }
 
-        private T7.SymbolCollection _symbols = new T7.SymbolCollection();
+        private SymbolCollection _symbols = new SymbolCollection();
 
-        public T7.SymbolCollection Symbols
+        public SymbolCollection Symbols
         {
             get { return _symbols; }
             set

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
-using T7;
+using CommonSuite;
 
 namespace T7
 {
@@ -156,7 +156,7 @@ namespace T7
         {
             if (onSymbolSelect != null)
             {
-                // haal eerst de data uit de tabel van de gridview
+                // First remove the data from the table of the gridview
                 onSymbolSelect(this, new SelectSymbolEventArgs(m_map_address, m_map_length, m_map_name, m_filename, false, m_compareSymbolCollection, symbolnumber1, symbolnumber2));
             }
         }
@@ -165,7 +165,7 @@ namespace T7
         {
             if (onSymbolSelect != null)
             {
-                // haal eerst de data uit de tabel van de gridview
+                // First remove the data from the table of the gridview
                 onSymbolSelect(this, new SelectSymbolEventArgs(m_map_address, m_map_length, m_map_name, m_filename, true, m_compareSymbolCollection, symbolnumber1, symbolnumber2));
             }
         }

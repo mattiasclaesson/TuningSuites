@@ -1,4 +1,4 @@
-namespace T7
+namespace CommonSuite
 {
     partial class frmDecodeVIN
     {
@@ -79,7 +79,6 @@ namespace T7
             // lblCarModel
             // 
             this.lblCarModel.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblCarModel.Appearance.Options.UseForeColor = true;
             this.lblCarModel.Location = new System.Drawing.Point(196, 47);
             this.lblCarModel.Name = "lblCarModel";
             this.lblCarModel.Size = new System.Drawing.Size(12, 13);
@@ -89,7 +88,6 @@ namespace T7
             // lblEngineType
             // 
             this.lblEngineType.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblEngineType.Appearance.Options.UseForeColor = true;
             this.lblEngineType.Location = new System.Drawing.Point(196, 66);
             this.lblEngineType.Name = "lblEngineType";
             this.lblEngineType.Size = new System.Drawing.Size(12, 13);
@@ -99,7 +97,6 @@ namespace T7
             // lblTurbo
             // 
             this.lblTurbo.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblTurbo.Appearance.Options.UseForeColor = true;
             this.lblTurbo.Location = new System.Drawing.Point(196, 85);
             this.lblTurbo.Name = "lblTurbo";
             this.lblTurbo.Size = new System.Drawing.Size(12, 13);
@@ -109,7 +106,6 @@ namespace T7
             // lblMakeyear
             // 
             this.lblMakeyear.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblMakeyear.Appearance.Options.UseForeColor = true;
             this.lblMakeyear.Location = new System.Drawing.Point(196, 104);
             this.lblMakeyear.Name = "lblMakeyear";
             this.lblMakeyear.Size = new System.Drawing.Size(12, 13);
@@ -159,7 +155,6 @@ namespace T7
             // lblPlant
             // 
             this.lblPlant.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblPlant.Appearance.Options.UseForeColor = true;
             this.lblPlant.Location = new System.Drawing.Point(196, 123);
             this.lblPlant.Name = "lblPlant";
             this.lblPlant.Size = new System.Drawing.Size(12, 13);
@@ -177,7 +172,6 @@ namespace T7
             // lblSeries
             // 
             this.lblSeries.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblSeries.Appearance.Options.UseForeColor = true;
             this.lblSeries.Location = new System.Drawing.Point(196, 142);
             this.lblSeries.Name = "lblSeries";
             this.lblSeries.Size = new System.Drawing.Size(12, 13);
@@ -195,7 +189,6 @@ namespace T7
             // lblBody
             // 
             this.lblBody.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblBody.Appearance.Options.UseForeColor = true;
             this.lblBody.Location = new System.Drawing.Point(196, 161);
             this.lblBody.Name = "lblBody";
             this.lblBody.Size = new System.Drawing.Size(12, 13);
@@ -223,7 +216,6 @@ namespace T7
             // lblGearbox
             // 
             this.lblGearbox.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblGearbox.Appearance.Options.UseForeColor = true;
             this.lblGearbox.Location = new System.Drawing.Point(196, 180);
             this.lblGearbox.Name = "lblGearbox";
             this.lblGearbox.Size = new System.Drawing.Size(12, 13);
@@ -264,7 +256,7 @@ namespace T7
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VIN decoder";
-            this.Load += new System.EventHandler(this.frmDecodeVIN_Load);
+            
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

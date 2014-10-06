@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.Globalization;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class ctrlReleaseNotes : DevExpress.XtraEditors.XtraUserControl
     {
@@ -63,16 +63,6 @@ namespace T7
             //DataTable dt = new DataTable();
             try
             {
-                
-                /*dt.TableName = "channel";
-                dt.Columns.Add("description");
-                dt.Columns.Add("link");
-                dt.Columns.Add("pubDate");
-                dt.Columns.Add("docs");
-                dt.Columns.Add("rating");
-                dt.Columns.Add("generator");
-
-                dt.ReadXml(filename);*/
                 ds.ReadXml(filename);
                 
                 if (ds.Tables.Count > 2)
@@ -115,7 +105,6 @@ namespace T7
         private void printPreviewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             gridControl1.ShowPrintPreview();
-
         }
 
 

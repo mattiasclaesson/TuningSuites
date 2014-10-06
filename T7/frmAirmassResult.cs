@@ -9,7 +9,7 @@ using DevExpress.XtraEditors;
 using T7;
 using System.IO;
 using DevExpress.XtraCharts;
-
+using CommonSuite;
 
 namespace T7
 {

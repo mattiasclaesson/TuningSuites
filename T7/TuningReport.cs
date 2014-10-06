@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class TuningReport : DevExpress.XtraReports.UI.XtraReport
     {

@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.XtraBars.Docking;
 using System.IO;
+using CommonSuite;
 
 namespace T7
 {

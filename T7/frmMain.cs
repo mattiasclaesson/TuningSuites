@@ -105,6 +105,7 @@ using DevExpress.XtraGrid;
 using System.Xml;
 using DevExpress.Skins;
 using PSTaskDialog;
+using CommonSuite;
 
 namespace T7
 {
@@ -7718,7 +7719,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 if (m_msiUpdater != null)
                 {
-                    m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T7Suite/", "", "", false);
+                    m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T7Suite/", "t7suitepro");
                 }
             }
             catch (Exception E)
@@ -7813,7 +7814,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 m_msiUpdater.Apppath = System.Windows.Forms.Application.UserAppDataPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
-                m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T7Suite/", "", "", false);
+                m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T7Suite/", "t7suitepro");
             }
             catch (Exception E)
             {
@@ -7890,13 +7891,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         m_msiUpdater.Blockauto_updates = false;
                     }
                 }
-            }
-            if (e.Info)
-            {
-                // send info to server?
-                _infoFeed = true;
-                // what to send?
-                // do a http post to the server and count usage there??
             }
         }
 

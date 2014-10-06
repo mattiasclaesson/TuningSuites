@@ -6,7 +6,7 @@ using DevExpress.XtraBars.Docking;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
-
+using CommonSuite;
 
 namespace T7
 {

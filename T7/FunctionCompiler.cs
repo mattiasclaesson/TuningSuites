@@ -26,7 +26,7 @@ namespace Plot3D
             functionBody = functionBody.Trim().ToLower();
             if (functionBody.Contains(";"))
             {
-                //throw new FunctionNotCompiledException(T7.Properties.Resources.FunctionCompiler_SemicolonException);
+                //throw new FunctionNotCompiledException(Suite.Properties.Resources.FunctionCompiler_SemicolonException);
             }
             if (!functionBody.StartsWith("y"))
             {
@@ -63,7 +63,7 @@ namespace Plot3D
             }
             strb.Append("double ").Append(functionBody).Append(";");
 
-            //string str = string.Format(T7.Properties.Resources.FunctionCompiler_EvalClass, strb.ToString(), typeof(CompiledFunction).Namespace);
+            //string str = string.Format(Common.Properties.Resources.FunctionCompiler_EvalClass, strb.ToString(), typeof(CompiledFunction).Namespace);
             string str = string.Empty;
 
             CSharpCodeProvider cscp = new CSharpCodeProvider();

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.IO;
 using System.Data;
+using CommonSuite;
 
 namespace T7
 {
@@ -1098,6 +1099,7 @@ namespace T7
                     XDFCategories category = XDFCategories.Undocumented;
                     XDFSubCategory subcat = XDFSubCategory.Undocumented;
                     sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat, LanguageID);
+
                     if (sh.Varname.Contains("."))
                     {
                         try

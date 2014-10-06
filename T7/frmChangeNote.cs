@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmChangeNote : DevExpress.XtraEditors.XtraForm
     {

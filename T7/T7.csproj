@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3FD286B8-0E90-44EF-861E-490D16A8ABD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -740,7 +740,6 @@
       <DependentUpon>TuningReport.cs</DependentUpon>
     </Compile>
     <Compile Include="VINDecoder.cs" />
-    <Compile Include="Wow.cs" />
     <Compile Include="XtraForm1.cs">
       <SubType>Form</SubType>
     </Compile>

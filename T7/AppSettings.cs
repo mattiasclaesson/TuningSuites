@@ -9,6 +9,7 @@ using System.Data.Odbc;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
+using CommonSuite;
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 

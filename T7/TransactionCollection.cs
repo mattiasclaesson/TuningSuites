@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 
-namespace T7
+namespace CommonSuite
 {
     public class TransactionCollection : SortableCollectionBase, ICustomTypeDescriptor
     {

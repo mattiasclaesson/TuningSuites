@@ -2,10 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace T7
+namespace CommonSuite
 {
     public class SymbolHelper
     {
+        private int _bitMask = 0x00000;
+
+        public int BitMask
+        {
+            get { return _bitMask; }
+            set { _bitMask = value; }
+        }
+
+        System.Drawing.Color _color = System.Drawing.Color.Black;
+
+        public System.Drawing.Color Color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
+
         private byte[] _currentdata;
 
         public byte[] Currentdata
@@ -36,14 +52,6 @@ namespace T7
         {
             get { return _selected; }
             set { _selected = value; }
-        }
-
-        System.Drawing.Color _color = System.Drawing.Color.Black;
-
-        public System.Drawing.Color Color
-        {
-            get { return _color; }
-            set { _color = value; }
         }
 
         int symbol_type = 0;

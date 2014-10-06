@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace T7
+namespace CommonSuite
 {
     public enum VINCarModel : int
     {
@@ -86,7 +85,7 @@ namespace T7
     {
         Unknown,
         None,
-        GarretT25,
+        GarretT25, 
 
         GarretTB2531,
         MitsubishiTD04,
@@ -108,6 +107,7 @@ namespace T7
 
         MitsubishiTD04L6_04H_19TK3S, //Some A20NHT_and A20NFT
         BorgWarnerK04_2277DCB, //A20NHT_LDK A20NFT_LHU
+        
     }
 
     public class VINDecoder
@@ -387,7 +387,7 @@ namespace T7
         private VINEngineType DecodeEngineType(string VINNumber, VINCarModel carModel, int makeYear)
         {
             if (VINNumber.Length < 8) return VINEngineType.Unknown;
-            // else if (makeYear > 2010 && carModel == VINCarModel.Saab93new) Removed code for NG9-3 2010 140616 and added the codes further down the line
+            // else if (makeYear > 2010 && carModel == VINCarModel.Saab93new)
           //  {
                 //For 9-3 model after 2010 we use special decoder as engine number is reused
                 /*             

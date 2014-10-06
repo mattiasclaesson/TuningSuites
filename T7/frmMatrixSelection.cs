@@ -6,9 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-//using Trionic5Tools;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmMatrixSelection : DevExpress.XtraEditors.XtraForm
     {

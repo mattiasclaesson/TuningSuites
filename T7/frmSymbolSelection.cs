@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Microsoft.Win32;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmSymbolSelection : DevExpress.XtraEditors.XtraForm
     {

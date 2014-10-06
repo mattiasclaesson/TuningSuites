@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace T7
@@ -256,54 +255,5 @@ namespace T7
             }
             return false;
         }
-
-        // printf("S00600004844521B\n");     /* Header record */
-       /* for (address = addr_offset; address <= max_addr; address += line_length)
-   {
-      if (verbose)
-         fprintf(stderr, "Processing %08lXh\r", address);
-
-      this_line = min(line_length, 1 + max_addr - address);
-      byte_count = (addr_bytes + this_line + 1);
-      printf("S%d%02X", addr_bytes - 1, byte_count);
-
-      checksum = byte_count;
-
-      for (i = addr_bytes - 1; i >= 0; i--)
-      {
-         c = (address >> (i << 3)) & 0xff;
-         printf("%02lX", c);
-         checksum += c;
-      }
-
-      fread(buf, 1, this_line, infile);
-
-      for (i = 0; i < this_line; i++)
-      {
-         printf("%02X", buf[i]);
-         checksum += buf[i];
-      }
-
-      printf("%02X\n", 255 - checksum);
-
-      record_count++;
-   }*/
-        /*
- checksum = 3 + (record_count & 0xff) + ((record_count >> 8) & 0xff);
-      printf("S503%04X%02X\n", record_count, 255 - checksum);
-
-      byte_count = (addr_bytes + 1);
-      printf("S%d%02X", 11 - addr_bytes, byte_count);
-
-      checksum = byte_count;
-
-      for (i = addr_bytes - 1; i >= 0; i--)
-      {
-         c = (addr_offset >> (i << 3)) & 0xff;
-         printf("%02lX", c);
-         checksum += c;
-      }
-      printf("%02X\n", 255 - checksum);
-         * */
     }
 }
