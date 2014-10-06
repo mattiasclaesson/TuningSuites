@@ -943,11 +943,11 @@ namespace T7
                                            0x00, 0x00, 0x00, 0x00,
                                            0x20, 0x00
                                        };
-                addressTableOffset = bytePatternSearch(filename, searchPattern, 0x30000) + 4;
-                int symbolTableOffset = GetAddressFromOffset(addressTableOffset - 0x0A, filename);
+                addressTableOffset = bytePatternSearch(filename, searchPattern, 0x30000) - 0x06;
                 // !!! m_sramOffsetForOpenFile is a PUBLIC variable !!!
-                m_sramOffsetForOpenFile = GetAddressFromOffset(addressTableOffset - 0x10, filename);
-                int symbolTableLength = GetLengthFromOffset(addressTableOffset - 0x06, filename);
+                m_sramOffsetForOpenFile = GetAddressFromOffset(addressTableOffset - 0x06, filename);
+                int symbolTableOffset = GetAddressFromOffset(addressTableOffset, filename);
+                int symbolTableLength = GetLengthFromOffset(addressTableOffset + 0x04, filename);
                 if (symbolTableLength > 0x1000 && symbolTableOffset > 0 && symbolTableOffset < 0x70000)
                 {
                     using (FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read))
@@ -966,8 +966,6 @@ namespace T7
             {
                 Console.WriteLine(E.Message);
             }
-            // Need to adjust for BioPower files as XML files reference the (missing) compressed symbol table
-            addressTableOffset -= 10;           
             return false;
         }
 
@@ -1014,10 +1012,17 @@ namespace T7
                                         internal_address |= Convert.ToInt64(bytes.GetValue(i));
                                     }
                                     int symbollength = 0;
-                                    for (int i = 4; i < 6; i++)
+                                    if (symb_count == 0)
                                     {
-                                        symbollength <<= 8;
-                                        symbollength |= Convert.ToInt32(bytes.GetValue(i));
+                                        symbollength = 0x08;            // report only a few bytes of the compressed symbol
+                                    }
+                                    else
+                                    {
+                                        for (int i = 4; i < 6; i++)
+                                        {
+                                            symbollength <<= 8;
+                                            symbollength |= Convert.ToInt32(bytes.GetValue(i));
+                                        }
                                     }
                                     // might be damaged addresstable by MapTun.. correct it automatically
                                     if (internal_address == 0x00 && symbollength > 0 && symbol_collection.Count > 0)
@@ -1064,7 +1069,6 @@ namespace T7
                     CastProgressEvent("Decoding packed symbol table", 40);
                     string[] allSymbolNames;
                     TrionicSymbolDecompressor.ExpandComprStream(compressedSymbolTable, out allSymbolNames);
-                    allSymbolNames = allSymbolNames.Where(val => val != allSymbolNames[0]).ToArray();
                     //Console.WriteLine("Adding names to symbols");
                     CastProgressEvent("Adding names to symbols", 45);
                     AddNamesToSymbols(symbol_collection, allSymbolNames, languageID);
