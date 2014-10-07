@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace T7
+namespace CommonSuite
 {
 	/// <summary>
 	/// Summary description for FormGoTo.

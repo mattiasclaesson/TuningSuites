@@ -1,4 +1,4 @@
-﻿namespace T7
+﻿namespace CommonSuite
 {
 	partial class FindAndReplaceForm
 	{

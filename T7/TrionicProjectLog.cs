@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace T7
+namespace CommonSuite
 {
 
     public enum LogbookEntryType : int

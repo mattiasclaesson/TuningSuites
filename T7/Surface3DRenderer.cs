@@ -232,6 +232,7 @@ namespace Plot3D
               }
           }
         }
+
         private System.Data.DataTable m_mapcomparedata = new System.Data.DataTable();
 
         public System.Data.DataTable Mapcomparedata
@@ -566,7 +567,6 @@ namespace Plot3D
                         zz = GetDataFromTable(xi - 1, yi - 1);// ;//function(xi, yi);
                         zzorig = GetDataFromOriginalTable(xi - 1, yi - 1);// ;//function(xi, yi);
                         zzcompare = GetDataFromCompareTable(xi - 1, yi - 1);// ;//function(xi, yi);
-
                     }
                     else if (x == (mesh.GetLength(0) - 1))
                     {
@@ -630,7 +630,6 @@ namespace Plot3D
                         polygoncompare[1] = meshFCompare[x, y + 1];
                         polygoncompare[2] = meshFCompare[x + 1, y + 1];
                         polygoncompare[3] = meshFCompare[x + 1, y];
-
                         /*
                         if (x == mesh.GetLength(0) - 1)
                         {

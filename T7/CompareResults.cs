@@ -92,6 +92,13 @@ namespace T7
             set { m_ShowAddressesInHex = value; }
         }
 
+        internal void HideMissingSymbolIndicators()
+        {
+            gcMissingInOriFile.Visible = false;
+            gcMissingInCompareFile.Visible = false;
+        }
+
+
         public void SetFilterMode(bool IsHexMode)
         {
             if (IsHexMode)
@@ -505,12 +512,6 @@ namespace T7
                     }
                 }
             }
-        }
-
-        internal void HideMissingSymbolIndicators()
-        {
-            gcMissingInOriFile.Visible = false;
-            gcMissingInCompareFile.Visible = false;
         }
     }
 }

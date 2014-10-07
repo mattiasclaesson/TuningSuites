@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 using Be.Windows.Forms;
 
-namespace T7
+namespace CommonSuite
 {
 	/// <summary>
 	/// Summary description for FormFindCancel.

@@ -22,7 +22,7 @@ namespace Plot3D
         {
             if ((value < min) || (value > max))
             {
-                //throw new ArgumentException(string.Format(T7.Properties.Resources.ColorRgb_CheckFloatException, name, value, min, max));
+                //throw new ArgumentException(string.Format(Suite.Properties.Resources.ColorRgb_CheckFloatException, name, value, min, max));
             }
         }
 

@@ -205,6 +205,7 @@ namespace T7
                 
             }
         }
+
         private byte[] m_map_original_content;
 
         public byte[] Map_original_content
@@ -579,7 +580,6 @@ namespace T7
         private DataTable m_mapdata = new DataTable();
         private DataTable m_mapcomparedata = new DataTable();
         private DataTable m_maporiginaldata = new DataTable();
-
 
         public DataTable Mapdata
         {

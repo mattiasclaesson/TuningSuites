@@ -582,6 +582,7 @@
     <Compile Include="HexViewer.designer.cs">
       <DependentUpon>HexViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="HighlightGroup.cs" />
     <Compile Include="IMapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

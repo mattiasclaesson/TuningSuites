@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace T7
+namespace CommonSuite
 {
     class EngineStatus
     {
