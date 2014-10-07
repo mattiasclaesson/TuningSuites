@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -367,7 +368,7 @@ namespace T8SuitePro
         {
             get
             {
-                if (comboBoxEdit3.SelectedIndex == -1) comboBoxEdit3.SelectedIndex = 0;
+                if (comboBoxEdit3.SelectedIndex == -1) comboBoxEdit3.SelectedIndex = (int)CANBusAdapter.Lawicel;
                 return (CANBusAdapter)comboBoxEdit3.SelectedIndex;
             }
             set
@@ -398,14 +399,14 @@ namespace T8SuitePro
         }
 
 
-        private void btnMultiAdapterConfiguration_Click(object sender, EventArgs e)
+        private void btnAdapterConfiguration_Click(object sender, EventArgs e)
         {
-            // open the config screen for additional configuration of the adapter
-            // which ADC channels mean what
-            // use ADC 1-5 & assign symbolname, max & min value
-            // use thermo & assign symbolname, max & min value
-            if (comboBoxEdit3.SelectedIndex == 1) // combiadapter
+            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter)
             {
+                // open the config screen for additional configuration of the adapter
+                // which ADC channels mean what
+                // use ADC 1-5 & assign symbolname, max & min value
+                // use thermo & assign symbolname, max & min value
                 frmMultiAdapterConfig multiconfig = new frmMultiAdapterConfig();
                 multiconfig.AppSettings = m_appSettings;
                 if (multiconfig.ShowDialog() == DialogResult.OK)
@@ -414,7 +415,7 @@ namespace T8SuitePro
                     // nothing really.. all is saved in appsettings already ... 
                 }
             }
-            else if (comboBoxEdit3.SelectedIndex == 2) // ELM327
+            else if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
             {
                 frmComportSelection comportSel = new frmComportSelection();
                 comportSel.PortName = m_appSettings.ELM327Port;
@@ -430,14 +431,14 @@ namespace T8SuitePro
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == 1 || comboBoxEdit3.SelectedIndex == 2)
+            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter || 
+                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
             {
-                // multiadapter and ELM327
-                btnMultiAdapterConfiguration.Enabled = true;
+                btnAdapterConfiguration.Enabled = true;
             }
             else
             {
-                btnMultiAdapterConfiguration.Enabled = false;
+                btnAdapterConfiguration.Enabled = false;
             }
         }
 
