@@ -90,6 +90,7 @@ using System.Threading;
 using RealtimeGraph;
 using DevExpress.Skins;
 using T7;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -107,7 +108,6 @@ namespace T8SuitePro
         Lawicel,
         MultiAdapter,
         ELM327,
-        //EasySync,
         Just4Trionic
     }
 
@@ -1256,92 +1256,13 @@ namespace T8SuitePro
             return retval;
         }
 
-        private bool Detectx64Architecture()
-        {
-            try
-            {
-                // if x64, install dosbox if not already done
-                if (Wow.Is64BitOperatingSystem)
-                {
-                    // 64 bit detected... 
-                    AppSettings m_appSettings = new AppSettings();
-                    if (!m_appSettings.DosBoxInstalled)
-                    {
-                        //DOSBox0.74-win32-installer.exe /S
-                        string fileName = Path.Combine(System.Windows.Forms.Application.StartupPath + "\\Dosbox", "DOSBox0.74-win32-installer.exe");
-                        ProcessStartInfo startinfo = new ProcessStartInfo(fileName);
-                        startinfo.CreateNoWindow = true;
-                        startinfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        startinfo.Arguments = "/S";
-                        startinfo.WorkingDirectory = /*Application.StartupPath*/Path.GetTempPath();
-                        System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                        conv_proc.WaitForExit(); // wait for 10 seconds max
-                        m_appSettings.DosBoxInstalled = true;
-                    }
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-            return false;
-        }
-
         private void DumpToSymbolFile(string p)
         {
             using (StreamWriter sw = new StreamWriter(@"C:\Documents and Settings\Guido.MOBICOACH\My Documents\Prive\SAAB\Trionic 8\Dev\SymbolAddressIssue\Addresses.txt", true))
             {
                 sw.WriteLine(p);
             }
-        }
-
-        //======================================================
-        //Recreate all executable resources
-        //======================================================
-        private void mRecreateAllExecutableResources()
-        {
-            // Get Current Assembly refrence
-            Assembly currentAssembly = Assembly.GetExecutingAssembly();
-            // Get all imbedded resources
-            string[] arrResources = currentAssembly.GetManifestResourceNames();
-
-            foreach (string resourceName in arrResources)
-            {
-                if (resourceName.EndsWith(".exe"))
-                { //or other extension desired
-                    //Name of the file saved on disk
-                    string saveAsName = resourceName;
-                    FileInfo fileInfoOutputFile = new FileInfo(System.Windows.Forms.Application.StartupPath + "\\" + saveAsName);
-                    //CHECK IF FILE EXISTS AND DO SOMETHING DEPENDING ON YOUR NEEDS
-                    if (fileInfoOutputFile.Exists)
-                    {
-                        //overwrite if desired  (depending on your needs)
-                        //fileInfoOutputFile.Delete();
-                    }
-                    //OPEN NEWLY CREATING FILE FOR WRITTING
-                    FileStream streamToOutputFile = fileInfoOutputFile.OpenWrite();
-                    //GET THE STREAM TO THE RESOURCES
-                    Stream streamToResourceFile =
-                                        currentAssembly.GetManifestResourceStream(resourceName);
-
-                    //---------------------------------
-                    //SAVE TO DISK OPERATION
-                    //---------------------------------
-                    const int size = 4096;
-                    byte[] bytes = new byte[4096];
-                    int numBytes;
-                    while ((numBytes = streamToResourceFile.Read(bytes, 0, size)) > 0)
-                    {
-                        streamToOutputFile.Write(bytes, 0, numBytes);
-                    }
-
-                    streamToOutputFile.Close();
-                    streamToResourceFile.Close();
-                }//end_if
-
-            }//end_foreach
-        }//end_mRecreateAllExecutableResources 
+        } 
 
         private void DumpBytesToConsole(byte[] bytes)
         {
@@ -1377,7 +1298,10 @@ namespace T8SuitePro
         {
             SymbolTranslator translator = new SymbolTranslator();
             SetProgress("Loading...");
-            string[] xtablelines = File.ReadAllLines(Path.Combine(Path.GetTempPath(), "XTABLE.TMP"));
+            string symbolNamesFilename = System.Windows.Forms.Application.StartupPath + @".\COMPR.TXT";
+            string combinedTableFilename = System.Windows.Forms.Application.StartupPath + @".\XTABLE.TMP";
+
+            string[] xtablelines = File.ReadAllLines(combinedTableFilename);
             string line = string.Empty;
             int flashaddress = 0;
             int length = 0;
@@ -1427,7 +1351,7 @@ namespace T8SuitePro
             }
             SetProgress("Combining...");
 
-            string[] comprlines = File.ReadAllLines(Path.Combine(Path.GetTempPath(), "COMPR.TXT"));
+            string[] comprlines = File.ReadAllLines(symbolNamesFilename);
             line = string.Empty;
             flashaddress = 0;
             length = 0;
@@ -2261,7 +2185,7 @@ namespace T8SuitePro
             m_currentfile = filename;
             TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
 
-            this.Text = "T8Suite Professional [" + Path.GetFileName(m_currentfile) + "]";
+            Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
             barFilenameText.Caption = Path.GetFileName(m_currentfile);
             gridControlSymbols.DataSource = m_symbols;
             m_appSettings.Lastfilename = m_currentfile;
@@ -4016,7 +3940,7 @@ namespace T8SuitePro
                     m_currentfile = m_commandLineFile;
                     TryToOpenFile(m_commandLineFile, out m_symbols, m_currentfile_size);
 
-                    this.Text = "T8Suite Professional [" + Path.GetFileName(m_currentfile) + "]";
+                    Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                     barFilenameText.Caption = Path.GetFileName(m_currentfile);
                     gridControlSymbols.DataSource = m_symbols;
                     m_appSettings.Lastfilename = m_currentfile;
@@ -4037,7 +3961,7 @@ namespace T8SuitePro
                             m_currentfile = m_appSettings.Lastfilename;
                             TryToOpenFile(m_appSettings.Lastfilename, out m_symbols, m_currentfile_size);
 
-                            this.Text = "T8Suite Professional [" + Path.GetFileName(m_currentfile) + "]";
+                            Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                             barFilenameText.Caption = Path.GetFileName(m_currentfile);
                             gridControlSymbols.DataSource = m_symbols;
                             m_appSettings.Lastfilename = m_currentfile;
@@ -5680,7 +5604,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             {
                 if (m_msiUpdater != null)
                 {
-                    m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T8Suite/", "", "", false);
+                    m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T8Suite/", "t8suitepro");
                 }
             }
             catch (Exception E)
@@ -7139,7 +7063,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_msiUpdater.Apppath = System.Windows.Forms.Application.UserAppDataPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
-                m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T8Suite/", "", "", false);
+                m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T8Suite/", "t8suitepro");
             }
             catch (Exception E)
             {
@@ -7325,7 +7249,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
 
 
-                    this.Text = "T8Suite Professional [" + Path.GetFileName(m_currentfile) + "]";
+                    Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                     barFilenameText.Caption = Path.GetFileName(m_currentfile);
                     gridControlSymbols.DataSource = m_symbols;
                     m_appSettings.Lastfilename = m_currentfile;
@@ -10176,7 +10100,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                     TryToOpenFile(projectprops.Rows[0]["BINFILE"].ToString(), out m_symbols, m_currentfile_size);
 
-                    this.Text = "T8Suite Professional [" + Path.GetFileName(m_currentfile) + "]";
+                    Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                     barFilenameText.Caption = Path.GetFileName(m_currentfile);
                     gridControlSymbols.DataSource = m_symbols;
                     m_appSettings.Lastfilename = m_currentfile;
