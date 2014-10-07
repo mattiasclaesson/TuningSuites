@@ -1,24 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.IO;
 
 
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     class msiupdater
     {
         private Version m_currentversion;
-        private string m_customer = "Global";
-        private string m_server = "http://develop.trionictuning.com/T8Suite/";
-        private string m_username = "";
-        private string m_password = "";
+        private string m_server = "";
         private Version m_NewVersion;
         private string m_apppath = "";
-        private bool m_fromFileLocation = false;
         private bool m_blockauto_updates = false;
+        private string m_tagName = "";
 
         public bool Blockauto_updates
         {
@@ -91,11 +87,11 @@ namespace T8SuitePro
 
             public MSIUpdateProgressEventArgs(Int32 NoFiles, Int32 NoFilesDone, Int32 PercentageDone, Int32 NoBytes, Int32 NoBytesDone)
             {
-                this._NoFiles = NoFiles;
-                this._NoFilesDone = NoFilesDone;
-                this._PercentageDone = PercentageDone;
-                this._NoBytes = NoBytes;
-                this._NoBytesDone = NoBytesDone;
+                _NoFiles = NoFiles;
+                _NoFilesDone = NoFilesDone;
+                _PercentageDone = PercentageDone;
+                _NoBytes = NoBytes;
+                _NoBytesDone = NoBytesDone;
             }
         }
 
@@ -145,11 +141,11 @@ namespace T8SuitePro
             }
             public MSIUpdaterEventArgs(string Data, bool Update, bool mVersion2High, Version NewVersion, string xmlfile)
             {
-                this._Data = Data;
-                this._UpdateAvailable = Update;
-                this._Version2High = mVersion2High;
-                this._Version = NewVersion;
-                this._xmlFile = xmlfile;
+                _Data = Data;
+                _UpdateAvailable = Update;
+                _Version2High = mVersion2High;
+                _Version = NewVersion;
+                _xmlFile = xmlfile;
             }
         }
 
@@ -159,13 +155,10 @@ namespace T8SuitePro
             m_NewVersion = new Version("0.0.0.0");
         }
 
-        public void CheckForUpdates(string customer, string server, string username, string password, bool FromFile)
+        public void CheckForUpdates(string server, string tagName)
         {
             m_server = server;
-            m_customer = customer;
-            m_username = username;
-            m_password = password;
-            m_fromFileLocation = FromFile;
+            m_tagName = tagName;
             if (!m_blockauto_updates)
             {
                 System.Threading.Thread t = new System.Threading.Thread(updatecheck);
@@ -175,7 +168,7 @@ namespace T8SuitePro
 
         public void ExecuteUpdate(Version ver)
         {
-            string command = "http://develop.trionictuning.com/T8Suite/" + ver.ToString() + "/T8Suite.msi";
+            string command = m_server + ver.ToString() + "/T8Suite.msi";
             try
             {
                 System.Diagnostics.Process.Start(command);
@@ -208,7 +201,6 @@ namespace T8SuitePro
 
                 try
                 {
-                    //request.Proxy = System.Net.WebProxy.GetDefaultProxy();
                     request.Proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
                 }
                 catch (Exception proxyE)
@@ -304,7 +296,6 @@ namespace T8SuitePro
         {
             string URLString="";
             string XMLResult="";
-            //string VehicleString;
             bool m_updateavailable = false;
             bool m_version_toohigh = false;
             Version maxversion = new Version("0.0.0.0");
@@ -313,28 +304,24 @@ namespace T8SuitePro
 
             try
             {
-                if (m_customer.Length > 0)
+                URLString = m_server + "version.xml";
+                XMLResult = GetPageHTML(URLString, 10);
+                using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\input.xml", false, System.Text.Encoding.ASCII, 2048))
                 {
-                    URLString = "http://develop.trionictuning.com/T8Suite/version.xml";
-                    XMLResult = GetPageHTML(URLString, 10);
-                    using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\input.xml", false, System.Text.Encoding.ASCII, 2048))
-                    {
-                        xmlfile.Write(XMLResult);
-                        xmlfile.Close();
-                    }
-                    URLString = "http://develop.trionictuning.com/T8Suite/Notes.xml";
-                    XMLResult = GetPageHTML(URLString, 10);
-                    using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
-                    {
-                        xmlfile.Write(XMLResult);
-                        xmlfile.Close();
-                    }
+                    xmlfile.Write(XMLResult);
+                    xmlfile.Close();
+                }
+                URLString = m_server + "Notes.xml";
+                XMLResult = GetPageHTML(URLString, 10);
+                using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
+                {
+                    xmlfile.Write(XMLResult);
+                    xmlfile.Close();
                 }
 
                 using (StreamWriter logfile = new StreamWriter(Apppath + "\\update.log", true, System.Text.Encoding.ASCII, 2048))
                 {
                     logfile.WriteLine("Current version: " + m_currentversion);
-                    logfile.WriteLine("Customer: " + "Global");
                     logfile.WriteLine("Server: " + m_server);
                     logfile.WriteLine("URLString: " + URLString);
                     logfile.WriteLine("XMLResult: " + XMLResult);
@@ -350,7 +337,7 @@ namespace T8SuitePro
                     // Add any other properties that would be useful to store
                     //foreach (
                     System.Xml.XmlNodeList Nodes;
-                    Nodes = doc.GetElementsByTagName("t8suitepro");
+                    Nodes = doc.GetElementsByTagName(m_tagName);
                     foreach (System.Xml.XmlNode Item in Nodes)
                     {
                         System.Xml.XmlAttributeCollection XMLColl;
@@ -413,7 +400,7 @@ namespace T8SuitePro
 
         internal string GetReleaseNotes()
         {
-            string URLString = "http://develop.trionictuning.com/T8Suite/Notes.xml";
+            string URLString = m_server + "Notes.xml";
             string XMLResult = GetPageHTML(URLString, 10);
             using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
             {
