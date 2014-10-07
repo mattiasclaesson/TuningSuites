@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
 using DevExpress.Charts;
 using System.Runtime.InteropServices;
+using CommonSuite;
 
 namespace T8SuitePro
 {

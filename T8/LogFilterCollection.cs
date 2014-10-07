@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public class LogFilterCollection : SortableCollectionBase, ICustomTypeDescriptor
     {

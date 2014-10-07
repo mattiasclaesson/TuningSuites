@@ -86,8 +86,7 @@ namespace T8SuitePro
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(269, 47);
             this.labelControl2.TabIndex = 2;
-            this.labelControl2.Text = "T8Suite Pro was created with the help of lots of people on ecuproject.com and tri" +
-                "onictuning.com";
+            this.labelControl2.Text = "T8Suite Pro was created with the help of lots of people on ecuproject.com and trionictuning.com";
             // 
             // labelControl3
             // 

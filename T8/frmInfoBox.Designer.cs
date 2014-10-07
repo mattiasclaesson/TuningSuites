@@ -1,4 +1,4 @@
-namespace T8SuitePro
+namespace CommonSuite
 {
     partial class frmInfoBox
     {
@@ -74,7 +74,7 @@ namespace T8SuitePro
             this.Name = "frmInfoBox";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "T8Suite information";
+            this.Text = "Information";
             this.TopMost = true;
             this.ResumeLayout(false);
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmVectorlist : DevExpress.XtraEditors.XtraForm
     {
@@ -23,6 +23,7 @@ namespace T8SuitePro
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.OK;
             this.Close();
         }
     }

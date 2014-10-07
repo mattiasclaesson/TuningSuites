@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class CompareResultSelector : DevExpress.XtraEditors.XtraUserControl
     {

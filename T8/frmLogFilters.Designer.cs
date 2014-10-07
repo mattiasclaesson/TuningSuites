@@ -1,4 +1,4 @@
-namespace T8SuitePro
+namespace CommonSuite
 {
     partial class frmLogFilters
     {

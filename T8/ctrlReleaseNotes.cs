@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.Globalization;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class ctrlReleaseNotes : DevExpress.XtraEditors.XtraUserControl
     {
@@ -63,16 +63,6 @@ namespace T8SuitePro
             //DataTable dt = new DataTable();
             try
             {
-                
-                /*dt.TableName = "channel";
-                dt.Columns.Add("description");
-                dt.Columns.Add("link");
-                dt.Columns.Add("pubDate");
-                dt.Columns.Add("docs");
-                dt.Columns.Add("rating");
-                dt.Columns.Add("generator");
-
-                dt.ReadXml(filename);*/
                 ds.ReadXml(filename);
                 
                 if (ds.Tables.Count > 2)

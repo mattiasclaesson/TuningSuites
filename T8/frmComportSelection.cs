@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO.Ports;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmComportSelection : DevExpress.XtraEditors.XtraForm
     {

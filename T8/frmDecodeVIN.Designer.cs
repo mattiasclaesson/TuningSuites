@@ -1,4 +1,4 @@
-namespace T8SuitePro
+namespace CommonSuite
 {
     partial class frmDecodeVIN
     {
@@ -256,7 +256,7 @@ namespace T8SuitePro
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VIN decoder";
-            this.Load += new System.EventHandler(this.frmDecodeVIN_Load);
+            
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

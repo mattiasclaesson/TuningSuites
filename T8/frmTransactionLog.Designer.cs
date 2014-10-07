@@ -1,4 +1,4 @@
-namespace T8SuitePro
+namespace CommonSuite
 {
     partial class frmTransactionLog
     {
@@ -69,10 +69,10 @@ namespace T8SuitePro
             // 
             this.gridControl1.ContextMenuStrip = this.contextMenuStrip1;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(2, 20);
+            this.gridControl1.Location = new System.Drawing.Point(2, 21);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(515, 339);
+            this.gridControl1.Size = new System.Drawing.Size(515, 338);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -83,20 +83,20 @@ namespace T8SuitePro
             this.rolllBackToolStripMenuItem,
             this.rollForwardToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(144, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // rolllBackToolStripMenuItem
             // 
             this.rolllBackToolStripMenuItem.Name = "rolllBackToolStripMenuItem";
-            this.rolllBackToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.rolllBackToolStripMenuItem.Text = "Rolll back";
+            this.rolllBackToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.rolllBackToolStripMenuItem.Text = "Roll back";
             this.rolllBackToolStripMenuItem.Click += new System.EventHandler(this.rolllBackToolStripMenuItem_Click);
             // 
             // rollForwardToolStripMenuItem
             // 
             this.rollForwardToolStripMenuItem.Name = "rollForwardToolStripMenuItem";
-            this.rollForwardToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.rollForwardToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.rollForwardToolStripMenuItem.Text = "Roll forward";
             this.rollForwardToolStripMenuItem.Click += new System.EventHandler(this.rollForwardToolStripMenuItem_Click);
             // 

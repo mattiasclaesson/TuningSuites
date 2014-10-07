@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Microsoft.Win32;
+using CommonSuite;
 
 namespace T8SuitePro
 {

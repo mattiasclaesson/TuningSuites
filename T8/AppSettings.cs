@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Odbc;
 using System.IO;
 using System.Windows.Forms;
+using CommonSuite;
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 
@@ -15,19 +16,6 @@ namespace T8SuitePro
 {
     public class AppSettings
     {
-
-        private bool m_dosBoxInstalled = false;
-
-        public bool DosBoxInstalled
-        {
-            get { return m_dosBoxInstalled; }
-            set
-            {
-                m_dosBoxInstalled = value;
-                SaveRegistrySetting("dosBoxInstalled", m_dosBoxInstalled);
-            }
-        }
-
 
         private int _Baudrate = 38400;
 
@@ -52,7 +40,6 @@ namespace T8SuitePro
                 SaveRegistrySetting("ELM327Port", _ELM327Port);
             }
         }
-
 
         private string _LastXAxisFromMatrix = string.Empty;
 
@@ -1747,10 +1734,6 @@ namespace T8SuitePro
                             else if (a == "notification3value")
                             {
                                 _notification3value = ConvertToDouble(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "dosBoxInstalled")
-                            {
-                                m_dosBoxInstalled = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                         }
                         catch (Exception E)

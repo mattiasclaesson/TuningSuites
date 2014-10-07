@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
-using System.Runtime.InteropServices;
 using Nevron.Chart;
 using Nevron.GraphicsCore;
 using Nevron.Chart.WinForm;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using DevExpress.XtraBars.Docking;
-using System.IO;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -3380,31 +3377,38 @@ namespace T8SuitePro
 
         private void CopySelectionToClipboard()
         {
-            DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-            CellHelperCollection chc = new CellHelperCollection();
-            foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
+            try
             {
-                CellHelper ch = new CellHelper();
-                ch.Rowhandle = gc.RowHandle;
-                ch.Columnindex = gc.Column.AbsoluteIndex;
-                object o = gridView1.GetRowCellValue(gc.RowHandle, gc.Column);
-                if (m_viewtype == ViewType.Hexadecimal)
+                DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
+                CellHelperCollection chc = new CellHelperCollection();
+                foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                 {
-                    ch.Value = Convert.ToInt32(o.ToString(), 16);
+                    CellHelper ch = new CellHelper();
+                    ch.Rowhandle = gc.RowHandle;
+                    ch.Columnindex = gc.Column.AbsoluteIndex;
+                    object o = gridView1.GetRowCellValue(gc.RowHandle, gc.Column);
+                    if (m_viewtype == ViewType.Hexadecimal)
+                    {
+                        ch.Value = Convert.ToInt32(o.ToString(), 16);
+                    }
+                    else
+                    {
+                        ch.Value = Convert.ToInt32(o);
+                    }
+                    chc.Add(ch);
                 }
-                else
+                string serialized = ((int)m_viewtype).ToString();//string.Empty;
+                foreach (CellHelper ch in chc)
                 {
-                    ch.Value = Convert.ToInt32(o);
+                    serialized += ch.Columnindex.ToString() + ":" + ch.Rowhandle.ToString() + ":" + ch.Value.ToString() + ":~";
                 }
-                chc.Add(ch);
+
+                Clipboard.SetText(serialized);
             }
-            string serialized = ((int)m_viewtype).ToString();//string.Empty;
-            foreach (CellHelper ch in chc)
+            catch (Exception E)
             {
-                serialized += ch.Columnindex.ToString() + ":" + ch.Rowhandle.ToString() + ":" + ch.Value.ToString() + ":~";
+                Console.WriteLine(E.Message);
             }
-            
-            Clipboard.SetText(serialized);
         }
 
         private void CopyMapToClipboard()
@@ -4232,7 +4236,6 @@ namespace T8SuitePro
                 nChartControl1.Charts[0].Projection.Rotation = rotation;
                 nChartControl1.Charts[0].Projection.Elevation = elevation;
                 nChartControl1.Refresh();
-
             }
             catch (Exception E)
             {

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
 using Be.Windows.Forms;
+using CommonSuite;
 
 namespace T8SuitePro
 {

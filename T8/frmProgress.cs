@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace T8SuitePro
 {
-    public partial class frmProgress : Form
+    public partial class frmProgress : DevExpress.XtraEditors.XtraForm
     {
         public delegate void CancelEvent(object sender, EventArgs e);
         public event frmProgress.CancelEvent onCancelOperation;
@@ -29,16 +29,22 @@ namespace T8SuitePro
 
         public void SetProgress(string text)
         {
-            label1.Text = text ;
-            Application.DoEvents();
+            if (label1.Text != text)
+            {
+                label1.Text = text;
+                Application.DoEvents();
+            }
         }
 
         public void SetProgressPercentage(int percentage)
         {
-            progressBarControl1.EditValue = percentage;
-            this.Height = 159;
-            progressBarControl1.Visible = true;
-            Application.DoEvents();
+            if (Convert.ToInt32(progressBarControl1.EditValue) != percentage)
+            {
+                progressBarControl1.EditValue = percentage;
+                this.Height = 159;
+                progressBarControl1.Visible = true;
+                Application.DoEvents();
+            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

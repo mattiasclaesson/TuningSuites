@@ -111,7 +111,7 @@ namespace T8SuitePro
             this.checkEdit23 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit19 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit18 = new DevExpress.XtraEditors.CheckEdit();
-            this.btnMultiAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
+            this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
@@ -543,7 +543,7 @@ namespace T8SuitePro
             this.groupControl2.Controls.Add(this.checkEdit23);
             this.groupControl2.Controls.Add(this.checkEdit19);
             this.groupControl2.Controls.Add(this.checkEdit18);
-            this.groupControl2.Controls.Add(this.btnMultiAdapterConfiguration);
+            this.groupControl2.Controls.Add(this.btnAdapterConfiguration);
             this.groupControl2.Controls.Add(this.labelControl5);
             this.groupControl2.Controls.Add(this.comboBoxEdit3);
             this.groupControl2.Location = new System.Drawing.Point(10, 254);
@@ -599,13 +599,13 @@ namespace T8SuitePro
             // 
             // btnMultiAdapterConfiguration
             // 
-            this.btnMultiAdapterConfiguration.Enabled = false;
-            this.btnMultiAdapterConfiguration.Location = new System.Drawing.Point(352, 28);
-            this.btnMultiAdapterConfiguration.Name = "btnMultiAdapterConfiguration";
-            this.btnMultiAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
-            this.btnMultiAdapterConfiguration.TabIndex = 28;
-            this.btnMultiAdapterConfiguration.Text = "Configuration";
-            this.btnMultiAdapterConfiguration.Click += new System.EventHandler(this.btnMultiAdapterConfiguration_Click);
+            this.btnAdapterConfiguration.Enabled = false;
+            this.btnAdapterConfiguration.Location = new System.Drawing.Point(352, 28);
+            this.btnAdapterConfiguration.Name = "btnMultiAdapterConfiguration";
+            this.btnAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
+            this.btnAdapterConfiguration.TabIndex = 28;
+            this.btnAdapterConfiguration.Text = "Configuration";
+            this.btnAdapterConfiguration.Click += new System.EventHandler(this.btnAdapterConfiguration_Click);
             // 
             // labelControl5
             // 
@@ -728,7 +728,7 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.CheckEdit checkEdit23;
         private DevExpress.XtraEditors.CheckEdit checkEdit19;
         private DevExpress.XtraEditors.CheckEdit checkEdit18;
-        private DevExpress.XtraEditors.SimpleButton btnMultiAdapterConfiguration;
+        private DevExpress.XtraEditors.SimpleButton btnAdapterConfiguration;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit3;
         private DevExpress.XtraEditors.SimpleButton btnNotifications;

@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Data;
+using CommonSuite;
 
 namespace T8SuitePro
 {

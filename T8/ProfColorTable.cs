@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public class ProfColorTable : ProfessionalColorTable
     {

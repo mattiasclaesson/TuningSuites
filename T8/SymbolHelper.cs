@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public class SymbolHelper
     {
-
         private int _bitMask = 0x00000;
 
         public int BitMask
@@ -37,6 +36,14 @@ namespace T8SuitePro
         {
             get { return symbol_number; }
             set { symbol_number = value; }
+        }
+
+        int symbol_number_ECU = 0;
+
+        public int Symbol_number_ECU
+        {
+            get { return symbol_number_ECU; }
+            set { symbol_number_ECU = value; }
         }
 
         bool _selected = false;
@@ -75,14 +82,6 @@ namespace T8SuitePro
             set { flash_start_address = value; }
         }
 
-        int symbol_number_ECU = 0;
-
-        public int Symbol_number_ECU
-        {
-            get { return symbol_number_ECU; }
-            set { symbol_number_ECU = value; }
-        }
-
         public Int64 Start_address
         {
             get { return start_address; }
@@ -95,6 +94,13 @@ namespace T8SuitePro
             get { return length; }
             set { length = value; }
         }
+        string varname = string.Empty;
+
+        public string Varname
+        {
+            get { return varname; }
+            set { varname = value; }
+        }
 
         string _userdescription = string.Empty;
 
@@ -104,13 +110,6 @@ namespace T8SuitePro
             set { _userdescription = value; }
         }
 
-        string varname = string.Empty;
-
-        public string Varname
-        {
-            get { return varname; }
-            set { varname = value; }
-        }
 
         string _description = string.Empty;
 
