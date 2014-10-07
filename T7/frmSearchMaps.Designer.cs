@@ -1,4 +1,4 @@
-namespace T7
+namespace CommonSuite
 {
     partial class frmSearchMaps
     {
@@ -30,6 +30,8 @@ namespace T7
         {
             this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
+            this.spinEdit2 = new DevExpress.XtraEditors.SpinEdit();
+            this.checkEdit5 = new DevExpress.XtraEditors.CheckEdit();
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.checkEdit4 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit3 = new DevExpress.XtraEditors.CheckEdit();
@@ -40,6 +42,8 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
@@ -63,6 +67,8 @@ namespace T7
             // 
             // groupControl1
             // 
+            this.groupControl1.Controls.Add(this.spinEdit2);
+            this.groupControl1.Controls.Add(this.checkEdit5);
             this.groupControl1.Controls.Add(this.textEdit1);
             this.groupControl1.Controls.Add(this.checkEdit4);
             this.groupControl1.Controls.Add(this.checkEdit3);
@@ -71,23 +77,46 @@ namespace T7
             this.groupControl1.Controls.Add(this.spinEdit1);
             this.groupControl1.Location = new System.Drawing.Point(12, 12);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(407, 187);
+            this.groupControl1.Size = new System.Drawing.Size(407, 216);
             this.groupControl1.TabIndex = 2;
             this.groupControl1.Text = "Search options";
             // 
+            // spinEdit2
+            // 
+            this.spinEdit2.EditValue = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.spinEdit2.Location = new System.Drawing.Point(174, 92);
+            this.spinEdit2.Name = "spinEdit2";
+            this.spinEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.spinEdit2.Size = new System.Drawing.Size(207, 20);
+            this.spinEdit2.TabIndex = 8;
+            // 
+            // checkEdit5
+            // 
+            this.checkEdit5.Location = new System.Drawing.Point(15, 92);
+            this.checkEdit5.Name = "checkEdit5";
+            this.checkEdit5.Properties.Caption = "Only maps with length";
+            this.checkEdit5.Size = new System.Drawing.Size(153, 19);
+            this.checkEdit5.TabIndex = 7;
+            this.checkEdit5.CheckedChanged += new System.EventHandler(this.checkEdit5_CheckedChanged);
+            // 
             // textEdit1
             // 
-            this.textEdit1.Location = new System.Drawing.Point(174, 75);
+            this.textEdit1.Location = new System.Drawing.Point(174, 66);
             this.textEdit1.Name = "textEdit1";
             this.textEdit1.Size = new System.Drawing.Size(207, 20);
             this.textEdit1.TabIndex = 6;
             // 
             // checkEdit4
             // 
-            this.checkEdit4.Location = new System.Drawing.Point(15, 75);
+            this.checkEdit4.Location = new System.Drawing.Point(15, 66);
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.Caption = "Search for string value";
-            this.checkEdit4.Size = new System.Drawing.Size(153, 20);
+            this.checkEdit4.Size = new System.Drawing.Size(153, 19);
             this.checkEdit4.TabIndex = 5;
             // 
             // checkEdit3
@@ -96,28 +125,28 @@ namespace T7
             this.checkEdit3.Location = new System.Drawing.Point(15, 40);
             this.checkEdit3.Name = "checkEdit3";
             this.checkEdit3.Properties.Caption = "Search for numeric value";
-            this.checkEdit3.Size = new System.Drawing.Size(153, 20);
+            this.checkEdit3.Size = new System.Drawing.Size(153, 19);
             this.checkEdit3.TabIndex = 4;
             // 
             // checkEdit2
             // 
-            this.checkEdit2.Location = new System.Drawing.Point(15, 148);
+            this.checkEdit2.Location = new System.Drawing.Point(15, 183);
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.Caption = "Include symbol descriptions";
-            this.checkEdit2.Size = new System.Drawing.Size(185, 20);
+            this.checkEdit2.Size = new System.Drawing.Size(185, 19);
             this.checkEdit2.TabIndex = 3;
             // 
             // checkEdit1
             // 
-            this.checkEdit1.Location = new System.Drawing.Point(15, 118);
+            this.checkEdit1.Location = new System.Drawing.Point(15, 153);
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Include symbol names";
-            this.checkEdit1.Size = new System.Drawing.Size(185, 20);
+            this.checkEdit1.Size = new System.Drawing.Size(185, 19);
             this.checkEdit1.TabIndex = 2;
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(345, 205);
+            this.simpleButton1.Location = new System.Drawing.Point(345, 234);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 3;
@@ -126,7 +155,7 @@ namespace T7
             // 
             // simpleButton2
             // 
-            this.simpleButton2.Location = new System.Drawing.Point(264, 205);
+            this.simpleButton2.Location = new System.Drawing.Point(264, 234);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 4;
@@ -137,7 +166,7 @@ namespace T7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(432, 238);
+            this.ClientSize = new System.Drawing.Size(432, 269);
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.groupControl1);
@@ -151,6 +180,8 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).EndInit();
@@ -171,5 +202,7 @@ namespace T7
         private DevExpress.XtraEditors.TextEdit textEdit1;
         private DevExpress.XtraEditors.CheckEdit checkEdit4;
         private DevExpress.XtraEditors.CheckEdit checkEdit3;
+        private DevExpress.XtraEditors.SpinEdit spinEdit2;
+        private DevExpress.XtraEditors.CheckEdit checkEdit5;
     }
 }

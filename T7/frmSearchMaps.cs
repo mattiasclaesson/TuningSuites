@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmSearchMaps : DevExpress.XtraEditors.XtraForm
     {
@@ -59,6 +59,23 @@ namespace T7
             }
         }
 
+        public bool UseSpecificMapLength
+        {
+            get
+            {
+                return checkEdit5.Checked;
+            }
+        }
+
+        public decimal MapLength
+        {
+            get
+            {
+                return spinEdit2.Value;
+            }
+        }
+
+
         public decimal NumericValueToSearchFor
         {
             get
@@ -73,6 +90,11 @@ namespace T7
             {
                 return textEdit1.Text;
             }
+        }
+
+        private void checkEdit5_CheckedChanged(object sender, EventArgs e)
+        {
+            spinEdit2.Enabled = checkEdit5.Checked;
         }
 
     }
