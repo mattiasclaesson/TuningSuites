@@ -1543,7 +1543,7 @@ namespace T7
                 gridControlSymbols.DataSource = m_symbols;
                 //gridViewSymbols.BestFitColumns();
                 SetDefaultFilters();
-                Text = String.Format("T7 Suite professional [ {0} ]", Path.GetFileName(m_currentfile));
+                Text = String.Format("T7SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                 barEditItem3.EditValue = 90;
                 barEditItem3.Caption = "Loading realtime info";
                 // also rearrange the symbolnumbers in the realtime view
@@ -1557,7 +1557,7 @@ namespace T7
             {
                 m_symbols = new SymbolCollection();
                 gridControlSymbols.DataSource = m_symbols;
-                Text = "T7 Suite professional [ none ]";
+                Text = String.Format("T7SuitePro v{0} [ none ]", System.Windows.Forms.Application.ProductVersion);
                 if (showmessage)
                 {
                     frmInfoBox info = new frmInfoBox("File is not a Trionic 7 binary file!");
@@ -13442,6 +13442,13 @@ dt.Columns.Add("SymbolName");
                         progress.SetProgress("Searching " + sh.Varname);
                         progress.SetProgressPercentage((cnt * 100) / m_symbols.Count);
                         bool hit_found = false;
+                        if (searchoptions.UseSpecificMapLength)
+                        {
+                            if (sh.Length != (int)searchoptions.MapLength)
+                            {
+                                continue;
+                            }
+                        }
                         if (searchoptions.IncludeSymbolNames)
                         {
                             if (searchoptions.SearchForNumericValues)
