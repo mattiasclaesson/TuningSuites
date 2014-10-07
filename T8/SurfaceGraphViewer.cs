@@ -108,6 +108,18 @@ namespace T8SuitePro
             }
         }
 
+        private bool m_ShowinBlue = false;
+
+        public bool ShowinBlue
+        {
+            get { return m_ShowinBlue; }
+            set
+            {
+                m_ShowinBlue = value;
+                sr.ShowinBlue = value;
+            }
+        }
+
         private int m_numberOfColumns = 8;
 
         public int NumberOfColumns
@@ -359,7 +371,6 @@ namespace T8SuitePro
                 m_mapdata.Columns.Add(i.ToString(), Type.GetType("System.Double"));
                 m_mapcomparedata.Columns.Add(i.ToString(), Type.GetType("System.Double"));
                 m_maporiginaldata.Columns.Add(i.ToString(), Type.GetType("System.Double"));
-
             }
             int numberofrows = m_map_length / m_numberOfColumns;
             if (m_isSixteenbit) numberofrows /= 2;
@@ -431,6 +442,7 @@ namespace T8SuitePro
                 }*/
 
             }
+
             // for original data
             if (m_map_original_content != null)
             {
@@ -546,9 +558,11 @@ namespace T8SuitePro
                     }
                 }
             }
+
             sr.Mapdata = m_mapdata;
             sr.Mapcomparedata = m_mapcomparedata;
             sr.Maporiginaldata = m_maporiginaldata;
+
             sr.StartPoint = new PointF(0, 0);
             sr.EndPoint = new PointF(m_mapdata.Columns.Count - 1, m_mapdata.Rows.Count - 1);
             sr.X_axisvalues = x_axis;

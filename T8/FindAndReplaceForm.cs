@@ -10,7 +10,7 @@ using ICSharpCode.TextEditor;
 using System.Diagnostics;
 using System.IO;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     
 

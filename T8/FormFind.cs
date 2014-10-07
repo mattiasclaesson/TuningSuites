@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 using Be.Windows.Forms;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
 	/// <summary>
 	/// Summary description for FormFind.
@@ -33,9 +33,6 @@ namespace T8SuitePro
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 			rbString.CheckedChanged += new EventHandler(rb_CheckedChanged);
 			rbHex.CheckedChanged += new EventHandler(rb_CheckedChanged);
 

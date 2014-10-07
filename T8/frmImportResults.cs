@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmImportResults : DevExpress.XtraEditors.XtraForm
     {
@@ -18,7 +15,7 @@ namespace T8SuitePro
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Close();
         }
 
@@ -36,6 +33,9 @@ namespace T8SuitePro
                 if (e.DisplayText == "Success")
                 {
                     c = Color.Green;
+                } else if (e.DisplayText == "Skipped")
+                {
+                    c = Color.Blue;
                 }
                 System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, c, Color.White, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                 e.Graphics.FillRectangle(gb, e.Bounds);

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmFileToExportSelection : DevExpress.XtraEditors.XtraForm
     {

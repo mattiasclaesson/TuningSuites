@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 using Be.Windows.Forms;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
 	/// <summary>
 	/// Summary description for FormFindCancel.
@@ -31,9 +31,6 @@ namespace T8SuitePro
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 		}
 
 		/// <summary>

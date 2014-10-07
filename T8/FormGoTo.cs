@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
 	/// <summary>
 	/// Summary description for FormGoTo.
@@ -29,9 +29,6 @@ namespace T8SuitePro
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 		}
 
 		/// <summary>

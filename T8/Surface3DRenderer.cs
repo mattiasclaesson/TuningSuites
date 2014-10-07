@@ -30,6 +30,14 @@ namespace Plot3D
             set { m_isRedWhite = value; }
         }
 
+        private bool m_showinBlue = false;
+
+        public bool ShowinBlue
+        {
+            get { return m_showinBlue; }
+            set { m_showinBlue = value; }
+        }
+
         public double Correction_percentage
         {
             get { return m_correction_percentage; }
@@ -400,7 +408,15 @@ namespace Plot3D
             if (b < 0) b = 0;
             if (b > 255) b = 255;
             if (Double.IsNaN(b)) b = 0;
-            if (!m_isRedWhite)
+            if (m_showinBlue)
+            {
+                b /= 2;
+                blue = 255 - (int)b;
+                green = 0;
+                c = Color.FromArgb((int)b, green, blue);
+
+            }
+            else if (!m_isRedWhite)
             {
                 blue = 0;
                 green = 255 - (int)b;
