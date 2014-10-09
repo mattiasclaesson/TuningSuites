@@ -374,7 +374,7 @@ namespace CommonSuite
                 if (m_updateavailable)
                 {
 
-                    //Console.WriteLine("An update is available: " + maxversion.ToString());
+                    //LogHelper.Log("An update is available: " + maxversion.ToString());
                     PumpString("A newer version is available: " + maxversion.ToString(), m_updateavailable, m_version_toohigh, maxversion, Apppath + "\\Notes.xml");
                     m_NewVersion = maxversion;
 

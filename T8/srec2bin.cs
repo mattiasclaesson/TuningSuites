@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -39,7 +40,7 @@ namespace T8SuitePro
                                 }
                             }
 
-                           // Console.WriteLine("S2: " + bytecount.ToString());
+                           // LogHelper.Log("S2: " + bytecount.ToString());
                         }
                         else if (readline.StartsWith("S2") && readline.Length > 43)
                         {
@@ -54,7 +55,7 @@ namespace T8SuitePro
                                      bytecount++;
                                  }
                              }
-                           // Console.WriteLine("S2: " + bytecount.ToString());
+                           // LogHelper.Log("S2: " + bytecount.ToString());
                         }
                         else if (readline.StartsWith("S1") && readline.Length > 41 && readline.Length <= 44)
                         {
@@ -69,12 +70,12 @@ namespace T8SuitePro
                                      bytecount++;
                                  }
                              }
-                            //Console.WriteLine("S1: " + bytecount.ToString());
+                            //LogHelper.Log("S1: " + bytecount.ToString());
                         }
 
                     }
                 }
-                Console.WriteLine("Bytes written: " + bytecount.ToString());
+                LogHelper.Log("Bytes written: " + bytecount.ToString());
                 binwrite.Close();
                 fswrite.Close();
                 newfilename = outputfile;
@@ -82,7 +83,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return false;
         }
@@ -177,7 +178,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return false;
         }
@@ -264,7 +265,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return false;
         }

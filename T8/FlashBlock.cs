@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -76,7 +76,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to get ECUDescription: " + E.Message);
+                LogHelper.Log("Failed to get ECUDescription: " + E.Message);
             }
             try
             {
@@ -87,7 +87,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to get VIN: " + E.Message);
+                LogHelper.Log("Failed to get VIN: " + E.Message);
             }
             try
             {
@@ -101,7 +101,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to get InterfaceDevice: " + E.Message);
+                LogHelper.Log("Failed to get InterfaceDevice: " + E.Message);
             }
             try
             {
@@ -112,7 +112,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to get VIN: " + E.Message);
+                LogHelper.Log("Failed to get VIN: " + E.Message);
             }
             //VerifyChecksums();
             DumpVariables();
@@ -173,7 +173,7 @@ adres 0x12C length 2 (byte checksum?)
             {
                 checksum += b;
                 if (checksum != 0) _ok = true;
-                if (checksum == 0 && _ok) Console.WriteLine("checksum A is zero at index: " + idx.ToString("X2"));
+                if (checksum == 0 && _ok) LogHelper.Log("checksum A is zero at index: " + idx.ToString("X2"));
                 idx ++;
             }
             idx = 0;
@@ -183,29 +183,29 @@ adres 0x12C length 2 (byte checksum?)
             {
                 checksum ^= b;
                 if (checksum != 0) _ok = true;
-                if (checksum == 0 && _ok) Console.WriteLine("checksum B is zero at index: " + idx.ToString("X2"));
+                if (checksum == 0 && _ok) LogHelper.Log("checksum B is zero at index: " + idx.ToString("X2"));
                 idx++;
             }
 
-            /*Console.WriteLine("full checksum: " + checksum.ToString("X2"));
+            /*LogHelper.Log("full checksum: " + checksum.ToString("X2"));
             checksum = 0;
             for(int i = 0; i <= 0x12b; i ++)
             {
                 checksum += _blockData[i];
             }
-            Console.WriteLine("partial checksum: " + checksum.ToString("X2") + " file: " + _blockData[0x12d].ToString("X2"));
+            LogHelper.Log("partial checksum: " + checksum.ToString("X2") + " file: " + _blockData[0x12d].ToString("X2"));
             checksum = 0;
             for (int i = 0x54; i <= 0x12b; i++)
             {
                 checksum += _blockData[i];
             }
-            Console.WriteLine("partial checksum 2: " + checksum.ToString("X2") );
+            LogHelper.Log("partial checksum 2: " + checksum.ToString("X2") );
             checksum = 0;
             for (int i = 0; i < 0x54; i++)
             {
                 checksum += _blockData[i];
             }
-            Console.WriteLine("partial checksum 3: " + checksum.ToString("X2") );*/
+            LogHelper.Log("partial checksum 3: " + checksum.ToString("X2") );*/
         }
 
         internal bool isValid()

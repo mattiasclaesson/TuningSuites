@@ -60,7 +60,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -75,7 +75,7 @@ namespace T8SuitePro
                 if (sh.Varname == symbol)
                 {
                     sh.Selected = true;
-                    //Console.WriteLine("Symbol: " + symbol + " was selected");
+                    //LogHelper.Log("Symbol: " + symbol + " was selected");
                 }
             }
         }
@@ -130,7 +130,7 @@ namespace T8SuitePro
                     SymbolHelper sh = (SymbolHelper)map;
                     /*if (sh.Selected)
                     {
-                        Console.WriteLine("Checking: " + sh.Varname + " " + sh.Selected.ToString());
+                        LogHelper.Log("Checking: " + sh.Varname + " " + sh.Selected.ToString());
                     }*/
                     if (sh.Varname == varname)
                     {

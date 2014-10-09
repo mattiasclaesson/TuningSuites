@@ -38,7 +38,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -46,7 +46,7 @@ namespace T8SuitePro
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                LogHelper.Log(E2.Message);
             }
             return filters;
         }
@@ -89,7 +89,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                 }
             }

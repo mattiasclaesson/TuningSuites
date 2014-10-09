@@ -1738,7 +1738,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("error retrieving registry settings: " + E.Message);
+                            LogHelper.Log("error retrieving registry settings: " + E.Message);
                         }
 
                     }

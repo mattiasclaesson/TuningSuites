@@ -52,7 +52,7 @@ namespace CommonSuite
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("Couldn't load logbook entry: " + E.Message);
+                            LogHelper.Log("Couldn't load logbook entry: " + E.Message);
                         }
                     }
                 }

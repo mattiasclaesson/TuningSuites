@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Plot3D;
 using System.Runtime.InteropServices;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -253,7 +254,7 @@ namespace T8SuitePro
                     int valtot = 0;
                     valtot = Convert.ToInt32((byte)m_map_content.GetValue(byteoffset++)) * 256;
                     valtot += Convert.ToInt32((byte)m_map_content.GetValue(byteoffset++));
-                    //Console.WriteLine("Value: :"+ valtot.ToString("X4"));
+                    //LogHelper.Log("Value: :"+ valtot.ToString("X4"));
                     if (valtot > 0xF000)
                     {
                         valtot ^= 0xFFFF;
@@ -414,7 +415,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -484,7 +485,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -542,7 +543,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -795,7 +796,7 @@ namespace T8SuitePro
                 double val = 0;
                 if (sr.GetMousePoint(e.X, e.Y, out tableposition, out val))
                 {
-                    //Console.WriteLine("Position = " + e.X.ToString() + ":" + e.Y.ToString() + " tablepos = " + tableposition.X.ToString() + ":" + tableposition.Y.ToString() + " value = " + val.ToString());
+                    //LogHelper.Log("Position = " + e.X.ToString() + ":" + e.Y.ToString() + " tablepos = " + tableposition.X.ToString() + ":" + tableposition.Y.ToString() + " value = " + val.ToString());
                     m_lastMouseHoverPoint = new PointF((float)e.X, (float)e.Y);
                     toolTipController1.ShowHint("Mouse hit : " + m_lastMouseHoverPoint.X.ToString() + ":" + m_lastMouseHoverPoint.Y.ToString(), PointToClient(e.Location));
                 }*/

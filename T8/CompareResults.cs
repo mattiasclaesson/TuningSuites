@@ -203,7 +203,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             ctrl.EndUpdate();
         }

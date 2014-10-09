@@ -81,7 +81,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -111,7 +111,7 @@ namespace T8SuitePro
             {
                 DataTable dt = (DataTable)gridControl1.DataSource;
                 dt.Rows.Add(varname, GetColorFromRegistry(varname).ToArgb());
-                //Console.WriteLine(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
+                //LogHelper.Log(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
                 //dt.Rows.Add(varname, Color.Red.ToArgb());
             }
             else
@@ -122,7 +122,7 @@ namespace T8SuitePro
                 
                 dt.Columns.Add("COLOR", Type.GetType("System.Int32"));
                 dt.Rows.Add(varname, GetColorFromRegistry(varname).ToArgb());
-                //Console.WriteLine(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
+                //LogHelper.Log(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
                 gridControl1.DataSource = dt;
             }
             UpdateColors();
@@ -215,7 +215,7 @@ namespace T8SuitePro
             LogFilters filterhelper = new LogFilters();
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
-            Console.WriteLine("filters: " + filters.Count);
+            LogHelper.Log("filters: " + filters.Count);
             frmfilters.SetFilters(filters);
             if (gridControl1.DataSource != null)
             {

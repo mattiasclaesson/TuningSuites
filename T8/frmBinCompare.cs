@@ -138,7 +138,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception cE)
                                 {
-                                    Console.WriteLine(cE.Message);
+                                    LogHelper.Log(cE.Message);
                                 }
                             }
                             fsi1.Close();

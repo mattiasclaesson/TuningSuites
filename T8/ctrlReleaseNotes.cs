@@ -30,7 +30,7 @@ namespace CommonSuite
         {
             CultureInfo culture = new CultureInfo(cultureName);
 
-            //Console.WriteLine();
+            //LogHelper.Log();
 
             // Convert each string in the dateStrings array.
             DateTime dateTimeValue = DateTime.MinValue;
@@ -45,12 +45,12 @@ namespace CommonSuite
 
                 // Display the DateTime object in a fixed format 
                 // if Convert succeeded.
-                Console.WriteLine("{0:yyyy-MMM-dd}", dateTimeValue);
+                LogHelper.Log(String.Format("{0:yyyy-MMM-dd}", dateTimeValue));
             }
             catch (Exception ex)
             {
                 // Display the exception type if Parse failed.
-                Console.WriteLine("{0}", GetExceptionType(ex));
+                LogHelper.Log(String.Format("{0}", GetExceptionType(ex)));
             }
             return dateTimeValue;
 
@@ -75,7 +75,7 @@ namespace CommonSuite
 
 
                         m_LatestReleaseDate = StringToDateTime("en-US", ds.Tables[1].Rows[0]["pubDate"].ToString());
-                        Console.WriteLine("Release date: " + m_LatestReleaseDate.ToString());
+                        LogHelper.Log("Release date: " + m_LatestReleaseDate.ToString());
                     }
                     ds.Tables[2].Columns.Add("Date", System.Type.GetType("System.DateTime"));
                     foreach (DataRow dr in ds.Tables[2].Rows)
@@ -86,7 +86,7 @@ namespace CommonSuite
                         }
                         catch (Exception convE)
                         {
-                            Console.WriteLine("Failed to convert datetime: " + convE.Message);
+                            LogHelper.Log("Failed to convert datetime: " + convE.Message);
                         }
                     }
 
@@ -97,7 +97,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }

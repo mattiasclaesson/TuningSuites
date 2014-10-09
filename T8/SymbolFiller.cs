@@ -405,7 +405,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                 bool limitersFound = false;
                 foreach (SymbolHelper sh in sc)
                 {
-                    //if (state > 0) Console.WriteLine("State = " + state.ToString() + " symcount: " + symCounter.ToString());
+                    //if (state > 0) LogHelper.Log("State = " + state.ToString() + " symcount: " + symCounter.ToString());
                     switch (state)
                     {
                         case 0:
@@ -461,7 +461,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                 }
                 if (symIndex > 0)
                 {
-                    Console.WriteLine("(I) Found index: " + symIndex.ToString());
+                    LogHelper.Log("(I) Found index: " + symIndex.ToString());
                     limitersFound = true;
                     // - 11 = TrqLimCal.Trq_ManGear
                     SetMapNameByIndex(sc, symIndex - 11, 16, "TrqLimCal.Trq_ManGear");
@@ -485,7 +485,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                     symCounter = 0;
                     foreach (SymbolHelper sh in sc)
                     {
-                        //if (state > 0) Console.WriteLine("State = " + state.ToString() + " symcount: " + symCounter.ToString());
+                        //if (state > 0) LogHelper.Log("State = " + state.ToString() + " symcount: " + symCounter.ToString());
                         switch (state)
                         {
                             case 0:
@@ -537,7 +537,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                 }
                 if (symIndex > 0)
                 {
-                    Console.WriteLine("(II) Found index: " + symIndex.ToString());
+                    LogHelper.Log("(II) Found index: " + symIndex.ToString());
                     limitersFound = true;
                     // - 9 = TrqLimCal.Trq_ManGear
                     SetMapNameByIndex(sc, symIndex - 9, 16, "TrqLimCal.Trq_ManGear");
@@ -564,11 +564,11 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                             try
                             {
                                 sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                //Console.WriteLine("Set cat to " + sh.Category + " for " + sh.Userdescription);
+                                //LogHelper.Log("Set cat to " + sh.Category + " for " + sh.Userdescription);
                             }
                             catch (Exception cE)
                             {
-                                Console.WriteLine("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
                             }
                         }
 

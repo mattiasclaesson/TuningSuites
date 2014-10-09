@@ -239,7 +239,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return retval;
         }
@@ -290,7 +290,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                         retval = 0;
                     }
                     fs.Flush();
@@ -430,7 +430,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return retval;
         }
@@ -538,7 +538,7 @@ namespace T8SuitePro
                         case 8:
                             /*if (fsread.Position > 0x5f900)
                             {
-                                Console.WriteLine("Hola");
+                                LogHelper.Log("Hola");
                             }
                             */
                             if (adrb == (byte)searchsequence.GetValue(8))
@@ -583,7 +583,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to retrieve address from: " + offset.ToString("X6") + ": " + E.Message);
+                        LogHelper.Log("Failed to retrieve address from: " + offset.ToString("X6") + ": " + E.Message);
                     }
                     fs.Close();
                 }
@@ -611,7 +611,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to retrieve length from: " + offset.ToString("X6") + ": " + E.Message);
+                        LogHelper.Log("Failed to retrieve length from: " + offset.ToString("X6") + ": " + E.Message);
                     }
                     fs.Close();
                 }
@@ -766,7 +766,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return false;
         }

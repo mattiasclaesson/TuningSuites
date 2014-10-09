@@ -88,7 +88,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             
             
@@ -513,7 +513,7 @@ namespace T8SuitePro
         private void hexViewer1_onSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // in that case, move the selection in the ASM file as well
-            Console.WriteLine("Selection in hexviewer: " + e.Offset.ToString("X8"));
+            LogHelper.Log("Selection in hexviewer: " + e.Offset.ToString("X8"));
             int offset = 0;// _trionicFile.Filelength;
             //if (offset == 0x20000) offset = 0x60000;
 
@@ -565,9 +565,9 @@ namespace T8SuitePro
             {
                 Disassembler disasm = new Disassembler();
                 disasm.onProgress += new Disassembler.Progress(disasm_onProgress);
-                Console.WriteLine("Starting disassembly");
+                LogHelper.Log("Starting disassembly");
                 disasm.DisassembleFile(filename, m_symbols);
-                Console.WriteLine("Done disassembling: " + disasm.Mnemonics.Count.ToString());
+                LogHelper.Log("Done disassembling: " + disasm.Mnemonics.Count.ToString());
                 using (StreamWriter sw = new StreamWriter(outputfile))
                 {
                     foreach (MNemonicHelper helper in disasm.Mnemonics)
