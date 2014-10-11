@@ -308,7 +308,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to set thread high prio: " + E.Message);
+                LogHelper.Log("Failed to set thread high prio: " + E.Message);
             }
             try
             {
@@ -316,7 +316,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             if (args.Length > 0)
             {
@@ -367,7 +367,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             try
             {
@@ -379,7 +379,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             try
             {
@@ -391,7 +391,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
             try
@@ -399,13 +399,13 @@ namespace T7
                 // should be done only once!
                 this.fio_callback = new FIOCallback(this.on_fio);
                 BdmAdapter_SetFIOCallback(this.fio_callback);
-                Console.WriteLine("BDM adapter callback set!");
+                LogHelper.Log("BDM adapter callback set!");
                 // should be done only once!
 
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("BDM init failed: " + BDMException.Message);
+                LogHelper.Log("BDM init failed: " + BDMException.Message);
             }
             try
             {
@@ -414,7 +414,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -555,7 +555,7 @@ namespace T7
                     {
                         retval = true; // found maps > 0x100 in size in sram
                         _softwareIsOpen = true;
-                        //                        Console.WriteLine("Software is open because of symbol: " + sh.Varname);
+                        //                        LogHelper.Log("Software is open because of symbol: " + sh.Varname);
                     }
                 }
             }
@@ -661,7 +661,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to remove read only flag: " + E.Message);
+                LogHelper.Log("Failed to remove read only flag: " + E.Message);
                 btnReadOnly.Caption = "File is READ ONLY";
             }
 
@@ -683,7 +683,7 @@ namespace T7
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                LogHelper.Log(E2.Message);
             }
             //t7file = new Trionic7File();
             AddFileToMRUList(filename);
@@ -697,7 +697,7 @@ namespace T7
                 if (m_currentSramOffsett == 0)
                 {
                     m_currentSramOffsett = retval.SramOffsetForOpenFile;
-                    Console.WriteLine("Overrules m_currentSramOffsett with value from t7file: " + m_currentSramOffsett.ToString("X8"));
+                    LogHelper.Log("Overrules m_currentSramOffsett with value from t7file: " + m_currentSramOffsett.ToString("X8"));
                 }
 
                 // <GS-27042010> now we need to check if there is a symbol information XML file present.
@@ -711,7 +711,7 @@ namespace T7
                 }
                 catch (Exception E3)
                 {
-                    Console.WriteLine(E3.Message);
+                    LogHelper.Log(E3.Message);
                 }
             }
             if (_infoFeed || m_appSettings.DebugMode)
@@ -782,7 +782,7 @@ namespace T7
             retval += (int)(((value & 0x0000FF00) >> 8) << 16);
             retval += (int)(((value & 0x000000FF)) << 24);
 
-            //Console.WriteLine("ReverseInt: " + value.ToString("X8") + " = " + retval.ToString("X8"));
+            //LogHelper.Log("ReverseInt: " + value.ToString("X8") + " = " + retval.ToString("X8"));
 
             return retval;
 
@@ -804,7 +804,7 @@ namespace T7
                 }
                 catch (Exception proxyE)
                 {
-                    Console.WriteLine(proxyE.Message);
+                    LogHelper.Log(proxyE.Message);
                 }
 
                 /*                if (UseDefaultProxy)
@@ -870,7 +870,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return retval;
         }
@@ -922,11 +922,11 @@ namespace T7
                                             try
                                             {
                                                 sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                                                //Console.WriteLine(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
+                                                //LogHelper.Log(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
                                             }
                                             catch (Exception cE)
                                             {
-                                                Console.WriteLine(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
+                                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                                             }
                                         }
                                     }
@@ -935,7 +935,7 @@ namespace T7
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -944,7 +944,7 @@ namespace T7
 
         private void AddDebugLog(string line)
         {
-            Console.WriteLine(line);
+            LogHelper.Log(line);
             if (Directory.Exists("C:\\debug"))
             {
                 using (StreamWriter sw = new StreamWriter("c:\\debug\\t7suite.log", true))
@@ -979,7 +979,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
 
@@ -988,7 +988,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("InitMruSystem: " + E.Message);
+                LogHelper.Log("InitMruSystem: " + E.Message);
             }
 
 
@@ -1026,7 +1026,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -1149,7 +1149,7 @@ namespace T7
                         case 8:
                             /*if (fsread.Position > 0x5f900)
                             {
-                                Console.WriteLine("Hola");
+                                LogHelper.Log("Hola");
                             }
                             */
                             if (adrb == (byte)searchsequence.GetValue(8))
@@ -1194,7 +1194,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to retrieve address from: " + offset.ToString("X6") + ": " + E.Message);
+                        LogHelper.Log("Failed to retrieve address from: " + offset.ToString("X6") + ": " + E.Message);
                     }
                     fs.Close();
                 }
@@ -1222,7 +1222,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to retrieve length from: " + offset.ToString("X6") + ": " + E.Message);
+                        LogHelper.Log("Failed to retrieve length from: " + offset.ToString("X6") + ": " + E.Message);
                     }
                     fs.Close();
                 }
@@ -1276,7 +1276,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                         retval = 0;
                     }
                     fs.Flush();
@@ -1375,7 +1375,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return retval;
         }
@@ -1396,7 +1396,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             splash.Close();
 
@@ -1409,7 +1409,7 @@ namespace T7
             }
             catch (Exception fontE)
             {
-                Console.WriteLine(fontE.Message);
+                LogHelper.Log(fontE.Message);
             }
 
             if (m_startFromCommandLine)
@@ -1522,7 +1522,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to clear readonly flag: " + E.Message);
+                LogHelper.Log("Failed to clear readonly flag: " + E.Message);
                 // failed 
             }
 
@@ -1578,9 +1578,9 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to load AFR maps: " + E.Message);
+                LogHelper.Log("Failed to load AFR maps: " + E.Message);
             }
-            Console.WriteLine("Number of symbols loaded: " + m_symbols.Count.ToString());
+            LogHelper.Log("Number of symbols loaded: " + m_symbols.Count.ToString());
             try
             {
                 T7FileHeader t7header = new T7FileHeader();
@@ -1593,7 +1593,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             if (m_currentfile != string.Empty) LoadRealtimeTable();
             // <GS-07072011> If the opened file is a BioPower file, then BFuelCal.StartMap = the actual fuel E85 map
@@ -1645,7 +1645,7 @@ namespace T7
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
 
                     }
@@ -1653,7 +1653,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
         
@@ -1722,7 +1722,7 @@ namespace T7
                         {
                             if (sh.Flash_start_address > m_currentfile_size)
                             {
-                                Console.WriteLine("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
+                                LogHelper.Log("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
                                 if (CheckCANConnectivity())
                                 {
                                     ShowRealtimeMapFromECU(symName);
@@ -1743,7 +1743,7 @@ namespace T7
                 dockSymbols.HideImmediately();
             }
             System.Windows.Forms.Application.DoEvents();
-            Console.WriteLine("Double click seen");
+            LogHelper.Log("Double click seen");
         }
 
         private byte[] ReadMapFromSRAMVarLength(SymbolHelper sh)
@@ -1765,7 +1765,7 @@ namespace T7
                 {
                     m_nrOfRetries = 0;
                     int addresstoread = (int)sh.Start_address + (readcount * m_nrBytes);
-                    //Console.WriteLine("Reading 64 bytes from address: " + addresstoread.ToString("X6"));
+                    //LogHelper.Log("Reading 64 bytes from address: " + addresstoread.ToString("X6"));
                     //if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(5);
                     // <GS-05052011> removed above line.
 
@@ -1773,14 +1773,14 @@ namespace T7
                     {
                         m_nrOfRetries++;
                     }
-                    Console.WriteLine("Send command in " + m_nrOfRetries.ToString() + " retries");
+                    LogHelper.Log("Send command in " + m_nrOfRetries.ToString() + " retries");
                     m_nrOfRetries = 0;
                     while (!KWPHandler.getInstance().sendRequestDataByOffset(out data) && m_nrOfRetries < 20)
                     {
                         m_nrOfRetries++;
                     }
-                    Console.WriteLine("Read data in " + m_nrOfRetries.ToString() + " retries");
-                    Console.WriteLine("Read " + data.Length.ToString() + " bytes from CAN interface");
+                    LogHelper.Log("Read data in " + m_nrOfRetries.ToString() + " retries");
+                    LogHelper.Log("Read " + data.Length.ToString() + " bytes from CAN interface");
                     foreach (byte b in data)
                     {
                         //Console.Write(b.ToString("X2") + " ");
@@ -1793,7 +1793,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to read memory: " + E.Message);
+                LogHelper.Log("Failed to read memory: " + E.Message);
             }
             m_prohibitReading = false;
             return completedata;
@@ -1812,12 +1812,12 @@ namespace T7
                 KWPHandler.getInstance().sendReadRequest(/*0xF04768*/(uint)(startaddress), 1);
                 KWPHandler.getInstance().sendRequestDataByOffset(out data);
                 completedata[0] = data[0];
-                Console.WriteLine("Single byte fetched: " + completedata[0].ToString("X2"));
+                LogHelper.Log("Single byte fetched: " + completedata[0].ToString("X2"));
                
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to read memory: " + E.Message);
+                LogHelper.Log("Failed to read memory: " + E.Message);
             }
             m_prohibitReading = false;
             return completedata;
@@ -1851,7 +1851,7 @@ namespace T7
                 }
                 else
                 {
-                    Console.WriteLine("Writing " + symbolindex.ToString() + " " + symbolname + " SRAM: " + sramAddress.ToString("X8"));
+                    LogHelper.Log("Writing " + symbolindex.ToString() + " " + symbolname + " SRAM: " + sramAddress.ToString("X8"));
                     // if data length > 64 then split the messages
                     uint m_nrBytes = 64;
                     uint m_nrOfWrites = 0;
@@ -1885,16 +1885,16 @@ namespace T7
                         }
                         if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, dataToSend))
                         {
-                            Console.WriteLine("Failed to write data to the ECU");
+                            LogHelper.Log("Failed to write data to the ECU");
                         }
                         /*if (!KWPHandler.getInstance().writeSymbolRequest((uint)symbolindex, completedata))
                         {
-                            Console.WriteLine("Failed to write data to the ECU");
+                            LogHelper.Log("Failed to write data to the ECU");
                         }*/
                     }
                 }
                 //byte b = (byte)e.Data.GetValue(e.Data.Length - 1);
-                //Console.WriteLine("Written last byte: " + b.ToString("X2"));
+                //LogHelper.Log("Written last byte: " + b.ToString("X2"));
 
             }
             if (showProgress)
@@ -1927,7 +1927,7 @@ namespace T7
                     int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, sh.Varname), sh.Varname);
                     sh.Symbol_number = symbolnumber;
                 }*/
-               // Console.WriteLine("Reading symbol: " + sh.Varname + " " + sh.Symbol_number.ToString() + " " + sh.Symbol_number_ECU.ToString() + " " + sh.Start_address.ToString("X8"));
+               // LogHelper.Log("Reading symbol: " + sh.Varname + " " + sh.Symbol_number.ToString() + " " + sh.Symbol_number_ECU.ToString() + " " + sh.Start_address.ToString("X8"));
 
 
                 byte[] data;
@@ -1943,14 +1943,14 @@ namespace T7
                     if (showProgress)
                     {
                         int percentage = readcount * 100 / m_nrOfReads;
-                        Console.WriteLine("Percentage: " + percentage.ToString());
+                        LogHelper.Log("Percentage: " + percentage.ToString());
                         barEditItem3.EditValue = percentage;
                         System.Windows.Forms.Application.DoEvents();
                     }
 
                     m_nrOfRetries = 0;
                     int addresstoread = (int)sh.Start_address + (readcount * m_nrBytes);
-                    Console.WriteLine("Reading 64 bytes from address: " + addresstoread.ToString("X6"));
+                    LogHelper.Log("Reading 64 bytes from address: " + addresstoread.ToString("X6"));
                     //if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(5);
                     //<GS-05052011> removed above line
 
@@ -1958,15 +1958,15 @@ namespace T7
                     {
                         m_nrOfRetries++;
                     }
-                    Console.WriteLine("Send command in " + m_nrOfRetries.ToString() + " retries");
+                    LogHelper.Log("Send command in " + m_nrOfRetries.ToString() + " retries");
                     m_nrOfRetries = 0;
                     Thread.Sleep(1);
                     while (!KWPHandler.getInstance().sendRequestDataByOffset(out data) && m_nrOfRetries < 20)
                     {
                         m_nrOfRetries++;
                     }
-                    Console.WriteLine("Read data in " + m_nrOfRetries.ToString() + " retries");
-                    Console.WriteLine("Read " + data.Length.ToString() + " bytes from CAN interface");
+                    LogHelper.Log("Read data in " + m_nrOfRetries.ToString() + " retries");
+                    LogHelper.Log("Read " + data.Length.ToString() + " bytes from CAN interface");
                     foreach (byte b in data)
                     {
                        // Console.Write(b.ToString("X2") + " ");
@@ -1976,11 +1976,11 @@ namespace T7
                         }
                     }
                 }
-                //Console.WriteLine("Reading done");
+                //LogHelper.Log("Reading done");
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to read memory: " + E.Message);
+                LogHelper.Log("Failed to read memory: " + E.Message);
             }
             m_prohibitReading = false;
             if (showProgress)
@@ -2020,7 +2020,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to read memory: " + E.Message);
+                LogHelper.Log("Failed to read memory: " + E.Message);
             }
             return data;
         }
@@ -2225,7 +2225,7 @@ namespace T7
 
         private bool IsSymbolCalibration(string symbolname)
         {
-            //Console.WriteLine("Iscalibration: " + symbolname);
+            //LogHelper.Log("Iscalibration: " + symbolname);
             if (symbolname.Contains("Cal.")) return true;
             if (symbolname.Contains("Cal1.")) return true;
             if (symbolname.Contains("Cal2.")) return true;
@@ -2479,7 +2479,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             if (returnvalue == 0)
             {
@@ -2585,12 +2585,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                         if (!pnlfound)
                         {
                             //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                            Console.WriteLine("Begin update");
+                            LogHelper.Log("Begin update");
                             dockManager1.BeginUpdate();
                             try
                             {
@@ -2785,7 +2785,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 int sramaddress = 0;// Convert.ToInt32(dr.Row["SRAMADDRESS"].ToString());
                                 if (address != 0)
                                 {
-                                    Console.WriteLine("address: " + address.ToString("X8"));
+                                    LogHelper.Log("address: " + address.ToString("X8"));
 
                                     //while (address > m_currentfile_size) address -= m_currentfile_size;
 
@@ -2797,7 +2797,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     mapdata.Initialize();
                                     if (address < 0x0F00000)
                                     {
-                                        Console.WriteLine("read data from file");
+                                        LogHelper.Log("read data from file");
                                         mapdata = readdatafromfile(m_currentfile, address, length);
                                     }
                                     else
@@ -2811,7 +2811,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         }
                                     }
 
-                                    Console.WriteLine("mapdata len: " + mapdata.Length.ToString("X4"));
+                                    LogHelper.Log("mapdata len: " + mapdata.Length.ToString("X4"));
 
                                     tabdet.Map_content = mapdata;
 
@@ -2968,9 +2968,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception newdockE)
                             {
-                                Console.WriteLine(newdockE.Message);
+                                LogHelper.Log(newdockE.Message);
                             }
-                            Console.WriteLine("End update");
+                            LogHelper.Log("End update");
                             dockManager1.EndUpdate();
                         }
                         /*if (!srampnlfound)
@@ -2991,7 +2991,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                                 catch (Exception E)
                                 {
-                                    Console.WriteLine(E.Message);
+                                    LogHelper.Log(E.Message);
                                 }
                             }
                         }*/
@@ -3244,7 +3244,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             // try to find a KNOWN table (which is always more or less similar
             if (m_currentSramOffsett > 0)
             {
-                //Console.WriteLine("Working with: " + m_currentSramOffsett.ToString("X8"));
+                //LogHelper.Log("Working with: " + m_currentSramOffsett.ToString("X8"));
                 return m_currentSramOffsett;
             }
             //     34FCEF00
@@ -3276,7 +3276,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -3296,7 +3296,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         int symbolindex = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, e.Mapname), e.Mapname);
                         if (symbolindex >= 0)
                         {
-                            //Console.WriteLine("Reading " + symbolindex.ToString() + " " + e.Mapname);
+                            //LogHelper.Log("Reading " + symbolindex.ToString() + " " + e.Mapname);
                             System.Windows.Forms.Application.DoEvents();
                             foreach (SymbolHelper shs in m_symbols)
                             {
@@ -3418,7 +3418,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     }
                                     catch (Exception E)
                                     {
-                                        Console.WriteLine("Refresh viewer with SRAM data error: " + E.Message);
+                                        LogHelper.Log("Refresh viewer with SRAM data error: " + E.Message);
                                     }
                                     break;
                                 }
@@ -3431,7 +3431,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 debugstring += b.ToString("X2") + " ";
                             }
-                            Console.WriteLine(debugstring);*/
+                            LogHelper.Log(debugstring);*/
                             //TODO: remove this line
                             //byte[] result = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, e.Mapname), (int)GetSymbolLength(m_symbols, e.Mapname));
                             //TODO: remove this line ^^
@@ -3508,7 +3508,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to read MAP from SRAM: " + E.Message);
+                LogHelper.Log("Failed to read MAP from SRAM: " + E.Message);
             }
             m_prohibitReading = false;
         }
@@ -3536,15 +3536,15 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             /*int symbolindex = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, e.Mapname), e.Mapname);
                             if (symbolindex >= 0)
                             {
-                                Console.WriteLine("Writing " + symbolindex.ToString() + " " + e.Mapname);
+                                LogHelper.Log("Writing " + symbolindex.ToString() + " " + e.Mapname);
                                 KWPHandler.getInstance().requestSequrityAccess();
                                 //KWPHandler.getInstance().w
                                 if (!KWPHandler.getInstance().writeSymbolRequest((uint)symbolindex, e.Data))
                                 {
-                                    Console.WriteLine("Failed to write data to the ECU");
+                                    LogHelper.Log("Failed to write data to the ECU");
                                 }
                                 byte b = (byte)e.Data.GetValue(e.Data.Length - 1);
-                                //Console.WriteLine("Written last byte: " + b.ToString("X2"));
+                                //LogHelper.Log("Written last byte: " + b.ToString("X2"));
 
                             }
                             */
@@ -3552,7 +3552,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("Failed to write to SRAM: " + E.Message);
+                            LogHelper.Log("Failed to write to SRAM: " + E.Message);
                         }
                     }
                 }
@@ -3570,7 +3570,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to write map to SRAM: " + E.Message);
+                LogHelper.Log("Failed to write map to SRAM: " + E.Message);
             }
             m_prohibitReading = false;
         }
@@ -3695,7 +3695,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
                 foreach (DockPanel dp in dockManager1.Panels)
                 {
-                    Console.WriteLine(dp.Text);
+                    LogHelper.Log(dp.Text);
                     if (dp.Text == dockpanelname)
                     {
                         dockManager1.RemovePanel(dp);
@@ -3809,7 +3809,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             csHandler.SramOffset = m_currentSramOffsett;
             int fwLength = t7InfoHeader.getFWLength();
             int calculatedFWChecksum = csHandler.calculateFWChecksum(m_fileName);
-            Console.WriteLine("FW Checksum: " + calculatedFWChecksum.ToString("X8"));
+            LogHelper.Log("FW Checksum: " + calculatedFWChecksum.ToString("X8"));
             csHandler.setFWChecksum(m_fileName, calculatedFWChecksum);
 
             uint calculatedF2Checksum = csHandler.calculateF2Checksum(m_fileName, 0, fwLength);
@@ -3864,7 +3864,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 if (cnt++ > 15)
                 {
                     endFound = true;
-                    Console.WriteLine("More than 10 lines!");
+                    LogHelper.Log("More than 10 lines!");
                 }
             }
             return retval;
@@ -3887,7 +3887,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
             if (symbolname == "CatOx2Dev")
             {
-                Console.WriteLine("break");
+                LogHelper.Log("break");
             }
 
             if (address > 0)
@@ -3900,7 +3900,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 byte[] compdata = readdatafromfile(filename, address, length);
                 if (curdata.Length != compdata.Length)
                 {
-                    Console.WriteLine("Lengths didn't match: " + symbolname);
+                    LogHelper.Log("Lengths didn't match: " + symbolname);
                     return false;
                 }
                 for (int offset = 0; offset < curdata.Length; offset++)
@@ -3908,7 +3908,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     if ((byte)curdata.GetValue(offset) != (byte)compdata.GetValue(offset))
                     {
                         retval = false;
-                        //Console.WriteLine("Difference detected in: " + symbolname + " offset=" + offset.ToString() + " value1: " + curdata[offset].ToString("X2") + " value2: " + compdata[offset].ToString("X2"));
+                        //LogHelper.Log("Difference detected in: " + symbolname + " offset=" + offset.ToString() + " value1: " + curdata[offset].ToString("X2") + " value2: " + compdata[offset].ToString("X2"));
                         diffabs++;
                     }
                     totalvalue1 += (byte)curdata.GetValue(offset);
@@ -4040,7 +4040,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                             
                             string compareName = sh_compare.Varname;
@@ -4079,7 +4079,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                     }
                                                     catch (Exception cE)
                                                     {
-                                                        Console.WriteLine("Failed to assign category to symbol: " + sh_org.Varname + " err: " + cE.Message);
+                                                        LogHelper.Log("Failed to assign category to symbol: " + sh_org.Varname + " err: " + cE.Message);
                                                     }
                                                 }
                                                 else if (sh_org.Userdescription.Contains("."))
@@ -4090,7 +4090,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                     }
                                                     catch (Exception cE)
                                                     {
-                                                        Console.WriteLine("Failed to assign category to symbol: " + sh_org.Userdescription + " err: " + cE.Message);
+                                                        LogHelper.Log("Failed to assign category to symbol: " + sh_org.Userdescription + " err: " + cE.Message);
                                                     }
                                                 }
 
@@ -4120,7 +4120,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                             bool _foundSymbol = false;
                             varnamecomp = shtest.Varname;
@@ -4160,7 +4160,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                             bool _foundSymbol = false;
                             varnamecomp = shtest.Varname;
@@ -4198,7 +4198,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -4383,14 +4383,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                     dockManager1.EndUpdate();
                 }
             }
             catch (Exception startnewcompareE)
             {
-                Console.WriteLine(startnewcompareE.Message);
+                LogHelper.Log(startnewcompareE.Message);
             }
 
         }
@@ -4401,7 +4401,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             bool _vwrstarted = false;
             if (GetSymbolAddress(m_symbols, symbolname) > 0)
             {
-                //Console.WriteLine("Option one");
+                //LogHelper.Log("Option one");
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
                 gridViewSymbols.ApplyFindFilter("");
                 
@@ -4502,7 +4502,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             else
             {
-                //Console.WriteLine("Option two");
+                //LogHelper.Log("Option two");
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
                 SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
 
@@ -4761,7 +4761,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
                             }
@@ -4851,7 +4851,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 catch (Exception E)
                 {
 
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -4906,9 +4906,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 {
                     if (m_appSettings.AutoChecksum)
                     {
-                        Console.WriteLine("calculatedF2Checksum = " + calculatedF2Checksum.ToString("X8") + " readF2checksum = " + readF2checksum.ToString("X8"));
-                        Console.WriteLine("calculatedFBChecksum = " + calculatedFBChecksum.ToString("X8") + " readFBchecksum = " + readFBchecksum.ToString("X8"));
-                        Console.WriteLine("calculatedFWChecksum = " + calculatedFWChecksum.ToString("X8") + " csHandler.getFWChecksum(m_currentfile) = " + csHandler.getFWChecksum(m_currentfile).ToString("X8"));
+                        LogHelper.Log("calculatedF2Checksum = " + calculatedF2Checksum.ToString("X8") + " readF2checksum = " + readF2checksum.ToString("X8"));
+                        LogHelper.Log("calculatedFBChecksum = " + calculatedFBChecksum.ToString("X8") + " readFBchecksum = " + readFBchecksum.ToString("X8"));
+                        LogHelper.Log("calculatedFWChecksum = " + calculatedFWChecksum.ToString("X8") + " csHandler.getFWChecksum(m_currentfile) = " + csHandler.getFWChecksum(m_currentfile).ToString("X8"));
                         
                         csHandler.setFWChecksum(m_currentfile, calculatedFWChecksum);
                         t7InfoHeader.setChecksumF2((int)calculatedF2Checksum);
@@ -4954,7 +4954,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 if (sh.Varname == "TorqueCal.M_EngMaxE85Tab" || sh.Userdescription == "TorqueCal.M_EngMaxE85Tab")
                 {
-                    Console.WriteLine(Path.GetFileNameWithoutExtension(m_currentfile) + " is BioPower");
+                    LogHelper.Log(Path.GetFileNameWithoutExtension(m_currentfile) + " is BioPower");
                     return true;
 
                 }
@@ -6205,7 +6205,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
             return DateTime.Now;
@@ -6242,7 +6242,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
         private void AddToCanTrace(string line)
         {
-            Console.WriteLine(line);
+            LogHelper.Log(line);
             if (m_appSettings.EnableCanLog)
             {
                 DateTime dtnow = DateTime.Now;
@@ -6268,12 +6268,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     startinfo.WindowStyle = ProcessWindowStyle.Hidden;
                     //startinfo.UseShellExecute = false;
                     startinfo.WorkingDirectory = System.Windows.Forms.Application.StartupPath;
-                    Console.WriteLine("Spawning WakeupCANbus.exe");
+                    LogHelper.Log("Spawning WakeupCANbus.exe");
                     System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
                     conv_proc.WaitForExit(10000); // wait for 10 seconds max
                     if (!conv_proc.HasExited)
                     {
-                        Console.WriteLine("Killing WakeupCANbus.exe");
+                        LogHelper.Log("Killing WakeupCANbus.exe");
                         conv_proc.Kill();
                     }
                     _connectionWasOpenedBefore = true;
@@ -6289,7 +6289,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         //    {
         //        AddToCanTrace("Initializing CANbus interface");
         //        System.Windows.Forms.Application.DoEvents();
-        //        Console.WriteLine("Initializing CAN interface, please stand by...");
+        //        LogHelper.Log("Initializing CAN interface, please stand by...");
         //        AddToCanTrace("Creating new connection to CANUSB device!");
 
 
@@ -6303,7 +6303,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         //            this.flash = lpc.createFlasher();
         //            flash.EnableCanLog = false;
         //            AddToCanTrace("T7CombiFlasher object created");
-        //            Console.WriteLine("CombiAdapter ready");
+        //            LogHelper.Log("CombiAdapter ready");
         //        }
         //        //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
         //        //{
@@ -6319,28 +6319,28 @@ TorqueCal.M_IgnInflTroqMap 8*/
         //        //    }
         //        //    catch (Exception E)
         //        //    {
-        //        //        Console.WriteLine(E.Message);
+        //        //        LogHelper.Log(E.Message);
         //        //        AddToCanTrace("Failed to set flasher object to KWPHandler");
 
         //        //    }
         //        //    flash = T7.Flasher.T7Flasher.getInstance();
         //        //    if (KWPHandler.getInstance().openDevice())
         //        //    {
-        //        //        Console.WriteLine("Canbus channel opened");
+        //        //        LogHelper.Log("Canbus channel opened");
         //        //    }
         //        //    else
         //        //    {
-        //        //        Console.WriteLine("Unable to open canbus channel");
+        //        //        LogHelper.Log("Unable to open canbus channel");
         //        //        KWPHandler.getInstance().closeDevice();
         //        //        return false;
         //        //    }
         //        //    if (KWPHandler.getInstance().startSession())
         //        //    {
-        //        //        Console.WriteLine("Session started");
+        //        //        LogHelper.Log("Session started");
         //        //    }
         //        //    else
         //        //    {
-        //        //        Console.WriteLine("Unable to start session");
+        //        //        LogHelper.Log("Unable to start session");
         //        //        KWPHandler.getInstance().closeDevice();
         //        //        return false;
         //        //    }
@@ -6359,28 +6359,28 @@ TorqueCal.M_IgnInflTroqMap 8*/
         //            }
         //            catch (Exception E)
         //            {
-        //                Console.WriteLine(E.Message);
+        //                LogHelper.Log(E.Message);
         //                AddToCanTrace("Failed to set flasher object to KWPHandler");
 
         //            }
         //            flash = T7.Flasher.T7Flasher.getInstance();
         //            if (KWPHandler.getInstance().openDevice())
         //            {
-        //                Console.WriteLine("Canbus channel opened");
+        //                LogHelper.Log("Canbus channel opened");
         //            }
         //            else
         //            {
-        //                Console.WriteLine("Unable to open canbus channel");
+        //                LogHelper.Log("Unable to open canbus channel");
         //                KWPHandler.getInstance().closeDevice();
         //                return false;
         //            }
         //            if (KWPHandler.getInstance().startSession())
         //            {
-        //                Console.WriteLine("Session started");
+        //                LogHelper.Log("Session started");
         //            }
         //            else
         //            {
-        //                Console.WriteLine("Unable to start session");
+        //                LogHelper.Log("Unable to start session");
         //                KWPHandler.getInstance().closeDevice();
         //                return false;
         //            }
@@ -6429,7 +6429,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     }
                     canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrame);
                     canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-                    Console.WriteLine("Created new CANUSBDevice instance");
+                    LogHelper.Log("Created new CANUSBDevice instance");
                 }
                 canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
                 canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
@@ -6444,7 +6444,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     {
                         kwpDevice = new KWPCANDevice();
                     } 
-                    Console.WriteLine("Created new KWPCANDevice instance");
+                    LogHelper.Log("Created new KWPCANDevice instance");
                 }
                 kwpDevice.EnableLog = m_appSettings.EnableCanLog;
                 kwpDevice.setCANDevice(canUsbDevice);
@@ -6594,7 +6594,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                     AddToCanTrace("Failed to set flasher object to KWPHandler");
 
                 }
@@ -6932,19 +6932,19 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             else
                             {
                                 frmFlasherProgress.Close();
-                                Console.WriteLine("Closed because of CheckFlashStatus");
+                                LogHelper.Log("Closed because of CheckFlashStatus");
                             }
                         }
                         else
                         {
                             frmFlasherProgress.Close();
-                            Console.WriteLine("Closed because of filename empty");
+                            LogHelper.Log("Closed because of filename empty");
                         }
                     }
                     else
                     {
                         frmFlasherProgress.Close();
-                        Console.WriteLine("Closed because of filename empty (2)");
+                        LogHelper.Log("Closed because of filename empty (2)");
                     }
                 }
             }*/
@@ -6997,7 +6997,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E1)
             {
-                Console.WriteLine(E1.Message);
+                LogHelper.Log(E1.Message);
             }
         }
 
@@ -7009,7 +7009,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -7065,7 +7065,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to load realtime symbol table: " + E.Message);
+                LogHelper.Log("Failed to load realtime symbol table: " + E.Message);
             }
         }
 
@@ -7115,7 +7115,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to load realtime symbol table: " + E.Message);
+                LogHelper.Log("Failed to load realtime symbol table: " + E.Message);
             }
         }
 
@@ -7143,7 +7143,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to write realtime datatable: " + E.Message);
+                LogHelper.Log("Failed to write realtime datatable: " + E.Message);
             }
         }
 
@@ -7171,7 +7171,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to write realtime datatable: " + E.Message);
+                LogHelper.Log("Failed to write realtime datatable: " + E.Message);
             }
         }
 
@@ -7193,7 +7193,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception stargetE)
             {
-                Console.WriteLine(stargetE.Message);
+                LogHelper.Log(stargetE.Message);
             }
         }
 
@@ -7209,7 +7209,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             catch (Exception E)
             {
                 //BdmAdapter_Close();
-                Console.WriteLine("Failed to close BDM: " + E.Message);
+                LogHelper.Log("Failed to close BDM: " + E.Message);
             }
             try
             {
@@ -7217,7 +7217,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to set thread high prio: " + E.Message);
+                LogHelper.Log("Failed to set thread high prio: " + E.Message);
             }
             if (m_CurrentWorkingProject != "")
             {
@@ -7241,7 +7241,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     }
                     catch (Exception kwpE)
                     {
-                        Console.WriteLine("KWP: " + kwpE.Message);
+                        LogHelper.Log("KWP: " + kwpE.Message);
                     }
                     exit_hardstyle = true;
                 }
@@ -7251,7 +7251,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             if (exit_hardstyle)
             {
@@ -7350,7 +7350,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 bool _success = false;
                 byte[] data = ReadMapFromSRAM(0xF00000, 0x10000, out _success);
-                Console.WriteLine(_success.ToString() + ": " + data.Length.ToString("X8"));
+                LogHelper.Log(_success.ToString() + ": " + data.Length.ToString("X8"));
 
 
             }*/
@@ -7724,7 +7724,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -7745,7 +7745,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                LogHelper.Log(E2.Message);
             }
         }
 
@@ -7764,7 +7764,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                LogHelper.Log(E2.Message);
             }
 
         }
@@ -7818,7 +7818,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             if (IsChristmasTime())
             {
@@ -7864,7 +7864,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -7932,14 +7932,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
             data = new byte[1];
             data[0] = (byte)0xFF;
             _success = false;
-            //Console.WriteLine("Getting symbolnumber: " + symbolnumber.ToString());
+            //LogHelper.Log("Getting symbolnumber: " + symbolnumber.ToString());
             if (m_connectedToECU)
             {
                 // test 
                 sramaddress = 0;
                 if (sramaddress > 0)
                 {
-                    //Console.WriteLine("Get SRAM (1): " + sramaddress.ToString());
+                    //LogHelper.Log("Get SRAM (1): " + sramaddress.ToString());
                     //KWPHandler.getInstance().requestSequrityAccess();
                     data = ReadMapFromSRAM(sramaddress, length, out _success);
                     Thread.Sleep(0); //<GS-11022010>
@@ -7947,7 +7947,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 else if (length == 1)
                 {
                     int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);
-                    /*Console.WriteLine("Get single byte : " + sram.ToString());
+                    /*LogHelper.Log("Get single byte : " + sram.ToString());
                     data = ReadSingleByteFromSRAM(sram);*/
                     SymbolHelper sh = new SymbolHelper();
                     sh.Length = 1;
@@ -7957,7 +7957,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
                 else
                 {
-                    //Console.WriteLine("Get symbolnumber (2): " + symbolnumber.ToString());
+                    //LogHelper.Log("Get symbolnumber (2): " + symbolnumber.ToString());
                     //KWPHandler.getInstance().requestSequrityAccess();
                     if (KWPHandler.getInstance().setSymbolRequest((uint)symbolnumber))
                     {
@@ -7976,7 +7976,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private void WriteSymbolToSRAM(int symbolnumber, byte[] bytes)
         {
             KWPHandler.getInstance().writeSymbolRequest((uint)symbolnumber, bytes);
-            //Console.WriteLine("Written to SRAM!");
+            //LogHelper.Log("Written to SRAM!");
             frmInfoBox info = new frmInfoBox("Written " + bytes.Length.ToString() + " to SRAM");
         }
 
@@ -8000,12 +8000,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symName), symName);
                         sh.Symbol_number = symbolnumber;
 
-                        Console.WriteLine("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symName);
+                        LogHelper.Log("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symName);
                         if (symbolnumber >= 0)
                         {
                             //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh, true);
-                            Console.WriteLine("read " + result.Length.ToString() + " bytes from SRAM!");
+                            LogHelper.Log("read " + result.Length.ToString() + " bytes from SRAM!");
 
                             StartTableViewer(symName);
                             try
@@ -8069,7 +8069,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine("Refresh viewer with SRAM data error: " + E.Message);
+                                LogHelper.Log("Refresh viewer with SRAM data error: " + E.Message);
                             }
 
                         }
@@ -8106,7 +8106,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             if (symbolname == "TorqueCal.M_NominalMap")
             {
-                Console.WriteLine("breakme");
+                LogHelper.Log("breakme");
             }
             if (fromlength != targetlength)
             {
@@ -8407,7 +8407,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -8781,7 +8781,7 @@ If boost regulation reports errors you can increase the difference between boost
             /*byte[] torquenominalx = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngXSP"), GetSymbolLength(m_symbols, "TorqueCal.M_EngXSP"));
             retval = Convert.ToInt32(torquenominalx.GetValue(torquenominalx.Length - 2)) * 256;
             retval += Convert.ToInt32(torquenominalx.GetValue(torquenominalx.Length - 1));
-            Console.WriteLine("Max torque from table = " + retval.ToString());*/
+            LogHelper.Log("Max torque from table = " + retval.ToString());*/
             return retval;
         }
 
@@ -9870,11 +9870,11 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void SetToolstripTheme()
         {
-            //Console.WriteLine("Rendermode was: " + ToolStripManager.RenderMode.ToString());
-            //Console.WriteLine("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
-            //Console.WriteLine("Skinname: " + appSettings.SkinName);
-            //Console.WriteLine("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
-            //Console.WriteLine("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
+            //LogHelper.Log("Rendermode was: " + ToolStripManager.RenderMode.ToString());
+            //LogHelper.Log("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
+            //LogHelper.Log("Skinname: " + appSettings.SkinName);
+            //LogHelper.Log("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
+            //LogHelper.Log("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
             try
             {
                 Skin currentSkin = CommonSkins.GetSkin(defaultLookAndFeel1.LookAndFeel);
@@ -9934,7 +9934,7 @@ If boost regulation reports errors you can increase the difference between boost
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             SetToolstripTheme();
         }
@@ -10119,7 +10119,7 @@ If boost regulation reports errors you can increase the difference between boost
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to add symbol to realtime list: "+ E.Message);
+                LogHelper.Log("Failed to add symbol to realtime list: "+ E.Message);
             }
         }
 
@@ -10172,7 +10172,7 @@ If boost regulation reports errors you can increase the difference between boost
                 }
                 catch (Exception kwpE)
                 {
-                    Console.WriteLine("KWP: " + kwpE.Message);
+                    LogHelper.Log("KWP: " + kwpE.Message);
                 }
                 m_connectedToECU = false;
                 m_swversion = "";*/
@@ -10232,19 +10232,19 @@ If boost regulation reports errors you can increase the difference between boost
                         m_filename = System.Windows.Forms.Application.StartupPath + "\\symbolmaps\\";
                         m_swversion = string.Empty;
                         KWPHandler.getInstance().getSwVersionFromDR51(out m_swversion);
-                        Console.WriteLine("Version: " + m_swversion);
+                        LogHelper.Log("Version: " + m_swversion);
                         //KWPHandler.getInstance().getSwVersion(out m_swversion);
-                        //Console.WriteLine("SW version : " + swversion);
+                        //LogHelper.Log("SW version : " + swversion);
                         if (m_swversion.Length > 12)
                         {
                             m_swversion = m_swversion.Substring(m_swversion.Length - 12, 12);
 
                         }
-                        Console.WriteLine("Version II: " + m_swversion);
+                        LogHelper.Log("Version II: " + m_swversion);
                         m_filename += m_swversion;
-                        //Console.WriteLine("filename (1): " + m_filename);
+                        //LogHelper.Log("filename (1): " + m_filename);
                         m_filename += "SymbolTable.bin";
-                        //Console.WriteLine("filename (2): " + m_filename);
+                        //LogHelper.Log("filename (2): " + m_filename);
                         if (!File.Exists(m_filename))
                         {
                             if (CheckFlashStatus())
@@ -10319,7 +10319,7 @@ If boost regulation reports errors you can increase the difference between boost
 
                         if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, dataToSend))
                         {
-                            Console.WriteLine("Failed to write data to the ECU");
+                            LogHelper.Log("Failed to write data to the ECU");
                         }
                         break;
                     }
@@ -10372,13 +10372,13 @@ If boost regulation reports errors you can increase the difference between boost
                                 sramfnd = true;
                                 sh.Symbol_number_ECU = idx-1;
                                 m_realtimeAddresses.Rows[m_realtimeAddresses.Rows.Count - 1]["VarName"] = sh.Varname;
-                                //Console.WriteLine("SRAM Symbol: " + symbol.getSymbolName() + " / " + sh.Varname + "[" + sh.Symbol_number.ToString() + "]" + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
+                                //LogHelper.Log("SRAM Symbol: " + symbol.getSymbolName() + " / " + sh.Varname + "[" + sh.Symbol_number.ToString() + "]" + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
                                 break;
                             }
                         }
                         if (!sramfnd)
                         {
-                            //Console.WriteLine("************ NOT FOUND SRAM Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
+                            //LogHelper.Log("************ NOT FOUND SRAM Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
                         }
                     }
                     else if (flashaddress > 0)
@@ -10391,16 +10391,16 @@ If boost regulation reports errors you can increase the difference between boost
                                 flashfnd = true;
                                 sh.Symbol_number_ECU = idx-1;
                                 m_realtimeAddresses.Rows[m_realtimeAddresses.Rows.Count - 1]["VarName"] = sh.Varname;
-                                //Console.WriteLine("ROM Symbol: " + symbol.getSymbolName() + " / " + sh.Varname + "[" + sh.Symbol_number.ToString() + "]" + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
+                                //LogHelper.Log("ROM Symbol: " + symbol.getSymbolName() + " / " + sh.Varname + "[" + sh.Symbol_number.ToString() + "]" + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
                                 break;
                             }
                         }
                         if (!flashfnd)
                         {
-                            //Console.WriteLine("************ NOT FOUND ROM Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
+                            //LogHelper.Log("************ NOT FOUND ROM Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString("X8") + " sram: " + symbol.getRAMAddress().ToString("X8") + " len: " + symbol.getDataLength().ToString() + " index: " + idx.ToString());
                         }
                     }
-                    //Console.WriteLine("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString());
+                    //LogHelper.Log("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString());
                 }
             }
             else
@@ -10412,13 +10412,13 @@ If boost regulation reports errors you can increase the difference between boost
                         m_realtimeAddresses.Rows.Add(symbol.getSymbolName(), idx++);
                         /*if (symbol.getSymbolName() == "BFuelCal.Map")
                         {
-                            Console.WriteLine("Seen BFuelCal.Map");
-                            Console.WriteLine("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString() + " idx: " + idx.ToString());
+                            LogHelper.Log("Seen BFuelCal.Map");
+                            LogHelper.Log("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString() + " idx: " + idx.ToString());
                         }
                         if (symbol.getSymbolName() == "ActualIn.U_Batt")
                         {
-                            Console.WriteLine("Seen ActualIn.U_Batt");
-                            Console.WriteLine("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString() + " idx: " + idx.ToString());
+                            LogHelper.Log("Seen ActualIn.U_Batt");
+                            LogHelper.Log("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString() + " idx: " + idx.ToString());
                         }*/
 
                     }
@@ -10437,8 +10437,8 @@ If boost regulation reports errors you can increase the difference between boost
                                 sh.Symbol_number_ECU = idx-1;
                                 if (symbol.getSymbolName() == "ActualIn.U_Batt")
                                 {
-                                    Console.WriteLine("Seen ActualIn.U_Batt");
-                                    Console.WriteLine("Symbol: " + sh.Varname + " addr: " + sh.Flash_start_address.ToString() + " sram: " + sh.Start_address.ToString() + " idx: " + idx.ToString());
+                                    LogHelper.Log("Seen ActualIn.U_Batt");
+                                    LogHelper.Log("Symbol: " + sh.Varname + " addr: " + sh.Flash_start_address.ToString() + " sram: " + sh.Start_address.ToString() + " idx: " + idx.ToString());
                                 }
 
                                 break;
@@ -10447,7 +10447,7 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                     else if (flashaddress > 0)
                     {
-                        Console.WriteLine("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString());
+                        LogHelper.Log("Symbol: " + symbol.getSymbolName() + " addr: " + symbol.getROMAddress().ToString() + " sram: " + symbol.getRAMAddress().ToString());
                     }
                 }
             }
@@ -10470,7 +10470,7 @@ If boost regulation reports errors you can increase the difference between boost
                                 retval = Convert.ToInt32(dr["SymbolNumber"]);
                                 if (number != retval)
                                 {
-                                    //Console.WriteLine("Fetched (" + symbolname + ") number from realtime list: " + retval.ToString());
+                                    //LogHelper.Log("Fetched (" + symbolname + ") number from realtime list: " + retval.ToString());
                                 }
                                 break;
                             }
@@ -10513,12 +10513,12 @@ If boost regulation reports errors you can increase the difference between boost
                         }
                         else
                         {
-                            Console.WriteLine("Delay value was null for : " + dr["SymbolName"].ToString());
+                            LogHelper.Log("Delay value was null for : " + dr["SymbolName"].ToString());
                         }
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to reload: " + E.Message);
+                        LogHelper.Log("Failed to reload: " + E.Message);
                     }
                     //if (!tmrRealtime.Enabled) return; /// obviously stopped
 /*                    int ori_symbolnumber = Convert.ToInt32(dr["Symbolnumber"]);
@@ -10526,10 +10526,10 @@ If boost regulation reports errors you can increase the difference between boost
 
                     // symbolnumber fetch from realtime table read from ECU directly
                     int symbolnumber = GetSymbolNumberFromRealtimeList(ori_symbolnumber, symbol);
-                    //Console.WriteLine("Ori num: " + ori_symbolnumber.ToString() + " convnr: " + symbolnumber.ToString());*/
+                    //LogHelper.Log("Ori num: " + ori_symbolnumber.ToString() + " convnr: " + symbolnumber.ToString());*/
                     int symbolnumber = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
                     string symbolName = dr["SymbolName"].ToString();
-                    //Console.WriteLine("Number converted : " + symbolnumber.ToString() + " ConvNr: " + Convert.ToInt32(dr["ConvertedSymbolnumber"]).ToString());
+                    //LogHelper.Log("Number converted : " + symbolnumber.ToString() + " ConvNr: " + Convert.ToInt32(dr["ConvertedSymbolnumber"]).ToString());
                     if (symbolnumber > 0)
                     {
                         byte[] buffer;
@@ -10542,7 +10542,7 @@ If boost regulation reports errors you can increase the difference between boost
                         {
                             if (buffer.Length == 1)
                             {
-                                //Console.WriteLine("Buffer received: " + buffer[0].ToString("X2"));
+                                //LogHelper.Log("Buffer received: " + buffer[0].ToString("X2"));
                                 value = Convert.ToInt32(buffer.GetValue(0));
                             }
                             else if (buffer.Length == 2)
@@ -10616,7 +10616,7 @@ If boost regulation reports errors you can increase the difference between boost
                             }
                             catch (Exception peakE)
                             {
-                                Console.WriteLine("Failed to set peak: " + peakE.Message);
+                                LogHelper.Log("Failed to set peak: " + peakE.Message);
                             }
                             // update realtime info
                             UpdateRealtimeInformation(symbolName, (float)value);
@@ -10626,7 +10626,7 @@ If boost regulation reports errors you can increase the difference between boost
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -10680,7 +10680,7 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                 }
               
-                //Console.WriteLine("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                //LogHelper.Log("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
                 LogRealTimeInformation(dt);
                 UpdateOpenViewers();
                 //<GS-06012011> maybe move the fps counter timer here!
@@ -10767,7 +10767,7 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                 }
             }
@@ -10820,15 +10820,15 @@ If boost regulation reports errors you can increase the difference between boost
             // convert to AFR value using wideband lambda sensor settings
             // ranges 0 - 255 will be default for 0-5 volt
             double voltage = value; // <GS-14042011> Combiadapter seems to generate voltage in stead of 0-255 values ((value) / 255) * (m_HighVoltage / 1000 - m_LowVoltage / 1000);
-            //Console.WriteLine("Wideband voltage: " + voltage.ToString());
+            //LogHelper.Log("Wideband voltage: " + voltage.ToString());
             // now convert to AFR using user settings
             if (voltage < m_LowVoltage / 1000) voltage = m_LowVoltage / 1000;
             if (voltage > m_HighVoltage / 1000) voltage = m_HighVoltage / 1000;
-            //Console.WriteLine("Wideband voltage (after clipping): " + voltage.ToString());
+            //LogHelper.Log("Wideband voltage (after clipping): " + voltage.ToString());
             double steepness = ((m_HighValue / 1000) - (m_LowValue / 1000)) / ((m_HighVoltage / 1000) - (m_LowVoltage / 1000));
-            //Console.WriteLine("Steepness: " + steepness.ToString());
+            //LogHelper.Log("Steepness: " + steepness.ToString());
             retval = (m_LowValue / 1000) + (steepness * (voltage - (m_LowVoltage / 1000)));
-            //Console.WriteLine("retval: " + retval.ToString());
+            //LogHelper.Log("retval: " + retval.ToString());
             return retval;
 
         }
@@ -10894,7 +10894,7 @@ dt.Columns.Add("SymbolName");
                         min_difference = diff;
                         // this is our index
                         return_index = t / 2;
-                        // Console.WriteLine("Difference was: " + diff.ToString() + " at index " + return_index.ToString());
+                        // LogHelper.Log("Difference was: " + diff.ToString() + " at index " + return_index.ToString());
 
                     }
                 }
@@ -10946,7 +10946,7 @@ dt.Columns.Add("SymbolName");
                         min_difference = diff;
                         // this is our index
                         return_index = t / 2;
-                        // Console.WriteLine("Difference was: " + diff.ToString() + " at index " + return_index.ToString());
+                        // LogHelper.Log("Difference was: " + diff.ToString() + " at index " + return_index.ToString());
 
                     }
                 }
@@ -11129,7 +11129,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -11220,10 +11220,10 @@ dt.Columns.Add("SymbolName");
                             // first convert the value to AFR
                             // value to volt first
                             //value = value / 204.6F;
-                            //Console.WriteLine("1: " + value.ToString());
+                            //LogHelper.Log("1: " + value.ToString());
                             value = (float)ConvertToWidebandAFR(value);
                             //if (m_appSettings.DebugMode) value = 13; //TODO: <GS-25012011> REMOVE AFTER TESTING
-                            //Console.WriteLine("2: " + value.ToString());
+                            //LogHelper.Log("2: " + value.ToString());
                         }
 
                         float valTextLambda = value / 14.7F;
@@ -11318,7 +11318,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -11329,15 +11329,15 @@ dt.Columns.Add("SymbolName");
             // ranges 0 - 255 will be default for 0-5 volt
             double retval = 0;
             double voltage = ((value) / 1023) * (m_appSettings.WidebandHighVoltage / 1000 - m_appSettings.WidebandLowVoltage / 1000);
-            //Console.WriteLine("Wideband voltage: " + voltage.ToString());
+            //LogHelper.Log("Wideband voltage: " + voltage.ToString());
             // now convert to AFR using user settings
             if (voltage < m_appSettings.WidebandLowVoltage / 1000) voltage = m_appSettings.WidebandLowVoltage / 1000;
             if (voltage > m_appSettings.WidebandHighVoltage / 1000) voltage = m_appSettings.WidebandHighVoltage / 1000;
-            //Console.WriteLine("Wideband voltage (after clipping): " + voltage.ToString());
+            //LogHelper.Log("Wideband voltage (after clipping): " + voltage.ToString());
             double steepness = ((m_appSettings.WidebandHighAFR / 1000) - (m_appSettings.WidebandLowAFR / 1000)) / ((m_appSettings.WidebandHighVoltage / 1000) - (m_appSettings.WidebandLowVoltage / 1000));
-            //Console.WriteLine("Steepness: " + steepness.ToString());
+            //LogHelper.Log("Steepness: " + steepness.ToString());
             retval = (m_appSettings.WidebandLowAFR / 1000) + (steepness * (voltage - (m_appSettings.WidebandLowVoltage / 1000)));
-            //Console.WriteLine("retval: " + retval.ToString());
+            //LogHelper.Log("retval: " + retval.ToString());
             return retval;
 
         }
@@ -11380,7 +11380,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine("LogWidebandAFR: " + E.Message);
+                LogHelper.Log("LogWidebandAFR: " + E.Message);
             }
         }
 
@@ -11397,7 +11397,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -11470,7 +11470,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine("Refresh viewer with AFR data error: " + E.Message);
+                LogHelper.Log("Refresh viewer with AFR data error: " + E.Message);
             }
         }
 
@@ -11485,7 +11485,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
 
@@ -11509,7 +11509,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine("Failed to log to file: " + E.Message);
+                    LogHelper.Log("Failed to log to file: " + E.Message);
                 }
             }
             if (m_WriteLogMarker)
@@ -11594,7 +11594,7 @@ dt.Columns.Add("SymbolName");
                             }
                             catch (Exception pE)
                             {
-                                Console.WriteLine(pE.Message);
+                                LogHelper.Log(pE.Message);
                             }
                         }
                     }
@@ -11628,7 +11628,7 @@ dt.Columns.Add("SymbolName");
                     }
                     catch (Exception expE1)
                     {
-                        Console.WriteLine(expE1.Message);
+                        LogHelper.Log(expE1.Message);
                     }
                     frmProgressLogWorks.Close();
                 }
@@ -11679,7 +11679,7 @@ dt.Columns.Add("SymbolName");
                         }
                         catch (Exception expE2)
                         {
-                            Console.WriteLine(expE2.Message);
+                            LogHelper.Log(expE2.Message);
                         }
                         frmProgressLogWorks.Close();
                     }
@@ -11689,7 +11689,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -11718,7 +11718,7 @@ dt.Columns.Add("SymbolName");
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -11753,8 +11753,8 @@ dt.Columns.Add("SymbolName");
                     {
                         logworksstring = logworksstring.Substring(0, idx);
                         //string parameterstring = "\"" + Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.dif" + "\"";
-                        //                        Console.WriteLine(logworksstring);
-                        //Console.WriteLine(parameterstring);
+                        //                        LogHelper.Log(logworksstring);
+                        //LogHelper.Log(parameterstring);
 
                         System.Diagnostics.Process.Start(logworksstring, "\"" + filename + "\"");
                     }
@@ -11762,7 +11762,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -11785,7 +11785,7 @@ dt.Columns.Add("SymbolName");
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -11806,7 +11806,7 @@ dt.Columns.Add("SymbolName");
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -11837,7 +11837,7 @@ dt.Columns.Add("SymbolName");
                             }
                             catch (Exception pE)
                             {
-                                Console.WriteLine("Failed to update performance mode: " + pE.Message);
+                                LogHelper.Log("Failed to update performance mode: " + pE.Message);
                             }
                         }
                         //<GS-23052011> change to engine temp > 0 in stead of > 70
@@ -11860,13 +11860,13 @@ dt.Columns.Add("SymbolName");
                     }
                     else
                     {
-                        Console.WriteLine("Not reading from SRAM because we're doing something else");
+                        LogHelper.Log("Not reading from SRAM because we're doing something else");
                     }
                 }
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to run realtime timer code: " + E.Message);
+                LogHelper.Log("Failed to run realtime timer code: " + E.Message);
             }
             tmrRealtime.Enabled = m_enableRealtimeTimer;
         }
@@ -11881,11 +11881,11 @@ dt.Columns.Add("SymbolName");
                     if (sh.Start_address > 0)
                     {
                         bool _success = false;
-                        //Console.WriteLine("Start read pm!");
+                        //LogHelper.Log("Start read pm!");
                         byte[] performancemodeData = ReadSymbolFromSRAM((uint)sh.Symbol_number_ECU, "Performance.Mode", (uint)sh.Start_address, (int)sh.Length, out _success);
-                        //Console.WriteLine("PM len: " + performancemodeData.Length.ToString() + " shlen: " + sh.Length.ToString());
-                        //Console.WriteLine("PM data: " + performancemodeData[0].ToString());
-                        //Console.WriteLine("success: " + _success.ToString());
+                        //LogHelper.Log("PM len: " + performancemodeData.Length.ToString() + " shlen: " + sh.Length.ToString());
+                        //LogHelper.Log("PM data: " + performancemodeData[0].ToString());
+                        //LogHelper.Log("success: " + _success.ToString());
                         if (_success)
                         {
                             if (performancemodeData[performancemodeData.Length - 1] == 0x00 || performancemodeData[performancemodeData.Length - 1] == 0x45)
@@ -11968,7 +11968,7 @@ dt.Columns.Add("SymbolName");
                     {
                         /*if (dr["SYMBOLNAME"].ToString() == "Rpm")
                         {
-                            Console.WriteLine("break");
+                            LogHelper.Log("break");
                         }*/
 
 
@@ -11993,7 +11993,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
 
@@ -12023,7 +12023,7 @@ dt.Columns.Add("SymbolName");
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
 
                 }
@@ -12086,7 +12086,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -12121,7 +12121,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -12137,8 +12137,8 @@ dt.Columns.Add("SymbolName");
             {
                 int addrtaboffset = GetStartOfAddressTableOffset(m_currentfile);
                 int addrtaboffset_newfile = GetStartOfAddressTableOffset(ofd.FileName);
-                Console.WriteLine("Addresstable offset 1: " + addrtaboffset.ToString());
-                Console.WriteLine("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
+                LogHelper.Log("Addresstable offset 1: " + addrtaboffset.ToString());
+                LogHelper.Log("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
                 bool _allow = false;
                 if (addrtaboffset == addrtaboffset_newfile) _allow = true;
                 if (!_allow)
@@ -12189,7 +12189,7 @@ dt.Columns.Add("SymbolName");
                                     }
                                     catch (Exception E)
                                     {
-                                        Console.WriteLine(E.Message);
+                                        LogHelper.Log(E.Message);
                                     }
 
                                 }
@@ -12343,7 +12343,7 @@ dt.Columns.Add("SymbolName");
                 catch (Exception E)
                 {
                     AddDebugLog("Failed to set y axis: " + E.Message);
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
 
 
@@ -12395,7 +12395,7 @@ dt.Columns.Add("SymbolName");
             catch (Exception E)
             {
                 AddDebugLog("Failed to export to excel: " + E.Message);
-                Console.WriteLine("Failed to export to excel: " + E.Message);
+                LogHelper.Log("Failed to export to excel: " + E.Message);
             }
             tci = new CultureInfo("nl-NL");
             Thread.CurrentThread.CurrentCulture = tci;
@@ -12552,7 +12552,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine("ImportExcelSymbol: " + E.Message);
+                    LogHelper.Log("ImportExcelSymbol: " + E.Message);
                 }
 
             }
@@ -12675,7 +12675,7 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                LogHelper.Log(ex.Message);
                 return null;
             }
             finally { }
@@ -13019,7 +13019,7 @@ dt.Columns.Add("SymbolName");
                         }
                         catch (Exception newdockE)
                         {
-                            Console.WriteLine(newdockE.Message);
+                            LogHelper.Log(newdockE.Message);
                         }
                         dockManager1.EndUpdate();
                     }
@@ -13268,7 +13268,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    LogHelper.Log(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -13343,7 +13343,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -13416,7 +13416,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -13604,7 +13604,7 @@ dt.Columns.Add("SymbolName");
                                     }
                                     catch (Exception cE)
                                     {
-                                        Console.WriteLine("Failed to assign category to symbol: " + shfound.Varname + " err: " + cE.Message);
+                                        LogHelper.Log("Failed to assign category to symbol: " + shfound.Varname + " err: " + cE.Message);
                                     }
                                 }
                                 dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
@@ -13616,7 +13616,7 @@ dt.Columns.Add("SymbolName");
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                         dockManager1.EndUpdate();
 
@@ -14139,7 +14139,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -14221,7 +14221,7 @@ dt.Columns.Add("SymbolName");
 
                         currentsidcollection.Add(sidh);
                     }
-                    //Console.WriteLine("ALL: " + t7SidEdit.getDataArrayAll()[i]);
+                    //LogHelper.Log("ALL: " + t7SidEdit.getDataArrayAll()[i]);
                 }
                 if (t7SidEdit.getFileType() == 1)
                 {
@@ -14261,7 +14261,7 @@ dt.Columns.Add("SymbolName");
                             if ((modcount % 12) == 0) mode++;
                             currentsidcollection.Add(sidh);
                         }
-                        //Console.WriteLine("NEW: " + t7SidEdit.getDataArrayNew()[j]);
+                        //LogHelper.Log("NEW: " + t7SidEdit.getDataArrayNew()[j]);
                     }
                 }
                 frmSIDInformation frmsid = new frmSIDInformation();
@@ -14308,13 +14308,13 @@ dt.Columns.Add("SymbolName");
 
 /*
             SIDICollection currentsidcollection = GetSidCollectionFromBinary(m_currentfile);
-            //Console.WriteLine("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
+            //LogHelper.Log("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
             int mode = 0;
             int modcount = 0;
             
             foreach (SIDIHelper sh in currentsidcollection)
             {
-                //Console.WriteLine("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
+                //LogHelper.Log("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
                 //Console.Write(Environment.NewLine); 
                 for (int t = 0; t < sh.Symbol.Length; t++)
                 {
@@ -14444,10 +14444,10 @@ dt.Columns.Add("SymbolName");
             //int num5 = 0;
             for (int i = 0; i <= num4; i++)
             {
-                //Console.WriteLine("*****" + i.ToString());
+                //LogHelper.Log("*****" + i.ToString());
                 /*if (i == 65)
                 {
-                    Console.WriteLine("65");
+                    LogHelper.Log("65");
                 }*/
                 for (int j = 0; j <= 3; j++)
                 {
@@ -14457,7 +14457,7 @@ dt.Columns.Add("SymbolName");
                 SIDIHelper sidihelper = new SIDIHelper();
                 sidihelper.Symbol = Encoding.Default.GetString(bytes, 0, 4);
                 sidihelper.Symbol = sidihelper.Symbol.Replace((char)0x00, (char)0x20);
-                //Console.WriteLine(i.ToString() + " = " + Encoding.Default.GetString(bytes, 0, 4));
+                //LogHelper.Log(i.ToString() + " = " + Encoding.Default.GetString(bytes, 0, 4));
                 stream.Position += 3L;
                 for (int k = 0; k <= 2; k++)
                 {
@@ -14628,7 +14628,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    LogHelper.Log(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -14831,7 +14831,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         // set to max
                         int maxtorqueforcell = PowerToTorque(peakHP, rpm, false);
                         int maxairmassforcell = TorqueToAirmass(maxtorqueforcell, E85);
-                        Console.WriteLine("Setting " + valueincell.ToString() + " to " + maxairmassforcell.ToString() + " at " + rpm.ToString() + " rpm");
+                        LogHelper.Log("Setting " + valueincell.ToString() + " to " + maxairmassforcell.ToString() + " at " + rpm.ToString() + " rpm");
                         valueincell = maxairmassforcell;
                     }
 
@@ -15271,7 +15271,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     }
                     FileInfo fileInfoOutputFile = new FileInfo(path + "\\scripts\\" + saveAsName);
                     //CHECK IF FILE EXISTS AND DO SOMETHING DEPENDING ON YOUR NEEDS
-                    Console.WriteLine("Extracting: " + fileInfoOutputFile.FullName);
+                    LogHelper.Log("Extracting: " + fileInfoOutputFile.FullName);
                     if (fileInfoOutputFile.Exists)
                     {
                         //overwrite if desired  (depending on your needs)
@@ -15305,7 +15305,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             // remove the entire folder
             path += "\\scripts";
-            Console.WriteLine("Deleting scripts folder: " + path);
+            LogHelper.Log("Deleting scripts folder: " + path);
             Directory.Delete(path, true);
         }
 
@@ -15313,7 +15313,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
 
             this.fio_bytes += (uint)bytes;
-            //Console.WriteLine("on_fio: " + this.fio_bytes.ToString());
+            //LogHelper.Log("on_fio: " + this.fio_bytes.ToString());
             if (!this.IsDisposed)
             {
                 try
@@ -15322,7 +15322,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
             //this.fio_invoke();
@@ -15360,7 +15360,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             catch (Exception E)
             {
-                Console.WriteLine("fio_invoke: " + E.Message);
+                LogHelper.Log("fio_invoke: " + E.Message);
             }
         }
 
@@ -15424,7 +15424,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("Failed to dump ECU: " + BDMException.Message);
+                LogHelper.Log("Failed to dump ECU: " + BDMException.Message);
                 frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
             }
         }
@@ -15490,7 +15490,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("Failed to program ECU: " + BDMException.Message);
+                LogHelper.Log("Failed to program ECU: " + BDMException.Message);
                 frmInfoBox info = new frmInfoBox("Failed to program ECU: " + BDMException.Message);
             }
         }
@@ -15522,7 +15522,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             }
                             catch (Exception peakE)
                             {
-                                Console.WriteLine("Failed to set peak: " + peakE.Message);
+                                LogHelper.Log("Failed to set peak: " + peakE.Message);
                             }
                         }
                         else
@@ -15635,7 +15635,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -15692,14 +15692,14 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             m_prohibitReading = false;
                             return;
                         }
-                        //Console.WriteLine("Read data");
+                        //LogHelper.Log("Read data");
                         int prec = (i * 100) / (0x10000 / blockSize);
                         float kbsread = (float)(i * blockSize)/1024F;
                         progress.SetProgress("Downloading snapshot: " + kbsread.ToString("F1") + " Kb" + " [ " + prec.ToString() + " % ]");
                         progress.SetProgressPercentage(prec);
                         br.Write(data);
                     }
-                    //Console.WriteLine("Read data");
+                    //LogHelper.Log("Read data");
                 }
                 fs.Close();
                 progress.Close();
@@ -15840,7 +15840,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
                 catch (Exception E3)
                 {
-                    Console.WriteLine(E3.Message);
+                    LogHelper.Log(E3.Message);
                 }
             }
         }
@@ -15938,7 +15938,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 m_prohibitReading = false;
             }
@@ -16102,12 +16102,12 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symbolname), symbolname);
                         sh.Symbol_number = symbolnumber;
 
-                        Console.WriteLine("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symbolname);
+                        LogHelper.Log("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symbolname);
                         if (symbolnumber >= 0)
                         {
                             //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh, true);
-                            Console.WriteLine("read " + result.Length.ToString() + " bytes from SRAM!");
+                            LogHelper.Log("read " + result.Length.ToString() + " bytes from SRAM!");
                             StartTableViewer(symbolname);
                             try
                             {
@@ -16170,7 +16170,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine("Refresh viewer with SRAM data error: " + E.Message);
+                                LogHelper.Log("Refresh viewer with SRAM data error: " + E.Message);
                             }
                             break;
                         }
@@ -16643,7 +16643,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             {
                                 // add failure
                                 dt.Rows.Add(sh_Import.Varname, "Fail");
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -16676,7 +16676,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             if (!pnlfound)
             {
@@ -17036,7 +17036,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    LogHelper.Log(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -18283,7 +18283,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             {
                                 // add failure
                                 dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), "");
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -18504,7 +18504,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    LogHelper.Log(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -18537,7 +18537,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 if (edit.WriteData)
                 {
                     // save the package again with altered settings probably.
-                    Console.WriteLine("We should write the tuning package here!");
+                    LogHelper.Log("We should write the tuning package here!");
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Trionic 7 packages|*.t7p";
                     if (sfd.ShowDialog() == DialogResult.OK)
@@ -18569,7 +18569,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void gridViewSymbols_DragObjectStart(object sender, DevExpress.XtraGrid.Views.Base.DragObjectStartEventArgs e)
         {
-            Console.WriteLine("Start dragging: " + e.DragObject.ToString());
+            LogHelper.Log("Start dragging: " + e.DragObject.ToString());
             _isMouseDown = true;
             //e.DragObject
         }
@@ -18619,7 +18619,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         if (row >= 0)
                         {
                             SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                            Console.WriteLine("Symbol dragging: " + sh.Varname);
+                            LogHelper.Log("Symbol dragging: " + sh.Varname);
                             sh.Currentdata = readdatafromfile(m_currentfile, (int)sh.Flash_start_address, sh.Length);
                             if (IsSoftwareOpen())
                             {
@@ -18705,7 +18705,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                 }
                                 catch (Exception pE)
                                 {
-                                    Console.WriteLine(pE.Message);
+                                    LogHelper.Log(pE.Message);
                                 }
                             }
                         }
@@ -18713,7 +18713,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 frmMatrixSelection sel = new frmMatrixSelection();
                 sel.SetSymbolList(sc);
@@ -18796,7 +18796,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                 }
                                 catch (Exception pE)
                                 {
-                                    Console.WriteLine(pE.Message);
+                                    LogHelper.Log(pE.Message);
                                 }
                             }
                         }
@@ -18823,14 +18823,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
                         double xvalue = xmin;
                         if (i > 0) xvalue = xmin + i * ((xmax - xmin) / (15));
-                        //Console.WriteLine("Adding: " + xvalue.ToString());
+                        //LogHelper.Log("Adding: " + xvalue.ToString());
                         try
                         {
                             dtresult.Columns.Add(xvalue.ToString(), Type.GetType("System.Double"));
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("Failed to add column: " + E.Message);
+                            LogHelper.Log("Failed to add column: " + E.Message);
                         }
                         x_values.SetValue(xvalue, i); //    test: andersom?
                     }
@@ -18849,7 +18849,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("Failed to add empty row: " + E.Message);
+                            LogHelper.Log("Failed to add empty row: " + E.Message);
                         }
                     }
                     // table filled
@@ -18905,7 +18905,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                 }
                                 catch (Exception pE)
                                 {
-                                    Console.WriteLine(pE.Message);
+                                    LogHelper.Log(pE.Message);
                                 }
                                 // add point to the datatable
                                 AddPointToDataTable(dtresult, _lastX, _lastY, _lastZ, xmin, xmax, ymin, ymax, zmin, zmax, type);
@@ -18986,7 +18986,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             yindex = 15 - yindex; // flip the table
 
 
-            //Console.WriteLine("x = " + x.ToString() + " y = " + y.ToString() + " xindex = " + xindex.ToString() + " yindex = " + yindex.ToString());
+            //LogHelper.Log("x = " + x.ToString() + " y = " + y.ToString() + " xindex = " + xindex.ToString() + " yindex = " + yindex.ToString());
             // get the counter from avgTable
             if (type == 0)
             {
@@ -19210,7 +19210,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void SetTabControlView(DevExpress.XtraTab.XtraTabControl tabcontrol, PanelMode panelMode, Color nightColor, Color labelColor)
         {
-            //Console.WriteLine("Switching tab control!");
+            //LogHelper.Log("Switching tab control!");
             if (panelMode == PanelMode.Day)
             {
                 tabcontrol.LookAndFeel.UseDefaultLookAndFeel = true;
@@ -19282,7 +19282,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             foreach (DevExpress.XtraTab.XtraTabPage page in tabcontrol.TabPages)
             {
-                //Console.WriteLine("Switching tab page: " + page.Name);
+                //LogHelper.Log("Switching tab page: " + page.Name);
                 SetTabPageView(page, panelMode, nightColor);
             }
             
@@ -19429,7 +19429,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
                 catch (Exception E3)
                 {
-                    Console.WriteLine(E3.Message);
+                    LogHelper.Log(E3.Message);
                 }
             }
         }
@@ -19468,11 +19468,11 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                         try
                                         {
                                             sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                            //Console.WriteLine("Set cat to " + sh.Category + " for " + sh.Userdescription);
+                                            //LogHelper.Log("Set cat to " + sh.Category + " for " + sh.Userdescription);
                                         }
                                         catch (Exception cE)
                                         {
-                                            Console.WriteLine("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                            LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
                                         }
                                     }
 
@@ -19482,13 +19482,13 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     catch (Exception lineE)
                     {
-                        Console.WriteLine("Failed to import a symbol from CSV file " + line + ": " + lineE.Message);
+                        LogHelper.Log("Failed to import a symbol from CSV file " + line + ": " + lineE.Message);
                     }
                 }
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to import additional CSV symbols: " + E.Message);
+                LogHelper.Log("Failed to import additional CSV symbols: " + E.Message);
             }
         }
 
@@ -19658,7 +19658,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                     catch (Exception E)
                                     {
                                         // add failure
-                                        Console.WriteLine(E.Message);
+                                        LogHelper.Log(E.Message);
                                     }
                                 }
                             }
@@ -19807,7 +19807,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         // misschien wel terugzetten?
                         if (dockManager1.ActivePanel.FloatForm != null)
                         {
-                            Console.WriteLine("Restoring: " + dockManager1.ActivePanel.Text);
+                            LogHelper.Log("Restoring: " + dockManager1.ActivePanel.Text);
                             if (dockManager1.ActivePanel.FloatForm.Width < this.Width - 20)
                             {
                                 // maximaliseren
@@ -19839,7 +19839,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         }
                         else
                         {
-                            Console.WriteLine("Maximizing: " + dockManager1.ActivePanel.Text);
+                            LogHelper.Log("Maximizing: " + dockManager1.ActivePanel.Text);
                             dockManager1.ActivePanel.FloatSize = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
                             dockManager1.ActivePanel.FloatLocation = new System.Drawing.Point(1, 1);
                             dockManager1.ActivePanel.MakeFloat();
@@ -19850,12 +19850,12 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         // misschien wel terugzetten?
                         if (dockManager1.ActivePanel.FloatForm != null)
                         {
-                            Console.WriteLine("Restoring: " + dockManager1.ActivePanel.Text);
+                            LogHelper.Log("Restoring: " + dockManager1.ActivePanel.Text);
                             dockManager1.ActivePanel.Restore();
                         }
                         else
                         {
-                            Console.WriteLine("Maximizing: " + dockManager1.ActivePanel.Text);
+                            LogHelper.Log("Maximizing: " + dockManager1.ActivePanel.Text);
                             dockManager1.ActivePanel.FloatSize = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
                             dockManager1.ActivePanel.FloatLocation = new System.Drawing.Point(1, 1);
                             dockManager1.ActivePanel.MakeFloat();
@@ -19866,7 +19866,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             catch (Exception E)
             {
-                Console.WriteLine("btnPanelFullscreen_ItemClick: " + E.Message);
+                LogHelper.Log("btnPanelFullscreen_ItemClick: " + E.Message);
             }
         }
 
@@ -19970,7 +19970,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                                     System.Windows.Forms.Panel pnl = (System.Windows.Forms.Panel)c5;
                                                     foreach (Control c6 in pnl.Controls)
                                                     {
-                                                        Console.WriteLine("MapViewerEx:GroupControl:SplitContainer.Panel2.Panel:" + c6.GetType().ToString());
+                                                        LogHelper.Log("MapViewerEx:GroupControl:SplitContainer.Panel2.Panel:" + c6.GetType().ToString());
                                                     }
                                                 }
                                             }
@@ -20015,7 +20015,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                                 System.Windows.Forms.Panel pnl = (System.Windows.Forms.Panel)c5;
                                                 foreach (Control c6 in pnl.Controls)
                                                 {
-                                                    Console.WriteLine("MapViewer:GroupControl:SplitContainer.Panel2.Panel:" + c6.GetType().ToString());
+                                                    LogHelper.Log("MapViewer:GroupControl:SplitContainer.Panel2.Panel:" + c6.GetType().ToString());
                                                 }
                                             }
                                         }
@@ -20044,7 +20044,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                         }
                                         else
                                         {
-                                            Console.WriteLine("ctrlAirmassResult:XtraTab:" + c4.GetType().ToString());
+                                            LogHelper.Log("ctrlAirmassResult:XtraTab:" + c4.GetType().ToString());
                                         }
                                     }
                                 }
@@ -20059,7 +20059,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         }
                         else
                         {
-                            Console.WriteLine("Unsupported screenshot control: " + c2.GetType().ToString());
+                            LogHelper.Log("Unsupported screenshot control: " + c2.GetType().ToString());
                         }
                     }
 
@@ -20121,7 +20121,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 //                canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrameDebug);
 //                canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
 //                //canUsbDevice = new EasySyncUSBDevice();
-//                Console.WriteLine("Created new CANUSBDevice instance");
+//                LogHelper.Log("Created new CANUSBDevice instance");
 //            }
 //            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
 //            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
@@ -20131,7 +20131,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         void canUsbDevice_onReceivedAdditionalInformationFrameDebug(object sender, ICANDevice.InformationFrameEventArgs e)
         {
-            Console.WriteLine("Rx frame: 0x" + e.Message.getID().ToString("X4") + " 0x" + e.Message.getData().ToString("X16"));
+            LogHelper.Log("Rx frame: 0x" + e.Message.getID().ToString("X4") + " 0x" + e.Message.getData().ToString("X16"));
         }
 
 
@@ -20256,7 +20256,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     // decide which cells should be updated and which ones should be discarded
                     try
                     {
-                        Console.WriteLine("Getting differences in percentages");
+                        LogHelper.Log("Getting differences in percentages");
                         double[] diffinperc = m_AFRMap.GetPercentualDifferences();
 
                         System.Data.DataTable dt = new System.Data.DataTable();
@@ -20282,7 +20282,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to stop autotune: " + E.Message);
+                        LogHelper.Log("Failed to stop autotune: " + E.Message);
                     }
                 }
                 SetStatusText("Autotune stopped.");
@@ -20390,14 +20390,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 byte[] data2Write = new byte[1];
                 data2Write[0] = newFuelMapByte;
 
-                Console.WriteLine("Writing fuelmap");
+                LogHelper.Log("Writing fuelmap");
                 KWPHandler.getInstance().requestSequrityAccess(false);
                 uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)(y * 18) + (uint)e.X;;
                 byte[] dataToSend = new byte[1];
                 //dataToSend[0] = e.Cellvalue;
                 if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, data2Write))
                 {
-                    Console.WriteLine("Failed to write data to the ECU");
+                    LogHelper.Log("Failed to write data to the ECU");
                 }
                 int fuelMapAddressFlash = (int)GetSymbolAddress(m_symbols, "BFuelCal.Map");
                 fuelMapAddressFlash += (y * 18) + e.X;
@@ -20415,14 +20415,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 {
                     if (_autoTuning)
                     {
-                        Console.WriteLine("Writing fuelmap");
+                        LogHelper.Log("Writing fuelmap");
                         KWPHandler.getInstance().requestSequrityAccess(false);
                         uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)e.Mapindex;
                         byte[] dataToSend = new byte[1];
                         dataToSend[0] = e.Cellvalue;
                         if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, dataToSend))
                         {
-                            Console.WriteLine("Failed to write data to the ECU");
+                            LogHelper.Log("Failed to write data to the ECU");
                         }
                     }
                 }
@@ -20435,7 +20435,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         void m_AFRMap_onCellLocked(object sender, EventArgs e)
         {
-            Console.WriteLine("AFR maps: cell locked");
+            LogHelper.Log("AFR maps: cell locked");
             if (sndplayer != null)
             {
                 if (m_appSettings.PlayCellProcessedSound)
@@ -20458,7 +20458,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             //<GS-17012011> implement autotuning functions here
             if (_autoTuning)
             {
-                //Console.WriteLine("Autotuning: " + afr.ToString("F2") + " " + rpm.ToString("F0") + " " + airmass.ToString("F1"));
+                //LogHelper.Log("Autotuning: " + afr.ToString("F2") + " " + rpm.ToString("F0") + " " + airmass.ToString("F1"));
                 m_AFRMap.HandleRealtimeData(afr, rpm, airmass);
                 // measure current AFR agains targeted AFR and hold for cell stable time.
             }
@@ -20501,7 +20501,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
                 catch (Exception kwpE)
                 {
-                    Console.WriteLine("KWP: " + kwpE.Message);
+                    LogHelper.Log("KWP: " + kwpE.Message);
                 }
             }
 
@@ -20577,35 +20577,35 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             SpawnSaabOpenTech("I", false);// show info
             /*System.Windows.Forms.Application.DoEvents();
-            Console.WriteLine("Checking can connection");
+            LogHelper.Log("Checking can connection");
             if (CheckCANConnectivityDirectAccess())
             {
                 // init 
                 canUsbDevice.EnableCanLog = true;
-                Console.WriteLine("Sending session request to trionic");
+                LogHelper.Log("Sending session request to trionic");
                 //KWPHandler.getInstance().
                 System.Windows.Forms.Application.DoEvents();
                 canUsbDevice.Flush();
                 if (canUsbDevice.sendSessionRequest(0x11)) // 0x11 = Trionic
                 {
-                    Console.WriteLine("Query data from trionic");
+                    LogHelper.Log("Query data from trionic");
                     System.Windows.Forms.Application.DoEvents();
                     byte[] buf = new byte[8];
                     int i = canUsbDevice.query_data(0xA1, 0xAC, out buf); // A1 = 11 = trionic
-                    Console.WriteLine("Rx length: " + i.ToString());
+                    LogHelper.Log("Rx length: " + i.ToString());
                     if (i == 8)
                     {
                         foreach (byte b in buf)
                         {
                             Console.Write(b.ToString("X2") + " ");
                         }
-                        Console.WriteLine();
+                        LogHelper.Log();
                     }
 
                 }
                 else
                 {
-                    Console.WriteLine("Failed to init the session with Trionic");
+                    LogHelper.Log("Failed to init the session with Trionic");
                 }
             }*/
         }
@@ -20671,7 +20671,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             int bdifferent = 0;
                             if (sh.Varname == "BFuelCal.Map")
                             {
-                                Console.WriteLine("break!");
+                                LogHelper.Log("break!");
                             }
                             for (int btel = 0; btel < sh.Length; btel++)
                             {
@@ -20743,7 +20743,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             dockManager1.EndUpdate();
         }
@@ -20866,7 +20866,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
                             }
@@ -20956,7 +20956,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 catch (Exception E)
                 {
 
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -21045,7 +21045,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                         }
                                         catch (Exception E)
                                         {
-                                            Console.WriteLine(E.Message);
+                                            LogHelper.Log(E.Message);
                                         }
                                     }
                                 }
@@ -21109,7 +21109,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                     dockManager1.EndUpdate();
                     SetStatusText("SRAM compare done");
@@ -21229,7 +21229,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    //Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    //LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
                             }
@@ -21312,7 +21312,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 catch (Exception E)
                 {
 
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -21463,7 +21463,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             catch (Exception E)
             {
-                Console.WriteLine("Refresh viewer " + symbolname + " error: " + E.Message);
+                LogHelper.Log("Refresh viewer " + symbolname + " error: " + E.Message);
             }
         }
 
@@ -21520,7 +21520,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             catch (Exception myMapsE)
             {
-                Console.WriteLine("Failed to create myMaps menu: " + myMapsE.Message);
+                LogHelper.Log("Failed to create myMaps menu: " + myMapsE.Message);
             }
         }
 

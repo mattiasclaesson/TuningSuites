@@ -128,6 +128,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\LBIndustrialCtrls\obj\x86\Release\LBIndustrialCtrls.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="Microsoft.Office.Tools.Excel.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Office.Tools.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -157,6 +161,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TrionicCANLib, Version=0.0.0.11, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TrionicCANLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AFRMap.cs" />
@@ -602,6 +610,7 @@
     <Compile Include="LogFilter.cs" />
     <Compile Include="LogFilterCollection.cs" />
     <Compile Include="LogFilters.cs" />
+    <Compile Include="LogHelper.cs" />
     <Compile Include="MapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1051,6 +1060,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="quick_restart.ico" />
+    <Content Include="Resources\log4net.config.xml" />
+    <Content Include="usb_bdm.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
