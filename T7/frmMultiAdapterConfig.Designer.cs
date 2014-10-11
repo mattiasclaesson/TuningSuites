@@ -228,7 +228,7 @@ namespace T7
             this.Controls.Add(this.groupControl1);
             this.Name = "frmMultiAdapterConfig";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Configuration for multi adapter...";
+            this.Text = "Configuration for combiadapter...";
             ((System.ComponentModel.ISupportInitialize)(this.chkUseADC1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkUseADC2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkUseADC3.Properties)).EndInit();
