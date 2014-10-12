@@ -147,7 +147,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    Console.WriteLine(cE.Message);
+                                    LogHelper.Log(cE.Message);
                                 }
                                 bytecount++;
                             }

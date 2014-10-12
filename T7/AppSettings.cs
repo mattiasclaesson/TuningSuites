@@ -2211,7 +2211,7 @@ namespace T7
                                 //m_RealtimeFont = new Font(Settings.GetValue(a).ToString(), 10F);
                                 TypeConverter tc = TypeDescriptor.GetConverter(typeof(Font));
                                 //string fontString = tc.ConvertToString(font);
-                                //Console.WriteLine("Font as string: {0}", fontString);
+                                //LogHelper.Log("Font as string: {0}", fontString);
 
                                 m_RealtimeFont = (Font)tc.ConvertFromString(Settings.GetValue(a).ToString());
 
@@ -2337,7 +2337,7 @@ namespace T7
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("error retrieving registry settings: " + E.Message);
+                            LogHelper.Log("error retrieving registry settings: " + E.Message);
                         }
 
                     }

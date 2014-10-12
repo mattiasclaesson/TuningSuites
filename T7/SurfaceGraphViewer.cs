@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Plot3D;
 using System.Runtime.InteropServices;
+using CommonSuite;
 
 namespace T7
 {
@@ -253,7 +254,7 @@ namespace T7
                     int valtot = 0;
                     valtot = Convert.ToInt32((byte)m_map_content.GetValue(byteoffset++)) * 256;
                     valtot += Convert.ToInt32((byte)m_map_content.GetValue(byteoffset++));
-                    //Console.WriteLine("Value: :"+ valtot.ToString("X4"));
+                    //LogHelper.Log("Value: :"+ valtot.ToString("X4"));
                     if (valtot > 0xF000)
                     {
                         valtot ^= 0xFFFF;
@@ -414,7 +415,7 @@ namespace T7
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                     }
                 }
@@ -484,7 +485,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -542,7 +543,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -684,8 +685,8 @@ namespace T7
         {
             int delta = e.Delta;
             //if((uint)e.Delta > 0xff000000) delta = (int)(0x100000000- (long)delta);
-            Console.WriteLine("e.Delta: " + e.Delta.ToString());
-            Console.WriteLine("Delta: " + delta.ToString());
+            LogHelper.Log("e.Delta: " + e.Delta.ToString());
+            LogHelper.Log("Delta: " + delta.ToString());
             pov_d += (delta * 0.0001);
             sr.ReCalculateTransformationsCoeficients(pov_x, pov_y, pov_z, pan_x, pan_y, ClientRectangle.Width, ClientRectangle.Height, pov_d, 0, 0);
             CastGraphChangedEvent();
@@ -797,7 +798,7 @@ namespace T7
                 double val = 0;
                 if (sr.GetMousePoint(e.X, e.Y, out tableposition, out val))
                 {
-                    //Console.WriteLine("Position = " + e.X.ToString() + ":" + e.Y.ToString() + " tablepos = " + tableposition.X.ToString() + ":" + tableposition.Y.ToString() + " value = " + val.ToString());
+                    //LogHelper.Log("Position = " + e.X.ToString() + ":" + e.Y.ToString() + " tablepos = " + tableposition.X.ToString() + ":" + tableposition.Y.ToString() + " value = " + val.ToString());
                     m_lastMouseHoverPoint = new PointF((float)e.X, (float)e.Y);
                     toolTipController1.ShowHint("Mouse hit : " + m_lastMouseHoverPoint.X.ToString() + ":" + m_lastMouseHoverPoint.Y.ToString(), PointToClient(e.Location));
                 }*/

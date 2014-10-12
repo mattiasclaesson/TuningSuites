@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using CommonSuite;
 
 namespace T7
 {
@@ -323,7 +323,7 @@ namespace T7
                                     /*result = putc(v5, File);
                                     if (result == -1)
                                         return result;*/
-                                    Console.WriteLine(v5.ToString("X4"));
+                                    LogHelper.Log(v5.ToString("X4"));
                                     byte_710E7C[v3++] = Convert.ToByte(v5);
                                     v3 &= 0xFFFu;
                                     ++v4;
@@ -335,7 +335,7 @@ namespace T7
                                 /*result = putc(v5, File);
                                 if (result == -1)
                                     return result;*/
-                                Console.WriteLine(v5.ToString("X4"));
+                                LogHelper.Log(v5.ToString("X4"));
                                 byte_710E7C[v3++] = Convert.ToByte(v5);
                                 v3 &= 0xFFFu;
                                 ++v4;

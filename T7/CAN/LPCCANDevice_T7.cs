@@ -5,12 +5,11 @@
 //-----------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using T7.CAN;
 using Combi;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -114,35 +113,35 @@ class LPCCANDevice_T7 : ICANDevice
         try
         {
             // connect to adapter
-            Console.WriteLine("Connecting LPCCanDevice");
+            LogHelper.Log("Connecting LPCCanDevice");
             lock (this.term_mutex)
             {
                 this.term_requested = false;
             }
             this.connect();
-            Console.WriteLine("Connected LPCCanDevice");
+            LogHelper.Log("Connected LPCCanDevice");
 
             // try listening on I-bus first
             if (!this.UseOnlyPBus && this.try_bitrate(47619))
             {
                 // got traffic
-                Console.WriteLine("I-bus connected");
+                LogHelper.Log("I-bus connected");
 
                 return OpenResult.OK;
             }
-            Console.WriteLine("Trying P-bus connection");
+            LogHelper.Log("Trying P-bus connection");
 
             // try P-bus next
             if (!this.try_bitrate(500000))
             {
                 // give up
-                Console.WriteLine("Failed to open canchannel");
+                LogHelper.Log("Failed to open canchannel");
                 this.combi.Close();
                 return OpenResult.OpenError;
             }
 
-            Console.WriteLine("Canchannel opened");
-            if(read_thread != null) Console.WriteLine("Threadstate: " + read_thread.ThreadState.ToString());
+            LogHelper.Log("Canchannel opened");
+            if(read_thread != null) LogHelper.Log("Threadstate: " + read_thread.ThreadState.ToString());
             // start reader thread
             try
             {
@@ -150,7 +149,7 @@ class LPCCANDevice_T7 : ICANDevice
             }
             catch (Exception tE)
             {
-                Console.WriteLine("Failed to abort thread: " + tE.Message);
+                LogHelper.Log("Failed to abort thread: " + tE.Message);
             }
             this.read_thread = new Thread(this.read_messages); // move here to ensure a new thread is started
             this.read_thread.Start();
@@ -159,7 +158,7 @@ class LPCCANDevice_T7 : ICANDevice
 
         catch (Exception E)
         {
-            Console.WriteLine("Failed to open LPCCanDevice: " + E.Message);
+            LogHelper.Log("Failed to open LPCCanDevice: " + E.Message);
             // cleanup
             this.close();
 
@@ -189,7 +188,7 @@ class LPCCANDevice_T7 : ICANDevice
     {
         try
         {
-            Console.WriteLine("Closing combiadapter");
+            LogHelper.Log("Closing combiadapter");
             // terminate worker thread
             Debug.Assert(this.term_mutex != null);
             lock (this.term_mutex)

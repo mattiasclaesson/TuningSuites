@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Threading;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -34,14 +35,14 @@ namespace T7.KWP
         /// <param name="a_kwpDevice">IKWPDevice to be used by KWPHandler.</param>
         public static void setKWPDevice(IKWPDevice a_kwpDevice)
         {
-            Console.WriteLine("******* KWPHandler: KWP device set");
+            LogHelper.Log("******* KWPHandler: KWP device set");
             m_kwpDevice = a_kwpDevice;
         }
 
         public static KWPHandler getInstance()
         {
             if (m_kwpDevice == null)
-                Console.WriteLine("KWPDevice not set.");
+                LogHelper.Log("KWPDevice not set.");
             if (m_instance == null)
                 m_instance = new KWPHandler();
             return m_instance;
@@ -79,7 +80,7 @@ namespace T7.KWP
             {
                 sendUnknownRequest();
             }
-          //  Console.WriteLine("Sending keep alive");
+          //  LogHelper.Log("Sending keep alive");
         }
 
 
@@ -99,7 +100,7 @@ namespace T7.KWP
         /// <returns>true on success, otherwise false.</returns>
         public bool openDevice()
         {
-            Console.WriteLine("******* KWPHandler: Opening kwpDevice");
+            LogHelper.Log("******* KWPHandler: Opening kwpDevice");
 
             return m_kwpDevice.open();
         }
@@ -110,7 +111,7 @@ namespace T7.KWP
         /// <returns>true on success, otherwise false.</returns>
         public bool closeDevice()
         {
-            Console.WriteLine("******* KWPHandler: Closing kwpDevice");
+            LogHelper.Log("******* KWPHandler: Closing kwpDevice");
 
             if(m_kwpDevice != null)
                 return m_kwpDevice.close();
@@ -147,12 +148,12 @@ namespace T7.KWP
                 using (StreamWriter sw = new StreamWriter("kwplog.txt", true))
                 {
                     sw.WriteLine(entry);
-                    //Console.WriteLine(entry);
+                    //LogHelper.Log(entry);
                 }
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -184,16 +185,16 @@ namespace T7.KWP
             byte[] data = new byte[1];
             data[0] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x11, 0x01, data);
-            Console.WriteLine(req.ToString());
+            LogHelper.Log(req.ToString());
             result = sendRequest(req, out reply);
             if (reply.getMode() == 0x51)
             {
-                Console.WriteLine("Reset Success: " + reply.ToString());
+                LogHelper.Log("Reset Success: " + reply.ToString());
                 return true;
             }
             else if (reply.getMode() == 0x7F)
             {
-                Console.WriteLine("Reset Failed: " + reply.ToString());
+                LogHelper.Log("Reset Failed: " + reply.ToString());
             }
             return false;
         }
@@ -208,9 +209,9 @@ namespace T7.KWP
             //data[1] = (byte)0x00;
             //data[2] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x12, Convert.ToByte(frameNumber), data);
-            Console.WriteLine(req.ToString());
+            LogHelper.Log(req.ToString());
             result = sendRequest(req, out reply);
-            Console.WriteLine(reply.ToString());
+            LogHelper.Log(reply.ToString());
             return true;
         }
 
@@ -234,9 +235,9 @@ namespace T7.KWP
             // 1 Current code - present at time of request
             // 0 Maturing/intermittent code - insufficient data to consider as a malfunction
             KWPRequest req = new KWPRequest(0x18 , 0x02); // Request Diagnostic Trouble Codes by Status
-            Console.WriteLine(req.ToString());
+            LogHelper.Log(req.ToString());
             result = sendRequest(req, out reply);
-            Console.WriteLine(reply.ToString());
+            LogHelper.Log(reply.ToString());
             // J2190
             // Multiple Mode $58 response messages may be reported to a single request, depending on the number of diagnostic 
             // trouble codes stored in the module. Each response message will report up to three DTCs for
@@ -247,7 +248,7 @@ namespace T7.KWP
             {
                 if (reply.getPid() == 0x00)
                 {
-                    Console.WriteLine("No DTC's");
+                    LogHelper.Log("No DTC's");
                     list.Add("No DTC's");
                     return true;
                 }
@@ -301,9 +302,9 @@ namespace T7.KWP
             //data[1] = (byte)0xFF;
             //data[2] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x14, (byte)(dtccode >> 8), data);
-            Console.WriteLine(req.ToString());
+            LogHelper.Log(req.ToString());
             result = sendRequest(req, out reply);
-            Console.WriteLine(reply.ToString());
+            LogHelper.Log(reply.ToString());
             return true;
         }
 
@@ -317,9 +318,9 @@ namespace T7.KWP
             //data[1] = (byte)0xFF;
             //data[2] = (byte)0x00;
             KWPRequest req = new KWPRequest(0x14, 0xFF, data);
-            Console.WriteLine(req.ToString());
+            LogHelper.Log(req.ToString());
             result = sendRequest(req, out reply);
-            Console.WriteLine(reply.ToString());
+            LogHelper.Log(reply.ToString());
             return true;
         }
 
@@ -338,9 +339,9 @@ namespace T7.KWP
             byte[] key = new byte[2];
             // Send a seed request.
             KWPRequest requestForKey = new KWPRequest(0x27, 0x05);
-            Console.WriteLine("requestSequrityAccessLevel " + a_method.ToString() +  " request for key: " + requestForKey.ToString());
+            LogHelper.Log("requestSequrityAccessLevel " + a_method.ToString() +  " request for key: " + requestForKey.ToString());
             result = sendRequest(requestForKey, out reply);
-            Console.WriteLine("requestSequrityAccessLevel " + a_method.ToString() + " request for key result: " + reply.ToString());
+            LogHelper.Log("requestSequrityAccessLevel " + a_method.ToString() + " request for key result: " + reply.ToString());
 
             if (result != KWPResult.OK)
                 return false;
@@ -354,25 +355,25 @@ namespace T7.KWP
                 key = calculateKey(seed, 1);
             // Send key reply.
             KWPRequest sendKeyRequest = new KWPRequest(0x27, 0x06, key);
-            Console.WriteLine("requestSequrityAccessLevel " + a_method.ToString() +  " send Key request: " + sendKeyRequest.ToString());
+            LogHelper.Log("requestSequrityAccessLevel " + a_method.ToString() +  " send Key request: " + sendKeyRequest.ToString());
             result = sendRequest(sendKeyRequest, out reply);
-            Console.WriteLine("requestSequrityAccessLevel " + a_method.ToString() + " send Key reply: " + reply.ToString());
+            LogHelper.Log("requestSequrityAccessLevel " + a_method.ToString() + " send Key reply: " + reply.ToString());
             if (result != KWPResult.OK)
             {
-                Console.WriteLine("Security access request was not send");
+                LogHelper.Log("Security access request was not send");
                 return false;
             }
 
             //Check if sequrity was granted.
-            Console.WriteLine("Mode: " + reply.getMode().ToString("X2"));
-            Console.WriteLine("Data: " + reply.getData()[0].ToString("X2"));
+            LogHelper.Log("Mode: " + reply.getMode().ToString("X2"));
+            LogHelper.Log("Data: " + reply.getData()[0].ToString("X2"));
             if ((reply.getMode() == 0x67) && (reply.getData()[0] == 0x34)) // WAS [0]
             {
-                Console.WriteLine("Security access granted: " + a_method.ToString());
+                LogHelper.Log("Security access granted: " + a_method.ToString());
                 return true;
             }
 
-            Console.WriteLine("Security access was not granted: " + reply.ToString());
+            LogHelper.Log("Security access was not granted: " + reply.ToString());
             return false;
         }
 
@@ -473,7 +474,7 @@ namespace T7.KWP
             }
             else if (reply.getMode() == 0x7F && reply.getPid() == 0x21 && reply.getLength() == 3)
             {
-                Console.WriteLine(TranslateErrorCode(reply.getData()[0]));
+                LogHelper.Log(TranslateErrorCode(reply.getData()[0]));
             }
             r_level = 0;
             return KWPResult.NOK;
@@ -499,7 +500,7 @@ namespace T7.KWP
             }
             else if(reply.getMode() == 0x7F && reply.getPid() == 0x3B && reply.getLength() == 3)
             {
-                Console.WriteLine(TranslateErrorCode(reply.getData()[0]));
+                LogHelper.Log(TranslateErrorCode(reply.getData()[0]));
             }
 
             return KWPResult.NOK;
@@ -652,18 +653,18 @@ namespace T7.KWP
             KWPRequest req = new KWPRequest(0x31, 0x50, a_data);
             
             result = sendRequest(req, out reply);
-            Console.WriteLine("Erase(1) " + reply.ToString());
+            LogHelper.Log("Erase(1) " + reply.ToString());
             /*if (result != KWPResult.OK)
                 return result;
             System.Threading.Thread.Sleep(10000);
             result = sendRequest(new KWPRequest(0x31, 0x53, a_data), out reply);
-            Console.WriteLine("Erase(2:" + i.ToString() + ") " + reply.ToString());
+            LogHelper.Log("Erase(2:" + i.ToString() + ") " + reply.ToString());
             */
             if (result != KWPResult.OK)
                 return result;
 
             result = sendRequest(new KWPRequest(0x3E, 0x50), out reply2); // tester present???
-            Console.WriteLine("reply on exit " + reply2.ToString());
+            LogHelper.Log("reply on exit " + reply2.ToString());
 
             return result;
         }
@@ -687,14 +688,14 @@ namespace T7.KWP
             //PID = 0x52
             //Expected result is 0x71
             result = sendRequest(new KWPRequest(0x31, 0x52), out reply);
-            Console.WriteLine("Erase(1) " + reply.ToString());
+            LogHelper.Log("Erase(1) " + reply.ToString());
             if (result != KWPResult.OK)
                 return result;
             while (reply.getMode() != 0x71) 
             {
                 System.Threading.Thread.Sleep(1000);
                 result = sendRequest(new KWPRequest(0x31, 0x52), out reply);
-                Console.WriteLine("Erase(2:" + i.ToString() + ") " + reply.ToString());
+                LogHelper.Log("Erase(2:" + i.ToString() + ") " + reply.ToString());
                 if (i++ > 15) return KWPResult.Timeout;
             }
             if (result != KWPResult.OK) 
@@ -706,14 +707,14 @@ namespace T7.KWP
             //Expected result is 0x71
             i = 0;
             result = sendRequest(new KWPRequest(0x31, 0x53), out reply2);
-            Console.WriteLine("Erase(3) " + reply2.ToString());
+            LogHelper.Log("Erase(3) " + reply2.ToString());
             if (result != KWPResult.OK)
                 return result;
             while (reply2.getMode() != 0x71)
             {
                 System.Threading.Thread.Sleep(1000);
                 result = sendRequest(new KWPRequest(0x31, 0x53), out reply2);
-                Console.WriteLine("Erase(4:" + i.ToString() + ") " + reply2.ToString());
+                LogHelper.Log("Erase(4:" + i.ToString() + ") " + reply2.ToString());
                 if (i++ > 20) return KWPResult.Timeout;
             }
 
@@ -721,7 +722,7 @@ namespace T7.KWP
             //Mode = 0x3E
             //Expected result is 0x7E
             result = sendRequest(new KWPRequest(0x3E, 0x53), out reply2);
-            Console.WriteLine("Erase(5) " + reply2.ToString());
+            LogHelper.Log("Erase(5) " + reply2.ToString());
 
             return result;
         }
@@ -821,7 +822,7 @@ namespace T7.KWP
         public KWPResult sendUnknownRequest()
         {
             LogDataString("sendUnknownRequest");
-            //Console.WriteLine("sendUnknownRequest");
+            //LogHelper.Log("sendUnknownRequest");
             KWPReply reply = new KWPReply();
             KWPResult result;
 
@@ -921,7 +922,7 @@ namespace T7.KWP
                 {
                     result = KWPResult.Timeout;
                     LogDataString("Got wrong response on sendRequest in setSymbolRequest, len = " + reply.getLength().ToString("D2"));
-                    Console.WriteLine("Got wrong response on sendRequest in setSymbolRequest, len = " + reply.getLength().ToString("D2"));
+                    LogHelper.Log("Got wrong response on sendRequest in setSymbolRequest, len = " + reply.getLength().ToString("D2"));
                 }
             }
             if (result == KWPResult.OK)
@@ -931,7 +932,7 @@ namespace T7.KWP
             else
             {
                 LogDataString("setSymbolRequest timed out");
-                Console.WriteLine("setSymbolRequest timed out");
+                LogHelper.Log("setSymbolRequest timed out");
                 return false;
             }
         }
@@ -966,19 +967,19 @@ namespace T7.KWP
             {
                 requestString += b.ToString("X2") + " ";
             }
-            Console.WriteLine(requestString);
+            LogHelper.Log(requestString);
             // end dump to console
-            Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
+            LogHelper.Log("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
             KWPRequest t_request = new KWPRequest(0x3D, /*0x81, */symbolNumberAndData);
-            Console.WriteLine(t_request.ToString());
+            LogHelper.Log(t_request.ToString());
             result = sendRequest(t_request, out reply);
             if (result != KWPResult.OK)
             {
-                Console.WriteLine("Result != KWPResult.OK");
+                LogHelper.Log("Result != KWPResult.OK");
                 return false;
             }
-            Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
-            Console.WriteLine("Result-total = " + reply.ToString());
+            LogHelper.Log("Result = " + reply.getData()[0].ToString("X2"));
+            LogHelper.Log("Result-total = " + reply.ToString());
             if (reply.getData()[0] == 0x7D)
             {
                 return true;
@@ -1020,19 +1021,19 @@ namespace T7.KWP
             {
                 requestString += b.ToString("X2") + " ";
             }
-            Console.WriteLine(requestString);
+            LogHelper.Log(requestString);
             // end dump to console
-            Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
+            LogHelper.Log("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
             KWPRequest t_request = new KWPRequest(0x3D, 0x80, symbolNumberAndData);
-            Console.WriteLine(t_request.ToString());
+            LogHelper.Log(t_request.ToString());
             result = sendRequest(t_request, out reply);
             if (result != KWPResult.OK)
             {
-                Console.WriteLine("Result != KWPResult.OK");
+                LogHelper.Log("Result != KWPResult.OK");
                 return false;
             }
-            Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
-            Console.WriteLine("Resulttotal = " + reply.ToString());
+            LogHelper.Log("Result = " + reply.getData()[0].ToString("X2"));
+            LogHelper.Log("Resulttotal = " + reply.ToString());
             if (reply.getData()[0] == 0x7D)
             {
                 return true;
@@ -1074,18 +1075,18 @@ namespace T7.KWP
             {
                 requestString += b.ToString("X2") + " ";
             }
-            Console.WriteLine(requestString);
+            LogHelper.Log(requestString);
             // end dump to console
-            Console.WriteLine("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
+            LogHelper.Log("SymbolNumberAndData length: " + symbolNumberAndData.Length.ToString("X8"));
             KWPRequest t_request = new KWPRequest(0x3D, 0x80, symbolNumberAndData);
-            Console.WriteLine(t_request.ToString());
+            LogHelper.Log(t_request.ToString());
             result = sendRequest(t_request, out reply);
             if (result != KWPResult.OK)
             {
-                Console.WriteLine("Result != KWPResult.OK");
+                LogHelper.Log("Result != KWPResult.OK");
                 return false;
             }
-            Console.WriteLine("Result = " + reply.getData()[0].ToString("X2"));
+            LogHelper.Log("Result = " + reply.getData()[0].ToString("X2"));
             if (reply.getData()[0] == 0x7D)
             {
                 return true;
@@ -1157,7 +1158,7 @@ namespace T7.KWP
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to enable logging");
+                LogHelper.Log("Failed to enable logging");
             }*/
             
         }
@@ -1185,7 +1186,7 @@ namespace T7.KWP
             a_reply = new KWPReply();
             //<GS-11012010> was allemaal 1000
             int keepAliveTimeout = 1000;
-            //Console.WriteLine("Checking KWP device open");
+            //LogHelper.Log("Checking KWP device open");
             if (!m_kwpDevice.isOpen())
                 return KWPResult.DeviceNotConnected;
 
@@ -1212,7 +1213,7 @@ namespace T7.KWP
                 else
                 {
                     LogDataString("Timeout in KWPHandler::sendRequest: " + result.ToString() + " " + retry.ToString());
-                    Console.WriteLine("Timeout in KWPHandler::sendRequest: " + result.ToString() + " " + retry.ToString());
+                    LogHelper.Log("Timeout in KWPHandler::sendRequest: " + result.ToString() + " " + retry.ToString());
                 }
             }
             m_requestMutex.ReleaseMutex();
@@ -1236,7 +1237,7 @@ namespace T7.KWP
             a_reply = new KWPReply();
             //<GS-11012010> was allemaal 1000
             int keepAliveTimeout = 1000;
-            //Console.WriteLine("Checking KWP device open");
+            //LogHelper.Log("Checking KWP device open");
             if (!m_kwpDevice.isOpen())
                 return KWPResult.DeviceNotConnected;
 

@@ -212,7 +212,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
 
@@ -225,7 +225,7 @@ namespace T7
             /*if (repositoryItemLookUpEdit1 is LookUpEdit)
             {
                 LookUpEdit lue = (LookUpEdit)repositoryItemLookUpEdit1;
-                Console.WriteLine("Changed to: " + lue.EditValue.ToString());
+                LogHelper.Log("Changed to: " + lue.EditValue.ToString());
             }*/
         }
 
@@ -256,7 +256,7 @@ namespace T7
                 e.Valid = false;
                 return;
             }*/
-            //Console.WriteLine(sender.ToString());
+            //LogHelper.Log(sender.ToString());
             if (gridView1.FocusedColumn.Name == gcSIDSymbol.Name)
             {
                 /*
@@ -472,7 +472,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -531,7 +531,7 @@ namespace T7
                                     }
                                     else
                                     {
-                                        //Console.WriteLine("Ori address = 0 " + sh.Symbol + " " + sh.T7Symbol);
+                                        //LogHelper.Log("Ori address = 0 " + sh.Symbol + " " + sh.T7Symbol);
                                     }
                                     if (sh.T7Symbol == string.Empty)
                                     {
@@ -561,7 +561,7 @@ namespace T7
                                 }
                                 catch (Exception E)
                                 {
-                                    Console.WriteLine(E.Message);
+                                    LogHelper.Log(E.Message);
                                 }
 
                             }
@@ -573,7 +573,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 

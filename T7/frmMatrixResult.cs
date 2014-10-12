@@ -9,7 +9,7 @@ using DevExpress.XtraEditors;
 using Nevron.Chart;
 using Nevron.Chart.WinForm;
 using Nevron.GraphicsCore;
-//using Trionic5Controls;
+using CommonSuite;
 
 namespace T7
 {
@@ -92,7 +92,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
             return retval;
@@ -125,7 +125,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to convert to integer value: " + value.ToString());
+                        LogHelper.Log("Failed to convert to integer value: " + value.ToString());
                     }
                     byte b1 = 0;
                     byte b2 = 0;
@@ -136,7 +136,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to convert to byte value + " + ivalue.ToString());
+                        LogHelper.Log("Failed to convert to byte value + " + ivalue.ToString());
                     }
                     
                     m_map_content[idx++] = b1;
@@ -194,7 +194,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to convert to integer value: " + value.ToString());
+                        LogHelper.Log("Failed to convert to integer value: " + value.ToString());
                     }
                     byte b1 = 0;
                     byte b2 = 0;
@@ -205,7 +205,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to convert to byte value + " + ivalue.ToString());
+                        LogHelper.Log("Failed to convert to byte value + " + ivalue.ToString());
                     }
 
                     m_map_content[idx++] = b1;
@@ -279,7 +279,7 @@ namespace T7
                         }
                         catch (Exception cE)
                         {
-                            Console.WriteLine(cE.Message);
+                            LogHelper.Log(cE.Message);
                         }
                     }
                     scaleConfiguratorX.Labels.Add(yvalue);
@@ -305,7 +305,7 @@ namespace T7
                         }
                         catch (Exception cE)
                         {
-                            Console.WriteLine(cE.Message);
+                            LogHelper.Log(cE.Message);
                         }
                     }
                     scaleConfiguratorY.Labels.Add(xvalue);
@@ -359,7 +359,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to refresh mesh chart: " + E.Message);
+                LogHelper.Log("Failed to refresh mesh chart: " + E.Message);
             }
         }
 
@@ -539,7 +539,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
         }
@@ -562,13 +562,13 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
         private void frmMatrixResult_Resize(object sender, EventArgs e)
         {
-            Console.WriteLine(this.Height.ToString() + " " + this.Width.ToString());
+            LogHelper.Log(this.Height.ToString() + " " + this.Width.ToString());
         }
 
         private void xtraTabControl1_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)

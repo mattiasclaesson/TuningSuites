@@ -6,6 +6,7 @@ using System.IO.Ports;
 using System.Threading;
 using T7.CAN;
 using Microsoft.Win32;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -53,14 +54,14 @@ namespace T7.KWP
             string receiveString = string.Empty;
             
 
-            Console.WriteLine("readMessages started");
+            LogHelper.Log("readMessages started");
             while (true)
             {
                 lock (m_synchObject)
                 {
                     if (m_endThread)
                     {
-                        Console.WriteLine("readMessages ended");
+                        LogHelper.Log("readMessages ended");
                         return;
                     }
                 }
@@ -69,7 +70,7 @@ namespace T7.KWP
                     if (m_serialPort.BytesToRead > 0)
                     {
                         receiveString += m_serialPort.ReadExisting();
-                        //Console.WriteLine("BUF1: " + receiveString);
+                        //LogHelper.Log("BUF1: " + receiveString);
                         receiveString = receiveString.Replace(">", ""); // remove prompt characters... we don't need that stuff
                         receiveString = receiveString.Replace("NO DATA", ""); // remove prompt characters... we don't need that stuff
                         while (receiveString.StartsWith("\n") || receiveString.StartsWith("\r"))
@@ -87,7 +88,7 @@ namespace T7.KWP
                             {
                                 receiveString = receiveString.Substring(1, receiveString.Length - 1);
                             }
-                            Console.WriteLine("BUF2: " + receiveString);
+                            LogHelper.Log("BUF2: " + receiveString);
                             // is it a valid line
                             if (rxMessage.Length >= 6)
                             {
@@ -103,7 +104,7 @@ namespace T7.KWP
                                         if (b1 < 7)
                                         {
                                             canMessage.setCanData(b1, 0);
-                                            //Console.WriteLine("Byte 1: " + Convert.ToByte(rxMessage.Substring(4, 2), 16).ToString("X2"));
+                                            //LogHelper.Log("Byte 1: " + Convert.ToByte(rxMessage.Substring(4, 2), 16).ToString("X2"));
                                             if (b1 >= 1) canMessage.setCanData(Convert.ToByte(rxMessage.Substring(7, 2), 16), 1);
                                             if (b1 >= 2) canMessage.setCanData(Convert.ToByte(rxMessage.Substring(10, 2), 16), 2);
                                             if (b1 >= 3) canMessage.setCanData(Convert.ToByte(rxMessage.Substring(13, 2), 16), 3);
@@ -115,7 +116,7 @@ namespace T7.KWP
                                         else
                                         {
                                             canMessage.setCanData(b1, 0);
-                                            //Console.WriteLine("Byte 1: " + Convert.ToByte(rxMessage.Substring(4, 2), 16).ToString("X2"));
+                                            //LogHelper.Log("Byte 1: " + Convert.ToByte(rxMessage.Substring(4, 2), 16).ToString("X2"));
                                             canMessage.setCanData(Convert.ToByte(rxMessage.Substring(7, 2), 16), 1);
                                             canMessage.setCanData(Convert.ToByte(rxMessage.Substring(10, 2), 16), 2);
                                             canMessage.setCanData(Convert.ToByte(rxMessage.Substring(13, 2), 16), 3);
@@ -128,7 +129,7 @@ namespace T7.KWP
                                         lock (m_listeners)
                                         {
                                             AddToCanTrace("RX: " + canMessage.getData().ToString("X16"));
-                                            //Console.WriteLine("MSG: " + rxMessage);
+                                            //LogHelper.Log("MSG: " + rxMessage);
                                             foreach (ICANListener listener in m_listeners)
                                             {
                                                 listener.handleMessage(canMessage);
@@ -139,7 +140,7 @@ namespace T7.KWP
                                 }
                                 catch (Exception)
                                 {
-                                    Console.WriteLine("MSG: " + rxMessage);
+                                    LogHelper.Log("MSG: " + rxMessage);
                                 }
                             }
                         }
@@ -157,21 +158,21 @@ namespace T7.KWP
             /*int readResult = 0;
             LAWICEL.CANMsg r_canMsg = new LAWICEL.CANMsg();
             CANMessage canMessage = new CANMessage();
-            Console.WriteLine("readMessages started");
+            LogHelper.Log("readMessages started");
             while (true)
             {
                 lock (m_synchObject)
                 {
                     if (m_endThread)
                     {
-                        Console.WriteLine("readMessages ended");
+                        LogHelper.Log("readMessages ended");
                         return;
                     }
                 }
                 readResult = LAWICEL.canusb_Read(m_deviceHandle, out r_canMsg);
                 if (readResult == LAWICEL.ERROR_CANUSB_OK)
                 {
-                    //Console.WriteLine(r_canMsg.id.ToString("X3") + " " + r_canMsg.data.ToString("X8"));
+                    //LogHelper.Log(r_canMsg.id.ToString("X3") + " " + r_canMsg.data.ToString("X8"));
                     if (MessageContainsInformationForRealtime(r_canMsg.id))
                     {
                         canMessage.setID(r_canMsg.id);
@@ -223,7 +224,7 @@ namespace T7.KWP
                 // 
                 m_serialPort.Write("ATSH " + _senderID.ToString("X3") + "\r");    //Set header to XX = T7 ECU
                 string answer = m_serialPort.ReadTo(">");
-                Console.WriteLine("ATSH " + _senderID.ToString("X3") + " response: " + answer);
+                LogHelper.Log("ATSH " + _senderID.ToString("X3") + " response: " + answer);
 
             }
 
@@ -244,7 +245,7 @@ namespace T7.KWP
             {
 
                 m_serialPort.Write(sendString);
-                Console.WriteLine("TX: " + sendString);
+                LogHelper.Log("TX: " + sendString);
             }
 
             // bitrate = 38400bps -> 3840 bytes per second
@@ -323,7 +324,7 @@ namespace T7.KWP
             if (m_forcedComport != string.Empty && m_forcedComport != "Autodetect")
             {
                 // only check this comport
-                Console.WriteLine("Opening com: " + m_forcedComport);
+                LogHelper.Log("Opening com: " + m_forcedComport);
 
                 readException = false;
                 if (m_serialPort.IsOpen)
@@ -365,36 +366,36 @@ namespace T7.KWP
 
                 m_serialPort.Write("ATI\r");    //Print version
                 string answer = m_serialPort.ReadTo(">");
-                Console.WriteLine("Version ELM: " + answer);
+                LogHelper.Log("Version ELM: " + answer);
                 if (answer.StartsWith("ELM327 v1.2") || answer.StartsWith("ELM327 v1.3"))
                 {
                     CastInformationEvent("Connected on " + m_forcedComport);
 
                     m_serialPort.Write("ATSP6\r");    //Set protocol type ISO 15765-4 CAN (11 bit ID, 500kb/s)
                     answer = m_serialPort.ReadTo(">");
-                    Console.WriteLine("Protocol select response: " + answer);
+                    LogHelper.Log("Protocol select response: " + answer);
                     if (answer.StartsWith("OK"))
                     {
                         m_deviceIsOpen = true;
 
                         m_serialPort.Write("ATH1\r");    //ATH1 = Headers ON, so we can see who's talking
                         answer = m_serialPort.ReadTo(">");
-                        Console.WriteLine("ATH1 response: " + answer);
+                        LogHelper.Log("ATH1 response: " + answer);
                         string idString = "ATSH " + _senderID.ToString("X3");
                         m_serialPort.Write(idString + "\r");    //Set header to XX = T7 ECU
                         answer = m_serialPort.ReadTo(">");
-                        Console.WriteLine(idString + answer);
+                        LogHelper.Log(idString + answer);
                         //m_serialPort.Write("ATAL\r");    //Allow messages with length > 7
-                        //Console.WriteLine("ATAL response: " + answer);
+                        //LogHelper.Log("ATAL response: " + answer);
                         //answer = m_serialPort.ReadTo(">");
 
                         m_serialPort.Write("ATCAF0\r");   //Can formatting OFF (don't automatically send repsonse codes, we will do this!)
-                        Console.WriteLine("ATCAF0:" + m_serialPort.ReadTo(">"));
+                        LogHelper.Log("ATCAF0:" + m_serialPort.ReadTo(">"));
                         //m_serialPort.Write("ATR0\r");     //Don't wait for response from the ECU
                         //m_serialPort.ReadTo(">");
                         if (m_readThread != null)
                         {
-                            Console.WriteLine(m_readThread.ThreadState.ToString());
+                            LogHelper.Log(m_readThread.ThreadState.ToString());
                         }
                         m_readThread = new Thread(readMessages);
                         m_endThread = false; // reset for next tries :)
@@ -413,7 +414,7 @@ namespace T7.KWP
                     m_serialPort.ReadTimeout = 500;
 
                     CastInformationEvent("Scanning " + port);
-                    Console.WriteLine("Trying port: " + port);
+                    LogHelper.Log("Trying port: " + port);
                     if (!port.StartsWith("COM")) continue;
                     readException = false;
                     if (m_serialPort.IsOpen)
@@ -457,7 +458,7 @@ namespace T7.KWP
 
                     m_serialPort.Write("ATI\r");    //Print version
                     string answer = m_serialPort.ReadTo(">");
-                    Console.WriteLine("Version ELM: " + answer);
+                    LogHelper.Log("Version ELM: " + answer);
                     if (answer.StartsWith("ELM327 v1.2") || answer.StartsWith("ELM327 v1.3"))
                     {
                         m_serialPort.ReadTimeout = 3000;
@@ -469,28 +470,28 @@ namespace T7.KWP
                         // save COMPORT number in registry to use this as preffered comport the next time
                         m_serialPort.Write("ATSP6\r");    //Set protocol type ISO 15765-4 CAR (11 bit ID, 500kb/s)
                         answer = m_serialPort.ReadTo(">");
-                        Console.WriteLine("Protocol select response: " + answer);
+                        LogHelper.Log("Protocol select response: " + answer);
                         if (answer.StartsWith("OK"))
                         {
                             m_deviceIsOpen = true;
 
                             m_serialPort.Write("ATH1\r");    //ATH1 = Headers ON, so we can see who's talking
                             answer = m_serialPort.ReadTo(">");
-                            Console.WriteLine("ATH1 response: " + answer);
+                            LogHelper.Log("ATH1 response: " + answer);
                             m_serialPort.Write("ATSH 7E0\r");    //Set header to 7E0 = ECU
                             answer = m_serialPort.ReadTo(">");
-                            Console.WriteLine("ATSH 7E0 response: " + answer);
+                            LogHelper.Log("ATSH 7E0 response: " + answer);
                             //m_serialPort.Write("ATAL\r");    //Allow messages with length > 7
-                            //Console.WriteLine("ATAL response: " + answer);
+                            //LogHelper.Log("ATAL response: " + answer);
                             //answer = m_serialPort.ReadTo(">");
 
                             m_serialPort.Write("ATCAF0\r");   //Can formatting OFF (don't automatically send repsonse codes, we will do this!)
-                            Console.WriteLine("ATCAF0:" + m_serialPort.ReadTo(">"));
+                            LogHelper.Log("ATCAF0:" + m_serialPort.ReadTo(">"));
                             //m_serialPort.Write("ATR0\r");     //Don't wait for response from the ECU
                             //m_serialPort.ReadTo(">");
                             if (m_readThread != null)
                             {
-                                Console.WriteLine(m_readThread.ThreadState.ToString());
+                                LogHelper.Log(m_readThread.ThreadState.ToString());
                             }
                             m_readThread = new Thread(readMessages);
                             m_endThread = false; // reset for next tries :)

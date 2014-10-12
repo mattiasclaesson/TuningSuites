@@ -407,11 +407,11 @@ namespace T7
                 }
 
                 nChartControl1.Refresh();
-                Console.WriteLine("Chartcontrol refreshed");
+                LogHelper.Log("Chartcontrol refreshed");
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to refresh mesh chart: " + E.Message);
+                LogHelper.Log("Failed to refresh mesh chart: " + E.Message);
             }
         }
 
@@ -489,7 +489,7 @@ namespace T7
                                 }
                                 surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                             }
-                            //Console.WriteLine(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
+                            //LogHelper.Log(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
                         }
                         else
                         {
@@ -507,13 +507,13 @@ namespace T7
                                 }
                                 surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                             }
-                            //Console.WriteLine(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
+                            //LogHelper.Log(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
 
                         }
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to fill data for original map: " + E.Message);
+                        LogHelper.Log("Failed to fill data for original map: " + E.Message);
                     }
                 }
             }
@@ -550,7 +550,7 @@ namespace T7
                             }
                             surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                         }
-                        //Console.WriteLine(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
+                        //LogHelper.Log(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
 
                     }
                     else
@@ -1020,7 +1020,7 @@ namespace T7
                                     }
                                     catch (Exception E)
                                     {
-                                        Console.WriteLine("Failed to convert to ascii: " + E.Message);
+                                        LogHelper.Log("Failed to convert to ascii: " + E.Message);
                                         objarr.SetValue(Convert.ToChar(0x20), j);
                                     }
                                 }
@@ -1365,7 +1365,7 @@ namespace T7
                 title.TextStyle.FillStyle = new NColorFillStyle(Color.FromArgb(68, 90, 108));
 
                 // setup chart
-                Console.WriteLine("Number of charts: " + nChartControl1.Charts.Count.ToString());
+                LogHelper.Log("Number of charts: " + nChartControl1.Charts.Count.ToString());
 
 
 
@@ -1706,7 +1706,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("value: " + (int)trackBarControl1.Value + " " + E.Message);
+                LogHelper.Log("value: " + (int)trackBarControl1.Value + " " + E.Message);
             }
 
             int numberofrows = data.Length / m_TableWidth;
@@ -1810,11 +1810,11 @@ namespace T7
                     }
                     catch (Exception cE)
                     {
-                        Console.WriteLine(cE.Message);
+                        LogHelper.Log(cE.Message);
                     }
                 }
                 scaleConfiguratorX.Labels.Add(yvalue);
-                Console.WriteLine("Added axis label: " + yvalue);
+                LogHelper.Log("Added axis label: " + yvalue);
 
             }*/
             line.ClearDataPoints();
@@ -1823,7 +1823,7 @@ namespace T7
                 //<GS-09032010> fill second 2d chart here
                 //series.Values.Add(dr["Y"]);
                 line.AddDataPoint(new NDataPoint(Convert.ToDouble(dr["X"]), Convert.ToDouble(dr["Y"])));
-                //Console.WriteLine("Added value: " + dr["Y"].ToString());
+                //LogHelper.Log("Added value: " + dr["Y"].ToString());
             }
             nChartControl2.Refresh();
 
@@ -1963,7 +1963,7 @@ namespace T7
                                         e.DisplayText = dispvalue.ToString("F1") + "\u00b0";
                                         /*if (dispvalue < 0)
                                         {
-                                            Console.WriteLine("Negative value:  " + cellvalue.ToString());
+                                            LogHelper.Log("Negative value:  " + cellvalue.ToString());
 
                                         }*/
                                     }
@@ -2026,7 +2026,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
 
                         }
@@ -2043,7 +2043,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -2135,7 +2135,7 @@ namespace T7
                                         }
                                         /*if (cellvalue < 0)
                                         {
-                                            Console.WriteLine("value < 0");
+                                            LogHelper.Log("value < 0");
                                         }*/
                                         bstr1 = cellvalue.ToString("X8").Substring(4, 2);
                                         bstr2 = cellvalue.ToString("X8").Substring(6, 2);
@@ -2216,7 +2216,7 @@ namespace T7
                                             }
                                             catch (Exception cE)
                                             {
-                                                Console.WriteLine(cE.Message);
+                                                LogHelper.Log(cE.Message);
                                             }
 
                                         }
@@ -2233,7 +2233,7 @@ namespace T7
                                             }
                                             catch (Exception sE)
                                             {
-                                                Console.WriteLine(sE.Message);
+                                                LogHelper.Log(sE.Message);
                                             }
                                         }
                                     }
@@ -2276,7 +2276,7 @@ namespace T7
             }
             else
             {
-                Console.WriteLine("onAxisLock not registered");
+                LogHelper.Log("onAxisLock not registered");
             }
         }
 
@@ -2289,7 +2289,7 @@ namespace T7
             }
             else
             {
-                Console.WriteLine("onSelectionChanged not registered!");
+                LogHelper.Log("onSelectionChanged not registered!");
             }
 
         }
@@ -2305,7 +2305,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -2338,7 +2338,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -2356,7 +2356,7 @@ namespace T7
             }
             else
             {
-                Console.WriteLine("onSymbolSave not registered!");
+                LogHelper.Log("onSymbolSave not registered!");
             }
 
         }
@@ -2373,7 +2373,7 @@ namespace T7
             }
             else
             {
-                Console.WriteLine("onSplitterMoved not registered!");
+                LogHelper.Log("onSplitterMoved not registered!");
             }
 
         }
@@ -2739,7 +2739,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
         }
@@ -2772,7 +2772,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -2854,7 +2854,7 @@ namespace T7
            /* object[] objs = chartControl1.HitTest(e.X, e.Y);
             foreach (object o in objs)
             {
-                Console.WriteLine("Double clicked: " + o.ToString());
+                LogHelper.Log("Double clicked: " + o.ToString());
             }*/
         }
 
@@ -2965,7 +2965,7 @@ namespace T7
                 //surfaceGraphViewer1.Map_content = GetDataFromGridView(false);
                 //surfaceGraphViewer1.IsUpsideDown = false;
                 //surfaceGraphViewer1.NormalizeData();
-                Console.WriteLine("RefreshMeshGraph on tabindex changed");
+                LogHelper.Log("RefreshMeshGraph on tabindex changed");
 
                 RefreshMeshGraph();
             }
@@ -3041,13 +3041,13 @@ namespace T7
                     double deltavalue = delta_y * (yaxissize / yaxissizepxls);
                     //deltavalue -= correction_offset;
                     //deltavalue *= 1 / correction_factor;
-                    //Console.WriteLine("Delta: " + deltavalue.ToString());
+                    //LogHelper.Log("Delta: " + deltavalue.ToString());
                     if (_sp_dragging != null)
                     {
                         double curval = Convert.ToDouble(_sp_dragging.Values.GetValue(0));
                         double newvalue = (curval - deltavalue);
                         // if (newvalue < 0) newvalue = 0;
-                        //Console.WriteLine("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
+                        //LogHelper.Log("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
                         _sp_dragging.Values.SetValue(newvalue, 0);
                         DataTable dt = (DataTable)chartControl1.DataSource;
                         foreach (DataRow dr in dt.Rows)
@@ -3057,7 +3057,7 @@ namespace T7
                                 dr[1] = newvalue;
                                 // zet ook de betreffende waarde in de tabel!
                                 SetDataValueInMap(_sp_dragging.Argument, newvalue);
-                                //Console.WriteLine("Written: " + _sp_dragging.Argument + " : " + newvalue);
+                                //LogHelper.Log("Written: " + _sp_dragging.Argument + " : " + newvalue);
                                 //sp.Values.SetValue(curval - 1, 0);
                                 //chartControl1.Invalidate();
                             }
@@ -3395,7 +3395,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -3437,7 +3437,7 @@ namespace T7
                     if (Clipboard.ContainsText())
                     {
                         string serialized = Clipboard.GetText();
-                        //   Console.WriteLine(serialized);
+                        //   LogHelper.Log(serialized);
                         int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                         ViewType vtclip = (ViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
@@ -3490,7 +3490,7 @@ namespace T7
                                     }
                                     catch (Exception E)
                                     {
-                                        Console.WriteLine(E.Message);
+                                        LogHelper.Log(E.Message);
                                     }
                                 }
                             }
@@ -3500,7 +3500,7 @@ namespace T7
                 }
                 catch (Exception pasteE)
                 {
-                    Console.WriteLine(pasteE.Message);
+                    LogHelper.Log(pasteE.Message);
                 }
             }
         }
@@ -3512,7 +3512,7 @@ namespace T7
                 string serialized = Clipboard.GetText();
                 try
                 {
-                    //   Console.WriteLine(serialized);
+                    //   LogHelper.Log(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                     ViewType vtclip = (ViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
@@ -3561,7 +3561,7 @@ namespace T7
                                 }
                                 catch (Exception E)
                                 {
-                                    Console.WriteLine(E.Message);
+                                    LogHelper.Log(E.Message);
                                 }
                             }
                         }
@@ -3570,7 +3570,7 @@ namespace T7
                 }
                 catch (Exception pasteE)
                 {
-                    Console.WriteLine(pasteE.Message);
+                    LogHelper.Log(pasteE.Message);
                 }
             }
         }
@@ -3677,7 +3677,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    Console.WriteLine(cE.Message);
+                                    LogHelper.Log(cE.Message);
                                 }
                             }
                             break;
@@ -3756,7 +3756,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    Console.WriteLine(cE.Message);
+                                    LogHelper.Log(cE.Message);
                                 }
 
                             }
@@ -3846,7 +3846,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    Console.WriteLine(cE.Message);
+                                    LogHelper.Log(cE.Message);
                                 }
                             }
                             break;
@@ -3920,7 +3920,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    Console.WriteLine(cE.Message);
+                                    LogHelper.Log(cE.Message);
                                 }
                             }
                             break;
@@ -3931,7 +3931,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -4164,7 +4164,7 @@ namespace T7
             if (m_split_dragging)
             {
                 m_split_dragging = false;
-                Console.WriteLine("Splitter moved: " + splitContainer1.Panel1.Height.ToString() + ":" + splitContainer1.Panel2.Height.ToString() + splitContainer1.Panel1Collapsed.ToString() + ":" + splitContainer1.Panel2Collapsed.ToString());
+                LogHelper.Log("Splitter moved: " + splitContainer1.Panel1.Height.ToString() + ":" + splitContainer1.Panel2.Height.ToString() + splitContainer1.Panel1Collapsed.ToString() + ":" + splitContainer1.Panel2Collapsed.ToString());
                 CastSplitterMovedEvent();
             }
         }
@@ -4195,7 +4195,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -4209,7 +4209,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
         }
@@ -4227,7 +4227,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("SetSurfaceGraphViewEx:" + E.Message);
+                LogHelper.Log("SetSurfaceGraphViewEx:" + E.Message);
             }
 
         }
@@ -4297,7 +4297,7 @@ namespace T7
                         {
                             if (gridView1.ActiveEditor.EditValue.ToString() != gridView1.ActiveEditor.OldEditValue.ToString())
                             {
-                                Console.WriteLine(gridView1.ActiveEditor.IsModified.ToString());
+                                LogHelper.Log(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
 /*                                if(value < 0)
@@ -4361,7 +4361,7 @@ namespace T7
                         {
                             if (gridView1.ActiveEditor.EditValue.ToString() != gridView1.ActiveEditor.OldEditValue.ToString())
                             {
-                                Console.WriteLine(gridView1.ActiveEditor.IsModified.ToString());
+                                LogHelper.Log(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
                             }
@@ -4428,7 +4428,7 @@ namespace T7
             if (m_viewtype == ViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
-                Console.WriteLine("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
+                LogHelper.Log("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
             }
         }
 
@@ -4438,7 +4438,7 @@ namespace T7
 
         private void gridView1_HiddenEditor(object sender, EventArgs e)
         {
-            Console.WriteLine("Hidden editor with value: " + gridView1.GetFocusedRowCellDisplayText(gridView1.FocusedColumn));
+            LogHelper.Log("Hidden editor with value: " + gridView1.GetFocusedRowCellDisplayText(gridView1.FocusedColumn));
         }
 
         private void MapViewer_VisibleChanged(object sender, EventArgs e)
@@ -4489,7 +4489,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
           //  gridView1.EndUpdate();*/
 
@@ -4535,7 +4535,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             //  gridView1.EndUpdate();
         }
@@ -4709,7 +4709,7 @@ namespace T7
                             {
                                 valy2 = Convert.ToDouble(gridView1.GetRowCellValue(tely + min_row, gridView1.Columns[telx + min_column]));
                             }
-                            //Console.WriteLine("valx1 = " + valx1.ToString() + " valx2 = " + valx2.ToString() + " valy1 = " + valy1.ToString() + " valy2 = " + valy2.ToString());
+                            //LogHelper.Log("valx1 = " + valx1.ToString() + " valx2 = " + valx2.ToString() + " valy1 = " + valy1.ToString() + " valy2 = " + valy2.ToString());
                             // x as 
                             double valuex = (valx2 + valx1) / 2;
                             double valuey = (valy2 + valy1) / 2;
@@ -4754,7 +4754,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             timer5.Enabled = true;
 
@@ -4806,7 +4806,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to select cell: " + E.Message);
+                        LogHelper.Log("Failed to select cell: " + E.Message);
                     }
 
                 }

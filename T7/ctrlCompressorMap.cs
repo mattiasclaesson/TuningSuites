@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using CommonSuite;
 
 namespace T7
 {
@@ -302,7 +303,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
 
                     double suckgrammin = rpm * efficiency * liters * 0.5 * 1.2041;
@@ -320,7 +321,7 @@ namespace T7
                     double pressureRatioAtmNom = ((pAtmNom - intakeLoss) * volAtmNom) / pAtmNom;
                     double pressureRatioAtmLow = ((pAtmLow - intakeLoss) * volAtmLow) / pAtmLow;
                     double pressureRatioAtmHigh = ((pAtmHigh - intakeLoss) * volAtmHigh) / pAtmHigh;
-                    Console.WriteLine("Rpm: " + rpm.ToString() + " mReq: " + mReq.ToString() + " suckpoundsmin: " + suckpoundsmin.ToString() + " mReqpoundsmin: " + mReqpoundsmin.ToString());
+                    LogHelper.Log("Rpm: " + rpm.ToString() + " mReq: " + mReq.ToString() + " suckpoundsmin: " + suckpoundsmin.ToString() + " mReqpoundsmin: " + mReqpoundsmin.ToString());
                     double temperature = 20;
 
                     try
@@ -329,7 +330,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                     //temperature = ConvertToFahrenheit(temperature);
 
@@ -409,7 +410,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                     double temperature = 20;
 
@@ -419,7 +420,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                     temperature = ConvertToFahrenheit(temperature);
                     temperature = 460 + temperature; // to rankin
@@ -445,7 +446,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -654,7 +655,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 

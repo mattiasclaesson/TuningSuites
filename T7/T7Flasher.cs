@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
 using T7.KWP;
 using System.Threading;
+using CommonSuite;
 
 namespace T7.Flasher
 {
@@ -97,7 +97,7 @@ namespace T7.Flasher
         */
         protected void AddToCanTrace(string line)
         {
-            Console.WriteLine(line);
+            LogHelper.Log(line);
             if (!this.m_EnableCanLog)
             {
                 return;
@@ -412,7 +412,7 @@ namespace T7.Flasher
                 {
                     int nrOfBytes = /*512*/64;
                     byte[] data;
-                    Console.WriteLine("Reading: " + m_length.ToString() + " bytes");
+                    LogHelper.Log("Reading: " + m_length.ToString() + " bytes");
                     if (File.Exists(m_fileName))
                         File.Delete(m_fileName);
                     FileStream fileStream = File.Create(m_fileName, 1024);
@@ -438,12 +438,12 @@ namespace T7.Flasher
                         {
                             m_nrOfRetries++;
                         }
-                        Console.WriteLine("Writing data to file: " + m_length.ToString() + " bytes");
+                        LogHelper.Log("Writing data to file: " + m_length.ToString() + " bytes");
                         fileStream.Write(data, 0, nrOfBytes);
                         m_nrOfBytesRead += nrOfBytes;
                     }
                     fileStream.Close();
-                    Console.WriteLine("Done reading");
+                    LogHelper.Log("Done reading");
                     m_kwpHandler.sendDataTransferExitRequest();
                 }
                 else if (m_command == FlashCommand.ReadSymbolMapCommand)

@@ -61,7 +61,7 @@ namespace T7
                 if (o is SymbolHelper)
                 {
                     SymbolHelper sh = (SymbolHelper)o;
-                    Console.WriteLine("Dropped: " + sh.Varname);
+                    LogHelper.Log("Dropped: " + sh.Varname);
                     AddSymbolToTuningPackage(sh);
                 }
             }

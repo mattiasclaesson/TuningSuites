@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CommonSuite;
 
 namespace T7
 {
@@ -219,7 +220,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return true;
         }
@@ -529,7 +530,7 @@ namespace T7
             writeFieldIncludingDetails(fs, fhf);
             //fs.Position = writePos;
             fs.Close();
-            Console.WriteLine("New header created");
+            LogHelper.Log("New header created");
 
         }
 
@@ -545,7 +546,7 @@ namespace T7
                 fs.WriteByte((byte)0xFF);
             }
             fs.Close();
-            Console.WriteLine("Footer cleared");
+            LogHelper.Log("Footer cleared");
         }
 
 
@@ -672,7 +673,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine("Failed to read header field: " + E.Message);
+                    LogHelper.Log("Failed to read header field: " + E.Message);
                 }
 
             }

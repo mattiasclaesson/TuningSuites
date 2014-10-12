@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO.Ports;
 using System.Threading;
 using T7.CAN;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -279,7 +279,7 @@ namespace T7.KWP
                                 {
                                     string elmVersion = m_serialPort.ReadExisting();
                                     //AddToSerialTrace("elmVersion:" + elmVersion);
-                                    Console.WriteLine("elmVersion: " + elmVersion);
+                                    LogHelper.Log("elmVersion: " + elmVersion);
                                     if (elmVersion.Length > 5)
                                     {
                                         gotVersion = true;

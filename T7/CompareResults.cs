@@ -203,7 +203,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             ctrl.EndUpdate();
         }

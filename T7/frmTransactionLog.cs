@@ -77,7 +77,7 @@ namespace CommonSuite
                 int grouplevel = gridView1.GetRowLevel((int)selectedrows.GetValue(0));
                 if (grouplevel >= gridView1.GroupCount)
                 {
-                    //Console.WriteLine("In row");
+                    //LogHelper.Log("In row");
                     if (gridView1.GetFocusedRow() is TransactionEntry)
                     {
                         TransactionEntry sh = (TransactionEntry)gridView1.GetFocusedRow();
@@ -127,7 +127,7 @@ namespace CommonSuite
             int grouplevel = gridView1.GetRowLevel((int)selectedrows.GetValue(0));
             if (grouplevel >= gridView1.GroupCount)
             {
-                //Console.WriteLine("In row");
+                //LogHelper.Log("In row");
                 if (gridView1.GetFocusedRow() is TransactionEntry)
                 {
                     TransactionEntry sh = (TransactionEntry)gridView1.GetFocusedRow();
@@ -148,7 +148,7 @@ namespace CommonSuite
             int grouplevel = gridView1.GetRowLevel((int)selectedrows.GetValue(0));
             if (grouplevel >= gridView1.GroupCount)
             {
-                //Console.WriteLine("In row");
+                //LogHelper.Log("In row");
                 if (gridView1.GetFocusedRow() is TransactionEntry)
                 {
                     TransactionEntry sh = (TransactionEntry)gridView1.GetFocusedRow();
@@ -250,7 +250,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }*/
 
         }

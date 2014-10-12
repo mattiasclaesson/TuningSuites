@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -24,7 +25,7 @@ namespace T7.KWP
             m_reply = a_reply;
             if (m_reply == null)
             {
-                Console.WriteLine("Reply was NULL");
+                LogHelper.Log("Reply was NULL");
             }
             m_nrOfPid = a_nrOfPid;
         }

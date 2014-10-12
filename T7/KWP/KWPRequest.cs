@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -86,7 +87,7 @@ namespace T7.KWP
             byte length = (byte)(2 + a_data.Length);
             if(a_mode == 0x3D && a_pid == 0x80)
             {
-                Console.WriteLine("KWPRequest length: " + length.ToString("X8"));
+                LogHelper.Log("KWPRequest length: " + length.ToString("X8"));
             }
             m_request = new byte[length + 1];
             //Set length of request

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using T7.CAN;
-using System.IO;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -189,7 +188,7 @@ namespace T7.KWP
         /// returned.</returns>
         override public OpenResult open()
         {
-            Console.WriteLine("******* CANUSB: Opening CANUSB");
+            LogHelper.Log("******* CANUSB: Opening CANUSB");
             LAWICEL.CANMsg msg = new LAWICEL.CANMsg();
             //Check if I bus is connected
             if (m_deviceHandle != 0)
@@ -199,7 +198,7 @@ namespace T7.KWP
             Thread.Sleep(200);
             if (!this.UseOnlyPBus)
             {
-                Console.WriteLine("Getting handle");
+                LogHelper.Log("Getting handle");
                 m_deviceHandle = LAWICEL.canusb_Open(IntPtr.Zero,
                     "0xcb:0x9a",                        // Slow
                     LAWICEL.CANUSB_ACCEPTANCE_CODE_ALL,
@@ -225,7 +224,7 @@ namespace T7.KWP
                 close();
             }
 
-            Console.WriteLine("No I bus, checking P bus");
+            LogHelper.Log("No I bus, checking P bus");
             //I bus wasn't connected.
             //Check if P bus is connected
             m_deviceHandle = LAWICEL.canusb_Open(IntPtr.Zero,
@@ -233,16 +232,16 @@ namespace T7.KWP
             LAWICEL.CANUSB_ACCEPTANCE_CODE_ALL,
             LAWICEL.CANUSB_ACCEPTANCE_MASK_ALL,
             LAWICEL.CANUSB_FLAG_TIMESTAMP);
-            Console.WriteLine("Checking box presence");
+            LogHelper.Log("Checking box presence");
 
             if (boxIsThere())
             {
-                Console.WriteLine("Box is there, starting thread");
+                LogHelper.Log("Box is there, starting thread");
                 if (m_readThread.ThreadState == ThreadState.Unstarted)
                     m_readThread.Start();
                 return OpenResult.OK;
             }
-            Console.WriteLine("Box not there");
+            LogHelper.Log("Box not there");
             close();
             return OpenResult.OpenError;
         }
@@ -253,7 +252,7 @@ namespace T7.KWP
         /// <returns>CloseResult.OK on success, otherwise CloseResult.CloseError.</returns>
         override public CloseResult close()
         {
-            Console.WriteLine("******* CANUSB: Closing CANUSB");
+            LogHelper.Log("******* CANUSB: Closing CANUSB");
 
             int res = 0;
             try
@@ -262,7 +261,7 @@ namespace T7.KWP
             }
             catch(DllNotFoundException e)
             {
-                Console.WriteLine("CANUSBDevice::close: " + e.Message);
+                LogHelper.Log("CANUSBDevice::close: " + e.Message);
                 return CloseResult.CloseError;
             }
 
@@ -373,7 +372,7 @@ namespace T7.KWP
                 readResult = LAWICEL.canusb_Read(m_deviceHandle, out r_canMsg);
                 if (readResult == LAWICEL.ERROR_CANUSB_OK)
                 {
-                    //Console.WriteLine("rx id: 0x" + r_canMsg.id.ToString("X4"));
+                    //LogHelper.Log("rx id: 0x" + r_canMsg.id.ToString("X4"));
                     if (r_canMsg.id != a_canID)
                     {
                         nrOfWait++;
@@ -496,19 +495,19 @@ namespace T7.KWP
         private bool boxIsThere()
         {
             LAWICEL.CANMsg msg = new LAWICEL.CANMsg();
-            Console.WriteLine("in Box is there");
+            LogHelper.Log("in Box is there");
             if (waitAnyMessage(2000, out msg) != 0)
             {
-                Console.WriteLine("A message was seen");
+                LogHelper.Log("A message was seen");
                 return true;
             }
             if (sendSessionRequest())
             {
-                Console.WriteLine("Session request success");
+                LogHelper.Log("Session request success");
 
                 return true;
             }
-            Console.WriteLine("Box not there");
+            LogHelper.Log("Box not there");
 
             return false;
         }
@@ -522,7 +521,7 @@ namespace T7.KWP
         /// <returns></returns>
         private bool sendSessionRequest()
         {
-            Console.WriteLine("Sending session request");
+            LogHelper.Log("Sending session request");
 
             CANMessage msg1 = new CANMessage(0x220, 0, 8);
             LAWICEL.CANMsg msg = new LAWICEL.CANMsg();
@@ -530,22 +529,22 @@ namespace T7.KWP
 
             if (!sendMessage(msg1))
             {
-                Console.WriteLine("Unable to send session request");
+                LogHelper.Log("Unable to send session request");
                 return false;
             }
             if (waitForMessage(0x238, 1000, out msg) == 0x238)
             {
-                Console.WriteLine("Message 0x238 seen");
+                LogHelper.Log("Message 0x238 seen");
                 //Ok, there seems to be a ECU somewhere out there.
                 //Now, sleep for 10 seconds to get a session timeout. This is needed for
                 //applications on higher level. Otherwise there will be no reply when the
                 //higher level application tries to start a session.
                 Thread.Sleep(10000); 
-                Console.WriteLine("sendSessionRequest: TRUE");
+                LogHelper.Log("sendSessionRequest: TRUE");
 
                 return true;
             }
-            Console.WriteLine("sendSessionRequest: FALSE");
+            LogHelper.Log("sendSessionRequest: FALSE");
             return false;
         }
 

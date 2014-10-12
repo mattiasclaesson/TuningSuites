@@ -30,7 +30,7 @@ namespace CommonSuite
 
         public void Dispose()
         {
-            Console.WriteLine("Disposed!");
+            LogHelper.Log("Disposed!");
             ClearMarkers();
             GC.SuppressFinalize(this);
         }

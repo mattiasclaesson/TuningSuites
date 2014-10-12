@@ -68,7 +68,7 @@ namespace T7.KWP
             {
                 /*if (_logData)
                 {
-                    Console.WriteLine("KWPListener: " + a_message.getID().ToString("X4") + " " + a_message.getData().ToString("X16"));
+                    LogHelper.Log("KWPListener: " + a_message.getID().ToString("X4") + " " + a_message.getData().ToString("X16"));
                 }*/
                 if (a_message.getID() == m_waitMsgID)
                 {

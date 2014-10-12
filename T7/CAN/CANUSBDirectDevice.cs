@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.IO;
 using System.IO.Ports;
 using T7.CAN;
 using Microsoft.Win32;
-//using System.Diagnostics;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -138,14 +137,14 @@ namespace T7.KWP
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }*/
         }
 
         void m_port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
 
-            //Console.WriteLine("data received");
+            //LogHelper.Log("data received");
             /*try
             {
                 lock (m_synchObject)
@@ -161,7 +160,7 @@ namespace T7.KWP
                 string line = string.Empty;
                 //m_port.Write("\r");
                 //m_port.Write("A\r"); // poll for all pending CAN messages
-                // Console.WriteLine("Polled for frames");
+                // LogHelper.Log("Polled for frames");
                 //Thread.Sleep(0);
                 bool endofFrames = false;
                 while (!endofFrames)
@@ -175,13 +174,13 @@ namespace T7.KWP
                             {
                                 if (line[0] == '\x07' || line[0] == '\r' || line[0] == 'A')
                                 {
-                                    //Console.WriteLine("End of messages");
+                                    //LogHelper.Log("End of messages");
                                     endofFrames = true;
                                 }
                                 else
                                 {
                                     //t00C8C6003E0000000000
-                                    //Console.WriteLine("line: " + line + " len: " + line.Length.ToString());
+                                    //LogHelper.Log("line: " + line + " len: " + line.Length.ToString());
                                     if (line.Length == 25)
                                     {
                                         r_canMsg = new LAWICEL.CANMsg();
@@ -222,7 +221,7 @@ namespace T7.KWP
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("Failed to read frames from CANbus: " + E.Message);
+                            LogHelper.Log("Failed to read frames from CANbus: " + E.Message);
                         }
                     }
                     //Thread.Sleep(0);
@@ -252,12 +251,12 @@ namespace T7.KWP
 
         void m_port_PinChanged(object sender, SerialPinChangedEventArgs e)
         {
-            Console.WriteLine("pin changed");
+            LogHelper.Log("pin changed");
         }
 
         void m_port_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {
-            Console.WriteLine("port error");
+            LogHelper.Log("port error");
         }
 
         /// <summary>
@@ -357,7 +356,7 @@ namespace T7.KWP
                     //string line = string.Empty;
                     //m_port.Write("\r");
                     //m_port.Write("A\r"); // poll for all pending CAN messages
-                   // Console.WriteLine("Polled for frames");
+                   // LogHelper.Log("Polled for frames");
                     //Thread.Sleep(0);
                     bool endofFrames = false;
                     while (!endofFrames)
@@ -371,17 +370,17 @@ namespace T7.KWP
                                 string allline = m_port.ReadExisting();
                                 if (allline.Length > 0)
                                 {
-                                    //Console.WriteLine("allline: " + allline + " len: " + allline.Length.ToString());
+                                    //LogHelper.Log("allline: " + allline + " len: " + allline.Length.ToString());
                                     // split by \r
                                     string[] lines = SplitContentBy('\r', allline);
                                     foreach (string line in lines)
                                     {
                                         if (line.Length > 0)
                                         {
-                                            //Console.WriteLine("line: " + line + " len: " + line.Length.ToString());
+                                            //LogHelper.Log("line: " + line + " len: " + line.Length.ToString());
                                             if (line[0] == '\x07' || line[0] == '\r' || line[0] == 'A')
                                             {
-                                                //Console.WriteLine("End of messages");
+                                                //LogHelper.Log("End of messages");
                                                 endofFrames = true;
                                             }
                                             else
@@ -417,7 +416,7 @@ namespace T7.KWP
                                                     }*/
                                                     if (r_canMsg.id == 0x238 || r_canMsg.id == 0x220 || r_canMsg.id == 0x240 || r_canMsg.id == 0x258)
                                                     {
-                                                        Console.WriteLine("RX: " + r_canMsg.id.ToString("X4") + " " + r_canMsg.data.ToString("X16"));
+                                                        LogHelper.Log("RX: " + r_canMsg.id.ToString("X4") + " " + r_canMsg.data.ToString("X16"));
                                                     }
                                                     lock (m_listeners)
                                                     {
@@ -436,7 +435,7 @@ namespace T7.KWP
                                                 }
                                                 else
                                                 {
-                                                    if(line == "z") Console.WriteLine("Frame sent ok");
+                                                    if(line == "z") LogHelper.Log("Frame sent ok");
                                                 }
                                             }
                                         }
@@ -445,7 +444,7 @@ namespace T7.KWP
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine("Failed to read frames from CANbus: " + E.Message);
+                                LogHelper.Log("Failed to read frames from CANbus: " + E.Message);
                             }
                         }
                         Thread.Sleep(1);
@@ -524,7 +523,7 @@ namespace T7.KWP
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to write to logfile: " + E.Message);
+                LogHelper.Log("Failed to write to logfile: " + E.Message);
             }
         }
 
@@ -542,7 +541,7 @@ namespace T7.KWP
                     string[] keys = Settings.GetSubKeyNames();
                     foreach (string key in keys)
                     {
-                        Console.WriteLine(key);
+                        LogHelper.Log(key);
                         RegistryKey deviceSettings = TempKey.OpenSubKey(@"FTDIBUS\" + key + @"\0000");
                         if (deviceSettings != null)
                         {
@@ -551,7 +550,7 @@ namespace T7.KWP
                             {
                                 try
                                 {
-                                    //Console.WriteLine(a + " = " + deviceSettings.GetValue(a).ToString());
+                                    //LogHelper.Log(a + " = " + deviceSettings.GetValue(a).ToString());
                                     if (a == "DeviceDesc" && deviceSettings.GetValue(a).ToString() == "Lawicel CANUSB")
                                     {
                                         RegistryKey lawicelSettings = TempKey.OpenSubKey(@"FTDIBUS\" + key + @"\0000\Device Parameters");
@@ -580,7 +579,7 @@ namespace T7.KWP
                                 }
                                 catch (Exception E)
                                 {
-                                    Console.WriteLine(E.Message);
+                                    LogHelper.Log(E.Message);
                                 }
                             }
                         }
@@ -600,10 +599,10 @@ namespace T7.KWP
         /// returned.</returns>
         override public OpenResult open()
         {
-            Console.WriteLine("Opening port: " + m_portnumber + " in CANUSBDirect");
+            LogHelper.Log("Opening port: " + m_portnumber + " in CANUSBDirect");
             if (m_port.IsOpen)
             {
-                Console.WriteLine("Port was open, closing first");
+                LogHelper.Log("Port was open, closing first");
                 //m_port.Write("\r");
                 m_port.Write("C\r");
                 Thread.Sleep(100);
@@ -613,7 +612,7 @@ namespace T7.KWP
             m_port.BaudRate = m_baudrate;
             m_port.PortName = m_portnumber;
             m_port.Handshake = Handshake.None;
-            Console.WriteLine("Opening comport");
+            LogHelper.Log("Opening comport");
             try
             {
                 m_port.Open();
@@ -621,7 +620,7 @@ namespace T7.KWP
                 {
                     try
                     {
-                        Console.WriteLine("Setting CAN bitrate");
+                        LogHelper.Log("Setting CAN bitrate");
                         //m_port.Write("\r");
                         m_port.Write("m7FF\r");        
                         Thread.Sleep(100);
@@ -635,13 +634,13 @@ namespace T7.KWP
                         byte rxb = (byte)m_port.ReadByte();
                         if (rxb == 0x07) // error
                         {
-                            Console.WriteLine("Failed to set CAN bitrate to 500 Kb/s");
+                            LogHelper.Log("Failed to set CAN bitrate to 500 Kb/s");
                         }
                         else if(rxb == 0x0D) // OK
                         {
-                            Console.WriteLine("CAN bitrate set to 500 Kb/s");
+                            LogHelper.Log("CAN bitrate set to 500 Kb/s");
                         }
-                        Console.WriteLine("Opening CAN channel");
+                        LogHelper.Log("Opening CAN channel");
 
                         //m_port.Write("\r");
                         Thread.Sleep(1);
@@ -649,12 +648,12 @@ namespace T7.KWP
                         Thread.Sleep(1000); // 2 seconds
                         if ((byte)m_port.ReadByte() == 0x07) // error
                         {
-                            Console.WriteLine("Failed to open CAN channel");
+                            LogHelper.Log("Failed to open CAN channel");
                             return OpenResult.OpenError;
                         }
                         
                         //need to check is channel opened!!! 
-                        Console.WriteLine("Creating new reader thread");
+                        LogHelper.Log("Creating new reader thread");
                         m_readThread = new Thread(readMessages);
                         try
                         {
@@ -662,7 +661,7 @@ namespace T7.KWP
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                         }
                         if (m_readThread.ThreadState == ThreadState.Unstarted)
                             m_readThread.Start();
@@ -673,15 +672,15 @@ namespace T7.KWP
                         //Thread.Sleep(100);
                         /*if ((byte)m_port.ReadByte() == 0x07) // error
                         {
-                            Console.WriteLine("Failed to open set echo on");
+                            LogHelper.Log("Failed to open set echo on");
                             return OpenResult.OpenError;
                         }*/
-                        //Console.WriteLine("Line after ECHO: " + m_port.ReadLine());
+                        //LogHelper.Log("Line after ECHO: " + m_port.ReadLine());
                         return OpenResult.OK;
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to set canbaudrate: " + E.Message);
+                        LogHelper.Log("Failed to set canbaudrate: " + E.Message);
 
                     }
                     try
@@ -690,14 +689,14 @@ namespace T7.KWP
                     }
                     catch (Exception cE)
                     {
-                        Console.WriteLine("Failed to close comport: " + cE.Message);
+                        LogHelper.Log("Failed to close comport: " + cE.Message);
                     }
                     return OpenResult.OpenError;
                 }
             }
             catch (Exception oE)
             {
-                Console.WriteLine("Failed to open comport: " + oE.Message);
+                LogHelper.Log("Failed to open comport: " + oE.Message);
             }
             return OpenResult.OpenError;
         }
@@ -709,7 +708,7 @@ namespace T7.KWP
         override public CloseResult close()
         {
 
-            Console.WriteLine("Close called in CANUSBDirectDevice");
+            LogHelper.Log("Close called in CANUSBDirectDevice");
             if (m_readThread != null)
             {
                 if (m_readThread.ThreadState != ThreadState.Stopped && m_readThread.ThreadState != ThreadState.StopRequested)
@@ -721,16 +720,16 @@ namespace T7.KWP
                     // m_readThread.Abort();
                 }
             }
-            Console.WriteLine("Thread ended");
+            LogHelper.Log("Thread ended");
             if (m_port.IsOpen)
             {
-                //Console.WriteLine("Thread Closing port (1)");
+                //LogHelper.Log("Thread Closing port (1)");
                 //m_port.Write("\r");
                 m_port.Write("C\r");
                 Thread.Sleep(100);
-                //Console.WriteLine("Thread Closing port (2)");
+                //LogHelper.Log("Thread Closing port (2)");
                 m_port.Close();
-                //Console.WriteLine("Thread Closing port (3)");
+                //LogHelper.Log("Thread Closing port (3)");
                 return CloseResult.OK;
             }
             return CloseResult.CloseError;
@@ -777,7 +776,7 @@ namespace T7.KWP
                 txstring += "\r";
                 m_port.Write(txstring);
                 Thread.Sleep(5);
-                Console.WriteLine("Send: " + txstring);
+                LogHelper.Log("Send: " + txstring);
                 return true;
             }
             return false;

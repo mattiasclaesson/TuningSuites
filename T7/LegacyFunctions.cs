@@ -116,7 +116,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                     fs.Flush();
                     br.Close();
@@ -330,7 +330,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return false;
         }
@@ -341,7 +341,7 @@ namespace T7
             {
                 line += b.ToString("X2") + " ";
             }
-            Console.WriteLine(line);
+            LogHelper.Log(line);
         }
         private void DumpSymbolAddressTable(SymbolCollection symbol_collection)
         {
@@ -376,15 +376,15 @@ namespace T7
                     try
                     {
                         sh.Varname = sr.ReadLine();
-                        // Console.WriteLine(sh.Varname);
+                        // LogHelper.Log(sh.Varname);
                         /*if (sh.Varname == "TorqueCal.M_IgnInflTorqMap")
                         {
-                            Console.WriteLine("break!");
+                            LogHelper.Log("break!");
                         }*/
                     }
                     catch (Exception snaE)
                     {
-                        Console.WriteLine("Failed to attach name to symbol: :" + snaE.Message);
+                        LogHelper.Log("Failed to attach name to symbol: :" + snaE.Message);
                     }
                 }
             }
@@ -402,7 +402,7 @@ namespace T7
                     }
                     catch (Exception cE)
                     {
-                        Console.WriteLine("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
+                        LogHelper.Log("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
                     }
                 }
             }
@@ -419,7 +419,7 @@ namespace T7
 
             string addresses = string.Empty;
             string symbol = string.Empty;
-            Console.WriteLine("Fase 1");
+            LogHelper.Log("Fase 1");
             using (StreamReader sr = new StreamReader(Path.Combine(/*Application.StartupPath*/Path.GetTempPath(), "XTABLE.TMP")))
             {
                 string totallines = sr.ReadToEnd();
@@ -465,10 +465,10 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to add symbolnames: " + E.Message);
+                        LogHelper.Log("Failed to add symbolnames: " + E.Message);
                     }
                 }
-                Console.WriteLine("Fase 2");
+                LogHelper.Log("Fase 2");
                 for (int i = 3; i < lines.Length; i++)
                 {
                     line = (string)lines[i];
@@ -476,7 +476,7 @@ namespace T7
                     {
                         if (line.Length > 2)
                         {
-                            //Console.WriteLine("line: " + line);
+                            //LogHelper.Log("line: " + line);
                             if (!line.Contains(" "))
                             {
                                 // dan is het een symbool
@@ -491,7 +491,7 @@ namespace T7
                                 if (addvalues.Length >= 3)
                                 {
                                     flashaddress = Convert.ToInt32((string)addvalues.GetValue(0), 16);
-                                    //Console.WriteLine("Flash address: " + flashaddress.ToString());
+                                    //LogHelper.Log("Flash address: " + flashaddress.ToString());
                                     length = Convert.ToInt32((string)addvalues.GetValue(1), 16);
                                     foreach (SymbolHelper sh in symbol_collection)
                                     {
@@ -501,7 +501,7 @@ namespace T7
                                             {
                                                 sh.Varname = symbol;
                                                 sh.Length = length;
-                                                //Console.WriteLine("Set symbolnumber: " + sh.Symbol_number.ToString() + " to be " + symbol);
+                                                //LogHelper.Log("Set symbolnumber: " + sh.Symbol_number.ToString() + " to be " + symbol);
                                             }
                                             break;
                                         }
@@ -512,12 +512,12 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to add symbolnames: " + E.Message);
+                        LogHelper.Log("Failed to add symbolnames: " + E.Message);
                     }
                 }
 
             }
-            Console.WriteLine("Fase 3");
+            LogHelper.Log("Fase 3");
             string help = string.Empty;
             XDFCategories category = XDFCategories.Undocumented;
             XDFSubCategory subcat = XDFSubCategory.Undocumented;
@@ -532,7 +532,7 @@ namespace T7
                     }
                     catch (Exception cE)
                     {
-                        Console.WriteLine("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
+                        LogHelper.Log("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
                     }
                 }
             }
@@ -691,7 +691,7 @@ namespace T7
                         case 8:
                             /*if (fsread.Position > 0x5f900)
                             {
-                                Console.WriteLine("Hola");
+                                LogHelper.Log("Hola");
                             }
                             */
                             if (adrb == (byte)searchsequence.GetValue(8))
@@ -746,7 +746,7 @@ namespace T7
                                 {
                                     endoftable = true;
                                     //MessageBox.Show("EOT: " + fsread.Position.ToString("X6"));
-                                    Console.WriteLine("EOT: " + fsread.Position.ToString("X6"));
+                                    LogHelper.Log("EOT: " + fsread.Position.ToString("X6"));
                                 }
                                 else
                                 {
@@ -758,11 +758,11 @@ namespace T7
 
                                     /* if (bytes[1] == 0x7A && bytes[2] == 0xEE)
                                      {
-                                         Console.WriteLine("suspicious");
+                                         LogHelper.Log("suspicious");
 
                                          if (internal_address == 0x7AEE)
                                          {
-                                             Console.WriteLine("break: " + fsread.Position.ToString("X8"));
+                                             LogHelper.Log("break: " + fsread.Position.ToString("X8"));
                                          }
                                      }*/
                                     symbollength = Convert.ToInt32(bytes.GetValue(3)) * 256;
@@ -774,7 +774,7 @@ namespace T7
                                         {
                                             internal_address = symbol_collection[symbol_collection.Count - 1].Start_address + symbol_collection[symbol_collection.Count - 1].Length;
                                             if (symbollength == 0x240 && (internal_address % 2) > 0) internal_address++;
-                                            Console.WriteLine("Corrected symbol with address: " + internal_address.ToString("X8") + " and len: " + symbollength.ToString("X4"));
+                                            LogHelper.Log("Corrected symbol with address: " + internal_address.ToString("X8") + " and len: " + symbollength.ToString("X4"));
                                         }
                                     }
                                     //                                                sramaddress = Convert.ToInt32(bytes.GetValue(7)) * 256 * 256;
@@ -798,7 +798,7 @@ namespace T7
                                     }
                                     else
                                     {
-                                        Console.WriteLine("Length > 0x1000: " + sh.Varname);
+                                        LogHelper.Log("Length > 0x1000: " + sh.Varname);
                                     }
                                 }
                             }
@@ -809,7 +809,7 @@ namespace T7
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            LogHelper.Log(E.Message);
                             retval = false;
                         }
 
@@ -945,7 +945,7 @@ namespace T7
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                LogHelper.Log(E2.Message);
             }
 
 
@@ -1012,14 +1012,14 @@ namespace T7
                                                         }
                                                         catch (Exception cE)
                                                         {
-                                                            Console.WriteLine("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
+                                                            LogHelper.Log("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
                                                         }
                                                     }
                                                     sh.Internal_address = internal_address - 1;
                                                     sh.Symbol_number = sym_count;
                                                     //if (sh.Varname == "IgnNormCal.Map")
                                                     //{
-                                                    //    Console.WriteLine("IgnNormCal.Map: " + sh.Internal_address.ToString("X4"));
+                                                    //    LogHelper.Log("IgnNormCal.Map: " + sh.Internal_address.ToString("X4"));
                                                     //}
                                                     symbol_collection.Add(sh);
                                                     symbolname = "";
@@ -1150,11 +1150,11 @@ namespace T7
                                                             int indicator = Convert.ToInt32(bytes.GetValue(8));
                                                             if (symbollength == 1 || symbollength == 2 || symbollength == 4)
                                                             {
-                                                                //Console.WriteLine("Symbol address: " + internal_address.ToString("X8") + " sram: " + sramaddress.ToString("X8") + " ind " + indicator.ToString("X2") + " len " + symbollength.ToString());
+                                                                //LogHelper.Log("Symbol address: " + internal_address.ToString("X8") + " sram: " + sramaddress.ToString("X8") + " ind " + indicator.ToString("X2") + " len " + symbollength.ToString());
                                                             }
                                                             
-                                                            //if (sramaddress < 0xF00000) Console.WriteLine("Flash Indicator = " + indicator.ToString("X2"));
-                                                            //else if (sramaddress >= 0xF00000) Console.WriteLine("SRAM Indicator = " + indicator.ToString("X2"));
+                                                            //if (sramaddress < 0xF00000) LogHelper.Log("Flash Indicator = " + indicator.ToString("X2"));
+                                                            //else if (sramaddress >= 0xF00000) LogHelper.Log("SRAM Indicator = " + indicator.ToString("X2"));
                                                             
                                                            
                                                             int realromaddress = 0;
@@ -1169,7 +1169,7 @@ namespace T7
                                                                     //DumpToDebugTable(bytes, sh);
                                                                     if (realromaddress > 0)
                                                                     {
-                                                                        //Console.WriteLine(sh.Varname + " " + sh.Internal_address.ToString("X6") + " " + sramaddress.ToString("X6") + " " +realromaddress.ToString("X6") + " " + symbollength.ToString("X4"));
+                                                                        //LogHelper.Log(sh.Varname + " " + sh.Internal_address.ToString("X6") + " " + sramaddress.ToString("X6") + " " +realromaddress.ToString("X6") + " " + symbollength.ToString("X4"));
                                                                         if (sramaddress > highestsramaddress) highestsramaddress = sramaddress;
                                                                     }
 
@@ -1178,12 +1178,12 @@ namespace T7
                                                                     {
                                                                         if (sh.Varname == "BFuelCal.Map")
                                                                         {
-                                                                            Console.WriteLine("BfuelCal.map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString() + " " + sramaddress.ToString("X8"));
+                                                                            LogHelper.Log("BfuelCal.map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString() + " " + sramaddress.ToString("X8"));
                                                                         }
                                                                         sh.Start_address = sramaddress; // TEST
                                                                         //if (internal_address == 0xE71A)
                                                                         //{
-                                                                        //    Console.WriteLine("IgnNormCal.Map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString());
+                                                                        //    LogHelper.Log("IgnNormCal.Map: " + sh.Symbol_number.ToString() + " index in address lookup: " + sym_count.ToString());
                                                                         //}
                                                                         sh.Flash_start_address = sramaddress;
                                                                         //sh.Flash_start_address = realromaddress;
@@ -1204,13 +1204,13 @@ namespace T7
                                                     }
                                                     catch (Exception E)
                                                     {
-                                                        Console.WriteLine(E.Message);
+                                                        LogHelper.Log(E.Message);
                                                     }
                                                 }
-                                                //Console.WriteLine("Highest SRAM: " + highestsramaddress.ToString("X6"));
+                                                //LogHelper.Log("Highest SRAM: " + highestsramaddress.ToString("X6"));
                                                 //foreach (SymbolHelper sh in symbol_collection)
                                                 //{
-                                                //    Console.WriteLine(sh.Varname + " at " + sh.Flash_start_address.ToString("X6"));
+                                                //    LogHelper.Log(sh.Varname + " at " + sh.Flash_start_address.ToString("X6"));
                                                 //}
                                             }
                                         }
@@ -1257,7 +1257,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("TryOpenFile filed: " + filename + " err: " + E.Message);
+                LogHelper.Log("TryOpenFile filed: " + filename + " err: " + E.Message);
                 
             }
         */  
@@ -1295,8 +1295,8 @@ namespace T7
                     {
                         int offset1 = (rt * cols * 2) + (ct * 2);
                         int offset2 = (rt * cols * 2) + (ct * 2) + 1;
-                        //Console.WriteLine("Offset 1: " + offset1.ToString() + " offset2: "+ offset2.ToString());
-                        //Console.WriteLine("row = " + rt.ToString() + " col = " + ct.ToString() + " value1: " + boostcalmap[offset1].ToString("X2") + " value2: " + boostcalmap[offset2].ToString("X2"));
+                        //LogHelper.Log("Offset 1: " + offset1.ToString() + " offset2: "+ offset2.ToString());
+                        //LogHelper.Log("row = " + rt.ToString() + " col = " + ct.ToString() + " value1: " + boostcalmap[offset1].ToString("X2") + " value2: " + boostcalmap[offset2].ToString("X2"));
 
                         int boostcalvalue = Convert.ToInt32(boostcalmap[offset1]) * 256 + Convert.ToInt32(boostcalmap[offset2]);
                         //boostcalvalue *= 13;

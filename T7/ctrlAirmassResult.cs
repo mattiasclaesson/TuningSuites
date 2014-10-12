@@ -106,7 +106,7 @@ namespace T7
                     {
                         retval = true; // found maps > 0x100 in size in sram
                         _softwareIsOpen = true;
-                        //                        Console.WriteLine("Software is open because of symbol: " + sh.Varname);
+                        //                        LogHelper.Log("Software is open because of symbol: " + sh.Varname);
                     }
                 }
             }
@@ -127,7 +127,7 @@ namespace T7
             // try to find a KNOWN table (which is always more or less similar
             if (m_currentSramOffsett > 0)
             {
-                //Console.WriteLine("Working with: " + m_currentSramOffsett.ToString("X8"));
+                //LogHelper.Log("Working with: " + m_currentSramOffsett.ToString("X8"));
                 return m_currentSramOffsett;
             }
             //     34FCEF00
@@ -193,7 +193,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return retval;
         }
@@ -223,7 +223,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             return retval;
         }
@@ -339,7 +339,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             limitermap = new int[pedalrequestmap.Length];
             int[] resulttable = new int[pedalrequestmap.Length]; // result 
@@ -406,7 +406,7 @@ namespace T7
         private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, out limitType limiterType)
         {
             int retval = requestairmass;
-            //Console.WriteLine("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
+            //LogHelper.Log("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
             //calculate the restricted airmass for the current point
             // first, check the airmasslimiter
             //            retval = CheckAgainstAirmassLimiters(rpm, requestairmass, autogearbox);
@@ -464,7 +464,7 @@ namespace T7
             int LimitedAirMass = requestedairmass;
             /*if (requestedairmass == 1100 && rpm == 2400)
             {
-                Console.WriteLine("1100");
+                LogHelper.Log("1100");
             }*/
             if (HasBinaryTorqueLimiterEnabled(symbols, filename))
             {
@@ -509,7 +509,7 @@ namespace T7
                 //requestedairmass
                 if (torque > torquelimit1)
                 {
-                    //Console.WriteLine("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
+                    //LogHelper.Log("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
                     torque = torquelimit1;
                     if (E85Automatic && E85 && Automatic)
                     {
@@ -549,7 +549,7 @@ namespace T7
                         {
                             torque = torquelimitConvertable;
                             TrqLimiter = limitType.TorqueLimiterGear;
-                            //Console.WriteLine("Convertable gear torque limit hit");
+                            //LogHelper.Log("Convertable gear torque limit hit");
                         }
                     }
                     else
@@ -561,7 +561,7 @@ namespace T7
                         {
                             torque = torquelimitManual;
                             TrqLimiter = limitType.TorqueLimiterGear;
-                            //Console.WriteLine("Manual gear torque limit hit");
+                            //LogHelper.Log("Manual gear torque limit hit");
                         }
                     }
 
@@ -569,7 +569,7 @@ namespace T7
                     //TorqueCal.M_5GearTab		TorqueCal.n_Eng5GearSP
                     if (comboBoxEdit1.SelectedIndex == 5)
                     {
-                        //Console.WriteLine("Checking fifth gear!");
+                        //LogHelper.Log("Checking fifth gear!");
                         enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(symbols, "TorqueCal.M_5GearLimTab"));
                         yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng5GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng5GearSP"));
                         int torquelimit5th = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
@@ -577,7 +577,7 @@ namespace T7
                         {
                             torque = torquelimit5th;
                             TrqLimiter = limitType.TorqueLimiterGear;
-                            //Console.WriteLine("Fifth gear torque limit hit");
+                            //LogHelper.Log("Fifth gear torque limit hit");
                         }
                     }
                 }
@@ -586,7 +586,7 @@ namespace T7
                     // automatic!
                     if (comboBoxEdit1.SelectedIndex == 0)
                     {
-                        //Console.WriteLine("Checking reverse gear!");
+                        //LogHelper.Log("Checking reverse gear!");
                         enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ReverseTab"), GetSymbolLength(symbols, "TorqueCal.M_ReverseTab"));
                         yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngSP"), GetSymbolLength(symbols, "TorqueCal.n_EngSP"));
                         int torquelimitreverse = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
@@ -594,7 +594,7 @@ namespace T7
                         {
                             torque = torquelimitreverse;
                             TrqLimiter = limitType.TorqueLimiterGear;
-                            //Console.WriteLine("Reverse gear torque limit hit");
+                            //LogHelper.Log("Reverse gear torque limit hit");
                         }
                     }
 
@@ -602,7 +602,7 @@ namespace T7
                     //TorqueCal.M_1GearTab		TorqueCal.n_Eng1GearSP
                     else if (comboBoxEdit1.SelectedIndex == 1)
                     {
-                        //Console.WriteLine("Checking first gear!");
+                        //LogHelper.Log("Checking first gear!");
                         enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_1GearTab"), GetSymbolLength(symbols, "TorqueCal.M_1GearTab"));
                         yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng1GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng1GearSP"));
                         int torquelimit1st = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
@@ -610,7 +610,7 @@ namespace T7
                         {
                             torque = torquelimit1st;
                             TrqLimiter = limitType.TorqueLimiterGear;
-                            //Console.WriteLine("First gear torque limit hit");
+                            //LogHelper.Log("First gear torque limit hit");
                         }
                     }
                 }
@@ -624,9 +624,9 @@ namespace T7
                     if(TrqLimiter == limitType.None) TrqLimiter = limitType.AirTorqueCalibration;
                 }
             }
-//            Console.WriteLine("1. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
+//            LogHelper.Log("1. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
             if (TrqLimiter == limitType.None) LimitedAirMass = requestedairmass; // bugfix for if no limiter is active
-//            Console.WriteLine("2. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
+//            LogHelper.Log("2. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
 
             return LimitedAirMass;
         }
@@ -700,7 +700,7 @@ namespace T7
             {
                 requestedairmass = airmasslimit;
                 AirmassLimiter = limitType.AirmassLimiter;
-                //Console.WriteLine("Reduced airmass because of BstKnkCal.MaxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString());
+                //LogHelper.Log("Reduced airmass because of BstKnkCal.MaxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString());
             }
             return requestedairmass;
         }
@@ -807,7 +807,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to interpolate: " + E.Message);
+                LogHelper.Log("Failed to interpolate: " + E.Message);
             }
             return result;
 
@@ -915,7 +915,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to interpolate: " + E.Message);
+                LogHelper.Log("Failed to interpolate: " + E.Message);
             }
             return result;
 
@@ -1053,7 +1053,7 @@ namespace T7
 
         private void LoadExtraGraphFromCompareBin(DataTable dt, string filename)
         {
-            Console.WriteLine("Loading additional data for: " + filename);
+            LogHelper.Log("Loading additional data for: " + filename);
             string powerLabel = "Power (bhp) " + MaximizeFileLength(Path.GetFileNameWithoutExtension(filename));
             if (checkEdit5.Checked) powerLabel = "Power (kW) " + MaximizeFileLength(Path.GetFileNameWithoutExtension(filename));
             string torqueLabel = "Torque (Nm) " + MaximizeFileLength(Path.GetFileNameWithoutExtension(filename));
@@ -1424,7 +1424,7 @@ namespace T7
                 {
                     // get the current value from the request map
                     int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
-                    //Console.WriteLine("Current request = " + airmassrequestforcell.ToString() + " mg/c");
+                    //LogHelper.Log("Current request = " + airmassrequestforcell.ToString() + " mg/c");
                     limitType limiterType = limitType.None;
                     int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit3.Checked, checkEdit4.Checked, e85automatic, out limiterType);
                     resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
@@ -1545,7 +1545,7 @@ namespace T7
                 }
                 catch (Exception E2)
                 {
-                    Console.WriteLine(E2.Message);
+                    LogHelper.Log(E2.Message);
                 }
                 Trionic7File t7file = new Trionic7File();
                 
@@ -1916,7 +1916,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -1967,7 +1967,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
             }
         }

@@ -71,7 +71,7 @@ namespace T7.Parser
                         symbol.setSymbolName("Symbol nr " + symbolNr++);
                 }
                 m_symbolList.Add(symbol);
-                //Console.WriteLine("Added: " + symbol.getSymbolName());
+                //LogHelper.Log("Added: " + symbol.getSymbolName());
                 m_nrOfSymbols++;
             }
 

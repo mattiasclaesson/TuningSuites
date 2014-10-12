@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using CommonSuite;
 
 namespace T7
 {
@@ -44,7 +44,7 @@ namespace T7
                 checksumArea = checksumArea - m_sramOffset;
             }
             int positionInFile = findFWChecksum(fs, checksumArea).checksumAddress;
-            Console.WriteLine("positionInfile: " + positionInFile.ToString("X8"));
+            LogHelper.Log("positionInfile: " + positionInFile.ToString("X8"));
             if (positionInFile > 0x80000)
             {
                 positionInFile = positionInFile - m_sramOffset;
@@ -55,7 +55,7 @@ namespace T7
             returnValue += Convert.ToInt32(fs.ReadByte()) << 16;
             returnValue += Convert.ToInt32(fs.ReadByte()) << 8;
             returnValue += Convert.ToInt32(fs.ReadByte());
-            Console.WriteLine("Checksum GS: " + returnValue.ToString("X8"));
+            LogHelper.Log("Checksum GS: " + returnValue.ToString("X8"));
 
             //returnValue = findFWChecksum(fs, checksumArea).checksumValue;
 
@@ -85,7 +85,7 @@ namespace T7
                     positionInFile = positionInFile - m_sramOffset;
                 }
                 fs.Position = positionInFile;
-                //Console.WriteLine("New position in file: " + positionInFile.ToString("X8"));
+                //LogHelper.Log("New position in file: " + positionInFile.ToString("X8"));
                 byte aByte;
                 if (fs.Position < 0x80000)
                 {
@@ -100,7 +100,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
         }
 
@@ -203,7 +203,7 @@ namespace T7
 
         private CheckSum findFWChecksum(FileStream a_fileStream, int areaStart)
         {
-            Console.WriteLine("findFWChecksum with areaStart: " + areaStart.ToString("X8"));
+            LogHelper.Log("findFWChecksum with areaStart: " + areaStart.ToString("X8"));
              byte[] data = new byte[4];
              byte areaNumber = 0;
              int baseAddr = 0;

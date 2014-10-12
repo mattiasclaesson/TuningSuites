@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Base;
+using CommonSuite;
 
 namespace T7
 {
@@ -136,7 +134,7 @@ namespace T7
             {
                 if (value != 0)
                 {
-                    //Console.WriteLine("Writing x: " + x.ToString() + " y: " + y.ToString() + " percentage: " + value.ToString());
+                    //LogHelper.Log("Writing x: " + x.ToString() + " y: " + y.ToString() + " percentage: " + value.ToString());
                     onUpdateFuelMap(this, new UpdateFuelMapEventArgs(x, y, value, doSync));
                 }
             }
@@ -163,7 +161,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                 }
                 

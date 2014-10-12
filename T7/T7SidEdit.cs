@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CommonSuite;
 
 namespace T7
 {
@@ -347,14 +348,14 @@ namespace T7
                 }
             Label_0061:
                 array = encoding.GetBytes(this.m_dataArrayNew[num2++]);
-                Console.WriteLine(this.m_dataArrayNew[num2 - 1]);
+                LogHelper.Log(this.m_dataArrayNew[num2 - 1]);
                 Array.Resize<byte>(ref array, 7);
                 stream.Write(array, 0, 7);
                 buffer = ToByteArray(this.m_dataArrayNew[num2++]);
-                Console.WriteLine(this.m_dataArrayNew[num2 - 1]);
+                LogHelper.Log(this.m_dataArrayNew[num2 - 1]);
                 stream.Write(buffer, 0, 3);
                 buffer3 = ToByteArray(this.m_dataArrayNew[num2++]);
-                Console.WriteLine(this.m_dataArrayNew[num2 - 1]);
+                LogHelper.Log(this.m_dataArrayNew[num2 - 1]);
                 Array.Resize<byte>(ref buffer3, 2);
                 stream.Write(buffer3, 0, 2);
                 System.Windows.Forms.Application.DoEvents();
@@ -474,7 +475,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
             finally
             {

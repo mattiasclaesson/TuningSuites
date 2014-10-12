@@ -38,7 +38,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                     }
@@ -46,7 +46,7 @@ namespace T7
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                LogHelper.Log(E2.Message);
             }
             return filters;
         }
@@ -92,7 +92,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        LogHelper.Log(E.Message);
                     }
                 }
             }

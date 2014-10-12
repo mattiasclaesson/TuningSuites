@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CommonSuite;
 
 namespace T7.CAN
 {
@@ -327,11 +328,11 @@ const int init_reply_table[] = { 0x228, 0x22B, 0x22D, 0x22E, 0x22F, 0x238 };
                 if (waitForMessage(reponseID, 500, out msg1) == reponseID)
                 {
                     AddToCanTrace("ResponseID seen");
-                    Console.WriteLine("ResponseID seen");
+                    LogHelper.Log("ResponseID seen");
                     return true;
                 }
                 AddToCanTrace("no reponse seen from unit 0x" + unit.ToString("X2"));
-                Console.WriteLine("no reponse seen from unit 0x" + unit.ToString("X2"));
+                LogHelper.Log("no reponse seen from unit 0x" + unit.ToString("X2"));
             }
             return false;
         }

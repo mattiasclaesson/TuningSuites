@@ -74,7 +74,7 @@ namespace T7
                 // set the altered fuel map at this position with offset given
                 
                 byte originalValue = m_OriginalFuelMap.GetByteAtXY(x_index, y_index);
-                //Console.WriteLine("Update fuelmap: " + originalValue.ToString("D3") + " to " + offset.ToString("D3"));
+                //LogHelper.Log("Update fuelmap: " + originalValue.ToString("D3") + " to " + offset.ToString("D3"));
                 // calculate new average value
                 int newAverage = m_AlteredFuelMap.GetByteAtXY(x_index, y_index);
                 newAverage *= numberOfMeasurements;

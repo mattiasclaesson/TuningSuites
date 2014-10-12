@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
-using System.Xml;
 using System.IO;
 using System.Net;
-using T7;
+using CommonSuite;
 
 namespace T7
 {
@@ -42,7 +37,7 @@ namespace T7
                 }
                 catch (Exception proxyE)
                 {
-                    Console.WriteLine("Error setting proxy server: " + proxyE.Message);
+                    LogHelper.Log("Error setting proxy server: " + proxyE.Message);
                 }
 
                 /*                if (UseDefaultProxy)
@@ -73,7 +68,7 @@ namespace T7
             catch (Exception ex)
             {
                 // Error occured grabbing data, return empty string.
-                Console.WriteLine("An error occurred while retrieving the HTML content. " + ex.Message);
+                LogHelper.Log("An error occurred while retrieving the HTML content. " + ex.Message);
                 /*using (StreamWriter logfile = new StreamWriter("update.log", true, System.Text.Encoding.ASCII, 2048))
                 {
                     logfile.WriteLine("An error occurred while retrieving the HTML content. " + ex.Message);
@@ -122,7 +117,7 @@ namespace T7
             }
             catch (Exception tuE)
             {
-                Console.WriteLine(tuE.Message);
+                LogHelper.Log(tuE.Message);
             }
         }
 
@@ -178,7 +173,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    LogHelper.Log(E.Message);
                 }
                 progress.Close();
             }
@@ -190,7 +185,7 @@ namespace T7
             catch (Exception E)
             {
                 //PumpString("Exception when checking new update(s): " + E.Message, false, false, new Version());
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }*/
         }
 

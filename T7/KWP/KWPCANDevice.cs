@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using T7.CAN;
 using System.IO;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -118,14 +118,14 @@ namespace T7.KWP
             {
                 lock (m_lockObject)
                 {
-                    Console.WriteLine("******* KWPCANDevice: m_CanDevice set");
+                    LogHelper.Log("******* KWPCANDevice: m_CanDevice set");
 
                     m_canDevice = a_canDevice;
                 }
             }
             else
             {
-                Console.WriteLine("KWPCANDevice, candevice was already set");
+                LogHelper.Log("KWPCANDevice, candevice was already set");
             }
         }
 
@@ -135,23 +135,23 @@ namespace T7.KWP
         /// <returns>True if the device was opened, otherwise false.</returns>
         public override bool open()
         {
-            Console.WriteLine("******* KWPCANDevice: Opening KWPCANDevice");
+            LogHelper.Log("******* KWPCANDevice: Opening KWPCANDevice");
 
             bool retVal = false;
-            Console.WriteLine("Opening m_canDevice");
+            LogHelper.Log("Opening m_canDevice");
             lock (m_lockObject)
             {
-                Console.WriteLine("Lock passed: Opening m_canDevice");
+                LogHelper.Log("Lock passed: Opening m_canDevice");
                 if (m_canDevice.open() == OpenResult.OK)
                 {
-                    Console.WriteLine("Adding listener");
+                    LogHelper.Log("Adding listener");
                     m_canDevice.addListener(m_kwpCanListener);
                     retVal = true;
                 }
                 else
                     retVal = false;
             }
-            Console.WriteLine("return value = " + retVal.ToString());
+            LogHelper.Log("return value = " + retVal.ToString());
             return retVal;
         }
 
@@ -178,7 +178,7 @@ namespace T7.KWP
         /// <returns>True if the device was closed, otherwise false.</returns>
         public override bool close()
         {
-            Console.WriteLine("******* KWPCANDevice: Closing KWPCANDevice");
+            LogHelper.Log("******* KWPCANDevice: Closing KWPCANDevice");
 
             bool retVal = false;
             lock (m_lockObject)
@@ -193,7 +193,7 @@ namespace T7.KWP
         }
         private void AddToCanTrace(string line)
         {
-            Console.WriteLine("KWPCANDevice: " + line);
+            LogHelper.Log("KWPCANDevice: " + line);
             DateTime dtnow = DateTime.Now;
             if (m_EnableKwpLog)
             {
@@ -225,7 +225,7 @@ namespace T7.KWP
                 AddToCanTrace("Unable to send 0x000040021100813F message");
                 return false;
             }
-            Console.WriteLine("Init msg sent");
+            LogHelper.Log("Init msg sent");
             if (m_kwpCanListener.waitMessage(timeoutPeriod).getID() == 0x238)
             {
                 AddToCanTrace("Successfully sent 0x000040021100813F message and received reply 0x238");

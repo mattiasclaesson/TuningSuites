@@ -432,7 +432,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                LogHelper.Log(E.Message);
             }
 
             File.Delete(m_fileName);

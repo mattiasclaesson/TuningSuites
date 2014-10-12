@@ -132,15 +132,15 @@ namespace T7
             // ranges 0 - 255 will be default for 0-5 volt
             double retval = 0;
             double voltage = ((value) / 1023) * (m_appSettings.WidebandHighVoltage / 1000 - m_appSettings.WidebandLowVoltage / 1000);
-            //Console.WriteLine("Wideband voltage: " + voltage.ToString());
+            //LogHelper.Log("Wideband voltage: " + voltage.ToString());
             // now convert to AFR using user settings
             if (voltage < m_appSettings.WidebandLowVoltage / 1000) voltage = m_appSettings.WidebandLowVoltage / 1000;
             if (voltage > m_appSettings.WidebandHighVoltage / 1000) voltage = m_appSettings.WidebandHighVoltage / 1000;
-            //Console.WriteLine("Wideband voltage (after clipping): " + voltage.ToString());
+            //LogHelper.Log("Wideband voltage (after clipping): " + voltage.ToString());
             double steepness = ((m_appSettings.WidebandHighAFR / 1000) - (m_appSettings.WidebandLowAFR / 1000)) / ((m_appSettings.WidebandHighVoltage / 1000) - (m_appSettings.WidebandLowVoltage / 1000));
-            //Console.WriteLine("Steepness: " + steepness.ToString());
+            //LogHelper.Log("Steepness: " + steepness.ToString());
             retval = (m_appSettings.WidebandLowAFR / 1000) + (steepness * (voltage - (m_appSettings.WidebandLowVoltage / 1000)));
-            //Console.WriteLine("retval: " + retval.ToString());
+            //LogHelper.Log("retval: " + retval.ToString());
             return retval;
 
         }
@@ -452,7 +452,7 @@ namespace T7
                         {
                             try
                             {
-                                //Console.WriteLine(line);
+                                //LogHelper.Log(line);
                                 retval = true;
                                 string dtstring = (string)values.GetValue(0);
                                 DateTime dt = new DateTime(Convert.ToInt32(dtstring.Substring(6, 4)), Convert.ToInt32(dtstring.Substring(3, 2)), Convert.ToInt32(dtstring.Substring(0, 2)), Convert.ToInt32(dtstring.Substring(11, 2)), Convert.ToInt32(dtstring.Substring(14, 2)), Convert.ToInt32(dtstring.Substring(17, 2)));
@@ -481,7 +481,7 @@ namespace T7
                                             rest_ticks = Math.Abs(dt.Ticks - exported_to.Ticks);
                                             if (rest_ticks > TimeSpan.TicksPerMinute) rest_ticks = 0;
                                             long rest_ms = rest_ticks / TimeSpan.TicksPerMillisecond;
-                                          //  Console.WriteLine("From timespan: " + dtpreviousline.Minute.ToString("D2") + ":" + dtpreviousline.Second.ToString("D2") + "." + dtpreviousline.Millisecond.ToString("D3") + " upto " + dt.Minute.ToString("D2") + ":" + dt.Second.ToString("D2") + "." + dt.Millisecond.ToString("D3") + " export_to " + exported_to.Minute.ToString("D2") + ":" + exported_to.Second.ToString("D2") + "." + exported_to.Millisecond.ToString("D3") + " results in " + numberofrepeats.ToString() + " and rest = " + rest_ticks.ToString() + " is " + rest_ms.ToString() + " ms");
+                                          //  LogHelper.Log("From timespan: " + dtpreviousline.Minute.ToString("D2") + ":" + dtpreviousline.Second.ToString("D2") + "." + dtpreviousline.Millisecond.ToString("D3") + " upto " + dt.Minute.ToString("D2") + ":" + dt.Second.ToString("D2") + "." + dt.Millisecond.ToString("D3") + " export_to " + exported_to.Minute.ToString("D2") + ":" + exported_to.Second.ToString("D2") + "." + exported_to.Millisecond.ToString("D3") + " results in " + numberofrepeats.ToString() + " and rest = " + rest_ticks.ToString() + " is " + rest_ms.ToString() + " ms");
                                             dtpreviousline = dt;
                                         }
                                         else
@@ -604,7 +604,7 @@ namespace T7
                                                             Int64 value = Convert.ToInt64((string)subvals.GetValue(1));
                                                             if ((value & 0x00000200) > 0)
                                                             {
-                                                                Console.WriteLine("Knock map used on: " + dt.ToString());
+                                                                LogHelper.Log("Knock map used on: " + dt.ToString());
                                                             }
                                                             
 
@@ -643,7 +643,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                LogHelper.Log(E.Message);
                             }
                         }
                         previousline = line;
@@ -688,7 +688,7 @@ namespace T7
                             {
                                 if (value > filter.Value) retval = false;
                             }
-                            //Console.WriteLine("value = " + value.ToString() + " retval = " + retval.ToString());
+                            //LogHelper.Log("value = " + value.ToString() + " retval = " + retval.ToString());
                         }
                         
                     }

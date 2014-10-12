@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using T7.CAN;
-using System.IO;
+using CommonSuite;
 
 namespace T7.KWP
 {
@@ -143,7 +142,7 @@ namespace T7.KWP
         /// returned.</returns>
         override public OpenResult open()
         {
-            Console.WriteLine("Opening Easysync device");
+            LogHelper.Log("Opening Easysync device");
             //EASYSYNC.CANMsg msg = new EASYSYNC.CANMsg();
             //Check if I bus is connected
             close();
@@ -162,22 +161,22 @@ namespace T7.KWP
             */
             //I bus wasn't connected.
             //Check if P bus is connected
-            Console.WriteLine("Calling canusb_Open");
+            LogHelper.Log("Calling canusb_Open");
             m_deviceHandle = EASYSYNC.canusb_Open(/*IntPtr.Zero,*/ null,
             EASYSYNC.CAN_BAUD_500K,              //500Kb/s
             null,//EASYSYNC.CANUSB_ACCEPTANCE_CODE_ALL,
             null,//EASYSYNC.CANUSB_ACCEPTANCE_MASK_ALL,
             EASYSYNC.CANUSB_FLAG_TIMESTAMP);
-            Console.WriteLine("Device handle: " + m_deviceHandle.ToString());
+            LogHelper.Log("Device handle: " + m_deviceHandle.ToString());
             if (m_deviceHandle == 4294967295) return OpenResult.OpenError; // no valid handle
             if (boxIsThere())
             {
-                Console.WriteLine("Box is there");
+                LogHelper.Log("Box is there");
                 if (m_readThread.ThreadState == ThreadState.Unstarted)
                     m_readThread.Start();
                 return OpenResult.OK;
             }
-            Console.WriteLine("Box is not there");
+            LogHelper.Log("Box is not there");
             close();
             return OpenResult.OpenError;
         }
@@ -195,7 +194,7 @@ namespace T7.KWP
             }
             catch(DllNotFoundException e)
             {
-                Console.WriteLine("EASYSYNC.canusb_Close: " + e.Message);
+                LogHelper.Log("EASYSYNC.canusb_Close: " + e.Message);
                 return CloseResult.CloseError;
             }
 
@@ -386,16 +385,16 @@ namespace T7.KWP
             EASYSYNC.CANMsg msg = new EASYSYNC.CANMsg();
             if (waitAnyMessage(2000, out msg) != 0)
             {
-                Console.WriteLine("Seen a message");
+                LogHelper.Log("Seen a message");
                 return true;
             }
-            Console.WriteLine("Sending session request");
+            LogHelper.Log("Sending session request");
             if (sendSessionRequest())
             {
-                Console.WriteLine("Session request issued");
+                LogHelper.Log("Session request issued");
                 return true;
             }
-            Console.WriteLine("No box detected");
+            LogHelper.Log("No box detected");
 
             return false;
         }
