@@ -13664,13 +13664,13 @@ dt.Columns.Add("SymbolName");
                 if (selrows.Length > 0)
                 {
                     SymbolHelper dr = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
+                    symbolname = dr.Varname;
                     if (dr.Userdescription != "")
                     {
-                        symbolname = dr.Userdescription;
-                    }
-                    else
-                    {
-                        symbolname = dr.Varname;
+                        if (dr.Userdescription != String.Format("Symbolnumber {0}", dr.Symbol_number))
+                        {
+                            symbolname = dr.Userdescription;
+                        }
                     }
                 }
             }

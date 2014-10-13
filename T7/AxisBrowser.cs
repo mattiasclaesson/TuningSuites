@@ -68,15 +68,15 @@ namespace T7
             string zaxisdescr = "";
             foreach (SymbolHelper sh in sc)
             {
-                string name = String.Empty;
+                string name = sh.Varname;
                 if (sh.Userdescription != "")
                 {
-                    name = sh.Userdescription;
+                    if (sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
+                    {
+                        name = sh.Userdescription;
+                    }
                 }
-                else
-                {
-                    name = sh.Varname;
-                }
+
                 sat.GetAxisSymbols(name, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
                 string symboldescr = symtrans.TranslateSymbolToHelpText(name, out helptext, out cat, out subcat, m_ApplicationLanguage);    
                 if (xaxis != "")
