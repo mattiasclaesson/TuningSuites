@@ -69,12 +69,9 @@ namespace T7
             foreach (SymbolHelper sh in sc)
             {
                 string name = sh.Varname;
-                if (sh.Userdescription != "")
+                if (sh.Userdescription != "" && sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
                 {
-                    if (sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
-                    {
-                        name = sh.Userdescription;
-                    }
+                    name = sh.Userdescription;
                 }
 
                 sat.GetAxisSymbols(name, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);

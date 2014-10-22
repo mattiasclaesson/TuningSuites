@@ -689,7 +689,7 @@ namespace T7
                         // break;
                     }
                 }
-                //AddDebugLog("RPMindex = " + m_rpmindex + " Percentage = " + m_rpmpercentage.ToString() + " MAPindex = " + m_mapindex.ToString() + " Percentage = " + m_mappercentage.ToString());
+                //LogHelper.Log("RPMindex = " + m_rpmindex + " Percentage = " + m_rpmpercentage.ToString() + " MAPindex = " + m_mapindex.ToString() + " Percentage = " + m_mappercentage.ToString());
                 // now we found the indexes of the smaller values
                 int a1 = 0;
                 int a2 = 0;
@@ -725,7 +725,7 @@ namespace T7
                     b1 = (int)table.GetValue(((m_yindex + 1) * xaxis.Length) + m_xindex);
                     b2 = (int)table.GetValue(((m_yindex + 1) * xaxis.Length) + m_xindex + 1);
                 }
-                //AddDebugLog("a1 = " + a1.ToString() + " a2 = " + a2.ToString() + " b1 = " + b1.ToString() + " b2 = " + b2.ToString());
+                //LogHelper.Log("a1 = " + a1.ToString() + " a2 = " + a2.ToString() + " b1 = " + b1.ToString() + " b2 = " + b2.ToString());
                 // now interpolate the values found
                 double aval = 0;
                 double bval = 0;
@@ -737,11 +737,11 @@ namespace T7
                 else bval = b1 + (m_xpercentage * bdiff);
                 // now interpolate vertically (RPM axis)
                 
-                //AddDebugLog("aval = " + aval.ToString() + " bval = " + bval.ToString());
+                //LogHelper.Log("aval = " + aval.ToString() + " bval = " + bval.ToString());
                 double abdiff = Math.Abs(aval - bval);
                 if (aval > bval) result = aval - (m_ypercentage * abdiff);
                 else result = aval + (m_ypercentage * abdiff);
-                //AddDebugLog("result = " + result.ToString());
+                //LogHelper.Log("result = " + result.ToString());
             }
             catch (Exception E)
             {
@@ -797,7 +797,7 @@ namespace T7
                         // break;
                     }
                 }
-                //AddDebugLog("RPMindex = " + m_rpmindex + " Percentage = " + m_rpmpercentage.ToString() + " MAPindex = " + m_mapindex.ToString() + " Percentage = " + m_mappercentage.ToString());
+                //LogHelper.Log("RPMindex = " + m_rpmindex + " Percentage = " + m_rpmpercentage.ToString() + " MAPindex = " + m_mapindex.ToString() + " Percentage = " + m_mappercentage.ToString());
                 // now we found the indexes of the smaller values
                 byte a1 = 0;
                 byte a2 = 0;
@@ -833,7 +833,7 @@ namespace T7
                     b1 = (byte)table.GetValue(((m_yindex + 1) * xaxis.Length) + m_xindex);
                     b2 = (byte)table.GetValue(((m_yindex + 1) * xaxis.Length) + m_xindex + 1);
                 }
-                //AddDebugLog("a1 = " + a1.ToString() + " a2 = " + a2.ToString() + " b1 = " + b1.ToString() + " b2 = " + b2.ToString());
+                //LogHelper.Log("a1 = " + a1.ToString() + " a2 = " + a2.ToString() + " b1 = " + b1.ToString() + " b2 = " + b2.ToString());
                 // now interpolate the values found
                 double aval = 0;
                 double bval = 0;
@@ -845,11 +845,11 @@ namespace T7
                 else bval = b1 + (m_xpercentage * bdiff);
                 // now interpolate vertically (RPM axis)
 
-                //AddDebugLog("aval = " + aval.ToString() + " bval = " + bval.ToString());
+                //LogHelper.Log("aval = " + aval.ToString() + " bval = " + bval.ToString());
                 double abdiff = Math.Abs(aval - bval);
                 if (aval > bval) result = aval - (m_ypercentage * abdiff);
                 else result = aval + (m_ypercentage * abdiff);
-                //AddDebugLog("result = " + result.ToString());
+                //LogHelper.Log("result = " + result.ToString());
             }
             catch (Exception E)
             {

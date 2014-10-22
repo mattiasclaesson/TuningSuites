@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using CommonSuite;
+using TrionicCANLib;
 
 namespace T7
 {
@@ -542,7 +538,7 @@ namespace T7
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter || 
+            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.COMBI || 
                 comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
             {
                 btnAdapterConfiguration.Enabled = true;
@@ -563,7 +559,7 @@ namespace T7
 
         private void btnAdapterConfiguration_Click(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter)
+            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.COMBI)
             {
                 // open the config screen for additional configuration of the adapter
                 // which ADC channels mean what

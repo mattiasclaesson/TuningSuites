@@ -724,7 +724,7 @@ namespace T7
 
                 if (AddressTableOffset > 0 /*&& !notfound*/)
                 {
-                    AddDebugLog("Opening file resulted in AddressTableOffset (packed): " + AddressTableOffset.ToString("X8"));
+                    LogHelper.Log("Opening file resulted in AddressTableOffset (packed): " + AddressTableOffset.ToString("X8"));
 
                     fsread.Seek(/*0x588f0*/ AddressTableOffset - 17, SeekOrigin.Begin);
                     bool endoftable = false;
@@ -969,7 +969,7 @@ namespace T7
                             int SymbolListOffSet = GetSymbolListOffSet(filename);
                             if (SymbolListOffSet > 0)
                             {
-                                AddDebugLog("Opening file resulted in SymbolListOffset: " + SymbolListOffSet.ToString("X8"));
+                                LogHelper.Log("Opening file resulted in SymbolListOffset: " + SymbolListOffSet.ToString("X8"));
                                 FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
                                 using (BinaryReader br = new BinaryReader(fsread))
                                 {
@@ -1120,7 +1120,7 @@ namespace T7
                                         }
                                         if (AddressTableOffset > 0)
                                         {
-                                            AddDebugLog("Opening file resulted in AddressTableOffset: " + AddressTableOffset.ToString("X8"));
+                                            LogHelper.Log("Opening file resulted in AddressTableOffset: " + AddressTableOffset.ToString("X8"));
 
                                             fsread.Seek(AddressTableOffset-8, SeekOrigin.Begin);        // 0x588f0 <AddressTableOffset-8>
                                             endoftable = false;

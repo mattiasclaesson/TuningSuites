@@ -517,7 +517,7 @@ namespace T7
             {
                 if (caddr != 0 && sh.Flash_start_address == caddr)
                 {
-                    if (sh.Userdescription != "")
+                    if (sh.Userdescription != "" && sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
                     {
                         symbol = "ROM_" + sh.Userdescription;
                     }
@@ -529,7 +529,7 @@ namespace T7
                 }
                 else if (caddr != 0 && sh.Start_address == caddr)
                 {
-                    if (sh.Userdescription != "")
+                    if (sh.Userdescription != "" && sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
                     {
                         symbol = "RAM_" + sh.Userdescription;
                     }

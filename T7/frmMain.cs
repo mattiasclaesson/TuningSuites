@@ -84,14 +84,12 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using T7;
 using System.Diagnostics;
 using System.Reflection;
 using T7.KWP;
 using DevExpress.XtraBars;
 using Microsoft.Win32;
 using System.Data.OleDb;
-using Microsoft.Office.Tools.Excel;
 using System.Globalization;
 using System.Threading;
 using System.Runtime.InteropServices;
@@ -99,94 +97,16 @@ using T7.Parser;
 using DevExpress.XtraBars.Docking;
 using Microsoft.Office.Interop.Excel;
 using RealtimeGraph;
-using System.Net;
 using T7.CAN;
 using DevExpress.XtraGrid;
 using System.Xml;
 using DevExpress.Skins;
 using PSTaskDialog;
 using CommonSuite;
+using TrionicCANLib;
 
 namespace T7
 {
-    public enum VectorType : int
-    {
-        Reset_initial_stack_pointer,
-        Reset_initial_program_counter,
-        Bus_error,
-        Address_error,
-        Illegal_instruction,
-        Zero_division,
-        CHK_CHK2_instructions,
-        TRAPcc_TRAPV_instructions,
-        Privilege_violation,
-        Trace,
-        Line_1010_emulator,
-        Line_1111_emulator,
-        Hardware_breakpoint,
-        Coprocessor_protocol_violation,
-        Format_error_and_uninitialized_interrupt_1,
-        Format_error_and_uninitialized_interrupt_2,
-        Unassigned_reserved_1,
-        Unassigned_reserved_2,
-        Unassigned_reserved_3,
-        Unassigned_reserved_4,
-        Unassigned_reserved_5,
-        Unassigned_reserved_6,
-        Unassigned_reserved_7,
-        Unassigned_reserved_8,
-        Spurious_interrupt,
-        Level_1_interrupt_autovector,
-        Level_2_interrupt_autovector,
-        Level_3_interrupt_autovector,
-        Level_4_interrupt_autovector,
-        Level_5_interrupt_autovector,
-        Level_6_interrupt_autovector,
-        Level_7_interrupt_autovector,
-        Trap_instruction_vectors_0,
-        Trap_instruction_vectors_1,
-        Trap_instruction_vectors_2,
-        Trap_instruction_vectors_3,
-        Trap_instruction_vectors_4,
-        Trap_instruction_vectors_5,
-        Trap_instruction_vectors_6,
-        Trap_instruction_vectors_7,
-        Trap_instruction_vectors_8,
-        Trap_instruction_vectors_9,
-        Trap_instruction_vectors_10,
-        Trap_instruction_vectors_11,
-        Trap_instruction_vectors_12,
-        Trap_instruction_vectors_13,
-        Trap_instruction_vectors_14,
-        Trap_instruction_vectors_15,
-        Reserved_coprocessor_0,
-        Reserved_coprocessor_1,
-        Reserved_coprocessor_2,
-        Reserved_coprocessor_3,
-        Reserved_coprocessor_4,
-        Reserved_coprocessor_5,
-        Reserved_coprocessor_6,
-        Reserved_coprocessor_7,
-        Reserved_coprocessor_8,
-        Reserved_coprocessor_9,
-        Reserved_coprocessor_10,
-        Unassigned_reserved_9,
-        Unassigned_reserved_10,
-        Unassigned_reserved_11,
-        Unassigned_reserved_12,
-        Unassigned_reserved_13
-    }
-
-    public enum CANBusAdapter : int
-    {
-        Lawicel,
-        MultiAdapter,
-        //Mitronics,
-        //EasySync,
-        ELM327
-    }
-
-
     public delegate void DelegateStartReleaseNotePanel(string filename, string version);
 
     public delegate void FIOCallback(int value);
@@ -245,13 +165,11 @@ namespace T7
 
         private string m_currentsramfile = string.Empty;
         private AFRViewType AfrViewMode = AFRViewType.AFRMode;
-        private bool _infoFeed = false;
         private Stopwatch _sw = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
         frmSplash splash;
         frmProgress frmFlasherProgress;
         frmProgress frmSymbolReadProgress;
-        private frmProgress frmProgressWriteRAM;
         //private T7.Flasher.T7Flasher flash = null;
         
         // should be interface
@@ -286,7 +204,7 @@ namespace T7
         System.Data.DataTable m_realtimeAddresses;
         private System.Data.DataTable mrudt = new System.Data.DataTable();
         private bool m_prohibitReading = false;
-
+        private frmEditTuningPackage tunpackeditWindow = null;
 
 
         public frmMain(string[] args)
@@ -329,7 +247,7 @@ namespace T7
                     }
                 }
             }
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+            if (m_appSettings.CANBusAdapterType == CANBusAdapter.LAWICEL)
             {
                 canUsbDevice = new CANUSBDevice();
             }
@@ -416,8 +334,387 @@ namespace T7
             {
                 LogHelper.Log(E.Message);
             }
-
         }
+
+        #region File
+        private void File_Open_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                CloseProject();
+                m_appSettings.Lastprojectname = "";
+                OpenFile(openFileDialog1.FileName, true);
+                m_appSettings.LastOpenedType = 0;
+
+            }
+        }
+
+        private void File_SaveAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            //review all open editors and save the data still pending
+            bool _datasaved = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                foreach (Control c in pnl.Controls)
+                {
+                    if (c is IMapViewer)
+                    {
+                        IMapViewer vwr = (IMapViewer)c;
+                        if (vwr.SaveData()) _datasaved = true;
+                    }
+                    else if (c is DockPanel)
+                    {
+                        DockPanel tpnl = (DockPanel)c;
+                        foreach (Control c2 in tpnl.Controls)
+                        {
+                            if (c2 is IMapViewer)
+                            {
+                                IMapViewer vwr2 = (IMapViewer)c2;
+                                if (vwr2.SaveData()) _datasaved = true;
+                            }
+                        }
+                    }
+                    else if (c is ControlContainer)
+                    {
+                        ControlContainer cntr = (ControlContainer)c;
+                        foreach (Control c3 in cntr.Controls)
+                        {
+                            if (c3 is IMapViewer)
+                            {
+                                IMapViewer vwr3 = (IMapViewer)c3;
+                                if (vwr3.SaveData()) _datasaved = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (_datasaved)
+            {
+                frmInfoBox info = new frmInfoBox("All pending changes saved to binary");
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("Binary was already up to date!");
+            }
+        }
+
+        private void File_SaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Binary files|*.bin";
+            sfd.Title = "Save current file as... ";
+            sfd.CheckFileExists = false;
+            sfd.CheckPathExists = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                File.Copy(m_currentfile, sfd.FileName, true);
+                if (MessageBox.Show("Do you want to open the newly saved file?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    m_appSettings.Lastprojectname = "";
+                    CloseProject();
+                    OpenFile(sfd.FileName, true);
+                    m_appSettings.LastOpenedType = 0;
+                }
+            }
+        }
+
+        private void File_ExportToS19(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SaveFileDialog sfd1 = new SaveFileDialog();
+            sfd1.Filter = "S19 files|*.S19";
+            sfd1.AddExtension = true;
+            sfd1.DefaultExt = "S19";
+            sfd1.OverwritePrompt = true;
+            sfd1.Title = "Export file to motorola S19 format...";
+            if (sfd1.ShowDialog() == DialogResult.OK)
+            {
+                srec2bin srec = new srec2bin();
+                srec.ConvertBinToSrec(m_currentfile, sfd1.FileName);
+            }
+        }
+
+        private void File_Exit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            System.Windows.Forms.Application.Exit();
+        }
+
+        private void File_CreateBackupFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (m_currentfile != string.Empty)
+            {
+                verifychecksum(false);
+
+                if (File.Exists(m_currentfile))
+                {
+                    if (m_CurrentWorkingProject != "")
+                    {
+                        if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups");
+                        string filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups\\" + Path.GetFileNameWithoutExtension(GetBinaryForProject(m_CurrentWorkingProject)) + "-backup-" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".BIN";
+                        File.Copy(GetBinaryForProject(m_CurrentWorkingProject), filename);
+                    }
+                    else
+                    {
+                        File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup", true);
+                        frmInfoBox info = new frmInfoBox("Backup created: " + Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup");
+                    }
+                }
+            }
+        }
+
+        private void File_ImportXML_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // ask user to point to XML document
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "XML documents|*.xml";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                TryToLoadAdditionalSymbols(ofd.FileName);
+                gridControlSymbols.DataSource = m_symbols;
+                SetDefaultFilters();
+                gridControlSymbols.RefreshDataSource();
+                // and save the data to the repository
+                SaveAdditionalSymbols();
+                try
+                {
+                    _softwareIsOpenDetermined = false;
+                    IsSoftwareOpen();
+                }
+                catch (Exception E3)
+                {
+                    LogHelper.Log(E3.Message);
+                }
+            }
+        }
+
+        private void File_ImportCSV_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CSV documents|*.csv";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                TryToLoadAdditionalCSVSymbols(ofd.FileName);
+                foreach (SymbolHelper sh in m_symbols)
+                {
+                    if (sh.Userdescription != "" && sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                    {
+                        string temp = sh.Varname;
+                        sh.Varname = sh.Userdescription;
+                        sh.Userdescription = temp;
+                    }
+                }
+                gridControlSymbols.DataSource = m_symbols;
+                SetDefaultFilters();
+                gridControlSymbols.RefreshDataSource();
+                // and save the data to the repository
+                SaveAdditionalSymbols();
+                try
+                {
+                    _softwareIsOpenDetermined = false;
+                    IsSoftwareOpen();
+                }
+                catch (Exception E3)
+                {
+                    LogHelper.Log(E3.Message);
+                }
+            }
+        }
+
+        private void File_ImportTuningPackage_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Trionic 7 packages|*.t7p";
+            ofd.Multiselect = false;
+            char[] sep = new char[1];
+            sep.SetValue(',', 0);
+
+            SymbolCollection scToImport = new SymbolCollection();
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("Map");
+            dt.Columns.Add("Result");
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                //TODO: create a list of maps to import .. maybe?
+                using (StreamReader sr = new StreamReader(ofd.FileName))
+                {
+                    string line = string.Empty;
+                    SymbolHelper sh_Import = new SymbolHelper();
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("symbol="))
+                        {
+                            //
+                            sh_Import = new SymbolHelper();
+                            sh_Import.Varname = line.Replace("symbol=", "");
+                        }
+                        else if (line.StartsWith("length="))
+                        {
+                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
+                        }
+                        else if (line.StartsWith("data="))
+                        {
+                            //
+                            try
+                            {
+                                string dataBytes = line.Replace("data=", "");
+                                // split using ','
+                                string[] bytesInStrings = dataBytes.Split(sep);
+                                byte[] dataToInsert = new byte[sh_Import.Length];
+                                for (int t = 0; t < sh_Import.Length; t++)
+                                {
+                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
+                                    dataToInsert.SetValue(b, t);
+                                }
+                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
+                                if (addressInFile > 0)
+                                {
+                                    savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
+                                    // add successful
+                                    dt.Rows.Add(sh_Import.Varname, "Success");
+                                }
+                                else
+                                {
+                                    // add failure
+                                    dt.Rows.Add(sh_Import.Varname, "Fail");
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                // add failure
+                                dt.Rows.Add(sh_Import.Varname, "Fail");
+                                LogHelper.Log(E.Message);
+                            }
+                        }
+                    }
+                }
+                UpdateChecksum(m_currentfile);
+                frmImportResults res = new frmImportResults();
+                res.SetDataTable(dt);
+                res.ShowDialog();
+            }
+        }
+
+        private void File_EditTuningPackage(object sender, ItemClickEventArgs e)
+        {
+            if (tunpackeditWindow != null)
+            {
+                frmInfoBox info = new frmInfoBox("You have another tuning package edit window open, please close that first");
+                return;
+            }
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Trionic 7 packages|*.t7p";
+            ofd.Multiselect = false;
+            char[] sep = new char[1];
+            sep.SetValue(',', 0);
+
+            SymbolCollection scToImport = new SymbolCollection();
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("Map");
+            dt.Columns.Add("Length");
+            dt.Columns.Add("Data");
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                //TODO: create a list of maps to import .. maybe?
+                using (StreamReader sr = new StreamReader(ofd.FileName))
+                {
+                    string line = string.Empty;
+                    SymbolHelper sh_Import = new SymbolHelper();
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("symbol="))
+                        {
+                            //
+                            sh_Import = new SymbolHelper();
+                            sh_Import.Varname = line.Replace("symbol=", "");
+                        }
+                        else if (line.StartsWith("length="))
+                        {
+                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
+                        }
+                        else if (line.StartsWith("data="))
+                        {
+                            //
+                            try
+                            {
+                                string dataBytes = line.Replace("data=", "");
+                                // split using ','
+                                string[] bytesInStrings = dataBytes.Split(sep);
+                                byte[] dataToInsert = new byte[sh_Import.Length];
+                                for (int t = 0; t < sh_Import.Length; t++)
+                                {
+                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
+                                    dataToInsert.SetValue(b, t);
+                                }
+                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
+                                if (addressInFile > 0)
+                                {
+                                    //savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
+                                    // add successful
+                                    dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), dataBytes);
+                                }
+                                else
+                                {
+                                    // add failure
+                                    dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), dataBytes);
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                // add failure
+                                dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), "");
+                                LogHelper.Log(E.Message);
+                            }
+                        }
+                    }
+                }
+                tunpackeditWindow = new frmEditTuningPackage();
+                tunpackeditWindow.FormClosed += new FormClosedEventHandler(edit_FormClosed);
+                tunpackeditWindow.onMapSelected += new frmEditTuningPackage.MapSelected(edit_onMapSelected);
+                tunpackeditWindow.SetFilename(ofd.FileName);
+                tunpackeditWindow.SetDataTable(dt);
+                tunpackeditWindow.Show();
+
+            }
+        }
+
+        private void File_barEditRecent_EditValueChanged(object sender, EventArgs e)
+        {
+            if (barEditRecent.EditValue != null)
+            {
+                if (barEditRecent.EditValue != DBNull.Value)
+                {
+                    CloseProject();
+                    m_appSettings.Lastprojectname = "";
+                    OpenFile(barEditRecent.EditValue.ToString(), false);
+                    m_appSettings.LastOpenedType = 0;
+                }
+            }
+        }
+
+        private void File_barEditRecent_ShowingEditor(object sender, ItemCancelEventArgs e)
+        {
+            repositoryItemLookUpEdit1.DataSource = mrudt;
+        }
+
+        private void File_CompareToOriginal_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            T7FileHeader t7header = new T7FileHeader();
+            t7header.init(m_currentfile, false);
+            if (Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\Binaries"))
+            {
+                string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\Binaries", t7header.getPartNumber() + ".bin");
+                if (files.Length == 1)
+                {
+                    CompareToFile((string)files.GetValue(0));
+                }
+            }
+        }
+
+        #endregion
 
         void canUsbDevice_onReceivedAdditionalInformation(object sender, ICANDevice.InformationEventArgs e)
         {
@@ -685,7 +982,6 @@ namespace T7
             {
                 LogHelper.Log(E2.Message);
             }
-            //t7file = new Trionic7File();
             AddFileToMRUList(filename);
             symbol_collection = retval.ExtractFile(filename, m_appSettings.ApplicationLanguage, m_current_softwareversion);
             
@@ -706,23 +1002,13 @@ namespace T7
                     IsSoftwareOpen();
                     // fill in the rest of the parameters
                     barFilenameText.Caption = Path.GetFileNameWithoutExtension(filename);
-
-
                 }
                 catch (Exception E3)
                 {
                     LogHelper.Log(E3.Message);
                 }
             }
-            if (_infoFeed || m_appSettings.DebugMode)
-            {
-                // well, upload the file maybe, but that would be stealing right?
-                // for now, just send the information about the file
-                //InfoBrowser/Default.aspx?trionicversion=7&filename=testmy.bin&computer=hans&username=pchans&appversion=1.6.7
 
-                //GetPageHTML("http://trionic.mobixs.eu/InfoBrowser/Default.aspx?trionicversion=7&filename=" + Path.GetFileName(filename) + "&computer=" + Environment.MachineName + "&username=" + Environment.UserName + "&appversion=" + System.Windows.Forms.Application.ProductVersion, 10);
-
-            }
             if (IsBinaryBiopower())
             {
                 foreach (SymbolHelper sh in symbol_collection)
@@ -742,16 +1028,6 @@ namespace T7
                         sh.Description = translator.TranslateSymbolToHelpText(sh.Userdescription, out help, out cat, out sub, m_appSettings.ApplicationLanguage);
                     }
                 }
-            }
-            return retval;
-        }
-
-        private int NamedSymbolCount()
-        {
-            int retval = 0;
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                if (sh.Userdescription != "") retval++;
             }
             return retval;
         }
@@ -786,64 +1062,6 @@ namespace T7
 
             return retval;
 
-        }
-
-        public string GetPageHTML(string pageUrl, int timeoutSeconds)
-        {
-            System.Net.WebResponse response = null;
-
-            try
-            {
-                // Setup our Web request
-                System.Net.WebRequest request = System.Net.WebRequest.Create(pageUrl);
-
-                try
-                {
-                    //request.Proxy = System.Net.WebProxy.GetDefaultProxy();
-                    request.Proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
-                }
-                catch (Exception proxyE)
-                {
-                    LogHelper.Log(proxyE.Message);
-                }
-
-                /*                if (UseDefaultProxy)
-                                {
-                                    request.Proxy = System.Net.WebProxy.GetDefaultProxy();
-                                    if (UseDefaultCredentials)
-                                    {
-                                        request.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
-                                    }
-                                    if (UseDefaultNetworkCredentials)
-                                    {
-                                        request.Proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
-                                    }
-                                }*/
-
-                request.Timeout = timeoutSeconds * 1000;
-
-                // Retrieve data from request
-                response = request.GetResponse();
-
-                System.IO.Stream streamReceive = response.GetResponseStream();
-                System.Text.Encoding encoding = System.Text.Encoding.GetEncoding("utf-8");
-                System.IO.StreamReader streamRead = new System.IO.StreamReader(streamReceive, encoding);
-
-                // return the retrieved HTML
-                return streamRead.ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-            finally
-            {
-                // Check if exists, then close the response.
-                if (response != null)
-                {
-                    response.Close();
-                }
-            }
         }
 
         private string GetFileDescriptionFromFile(string file)
@@ -942,18 +1160,6 @@ namespace T7
             }
         }
 
-        private void AddDebugLog(string line)
-        {
-            LogHelper.Log(line);
-            if (Directory.Exists("C:\\debug"))
-            {
-                using (StreamWriter sw = new StreamWriter("c:\\debug\\t7suite.log", true))
-                {
-                    sw.WriteLine(line);
-                }
-            }
-        }
-
         private void InitMruSystem()
         {
             try
@@ -1027,22 +1233,6 @@ namespace T7
             catch (Exception E)
             {
                 LogHelper.Log(E.Message);
-            }
-        }
-
-        
-
-        private void DumpToDebugTable(byte[] bytes, SymbolHelper sh)
-        {
-            string line = string.Empty;
-            line = sh.Varname + " " + sh.Internal_address.ToString("X4") + " " + sh.Length.ToString("X4") + " " + sh.Symbol_number.ToString();
-            foreach (byte b in bytes)
-            {
-                line += " " + b.ToString("X2");
-            }
-            using (StreamWriter sw = new StreamWriter("debug.txt", true))
-            {
-                sw.WriteLine(line);
             }
         }
 
@@ -1382,9 +1572,7 @@ namespace T7
 
 
         private void frmMain_Load(object sender, EventArgs e)
-        {
-            //if (m_appSettings.DebugMode) m_connectedToECU = true;
-            
+        {            
             ribbonControl1.Minimized = true;
             ribbonControl2.Minimized = true;
             InitSkins();
@@ -1454,14 +1642,10 @@ namespace T7
             }
             if(m_appSettings.DebugMode)
             {
-                ribbonPageGroup23.Visible = true;
                 debugActionToolStripMenuItem.Visible = true;
-                barButtonItem2.Enabled = true;
-                barButtonItem2.Visibility = BarItemVisibility.Always;
                 barButtonItem3.Enabled = true;
                 barButtonItem3.Visibility = BarItemVisibility.Always;
                 readSymbolToolStripMenuItem.Enabled = true;
-                //writeSymbolToSRAMToolStripMenuItem.Enabled = true;
             }
             if (m_appSettings.MeasureAFRInLambda)
             {
@@ -1506,8 +1690,6 @@ namespace T7
                 if (convert.ConvertSrecToBin(filename, out convertedfile))
                 {
                     filename = convertedfile;
-
-                    //this.Text = "T5 tool suite - " + System.IO.Path.GetFileName(m_currentfile);
                 }
                 else
                 {
@@ -1656,18 +1838,6 @@ namespace T7
                 LogHelper.Log(E.Message);
             }
         }
-        
-        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                CloseProject();
-                m_appSettings.Lastprojectname = "";
-                OpenFile(openFileDialog1.FileName, true);
-                m_appSettings.LastOpenedType = 0;
-
-            }
-        }
 
         private void SetDefaultFilters()
         {
@@ -1790,30 +1960,6 @@ namespace T7
                         }
                     }
                 }
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to read memory: " + E.Message);
-            }
-            m_prohibitReading = false;
-            return completedata;
-        }
-
-        private byte[] ReadSingleByteFromSRAM(int startaddress)
-        {
-            m_prohibitReading = true;
-            byte[] completedata = new byte[1];
-            try
-            {
-                byte[] data;
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(5);
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) Thread.Sleep(1);
-                KWPHandler.getInstance().requestSequrityAccess(false);
-                KWPHandler.getInstance().sendReadRequest(/*0xF04768*/(uint)(startaddress), 1);
-                KWPHandler.getInstance().sendRequestDataByOffset(out data);
-                completedata[0] = data[0];
-                LogHelper.Log("Single byte fetched: " + completedata[0].ToString("X2"));
-               
             }
             catch (Exception E)
             {
@@ -2003,13 +2149,13 @@ namespace T7
             {
                 KWPHandler.getInstance().requestSequrityAccess(false);
 
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(1);
+                if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) Thread.Sleep(1);
                 else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) Thread.Sleep(1);
 
                 if (KWPHandler.getInstance().sendReadRequest((uint)(sramaddress), (uint)length))
                 {
                     Thread.Sleep(0); //<GS-11022010>
-                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(1);
+                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) Thread.Sleep(1);
                     else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) Thread.Sleep(1);
 
                     if (KWPHandler.getInstance().sendRequestDataByOffset(out data))
@@ -3766,37 +3912,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 sw.WriteLine("SymbolTableAddress=" + fileHeader.Symboltableaddress.ToString("X8"));
             }
 
-        }
-
-        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            tmrDummyRealtime.Enabled = !tmrDummyRealtime.Enabled;
-            if (tmrDummyRealtime.Enabled)
-            {
-                // show realtime panel
-                dockRealtime.Visibility = DockVisibility.Visible;
-                int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
-                int height = dockManager1.Form.ClientSize.Height;
-                if (width > 660) width = 660;
-
-                /*
-                if (width > 660 && Height > 580)
-                {
-                    dockRealtime.MakeFloat();
-                    // maximize
-                    dockRealtime.FloatSize = new Size(660, 580);
-                }
-                else*/
-                {
-                    dockRealtime.Dock = DockingStyle.Left;
-                    dockRealtime.Width = width;
-                }
-            }
-            else
-            {
-                // hide realtime panel
-                dockRealtime.Visibility = DockVisibility.Hidden;
-            }
         }
 
         private void UpdateChecksum(string m_fileName)
@@ -5767,400 +5882,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return retval;
         }
 
-        private void barButtonItem11_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            // show firmware information screen!
-            bool _correctFooter = m_appSettings.AutoFixFooter;
-            frmFirmwareInformation frminfo = new frmFirmwareInformation();
-
-            if (m_currentfile != null)
-            {
-                if (File.Exists(m_currentfile))
-                {
-                    T7FileHeader t7InfoHeader = new T7FileHeader();
-                    t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
-                    string swVersion = t7InfoHeader.getSoftwareVersion();
-                    PartNumberConverter pnc = new PartNumberConverter();
-                    ECUInformation ecuinfo = pnc.GetECUInfo(t7InfoHeader.getPartNumber().Trim(), "");
-                    frminfo.SIDDate = t7InfoHeader.getSIDDate();
-                    if (ecuinfo.Valid)
-                    {
-                        frminfo.OriginalCarType = ecuinfo.Carmodel.ToString();
-                        frminfo.OriginalEngineType = ecuinfo.Enginetype.ToString();
-                    }
-
-                    if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
-                    {
-                        // additional requirements for the bytes in that location
-                        // http://www.trionictuning.com/forum/viewtopic.php?f=17&t=109&p=8569#p8537
-
-                        
-                      
-                        // set these options correct
-                        if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
-                        {
-                            if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
-                                (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
-                                (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
-                            {
-                                frminfo.EnableSIDAdvancedOptions(true);
-                                if (/*CheckBytesInFile(m_currentfile, 0x495FA, 0, 2) &&*/ CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) && CheckBytesInFile(m_currentfile, 0x496B4, 0, 2))
-                                {
-                                    frminfo.SIDDisableStartScreen = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableStartScreen = false;
-                                }
-                                if (CheckBytesInFile(m_currentfile, 0x49760, 0, 2)) // should be 0x49760 in stead of 0x4975E
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = false;
-                                }
-                                /*
-                                 *  Remove startup screen:
-                                    change to 00 00 instead of 00 80 
-                                    000495FA // not needed!!! <GS-11042011>
-                                    0004968E 
-                                    000496B4                              
-                                    Remove adaptation messages:
-                                    Change 0x49760 to 00 00 instead of 00 80
-                                 */
-                            }
-                            else
-                            {
-                                frminfo.EnableSIDAdvancedOptions(false);
-                            }
-                        }
-                        else
-                        {
-                            if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
-                                (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
-                            {
-                                frminfo.EnableSIDAdvancedOptions(true);
-
-                                //Disable startscreen, change 0x00046F4D to 00 in stead of 80
-                                if (CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1))
-                                {
-                                    frminfo.SIDDisableStartScreen = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableStartScreen = false;
-                                }
-                                //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
-                                if (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1))
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = false;
-                                }
-                            }
-                            else
-                            {
-                                frminfo.EnableSIDAdvancedOptions(false);
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        frminfo.EnableSIDAdvancedOptions(false);
-                    }
-
-                    // Pavel Angelov created this modification. 
-                    // Disable effect of the emission limitation function.
-                    if (swVersion.Trim().StartsWith("EU0AF01C"))
-                    {
-                        if (CheckBytesInFile(m_currentfile, 0x13837, 0x03, 1))
-                        {
-                            frminfo.EmissionLimitation = true;
-                            frminfo.EnableEmissionLimitation(true);
-                        }
-                        else if (CheckBytesInFile(m_currentfile, 0x13837, 0x02, 1))
-                        {
-                            frminfo.EmissionLimitation = false;
-                            frminfo.EnableEmissionLimitation(true);
-                        }
-                        else
-                        {
-                            frminfo.EnableEmissionLimitation(false);
-                        }
-                    }
-                    else
-                    {
-                        frminfo.EnableEmissionLimitation(false);
-                    }
-                    
-
-                    frminfo.SoftwareID = t7InfoHeader.getSoftwareVersion();
-                    frminfo.ChassisID = t7InfoHeader.getChassisID();
-                    frminfo.EngineType = t7InfoHeader.getCarDescription();
-                    frminfo.Partnumber = t7InfoHeader.getPartNumber();
-                    frminfo.ImmoID = t7InfoHeader.getImmobilizerID();
-                    frminfo.SoftwareIsOpen = IsBinaryFileOpen();
-                    frminfo.BioPowerSoftware = IsBinaryBiopower();
-                    frminfo.BioPowerEnabled = IsBioPowerEnabled();
-                    frminfo.CompressedSymboltable = IsBinaryPackedVersion(m_currentfile);
-                    frminfo.MissingSymbolTable = IsBinaryMissingSymbolTable();
-                    if (frminfo.MissingSymbolTable) frminfo.BioPowerSoftware = true; // only missing in biopower software
-                    frminfo.ChecksumEnabled = HasBinaryChecksumEnabled();
-                    frminfo.TorqueLimitersEnabled = HasBinaryTorqueLimiterEnabled();
-                    if (!HasBinaryTorqueLimiters()) frminfo.TorqueLimitersPresent = false;
-                    //if (!frminfo.MissingSymbolTable)
-                    {
-                        frminfo.OBDIIPresent = HasBinaryOBDIIMaps();
-                        if (!frminfo.OBDIIPresent)
-                        {
-                            frminfo.OBDIIEnabled = false;
-                        }
-                        else
-                        {
-                            frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
-                        }
-                    }
-                    if(HasBinaryOBDIIMaps())
-                    {
-                        frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
-                    }
-                    frminfo.SecondLambdaEnabled = HasBinarySecondLambdaEnabled();
-
-                    if (!HasBinarySecondLambdaMap()) frminfo.SecondLambdaPresent = false;
-
-                    if (!HasBinaryTipInOutParameters()) frminfo.FastThrottleResponsePresent = false;
-                    else frminfo.FastThrottleResponsePresent = true;
-                    frminfo.FastThrottleReponse = HasBinaryFastThrottleResponse();
-                    frminfo.ExtraFastThrottleReponse = HasBinaryExtraFastThrottleResponse();
-                    if (!HasBinaryTipInOutParameters())
-                    {
-                        frminfo.FastThrottleReponse = false;
-                        frminfo.ExtraFastThrottleReponse = false;
-                    }
-                    if (!HasBinaryCatalystLightOffParameters()) frminfo.CatalystLightoffPresent = false;
-                    else frminfo.CatalystLightoffPresent = true;
-                    frminfo.CatalystLightOff = HasBinaryCatalystLightOffEnabled();
-                    frminfo.ProgrammingDateTime = GetProgrammingDateTime();
-                    if(!m_appSettings.WriteTimestampInBinary)
-                    {
-                        frminfo.DisableTimeStamping();
-                    }
-                    if (frminfo.ShowDialog() == DialogResult.OK)
-                    {
-                        if (t7InfoHeader.IsTISBinary(m_currentfile))
-                        {
-                            // user is trying to update a TIS file, ask for footer correction.
-                            if ((frminfo.ImmoID != t7InfoHeader.getImmobilizerID()) || frminfo.ChassisID != t7InfoHeader.getChassisID())
-                            {
-                                if (!_correctFooter)
-                                {
-                                    if (MessageBox.Show("It seems you are trying to update data in a TIS file, would you like T7Suite to correct the footer information?", "TIS file question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                    {
-                                        //_correctFooter = true;
-                                        // create a backup file at this point
-                                        File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup", true);
-                                        t7InfoHeader.init(m_currentfile, true);
-                                    }
-                                }
-                            }
-                        }
-                        t7InfoHeader.setImmobilizerID(frminfo.ImmoID);
-                        t7InfoHeader.setSoftwareVersion(frminfo.SoftwareID);
-                        t7InfoHeader.setCarDescription(frminfo.EngineType);
-                        t7InfoHeader.setChassisID(frminfo.ChassisID);
-                        t7InfoHeader.setSIDDate(frminfo.SIDDate);
-                        if (GetProgrammingDateTime() != frminfo.ProgrammingDateTime)
-                        {
-                            SetProgrammingDateTime(frminfo.ProgrammingDateTime);
-                        }
-                        
-                        if (frminfo.SoftwareIsOpen)
-                        {
-                            SetBinaryFileOpen();
-                        }
-                        else
-                        {
-                            SetBinaryFileClosed();
-                        }
-                        if (frminfo.TorqueLimitersEnabled && !HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
-                        {
-                            SetTorqueLimiterEnabled(true);
-                        }
-                        else if (!frminfo.TorqueLimitersEnabled && HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
-                        {
-                            SetTorqueLimiterEnabled(false);
-                        }
-                        if (frminfo.OBDIIEnabled && !HasBinaryOBDIIEnabled())
-                        {
-                            SetOBDIIEnabled(true);
-                        }
-                        else if (!frminfo.OBDIIEnabled && HasBinaryOBDIIEnabled())
-                        {
-                            SetOBDIIEnabled(false);
-                        }
-                        if (frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap()/*&& !HasBinarySecondLambdaEnabled()*/)
-                        {
-                            SetSecondLambdaEnabled(true);
-                        }
-                        else if (!frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap() && HasBinarySecondLambdaEnabled())
-                        {
-                            SetSecondLambdaEnabled(false);
-                        }
-                        if (HasBinaryTipInOutParameters())
-                        {
-                            if (frminfo.FastThrottleReponse && !HasBinaryFastThrottleResponse())
-                            {
-                                SetFastThrottleResponse(true);
-                            }
-                            else if (!frminfo.FastThrottleReponse && HasBinaryFastThrottleResponse())
-                            {
-                                SetFastThrottleResponse(false);
-                            }
-                            if (frminfo.ExtraFastThrottleReponse && !HasBinaryExtraFastThrottleResponse())
-                            {
-                                SetExtraFastThrottleResponse(true);
-                            }
-                            else if (!frminfo.ExtraFastThrottleReponse && !frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
-                            {
-                                SetExtraFastThrottleResponse(false);
-                            }
-                            else if (!frminfo.ExtraFastThrottleReponse && frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
-                            {
-                                SetActG2(false);
-                            }
-                            
-                        }
-                        if (HasBinaryCatalystLightOffParameters())
-                        {
-                            if (frminfo.CatalystLightOff && !HasBinaryCatalystLightOffEnabled())
-                            {
-                                SetCatalystLightOff(true);
-                            }
-                            else if (!frminfo.CatalystLightOff && HasBinaryCatalystLightOffEnabled())
-                            {
-                                SetCatalystLightOff(false);
-                            }
-
-                        }
-                        if (IsBinaryBiopower())
-                        {
-                            if (frminfo.BioPowerEnabled && !IsBioPowerEnabled())
-                            {
-                                SetBioPowerEnabled(true);
-                            }
-                            else if (!frminfo.BioPowerEnabled && IsBioPowerEnabled())
-                            {
-                                SetBioPowerEnabled(false);
-                            }
-                        }
-                        t7InfoHeader.save(m_currentfile);
-
-                        if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
-                        {
-                            if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
-                            {
-                                if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
-                                    (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
-                                    (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
-                                {
-
-                                    if (frminfo.SIDDisableStartScreen)
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x00, 1);
-                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x80, 1);
-                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
-                                    }
-                                    if (frminfo.SIDDisableAdaptionMessages)
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x00, 1);
-                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x80, 1);
-                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
-                                    (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
-                                {
-
-                                    //Disable startscreen, change 0x00046F4D to 00 in stead of 80
-                                    //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
-                                    if (frminfo.SIDDisableStartScreen)
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x80, 0);
-                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
-                                    }
-                                    if (frminfo.SIDDisableAdaptionMessages)
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x80, 0);
-                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
-                                    }
-                                }
-                            }
-                        }
-
-                        // Disable effect of the emission limitation function.
-                        if (swVersion.Trim().StartsWith("EU0AF01C"))
-                        {
-                            if (frminfo.EmissionLimitation)
-                            {
-                                byte[] data2write = new byte[1];
-                                data2write.SetValue((byte)0x03, 0);
-                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
-                            }
-                            else
-                            {
-                                byte[] data2write = new byte[1];
-                                data2write.SetValue((byte)0x02, 0);
-                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
-                            }
-                        }
-
-                        UpdateChecksum(m_currentfile);
-                    }
-                }
-            }
-        }
-
         private bool CheckBytesInFile(string filename, int address, byte value, int length)
         {
             byte[] data2check = readdatafromfile(filename, address, length);
@@ -6209,22 +5930,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
             }
             return DateTime.Now;
-        }
-
-        private void barButtonItem8_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            SaveFileDialog sfd1 = new SaveFileDialog();
-            sfd1.Filter = "S19 files|*.S19";
-            sfd1.AddExtension = true;
-            sfd1.DefaultExt = "S19";
-            sfd1.OverwritePrompt = true;
-            sfd1.Title = "Export file to motorola S19 format...";
-            if (sfd1.ShowDialog() == DialogResult.OK)
-            {
-                srec2bin srec = new srec2bin();
-                srec.ConvertBinToSrec(m_currentfile, sfd1.FileName);
-            }
-            
         }
 
         private void gridViewSymbols_KeyDown(object sender, KeyEventArgs e)
@@ -6409,7 +6114,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 barEditItem3.EditValue = 10;
 
                 System.Windows.Forms.Application.DoEvents();
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+                if (m_appSettings.CANBusAdapterType == CANBusAdapter.LAWICEL)
                 {
                     CheckCanwakeup();
                 }
@@ -6419,7 +6124,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 System.Windows.Forms.Application.DoEvents();
                 if (canUsbDevice == null)
                 {
-                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.LAWICEL)
                     {
                         canUsbDevice = new CANUSBDevice();
                     }
@@ -6896,7 +6601,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) combiAdapter = 1;
+                if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) combiAdapter = 1;
                 else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) combiAdapter = 2; //TODO: 2 = ELM327
                 ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", combiAdapter.ToString() + " 1 \"" + sfd.FileName + "\"");
                 Process.Start(psi);
@@ -7267,7 +6972,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             TerminateOnlineProcesses();
             
             int combiAdapter = 0;
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) combiAdapter = 1;
+            if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) combiAdapter = 1;
             else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) combiAdapter = 2; //TODO: 2 = ELM327
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Binary files|*.bin";
@@ -7345,15 +7050,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private void barButtonItem19_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             GetSRAMSnapshot();
-            // download RAM file from ECU
-            /*if (CheckCANConnectivity())
-            {
-                bool _success = false;
-                byte[] data = ReadMapFromSRAM(0xF00000, 0x10000, out _success);
-                LogHelper.Log(_success.ToString() + ": " + data.Length.ToString("X8"));
-
-
-            }*/
         }
 
         private void tmrReadRAMProcessChecker_Tick(object sender, EventArgs e)
@@ -7379,108 +7075,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     }
                 }
             }
-        }
-
-        private void barButtonItem9_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            System.Windows.Forms.Application.Exit();
-            //Environment.Exit(0);
-        }
-
-        private void barButtonItem7_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            //review all open editors and save the data still pending
-            bool _datasaved = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-                foreach (Control c in pnl.Controls)
-                {
-                    if (c is IMapViewer)
-                    {
-                        IMapViewer vwr = (IMapViewer)c;
-                        if (vwr.SaveData()) _datasaved = true;
-                    }
-                    else if (c is DockPanel)
-                    {
-                        DockPanel tpnl = (DockPanel)c;
-                        foreach (Control c2 in tpnl.Controls)
-                        {
-                            if (c2 is IMapViewer)
-                            {
-                                IMapViewer vwr2 = (IMapViewer)c2;
-                                if (vwr2.SaveData()) _datasaved = true;
-                            }
-                        }
-                    }
-                    else if (c is ControlContainer)
-                    {
-                        ControlContainer cntr = (ControlContainer)c;
-                        foreach (Control c3 in cntr.Controls)
-                        {
-                            if (c3 is IMapViewer)
-                            {
-                                IMapViewer vwr3 = (IMapViewer)c3;
-                                if (vwr3.SaveData()) _datasaved = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (_datasaved)
-            {
-                frmInfoBox info = new frmInfoBox("All pending changes saved to binary");
-            }
-            else
-            {
-                frmInfoBox info = new frmInfoBox("Binary was already up to date!");
-            }
-        }
-
-        private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Binary files|*.bin";
-            sfd.Title = "Save current file as... ";
-            sfd.CheckFileExists = false;
-            sfd.CheckPathExists = true;
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                File.Copy(m_currentfile, sfd.FileName, true);
-                if (MessageBox.Show("Do you want to open the newly saved file?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    m_appSettings.Lastprojectname = "";
-                    CloseProject();
-                    OpenFile(sfd.FileName, true);
-                    m_appSettings.LastOpenedType = 0;
-                }
-            }
-
-        }
-
-        private void barButtonItem10_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (m_currentfile != string.Empty)
-            {
-                verifychecksum(false);
-
-                if (File.Exists(m_currentfile))
-                {
-                    if (m_CurrentWorkingProject != "")
-                    {
-                        if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups");
-                        string filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups\\" + Path.GetFileNameWithoutExtension(GetBinaryForProject(m_CurrentWorkingProject)) + "-backup-" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".BIN";
-                        File.Copy(GetBinaryForProject(m_CurrentWorkingProject), filename);
-                    }
-                    else
-                    {
-                        File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup", true);
-                        frmInfoBox info = new frmInfoBox("Backup created: " + Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup");
-                    }
-                }
-            }
-
-
         }
 
         private SymbolCollection GetRealtimeNotificationSymbols()
@@ -10134,29 +9728,6 @@ If boost regulation reports errors you can increase the difference between boost
             }
         }
 
-        
-
-        private bool CheckSymbolTableForECU()
-        {
-            m_realtimeAddresses = new System.Data.DataTable();
-            m_realtimeAddresses.Columns.Add("SymbolName");
-            m_realtimeAddresses.Columns.Add("SymbolNumber", System.Type.GetType("System.Int32"));
-            m_realtimeAddresses.Columns.Add("VarName");
-
-            T7FileHeader fh = new T7FileHeader();
-            fh.init(m_currentfile, false);
-            string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
-
-            if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\symbolmaps\\" + checkstring + ".xml"))
-            {
-                // read it
-                m_realtimeAddresses.ReadXml(System.Windows.Forms.Application.StartupPath + "\\symbolmaps\\" + checkstring + ".xml");
-                return true;
-            }
-         //   flash.readSymbolMap(m_currentfile);
-            return false;
-        }
-
         private void barButtonItem43_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (dockRealtime.Visibility == DockVisibility.Visible)
@@ -10635,7 +10206,7 @@ If boost regulation reports errors you can increase the difference between boost
                 }
                 // <GS-29072010> if the multiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
+                if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI)
                 {
                     if (m_appSettings.Useadc1)
                     {
@@ -12240,7 +11811,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception xlaE)
                 {
-                    AddDebugLog("Failed to create office application interface: " + xlaE.Message);
+                    LogHelper.Log("Failed to create office application interface: " + xlaE.Message);
                 }
 
                 // turn mapdata upside down
@@ -12342,8 +11913,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception E)
                 {
-                    AddDebugLog("Failed to set y axis: " + E.Message);
-                    LogHelper.Log(E.Message);
+                    LogHelper.Log("Failed to set y axis: " + E.Message);
                 }
 
 
@@ -12371,7 +11941,7 @@ dt.Columns.Add("SymbolName");
                 }
                 catch (Exception sE)
                 {
-                    AddDebugLog("Failed to save workbook: " + sE.Message);
+                    LogHelper.Log("Failed to save workbook: " + sE.Message);
                 }
 
 
@@ -12394,7 +11964,6 @@ dt.Columns.Add("SymbolName");
             }
             catch (Exception E)
             {
-                AddDebugLog("Failed to export to excel: " + E.Message);
                 LogHelper.Log("Failed to export to excel: " + E.Message);
             }
             tci = new CultureInfo("nl-NL");
@@ -12446,11 +12015,6 @@ dt.Columns.Add("SymbolName");
             }
             return dataArray;
         }
-
-       /* private void barButtonItem26_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            StartExcelExport();
-        }*/
 
         private void StartExcelExport()
         {
@@ -13664,13 +13228,13 @@ dt.Columns.Add("SymbolName");
                 if (selrows.Length > 0)
                 {
                     SymbolHelper dr = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    symbolname = dr.Varname;
-                    if (dr.Userdescription != "")
+                    if (dr.Userdescription != "" && dr.Userdescription != String.Format("Symbolnumber {0}", dr.Symbol_number))
                     {
-                        if (dr.Userdescription != String.Format("Symbolnumber {0}", dr.Symbol_number))
-                        {
-                            symbolname = dr.Userdescription;
-                        }
+                        symbolname = dr.Userdescription;
+                    }
+                    else
+                    {
+                        symbolname = dr.Varname;
                     }
                 }
             }
@@ -13682,33 +13246,6 @@ dt.Columns.Add("SymbolName");
             dockPanel.Controls.Add(tabdet);
             tabdet.ShowSymbolCollection(m_symbols);
             tabdet.SetCurrentSymbol(symbolname);
-            dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
-            bool isDocked = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                {
-                    dockPanel.DockAsTab(pnl, 0);
-                    isDocked = true;
-                    break;
-                }
-            }
-            if (!isDocked)
-            {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
-                dockPanel.Width = 700;
-            }
-        }
-
-        private void barButtonItem58_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-            AxisBrowser tabdet = new AxisBrowser();
-            tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
-            tabdet.ApplicationLanguage = m_appSettings.ApplicationLanguage;
-            tabdet.Dock = DockStyle.Fill;
-            dockPanel.Controls.Add(tabdet);
-            tabdet.ShowSymbolCollection(m_symbols);
             dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
             bool isDocked = false;
             foreach (DockPanel pnl in dockManager1.Panels)
@@ -13789,25 +13326,6 @@ dt.Columns.Add("SymbolName");
                 ramview.ShowDialog();
             }*/
 
-        }
-
-        private void barEditItem2_EditValueChanged(object sender, EventArgs e)
-        {
-            if (barEditItem2.EditValue != null)
-            {
-                if (barEditItem2.EditValue != DBNull.Value)
-                {
-                    CloseProject();
-                    m_appSettings.Lastprojectname = "";
-                    OpenFile(barEditItem2.EditValue.ToString(), false);
-                    m_appSettings.LastOpenedType = 0;
-                }
-            }
-        }
-
-        private void barEditItem2_ShowingEditor(object sender, ItemCancelEventArgs e)
-        {
-            repositoryItemLookUpEdit1.DataSource = mrudt;
         }
 
         private void barButtonItem61_ItemClick(object sender, ItemClickEventArgs e)
@@ -13939,7 +13457,7 @@ dt.Columns.Add("SymbolName");
                 TerminateOnlineProcesses();
 
                 int combiAdapter = 0;
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) combiAdapter = 1;
+                if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) combiAdapter = 1;
                 else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) combiAdapter = 2; //TODO: 2 = ELM327
                 ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", combiAdapter.ToString() + " 2 \"" + m_currentfile + "\"");
                 Process.Start(psi);
@@ -14066,107 +13584,6 @@ dt.Columns.Add("SymbolName");
             StartAViewer("IgnE85Cal.fi_AbsMap");
         }
 
-        private void showDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (t7file != null)
-            {
-                string outputfile = Path.GetDirectoryName(t7file.FileName);
-                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(t7file.FileName) + ".asm");
-                System.Windows.Forms.Application.DoEvents();
-                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
-                ctrlDisassembler disasmcontrol = new ctrlDisassembler() { TrionicFile = t7file, Dock = DockStyle.Fill };
-                panel.Controls.Add(disasmcontrol);
-                panel.Text = "T7Suite Disassembler";
-                panel.Width = this.ClientSize.Width - dockSymbols.Width;
-                System.Windows.Forms.Application.DoEvents();
-                disasmcontrol.DisassembleFile(outputfile);
-            }
-        }
-
-        private bool AssemblerViewerActive(bool ShowIfActive, string filename)
-        {
-            bool retval = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-                if (pnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
-                {
-                    retval = true;
-                    if (ShowIfActive)
-                    {
-                        pnl.Show();
-                        dockManager1.ActivePanel = pnl;
-                    }
-                }
-                else
-                {
-                    foreach (Control c in pnl.Controls)
-                    {
-                        if (c is DockPanel)
-                        {
-                            DockPanel tpnl = (DockPanel)c;
-                            if (tpnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
-                            {
-                                retval = true;
-                                if (ShowIfActive)
-                                {
-                                    tpnl.Show();
-                                    dockManager1.ActivePanel = tpnl;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return retval;
-        }
-
-        private void StartAssemblerViewer(string filename, frmProgress progress)
-        {
-            if (m_currentfile != "")
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-                    dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
-                    AsmViewer av = new AsmViewer() { Dock = DockStyle.Fill };
-                    dockPanel.Width = 800;
-                    dockPanel.Controls.Add(av);
-                    progress.SetProgress("Loading assembler file ...");
-                    av.LoadDataFromFile(filename, m_symbols);
-                    progress.SetProgress("Finding starting address in file");
-                    av.FindStartAddress(m_currentfile);
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-        }
-
-        private void showFullDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string outputfile = Path.GetDirectoryName(m_currentfile);
-            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
-            if (!AssemblerViewerActive(true, outputfile))
-            {
-               frmProgress progress = new frmProgress();
-               progress.Show();
-               progress.SetProgress("Start disassembler");
-               if (!File.Exists(outputfile))
-               {
-                   progress.SetProgress("Disassembler running...");
-                   Disassembler dis = new Disassembler();
-                   dis.DisassembleFileRtf(m_currentfile, outputfile, m_currentfile_size, m_symbols);
-                   progress.SetProgress("Disassembler done...");
-               }
-               progress.SetProgress("Loading assembler file");
-               StartAssemblerViewer(outputfile, progress);
-               progress.Close();
-            }
-        }
-
         /// <summary>
         /// TODO: make this work with manually added symbol (user description in stead of varname
         /// </summary>
@@ -14189,7 +13606,7 @@ dt.Columns.Add("SymbolName");
             else
             {
                 bool first = true;
-                for (int i = 0; i < t7SidEdit.getDataArrayAll().Length; i+=3)
+                for (int i = 0; i < t7SidEdit.getDataArrayAll().Length; i += 3)
                 {
                     if (i + 2 < t7SidEdit.getDataArrayAll().Length)
                     {
@@ -14208,7 +13625,7 @@ dt.Columns.Add("SymbolName");
                             // try to match it to a symbol in the binary file
                             if (sh.Flash_start_address == sidh.AddressSRAM)
                             {
-                                
+
                                 sidh.FoundT7Symbol = sh.Varname;
                                 if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
                                 {
@@ -14228,7 +13645,7 @@ dt.Columns.Add("SymbolName");
                     int mode = 0;
                     int modcount = 0;
                     first = true;
-                    for (int j = 0; j < t7SidEdit.getDataArrayNew().Length; j+=3)
+                    for (int j = 0; j < t7SidEdit.getDataArrayNew().Length; j += 3)
                     {
                         if (j + 2 < t7SidEdit.getDataArrayNew().Length)
                         {
@@ -14267,7 +13684,7 @@ dt.Columns.Add("SymbolName");
                 frmSIDInformation frmsid = new frmSIDInformation();
                 frmsid.ApplicationLanguage = m_appSettings.ApplicationLanguage;
                 frmsid.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-              
+
                 frmsid.Sidcollection = currentsidcollection;
                 frmsid.Entiresidcollection = entiresidcollection;
                 frmsid.Symbols = m_symbols;
@@ -14306,34 +13723,34 @@ dt.Columns.Add("SymbolName");
                 }
             }
 
-/*
-            SIDICollection currentsidcollection = GetSidCollectionFromBinary(m_currentfile);
-            //LogHelper.Log("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
-            int mode = 0;
-            int modcount = 0;
+            /*
+                        SIDICollection currentsidcollection = GetSidCollectionFromBinary(m_currentfile);
+                        //LogHelper.Log("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
+                        int mode = 0;
+                        int modcount = 0;
             
-            foreach (SIDIHelper sh in currentsidcollection)
-            {
-                //LogHelper.Log("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
-                //Console.Write(Environment.NewLine); 
-                for (int t = 0; t < sh.Symbol.Length; t++)
-                {
-                    byte b = (byte)sh.Symbol[t];
-                    Console.Write(b.ToString("X2") + " " );
-                }
-                Console.Write(Environment.NewLine);
-                sidtrans.GetSidDescription(sh);
-                sh.Mode = mode;//Convert.ToInt32(sh.Value);
-                modcount++;
-                if ((modcount % 12) == 0) mode++;
-            }
-            frmSIDInformation frmsid = new frmSIDInformation();
-            frmsid.Sidcollection = currentsidcollection;
-            frmsid.Entiresidcollection = entiresidcollection;
-            if (frmsid.ShowDialog() == DialogResult.OK)
-            {
-                SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
-            }*/
+                        foreach (SIDIHelper sh in currentsidcollection)
+                        {
+                            //LogHelper.Log("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
+                            //Console.Write(Environment.NewLine); 
+                            for (int t = 0; t < sh.Symbol.Length; t++)
+                            {
+                                byte b = (byte)sh.Symbol[t];
+                                Console.Write(b.ToString("X2") + " " );
+                            }
+                            Console.Write(Environment.NewLine);
+                            sidtrans.GetSidDescription(sh);
+                            sh.Mode = mode;//Convert.ToInt32(sh.Value);
+                            modcount++;
+                            if ((modcount % 12) == 0) mode++;
+                        }
+                        frmSIDInformation frmsid = new frmSIDInformation();
+                        frmsid.Sidcollection = currentsidcollection;
+                        frmsid.Entiresidcollection = entiresidcollection;
+                        if (frmsid.ShowDialog() == DialogResult.OK)
+                        {
+                            SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
+                        }*/
         }
 
         private void SaveSidCollectionToBinary(string m_currentfile, SIDICollection sidicoll)
@@ -14437,7 +13854,7 @@ dt.Columns.Add("SymbolName");
                 return m_sidcollection;
             }
             stream.Position -= 7L;
-            
+
             long start_pos = stream.Position;
             byte[] bytes = new byte[12];
             uint num4 = 0x53;           //?? fixed length?
@@ -14558,16 +13975,6 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-        private void barButtonItem79_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            
-        }
-
-        private void barButtonItem80_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            
-        }
-
         private void StartReleaseNotesViewer(string xmlfilename, string version)
         {
             dockManager1.BeginUpdate();
@@ -14581,18 +13988,6 @@ dt.Columns.Add("SymbolName");
             dp.Text = "Release notes: " + version;
             dp.Controls.Add(mv);
             dockManager1.EndUpdate();
-        }
-
-        private void btnVinDecoder_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            frmDecodeVIN decode = new frmDecodeVIN();
-            if(m_currentfile != string.Empty)
-            {
-                T7FileHeader t7InfoHeader = new T7FileHeader();
-                t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
-                decode.SetVinNumber(t7InfoHeader.getChassisID());
-            }
-            decode.ShowDialog();
         }
 
         private void BtnLimiterCheck_ItemClick(object sender, ItemClickEventArgs e)
@@ -15005,18 +14400,18 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             return returnvalue;
 
 
-/*            byte[] returnvalue = new byte[36];
-            int range = maxairmass - 80;
-            int airmassperstep = range / 17;
-            for (int i = 0; i < 18; i++)
-            {
-                int valueincell = 80 + (airmassperstep * i);
-                byte b1 = Convert.ToByte(valueincell / 256);
-                byte b2 = Convert.ToByte(valueincell - (int)b1 * 256);
-                returnvalue[i * 2] = b1;
-                returnvalue[(i * 2) + 1] = b2;
-            }
-            return returnvalue;*/
+            /*            byte[] returnvalue = new byte[36];
+                        int range = maxairmass - 80;
+                        int airmassperstep = range / 17;
+                        for (int i = 0; i < 18; i++)
+                        {
+                            int valueincell = 80 + (airmassperstep * i);
+                            byte b1 = Convert.ToByte(valueincell / 256);
+                            byte b2 = Convert.ToByte(valueincell - (int)b1 * 256);
+                            returnvalue[i * 2] = b1;
+                            returnvalue[(i * 2) + 1] = b2;
+                        }
+                        return returnvalue;*/
         }
 
         private byte[] GetBoostMapSupportPoints(int maxairmass)
@@ -15215,6 +14610,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
         }
 
+        #region BDM
+
         private uint fio_bytes;
         private FIOCallback fio_callback = null;
 
@@ -15405,7 +14802,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             barEditItem3.EditValue = 0;
                             barEditItem3.Caption = "Dumping ECU";
                             System.Windows.Forms.Application.DoEvents();
-                            
+
                             _globalECUType = ecu_t.Trionic7;
                             fio_bytes = 0;
                             if (!BdmAdapter_DumpECU(sfd.FileName, ecu_t.Trionic7))
@@ -15494,6 +14891,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 frmInfoBox info = new frmInfoBox("Failed to program ECU: " + BDMException.Message);
             }
         }
+        #endregion
 
         private void AddToRealtimeTable(System.Data.DataTable dt, string varname, string description, int symbolnumber, double value, double offset, double correction, double peak, double minimum, double maximum, int convertedSymbolnumber, uint sramaddress, int length, int delay)
         {
@@ -15681,7 +15079,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 using (BinaryWriter br = new BinaryWriter(fs))
                 {
                     int blockSize = 0x80;
-                    for (int i = 0; i < /*0x800*/ 0x10000/blockSize; i++)
+                    for (int i = 0; i < /*0x800*/ 0x10000 / blockSize; i++)
                     {
                         long curaddress = (0xF00000 + i * blockSize);
                         byte[] data = ReadMapFromSRAM(curaddress, blockSize, out _success);
@@ -15694,7 +15092,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         }
                         //LogHelper.Log("Read data");
                         int prec = (i * 100) / (0x10000 / blockSize);
-                        float kbsread = (float)(i * blockSize)/1024F;
+                        float kbsread = (float)(i * blockSize) / 1024F;
                         progress.SetProgress("Downloading snapshot: " + kbsread.ToString("F1") + " Kb" + " [ " + prec.ToString() + " % ]");
                         progress.SetProgressPercentage(prec);
                         br.Write(data);
@@ -15704,7 +15102,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 fs.Close();
                 progress.Close();
                 // write data
-                
+
                 m_prohibitReading = false;
                 frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
 
@@ -15808,7 +15206,10 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 {
                     if (sh.Userdescription != "")
                     {
-                        plotsel.AddItemToList(sh.Userdescription);
+                        if (sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
+                        {
+                            plotsel.AddItemToList(sh.Userdescription);
+                        }
                     }
                     else
                     {
@@ -15816,38 +15217,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     }
                 }
             }
-            plotsel.ShowDialog(); 
-        }
-
-        private void ImportXMLDescriptor()
-        {
-            // ask user to point to XML document
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "XML documents|*.xml";
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                TryToLoadAdditionalSymbols(ofd.FileName);
-                gridControlSymbols.DataSource = m_symbols;
-                SetDefaultFilters();
-                gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
-                try
-                {
-                    _softwareIsOpenDetermined = false;
-                    IsSoftwareOpen();
-                }
-                catch (Exception E3)
-                {
-                    LogHelper.Log(E3.Message);
-                }
-            }
-        }
-
-        private void btnImportXML_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ImportXMLDescriptor();
+            plotsel.ShowDialog();
         }
 
         private void btnReadFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
@@ -15861,12 +15231,12 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 bool _success = false;
                 string faultCodes = string.Empty;
                 int symbolnumber = GetSymbolNumber(m_symbols, "obdFaults");
-                if(symbolnumber == 0)
+                if (symbolnumber == 0)
                 {
                     // not connected to ECU
                     frmInfoBox info = new frmInfoBox("Cannot find symbolnumber for symbol obdFaults, ECU binary must be loaded");
                 }
-                byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, "obdFaults", (uint)GetSymbolAddressSRAM(m_symbols, "obdFaults"), GetSymbolLength(m_symbols,"obdFaults"), out _success);
+                byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, "obdFaults", (uint)GetSymbolAddressSRAM(m_symbols, "obdFaults"), GetSymbolLength(m_symbols, "obdFaults"), out _success);
                 if (_success)
                 {
                     for (int t = 0; t < buffer.Length; t += 2)
@@ -15965,11 +15335,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 string filename = lookup.GetFileToOpen();
                 if (filename != string.Empty)
                 {
-                    
+
                     CompareToFile(filename);
                 }
             }
-                //<GS-21062010>
+            //<GS-21062010>
             else if (lookup.CreateNewFile)
             {
                 string filename = lookup.GetFileToOpen();
@@ -15983,96 +15353,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
                 }
             }
-        }
-
-        private void tmrDummyRealtime_Tick(object sender, EventArgs e)
-        {
-            // generate dummy realtime data
-            // read data from file, so we can alter it?
-            double variation = _random.NextDouble();
-            variation -= 0.5;
-            UpdateRealtimeInformation("ActualIn.n_Engine", (float)(5000 + (variation * 1000)) );
-            UpdateRealtimeInformation("ActualIn.T_Engine", (float)(80 + (variation * 10)));
-            UpdateRealtimeInformation("ActualIn.T_AirInlet", (float)(10 + (variation * 10)));
-            UpdateRealtimeInformation("ECMStat.ST_ActiveAirDem", (float)12);
-            UpdateRealtimeInformation("Lambda.Status", (float)0);
-            UpdateRealtimeInformation("IgnProt.fi_Offset", (float)(-3 + (variation * 10)));
-            UpdateRealtimeInformation("m_Request", (float)(900 + (variation * 100)));
-            UpdateRealtimeInformation("Out.M_Engine", (float)(250 + (variation * 100)));
-            UpdateRealtimeInformation("ECMStat.P_Engine", (float)(100 + (variation * 50)));
-            UpdateRealtimeInformation("ECMStat.p_Diff", (float)0.5);
-            UpdateRealtimeInformation("In.p_AirInlet", (float)0.5);
-            UpdateRealtimeInformation("Out.PWM_BoostCntrl", (float)65);
-            UpdateRealtimeInformation("Out.fi_Ignition", (float)15);
-            UpdateRealtimeInformation("Out.X_AccPedal", (float)(90 + (variation * 20)));
-            UpdateRealtimeInformation("MAF.m_AirInlet", (float)(850 + (variation * 200)));
-            UpdateRealtimeInformation("In.v_Vehicle", (float)105);
-            UpdateRealtimeInformation("Exhaust.T_Calc", (float)820);
-            UpdateRealtimeInformation("BFuelProt.CurrentFuelCon", (float)15);
-            UpdateRealtimeInformation("DisplProt.LambdaScanner", (float)14.7);
-            UpdateOpenViewers();
-            
-        }
-
-        private void barButtonItem84_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            tmrDummyRealtime.Enabled = !tmrDummyRealtime.Enabled;
-            if (tmrDummyRealtime.Enabled)
-            {
-                // show realtime panel
-                if (PerformanceModePresent())
-                {
-                    btnEconomyMode.Visible = true;
-                    btnNormalMode.Visible = true;
-                    btnSportMode.Visible = true;
-                }
-                else
-                {
-                    btnEconomyMode.Visible = false;
-                    btnNormalMode.Visible = false;
-                    btnSportMode.Visible = false;
-
-                }
-                dockRealtime.Visibility = DockVisibility.Visible;
-                int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
-                int height = dockManager1.Form.ClientSize.Height;
-                if (width > 660) width = 660;
-                /*if (width > 660 && Height > 580)
-                {
-                    dockRealtime.MakeFloat();
-                    // maximize
-                    dockRealtime.FloatSize = new Size(660, 580);
-                }
-                else*/
-                {
-                    dockRealtime.Dock = DockingStyle.Left;
-                    dockRealtime.Width = width;
-                }
-            }
-            else
-            {
-                // hide realtime panel
-                dockRealtime.Visibility = DockVisibility.Hidden;
-            }
-
-            // write data to SRAM, check for valid connection first
-            /*if (CheckCANConnectivity())
-            {
-                m_prohibitReading = true;
-                KWPHandler.getInstance().requestSequrityAccess(false);
-                //KWPHandler.getInstance().ReadFreezeFrameData(framenumber);
-                KWPHandler.getInstance().ReadDTCCodes();
-                KWPHandler.getInstance().ClearDTCCodes();
-                m_prohibitReading = false;
-            }*/
-
-            /*if (CheckCANConnectivity())
-            {
-                KWPHandler.getInstance().sendEraseMemorySpaceRequest(0x01AD0E, 0x120);
-                //send 0x31, 0x51 start/stop address
-                //15,71,51,0E,CB,CB,74,25,E8,45,39,31,53,4E,38,37,4F,2E,34,37,42,00
-
-            }*/
         }
 
         private void btnClearDTCs_ItemClick(object sender, ItemClickEventArgs e)
@@ -16290,7 +15570,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                                 //m_flashStatus = FlashStatus.WriteError;
                                 retval = false;
                                 result = FlashingProcedureResult.FailedToProgramData;
-                                break; 
+                                break;
                             }
                         }
                         //
@@ -16386,49 +15666,49 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
         private void ReadFlash()
         {
-           /* if (_readingFlash) return;
-            if (_writingFlash) return;
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Binary files|*.bin";
-            bool retval = true;
+            /* if (_readingFlash) return;
+             if (_writingFlash) return;
+             SaveFileDialog sfd = new SaveFileDialog();
+             sfd.Filter = "Binary files|*.bin";
+             bool retval = true;
             
-            if (CheckCANConnectivity())
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (Path.GetFileName(sfd.FileName) != string.Empty)
-                    {
-                        if (CheckFlashStatus())
-                        {
-                            // frmFlasherProgress.SetProgress("Starting flash download...");
-                            AddToCanTrace("Starting download of flash");
-                            tmrReadProcessChecker.Enabled = true;
-                            flash.readFlash(sfd.FileName);
-                            //DisableCANInteractionButtons();
-                        }
-                    }
-                }
+             if (CheckCANConnectivity())
+             {
+                 if (sfd.ShowDialog() == DialogResult.OK)
+                 {
+                     if (Path.GetFileName(sfd.FileName) != string.Empty)
+                     {
+                         if (CheckFlashStatus())
+                         {
+                             // frmFlasherProgress.SetProgress("Starting flash download...");
+                             AddToCanTrace("Starting download of flash");
+                             tmrReadProcessChecker.Enabled = true;
+                             flash.readFlash(sfd.FileName);
+                             //DisableCANInteractionButtons();
+                         }
+                     }
+                 }
                 
-                else
-                {
-                    _readingFlash = false;
-                    return;
-                }
-            }
-            else
-            {
-                retval = false;
-            }
-            _readingFlash = false;
+                 else
+                 {
+                     _readingFlash = false;
+                     return;
+                 }
+             }
+             else
+             {
+                 retval = false;
+             }
+             _readingFlash = false;
 
-            if (!retval)
-            {
-                frmInfoBox info = new frmInfoBox("Failed to download flash from ECU");
-            }
-            else
-            {
-                frmInfoBox info = new frmInfoBox("Flash downloaded successfully");
-            }*/
+             if (!retval)
+             {
+                 frmInfoBox info = new frmInfoBox("Failed to download flash from ECU");
+             }
+             else
+             {
+                 frmInfoBox info = new frmInfoBox("Flash downloaded successfully");
+             }*/
         }
 
         void progress_onCancelOperation(object sender, EventArgs e)
@@ -16461,7 +15741,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 pnts[3] = new PointF(24, 107);
                 e.Graphics.FillPolygon(Brushes.Yellow, pnts);
             }
-            
+
         }
 
         private void barUpdateText_ItemDoubleClick(object sender, ItemClickEventArgs e)
@@ -16511,7 +15791,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             SwitchAFRMode();
         }
-        
+
         // Once every x seconds, read the Performance.Mode to show the active mode in the realtime panel
 
         private void btnEconomyMode_Click(object sender, EventArgs e)
@@ -16559,7 +15839,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                                 // make a copy?
                                 scToExport.Add(sh);
                             }
-                            
+
                             PackageExporter pe = new PackageExporter();
                             if (IsSoftwareOpen())
                             {
@@ -16570,88 +15850,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
                     }
                 }
-
-            }
-        }
-
-        private void btnImportTuningPackage_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ImportTuningPackage();
-            
-        }
-
-        private void ImportTuningPackage()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Trionic 7 packages|*.t7p";
-            ofd.Multiselect = false;
-            char[] sep = new char[1];
-            sep.SetValue(',', 0);
-
-            SymbolCollection scToImport = new SymbolCollection();
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("Map");
-            dt.Columns.Add("Result");
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                //TODO: create a list of maps to import .. maybe?
-                using (StreamReader sr = new StreamReader(ofd.FileName))
-                {
-                    string line = string.Empty;
-                    SymbolHelper sh_Import = new SymbolHelper();
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("symbol="))
-                        {
-                            //
-                            sh_Import = new SymbolHelper();
-                            sh_Import.Varname = line.Replace("symbol=", "");
-                        }
-                        else if (line.StartsWith("length="))
-                        {
-                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
-                        }
-                        else if (line.StartsWith("data="))
-                        {
-                            //
-                            try
-                            {
-                                string dataBytes = line.Replace("data=", "");
-                                // split using ','
-                                string[] bytesInStrings = dataBytes.Split(sep);
-                                byte[] dataToInsert = new byte[sh_Import.Length];
-                                for (int t = 0; t < sh_Import.Length; t++)
-                                {
-                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
-                                    dataToInsert.SetValue(b, t);
-                                }
-                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
-                                if (addressInFile > 0)
-                                {
-                                    savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                    // add successful
-                                    dt.Rows.Add(sh_Import.Varname, "Success");
-                                }
-                                else
-                                {
-                                    // add failure
-                                    dt.Rows.Add(sh_Import.Varname, "Fail");
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                // add failure
-                                dt.Rows.Add(sh_Import.Varname, "Fail");
-                                LogHelper.Log(E.Message);
-                            }
-                        }
-                    }
-                }
-                UpdateChecksum(m_currentfile);
-                frmImportResults res = new frmImportResults();
-                res.SetDataTable(dt);
-                res.ShowDialog();
 
             }
         }
@@ -17088,7 +16286,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         Directory.CreateDirectory(foldername);
                     }
                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out cols, out rows);
-                    
+
                     if (e.SymbolName == "TargetAFR")
                     {
                         // set the new map data
@@ -17218,7 +16416,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "TorqueCal.m_AirTorqMap"); // add axis
                 AddToSymbolCollection(scToExport, "TorqueCal.M_EngXSP");
                 AddToSymbolCollection(scToExport, "TorqueCal.m_PedYSP");
-                AddToSymbolCollection(scToExport, "FCutCal.m_AirInletLimit"); 
+                AddToSymbolCollection(scToExport, "FCutCal.m_AirInletLimit");
                 AddToSymbolCollection(scToExport, "BoosDiagCal.m_FaultDiff");
                 AddToSymbolCollection(scToExport, "BoosDiagCal.ErrMaxMReq");
                 AddToSymbolCollection(scToExport, "BFuelCal.Map");
@@ -17276,20 +16474,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     shNew.Userdescription = symbolName;
                     scToExport.Add(shNew);
                     break;
-                }
-            }
-        }
-
-        private void btnCompareToOriginal_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            T7FileHeader t7header = new T7FileHeader();
-            t7header.init(m_currentfile, false);
-            if(Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\Binaries"))
-            {
-                string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\Binaries", t7header.getPartNumber() + ".bin");
-                if (files.Length == 1)
-                {
-                    CompareToFile((string)files.GetValue(0));
                 }
             }
         }
@@ -17371,7 +16555,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void btnEditSymbol_Click(object sender, EventArgs e)
         {
             EditSelectedSymbol();
-            
+
         }
 
         private void gridRealtime_KeyDown(object sender, KeyEventArgs e)
@@ -17404,7 +16588,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     if (ViewRealtime.FocusedRowHandle >= 1)
                     {
                         DataRow dr1 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle);
-                        DataRow dr2 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle-1);
+                        DataRow dr2 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle - 1);
                         //DataRow drtemp = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle - 1);
                         string descr = dr2["Description"].ToString();
                         string symbolname = dr2["SymbolName"].ToString();
@@ -17448,22 +16632,22 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         dr1["Minimum"] = minimum;
                         dr1["Maximum"] = maximum;
                         dr1["ConvertedSymbolnumber"] = convertedsymbolnumber;
-                        dr1["SRAMAddress"] = sramaddress ;
+                        dr1["SRAMAddress"] = sramaddress;
                         dr1["Length"] = Length;
                         dr1["UserDefined"] = UserDefined;
                         dr1["Delay"] = Delay;
                         dr1["Reload"] = Reload;
-                        
+
                     }
-                  
+
                 }
                 else if (e.KeyCode == Keys.Down)
                 {
-                    if (ViewRealtime.FocusedRowHandle < ViewRealtime.RowCount -1)
+                    if (ViewRealtime.FocusedRowHandle < ViewRealtime.RowCount - 1)
                     {
                         DataRow dr1 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle);
                         DataRow dr2 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle + 1);
-                        
+
                         string descr = dr2["Description"].ToString();
                         string symbolname = dr2["SymbolName"].ToString();
                         int symbolnumber = Convert.ToInt32(dr2["Symbolnumber"]);
@@ -17931,7 +17115,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             btnProduceLatestBinary.Enabled = false;
             btnAddNoteToProject.Enabled = false;
             btnEditProject.Enabled = false;
-            
+
             btnRebuildFile.Enabled = false;
             btnRollback.Enabled = false;
             btnRollforward.Enabled = false;
@@ -18112,7 +17296,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     projectproperties.BinaryFile = Path.Combine(m_appSettings.ProjectFolder + "\\" + project, Path.GetFileName(projectprops.Rows[0]["BINFILE"].ToString()));
                     _reopenProject = true;
                     // open this project
-                    
+
                 }
 
                 File.Delete(m_appSettings.ProjectFolder + "\\" + project + "\\projectproperties.xml");
@@ -18177,17 +17361,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             StartAViewer("TorqueCal.M_EngXSP");
         }
 
-        public long GetStartVectorAddress(string filename, int number)
-        {
-            long retval = 0;
-            Int32 start_address = number * 4;
-            retval = Convert.ToInt64(readdatafromfile(m_currentfile, start_address, 1)[0]) * 256 * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 1, 1)[0]) * 256 * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 2, 1)[0]) * 256;
-            retval += Convert.ToInt64(readdatafromfile(m_currentfile, start_address + 3, 1)[0]);
-            return retval;
-        }
-
         private void btnVectors_ItemClick(object sender, ItemClickEventArgs e)
         {
             using (frmVectorlist vectorlist = new frmVectorlist())
@@ -18207,99 +17380,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
-        private void editAnExistingTuningPackageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditTuningPackage();
-            
-        }
-
-
-        private void EditTuningPackage()
-        {
-            if (tunpackeditWindow != null)
-            {
-                frmInfoBox info = new frmInfoBox("You have another tuning package edit window open, please close that first");
-                return;
-            }
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Trionic 7 packages|*.t7p";
-            ofd.Multiselect = false;
-            char[] sep = new char[1];
-            sep.SetValue(',', 0);
-
-            SymbolCollection scToImport = new SymbolCollection();
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("Map");
-            dt.Columns.Add("Length");
-            dt.Columns.Add("Data");
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                //TODO: create a list of maps to import .. maybe?
-                using (StreamReader sr = new StreamReader(ofd.FileName))
-                {
-                    string line = string.Empty;
-                    SymbolHelper sh_Import = new SymbolHelper();
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("symbol="))
-                        {
-                            //
-                            sh_Import = new SymbolHelper();
-                            sh_Import.Varname = line.Replace("symbol=", "");
-                        }
-                        else if (line.StartsWith("length="))
-                        {
-                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
-                        }
-                        else if (line.StartsWith("data="))
-                        {
-                            //
-                            try
-                            {
-                                string dataBytes = line.Replace("data=", "");
-                                // split using ','
-                                string[] bytesInStrings = dataBytes.Split(sep);
-                                byte[] dataToInsert = new byte[sh_Import.Length];
-                                for (int t = 0; t < sh_Import.Length; t++)
-                                {
-                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
-                                    dataToInsert.SetValue(b, t);
-                                }
-                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
-                                if (addressInFile > 0)
-                                {
-                                    //savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                    // add successful
-                                    dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), dataBytes);
-                                }
-                                else
-                                {
-                                    // add failure
-                                    dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), dataBytes);
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                // add failure
-                                dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), "");
-                                LogHelper.Log(E.Message);
-                            }
-                        }
-                    }
-                }
-                tunpackeditWindow = new frmEditTuningPackage();
-                tunpackeditWindow.FormClosed += new FormClosedEventHandler(edit_FormClosed);
-                tunpackeditWindow.onMapSelected += new frmEditTuningPackage.MapSelected(edit_onMapSelected);
-                tunpackeditWindow.SetFilename(ofd.FileName);
-                tunpackeditWindow.SetDataTable(dt);
-                tunpackeditWindow.Show();
-
-            }
-        }
-
-        private frmEditTuningPackage tunpackeditWindow = null;
-
         void edit_onMapSelected(object sender, frmEditTuningPackage.MapSelectedEventArgs e)
         {
             // user double clicked on a symbol in the edit tuning packages window...
@@ -18312,7 +17392,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private byte[] ConvertTuningPackageDataToByteArray(string tpdata)
         {
-            if(tpdata.EndsWith(",")) tpdata = tpdata.Substring(0, tpdata.Length - 1);
+            if (tpdata.EndsWith(",")) tpdata = tpdata.Substring(0, tpdata.Length - 1);
             char[] sep = new char[1];
             sep.SetValue(',', 0);
             string[] hexdata = tpdata.Split(sep);
@@ -18562,7 +17642,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         }
                         pe.ExportPackage(scToExport, m_currentfile, sfd.FileName);
                     }
-                }                
+                }
             }
             tunpackeditWindow = null;
         }
@@ -18582,18 +17662,13 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             // get selected symbolname
             //if (e.Button == MouseButtons.Left)
             //{
-                
+
             //}
         }
 
         private void gridControlSymbols_MouseUp(object sender, MouseEventArgs e)
         {
             _isMouseDown = false;
-        }
-
-        private void btnEditTuningPackage_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            EditTuningPackage();
         }
 
         private void btnWriteLogMarker_ItemClick(object sender, ItemClickEventArgs e)
@@ -18658,7 +17733,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 SymbolCollection sc = new SymbolCollection();
                 try
                 {
-                   // using (StreamReader sr = new StreamReader(ofd.FileName))
+                    // using (StreamReader sr = new StreamReader(ofd.FileName))
                     {
                         //string line = string.Empty;
 
@@ -18668,7 +17743,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         sep.SetValue('|', 0);
                         sep2.SetValue('=', 0);
                         //while ((line = sr.ReadLine()) != null)
-                        foreach (string line in alllines) 
+                        foreach (string line in alllines)
                         {
                             string[] values = line.Split(sep);
                             if (values.Length > 0)
@@ -18738,7 +17813,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     double zmax = Double.MinValue;
                     //using (StreamReader sr = new StreamReader(ofd.FileName))
                     {
-                       // string line = string.Empty;
+                        // string line = string.Empty;
                         char[] sep = new char[1];
                         char[] sep2 = new char[1];
                         //int linecount = 0;
@@ -18746,7 +17821,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         sep2.SetValue('=', 0);
                         //while ((line = sr.ReadLine()) != null)
 
-                        foreach(string line in alllines)
+                        foreach (string line in alllines)
                         {
                             string[] values = line.Split(sep);
                             if (values.Length > 0)
@@ -19008,7 +18083,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             else if (type == 2)
             {
-               // maximum values
+                // maximum values
                 double currAvg = Convert.ToDouble(dt.Rows[yindex][xindex]);
                 if (z > currAvg || currAvg == 0) dt.Rows[yindex][xindex] = z;
             }
@@ -19029,7 +18104,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 if (!Directory.Exists(foldername))
                 {
                     Directory.CreateDirectory(foldername);
-                } 
+                }
                 int cols = 18;
                 int rows = 16;
                 GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out cols, out rows);
@@ -19049,12 +18124,12 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             if (simpleButton1.Text == "Night")
             {
                 SwitchRealtimePanelMode(PanelMode.Night);
-                
+
             }
             else
             {
                 SwitchRealtimePanelMode(PanelMode.Day);
-                
+
             }
             System.Windows.Forms.Application.DoEvents();
         }
@@ -19118,7 +18193,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         {
                             lbl.ForeColor = Color.DarkGreen;
                         }
-                        else if(lbl.Name == "labelControl10")
+                        else if (lbl.Name == "labelControl10")
                         {
                             lbl.ForeColor = Color.DarkBlue;
                         }
@@ -19197,7 +18272,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             else
             {
                 btn.LookAndFeel.UseDefaultLookAndFeel = false;
-                
+
                 btn.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
                 btn.Appearance.BorderColor = backColor;
                 btn.Appearance.BackColor = backColor;
@@ -19215,7 +18290,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 tabcontrol.LookAndFeel.UseDefaultLookAndFeel = true;
                 tabcontrol.LookAndFeel.Style = DevExpress.LookAndFeel.LookAndFeelStyle.Skin;
-                tabcontrol.LookAndFeel.SkinName = defaultLookAndFeel1.LookAndFeel.SkinName; 
+                tabcontrol.LookAndFeel.SkinName = defaultLookAndFeel1.LookAndFeel.SkinName;
 
                 tabcontrol.HeaderAutoFill = DevExpress.Utils.DefaultBoolean.True;
                 tabcontrol.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Default;
@@ -19275,7 +18350,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 tabcontrol.AppearancePage.HeaderHotTracked.BackColor = nightColor;
                 tabcontrol.AppearancePage.HeaderHotTracked.BackColor2 = nightColor;
                 tabcontrol.AppearancePage.HeaderHotTracked.ForeColor = Color.FromArgb(0, 192, 0);
-                
+
                 tabcontrol.AppearancePage.PageClient.BackColor = nightColor;
                 tabcontrol.AppearancePage.PageClient.BackColor2 = nightColor;
                 tabcontrol.AppearancePage.PageClient.ForeColor = Color.FromArgb(0, 192, 0);
@@ -19285,7 +18360,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 //LogHelper.Log("Switching tab page: " + page.Name);
                 SetTabPageView(page, panelMode, nightColor);
             }
-            
+
 
         }
 
@@ -19361,7 +18436,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 ViewRealtime.OptionsView.ShowVertLines = true;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
-                
+
         }
 
         private void SetColorForMeasurement(Measurement measurement, Color backColor, Color foreColor, Color labelColor)
@@ -19380,58 +18455,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
             //measurement.BackColor = backColor;
             //measurement.ForeColor = foreColor;
-        }
-
-        private void barButtonItem89_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ImportTuningPackage();
-        }
-
-        private void barButtonItem90_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ImportXMLDescriptor();
-        }
-
-        private void barButtonItem91_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ImportCSVDescriptor();
-        }
-
-        private void ImportCSVDescriptor()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CSV documents|*.csv";
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                TryToLoadAdditionalCSVSymbols(ofd.FileName);
-                foreach (SymbolHelper sh in m_symbols)
-                {
-                    if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                    {
-                        if (sh.Userdescription != "")
-                        {
-                            string temp = sh.Varname;
-                            sh.Varname = sh.Userdescription;
-                            sh.Userdescription = temp;
-                        }
-                    }
-                }
-                gridControlSymbols.DataSource = m_symbols;
-                SetDefaultFilters();
-                gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
-                try
-                {
-                    _softwareIsOpenDetermined = false;
-                    IsSoftwareOpen();
-                }
-                catch (Exception E3)
-                {
-                    LogHelper.Log(E3.Message);
-                }
-            }
         }
 
         private void TryToLoadAdditionalCSVSymbols(string filename)
@@ -19510,7 +18533,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         foreach (SymbolHelper sh in m_symbols)
                         {
                             // read from ECU, write to binary
-                            
+
                             if (sh.Start_address > 0x80000)
                             {
                                 //if (sh.Varname.EndsWith("Map")) //TODO: <GS-28012011> REMOVE AFTER DEBUGGING
@@ -19754,7 +18777,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         foreach (SymbolHelper sh in scToExport)
                         {
                             //<GS-28012011>
-                           
+
                             progress.SetProgress("Downloading: " + sh.Varname);
                             System.Windows.Forms.Application.DoEvents();
                             byte[] data = ReadMapFromSRAM(sh, false);
@@ -19903,7 +18926,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         _written = true;
                     }
                 }
-                if(!_written)
+                if (!_written)
                 {
                     Bitmap bmp = new Bitmap(this.Width, this.Height);
                     this.DrawToBitmap(bmp, new System.Drawing.Rectangle(0, 0, this.Width, this.Height));
@@ -20081,53 +19104,53 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
-        
 
-//        private bool CheckCANConnectivityDirectAccess()
-//        {
-//            if (canUsbDevice.isOpen()) return true;
-//            AddToCanTrace("Initializing CANbus interface");
-//            System.Windows.Forms.Application.DoEvents();
-//            System.Windows.Forms.Application.DoEvents();
-///*            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-//            {
-//                CheckCanwakeup();
-//            }*/
-//            AddToCanTrace("Creating new connection to CANUSB device!");
-//            if (canUsbDevice == null)
-//            {
-//                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-//                {
-//                    canUsbDevice = new CANUSBDevice();
-//                }
-//                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-//                {
-//                    canUsbDevice = new CANELM327Device();
-//                    canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
-//                }
-//                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-//                //{
-//                //    //canUsbDevice = new EasySyncUSBDevice();
-//                //    canUsbDevice = new CANUSBDirectDevice();
-//                //}
-//                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
-//                //{
-//                //    canUsbDevice = new Mictronics();
-//                //}
-//                else
-//                {
-//                    canUsbDevice = new LPCCANDevice_T7();
-//                }
-//                canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrameDebug);
-//                canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-//                //canUsbDevice = new EasySyncUSBDevice();
-//                LogHelper.Log("Created new CANUSBDevice instance");
-//            }
-//            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
-//            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
-//            if (canUsbDevice.open() == OpenResult.OpenError) return false;
-//            return true;
-//        }
+
+        //        private bool CheckCANConnectivityDirectAccess()
+        //        {
+        //            if (canUsbDevice.isOpen()) return true;
+        //            AddToCanTrace("Initializing CANbus interface");
+        //            System.Windows.Forms.Application.DoEvents();
+        //            System.Windows.Forms.Application.DoEvents();
+        ///*            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+        //            {
+        //                CheckCanwakeup();
+        //            }*/
+        //            AddToCanTrace("Creating new connection to CANUSB device!");
+        //            if (canUsbDevice == null)
+        //            {
+        //                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+        //                {
+        //                    canUsbDevice = new CANUSBDevice();
+        //                }
+        //                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
+        //                {
+        //                    canUsbDevice = new CANELM327Device();
+        //                    canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
+        //                }
+        //                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
+        //                //{
+        //                //    //canUsbDevice = new EasySyncUSBDevice();
+        //                //    canUsbDevice = new CANUSBDirectDevice();
+        //                //}
+        //                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
+        //                //{
+        //                //    canUsbDevice = new Mictronics();
+        //                //}
+        //                else
+        //                {
+        //                    canUsbDevice = new LPCCANDevice_T7();
+        //                }
+        //                canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrameDebug);
+        //                canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
+        //                //canUsbDevice = new EasySyncUSBDevice();
+        //                LogHelper.Log("Created new CANUSBDevice instance");
+        //            }
+        //            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
+        //            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
+        //            if (canUsbDevice.open() == OpenResult.OpenError) return false;
+        //            return true;
+        //        }
 
         void canUsbDevice_onReceivedAdditionalInformationFrameDebug(object sender, ICANDevice.InformationFrameEventArgs e)
         {
@@ -20306,7 +19329,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         m_AFRMap.AirXSP = GetSymbolAsIntArray("BFuelCal.AirXSP");
                         m_AFRMap.InitializeMaps(_width * _height, m_currentfile);
                     }
-                    
+
                     // fill BFuelCal.Map axis as integer values
                     m_AFRMap.RpmYSP = GetSymbolAsIntArray("BFuelCal.RpmYSP");
                     m_AFRMap.AirXSP = GetSymbolAsIntArray("BFuelCal.AirXSP");
@@ -20319,7 +19342,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     // what's next?
                     // TODO: read the current fuel map into memory
-                    byte[] fuelmap = new byte[18*16];
+                    byte[] fuelmap = new byte[18 * 16];
                     // is there something like spot adaption in T7?
                     bool _initOk = false;
                     foreach (SymbolHelper sh in m_symbols)
@@ -20335,7 +19358,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             m_AFRMap.AcceptableTargetErrorPercentage = m_appSettings.AcceptableTargetErrorPercentage;
                             m_AFRMap.CellStableTime_ms = m_appSettings.CellStableTime_ms;
                             m_AFRMap.MaximumAdjustmentPerCyclePercentage = m_appSettings.MaximumAdjustmentPerCyclePercentage;
-                            
+
                             _initOk = true;
                         }
                     }
@@ -20356,7 +19379,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         }
                     }
                 }
-                else 
+                else
                 {
                     frmInfoBox info = new frmInfoBox("Autotune is only available for OPEN binaries");
                 }
@@ -20376,7 +19399,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     m_AFRMap = new AFRMap();
                     m_AFRMap.onFuelmapCellChanged += new AFRMap.FuelmapCellChanged(m_AFRMap_onFuelmapCellChanged);
                     m_AFRMap.onCellLocked += new AFRMap.CellLocked(m_AFRMap_onCellLocked);
-                    m_AFRMap.InitializeMaps(18*16, m_currentfile);
+                    m_AFRMap.InitializeMaps(18 * 16, m_currentfile);
                 }
 
                 int y = 15 - e.Y;
@@ -20392,7 +19415,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
                 LogHelper.Log("Writing fuelmap");
                 KWPHandler.getInstance().requestSequrityAccess(false);
-                uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)(y * 18) + (uint)e.X;;
+                uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)(y * 18) + (uint)e.X; ;
                 byte[] dataToSend = new byte[1];
                 //dataToSend[0] = e.Cellvalue;
                 if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, data2Write))
@@ -20525,7 +19548,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             startinfo.CreateNoWindow = true;
             startinfo.UseShellExecute = false;
             startinfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startinfo.RedirectStandardOutput = true; 
+            startinfo.RedirectStandardOutput = true;
             startinfo.WorkingDirectory = System.Windows.Forms.Application.StartupPath;
             // set parameters
             startinfo.Arguments = arguments;
@@ -21362,7 +20385,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         {
                             float target = targetMap[i * cols + j];
                             float feedback = feedbackMap[i * cols + j];
-                            
+
                             float _afr_diff_percentage = Math.Abs(((target - feedback) / target) * 100);
                             float afr_diff_to_correct = Math.Abs(_afr_diff_percentage); // so, if lean, negative! 
                             int _fuelcorrectionvalue = (int)fuelmap[(i * cols) + j];
@@ -21581,8 +20604,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                 }
                 //canUsbDevice = null;
-               // kwpCanDevice = null;
-               // flash = null;
+                // kwpCanDevice = null;
+                // flash = null;
             }
             else
             {
@@ -21712,5 +20735,541 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
             }
         }
+
+        #region Information
+        private void btnVinDecoder_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            frmDecodeVIN decode = new frmDecodeVIN();
+            if (m_currentfile != string.Empty)
+            {
+                T7FileHeader t7InfoHeader = new T7FileHeader();
+                t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
+                decode.SetVinNumber(t7InfoHeader.getChassisID());
+            }
+            decode.ShowDialog();
+        }
+
+        private void btnShowDisassembly_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (t7file != null)
+            {
+                string outputfile = Path.GetDirectoryName(t7file.FileName);
+                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(t7file.FileName) + ".asm");
+                System.Windows.Forms.Application.DoEvents();
+                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
+                ctrlDisassembler disasmcontrol = new ctrlDisassembler() { TrionicFile = t7file, Dock = DockStyle.Fill };
+                panel.Controls.Add(disasmcontrol);
+                panel.Text = "T7Suite Disassembler";
+                panel.Width = this.ClientSize.Width - dockSymbols.Width;
+                System.Windows.Forms.Application.DoEvents();
+                disasmcontrol.DisassembleFile(outputfile);
+            }
+        }
+
+        private void btnShowFullDisassembly_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string outputfile = Path.GetDirectoryName(m_currentfile);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
+            if (!AssemblerViewerActive(true, outputfile))
+            {
+                frmProgress progress = new frmProgress();
+                progress.Show();
+                progress.SetProgress("Start disassembler");
+                if (!File.Exists(outputfile))
+                {
+                    progress.SetProgress("Disassembler running...");
+                    Disassembler dis = new Disassembler();
+                    dis.DisassembleFileRtf(m_currentfile, outputfile, m_currentfile_size, m_symbols);
+                    progress.SetProgress("Disassembler done...");
+                }
+                progress.SetProgress("Loading assembler file");
+                StartAssemblerViewer(outputfile, progress);
+                progress.Close();
+            }
+        }
+
+        private bool AssemblerViewerActive(bool ShowIfActive, string filename)
+        {
+            bool retval = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                if (pnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
+                {
+                    retval = true;
+                    if (ShowIfActive)
+                    {
+                        pnl.Show();
+                        dockManager1.ActivePanel = pnl;
+                    }
+                }
+                else
+                {
+                    foreach (Control c in pnl.Controls)
+                    {
+                        if (c is DockPanel)
+                        {
+                            DockPanel tpnl = (DockPanel)c;
+                            if (tpnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
+                            {
+                                retval = true;
+                                if (ShowIfActive)
+                                {
+                                    tpnl.Show();
+                                    dockManager1.ActivePanel = tpnl;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return retval;
+        }
+
+        private void StartAssemblerViewer(string filename, frmProgress progress)
+        {
+            if (m_currentfile != "")
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
+                    AsmViewer av = new AsmViewer() { Dock = DockStyle.Fill };
+                    dockPanel.Width = 800;
+                    dockPanel.Controls.Add(av);
+                    progress.SetProgress("Loading assembler file ...");
+                    av.LoadDataFromFile(filename, m_symbols);
+                    progress.SetProgress("Finding starting address in file");
+                    av.FindStartAddress(m_currentfile);
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        private void Information_firmwareInformation_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // show firmware information screen!
+            bool _correctFooter = m_appSettings.AutoFixFooter;
+            frmFirmwareInformation frminfo = new frmFirmwareInformation();
+
+            if (m_currentfile != null)
+            {
+                if (File.Exists(m_currentfile))
+                {
+                    T7FileHeader t7InfoHeader = new T7FileHeader();
+                    t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
+                    string swVersion = t7InfoHeader.getSoftwareVersion();
+                    PartNumberConverter pnc = new PartNumberConverter();
+                    ECUInformation ecuinfo = pnc.GetECUInfo(t7InfoHeader.getPartNumber().Trim(), "");
+                    frminfo.SIDDate = t7InfoHeader.getSIDDate();
+                    if (ecuinfo.Valid)
+                    {
+                        frminfo.OriginalCarType = ecuinfo.Carmodel.ToString();
+                        frminfo.OriginalEngineType = ecuinfo.Enginetype.ToString();
+                    }
+
+                    if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
+                    {
+                        // additional requirements for the bytes in that location
+                        // http://www.trionictuning.com/forum/viewtopic.php?f=17&t=109&p=8569#p8537
+
+
+
+                        // set these options correct
+                        if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
+                        {
+                            if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
+                                (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
+                                (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
+                            {
+                                frminfo.EnableSIDAdvancedOptions(true);
+                                if (/*CheckBytesInFile(m_currentfile, 0x495FA, 0, 2) &&*/ CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) && CheckBytesInFile(m_currentfile, 0x496B4, 0, 2))
+                                {
+                                    frminfo.SIDDisableStartScreen = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableStartScreen = false;
+                                }
+                                if (CheckBytesInFile(m_currentfile, 0x49760, 0, 2)) // should be 0x49760 in stead of 0x4975E
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = false;
+                                }
+                                /*
+                                 *  Remove startup screen:
+                                    change to 00 00 instead of 00 80 
+                                    000495FA // not needed!!! <GS-11042011>
+                                    0004968E 
+                                    000496B4                              
+                                    Remove adaptation messages:
+                                    Change 0x49760 to 00 00 instead of 00 80
+                                 */
+                            }
+                            else
+                            {
+                                frminfo.EnableSIDAdvancedOptions(false);
+                            }
+                        }
+                        else
+                        {
+                            if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
+                                (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
+                            {
+                                frminfo.EnableSIDAdvancedOptions(true);
+
+                                //Disable startscreen, change 0x00046F4D to 00 in stead of 80
+                                if (CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1))
+                                {
+                                    frminfo.SIDDisableStartScreen = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableStartScreen = false;
+                                }
+                                //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
+                                if (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1))
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = false;
+                                }
+                            }
+                            else
+                            {
+                                frminfo.EnableSIDAdvancedOptions(false);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        frminfo.EnableSIDAdvancedOptions(false);
+                    }
+
+                    // Pavel Angelov created this modification. 
+                    // Disable effect of the emission limitation function.
+                    if (swVersion.Trim().StartsWith("EU0AF01C"))
+                    {
+                        if (CheckBytesInFile(m_currentfile, 0x13837, 0x03, 1))
+                        {
+                            frminfo.EmissionLimitation = true;
+                            frminfo.EnableEmissionLimitation(true);
+                        }
+                        else if (CheckBytesInFile(m_currentfile, 0x13837, 0x02, 1))
+                        {
+                            frminfo.EmissionLimitation = false;
+                            frminfo.EnableEmissionLimitation(true);
+                        }
+                        else
+                        {
+                            frminfo.EnableEmissionLimitation(false);
+                        }
+                    }
+                    else
+                    {
+                        frminfo.EnableEmissionLimitation(false);
+                    }
+
+
+                    frminfo.SoftwareID = t7InfoHeader.getSoftwareVersion();
+                    frminfo.ChassisID = t7InfoHeader.getChassisID();
+                    frminfo.EngineType = t7InfoHeader.getCarDescription();
+                    frminfo.Partnumber = t7InfoHeader.getPartNumber();
+                    frminfo.ImmoID = t7InfoHeader.getImmobilizerID();
+                    frminfo.SoftwareIsOpen = IsBinaryFileOpen();
+                    frminfo.BioPowerSoftware = IsBinaryBiopower();
+                    frminfo.BioPowerEnabled = IsBioPowerEnabled();
+                    frminfo.CompressedSymboltable = IsBinaryPackedVersion(m_currentfile);
+                    frminfo.MissingSymbolTable = IsBinaryMissingSymbolTable();
+                    if (frminfo.MissingSymbolTable) frminfo.BioPowerSoftware = true; // only missing in biopower software
+                    frminfo.ChecksumEnabled = HasBinaryChecksumEnabled();
+                    frminfo.TorqueLimitersEnabled = HasBinaryTorqueLimiterEnabled();
+                    if (!HasBinaryTorqueLimiters()) frminfo.TorqueLimitersPresent = false;
+                    //if (!frminfo.MissingSymbolTable)
+                    {
+                        frminfo.OBDIIPresent = HasBinaryOBDIIMaps();
+                        if (!frminfo.OBDIIPresent)
+                        {
+                            frminfo.OBDIIEnabled = false;
+                        }
+                        else
+                        {
+                            frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
+                        }
+                    }
+                    if (HasBinaryOBDIIMaps())
+                    {
+                        frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
+                    }
+                    frminfo.SecondLambdaEnabled = HasBinarySecondLambdaEnabled();
+
+                    if (!HasBinarySecondLambdaMap()) frminfo.SecondLambdaPresent = false;
+
+                    if (!HasBinaryTipInOutParameters()) frminfo.FastThrottleResponsePresent = false;
+                    else frminfo.FastThrottleResponsePresent = true;
+                    frminfo.FastThrottleReponse = HasBinaryFastThrottleResponse();
+                    frminfo.ExtraFastThrottleReponse = HasBinaryExtraFastThrottleResponse();
+                    if (!HasBinaryTipInOutParameters())
+                    {
+                        frminfo.FastThrottleReponse = false;
+                        frminfo.ExtraFastThrottleReponse = false;
+                    }
+                    if (!HasBinaryCatalystLightOffParameters()) frminfo.CatalystLightoffPresent = false;
+                    else frminfo.CatalystLightoffPresent = true;
+                    frminfo.CatalystLightOff = HasBinaryCatalystLightOffEnabled();
+                    frminfo.ProgrammingDateTime = GetProgrammingDateTime();
+                    if (!m_appSettings.WriteTimestampInBinary)
+                    {
+                        frminfo.DisableTimeStamping();
+                    }
+                    if (frminfo.ShowDialog() == DialogResult.OK)
+                    {
+                        if (t7InfoHeader.IsTISBinary(m_currentfile))
+                        {
+                            // user is trying to update a TIS file, ask for footer correction.
+                            if ((frminfo.ImmoID != t7InfoHeader.getImmobilizerID()) || frminfo.ChassisID != t7InfoHeader.getChassisID())
+                            {
+                                if (!_correctFooter)
+                                {
+                                    if (MessageBox.Show("It seems you are trying to update data in a TIS file, would you like T7Suite to correct the footer information?", "TIS file question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    {
+                                        //_correctFooter = true;
+                                        // create a backup file at this point
+                                        File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup", true);
+                                        t7InfoHeader.init(m_currentfile, true);
+                                    }
+                                }
+                            }
+                        }
+                        t7InfoHeader.setImmobilizerID(frminfo.ImmoID);
+                        t7InfoHeader.setSoftwareVersion(frminfo.SoftwareID);
+                        t7InfoHeader.setCarDescription(frminfo.EngineType);
+                        t7InfoHeader.setChassisID(frminfo.ChassisID);
+                        t7InfoHeader.setSIDDate(frminfo.SIDDate);
+                        if (GetProgrammingDateTime() != frminfo.ProgrammingDateTime)
+                        {
+                            SetProgrammingDateTime(frminfo.ProgrammingDateTime);
+                        }
+
+                        if (frminfo.SoftwareIsOpen)
+                        {
+                            SetBinaryFileOpen();
+                        }
+                        else
+                        {
+                            SetBinaryFileClosed();
+                        }
+                        if (frminfo.TorqueLimitersEnabled && !HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
+                        {
+                            SetTorqueLimiterEnabled(true);
+                        }
+                        else if (!frminfo.TorqueLimitersEnabled && HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
+                        {
+                            SetTorqueLimiterEnabled(false);
+                        }
+                        if (frminfo.OBDIIEnabled && !HasBinaryOBDIIEnabled())
+                        {
+                            SetOBDIIEnabled(true);
+                        }
+                        else if (!frminfo.OBDIIEnabled && HasBinaryOBDIIEnabled())
+                        {
+                            SetOBDIIEnabled(false);
+                        }
+                        if (frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap()/*&& !HasBinarySecondLambdaEnabled()*/)
+                        {
+                            SetSecondLambdaEnabled(true);
+                        }
+                        else if (!frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap() && HasBinarySecondLambdaEnabled())
+                        {
+                            SetSecondLambdaEnabled(false);
+                        }
+                        if (HasBinaryTipInOutParameters())
+                        {
+                            if (frminfo.FastThrottleReponse && !HasBinaryFastThrottleResponse())
+                            {
+                                SetFastThrottleResponse(true);
+                            }
+                            else if (!frminfo.FastThrottleReponse && HasBinaryFastThrottleResponse())
+                            {
+                                SetFastThrottleResponse(false);
+                            }
+                            if (frminfo.ExtraFastThrottleReponse && !HasBinaryExtraFastThrottleResponse())
+                            {
+                                SetExtraFastThrottleResponse(true);
+                            }
+                            else if (!frminfo.ExtraFastThrottleReponse && !frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
+                            {
+                                SetExtraFastThrottleResponse(false);
+                            }
+                            else if (!frminfo.ExtraFastThrottleReponse && frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
+                            {
+                                SetActG2(false);
+                            }
+
+                        }
+                        if (HasBinaryCatalystLightOffParameters())
+                        {
+                            if (frminfo.CatalystLightOff && !HasBinaryCatalystLightOffEnabled())
+                            {
+                                SetCatalystLightOff(true);
+                            }
+                            else if (!frminfo.CatalystLightOff && HasBinaryCatalystLightOffEnabled())
+                            {
+                                SetCatalystLightOff(false);
+                            }
+
+                        }
+                        if (IsBinaryBiopower())
+                        {
+                            if (frminfo.BioPowerEnabled && !IsBioPowerEnabled())
+                            {
+                                SetBioPowerEnabled(true);
+                            }
+                            else if (!frminfo.BioPowerEnabled && IsBioPowerEnabled())
+                            {
+                                SetBioPowerEnabled(false);
+                            }
+                        }
+                        t7InfoHeader.save(m_currentfile);
+
+                        if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
+                        {
+                            if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
+                            {
+                                if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
+                                    (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
+                                    (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
+                                {
+
+                                    if (frminfo.SIDDisableStartScreen)
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x00, 1);
+                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x80, 1);
+                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
+                                    }
+                                    if (frminfo.SIDDisableAdaptionMessages)
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x00, 1);
+                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x80, 1);
+                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
+                                    (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
+                                {
+
+                                    //Disable startscreen, change 0x00046F4D to 00 in stead of 80
+                                    //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
+                                    if (frminfo.SIDDisableStartScreen)
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x80, 0);
+                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
+                                    }
+                                    if (frminfo.SIDDisableAdaptionMessages)
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x80, 0);
+                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
+                                    }
+                                }
+                            }
+                        }
+
+                        // Disable effect of the emission limitation function.
+                        if (swVersion.Trim().StartsWith("EU0AF01C"))
+                        {
+                            if (frminfo.EmissionLimitation)
+                            {
+                                byte[] data2write = new byte[1];
+                                data2write.SetValue((byte)0x03, 0);
+                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
+                            }
+                            else
+                            {
+                                byte[] data2write = new byte[1];
+                                data2write.SetValue((byte)0x02, 0);
+                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
+                            }
+                        }
+
+                        UpdateChecksum(m_currentfile);
+                    }
+                }
+            }
+        }
+
+        private void Information_browseAxisInformation_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+            AxisBrowser tabdet = new AxisBrowser();
+            tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
+            tabdet.ApplicationLanguage = m_appSettings.ApplicationLanguage;
+            tabdet.Dock = DockStyle.Fill;
+            dockPanel.Controls.Add(tabdet);
+            tabdet.ShowSymbolCollection(m_symbols);
+            dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
+            bool isDocked = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                {
+                    dockPanel.DockAsTab(pnl, 0);
+                    isDocked = true;
+                    break;
+                }
+            }
+            if (!isDocked)
+            {
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.Width = 700;
+            }
+        }
+        #endregion
     }
 }

@@ -749,15 +749,16 @@ namespace T7
             // 
             // comboBoxEdit3
             // 
-            this.comboBoxEdit3.EditValue = "Lawicel CANUSB (www.lawicel.com)";
+            this.comboBoxEdit3.EditValue = "Lawicel CANUSB";
             this.comboBoxEdit3.Location = new System.Drawing.Point(116, 140);
             this.comboBoxEdit3.Name = "comboBoxEdit3";
             this.comboBoxEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit3.Properties.Items.AddRange(new object[] {
-            "Lawicel CANUSB (www.lawicel.com)",
-            "CombiAdapter (www.ecuproject.com)",
-            "ELM327 (version 1.2 and higher)"});
+            "Lawicel CANUSB",
+            "CombiAdapter",
+            "ELM327 v1.3 or higher",
+            "Just4Trionic"});
             this.comboBoxEdit3.Size = new System.Drawing.Size(203, 20);
             this.comboBoxEdit3.TabIndex = 23;
             this.comboBoxEdit3.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);

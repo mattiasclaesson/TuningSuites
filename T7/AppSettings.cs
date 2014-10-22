@@ -10,6 +10,7 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 using CommonSuite;
+using TrionicCANLib;
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 
@@ -913,7 +914,7 @@ namespace T7
         }
 
 
-        private CANBusAdapter m_CANBusAdapterType = CANBusAdapter.Lawicel;
+        private CANBusAdapter m_CANBusAdapterType = CANBusAdapter.LAWICEL;
 
         public CANBusAdapter CANBusAdapterType
         {
