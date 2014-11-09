@@ -10767,6 +10767,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void SetCanAdapter()
         {
+            t8can.OnlyPBus = m_appSettings.OnlyPBus;
             if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
             {
                 t8can.setCANDevice(TrionicCANLib.CANBusAdapter.LAWICEL);

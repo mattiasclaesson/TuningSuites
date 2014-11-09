@@ -573,7 +573,6 @@ namespace T8SuitePro
             // checkEdit23
             // 
             this.checkEdit23.EditValue = true;
-            this.checkEdit23.Enabled = false;
             this.checkEdit23.Location = new System.Drawing.Point(250, 64);
             this.checkEdit23.Name = "checkEdit23";
             this.checkEdit23.Properties.Caption = "Only P-bus connection";
@@ -597,11 +596,11 @@ namespace T8SuitePro
             this.checkEdit18.Size = new System.Drawing.Size(232, 19);
             this.checkEdit18.TabIndex = 30;
             // 
-            // btnMultiAdapterConfiguration
+            // btnAdapterConfiguration
             // 
             this.btnAdapterConfiguration.Enabled = false;
             this.btnAdapterConfiguration.Location = new System.Drawing.Point(352, 28);
-            this.btnAdapterConfiguration.Name = "btnMultiAdapterConfiguration";
+            this.btnAdapterConfiguration.Name = "btnAdapterConfiguration";
             this.btnAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
             this.btnAdapterConfiguration.TabIndex = 28;
             this.btnAdapterConfiguration.Text = "Configuration";
