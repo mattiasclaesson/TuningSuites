@@ -91,6 +91,8 @@ using RealtimeGraph;
 using DevExpress.Skins;
 using T7;
 using CommonSuite;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace T8SuitePro
 {
@@ -14940,9 +14942,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     OpenFileDialog ofd2 = new OpenFileDialog() { Filter = "TIS T8 files|*.gbf", Title = "Choose a TIS T8 file to build the new file with", Multiselect = false };
                     if (ofd2.ShowDialog() == DialogResult.OK)
                     {
+                        string gbfFileName = ofd2.FileName;
+                        try
+                        {
+                            byte[] dataBuffer = new byte[4096];
+                            using (Stream s = new GZipInputStream(File.OpenRead(gbfFileName)))
+                            {
+                                using (FileStream fs = File.Create(Path.GetFileNameWithoutExtension(gbfFileName)))
+                                {
+                                    StreamUtils.Copy(s, fs, dataBuffer);
+                                }
+                                gbfFileName = Path.GetFileNameWithoutExtension(gbfFileName);
+                            }
+                        }
+                        catch (GZipException ex)
+                        {
+                            File.Delete(Path.GetFileNameWithoutExtension(gbfFileName));
+                            LogHelper.Log("Selected gbf file is probably not gziped:" + ex.Message);
+                        }
+
                         // Start updating FLASH from address 0x020000 
                         int address = 0x020000;
-                        byte[] gbfbytes = File.ReadAllBytes(ofd2.FileName);
+                        byte[] gbfbytes = File.ReadAllBytes(gbfFileName);
                         for (int gbft = 0; gbft < gbfbytes.Length; gbft++)
                         {
                             newFile[address + gbft] = decodeGbfData((gbfbytes[gbft]), gbft);
