@@ -5238,13 +5238,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-<<<<<<< HEAD
         "ProductCode" = "8:{62FD7FFD-00EF-48E8-B006-C69CEDEFDB63}"
         "PackageCode" = "8:{EFB5554E-7513-445F-8F7A-034FD0D1DD67}"
-=======
-        "ProductCode" = "8:{955DD20A-956B-487F-9ADE-2E35CF5AC123}"
-        "PackageCode" = "8:{00E62B86-BD15-4750-9AAD-2CF8D989F8E8}"
->>>>>>> parent of e4a46b8... Compressed binaries in installer pkg.
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
