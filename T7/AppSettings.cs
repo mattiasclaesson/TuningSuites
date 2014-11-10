@@ -1180,6 +1180,30 @@ namespace T7
             }
         }
 
+        private bool m_DisableCanCheck = false;
+
+        public bool DisableCanCheck
+        {
+            get { return m_DisableCanCheck; }
+            set
+            {
+                m_DisableCanCheck = value;
+                SaveRegistrySetting("DisableCanCheck", m_DisableCanCheck);
+            }
+        }
+
+        private bool m_ELM327Kline = false;
+
+        public bool ELM327Kline
+        {
+            get { return m_ELM327Kline; }
+            set
+            {
+                m_ELM327Kline = value;
+                SaveRegistrySetting("ELM327Kline", m_ELM327Kline);
+            }
+        }
+
         private bool m_EnableCanLog = false;
 
         public bool EnableCanLog
@@ -1188,7 +1212,6 @@ namespace T7
             set
             {
                 m_EnableCanLog = value;
-                m_EnableCanLog = false;
                 SaveRegistrySetting("EnableCanLog", m_EnableCanLog);
             }
         }
@@ -1657,6 +1680,7 @@ namespace T7
                 saveSettings.SetValue("autoLogTriggerStopSymbol", m_autoLogTriggerStopSymbol);
 
                 saveSettings.SetValue("ELM327Port", _ELM327Port);
+                saveSettings.SetValue("Baudrate", _Baudrate);
 
                 saveSettings.SetValue("LastXAxisFromMatrix", _LastXAxisFromMatrix);
                 saveSettings.SetValue("LastYAxisFromMatrix", _LastYAxisFromMatrix);
@@ -1753,6 +1777,8 @@ namespace T7
                 saveSettings.SetValue("AutoFixFooter", m_AutoFixFooter);
                 saveSettings.SetValue("EnableCanLog", m_EnableCanLog);
                 saveSettings.SetValue("OnlyPBus", m_OnlyPBus);
+                saveSettings.SetValue("DisableCanCheck", m_DisableCanCheck);
+                saveSettings.SetValue("ELM327Kline", m_ELM327Kline);
                 saveSettings.SetValue("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
                 saveSettings.SetValue("AutoUpdateSRAMViewers", m_AutoUpdateSRAMViewers);
                 saveSettings.SetValue("UseAdditionalCanbusFrames", m_UseAdditionalCanbusFrames);
@@ -2164,12 +2190,19 @@ namespace T7
                             }
                             else if (a == "EnableCanLog")
                             {
-                                //m_EnableCanLog = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                                m_EnableCanLog = false;// Convert.ToBoolean(Settings.GetValue(a).ToString());
+                                m_EnableCanLog = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "OnlyPBus")
                             {
                                 m_OnlyPBus = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "DisableCanCheck")
+                            {
+                                m_DisableCanCheck = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "ELM327Kline")
+                            {
+                                m_ELM327Kline = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "InterpolateLogWorksTimescale")
                             {
@@ -2322,6 +2355,10 @@ namespace T7
                             else if (a == "ELM327Port")
                             {
                                 _ELM327Port = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "Baudrate")
+                            {
+                                _Baudrate = Convert.ToInt32(Settings.GetValue(a).ToString());
                             }
                             else if (a == "LastXAxisFromMatrix")
                             {

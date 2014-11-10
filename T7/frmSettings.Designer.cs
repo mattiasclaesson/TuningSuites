@@ -28,6 +28,12 @@ namespace T7
         /// </summary>
         private void InitializeComponent()
         {
+            DevExpress.Utils.SuperToolTip superToolTip20 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem20 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem20 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip21 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem21 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem21 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
@@ -82,12 +88,6 @@ namespace T7
             DevExpress.Utils.SuperToolTip superToolTip18 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem18 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem18 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip19 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem19 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem19 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip20 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem20 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem20 = new DevExpress.Utils.ToolTipItem();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.comboBoxEdit4 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.checkEdit30 = new DevExpress.XtraEditors.CheckEdit();
@@ -142,6 +142,7 @@ namespace T7
             this.checkEdit18 = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton4 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton5 = new DevExpress.XtraEditors.SimpleButton();
+            this.cbDisableConnectionCheck = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit4.Properties)).BeginInit();
@@ -187,6 +188,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbDisableConnectionCheck.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -242,12 +244,12 @@ namespace T7
             this.checkEdit30.Name = "checkEdit30";
             this.checkEdit30.Properties.Caption = "Use new mapviewer";
             this.checkEdit30.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem1.Text = "Use new mapviewer";
-            toolTipItem1.LeftIndent = 6;
-            toolTipItem1.Text = "If checked, the new type of mapviewer will be used to display data.";
-            superToolTip1.Items.Add(toolTipTitleItem1);
-            superToolTip1.Items.Add(toolTipItem1);
-            this.checkEdit30.SuperTip = superToolTip1;
+            toolTipTitleItem20.Text = "Use new mapviewer";
+            toolTipItem20.LeftIndent = 6;
+            toolTipItem20.Text = "If checked, the new type of mapviewer will be used to display data.";
+            superToolTip20.Items.Add(toolTipTitleItem20);
+            superToolTip20.Items.Add(toolTipItem20);
+            this.checkEdit30.SuperTip = superToolTip20;
             this.checkEdit30.TabIndex = 21;
             // 
             // checkEdit27
@@ -257,14 +259,14 @@ namespace T7
             this.checkEdit27.Name = "checkEdit27";
             this.checkEdit27.Properties.Caption = "Write timestamp marker in binary";
             this.checkEdit27.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem2.Text = "Write timestamp marker in binary";
-            toolTipItem2.LeftIndent = 6;
-            toolTipItem2.Text = "With this option on, T7Suite will write the timestamp shown in the firmware infor" +
+            toolTipTitleItem21.Text = "Write timestamp marker in binary";
+            toolTipItem21.LeftIndent = 6;
+            toolTipItem21.Text = "With this option on, T7Suite will write the timestamp shown in the firmware infor" +
                 "mation screen into the binary. If you don\'t want T7Suite to do this, you can tur" +
                 "n this function off here.";
-            superToolTip2.Items.Add(toolTipTitleItem2);
-            superToolTip2.Items.Add(toolTipItem2);
-            this.checkEdit27.SuperTip = superToolTip2;
+            superToolTip21.Items.Add(toolTipTitleItem21);
+            superToolTip21.Items.Add(toolTipItem21);
+            this.checkEdit27.SuperTip = superToolTip21;
             this.checkEdit27.TabIndex = 20;
             // 
             // checkEdit17
@@ -274,12 +276,12 @@ namespace T7
             this.checkEdit17.Name = "checkEdit17";
             this.checkEdit17.Properties.Caption = "Show table upside down";
             this.checkEdit17.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem3.Text = "Show tables upside down";
-            toolTipItem3.LeftIndent = 6;
-            toolTipItem3.Text = "Allows you to display all tables upside down.";
-            superToolTip3.Items.Add(toolTipTitleItem3);
-            superToolTip3.Items.Add(toolTipItem3);
-            this.checkEdit17.SuperTip = superToolTip3;
+            toolTipTitleItem1.Text = "Show tables upside down";
+            toolTipItem1.LeftIndent = 6;
+            toolTipItem1.Text = "Allows you to display all tables upside down.";
+            superToolTip1.Items.Add(toolTipTitleItem1);
+            superToolTip1.Items.Add(toolTipItem1);
+            this.checkEdit17.SuperTip = superToolTip1;
             this.checkEdit17.TabIndex = 19;
             // 
             // checkEdit29
@@ -288,13 +290,13 @@ namespace T7
             this.checkEdit29.Name = "checkEdit29";
             this.checkEdit29.Properties.Caption = "Use T7Suite AFR maps";
             this.checkEdit29.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem4.Text = "Use T7Suite AFR maps";
-            toolTipItem4.LeftIndent = 6;
-            toolTipItem4.Text = "If you wish to use the AFR target/feedback maps in T7Suite, you need to have this" +
+            toolTipTitleItem2.Text = "Use T7Suite AFR maps";
+            toolTipItem2.LeftIndent = 6;
+            toolTipItem2.Text = "If you wish to use the AFR target/feedback maps in T7Suite, you need to have this" +
                 " checked.";
-            superToolTip4.Items.Add(toolTipTitleItem4);
-            superToolTip4.Items.Add(toolTipItem4);
-            this.checkEdit29.SuperTip = superToolTip4;
+            superToolTip2.Items.Add(toolTipTitleItem2);
+            superToolTip2.Items.Add(toolTipItem2);
+            this.checkEdit29.SuperTip = superToolTip2;
             this.checkEdit29.TabIndex = 22;
             // 
             // checkEdit16
@@ -304,13 +306,13 @@ namespace T7
             this.checkEdit16.Name = "checkEdit16";
             this.checkEdit16.Properties.Caption = "Fancy docking";
             this.checkEdit16.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem5.Text = "Fancy docking";
-            toolTipItem5.LeftIndent = 6;
-            toolTipItem5.Text = "Lets you decide whether docking (dragging windows) will be shown in a fancy manne" +
+            toolTipTitleItem3.Text = "Fancy docking";
+            toolTipItem3.LeftIndent = 6;
+            toolTipItem3.Text = "Lets you decide whether docking (dragging windows) will be shown in a fancy manne" +
                 "r or not.";
-            superToolTip5.Items.Add(toolTipTitleItem5);
-            superToolTip5.Items.Add(toolTipItem5);
-            this.checkEdit16.SuperTip = superToolTip5;
+            superToolTip3.Items.Add(toolTipTitleItem3);
+            superToolTip3.Items.Add(toolTipItem3);
+            this.checkEdit16.SuperTip = superToolTip3;
             this.checkEdit16.TabIndex = 18;
             // 
             // labelControl2
@@ -342,13 +344,13 @@ namespace T7
             this.checkEdit15.Name = "checkEdit15";
             this.checkEdit15.Properties.Caption = "Synchronize mapviewers";
             this.checkEdit15.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem6.Text = "Synchronize mapviewers";
-            toolTipItem6.LeftIndent = 6;
-            toolTipItem6.Text = "When checked, all the mapviewers will react to changes made in one of the viewers" +
+            toolTipTitleItem4.Text = "Synchronize mapviewers";
+            toolTipItem4.LeftIndent = 6;
+            toolTipItem4.Text = "When checked, all the mapviewers will react to changes made in one of the viewers" +
                 ". E.g. changing viewtype";
-            superToolTip6.Items.Add(toolTipTitleItem6);
-            superToolTip6.Items.Add(toolTipItem6);
-            this.checkEdit15.SuperTip = superToolTip6;
+            superToolTip4.Items.Add(toolTipTitleItem4);
+            superToolTip4.Items.Add(toolTipItem4);
+            this.checkEdit15.SuperTip = superToolTip4;
             this.checkEdit15.TabIndex = 15;
             // 
             // labelControl1
@@ -380,13 +382,13 @@ namespace T7
             this.checkEdit14.Name = "checkEdit14";
             this.checkEdit14.Properties.Caption = "Auto load last file on startup";
             this.checkEdit14.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem7.Text = "Auto load last file on startup";
-            toolTipItem7.LeftIndent = 6;
-            toolTipItem7.Text = "Lets you decide whether or not the last used file should be automatically loaded " +
+            toolTipTitleItem5.Text = "Auto load last file on startup";
+            toolTipItem5.LeftIndent = 6;
+            toolTipItem5.Text = "Lets you decide whether or not the last used file should be automatically loaded " +
                 "when the program starts up.";
-            superToolTip7.Items.Add(toolTipTitleItem7);
-            superToolTip7.Items.Add(toolTipItem7);
-            this.checkEdit14.SuperTip = superToolTip7;
+            superToolTip5.Items.Add(toolTipTitleItem5);
+            superToolTip5.Items.Add(toolTipItem5);
+            this.checkEdit14.SuperTip = superToolTip5;
             this.checkEdit14.TabIndex = 12;
             // 
             // checkEdit13
@@ -396,14 +398,14 @@ namespace T7
             this.checkEdit13.Name = "checkEdit13";
             this.checkEdit13.Properties.Caption = "Always re-create repository items";
             this.checkEdit13.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem8.Text = "Always re-create repository items";
-            toolTipItem8.LeftIndent = 6;
-            toolTipItem8.Text = "When checked, T7Suite will always re-create the repository items. This will slow " +
+            toolTipTitleItem6.Text = "Always re-create repository items";
+            toolTipItem6.LeftIndent = 6;
+            toolTipItem6.Text = "When checked, T7Suite will always re-create the repository items. This will slow " +
                 "down overall performance, but will ensure that an actual version is used all the" +
                 " time.";
-            superToolTip8.Items.Add(toolTipTitleItem8);
-            superToolTip8.Items.Add(toolTipItem8);
-            this.checkEdit13.SuperTip = superToolTip8;
+            superToolTip6.Items.Add(toolTipTitleItem6);
+            superToolTip6.Items.Add(toolTipItem6);
+            this.checkEdit13.SuperTip = superToolTip6;
             this.checkEdit13.TabIndex = 11;
             // 
             // checkEdit12
@@ -412,13 +414,13 @@ namespace T7
             this.checkEdit12.Name = "checkEdit12";
             this.checkEdit12.Properties.Caption = "New panels are floating";
             this.checkEdit12.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem9.Text = "New panels are floating";
-            toolTipItem9.LeftIndent = 6;
-            toolTipItem9.Text = "When checked makes new viewer float inside the application window in stead of doc" +
+            toolTipTitleItem7.Text = "New panels are floating";
+            toolTipItem7.LeftIndent = 6;
+            toolTipItem7.Text = "When checked makes new viewer float inside the application window in stead of doc" +
                 "king them to the right side of the screen.";
-            superToolTip9.Items.Add(toolTipTitleItem9);
-            superToolTip9.Items.Add(toolTipItem9);
-            this.checkEdit12.SuperTip = superToolTip9;
+            superToolTip7.Items.Add(toolTipTitleItem7);
+            superToolTip7.Items.Add(toolTipItem7);
+            this.checkEdit12.SuperTip = superToolTip7;
             this.checkEdit12.TabIndex = 10;
             // 
             // checkEdit11
@@ -428,12 +430,12 @@ namespace T7
             this.checkEdit11.Name = "checkEdit11";
             this.checkEdit11.Properties.Caption = "Show mapviewers in seperate windows";
             this.checkEdit11.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem10.Text = "Show mapviewers in seperate windows";
-            toolTipItem10.LeftIndent = 6;
-            toolTipItem10.Text = "When checked shows mapviewers in seperate windows in stead of docked panels.";
-            superToolTip10.Items.Add(toolTipTitleItem10);
-            superToolTip10.Items.Add(toolTipItem10);
-            this.checkEdit11.SuperTip = superToolTip10;
+            toolTipTitleItem8.Text = "Show mapviewers in seperate windows";
+            toolTipItem8.LeftIndent = 6;
+            toolTipItem8.Text = "When checked shows mapviewers in seperate windows in stead of docked panels.";
+            superToolTip8.Items.Add(toolTipTitleItem8);
+            superToolTip8.Items.Add(toolTipItem8);
+            this.checkEdit11.SuperTip = superToolTip8;
             this.checkEdit11.TabIndex = 9;
             // 
             // checkEdit10
@@ -442,13 +444,13 @@ namespace T7
             this.checkEdit10.Name = "checkEdit10";
             this.checkEdit10.Properties.Caption = "Auto dock maps with same name";
             this.checkEdit10.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem11.Text = "Auto dock maps with same name";
-            toolTipItem11.LeftIndent = 6;
-            toolTipItem11.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
+            toolTipTitleItem9.Text = "Auto dock maps with same name";
+            toolTipItem9.LeftIndent = 6;
+            toolTipItem9.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
                 "y display the same symbol.";
-            superToolTip11.Items.Add(toolTipTitleItem11);
-            superToolTip11.Items.Add(toolTipItem11);
-            this.checkEdit10.SuperTip = superToolTip11;
+            superToolTip9.Items.Add(toolTipTitleItem9);
+            superToolTip9.Items.Add(toolTipItem9);
+            this.checkEdit10.SuperTip = superToolTip9;
             this.checkEdit10.TabIndex = 8;
             // 
             // checkEdit9
@@ -457,13 +459,13 @@ namespace T7
             this.checkEdit9.Name = "checkEdit9";
             this.checkEdit9.Properties.Caption = "Auto dock maps from same file";
             this.checkEdit9.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem12.Text = "Auto dock maps from same file";
-            toolTipItem12.LeftIndent = 6;
-            toolTipItem12.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
+            toolTipTitleItem10.Text = "Auto dock maps from same file";
+            toolTipItem10.LeftIndent = 6;
+            toolTipItem10.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
                 "y are from the same binary file.";
-            superToolTip12.Items.Add(toolTipTitleItem12);
-            superToolTip12.Items.Add(toolTipItem12);
-            this.checkEdit9.SuperTip = superToolTip12;
+            superToolTip10.Items.Add(toolTipTitleItem10);
+            superToolTip10.Items.Add(toolTipItem10);
+            this.checkEdit9.SuperTip = superToolTip10;
             this.checkEdit9.TabIndex = 7;
             // 
             // checkEdit8
@@ -472,13 +474,13 @@ namespace T7
             this.checkEdit8.Name = "checkEdit8";
             this.checkEdit8.Properties.Caption = "Don\'t display colors in mapviewer";
             this.checkEdit8.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem13.Text = "Don\'t display colors in mapviewer";
-            toolTipItem13.LeftIndent = 6;
-            toolTipItem13.Text = "To improve performance you can check this item and coloring of the mapviewer cell" +
+            toolTipTitleItem11.Text = "Don\'t display colors in mapviewer";
+            toolTipItem11.LeftIndent = 6;
+            toolTipItem11.Text = "To improve performance you can check this item and coloring of the mapviewer cell" +
                 "s will be disabled.";
-            superToolTip13.Items.Add(toolTipTitleItem13);
-            superToolTip13.Items.Add(toolTipItem13);
-            this.checkEdit8.SuperTip = superToolTip13;
+            superToolTip11.Items.Add(toolTipTitleItem11);
+            superToolTip11.Items.Add(toolTipItem11);
+            this.checkEdit8.SuperTip = superToolTip11;
             this.checkEdit8.TabIndex = 6;
             // 
             // checkEdit7
@@ -487,11 +489,11 @@ namespace T7
             this.checkEdit7.Name = "checkEdit7";
             this.checkEdit7.Properties.Caption = "Auto size columns in mapviewer";
             this.checkEdit7.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem14.Text = "Auto size columns in mapviewer";
-            toolTipItem14.LeftIndent = 6;
-            superToolTip14.Items.Add(toolTipTitleItem14);
-            superToolTip14.Items.Add(toolTipItem14);
-            this.checkEdit7.SuperTip = superToolTip14;
+            toolTipTitleItem12.Text = "Auto size columns in mapviewer";
+            toolTipItem12.LeftIndent = 6;
+            superToolTip12.Items.Add(toolTipTitleItem12);
+            superToolTip12.Items.Add(toolTipItem12);
+            this.checkEdit7.SuperTip = superToolTip12;
             this.checkEdit7.TabIndex = 5;
             // 
             // checkEdit6
@@ -500,13 +502,13 @@ namespace T7
             this.checkEdit6.Name = "checkEdit6";
             this.checkEdit6.Properties.Caption = "Hide symbol window";
             this.checkEdit6.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem15.Text = "Hide symbol window";
-            toolTipItem15.LeftIndent = 6;
-            toolTipItem15.Text = "To save display space you can hide the symbollist and select the symbols you want" +
+            toolTipTitleItem13.Text = "Hide symbol window";
+            toolTipItem13.LeftIndent = 6;
+            toolTipItem13.Text = "To save display space you can hide the symbollist and select the symbols you want" +
                 " to view from the dropdownl list in the system menu.";
-            superToolTip15.Items.Add(toolTipTitleItem15);
-            superToolTip15.Items.Add(toolTipItem15);
-            this.checkEdit6.SuperTip = superToolTip15;
+            superToolTip13.Items.Add(toolTipTitleItem13);
+            superToolTip13.Items.Add(toolTipItem13);
+            this.checkEdit6.SuperTip = superToolTip13;
             this.checkEdit6.TabIndex = 4;
             // 
             // checkEdit5
@@ -515,13 +517,13 @@ namespace T7
             this.checkEdit5.Name = "checkEdit5";
             this.checkEdit5.Properties.Caption = "Show graphs in mapviewer";
             this.checkEdit5.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem16.Text = "Show graphs in mapviewer";
-            toolTipItem16.LeftIndent = 6;
-            toolTipItem16.Text = "When checked the graphical representation of the selected map will also be displa" +
+            toolTipTitleItem14.Text = "Show graphs in mapviewer";
+            toolTipItem14.LeftIndent = 6;
+            toolTipItem14.Text = "When checked the graphical representation of the selected map will also be displa" +
                 "yed. This consumes more system memory en cpu time.";
-            superToolTip16.Items.Add(toolTipTitleItem16);
-            superToolTip16.Items.Add(toolTipItem16);
-            this.checkEdit5.SuperTip = superToolTip16;
+            superToolTip14.Items.Add(toolTipTitleItem14);
+            superToolTip14.Items.Add(toolTipItem14);
+            this.checkEdit5.SuperTip = superToolTip14;
             this.checkEdit5.TabIndex = 3;
             // 
             // checkEdit4
@@ -530,13 +532,13 @@ namespace T7
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.Caption = "View tables in hexadecimal values";
             this.checkEdit4.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem17.Text = "View tables in hexadecimal values";
-            toolTipItem17.LeftIndent = 6;
-            toolTipItem17.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
+            toolTipTitleItem15.Text = "View tables in hexadecimal values";
+            toolTipItem15.LeftIndent = 6;
+            toolTipItem15.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
                 "maps will  be displayed in easy mode when they are opened.";
-            superToolTip17.Items.Add(toolTipTitleItem17);
-            superToolTip17.Items.Add(toolTipItem17);
-            this.checkEdit4.SuperTip = superToolTip17;
+            superToolTip15.Items.Add(toolTipTitleItem15);
+            superToolTip15.Items.Add(toolTipItem15);
+            this.checkEdit4.SuperTip = superToolTip15;
             this.checkEdit4.TabIndex = 2;
             // 
             // checkEdit2
@@ -545,13 +547,13 @@ namespace T7
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.Caption = "Use red and white maps";
             this.checkEdit2.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem18.Text = "Use red and white maps";
-            toolTipItem18.LeftIndent = 6;
-            toolTipItem18.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
+            toolTipTitleItem16.Text = "Use red and white maps";
+            toolTipItem16.LeftIndent = 6;
+            toolTipItem16.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
                 "o display low values and red for higher values.";
-            superToolTip18.Items.Add(toolTipTitleItem18);
-            superToolTip18.Items.Add(toolTipItem18);
-            this.checkEdit2.SuperTip = superToolTip18;
+            superToolTip16.Items.Add(toolTipTitleItem16);
+            superToolTip16.Items.Add(toolTipItem16);
+            this.checkEdit2.SuperTip = superToolTip16;
             this.checkEdit2.TabIndex = 1;
             // 
             // checkEdit1
@@ -560,12 +562,12 @@ namespace T7
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Auto size new mapwindows";
             this.checkEdit1.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem19.Text = "Auto size new mapwindows";
-            toolTipItem19.LeftIndent = 6;
-            toolTipItem19.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
-            superToolTip19.Items.Add(toolTipTitleItem19);
-            superToolTip19.Items.Add(toolTipItem19);
-            this.checkEdit1.SuperTip = superToolTip19;
+            toolTipTitleItem17.Text = "Auto size new mapwindows";
+            toolTipItem17.LeftIndent = 6;
+            toolTipItem17.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
+            superToolTip17.Items.Add(toolTipTitleItem17);
+            superToolTip17.Items.Add(toolTipItem17);
+            this.checkEdit1.SuperTip = superToolTip17;
             this.checkEdit1.TabIndex = 0;
             // 
             // groupControl2
@@ -611,7 +613,6 @@ namespace T7
             // 
             // checkEdit22
             // 
-            this.checkEdit22.Enabled = false;
             this.checkEdit22.Location = new System.Drawing.Point(242, 58);
             this.checkEdit22.Name = "checkEdit22";
             this.checkEdit22.Properties.Caption = "Enable CAN logging";
@@ -665,6 +666,7 @@ namespace T7
             // 
             // groupControl3
             // 
+            this.groupControl3.Controls.Add(this.cbDisableConnectionCheck);
             this.groupControl3.Controls.Add(this.checkEdit32);
             this.groupControl3.Controls.Add(this.simpleButton3);
             this.groupControl3.Controls.Add(this.comboBoxEdit5);
@@ -769,13 +771,13 @@ namespace T7
             this.checkEdit28.Name = "checkEdit28";
             this.checkEdit28.Properties.Caption = "Measure AFR in lambda";
             this.checkEdit28.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem20.Text = "Measure AFR in lambda";
-            toolTipItem20.LeftIndent = 6;
-            toolTipItem20.Text = "If you prefer AFR measurements in lambda values in stead of AFR values, enable th" +
+            toolTipTitleItem18.Text = "Measure AFR in lambda";
+            toolTipItem18.LeftIndent = 6;
+            toolTipItem18.Text = "If you prefer AFR measurements in lambda values in stead of AFR values, enable th" +
                 "is.";
-            superToolTip20.Items.Add(toolTipTitleItem20);
-            superToolTip20.Items.Add(toolTipItem20);
-            this.checkEdit28.SuperTip = superToolTip20;
+            superToolTip18.Items.Add(toolTipTitleItem18);
+            superToolTip18.Items.Add(toolTipItem18);
+            this.checkEdit28.SuperTip = superToolTip18;
             this.checkEdit28.TabIndex = 21;
             // 
             // labelControl3
@@ -883,6 +885,14 @@ namespace T7
             this.simpleButton5.Text = "Autotune settings";
             this.simpleButton5.Click += new System.EventHandler(this.simpleButton5_Click);
             // 
+            // cbDisableConnectionCheck
+            // 
+            this.cbDisableConnectionCheck.Location = new System.Drawing.Point(242, 109);
+            this.cbDisableConnectionCheck.Name = "cbDisableConnectionCheck";
+            this.cbDisableConnectionCheck.Properties.Caption = "Disable connection check";
+            this.cbDisableConnectionCheck.Size = new System.Drawing.Size(212, 19);
+            this.cbDisableConnectionCheck.TabIndex = 30;
+            // 
             // frmSettings
             // 
             this.AcceptButton = this.simpleButton1;
@@ -954,6 +964,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbDisableConnectionCheck.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1014,5 +1025,6 @@ namespace T7
         private DevExpress.XtraEditors.SimpleButton simpleButton4;
         private DevExpress.XtraEditors.SimpleButton simpleButton5;
         private DevExpress.XtraEditors.CheckEdit checkEdit32;
+        private DevExpress.XtraEditors.CheckEdit cbDisableConnectionCheck;
     }
 }

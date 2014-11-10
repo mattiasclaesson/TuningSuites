@@ -161,7 +161,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrionicCANLib, Version=0.0.0.11, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="TrionicCANLib, Version=0.0.0.14, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\TrionicCANLib.dll</HintPath>
     </Reference>
@@ -184,17 +184,6 @@
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="BitStream.cs" />
-    <Compile Include="CAN\CANELM327Device.cs" />
-    <Compile Include="CAN\CANMessage.cs" />
-    <Compile Include="CAN\CANUSBDevice.cs" />
-    <Compile Include="CAN\CANUSBDirectDevice.cs" />
-    <Compile Include="CAN\EasySyncUSBDevice.cs" />
-    <Compile Include="CAN\EasySync_canusb.cs" />
-    <Compile Include="CAN\ICANDevice.cs" />
-    <Compile Include="CAN\ICANListener.cs" />
-    <Compile Include="CAN\Lawicel_canusb.cs" />
-    <Compile Include="CAN\LPCCANDevice_T7.cs" />
-    <Compile Include="CAN\MictronicsDevice.cs" />
     <Compile Include="CellHelper.cs" />
     <Compile Include="CellHelperCollection.cs" />
     <Compile Include="ChecksumHandler.cs" />
@@ -391,7 +380,6 @@
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
     <Compile Include="EngineStatus.cs" />
-    <Compile Include="Flasher\T7Flasher.cs" />
     <Compile Include="FormFind.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -597,13 +585,6 @@
     <Compile Include="InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KWP\ELM327Device.cs" />
-    <Compile Include="KWP\IKWPDevice.cs" />
-    <Compile Include="KWP\KWPCANDevice.cs" />
-    <Compile Include="KWP\KWPCANListener.cs" />
-    <Compile Include="KWP\KWPHandler.cs" />
-    <Compile Include="KWP\KWPReply.cs" />
-    <Compile Include="KWP\KWPRequest.cs" />
     <Compile Include="LegacyFunctions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -726,13 +707,11 @@
     <Compile Include="Symbol.cs" />
     <Compile Include="SymbolAxesTranslator.cs" />
     <Compile Include="SymbolCollection.cs" />
-    <Compile Include="SymbolHelper.cs" />
     <Compile Include="SymbolMapParser.cs" />
     <Compile Include="SymbolTranslator.cs" />
     <Compile Include="T7EspEdit.cs" />
     <Compile Include="T7FileHeader.cs" />
     <Compile Include="T7FileParser.cs" />
-    <Compile Include="T7Flasher.cs" />
     <Compile Include="T7Parser.cs" />
     <Compile Include="T7SidEdit.cs" />
     <Compile Include="T7SymbolIntel.cs" />

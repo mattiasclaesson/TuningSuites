@@ -466,6 +466,18 @@ namespace T7
             }
         }
 
+        public bool DisableConnectionCheck
+        {
+            get
+            {
+                return cbDisableConnectionCheck.Checked;
+            }
+            set
+            {
+                cbDisableConnectionCheck.Checked = value;
+            }
+        }
+
         public bool AutoCreateAFRMaps
         {
             get
@@ -539,7 +551,8 @@ namespace T7
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.COMBI || 
-                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
+                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 btnAdapterConfiguration.Enabled = true;
             }
@@ -573,15 +586,18 @@ namespace T7
                     // nothing really.. all is saved in appsettings already ... 
                 }
             }
-            else if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
+            else if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 frmComportSelection comportSel = new frmComportSelection();
                 comportSel.PortName = m_appSettings.ELM327Port;
                 comportSel.Baudrate = m_appSettings.Baudrate;
+                comportSel.ELM327KLine = m_appSettings.ELM327Kline;
                 if (comportSel.ShowDialog() == DialogResult.OK)
                 {
                     m_appSettings.ELM327Port = comportSel.PortName;
                     m_appSettings.Baudrate = comportSel.Baudrate;
+                    m_appSettings.ELM327Kline = comportSel.ELM327KLine;
                 }
                 DialogResult = DialogResult.None;
             }

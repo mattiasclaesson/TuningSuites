@@ -86,7 +86,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
-using T7.KWP;
 using DevExpress.XtraBars;
 using Microsoft.Win32;
 using System.Data.OleDb;
@@ -97,7 +96,6 @@ using T7.Parser;
 using DevExpress.XtraBars.Docking;
 using Microsoft.Office.Interop.Excel;
 using RealtimeGraph;
-using T7.CAN;
 using DevExpress.XtraGrid;
 using System.Xml;
 using DevExpress.Skins;
@@ -115,6 +113,10 @@ namespace T7
     public delegate void DelegateUpdateBDMProgress(uint bytes);
     public delegate void DelegateUpdateRealTimeValue(string symbolname, float value);
     public delegate void DelegateUpdateMapViewer(IMapViewer viewer, int tabwidth, bool sixteenbits);
+
+    public delegate void DelegateUpdateStatus(ITrionic.CanInfoEventArgs e);
+    public delegate void DelegateProgressStatus(int percentage);
+    public delegate void DelegateCanFrame(ITrionic.CanFrameEventArgs e);
 
     public enum AFRViewType : int
     {
@@ -139,11 +141,6 @@ namespace T7
 
     public partial class frmMain : Form
     {
-        [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
-        public static extern uint MM_BeginPeriod(uint uMilliseconds);
-        [DllImport("winmm.dll", EntryPoint = "timeEndPeriod")]
-        public static extern uint MM_EndPeriod(uint uMilliseconds);
-        private Random _random = new Random(DateTime.Now.Millisecond);
         private string m_filename = string.Empty;
         private string m_swversion = string.Empty;
         private frmProgress frmProgressLogWorks;
@@ -168,18 +165,6 @@ namespace T7
         private Stopwatch _sw = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
         frmSplash splash;
-        frmProgress frmFlasherProgress;
-        frmProgress frmSymbolReadProgress;
-        //private T7.Flasher.T7Flasher flash = null;
-        
-        // should be interface
-//<GS-08122010> rewrite to interface base class   private T7.Flasher.T7Flasher flash = null;
-        private T7.Flasher.IFlasher flash = null;       // common base class
-
-        //private CANUSBDevice canUsbDevice = null;
-        private ICANDevice canUsbDevice = null;
-        private IKWPDevice kwpDevice = null;
-        //private KWPHandler kwpHandler = null;
         private bool m_connectedToECU = false;
         private bool m_enableRealtimeTimer = false;
         msiupdater m_msiUpdater;
@@ -206,9 +191,14 @@ namespace T7
         private bool m_prohibitReading = false;
         private frmEditTuningPackage tunpackeditWindow = null;
 
+        readonly Trionic7 trionic7 = new Trionic7();
+        public DelegateUpdateStatus m_DelegateUpdateStatus;
+        public DelegateProgressStatus m_DelegateProgressStatus;
+        public DelegateCanFrame m_DelegateCanFrame;
 
         public frmMain(string[] args)
         {
+            Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
             //System.Threading.Thread.CurrentThread.CurrentUICulture
             CultureInfo tci = new CultureInfo("nl-NL");
             Thread.CurrentThread.CurrentCulture = tci;
@@ -222,14 +212,6 @@ namespace T7
 
             try
             {
-                MM_BeginPeriod(1);
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to set thread high prio: " + E.Message);
-            }
-            try
-            {
                 sndplayer = new System.Media.SoundPlayer();
             }
             catch (Exception E)
@@ -238,55 +220,25 @@ namespace T7
             }
             if (args.Length > 0)
             {
-                if (args[0].ToString().ToUpper().EndsWith(".BIN"))
+                if (args[0].ToUpper().EndsWith(".BIN"))
                 {
-                    if(File.Exists(args[0].ToString()))
+                    if(File.Exists(args[0]))
                     {
-                        m_commandLineFile = args[0].ToString();
+                        m_commandLineFile = args[0];
                         m_startFromCommandLine = true;
                     }
                 }
             }
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.LAWICEL)
-            {
-                canUsbDevice = new CANUSBDevice();
-            }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-            {
-                canUsbDevice = new CANELM327Device();
-                canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
-            }
-            else
-            {
-                canUsbDevice = new LPCCANDevice_T7();
-            }
-            canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrame);
-            canUsbDevice.onReceivedAdditionalInformation += new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
-            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-            {
-                kwpDevice = new ELM327Device();
-                kwpDevice.EnableLog = m_appSettings.EnableCanLog;
-                kwpDevice.ForcedComport = m_appSettings.ELM327Port;
-                kwpDevice.ForcedBaudrate = m_appSettings.Baudrate;
-            }
-            else
-            {
-                kwpDevice = new KWPCANDevice();
-                kwpDevice.EnableLog = m_appSettings.EnableCanLog;
-            }
+            m_DelegateUpdateStatus = updateStatusInBox;
+            m_DelegateProgressStatus = SetProgressPercentage;
+            m_DelegateUpdateRealTimeValue = new DelegateUpdateRealTimeValue(UpdateRealtimeInformationValue);
+            m_DelegateCanFrame = trionic7_onCanFrame;
             
-            try
-            {
-                m_DelegateUpdateBDMProgress = new DelegateUpdateBDMProgress(this.ReportBDMProgress);
-                m_DelegateUpdateRealTimeValue = new DelegateUpdateRealTimeValue(this.UpdateRealtimeInformationValue);
-                m_DelegateUpdateMapViewer = new DelegateUpdateMapViewer(this.UpdateMapViewer);
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log(E.Message);
-            }
+            trionic7.onReadProgress += trionicCan_onReadProgress;
+            trionic7.onWriteProgress += trionicCan_onWriteProgress;
+            trionic7.onCanInfo += trionicCan_onCanInfo;
+            trionic7.onCanFrame += trionicCan_onCanFrame;
+
             try
             {
                 RegistryKey TempKeyCM = null;
@@ -333,6 +285,109 @@ namespace T7
             catch (Exception E)
             {
                 LogHelper.Log(E.Message);
+            }
+        }
+
+        void trionicCan_onWriteProgress(object sender, ITrionic.WriteProgressEventArgs e)
+        {
+            UpdateProgressStatus(e.Percentage);
+        }
+
+        void trionicCan_onCanInfo(object sender, ITrionic.CanInfoEventArgs e)
+        {
+            UpdateFlashStatus(e);
+        }
+
+        void trionicCan_onReadProgress(object sender, ITrionic.ReadProgressEventArgs e)
+        {
+            UpdateProgressStatus(e.Percentage);
+        }
+
+        void trionicCan_onCanFrame(object sender, ITrionic.CanFrameEventArgs e)
+        {
+            LogHelper.Log("Rx frame: 0x" + e.Message.getID().ToString("X4") + " 0x" + e.Message.getData().ToString("X16"));
+            UpdateFrame(e);
+        }
+
+        private void updateStatusInBox(ITrionic.CanInfoEventArgs e)
+        {
+            SetProgress(e.Info);
+        }
+
+        private void UpdateFrame(ITrionic.CanFrameEventArgs e)
+        {
+            try
+            {
+                Invoke(m_DelegateCanFrame, e);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(ex.Message);
+            }
+        }
+
+        private void UpdateFlashStatus(ITrionic.CanInfoEventArgs e)
+        {
+            try
+            {
+                Invoke(m_DelegateUpdateStatus, e);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(ex.Message);
+            }
+        }
+
+        private void UpdateProgressStatus(int percentage)
+        {
+            try
+            {
+                Invoke(m_DelegateProgressStatus, percentage);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Log(e.Message);
+            }
+        }
+
+        private void SetProgressIdle()
+        {
+            SetProgress("Idle");
+            SetProgressPercentage(0);
+        }
+
+        private void SetProgressPercentage(int perc)
+        {
+            try
+            {
+                if (perc < 100)
+                {
+                    if (Convert.ToInt32(barProgress.EditValue) != perc)
+                    {
+                        barProgress.Visibility = BarItemVisibility.Always;
+                        barProgress.EditValue = perc;
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+                }
+                else
+                {
+                    barProgress.Caption = "Done";
+                    barProgress.Visibility = BarItemVisibility.Never;
+                    barProgress.EditValue = 0;
+                }
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log(E.Message);
+            }
+        }
+
+        private void SetProgress(string descr)
+        {
+            if (barProgress.Caption != descr)
+            {
+                barProgress.Caption = descr;
+                System.Windows.Forms.Application.DoEvents();
             }
         }
 
@@ -716,16 +771,15 @@ namespace T7
 
         #endregion
 
-        void canUsbDevice_onReceivedAdditionalInformation(object sender, ICANDevice.InformationEventArgs e)
+        void trionic7_onCanInfo(ITrionic.CanInfoEventArgs e)
         {
             // display progress in the statusbar
             //TODO: For testing only
-            barEditItem3.Caption = e.Info;
-            System.Windows.Forms.Application.DoEvents();
+            SetProgress(e.Info);
         }
 
 
-        void canUsbDevice_onReceivedAdditionalInformationFrame(object sender, ICANDevice.InformationFrameEventArgs e)
+        void trionic7_onCanFrame(ITrionic.CanFrameEventArgs e)
         {
             //TODO: handle additional information from the canbus
             // the messages have been filtered already
@@ -985,8 +1039,8 @@ namespace T7
             AddFileToMRUList(filename);
             symbol_collection = retval.ExtractFile(filename, m_appSettings.ApplicationLanguage, m_current_softwareversion);
             
-            barEditItem3.EditValue = 60;
-            barEditItem3.Caption = "Examining file";
+            SetProgressPercentage(60);
+            SetProgress("Examining file");
             System.Windows.Forms.Application.DoEvents();
             if (isWorkingFile)
             {
@@ -1036,14 +1090,14 @@ namespace T7
         {
             if (e.Percentage < 100)
             {
-                barEditItem3.Visibility = BarItemVisibility.Always;
-                barEditItem3.EditValue = e.Percentage;
-                barEditItem3.Caption = e.Info;
+                barProgress.Visibility = BarItemVisibility.Always;
+                barProgress.EditValue = e.Percentage;
+                barProgress.Caption = e.Info;
             }
             else
             {
-                barEditItem3.Caption = "Done";
-                barEditItem3.Visibility = BarItemVisibility.Never;
+                barProgress.Caption = "Done";
+                barProgress.Visibility = BarItemVisibility.Never;
             }
             System.Windows.Forms.Application.DoEvents();
         }
@@ -1714,25 +1768,23 @@ namespace T7
             {
                 m_symbols = new SymbolCollection();
                 t7file = TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
-                barEditItem3.EditValue = 70;
-                barEditItem3.Caption = "Sorting data";
+                SetProgressPercentage(70);
+                SetProgress("Sorting data");
                 System.Windows.Forms.Application.DoEvents();
                 m_symbols.SortColumn = "Length";
                 m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
                 m_symbols.Sort();
-                barEditItem3.EditValue = 80;
-                barEditItem3.Caption = "Loading data into view";
+                SetProgressPercentage(80);
+                SetProgress("Loading data into view");
                 gridControlSymbols.DataSource = m_symbols;
                 //gridViewSymbols.BestFitColumns();
                 SetDefaultFilters();
                 Text = String.Format("T7SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
-                barEditItem3.EditValue = 90;
-                barEditItem3.Caption = "Loading realtime info";
+                SetProgressPercentage(90);
+                SetProgress("Loading realtime info");
                 // also rearrange the symbolnumbers in the realtime view
                 UpdateRealTimeDataTableWithNewSRAMValues();
-                barEditItem3.Visibility = BarItemVisibility.Never;
-                barEditItem3.Caption = "Done";
-                barEditItem3.EditValue = 0;
+                SetProgressPercentage(100);
                 System.Windows.Forms.Application.DoEvents();
             }
             else
@@ -1916,67 +1968,14 @@ namespace T7
             LogHelper.Log("Double click seen");
         }
 
-        private byte[] ReadMapFromSRAMVarLength(SymbolHelper sh)
-        {
-            int varlength = 2;
-            m_prohibitReading = true;
-            byte[] completedata = new byte[sh.Length];
-            try
-            {
-                byte[] data;
-                int m_nrBytes = varlength;
-                int m_nrOfReads = 0;
-                int m_nrOfRetries = 0;
-                m_nrOfReads = sh.Length / m_nrBytes;
-                if (((sh.Length) % varlength) > 0) m_nrOfReads++;
-                int bytecount = 0;
-                KWPHandler.getInstance().requestSequrityAccess(false); // no seq. access <GS-10022010>
-                for (int readcount = 0; readcount < m_nrOfReads; readcount++)
-                {
-                    m_nrOfRetries = 0;
-                    int addresstoread = (int)sh.Start_address + (readcount * m_nrBytes);
-                    //LogHelper.Log("Reading 64 bytes from address: " + addresstoread.ToString("X6"));
-                    //if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(5);
-                    // <GS-05052011> removed above line.
-
-                    while (!KWPHandler.getInstance().sendReadRequest(/*0xF04768*/(uint)(addresstoread), (uint)varlength) && m_nrOfRetries < 20)
-                    {
-                        m_nrOfRetries++;
-                    }
-                    LogHelper.Log("Send command in " + m_nrOfRetries.ToString() + " retries");
-                    m_nrOfRetries = 0;
-                    while (!KWPHandler.getInstance().sendRequestDataByOffset(out data) && m_nrOfRetries < 20)
-                    {
-                        m_nrOfRetries++;
-                    }
-                    LogHelper.Log("Read data in " + m_nrOfRetries.ToString() + " retries");
-                    LogHelper.Log("Read " + data.Length.ToString() + " bytes from CAN interface");
-                    foreach (byte b in data)
-                    {
-                        //Console.Write(b.ToString("X2") + " ");
-                        if (bytecount < completedata.Length)
-                        {
-                            completedata[bytecount++] = b;
-                        }
-                    }
-                }
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to read memory: " + E.Message);
-            }
-            m_prohibitReading = false;
-            return completedata;
-        }
-
         private void WriteMapToSRAM(string symbolname, byte[] completedata, bool showProgress)
         {
             // TODO: <GS-23052011> needs to update a statusbar to the user can see the progress of writing to SRAM
             if (showProgress)
             {
-                barEditItem3.EditValue = 0;
-                barEditItem3.Caption = "Writing map to SRAM";
-                barEditItem3.Visibility = BarItemVisibility.Always;
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Writing map to SRAM";
+                barProgress.Visibility = BarItemVisibility.Always;
                 System.Windows.Forms.Application.DoEvents();
             }
 
@@ -1987,67 +1986,19 @@ namespace T7
             {
                 if (sramAddress < 0xF00000)
                 {
-                    KWPHandler.getInstance().requestSequrityAccess(false);
                     // cannot use sram address in files that don't have these.. use symbolnumbers instead for trial
-                    //byte[] testdata = new byte[0x40];
-                    // set all to zero
-                    //testdata.Initialize();
-
-                    KWPHandler.getInstance().writeSymbolRequest((uint)symbolindex, completedata);
+                    trionic7.WriteSymbolToSRAM((uint)symbolindex, completedata);
                 }
                 else
                 {
-                    LogHelper.Log("Writing " + symbolindex.ToString() + " " + symbolname + " SRAM: " + sramAddress.ToString("X8"));
-                    // if data length > 64 then split the messages
-                    uint m_nrBytes = 64;
-                    uint m_nrOfWrites = 0;
-                    uint m_nrOfRetries = 0;
-                    m_nrOfWrites = (uint)completedata.Length / m_nrBytes;
-                    if (((completedata.Length) % 64) > 0) m_nrOfWrites++;
-                    uint bytecount = 0;
-
-
-                    KWPHandler.getInstance().requestSequrityAccess(false);
-
-                    for (uint readcount = 0; readcount < m_nrOfWrites; readcount++)
-                    {
-                        if (showProgress)
-                        {
-                            uint percentage = readcount * 100 / m_nrOfWrites;
-                            barEditItem3.EditValue = percentage;
-                            System.Windows.Forms.Application.DoEvents();
-                        }
-
-                        m_nrOfRetries = 0;
-                        uint addresstowrite = sramAddress + (readcount * m_nrBytes);
-                        byte[] dataToSend = new byte[64];
-                        if (readcount == m_nrOfWrites - 1) // only the last part
-                        {
-                            dataToSend = new byte[completedata.Length - bytecount];
-                        }
-                        for (int t = 0; t < dataToSend.Length; t++)
-                        {
-                            dataToSend[t] = completedata[bytecount++];
-                        }
-                        if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, dataToSend))
-                        {
-                            LogHelper.Log("Failed to write data to the ECU");
-                        }
-                        /*if (!KWPHandler.getInstance().writeSymbolRequest((uint)symbolindex, completedata))
-                        {
-                            LogHelper.Log("Failed to write data to the ECU");
-                        }*/
-                    }
+                    trionic7.WriteMapToSRAM(symbolname, completedata, showProgress, sramAddress, symbolindex);
                 }
-                //byte b = (byte)e.Data.GetValue(e.Data.Length - 1);
-                //LogHelper.Log("Written last byte: " + b.ToString("X2"));
-
             }
             if (showProgress)
             {
-                barEditItem3.EditValue = 0;
-                barEditItem3.Caption = "Idle";
-                barEditItem3.Visibility = BarItemVisibility.Never;
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Idle";
+                barProgress.Visibility = BarItemVisibility.Never;
                 System.Windows.Forms.Application.DoEvents();
             }
 
@@ -2058,117 +2009,24 @@ namespace T7
             m_prohibitReading = true;
             if (showProgress)
             {
-                barEditItem3.EditValue = 0;
-                barEditItem3.Caption = "Reading map from SRAM";
-                barEditItem3.Visibility = BarItemVisibility.Always;
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Reading map from SRAM";
+                barProgress.Visibility = BarItemVisibility.Always;
                 System.Windows.Forms.Application.DoEvents();
-            }
+            }            
 
-            byte[] completedata = new byte[sh.Length];
-            try
-            {
-                //<GS-28012011>
-                /*if (IsSoftwareOpen())
-                {
-                    int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, sh.Varname), sh.Varname);
-                    sh.Symbol_number = symbolnumber;
-                }*/
-               // LogHelper.Log("Reading symbol: " + sh.Varname + " " + sh.Symbol_number.ToString() + " " + sh.Symbol_number_ECU.ToString() + " " + sh.Start_address.ToString("X8"));
+            byte[] completedata = trionic7.ReadMapfromSRAM(sh, showProgress);
 
-
-                byte[] data;
-                int m_nrBytes = 64;
-                int m_nrOfReads = 0;
-                int m_nrOfRetries = 0;
-                m_nrOfReads = sh.Length / m_nrBytes;
-                if (((sh.Length) % 64) > 0) m_nrOfReads++;
-                int bytecount = 0;
-                KWPHandler.getInstance().requestSequrityAccess(false);
-                for (int readcount = 0; readcount < m_nrOfReads; readcount++)
-                {
-                    if (showProgress)
-                    {
-                        int percentage = readcount * 100 / m_nrOfReads;
-                        LogHelper.Log("Percentage: " + percentage.ToString());
-                        barEditItem3.EditValue = percentage;
-                        System.Windows.Forms.Application.DoEvents();
-                    }
-
-                    m_nrOfRetries = 0;
-                    int addresstoread = (int)sh.Start_address + (readcount * m_nrBytes);
-                    LogHelper.Log("Reading 64 bytes from address: " + addresstoread.ToString("X6"));
-                    //if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter) Thread.Sleep(5);
-                    //<GS-05052011> removed above line
-
-                    while (!KWPHandler.getInstance().sendReadRequest(/*0xF04768*/(uint)(addresstoread), 64) && m_nrOfRetries < 20)
-                    {
-                        m_nrOfRetries++;
-                    }
-                    LogHelper.Log("Send command in " + m_nrOfRetries.ToString() + " retries");
-                    m_nrOfRetries = 0;
-                    Thread.Sleep(1);
-                    while (!KWPHandler.getInstance().sendRequestDataByOffset(out data) && m_nrOfRetries < 20)
-                    {
-                        m_nrOfRetries++;
-                    }
-                    LogHelper.Log("Read data in " + m_nrOfRetries.ToString() + " retries");
-                    LogHelper.Log("Read " + data.Length.ToString() + " bytes from CAN interface");
-                    foreach (byte b in data)
-                    {
-                       // Console.Write(b.ToString("X2") + " ");
-                        if (bytecount < completedata.Length)
-                        {
-                            completedata[bytecount++] = b;
-                        }
-                    }
-                }
-                //LogHelper.Log("Reading done");
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to read memory: " + E.Message);
-            }
             m_prohibitReading = false;
             if (showProgress)
             {
-                barEditItem3.EditValue = 0;
-                barEditItem3.Caption = "Idle";
-                barEditItem3.Visibility = BarItemVisibility.Never;
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Idle";
+                barProgress.Visibility = BarItemVisibility.Never;
                 System.Windows.Forms.Application.DoEvents();
             }
 
             return completedata;
-        }
-
-
-        private byte[] ReadMapFromSRAM(Int64 sramaddress, Int32 length, out bool _success)
-        {
-            _success = false;
-            byte[] data = new byte[length];
-            try
-            {
-                KWPHandler.getInstance().requestSequrityAccess(false);
-
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) Thread.Sleep(1);
-                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) Thread.Sleep(1);
-
-                if (KWPHandler.getInstance().sendReadRequest((uint)(sramaddress), (uint)length))
-                {
-                    Thread.Sleep(0); //<GS-11022010>
-                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI) Thread.Sleep(1);
-                    else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327) Thread.Sleep(1);
-
-                    if (KWPHandler.getInstance().sendRequestDataByOffset(out data))
-                    {
-                        _success = true;
-                    }
-                }
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to read memory: " + E.Message);
-            }
-            return data;
         }
 
         private string TranslateSymbolName(string symbolname)
@@ -3673,28 +3531,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         m_prohibitReading = true;
                         try
                         {
-
-                            
                             WriteMapToSRAM(e.Mapname, e.Data, true);
-                            // first read the symbol into memory from SRAM
-                            // compare byte by byte for differences and save them in SRAM
-                            //T5 tcan.writeRam((ushort)GetSymbolAddressSRAM(m_symbols, e.Mapname), e.Data);
-                            /*int symbolindex = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, e.Mapname), e.Mapname);
-                            if (symbolindex >= 0)
-                            {
-                                LogHelper.Log("Writing " + symbolindex.ToString() + " " + e.Mapname);
-                                KWPHandler.getInstance().requestSequrityAccess();
-                                //KWPHandler.getInstance().w
-                                if (!KWPHandler.getInstance().writeSymbolRequest((uint)symbolindex, e.Data))
-                                {
-                                    LogHelper.Log("Failed to write data to the ECU");
-                                }
-                                byte b = (byte)e.Data.GetValue(e.Data.Length - 1);
-                                //LogHelper.Log("Written last byte: " + b.ToString("X2"));
-
-                            }
-                            */
-
                         }
                         catch (Exception E)
                         {
@@ -3706,13 +3543,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 {
                     frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to write data to the ECU");
                 }
-                /*if (frmProgressWriteRAM != null)
-                {
-                    if (frmProgressWriteRAM.Visible)
-                    {
-                        frmProgressWriteRAM.Close();
-                    }
-                }*/
             }
             catch (Exception E)
             {
@@ -4084,8 +3914,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     SymbolCollection compare_symbols = new SymbolCollection();
                     FileInfo fi = new FileInfo(filename);
                     Trionic7File compareFile = TryToOpenFileUsingClass(filename, out compare_symbols, (int)fi.Length, false);
-                    barEditItem3.EditValue = 60;
-                    barEditItem3.Caption = "Loading header";
+                    barProgress.EditValue = 60;
+                    barProgress.Caption = "Loading header";
                     System.Windows.Forms.Application.DoEvents();
 
                     T7FileHeader t7fh = new T7FileHeader();
@@ -4093,17 +3923,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
                     if (m_sramOffset == 0) m_sramOffset = compareFile.SramOffsetForOpenFile;
                     if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
-                    barEditItem3.EditValue = 90;
-                    barEditItem3.Caption = "Starting compare";
+                    barProgress.EditValue = 90;
+                    barProgress.Caption = "Starting compare";
                     System.Windows.Forms.Application.DoEvents();
 
                     System.Windows.Forms.Application.DoEvents();
-                    //frmProgress progress = new frmProgress();
-                    //progress.Show();
-                    //progress.SetProgress("Comparing symbols in files... ");
-                    barEditItem3.Visibility = BarItemVisibility.Always;
-                    barEditItem3.Caption = "Comparing symbols in files...";
-                    barEditItem3.EditValue = 0;
+                    barProgress.Visibility = BarItemVisibility.Always;
+                    barProgress.Caption = "Comparing symbols in files...";
+                    barProgress.EditValue = 0;
                     System.Windows.Forms.Application.DoEvents();
                     System.Data.DataTable dt = new System.Data.DataTable();
                     dt.Columns.Add("SYMBOLNAME");
@@ -4147,9 +3974,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 symNumber++;
                                 percentageDone = (symNumber * 50) / compare_symbols.Count;
-                                if (Convert.ToInt32(barEditItem3.EditValue) != percentageDone)
+                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
                                 {
-                                    barEditItem3.EditValue = percentageDone;
+                                    barProgress.EditValue = percentageDone;
                                     System.Windows.Forms.Application.DoEvents();
                                 }
                             }
@@ -4227,9 +4054,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 symNumber++;
                                 percentageDone = 50 + (symNumber * 25) / compare_symbols.Count;
-                                if (Convert.ToInt32(barEditItem3.EditValue) != percentageDone)
+                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
                                 {
-                                    barEditItem3.EditValue = percentageDone;
+                                    barProgress.EditValue = percentageDone;
                                     System.Windows.Forms.Application.DoEvents();
                                 }
                             }
@@ -4267,9 +4094,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 symNumber++;
                                 percentageDone = 75 + (symNumber * 25) / compare_symbols.Count;
-                                if (Convert.ToInt32(barEditItem3.EditValue) != percentageDone)
+                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
                                 {
-                                    barEditItem3.EditValue = percentageDone;
+                                    barProgress.EditValue = percentageDone;
                                     System.Windows.Forms.Application.DoEvents();
                                 }
                             }
@@ -4306,8 +4133,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         tabdet.CompareFilename = filename;
                         tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
                         tabdet.gridControl1.DataSource = dt.Copy();
-                        barEditItem3.Visibility = BarItemVisibility.Never;
-                        barEditItem3.Caption = "Done";
+                        barProgress.Visibility = BarItemVisibility.Never;
+                        barProgress.Caption = "Done";
 
                     }
                 }
@@ -5945,19 +5772,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private void AddToCanTrace(string line)
-        {
-            LogHelper.Log(line);
-            if (m_appSettings.EnableCanLog)
-            {
-                DateTime dtnow = DateTime.Now;
-                using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\CanTrace.txt", true))
-                {
-                    sw.WriteLine(dtnow.ToString("dd/MM/yyyy HH:mm:ss") + " - " + line);
-                }
-            }
-        }
-
         private bool _connectionWasOpenedBefore = false;
 
         private void CheckCanwakeup()
@@ -5986,283 +5800,42 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-
-        //private bool CheckCANConnectivityNew()
-        //{
-        //    // write log information to "CanTrace.txt"
-        //    //if (flash == null)
-        //    {
-        //        AddToCanTrace("Initializing CANbus interface");
-        //        System.Windows.Forms.Application.DoEvents();
-        //        LogHelper.Log("Initializing CAN interface, please stand by...");
-        //        AddToCanTrace("Creating new connection to CANUSB device!");
-
-
-        //        if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
-        //        {
-        //            // connect to adapter
-        //            //<GS-25012011> removed due to issues in the flashing compatibility
-        //            LPCCANDevice_T7 lpc = (LPCCANDevice_T7)this.canUsbDevice;
-        //            if (!lpc.connect()) return false;
-        //            // get flasher object
-        //            this.flash = lpc.createFlasher();
-        //            flash.EnableCanLog = false;
-        //            AddToCanTrace("T7CombiFlasher object created");
-        //            LogHelper.Log("CombiAdapter ready");
-        //        }
-        //        //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-        //        //{
-        //        //    // connect to adapter
-        //        //    //flash = new T7.Flasher.T7Flasher();
-        //        //    //flash.EnableCanLog = false;
-        //        //    //AddToCanTrace("Object T7.Flasher.T7Flasher created");
-        //        //    kwpCanDevice.setCANDevice(canUsbDevice);
-        //        //    KWPHandler.setKWPDevice(kwpCanDevice);
-        //        //    try
-        //        //    {
-        //        //        T7.Flasher.T7Flasher.setKWPHandler(KWPHandler.getInstance());
-        //        //    }
-        //        //    catch (Exception E)
-        //        //    {
-        //        //        LogHelper.Log(E.Message);
-        //        //        AddToCanTrace("Failed to set flasher object to KWPHandler");
-
-        //        //    }
-        //        //    flash = T7.Flasher.T7Flasher.getInstance();
-        //        //    if (KWPHandler.getInstance().openDevice())
-        //        //    {
-        //        //        LogHelper.Log("Canbus channel opened");
-        //        //    }
-        //        //    else
-        //        //    {
-        //        //        LogHelper.Log("Unable to open canbus channel");
-        //        //        KWPHandler.getInstance().closeDevice();
-        //        //        return false;
-        //        //    }
-        //        //    if (KWPHandler.getInstance().startSession())
-        //        //    {
-        //        //        LogHelper.Log("Session started");
-        //        //    }
-        //        //    else
-        //        //    {
-        //        //        LogHelper.Log("Unable to start session");
-        //        //        KWPHandler.getInstance().closeDevice();
-        //        //        return false;
-        //        //    }
-        //        //}
-        //        else
-        //        {
-
-        //            //flash = new T7.Flasher.T7Flasher();
-        //            //flash.EnableCanLog = false;
-        //            //AddToCanTrace("Object T7.Flasher.T7Flasher created");
-        //            kwpCanDevice.setCANDevice(canUsbDevice);
-        //            KWPHandler.setKWPDevice(kwpCanDevice);
-        //            try
-        //            {
-        //                T7.Flasher.T7Flasher.setKWPHandler(KWPHandler.getInstance());
-        //            }
-        //            catch (Exception E)
-        //            {
-        //                LogHelper.Log(E.Message);
-        //                AddToCanTrace("Failed to set flasher object to KWPHandler");
-
-        //            }
-        //            flash = T7.Flasher.T7Flasher.getInstance();
-        //            if (KWPHandler.getInstance().openDevice())
-        //            {
-        //                LogHelper.Log("Canbus channel opened");
-        //            }
-        //            else
-        //            {
-        //                LogHelper.Log("Unable to open canbus channel");
-        //                KWPHandler.getInstance().closeDevice();
-        //                return false;
-        //            }
-        //            if (KWPHandler.getInstance().startSession())
-        //            {
-        //                LogHelper.Log("Session started");
-        //            }
-        //            else
-        //            {
-        //                LogHelper.Log("Unable to start session");
-        //                KWPHandler.getInstance().closeDevice();
-        //                return false;
-        //            }
-        //        }
-
-        //    }
-        //    m_connectedToECU = true;
-        //    return m_connectedToECU;
-        //}
-
-
         private bool CheckCANConnectivity()
         {
-            if (m_connectedToECU) return true;
-            // write log information to "CanTrace.txt"
-            if (!m_connectedToECU)
-            {
-                AddToCanTrace("Initializing CANbus interface");
-                System.Windows.Forms.Application.DoEvents();
-                //frmProgress progress = new frmProgress();
-                //progress.SetProgress("Initializing CAN interface, please stand by...");
-                //progress.SetProgressPercentage(10);
-                //progress.Show();
-                barEditItem3.Visibility = BarItemVisibility.Always;
-                barEditItem3.Caption = "Initializing CAN interface...";
-                barEditItem3.EditValue = 10;
-
-                System.Windows.Forms.Application.DoEvents();
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.LAWICEL)
-                {
-                    CheckCanwakeup();
-                }
-                AddToCanTrace("Creating new connection to CANUSB device!");
-                //progress.SetProgressPercentage(20);
-                barEditItem3.EditValue = 20;
-                System.Windows.Forms.Application.DoEvents();
-                if (canUsbDevice == null)
-                {
-                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.LAWICEL)
-                    {
-                        canUsbDevice = new CANUSBDevice();
-                    }
-                    else
-                    {
-                        canUsbDevice = new LPCCANDevice_T7();
-                    }
-                    canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrame);
-                    canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-                    LogHelper.Log("Created new CANUSBDevice instance");
-                }
-                canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
-                canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
-                
-                if (kwpDevice == null)
-                {
-                    if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-                    {
-                        kwpDevice = new ELM327Device();
-                    }
-                    else
-                    {
-                        kwpDevice = new KWPCANDevice();
-                    } 
-                    LogHelper.Log("Created new KWPCANDevice instance");
-                }
-                kwpDevice.EnableLog = m_appSettings.EnableCanLog;
-                kwpDevice.setCANDevice(canUsbDevice);
-                AddToCanTrace("CANDevice set/checked");
-                //progress.SetProgressPercentage(30);
-                barEditItem3.EditValue = 30;
-                System.Windows.Forms.Application.DoEvents();
-
-                KWPHandler.setKWPDevice(kwpDevice);
-                if (m_appSettings.EnableCanLog)
-                {
-                    KWPHandler.startLogging();
-                }
-                AddToCanTrace("KWPHandler set to device");
-                //progress.SetProgressPercentage(40);
-                barEditItem3.EditValue = 40;
-                System.Windows.Forms.Application.DoEvents();
-
-//                kwpHandler = KWPHandler.getInstance();
-                AddToCanTrace("Fetched KWPHandler");
-
-                //progress.SetProgressPercentage(50);
-                barEditItem3.EditValue = 60;
-                System.Windows.Forms.Application.DoEvents();
-
-
-                //progress.SetProgressPercentage(70);
-                AddToCanTrace("Opening KWPHandler device");
-                
-                if (/*kwpHandler.openDevice()*/ KWPHandler.getInstance().openDevice())
-                {
-                    barEditItem3.EditValue = 80;
-                    System.Windows.Forms.Application.DoEvents();
-
-                    SetCANStatus("Open");
-                    AddToCanTrace("Opened KWPHandler device");
-                }
-                else
-                {
-                    SetCANStatus("Unable to open");
-                    AddToCanTrace("Failed to open KWPHandler device");
-                    KWPHandler.getInstance().closeDevice();
-                    //kwpHandler.closeDevice();
-                    //progress.Close();
-                    barEditItem3.Visibility = BarItemVisibility.Never;
-                    barEditItem3.Caption = "Failed to open canbus";
-                    return false;
-                }
-                //progress.SetProgressPercentage(80);
-                barEditItem3.EditValue = 80;
-                System.Windows.Forms.Application.DoEvents();
-
-
-                if (/*kwpHandler.startSession()*/ KWPHandler.getInstance().startSession())
-                {
-                    AddToCanTrace("KWP session started");
-                    SetCANStatus("Connected");
-                    btnConnectDisconnect.Caption = "Disconnect ECU";
-                    m_connectedToECU = true;
-                }
-                else
-                {
-                    AddToCanTrace("Failed to start KWP session");
-                    SetCANStatus("Failed to start KWP session");
-                    //kwpHandler.closeDevice();
-                    KWPHandler.getInstance().closeDevice();
-                    //progress.Close();
-                    barEditItem3.Visibility = BarItemVisibility.Never;
-                    barEditItem3.Caption = "Failed to start KWP session";
-
-                    return false;
-                }
-                barEditItem3.EditValue = 100;
-                System.Windows.Forms.Application.DoEvents();
-                barEditItem3.Visibility = BarItemVisibility.Never;
-                barEditItem3.Caption = "Done";
-                //progress.SetProgressPercentage(90);
-                //progress.Close();
-            }
-           //m_connectedToECU = true;
-           // populateECUTab();
             if (m_connectedToECU)
             {
-                KWPHandler.getInstance().getSwVersionFromDR51(out m_swversion);
+                return true;
+            }
+            else
+            {
+                SetCANStatus("Initializing CANbus interface");
+            }
+
+            trionic7.EnableLog = m_appSettings.EnableCanLog;
+            trionic7.OnlyPBus = m_appSettings.OnlyPBus;
+            trionic7.DisableCanConnectionCheck = m_appSettings.DisableCanCheck;
+            trionic7.ELM327Kline = m_appSettings.ELM327Kline;
+            if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327 ||
+                m_appSettings.CANBusAdapterType == CANBusAdapter.JUST4TRIONIC)
+            {
+                trionic7.ForcedComport = m_appSettings.ELM327Port;
+                trionic7.ForcedBaudrate = m_appSettings.Baudrate;
+            }
+            trionic7.setCANDevice(m_appSettings.CANBusAdapterType, false);
+
+            if (trionic7.openDevice(false, false))
+            {
+                SetCANStatus("Connected");
+                btnConnectDisconnect.Caption = "Disconnect ECU";
+                m_connectedToECU = true;
+            }
+            else
+            {
+                SetCANStatus("Failed to start KWP session");
+                trionic7.Cleanup();
+                return false;
             }
             return m_connectedToECU;
-        }
-
-        private void populateECUTab()
-        {
-         /*   string vin;
-            string immo;
-            string engineType;
-            string swVersion;
-            KWPResult res = kwpHandler.getVIN(out vin);
-            if (res == KWPResult.OK)
-                ecuVINTextBox.Text = vin;
-            else if (res == KWPResult.DeviceNotConnected)
-                ecuVINTextBox.Text = "Not connected";
-            else
-                ecuVINTextBox.Text = "Timeout";
-
-            res = kwpHandler.getImmo(out immo);
-            if (res == KWPResult.OK)
-                ecuImmoTextBox.Text = immo;
-            res = kwpHandler.getEngineType(out engineType);
-            if (res == KWPResult.OK)
-                ecuCarDescTextBox.Text = engineType;
-            res = kwpHandler.getSwVersion(out swVersion);
-            if (res == KWPResult.OK)
-                ecuSWVerTextBox.Text = swVersion;
-            flashStartButton.Enabled = true;
-            */
         }
 
         private void DisableCANInteractionButtons()
@@ -6276,82 +5849,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             barButtonItem17.Enabled = false;
             barButtonItem18.Enabled = false;
             barButtonItem19.Enabled = false;
-        }
-
-        private bool CheckFlashStatus()
-        {
-            bool retval = false;
-
-            AddToCanTrace("Start CheckFlashStatus");
-
-            if (flash == null)
-            {
-                //flash = new T7.Flasher.T7Flasher();
-                AddToCanTrace("Object T7.Flasher.T7Flasher created");
-                
-                AddToCanTrace("Fetched flash object");
-                try
-                {
-                    T7.Flasher.T7Flasher.setKWPHandler(/*kwpHandler*/ KWPHandler.getInstance());
-                    AddToCanTrace("Flasher object set to KWPHandler");
-                    flash = T7.Flasher.T7Flasher.getInstance();
-                    flash.EnableCanLog = m_appSettings.EnableCanLog;
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                    AddToCanTrace("Failed to set flasher object to KWPHandler");
-
-                }
-            }
-
-            if (flash != null)
-            {
-                retval = true;
-                T7.Flasher.T7Flasher.FlashStatus stat = flash.getStatus();
-                AddToCanTrace("Status retrieved");
-                switch (stat)
-                {
-                    case T7.Flasher.T7Flasher.FlashStatus.Completed:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.Completed");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.DoinNuthin:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.DoinNuthin");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.EraseError:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.EraseError");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.Eraseing:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.Eraseing");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.NoSequrityAccess:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.NoSequrityAccess");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.NoSuchFile:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.NoSuchFile");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.ReadError:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.ReadError");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.Reading:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.Reading");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.WriteError:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.WriteError");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.Writing:
-                        AddToCanTrace("Status = T7.Flasher.T7Flasher.FlashStatus.Writing");
-                        break;
-                    default:
-                        AddToCanTrace("Status = " + stat.ToString());
-                        break;
-                }
-                if (stat == T7.Flasher.T7Flasher.FlashStatus.Eraseing || stat == T7.Flasher.T7Flasher.FlashStatus.Reading || stat == T7.Flasher.T7Flasher.FlashStatus.Writing)
-                {
-                    retval = false;
-                }
-            }
-            return retval;
         }
 
         private string ConvertFuelcutStatus(int value)
@@ -6606,89 +6103,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", combiAdapter.ToString() + " 1 \"" + sfd.FileName + "\"");
                 Process.Start(psi);
             }
-
-            // download bin file from ECU
-         //   ReadFlash();
-            /*
-            frmFlasherProgress = new frmProgress();
-            frmFlasherProgress.onCancelOperation += new frmProgress.CancelEvent(frmFlasherProgress_onCancelOperation);
-            
-            if (CheckCANConnectivity())
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Bin files|*.bin";
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    frmFlasherProgress.Show();
-                    frmFlasherProgress.SetProgress("Opening CAN bus connection...");
-                    System.Windows.Forms.Application.DoEvents();
-                    // check reading status periodically
-                    if (sfd.FileName != string.Empty)
-                    {
-                        if (Path.GetFileName(sfd.FileName) != string.Empty)
-                        {
-                            if (CheckFlashStatus())
-                            {
-                                frmFlasherProgress.SetProgress("Starting flash download...");
-                                tmrReadProcessChecker.Enabled = true;
-                                flash.readFlash(sfd.FileName);
-                                DisableCANInteractionButtons();
-                            }
-                            else
-                            {
-                                frmFlasherProgress.Close();
-                                LogHelper.Log("Closed because of CheckFlashStatus");
-                            }
-                        }
-                        else
-                        {
-                            frmFlasherProgress.Close();
-                            LogHelper.Log("Closed because of filename empty");
-                        }
-                    }
-                    else
-                    {
-                        frmFlasherProgress.Close();
-                        LogHelper.Log("Closed because of filename empty (2)");
-                    }
-                }
-            }*/
-        }
-
-        void frmFlasherProgress_onCancelOperation(object sender, EventArgs e)
-        {
-            if (flash != null)
-            {
-                flash.stopFlasher();
-            }
-            frmFlasherProgress.Close();
-            tmrReadProcessChecker.Stop();
-            EnableCANInteractionButtons();
-        }
-
-        private void tmrReadProcessChecker_Tick(object sender, EventArgs e)
-        {
-            if (flash != null)
-            {
-                if (frmFlasherProgress != null)
-                {
-                    float numberkb = (float)flash.getNrOfBytesRead() / 1024F;
-                    frmFlasherProgress.SetProgress("Downloaded " + numberkb.ToString("F1") + " of 512 kB");
-                    int percentage = ((int)numberkb * 100) / 512;
-                    frmFlasherProgress.SetProgressPercentage(percentage);
-                }
-                if (flash.getStatus() == T7.Flasher.T7Flasher.FlashStatus.Completed)
-                {
-                    flash.stopFlasher();
-                    tmrReadProcessChecker.Enabled = false;
-                    EnableCANInteractionButtons();
-                    //MessageBox.Show("Done downloading binary file!");
-                    if (frmFlasherProgress != null)
-                    {
-                        frmFlasherProgress.Close();
-                    }
-                }
-            }
         }
 
         private void LoadLayoutFiles()
@@ -6831,9 +6245,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 if (gridRealtime.DataSource != null)
                 {
                     System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
-                    //dt.WriteXml(System.Windows.Forms.Application.StartupPath + "\\RealtimeTable.xml", XmlWriteMode.WriteSchema);
                     // save the user defined symbols
-                    //<GS-24062010>
                     using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\rtsymbols.txt"))
                     {
                         foreach (DataRow dr in dt.Rows)
@@ -6859,9 +6271,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 if (gridRealtime.DataSource != null)
                 {
                     System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
-                    //dt.WriteXml(System.Windows.Forms.Application.StartupPath + "\\RealtimeTable.xml", XmlWriteMode.WriteSchema);
                     // save the user defined symbols
-                    //<GS-24062010>
                     using (StreamWriter sw = new StreamWriter(filename))
                     {
                         foreach (DataRow dr in dt.Rows)
@@ -6913,16 +6323,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                //BdmAdapter_Close();
                 LogHelper.Log("Failed to close BDM: " + E.Message);
-            }
-            try
-            {
-                MM_EndPeriod(1);
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to set thread high prio: " + E.Message);
             }
             if (m_CurrentWorkingProject != "")
             {
@@ -6934,35 +6335,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
             SaveMRUList();
             SaveAFRAndCounterMaps();
             
-            bool exit_hardstyle = false;
             try
             {
-                KWPHandler.stopLogging();
-                if (KWPHandler.getInstance() != null)
-                {
-                    try
-                    {
-                        KWPHandler.getInstance().closeDevice();
-                    }
-                    catch (Exception kwpE)
-                    {
-                        LogHelper.Log("KWP: " + kwpE.Message);
-                    }
-                    exit_hardstyle = true;
-                }
-                canUsbDevice = null;
-                kwpDevice = null;
-                flash = null;
+                trionic7.Cleanup();
             }
             catch (Exception E)
             {
                 LogHelper.Log(E.Message);
             }
-            if (exit_hardstyle)
-            {
-                Environment.Exit(0);
-            }
-
         }
 
 
@@ -6981,100 +6361,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", combiAdapter.ToString() + " 2 \"" + ofd.FileName + "\"");
                 Process.Start(psi);
             }
-            //WriteFlash();
-
-        }
-
-        private void tmrWriteProcessChecker_Tick(object sender, EventArgs e)
-        {
-            if (flash != null)
-            {
-                float numberkb = (float)flash.getNrOfBytesRead() / 1024F;
-                if (frmFlasherProgress != null)
-                {
-                    frmFlasherProgress.SetProgress("Flashed " + numberkb.ToString("F1") + " of 512 kB");
-                    int percentage = ((int)numberkb * 100) / 512;
-                    frmFlasherProgress.SetProgressPercentage(percentage);
-                }
-                AddToCanTrace("Flashed " + numberkb.ToString("F1") + " of 512 kB");
-                T7.Flasher.T7Flasher.FlashStatus stat = flash.getStatus();
-                switch (stat)
-                {
-                    case T7.Flasher.T7Flasher.FlashStatus.Completed:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: Completed flashing procedure");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.DoinNuthin:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: DoinNuthin");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.EraseError:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: EraseError");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.Eraseing:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: Eraseing");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.NoSequrityAccess:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: NoSequrityAccess");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.NoSuchFile:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: NoSuchFile");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.ReadError:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: ReadError");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.Reading:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: Reading");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.WriteError:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: WriteError");
-                        break;
-                    case T7.Flasher.T7Flasher.FlashStatus.Writing:
-                        AddToCanTrace("tmrWriteProcessChecker_Tick: Writing");
-                        break;
-                }
-
-                if (flash.getStatus() == T7.Flasher.T7Flasher.FlashStatus.Completed)
-                {
-                    flash.stopFlasher();
-                    tmrWriteProcessChecker.Enabled = false;
-                    EnableCANInteractionButtons();
-                    //MessageBox.Show("Done downloading binary file!");
-                    if (frmFlasherProgress != null)
-                    {
-                        frmFlasherProgress.Close();
-                    }
-                }
-            }
-
         }
 
         private void barButtonItem19_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             GetSRAMSnapshot();
-        }
-
-        private void tmrReadRAMProcessChecker_Tick(object sender, EventArgs e)
-        {
-            if (flash != null)
-            {
-                if (frmFlasherProgress != null)
-                {
-                    float numberkb = (float)flash.getNrOfBytesRead() / 1024F;
-                    frmFlasherProgress.SetProgress("Downloaded " + numberkb.ToString("F1") + " of 64 kB");
-                    int percentage = ((int)numberkb * 100) / 64;
-                    frmFlasherProgress.SetProgressPercentage(percentage);
-                }
-                if (flash.getStatus() == T7.Flasher.T7Flasher.FlashStatus.Completed)
-                {
-                    flash.stopFlasher();
-                    tmrReadRAMProcessChecker.Enabled = false;
-                    EnableCANInteractionButtons();
-                    //MessageBox.Show("Done downloading binary file!");
-                    if (frmFlasherProgress != null)
-                    {
-                        frmFlasherProgress.Close();
-                    }
-                }
-            }
         }
 
         private SymbolCollection GetRealtimeNotificationSymbols()
@@ -7125,6 +6416,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             set.AutoFixFooter = m_appSettings.AutoFixFooter;
             set.EnableCanLog = m_appSettings.EnableCanLog;
             set.OnlyPBus = m_appSettings.OnlyPBus;
+            set.DisableConnectionCheck = m_appSettings.DisableCanCheck;
             set.AutoCreateAFRMaps = m_appSettings.AutoCreateAFRMaps;
             set.AutoUpdateSRAMViewers = m_appSettings.AutoUpdateSRAMViewers;
             set.UseAdditionalCanbusFrames = false;// m_appSettings.UseAdditionalCanbusFrames;
@@ -7193,6 +6485,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 m_appSettings.EnableCanLog = set.EnableCanLog;
                 m_appSettings.AutoCreateAFRMaps = set.AutoCreateAFRMaps;
                 m_appSettings.OnlyPBus = set.OnlyPBus;
+                m_appSettings.DisableCanCheck = set.DisableConnectionCheck;
                 m_appSettings.AutoUpdateSRAMViewers = set.AutoUpdateSRAMViewers;
                 m_appSettings.UseAdditionalCanbusFrames = set.UseAdditionalCanbusFrames;
                 m_appSettings.ResetRealtimeSymbolOnTabPageSwitch = set.ResetRealtimeSymbolOnTabPageSwitch;
@@ -7534,44 +6827,29 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 if (sramaddress > 0)
                 {
                     //LogHelper.Log("Get SRAM (1): " + sramaddress.ToString());
-                    //KWPHandler.getInstance().requestSequrityAccess();
-                    data = ReadMapFromSRAM(sramaddress, length, out _success);
+                    data = trionic7.ReadMapFromSRAM(sramaddress, length, out _success);
                     Thread.Sleep(0); //<GS-11022010>
                 }
                 else if (length == 1)
                 {
                     int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);
-                    /*LogHelper.Log("Get single byte : " + sram.ToString());
-                    data = ReadSingleByteFromSRAM(sram);*/
+                    //LogHelper.Log("Get single byte : " + sram.ToString());
                     SymbolHelper sh = new SymbolHelper();
                     sh.Length = 1;
                     sh.Start_address = sram;
-                    data = ReadMapFromSRAMVarLength(sh);
+                    m_prohibitReading = true;
+                    data = trionic7.ReadMapFromSRAMVarLength(sh);
+                    m_prohibitReading = false;
                     _success = true;
                 }
                 else
                 {
                     //LogHelper.Log("Get symbolnumber (2): " + symbolnumber.ToString());
-                    //KWPHandler.getInstance().requestSequrityAccess();
-                    if (KWPHandler.getInstance().setSymbolRequest((uint)symbolnumber))
-                    {
-                        Thread.Sleep(0);//<GS-11022010>
-                        if (KWPHandler.getInstance().sendRequestDataByOffset(out data))
-                        {
-                            _success = true;
-                        }
-                    }
+                    data = trionic7.ReadSymbolNumber(symbolnumber, out _success);
                 }
             }
 
             return data;
-        }
-
-        private void WriteSymbolToSRAM(int symbolnumber, byte[] bytes)
-        {
-            KWPHandler.getInstance().writeSymbolRequest((uint)symbolnumber, bytes);
-            //LogHelper.Log("Written to SRAM!");
-            frmInfoBox info = new frmInfoBox("Written " + bytes.Length.ToString() + " to SRAM");
         }
 
         private void readSymbolToolStripMenuItem_Click(object sender, EventArgs e)
@@ -7768,13 +7046,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 frmtransfer.Symbols = /*m_symbols*/_onlyFlashSymbols;
                 if (frmtransfer.ShowDialog() == DialogResult.OK)
                 {
-                    //frmProgress progress = new frmProgress();
-                    //progress.Show();
-                    //progress.SetProgress("Initializing");
-                    //progress.SetProgress("Creating backup file...");
-                    barEditItem3.Visibility = BarItemVisibility.Always;
-                    barEditItem3.Caption = "Initializing";
-                    barEditItem3.EditValue = 0;
+                    barProgress.Visibility = BarItemVisibility.Always;
+                    barProgress.Caption = "Initializing";
+                    barProgress.EditValue = 0;
                     System.Windows.Forms.Application.DoEvents();
                     File.Copy(filename, Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin", true);
                     AddToResumeTable("Backup file created (" + Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin)");
@@ -7796,8 +7070,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     curSymbolCollection.SortingOrder = GenericComparer.SortOrder.Ascending;
                     curSymbolCollection.Sort();
                     //progress.SetProgress("Start transfer");
-                    barEditItem3.Caption = "Start transferring";
-                    barEditItem3.EditValue = 1;
+                    barProgress.Caption = "Start transferring";
+                    barProgress.EditValue = 1;
                     System.Windows.Forms.Application.DoEvents();
 
                     Int64 currentFlashAddress = 0;
@@ -7833,8 +7107,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         if (SymbolInTransferCollection(frmtransfer.Symbols, symbolname))
                                         {
                                             //progress.SetProgress("Transferring: " + symbolname);
-                                            barEditItem3.Caption = "Transferring: " + symbolname;
-                                            barEditItem3.EditValue = 50;
+                                            barProgress.Caption = "Transferring: " + symbolname;
+                                            barProgress.EditValue = 50;
                                             System.Windows.Forms.Application.DoEvents();
 
                                             CopySymbol(symbolname, m_currentfile, (int)GetSymbolAddress(m_symbols, cfsh.Varname), cfsh.Length, filename, (int)currentFlashAddress, sh.Length);
@@ -7845,16 +7119,16 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         }
                     }
                     //progress.SetProgress("Starting report...");
-                    barEditItem3.Caption = "Starting report...";
-                    barEditItem3.EditValue = 80;
+                    barProgress.Caption = "Starting report...";
+                    barProgress.EditValue = 80;
                     System.Windows.Forms.Application.DoEvents();
 
                     UpdateChecksum(filename);
                     verifychecksum(false);
                     SetStatusText("Idle.");
-                    barEditItem3.EditValue = 0;
-                    barEditItem3.Caption = "Done";
-                    barEditItem3.Visibility = BarItemVisibility.Never;
+                    barProgress.EditValue = 0;
+                    barProgress.Caption = "Done";
+                    barProgress.Visibility = BarItemVisibility.Never;
                     //progress.Close();
                 }
             }
@@ -9735,31 +9009,6 @@ If boost regulation reports errors you can increase the difference between boost
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
                 m_enableRealtimeTimer = false;
-                //TODO: should be parameter
-                /*KWPHandler.stopLogging();
-                try
-                {
-                    KWPHandler.getInstance().closeDevice();
-                }
-                catch (Exception kwpE)
-                {
-                    LogHelper.Log("KWP: " + kwpE.Message);
-                }
-                m_connectedToECU = false;
-                m_swversion = "";*/
-
-                //kwpCanDevice.close();
-
-                //kwpHandler.closeDevice();
-                //canUsbDevice.close();
-                //kwpCanDevice.close();
-                //kwpCanDevice = null;
-                //canUsbDevice = null;
-                //kwpCanDevice.close();
-                //kwpHandler = null;
-                //                T7.Flasher.T7Flasher.setKWPHandler(kwpHandler);
-                //flash = null;
-
             }
             else
             {
@@ -9785,67 +9034,7 @@ If boost regulation reports errors you can increase the difference between boost
                 }
                 if (CheckCANConnectivity())
                 {
-                    // check for existance of symboltable for this file... 
-                    // if it does not exist, download the table from the ECU and save it for future use
-                    // so that it can be reloaded later
-                    // de symboolnummering lijkt immers te kloppen nu!
-                    if (m_swversion == string.Empty) // not yet connected
-                    {
-                        m_realtimeAddresses = new System.Data.DataTable();
-                        m_realtimeAddresses.Columns.Add("SymbolName");
-                        m_realtimeAddresses.Columns.Add("SymbolNumber", System.Type.GetType("System.Int32"));
-                        m_realtimeAddresses.Columns.Add("VarName");
-
-                        if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\symbolmaps"))
-                        {
-                            Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\symbolmaps");
-                        }
-                        m_filename = System.Windows.Forms.Application.StartupPath + "\\symbolmaps\\";
-                        m_swversion = string.Empty;
-                        KWPHandler.getInstance().getSwVersionFromDR51(out m_swversion);
-                        LogHelper.Log("Version: " + m_swversion);
-                        //KWPHandler.getInstance().getSwVersion(out m_swversion);
-                        //LogHelper.Log("SW version : " + swversion);
-                        if (m_swversion.Length > 12)
-                        {
-                            m_swversion = m_swversion.Substring(m_swversion.Length - 12, 12);
-
-                        }
-                        LogHelper.Log("Version II: " + m_swversion);
-                        m_filename += m_swversion;
-                        //LogHelper.Log("filename (1): " + m_filename);
-                        m_filename += "SymbolTable.bin";
-                        //LogHelper.Log("filename (2): " + m_filename);
-                        if (!File.Exists(m_filename))
-                        {
-                            if (CheckFlashStatus())
-                            {
-                                KWPHandler.getInstance().requestSequrityAccess(false);
-                                flash.readSymbolMap(m_filename);
-                                frmSymbolReadProgress = new frmProgress();
-                                //frmSymbolReadProgress.onCancelOperation += new frmProgress.CancelEvent(frmFlasherProgress_onCancelOperation);
-                                frmSymbolReadProgress.Show();
-                                frmSymbolReadProgress.SetProgress("Downloading symbol information...");
-                                tmrSymbolReadProcessChecker.Enabled = true;
-                            }
-                            //m_readingSymbolsStarted = true;
-                        }
-                        else
-                        {
-                            readSymbolTable(m_filename);
-                            _start_Timer = true;
-                        }
-                    }
-                    else
-                    {
-                        // we are already connected, don't retry.. 
-                        _start_Timer = true;
-
-                    }
-                    if (_start_Timer)
-                    {
                         tmrRealtime.Enabled = m_enableRealtimeTimer;
-                    }
                 }
                 // <GS-24062010> always show realtime panel, to make it available for configuration even if not online
                 dockRealtime.Visibility = DockVisibility.Visible;
@@ -9867,7 +9056,6 @@ If boost regulation reports errors you can increase the difference between boost
 
                 // set default skin
                 SwitchRealtimePanelMode(m_appSettings.Panelmode);
-
             }
         }
 
@@ -9884,11 +9072,8 @@ If boost regulation reports errors you can increase the difference between boost
                         dataToSend.Initialize();
                         dataToSend.SetValue((byte)mode, sh.Length - 1);
                         //WriteMapToSRAM("Performance.Mode", data);
-                        KWPHandler.getInstance().requestSequrityAccess(false);
-
                         uint addresstowrite = (uint)sh.Start_address;
-
-                        if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, dataToSend))
+                        if (!trionic7.WriteMapToSRAM(addresstowrite, dataToSend))
                         {
                             LogHelper.Log("Failed to write data to the ECU");
                         }
@@ -10210,42 +9395,42 @@ If boost regulation reports errors you can increase the difference between boost
                 {
                     if (m_appSettings.Useadc1)
                     {
-                        float adc = canUsbDevice.GetADCValue(0);
+                        float adc = trionic7.GetADCValue(0);
                         double convertedADvalue = Math.Round(ConvertADCValue(0, adc),2);
                         string channelName = m_appSettings.Adc1channelname;
                         AddToRealtimeTable(dt, channelName, "ADC channel 1", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc1lowvalue/1000, m_appSettings.Adc1highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc2)
                     {
-                        float adc = canUsbDevice.GetADCValue(1);
+                        float adc = trionic7.GetADCValue(1);
                         double convertedADvalue = Math.Round(ConvertADCValue(1, adc),2);
                         string channelName = m_appSettings.Adc2channelname;
                         AddToRealtimeTable(dt, channelName, "ADC channel 2", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc2lowvalue/1000, m_appSettings.Adc2highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc3)
                     {
-                        float adc = canUsbDevice.GetADCValue(2);
+                        float adc = trionic7.GetADCValue(2);
                         double convertedADvalue = Math.Round(ConvertADCValue(2, adc),2);
                         string channelName = m_appSettings.Adc3channelname;
                         AddToRealtimeTable(dt, channelName, "ADC channel 3", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc3lowvalue/1000, m_appSettings.Adc3highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc4)
                     {
-                        float adc = canUsbDevice.GetADCValue(3);
+                        float adc = trionic7.GetADCValue(3);
                         double convertedADvalue = Math.Round(ConvertADCValue(3, adc),2);
                         string channelName = m_appSettings.Adc4channelname;
                         AddToRealtimeTable(dt, channelName, "ADC channel 4", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc4lowvalue/1000, m_appSettings.Adc4highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Useadc5)
                     {
-                        float adc = canUsbDevice.GetADCValue(4);
+                        float adc = trionic7.GetADCValue(4);
                         double convertedADvalue = Math.Round(ConvertADCValue(4, adc),2);
                         string channelName = m_appSettings.Adc5channelname;
                         AddToRealtimeTable(dt, channelName, "ADC channel 5", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc5lowvalue/1000, m_appSettings.Adc5highvalue/1000, 0, 0, 0, 1);
                     }
                     if (m_appSettings.Usethermo)
                     {
-                        float temperature = canUsbDevice.GetThermoValue();
+                        float temperature = trionic7.GetThermoValue();
                         string channelName = m_appSettings.Thermochannelname;
                         AddToRealtimeTable(dt, channelName, "Thermo channel", 0, temperature, 0, 1, 0, 0, 1023, 0, 0, 0, 1);
                     }
@@ -12852,21 +12037,21 @@ dt.Columns.Add("SymbolName");
             m_symbols = new SymbolCollection();
             
             TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
-            barEditItem3.EditValue = 70;
-            barEditItem3.Caption = "Sorting data";
+            barProgress.EditValue = 70;
+            barProgress.Caption = "Sorting data";
             System.Windows.Forms.Application.DoEvents();
 
             m_symbols.SortColumn = "Length";
             m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
             m_symbols.Sort();
-            barEditItem3.EditValue = 70;
-            barEditItem3.Caption = "Loading data into view";
+            barProgress.EditValue = 70;
+            barProgress.Caption = "Loading data into view";
             System.Windows.Forms.Application.DoEvents();
 
             gridControlSymbols.DataSource = m_symbols;
-            barEditItem3.EditValue = 0;
-            barEditItem3.Caption = "Done";
-            barEditItem3.Visibility = BarItemVisibility.Never;
+            barProgress.EditValue = 0;
+            barProgress.Caption = "Done";
+            barProgress.Visibility = BarItemVisibility.Never;
             System.Windows.Forms.Application.DoEvents();
 
         }
@@ -13462,44 +12647,6 @@ dt.Columns.Add("SymbolName");
                 ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", combiAdapter.ToString() + " 2 \"" + m_currentfile + "\"");
                 Process.Start(psi);
             }
-            /*if (m_currentfile != string.Empty)
-            {
-                if (File.Exists(m_currentfile))
-                {
-                    WriteFlash(m_currentfile);
-                }
-            }*/
-            /*if (m_currentfile != string.Empty)
-            {
-                if (File.Exists(m_currentfile))
-                {
-                    if (CheckCANConnectivity())
-                    {
-                        if (!tmrReadProcessChecker.Enabled)
-                        {
-                            FileInfo fi = new FileInfo(m_currentfile);
-                            if (fi.Length == 512 * 1024)
-                            {
-                                // check reading status periodically
-                                if (CheckFlashStatus())
-                                {
-                                    frmFlasherProgress = new frmProgress();
-                                    frmFlasherProgress.onCancelOperation += new frmProgress.CancelEvent(frmFlasherProgress_onCancelOperation);
-                                    frmFlasherProgress.Show();
-                                    frmFlasherProgress.SetProgress("Starting ECU flash...");
-                                    tmrWriteProcessChecker.Enabled = true;
-                                    flash.writeFlash(m_currentfile);
-                                    DisableCANInteractionButtons();
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("File has incorrect length, should be 512 kB exactly!");
-                            }
-                        }
-                    }
-                }
-            }*/
         }
 
         private void barButtonItem64_ItemClick(object sender, ItemClickEventArgs e)
@@ -13948,31 +13095,31 @@ dt.Columns.Add("SymbolName");
 
         private void tmrSymbolReadProcessChecker_Tick(object sender, EventArgs e)
         {
-            if (flash != null)
-            {
-                if (frmSymbolReadProgress != null)
-                {
-                    float numberkb = (float)flash.getNrOfBytesRead() / 1024F;
-                    frmSymbolReadProgress.SetProgress("Downloaded " + numberkb.ToString("F1"));
-                    int percentage = ((int)numberkb * 100) / 128;
-                    frmSymbolReadProgress.SetProgressPercentage(percentage);
-                }
-                if (flash.getStatus() == T7.Flasher.T7Flasher.FlashStatus.Completed)
-                {
-                    tmrSymbolReadProcessChecker.Enabled = false;
-                    EnableCANInteractionButtons();
-                    //MessageBox.Show("Done downloading binary file!");
-                    if (frmSymbolReadProgress != null)
-                    {
-                        frmSymbolReadProgress.Close();
-                    }
-                    if (File.Exists(m_filename))
-                    {
-                        readSymbolTable(m_filename);
-                    }
-                    tmrRealtime.Enabled = true;
-                }
-            }
+//            if (flash != null)
+//            {
+//                if (frmSymbolReadProgress != null)
+//                {
+//                    float numberkb = (float)flash.getNrOfBytesRead() / 1024F;
+//                    frmSymbolReadProgress.SetProgress("Downloaded " + numberkb.ToString("F1"));
+//                    int percentage = ((int)numberkb * 100) / 128;
+//                    frmSymbolReadProgress.SetProgressPercentage(percentage);
+//                }
+////                if (flash.getStatus() == T7.Flasher.T7Flasher.FlashStatus.Completed)
+//                {
+//                    tmrSymbolReadProcessChecker.Enabled = false;
+//                    EnableCANInteractionButtons();
+//                    //MessageBox.Show("Done downloading binary file!");
+//                    if (frmSymbolReadProgress != null)
+//                    {
+//                        frmSymbolReadProgress.Close();
+//                    }
+//                    if (File.Exists(m_filename))
+//                    {
+//                        readSymbolTable(m_filename);
+//                    }
+//                    tmrRealtime.Enabled = true;
+//                }
+//            }
         }
 
         private void StartReleaseNotesViewer(string xmlfilename, string version)
@@ -14748,10 +13895,10 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         break;
                 }
                 percentage = ((int)this.fio_bytes * 100) / max_bytes;
-                if (Convert.ToInt32(barEditItem3.EditValue) != percentage)
+                if (Convert.ToInt32(barProgress.EditValue) != percentage)
                 {
                     // need to calculate the percentage
-                    barEditItem3.EditValue = percentage;
+                    barProgress.EditValue = percentage;
                     System.Windows.Forms.Application.DoEvents();
                 }
             }
@@ -14798,9 +13945,9 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         {
 
                             mRecreateAllScriptResources(Path.GetDirectoryName(sfd.FileName));
-                            barEditItem3.Visibility = BarItemVisibility.Always;
-                            barEditItem3.EditValue = 0;
-                            barEditItem3.Caption = "Dumping ECU";
+                            barProgress.Visibility = BarItemVisibility.Always;
+                            barProgress.EditValue = 0;
+                            barProgress.Caption = "Dumping ECU";
                             System.Windows.Forms.Application.DoEvents();
 
                             _globalECUType = ecu_t.Trionic7;
@@ -14814,9 +13961,9 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
                     }
                 }
-                barEditItem3.Caption = "Dumping ECU";
-                barEditItem3.EditValue = 0;
-                barEditItem3.Visibility = BarItemVisibility.Never;
+                barProgress.Caption = "Dumping ECU";
+                barProgress.EditValue = 0;
+                barProgress.Visibility = BarItemVisibility.Never;
                 System.Windows.Forms.Application.DoEvents();
             }
             catch (Exception BDMException)
@@ -14863,16 +14010,16 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         {
                             mRecreateAllScriptResources(Path.GetDirectoryName(ofd.FileName));
                             fio_bytes = 0;
-                            barEditItem3.Visibility = BarItemVisibility.Always;
-                            barEditItem3.Caption = "Erasing ECU";
+                            barProgress.Visibility = BarItemVisibility.Always;
+                            barProgress.Caption = "Erasing ECU";
                             System.Windows.Forms.Application.DoEvents();
                             _globalECUType = ecu_t.Trionic7;
                             BdmAdapter_EraseECU(ecu_t.Trionic7);
-                            barEditItem3.Caption = "Flashing ECU";
+                            barProgress.Caption = "Flashing ECU";
                             System.Windows.Forms.Application.DoEvents();
                             Thread.Sleep(100);
                             BdmAdapter_FlashECU(ofd.FileName, ecu_t.Trionic7);
-                            barEditItem3.Caption = "Resetting ECU";
+                            barProgress.Caption = "Resetting ECU";
                             System.Windows.Forms.Application.DoEvents();
                             Thread.Sleep(100);
                             DeleteScripts(Path.GetDirectoryName(ofd.FileName));
@@ -14880,9 +14027,9 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
                     }
                 }
-                barEditItem3.EditValue = 0;
-                barEditItem3.Caption = "Idle";
-                barEditItem3.Visibility = BarItemVisibility.Never;
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Idle";
+                barProgress.Visibility = BarItemVisibility.Never;
                 System.Windows.Forms.Application.DoEvents();
             }
             catch (Exception BDMException)
@@ -15052,6 +14199,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 // remove the symbols again ??
             }
 
+            panelBottom.Visible = (e.Page != xtraTabPageEmpty);
         }
 
         private void ribbonControl1_Click(object sender, EventArgs e)
@@ -15065,47 +14213,19 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 m_prohibitReading = true;
                 bool _success = false;
-                frmProgress progress = new frmProgress();
-                progress.SetProgress("Downloading snapshot...");
-                progress.SetProgressPercentage(0);
-                progress.Show();
+                SetProgress("Starting snapshot download");
                 string filename = Path.GetDirectoryName(m_currentfile) + "\\SRAM" + DateTime.Now.Year.ToString("D4") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2") + DateTime.Now.Millisecond.ToString("D3") + ".RAM";
                 if (m_CurrentWorkingProject != "")
                 {
                     if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots");
                     filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots\\Snapshot" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".RAM";
                 }
-                FileStream fs = new FileStream(filename, FileMode.Create);
-                using (BinaryWriter br = new BinaryWriter(fs))
+                if (trionic7.GetSRAMSnapshot(filename))
                 {
-                    int blockSize = 0x80;
-                    for (int i = 0; i < /*0x800*/ 0x10000 / blockSize; i++)
-                    {
-                        long curaddress = (0xF00000 + i * blockSize);
-                        byte[] data = ReadMapFromSRAM(curaddress, blockSize, out _success);
-                        if (!_success)
-                        {
-                            frmInfoBox error = new frmInfoBox("Failed to read data: " + curaddress.ToString("X8"));
-                            progress.Close();
-                            m_prohibitReading = false;
-                            return;
-                        }
-                        //LogHelper.Log("Read data");
-                        int prec = (i * 100) / (0x10000 / blockSize);
-                        float kbsread = (float)(i * blockSize) / 1024F;
-                        progress.SetProgress("Downloading snapshot: " + kbsread.ToString("F1") + " Kb" + " [ " + prec.ToString() + " % ]");
-                        progress.SetProgressPercentage(prec);
-                        br.Write(data);
-                    }
-                    //LogHelper.Log("Read data");
+                    frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
                 }
-                fs.Close();
-                progress.Close();
-                // write data
-
                 m_prohibitReading = false;
-                frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
-
+                SetProgressIdle();
             }
             else
             {
@@ -15275,7 +14395,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     int DTCCode = Convert.ToInt32(e.DTCCode.Substring(1, e.DTCCode.Length - 1), 16);
                     if (CheckCANConnectivity())
                     {
-                        KWPHandler.getInstance().ClearDTCCode(DTCCode);
+                        trionic7.ClearDTCCode(DTCCode);
                     }
                     if (sender is frmFaultcodes)
                     {
@@ -15360,11 +14480,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             if (CheckCANConnectivity())
             {
                 m_prohibitReading = true;
-                KWPHandler.getInstance().requestSequrityAccess(false);
-                //KWPHandler.getInstance().ReadFreezeFrameData(framenumber);
-                List<string> codes;
-                KWPHandler.getInstance().ReadDTCCodes(out codes);
-                KWPHandler.getInstance().ClearDTCCodes();
+                trionic7.ReadDTC();
+                trionic7.ClearDTCCodes();
                 m_prohibitReading = false;
             }
         }
@@ -15485,240 +14602,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             // false knock
             ShowRealtimeMapFromECU("F_KnkDetAdap.FKnkCntMap");
-        }
-
-        bool _stopFlashing = false;
-        bool _writingFlash = false;
-
-        private void WriteFlash()
-        {
-            if (_readingFlash) return;
-            if (_writingFlash) return;
-            m_prohibitReading = true;
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Binary files|*.bin";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                WriteFlash(ofd.FileName);
-            }
-            m_prohibitReading = false;
-        }
-
-        public enum FlashingProcedureResult : int
-        {
-            OK,
-            FailedToErase,
-            FailedToProgramData,
-            FailedToProgramFooter,
-            FailedToGetAccessToData,
-            FailedToGetAccessToFooter
-        }
-
-        private void WriteFlash(string filename)
-        {
-            if (_readingFlash) return;
-            if (_writingFlash) return;
-            bool retval = true;
-            int _failAddress = 0;
-            FlashingProcedureResult result = FlashingProcedureResult.OK;
-
-
-            if (CheckCANConnectivity())
-            {
-
-                FileInfo fi = new FileInfo(filename);
-                if (fi.Length != 0x80000)
-                {
-                    frmInfoBox info = new frmInfoBox("Binary file has incorrect length, aborting!");
-                    return;
-                }
-                _stopFlashing = false;
-                _writingFlash = true;
-                frmProgress progress = new frmProgress();
-                progress.onCancelOperation += new frmProgress.CancelEvent(progress_onCancelOperationWrite);
-                progress.Show();
-                progress.SetProgress("Initializing flash procedure");
-                progress.SetProgressPercentage(0);
-                FileStream fs = new FileStream(filename, FileMode.Open);
-                int address = 0;
-                int i = 0;
-                int nrOfBytes = 128;
-                byte[] data = new byte[nrOfBytes];
-                int m_nrOfBytesRead = 0;
-                // try to erase the ECU
-                KWPHandler.getInstance().SuspendAlivePolling();
-                progress.SetProgress("Erasing flash, please wait");
-                KWPHandler.getInstance().requestSequrityAccess(true);
-                if (KWPHandler.getInstance().sendEraseRequest() == KWPResult.OK)
-                {
-                    // erase success
-                    progress.SetProgress("Start flashing program");
-                    if (KWPHandler.getInstance().sendWriteRequest(0x0, 0x7B000) == KWPResult.OK)
-                    {
-                        // well, go ahead
-                        for (i = 0; i < 0x7B000 / nrOfBytes; i++)
-                        {
-                            fs.Read(data, 0, nrOfBytes);
-                            m_nrOfBytesRead = i * nrOfBytes;
-                            _failAddress = m_nrOfBytesRead;
-                            float kbsdone = (float)m_nrOfBytesRead / 1024F;
-                            int percentage = (Convert.ToInt32(m_nrOfBytesRead) * 100) / 0x80000;
-                            progress.SetProgress("Flashing " + kbsdone.ToString("F1") + " Kb" + " [ " + percentage.ToString() + " % ]");
-                            progress.SetProgressPercentage(percentage);
-                            if (KWPHandler.getInstance().sendWriteDataRequest(data) != KWPResult.OK)
-                            {
-                                //m_flashStatus = FlashStatus.WriteError;
-                                retval = false;
-                                result = FlashingProcedureResult.FailedToProgramData;
-                                break;
-                            }
-                        }
-                        //
-                        if (KWPHandler.getInstance().sendWriteRequest(0x7FE00, 0x200) == KWPResult.OK)
-                        {
-                            // go ahead
-                            fs.Seek(0x7FE00, System.IO.SeekOrigin.Begin);
-
-                            for (i = 0x7FE00 / nrOfBytes; i < 0x80000 / nrOfBytes; i++)
-                            {
-                                fs.Read(data, 0, nrOfBytes);
-                                m_nrOfBytesRead = i * nrOfBytes;
-                                _failAddress = m_nrOfBytesRead;
-                                float kbsdone = (float)m_nrOfBytesRead / 1024F;
-                                int percentage = (Convert.ToInt32(m_nrOfBytesRead) * 100) / 0x80000;
-                                progress.SetProgress("Flashing " + kbsdone.ToString("F1") + " Kb" + " [ " + percentage.ToString() + " % ]");
-                                progress.SetProgressPercentage(percentage);
-                                if (KWPHandler.getInstance().sendWriteDataRequest(data) != KWPResult.OK)
-                                {
-                                    retval = false;
-                                    result = FlashingProcedureResult.FailedToProgramFooter;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            result = FlashingProcedureResult.FailedToGetAccessToFooter;
-                            retval = false;
-                        }
-                    }
-                    else
-                    {
-                        retval = false;
-                        result = FlashingProcedureResult.FailedToGetAccessToData;
-                    }
-                }
-                else
-                {
-                    retval = false;
-                    result = FlashingProcedureResult.FailedToErase;
-                }
-                fs.Close();
-                progress.Close();
-
-            }
-            else
-            {
-                // non connectivity
-                retval = false;
-            }
-
-            KWPHandler.getInstance().ResumeAlivePolling();
-            _writingFlash = false;
-            if (!retval)
-            {
-                string errorMessage = string.Empty;
-                switch (result)
-                {
-                    case FlashingProcedureResult.FailedToErase:
-                        errorMessage = "Failed to erase ECU";
-                        break;
-                    case FlashingProcedureResult.FailedToGetAccessToData:
-                        errorMessage = "Failed to get write access to data part (0x00000-0x7B000)";
-                        break;
-                    case FlashingProcedureResult.FailedToGetAccessToFooter:
-                        errorMessage = "Failed to get write access to footer part (0x7FE00-0x7FFFF)";
-                        break;
-                    case FlashingProcedureResult.FailedToProgramData:
-                        errorMessage = "Failed program data address: " + _failAddress.ToString("X6");
-                        break;
-                    case FlashingProcedureResult.FailedToProgramFooter:
-                        errorMessage = "Failed program footer address: " + _failAddress.ToString("X6");
-                        break;
-                    default:
-                        errorMessage = "Failed to program ECU";
-                        break;
-                }
-                frmInfoBox info = new frmInfoBox(errorMessage);
-
-            }
-            else
-            {
-                //barUpdateText.Caption = "Flash completed successfully";
-                KWPHandler.getInstance().ResetECU(); // Test <GS-08112010>
-
-                frmInfoBox info = new frmInfoBox("Flashed successfully");
-            }
-        }
-
-        bool _stopReadingFlash = false;
-        bool _readingFlash = false;
-
-        private void ReadFlash()
-        {
-            /* if (_readingFlash) return;
-             if (_writingFlash) return;
-             SaveFileDialog sfd = new SaveFileDialog();
-             sfd.Filter = "Binary files|*.bin";
-             bool retval = true;
-            
-             if (CheckCANConnectivity())
-             {
-                 if (sfd.ShowDialog() == DialogResult.OK)
-                 {
-                     if (Path.GetFileName(sfd.FileName) != string.Empty)
-                     {
-                         if (CheckFlashStatus())
-                         {
-                             // frmFlasherProgress.SetProgress("Starting flash download...");
-                             AddToCanTrace("Starting download of flash");
-                             tmrReadProcessChecker.Enabled = true;
-                             flash.readFlash(sfd.FileName);
-                             //DisableCANInteractionButtons();
-                         }
-                     }
-                 }
-                
-                 else
-                 {
-                     _readingFlash = false;
-                     return;
-                 }
-             }
-             else
-             {
-                 retval = false;
-             }
-             _readingFlash = false;
-
-             if (!retval)
-             {
-                 frmInfoBox info = new frmInfoBox("Failed to download flash from ECU");
-             }
-             else
-             {
-                 frmInfoBox info = new frmInfoBox("Flash downloaded successfully");
-             }*/
-        }
-
-        void progress_onCancelOperation(object sender, EventArgs e)
-        {
-            _stopReadingFlash = true;
-        }
-
-        void progress_onCancelOperationWrite(object sender, EventArgs e)
-        {
-            _stopFlashing = true;
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -18171,7 +17054,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             SetColorForMeasurement(measurementPedalPosition, backColor, foreColor, labelColor);
             SetColorForMeasurement(measurementSpeed, backColor, foreColor, labelColor);
 
-            foreach (Control c in panel2.Controls)
+            foreach (Control c in panelBottom.Controls)
             {
                 if (c is Owf.Controls.DigitalDisplayControl)
                 {
@@ -19105,59 +17988,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         }
 
 
-
-        //        private bool CheckCANConnectivityDirectAccess()
-        //        {
-        //            if (canUsbDevice.isOpen()) return true;
-        //            AddToCanTrace("Initializing CANbus interface");
-        //            System.Windows.Forms.Application.DoEvents();
-        //            System.Windows.Forms.Application.DoEvents();
-        ///*            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-        //            {
-        //                CheckCanwakeup();
-        //            }*/
-        //            AddToCanTrace("Creating new connection to CANUSB device!");
-        //            if (canUsbDevice == null)
-        //            {
-        //                if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
-        //                {
-        //                    canUsbDevice = new CANUSBDevice();
-        //                }
-        //                else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
-        //                {
-        //                    canUsbDevice = new CANELM327Device();
-        //                    canUsbDevice.ForcedComport = m_appSettings.ELM327Port;
-        //                }
-        //                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.EasySync)
-        //                //{
-        //                //    //canUsbDevice = new EasySyncUSBDevice();
-        //                //    canUsbDevice = new CANUSBDirectDevice();
-        //                //}
-        //                //else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Mitronics)
-        //                //{
-        //                //    canUsbDevice = new Mictronics();
-        //                //}
-        //                else
-        //                {
-        //                    canUsbDevice = new LPCCANDevice_T7();
-        //                }
-        //                canUsbDevice.onReceivedAdditionalInformationFrame += new ICANDevice.ReceivedAdditionalInformationFrame(canUsbDevice_onReceivedAdditionalInformationFrameDebug);
-        //                canUsbDevice.onReceivedAdditionalInformation +=new ICANDevice.ReceivedAdditionalInformation(canUsbDevice_onReceivedAdditionalInformation);
-        //                //canUsbDevice = new EasySyncUSBDevice();
-        //                LogHelper.Log("Created new CANUSBDevice instance");
-        //            }
-        //            canUsbDevice.EnableCanLog = m_appSettings.EnableCanLog;
-        //            canUsbDevice.UseOnlyPBus = m_appSettings.OnlyPBus;
-        //            if (canUsbDevice.open() == OpenResult.OpenError) return false;
-        //            return true;
-        //        }
-
-        void canUsbDevice_onReceivedAdditionalInformationFrameDebug(object sender, ICANDevice.InformationFrameEventArgs e)
-        {
-            LogHelper.Log("Rx frame: 0x" + e.Message.getID().ToString("X4") + " 0x" + e.Message.getData().ToString("X16"));
-        }
-
-
         byte _lambdacalSTEnableBackup = 0;
 
         private bool SetLambdaControl(bool enable)
@@ -19414,11 +18244,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 data2Write[0] = newFuelMapByte;
 
                 LogHelper.Log("Writing fuelmap");
-                KWPHandler.getInstance().requestSequrityAccess(false);
                 uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)(y * 18) + (uint)e.X; ;
                 byte[] dataToSend = new byte[1];
                 //dataToSend[0] = e.Cellvalue;
-                if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, data2Write))
+                if (!trionic7.WriteMapToSRAM(addresstowrite, data2Write))
                 {
                     LogHelper.Log("Failed to write data to the ECU");
                 }
@@ -19439,11 +18268,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     if (_autoTuning)
                     {
                         LogHelper.Log("Writing fuelmap");
-                        KWPHandler.getInstance().requestSequrityAccess(false);
                         uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)e.Mapindex;
                         byte[] dataToSend = new byte[1];
                         dataToSend[0] = e.Cellvalue;
-                        if (!KWPHandler.getInstance().writeSymbolRequestAddress(addresstowrite, dataToSend))
+                        if (!trionic7.WriteMapToSRAM(addresstowrite, dataToSend))
                         {
                             LogHelper.Log("Failed to write data to the ECU");
                         }
@@ -19515,23 +18343,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 tmrRealtime.Enabled = false;
             }
             m_connectedToECU = false;
-            KWPHandler.stopLogging();
-            if (KWPHandler.getInstance() != null)
-            {
-                try
-                {
-                    KWPHandler.getInstance().closeDevice();
-                }
-                catch (Exception kwpE)
-                {
-                    LogHelper.Log("KWP: " + kwpE.Message);
-                }
-            }
-
-            canUsbDevice = null;
-            kwpDevice = null;
-            flash = null;
-
+            trionic7.Cleanup();
+            SetCANStatus("");
+            btnConnectDisconnect.Caption = "Connect ECU";
         }
 
         private void SpawnSaabOpenTech(string arguments, bool showWindow)
@@ -20001,10 +18815,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 {
                     string filename_2 = ofd1.FileName;
                     // now compare
-                    // frmProgress progress = new frmProgress();
-                    // progress.SetProgress("Analyzing SRAM dumps... stand by");
-                    //  progress.Show();
-                    //  System.Windows.Forms.Application.DoEvents();
                     System.Data.DataTable dt = new System.Data.DataTable();
                     dt.Columns.Add("SYMBOLNAME");
                     dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
@@ -20593,19 +19403,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             if (m_connectedToECU)
             {
-                // disconnect 
                 m_connectedToECU = false;
-                KWPHandler.stopLogging();
-                if (KWPHandler.getInstance() != null)
-                {
-                    if (KWPHandler.getInstance().closeDevice())
-                    {
-                        btnConnectDisconnect.Caption = "Connect ECU";
-                    }
-                }
-                //canUsbDevice = null;
-                // kwpCanDevice = null;
-                // flash = null;
+                trionic7.Cleanup();
+                btnConnectDisconnect.Caption = "Connect ECU";
+                SetCANStatus("");
             }
             else
             {
