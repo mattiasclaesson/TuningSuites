@@ -215,7 +215,6 @@ namespace T8SuitePro
                 t8can.onReadProgress += new TrionicCANLib.ITrionic.ReadProgress(t8can_onReadProgress);
                 t8can.onWriteProgress += new TrionicCANLib.ITrionic.WriteProgress(t8can_onWriteProgress);
                 t8can.onCanInfo += new TrionicCANLib.ITrionic.CanInfo(t8can_onCanInfo);
-                ZipUtil.unzip(System.Windows.Forms.Application.StartupPath + "\\Binaries\\Binaries.zip");
             }
             catch (Exception E)
             {
