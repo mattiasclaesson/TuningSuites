@@ -6606,7 +6606,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 if (m_msiUpdater != null)
                 {
-                    m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T7Suite/", "t7suitepro");
+                    m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T7Suite/", "t7suitepro", "T7Suite.msi");
                 }
             }
             catch (Exception E)
@@ -6701,7 +6701,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 m_msiUpdater.Apppath = System.Windows.Forms.Application.UserAppDataPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
-                m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T7Suite/", "t7suitepro");
+                m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T7Suite/", "t7suitepro", "T7Suite.msi");
             }
             catch (Exception E)
             {
