@@ -491,6 +491,8 @@ namespace T7
 
         private void File_Exit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            trionic7.Cleanup();
+            LogHelper.Flush();
             System.Windows.Forms.Application.Exit();
         }
 
@@ -6274,6 +6276,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 LogHelper.Log(E.Message);
             }
+
+            LogHelper.Flush();
+            Environment.Exit(0);
         }
 
 
@@ -6698,6 +6703,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     if (m_msiUpdater != null)
                     {
                         m_msiUpdater.ExecuteUpdate(e.Version);
+                        trionic7.Cleanup();
+                        LogHelper.Flush();
                         System.Windows.Forms.Application.Exit();
                     }
                 }

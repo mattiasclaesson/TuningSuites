@@ -70,6 +70,7 @@ namespace CommonSuite
         {
             lock (logThread)
             {
+                logThread.Abort();
                 LogManager.Shutdown();
                 isRunning = false;
             }
