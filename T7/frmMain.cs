@@ -1697,8 +1697,6 @@ namespace T7
             if(m_appSettings.DebugMode)
             {
                 debugActionToolStripMenuItem.Visible = true;
-                barButtonItem3.Enabled = true;
-                barButtonItem3.Visibility = BarItemVisibility.Always;
                 readSymbolToolStripMenuItem.Enabled = true;
             }
             if (m_appSettings.MeasureAFRInLambda)
@@ -3733,17 +3731,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             dt.WriteXml(filename);
         }
 
-        private void CreateInformationFile(string filename, string inffilename)
-        {
-            T7FileHeader fileHeader = new T7FileHeader();
-            fileHeader.init(filename, false);
-            using (StreamWriter sw = new StreamWriter(inffilename))
-            {
-                sw.WriteLine("SymbolTableAddress=" + fileHeader.Symboltableaddress.ToString("X8"));
-            }
-
-        }
-
         private void UpdateChecksum(string m_fileName)
         {
             T7FileHeader t7InfoHeader = null;
@@ -3762,62 +3749,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             t7InfoHeader.setChecksumF2((int)calculatedF2Checksum);
             t7InfoHeader.setChecksumFB(calculatedFBChecksum);
             t7InfoHeader.save(m_fileName);
-        }
-
-
-        private string GetFullDescription(string[] lines, int fromindex)
-        {
-            bool endFound = false;
-            string retval = string.Empty;
-            //retval = lines[fromindex];
-            int cnt = 0;
-            while (!endFound)
-            {
-                string line = lines[fromindex + cnt];
-                if (line.Contains("\"]"))
-                {
-                    // laatste regel
-                    line = line.Replace("\x0d", " ");
-                    line = line.Replace("\x0a", " ");
-                    line = line.Replace("\"", " ");
-                    line = line.Replace("'", " ");
-                    line = line.Replace("Description:[", "");
-                    line = line.Replace("DESCRIPTION:", "");
-                    line.Trim();
-                    while (line.Contains("  ")) line = line.Replace("  ", " ");
-                    while (line.Contains("**")) line = line.Replace("**", "*");
-                    endFound = true;
-                    retval += line;
-                }
-                else if (line.StartsWith("*") && !line.StartsWith("**"))
-                {
-                    endFound = true;
-                }
-                else
-                {
-                    line = line.Replace("\x0d", " ");
-                    line = line.Replace("\x0a", " ");
-                    line = line.Replace("\"", " ");
-                    line = line.Replace("'", " ");
-                    line = line.Replace("Description:[", "");
-                    line = line.Replace("DESCRIPTION:", "");
-                    line.Trim();
-                    while (line.Contains("  ")) line = line.Replace("  ", " ");
-                    while (line.Contains("**")) line = line.Replace("**", "*");
-                    retval += line;
-                }
-                if (cnt++ > 15)
-                {
-                    endFound = true;
-                    LogHelper.Log("More than 10 lines!");
-                }
-            }
-            return retval;
-        }
-
-        private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            
         }
 
         private bool CompareSymbolToCurrentFile(string symbolname, int address, int length, string filename, out double diffperc, out int diffabs, out double diffavg)
