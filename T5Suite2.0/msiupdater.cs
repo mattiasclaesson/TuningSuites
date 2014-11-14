@@ -12,7 +12,7 @@ namespace T5Suite2
     {
         private Version m_currentversion;
         private string m_customer = "Global";
-        private string m_server = "http://trionic.mobixs.eu/t5suite2/";
+        private string m_server = "http://develop.trionictuning.com/T5Suite2/";
         private string m_username = "";
         private string m_password = "";
         private Version m_NewVersion;
@@ -180,7 +180,7 @@ namespace T5Suite2
         public void ExecuteUpdate(Version ver)
         {
             //http://reverse-that-trionic.googlecode.com/svn/trunk/T5Suite/
-            string command = "http://trionic.mobixs.eu/t5suite2/" + ver.ToString() + "/T5SuiteII.msi";
+            string command = "http://develop.trionictuning.com/T5Suite2/" + ver.ToString() + "/T5SuiteII.msi";
             try
             {
                 System.Diagnostics.Process.Start(command);
@@ -320,7 +320,7 @@ namespace T5Suite2
                 File.Delete(Apppath + "\\Notes.xml");
                 if (m_customer.Length > 0)
                 {
-                    URLString = "http://trionic.mobixs.eu/t5suite2/version.xml";
+                    URLString = "http://develop.trionictuning.com/T5Suite2/version.xml";
                     Console.WriteLine("First try");
                     XMLResult = GetPageHTML(URLString, 10);
                     if (XMLResult == "")
@@ -333,7 +333,7 @@ namespace T5Suite2
                         xmlfile.Write(XMLResult);
                         xmlfile.Close();
                     }
-                    URLString = "http://trionic.mobixs.eu/t5suite2/Notes.xml";
+                    URLString = "http://develop.trionictuning.com/T5Suite2/Notes.xml";
                     XMLResult = GetPageHTML(URLString, 10);
                     using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
                     {
@@ -424,7 +424,7 @@ namespace T5Suite2
 
         public string GetReleaseNotes()
         {
-            string URLString = "http://trionic.mobixs.eu/t5suite2/Notes.xml";
+            string URLString = "http://develop.trionictuning.com/T5Suite2/Notes.xml";
             string XMLResult = GetPageHTML(URLString, 10);
             using (StreamWriter xmlfile = new StreamWriter(Apppath + "\\Notes.xml", false, System.Text.Encoding.ASCII, 2048))
             {

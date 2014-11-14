@@ -1,2 +1,2 @@
 @echo off
-set T5SuiteII.version=2.0.2
+set T5SuiteII.version=2.0.3

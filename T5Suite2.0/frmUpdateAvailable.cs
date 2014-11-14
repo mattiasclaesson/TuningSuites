@@ -113,7 +113,7 @@ namespace T5Suite2
         {
             //ShowRSSFeeds();
             //Application.DoEvents();
-            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://trionic.mobixs.eu/t5suite2/Notes.xml");
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", "http://develop.trionictuning.com/T5Suite2/Notes.xml");
         }
 
 

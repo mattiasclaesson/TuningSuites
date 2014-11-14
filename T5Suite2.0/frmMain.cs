@@ -3992,7 +3992,7 @@ namespace T5Suite2
                 m_msiUpdater.Apppath = System.Windows.Forms.Application.StartupPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
-                m_msiUpdater.CheckForUpdates("Global", "http://trionic.mobixs.eu/t5suite2/", "", "", false);
+                m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T5Suite2/", "", "", false);
 
             }
             catch (Exception E)
@@ -4190,7 +4190,7 @@ namespace T5Suite2
             {
                 if (m_msiUpdater != null)
                 {
-                    m_msiUpdater.CheckForUpdates("Global", "http://trionic.mobixs.eu/t5suite2/", "", "", false);
+                    m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T5Suite2/", "", "", false);
                 }
             }
             catch (Exception E)
