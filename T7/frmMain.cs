@@ -2245,14 +2245,10 @@ namespace T7
             {
                 if (sh.Varname == symbolname || sh.Userdescription == symbolname)
                 {
-                    string name = string.Empty;
-                    if (sh.Userdescription != "")
+                    string name = sh.Varname;
+                    if (sh.Varname.StartsWith("Symbol") && sh.Userdescription != "")
                     {
                         name = sh.Userdescription;
-                    }
-                    else
-                    {
-                        name = sh.Varname;
                     }
                     if (IsSoftwareOpen() && IsSymbolCalibration(name) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
                     {
