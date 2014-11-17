@@ -312,12 +312,11 @@ namespace T5Suite2
             //string VehicleString;
             bool m_updateavailable = false;
             bool m_version_toohigh = false;
-            
             Version maxversion = new Version("1.0.0.0");
+            File.Delete(Apppath + "\\input.xml");
+            File.Delete(Apppath + "\\Notes.xml");
             try
             {
-                File.Delete(Apppath + "\\input.xml");
-                File.Delete(Apppath + "\\Notes.xml");
                 if (m_customer.Length > 0)
                 {
                     URLString = "http://develop.trionictuning.com/T5Suite2/version.xml";

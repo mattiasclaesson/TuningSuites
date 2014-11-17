@@ -3989,7 +3989,7 @@ namespace T5Suite2
             try
             {
                 m_msiUpdater = new msiupdater(new Version(System.Windows.Forms.Application.ProductVersion));
-                m_msiUpdater.Apppath = System.Windows.Forms.Application.StartupPath;
+                m_msiUpdater.Apppath = System.Windows.Forms.Application.UserAppDataPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
                 m_msiUpdater.CheckForUpdates("Global", "http://develop.trionictuning.com/T5Suite2/", "", "", false);
