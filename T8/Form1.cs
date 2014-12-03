@@ -14808,20 +14808,25 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 foreach (SymbolHelper sh in m_symbols)
                 {
-                    if (sh.Varname == symbolname)
+                    string varname = sh.Varname;
+                    if (varname.StartsWith("Symbol") && sh.Userdescription != "")
+                    {
+                        varname = sh.Userdescription;
+                    }
+                    if (varname == symbolname)
                     {
                         // convert to realtime symbol
                         // start an SRAM mapviewer for this symbol
-                        int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, sh.Varname), sh.Varname);
+                        int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, varname), varname);
                         sh.Symbol_number = symbolnumber;
 
-                        LogHelper.Log("Got symnolnumber: " + symbolnumber.ToString() + " for map: " + sh.Varname);
+                        LogHelper.Log("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + varname);
                         if (symbolnumber >= 0)
                         {
                             //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh);
                             LogHelper.Log("read " + result.Length.ToString() + " bytes from SRAM!");
-                            StartTableViewer(sh.Varname);
+                            StartTableViewer(varname);
                             try
                             {
                                 int rows = 0;
@@ -14835,13 +14840,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                             if (c is IMapViewer)
                                             {
                                                 IMapViewer vwr = (IMapViewer)c;
-                                                if (vwr.Map_name == sh.Varname)
+                                                if (vwr.Map_name == varname)
                                                 {
                                                     vwr.Map_content = result;
-                                                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, sh.Varname, out cols, out rows);
+                                                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, varname, out cols, out rows);
                                                     vwr.IsRAMViewer = true;
                                                     vwr.OnlineMode = true;
-                                                    vwr.ShowTable(cols, isSixteenBitTable(sh.Varname));
+                                                    vwr.ShowTable(cols, isSixteenBitTable(varname));
                                                 }
                                             }
                                             else if (c is DockPanel)
@@ -14852,13 +14857,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     if (c2 is IMapViewer)
                                                     {
                                                         IMapViewer vwr2 = (IMapViewer)c2;
-                                                        if (vwr2.Map_name == sh.Varname)
+                                                        if (vwr2.Map_name == varname)
                                                         {
                                                             vwr2.Map_content = result;
-                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, sh.Varname, out cols, out rows);
+                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, varname, out cols, out rows);
                                                             vwr2.IsRAMViewer = true;
                                                             vwr2.OnlineMode = true;
-                                                            vwr2.ShowTable(cols, isSixteenBitTable(sh.Varname));
+                                                            vwr2.ShowTable(cols, isSixteenBitTable(varname));
                                                         }
                                                     }
                                                 }
@@ -14871,13 +14876,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     if (c3 is IMapViewer)
                                                     {
                                                         IMapViewer vwr3 = (IMapViewer)c3;
-                                                        if (vwr3.Map_name == sh.Varname)
+                                                        if (vwr3.Map_name == varname)
                                                         {
                                                             vwr3.Map_content = result;
-                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, sh.Varname, out cols, out rows);
+                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, varname, out cols, out rows);
                                                             vwr3.IsRAMViewer = true;
                                                             vwr3.OnlineMode = true;
-                                                            vwr3.ShowTable(cols, isSixteenBitTable(sh.Varname));
+                                                            vwr3.ShowTable(cols, isSixteenBitTable(varname));
                                                         }
                                                     }
                                                 }

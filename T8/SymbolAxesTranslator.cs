@@ -4545,9 +4545,9 @@ namespace T8SuitePro
                 case "KnkDetAdap.KnkCntMAP":
                     x_axis = "IgnAbsCal.m_AirNormXSP";
                     y_axis = "IgnAbsCal.n_EngNormYSP";
-                    x_axis_description = "";
-                    y_axis_description = "";
-                    z_axis_description = "Num";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "count";
                     break;
                 case "KnkDetCal.fi_knkWinOffsMAP":
                     x_axis = "KnkDetCal.m_AirXSP";
