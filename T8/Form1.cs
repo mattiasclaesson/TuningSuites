@@ -9139,6 +9139,32 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                 }
             }
+
+            bool createRepositoryFile = false;
+            if (dt.Rows.Count == 0)
+            {
+                if (fh.SoftwareVersion.Trim().StartsWith("FD0M", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (MessageBox.Show("Do you want to load the known symbollist for FD0M files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\FD0M_C_FMEP_14_FIEF_80l.xml", System.Windows.Forms.Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new System.Data.DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = true;
+                            }
+                        }
+                    }
+                }
+            }
             foreach (SymbolHelper sh in coll2load)
             {
                 foreach (DataRow dr in dt.Rows)
@@ -9185,6 +9211,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         LogHelper.Log(E.Message);
                     }
                 }
+            }
+            if (createRepositoryFile)
+            {
+                SaveAdditionalSymbols();
             }
             return retval;
         }
@@ -15309,14 +15339,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             catch (Exception E)
             {
                 LogHelper.Log("Failed to import additional AS2 symbols: " + E.Message);
-            }
-        }
-
-        private void AddLog(string line)
-        {
-            using (StreamWriter sw = new StreamWriter("C:\\log.txt", true))
-            {
-                sw.WriteLine(line);
             }
         }
 
