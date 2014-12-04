@@ -9105,11 +9105,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
             dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
             dt.Columns.Add("DESCRIPTION");
+            T8Header fh = new T8Header();
+            fh.init(filename);
             if (ImportFromRepository)
             {
-                T8Header fh = new T8Header();
-                fh.init(filename);
-
                 string checkstring = fh.PartNumber + fh.SoftwareVersion;
                 string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(filename) + File.GetCreationTime(filename).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
                 if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\repository"))
