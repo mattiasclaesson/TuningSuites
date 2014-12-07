@@ -2298,7 +2298,7 @@ namespace T8SuitePro
         private int GetTableMatrixWitdhByName(string filename, SymbolCollection curSymbols, string symbolname, out int columns, out int rows)
         {
 
-            columns = 1;// GetSymbolLength(curSymbols, symbolname) / 2;
+            columns = 1;
             if (symbolname == "MisfCal.m_LoadLevelMAT") columns = 5;
             else if (symbolname == "PedalMapCal.GainFactorMap") columns = 16;
             else if (symbolname == "FrictionLoadCal.Trq_RequestT_EngMAP") columns = 9;
@@ -2338,7 +2338,7 @@ namespace T8SuitePro
             else if (GetSymbolLength(curSymbols, symbolname) == 160) columns = 10;
             else if (GetSymbolLength(curSymbols, symbolname) == 72) columns = 9;
             else if (GetSymbolLength(curSymbols, symbolname) == 42) columns = 7; // testen... 
-            if (symbolname.ToUpper().EndsWith("YSP") || symbolname.ToUpper().EndsWith("XSP")) columns = 1;
+            if (symbolname.ToUpper().EndsWith("YSP") || symbolname.ToUpper().EndsWith("XSP") || symbolname.ToUpper().EndsWith("TAB")) columns = 1;
             rows = GetSymbolLength(curSymbols, symbolname) / columns;
             return columns;
         }
@@ -5606,7 +5606,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             {
                 if (m_msiUpdater != null)
                 {
-                    m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T8Suite/", "t8suitepro");
+                    m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T8Suite/", "t8suitepro", "T8Suite.msi");
                 }
             }
             catch (Exception E)
@@ -7065,7 +7065,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_msiUpdater.Apppath = System.Windows.Forms.Application.UserAppDataPath;
                 m_msiUpdater.onDataPump += new msiupdater.DataPump(m_msiUpdater_onDataPump);
                 m_msiUpdater.onUpdateProgressChanged += new msiupdater.UpdateProgressChanged(m_msiUpdater_onUpdateProgressChanged);
-                m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T8Suite/", "t8suitepro");
+                m_msiUpdater.CheckForUpdates("http://develop.trionictuning.com/T8Suite/", "t8suitepro", "T8Suite.msi");
             }
             catch (Exception E)
             {

@@ -1050,13 +1050,10 @@ namespace T8SuitePro
                     y_axis_description ="";
                     z_axis_description ="";
                     break;
-               
                 case"IgnAbsCal.fi_etaIgnOffsetTAB":
-                    x_axis ="";
-                    y_axis ="IgnAbsCal.EngEfficiencySP";
-                    x_axis_description ="";
-                    y_axis_description ="";
-                    z_axis_description ="";
+                    y_axis = "IgnAbsCal.EngEfficiencySP";
+                    y_axis_description = "";
+                    z_axis_description = "";
                     break;
                 case"IgnAbsCal.m_AirMBTXSP":
                     x_axis ="IgnAbsCal.n_EngMBTYSP";

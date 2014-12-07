@@ -13,8 +13,9 @@ namespace CommonSuite
         private string m_server = "";
         private Version m_NewVersion;
         private string m_apppath = "";
-        private bool m_blockauto_updates = false;
+        private bool m_blockauto_updates;
         private string m_tagName = "";
+        private string m_msi;
 
         public bool Blockauto_updates
         {
@@ -155,10 +156,11 @@ namespace CommonSuite
             m_NewVersion = new Version("0.0.0.0");
         }
 
-        public void CheckForUpdates(string server, string tagName)
+        public void CheckForUpdates(string server, string tagName, string msi)
         {
             m_server = server;
             m_tagName = tagName;
+            m_msi = msi;
             if (!m_blockauto_updates)
             {
                 System.Threading.Thread t = new System.Threading.Thread(updatecheck);
@@ -168,7 +170,7 @@ namespace CommonSuite
 
         public void ExecuteUpdate(Version ver)
         {
-            string command = m_server + ver.ToString() + "/T8Suite.msi";
+            string command = m_server + ver.ToString() + "/" + m_msi;
             try
             {
                 System.Diagnostics.Process.Start(command);
