@@ -1841,6 +1841,9 @@ namespace T7
                 barButtonItem67.Caption = "VE map";
                 barButtonItem69.Caption = "Startup VE map";
             }
+
+            IdaProIdcFile.create(m_currentfile, m_symbols);
+
             System.Windows.Forms.Application.DoEvents();
         }
 
@@ -5750,9 +5753,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 trionic7.ForcedComport = m_appSettings.ELM327Port;
                 trionic7.ForcedBaudrate = m_appSettings.Baudrate;
             }
-            trionic7.setCANDevice(m_appSettings.CANBusAdapterType, false);
+            trionic7.setCANDevice(m_appSettings.CANBusAdapterType);
 
-            if (trionic7.openDevice(false, false))
+            if (trionic7.openDevice())
             {
                 SetCANStatus("Connected");
                 btnConnectDisconnect.Caption = "Disconnect ECU";
@@ -8943,9 +8946,11 @@ If boost regulation reports errors you can increase the difference between boost
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
                 m_enableRealtimeTimer = false;
+                trionic7.ResumeAlivePolling();
             }
             else
             {
+                trionic7.SuspendAlivePolling();
                 m_enableRealtimeTimer = true;
                 bool _start_Timer = false;
                 if (m_appSettings.ResetRealtimeSymbolOnTabPageSwitch)
@@ -19338,6 +19343,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             if (m_connectedToECU)
             {
                 m_connectedToECU = false;
+                trionic7.SuspendAlivePolling();
                 trionic7.Cleanup();
                 btnConnectDisconnect.Caption = "Connect ECU";
                 SetCANStatus("");
@@ -19346,6 +19352,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 if (CheckCANConnectivity())
                 {
+                    trionic7.ResumeAlivePolling();
                     btnConnectDisconnect.Caption = "Disconnect ECU";
                 }
             }

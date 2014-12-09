@@ -579,6 +579,9 @@
       <DependentUpon>HexViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="HighlightGroup.cs" />
+    <Compile Include="IdaProIdcFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IMapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
