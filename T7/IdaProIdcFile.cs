@@ -11,7 +11,9 @@ namespace T7
     {
         protected internal static void create(string filename, SymbolCollection symbols)
         {
-            using (StreamWriter sw = new StreamWriter(filename.Replace(".bin","-autogen.idc")))
+            string outputfile = Path.GetDirectoryName(filename);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(filename) + "-autogen.idc");
+            using (StreamWriter sw = new StreamWriter(outputfile))
             {
                 sw.WriteLine("//                                           ");
                 sw.WriteLine("//      This file for Trionic 7 symboltable  ");
