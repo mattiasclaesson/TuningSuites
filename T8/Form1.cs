@@ -9163,6 +9163,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                     }
                 }
+                else if (fh.SoftwareVersion.Trim().StartsWith("FD0I", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (MessageBox.Show("Do you want to load the known symbollist for FD0I files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\FD0I_Closed.xml", System.Windows.Forms.Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new System.Data.DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = true;
+                            }
+                        }
+                    }
+                }
+            
             }
             foreach (SymbolHelper sh in coll2load)
             {
