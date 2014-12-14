@@ -2095,7 +2095,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.0.0.16, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.0.20.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_08EAC4FE62EE250154CA56FD2956B405"
@@ -5281,14 +5281,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{5529A0B3-300A-4747-9A2E-25FDB74728E9}"
-        "PackageCode" = "8:{1F489594-0D8B-4BE7-9163-0DEB550C97B4}"
+        "ProductCode" = "8:{7D25D546-8F14-417F-84FA-C5005DC9856C}"
+        "PackageCode" = "8:{A063E5F1-4BDF-4FCF-8F26-F68ED2829C50}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.18"
+        "ProductVersion" = "8:0.0.19"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
