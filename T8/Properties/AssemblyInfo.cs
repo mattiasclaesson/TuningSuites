@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MattiasC")]
 [assembly: AssemblyProduct("T8SuitePro")]
-[assembly: AssemblyCopyright("Copyright © 2014 Dilemma/Mattias Claesson")]
+[assembly: AssemblyCopyright("Copyright © 2015 Dilemma/Mattias Claesson")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.0.19.0")]
-[assembly: AssemblyFileVersion("0.0.19.0")]
+[assembly: AssemblyVersion("0.0.20.0")]
+[assembly: AssemblyFileVersion("0.0.20.0")]
