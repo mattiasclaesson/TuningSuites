@@ -9106,9 +9106,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
             dt.Columns.Add("DESCRIPTION");
             T8Header fh = new T8Header();
-            fh.init(filename);
             if (ImportFromRepository)
             {
+                fh.init(filename);
                 string checkstring = fh.PartNumber + fh.SoftwareVersion;
                 string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(filename) + File.GetCreationTime(filename).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
                 if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\repository"))
@@ -9142,6 +9142,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             bool createRepositoryFile = false;
             if (dt.Rows.Count == 0)
             {
+                fh.init(filename);
                 if (fh.SoftwareVersion.Trim().StartsWith("FD0M", StringComparison.OrdinalIgnoreCase))
                 {
                     if (MessageBox.Show("Do you want to load the known symbollist for FD0M files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
