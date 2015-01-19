@@ -229,9 +229,13 @@ namespace T7
                     }
                 }
             }
+
+            m_DelegateUpdateRealTimeValue = UpdateRealtimeInformationValue;
+            m_DelegateUpdateBDMProgress = ReportBDMProgress;
+            m_DelegateUpdateMapViewer = UpdateMapViewer;
+
             m_DelegateUpdateStatus = updateStatusInBox;
             m_DelegateProgressStatus = SetProgressPercentage;
-            m_DelegateUpdateRealTimeValue = new DelegateUpdateRealTimeValue(UpdateRealtimeInformationValue);
             m_DelegateCanFrame = trionic7_onCanFrame;
             
             trionic7.onReadProgress += trionicCan_onReadProgress;
