@@ -107,11 +107,11 @@ namespace T7
                     }
                     if (sh.Flash_start_address > 0x80000)
                     {
-                        sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", sh.Varname.Replace(" ", "_"), sh.Start_address.ToString("X"), sh.Length.ToString("X")));
+                        sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", name.Replace(" ", "_"), sh.Start_address.ToString("X"), sh.Length.ToString("X")));
                     }
                     else
                     {
-                        sw.WriteLine(String.Format("   namevar(\"ROM_{0}\", 0x{1}, 0x{2});", sh.Varname.Replace(" ", "_"), sh.Flash_start_address.ToString("X"), sh.Length.ToString("X")));
+                        sw.WriteLine(String.Format("   namevar(\"ROM_{0}\", 0x{1}, 0x{2});", name.Replace(" ", "_"), sh.Flash_start_address.ToString("X"), sh.Length.ToString("X")));
                     }
                 }
 
