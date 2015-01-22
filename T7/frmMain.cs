@@ -777,6 +777,4037 @@ namespace T7
 
         #endregion
 
+        #region Options
+        private void Options_Settings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            frmSettings set = new frmSettings();
+            set.AppSettings = m_appSettings;
+            set.Symbols = GetRealtimeNotificationSymbols();
+            set.StandardFill = m_appSettings.StandardFill;
+            set.InterpolateLogWorksTimescale = m_appSettings.InterpolateLogWorksTimescale;
+            set.AutoSizeNewWindows = m_appSettings.AutoSizeNewWindows;
+            set.AutoSizeColumnsInViewer = m_appSettings.AutoSizeColumnsInWindows;
+            set.AutoUpdateChecksum = m_appSettings.AutoChecksum;
+            set.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+            //set.AutoGenerateLogWorksFile = m_appSettings.AutoGenerateLogWorks;
+            set.HideSymbolWindow = m_appSettings.HideSymbolTable;
+            set.ShowGraphsInMapViewer = m_appSettings.ShowGraphs;
+            set.UseRedAndWhiteMaps = m_appSettings.ShowRedWhite;
+            set.ViewTablesInHex = m_appSettings.Viewinhex;
+            set.AutoDockSameFile = m_appSettings.AutoDockSameFile;
+            set.AutoDockSameSymbol = m_appSettings.AutoDockSameSymbol;
+            set.DisableMapviewerColors = m_appSettings.DisableMapviewerColors;
+            set.ShowMapViewersInWindows = m_appSettings.ShowViewerInWindows;
+            set.NewPanelsFloating = m_appSettings.NewPanelsFloating;
+            set.AutoLoadLastFile = m_appSettings.AutoLoadLastFile;
+            set.AlwaysRecreateRepositoryItems = m_appSettings.AlwaysRecreateRepositoryItems;
+            set.DefaultViewType = m_appSettings.DefaultViewType;
+            set.DefaultViewSize = m_appSettings.DefaultViewSize;
+            set.SynchronizeMapviewers = m_appSettings.SynchronizeMapviewers;
+            set.FancyDocking = m_appSettings.FancyDocking;
+            set.ShowTablesUpsideDown = m_appSettings.ShowTablesUpsideDown;
+            set.WriteTimestampInBinary = m_appSettings.WriteTimestampInBinary;
+            set.AutoFixFooter = m_appSettings.AutoFixFooter;
+            set.EnableCanLog = m_appSettings.EnableCanLog;
+            set.OnlyPBus = m_appSettings.OnlyPBus;
+            set.DisableConnectionCheck = m_appSettings.DisableCanCheck;
+            set.AutoCreateAFRMaps = m_appSettings.AutoCreateAFRMaps;
+            set.AutoUpdateSRAMViewers = m_appSettings.AutoUpdateSRAMViewers;
+            set.UseAdditionalCanbusFrames = false;// m_appSettings.UseAdditionalCanbusFrames;
+            set.ResetRealtimeSymbolOnTabPageSwitch = m_appSettings.ResetRealtimeSymbolOnTabPageSwitch;
+            set.UseWidebandLambda = m_appSettings.UseWidebandLambda;
+            set.WideBandSymbol = m_appSettings.WideBandSymbol;
+            set.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
+            set.MeasureAFRInLambda = m_appSettings.MeasureAFRInLambda;
+            set.UseNewMapViewer = m_appSettings.UseNewMapViewer;
+            set.ProjectFolder = m_appSettings.ProjectFolder;
+            set.RequestProjectNotes = m_appSettings.RequestProjectNotes;
+            set.CANBusAdapterType = m_appSettings.CANBusAdapterType;
+
+            set.AcceptableTargetErrorPercentage = m_appSettings.AcceptableTargetErrorPercentage;
+            set.AreaCorrectionPercentage = m_appSettings.AreaCorrectionPercentage;
+            set.AutoUpdateFuelMap = m_appSettings.AutoUpdateFuelMap;
+            set.CellStableTime_ms = m_appSettings.CellStableTime_ms;
+            set.CorrectionPercentage = m_appSettings.CorrectionPercentage;
+            set.DiscardClosedThrottleMeasurements = m_appSettings.DiscardClosedThrottleMeasurements;
+            set.DiscardFuelcutMeasurements = m_appSettings.DiscardFuelcutMeasurements;
+            set.DisableClosedLoopOnStartAutotune = m_appSettings.DisableClosedLoopOnStartAutotune;
+            set.PlayCellProcessedSound = m_appSettings.PlayCellProcessedSound;
+            set.AllowIdleAutoTune = m_appSettings.AllowIdleAutoTune;
+            set.EnrichmentFilter = m_appSettings.EnrichmentFilter;
+            set.FuelCutDecayTime_ms = m_appSettings.FuelCutDecayTime_ms;
+            set.MaximumAdjustmentPerCyclePercentage = m_appSettings.MaximumAdjustmentPerCyclePercentage;
+            set.MaximumAFRDeviance = m_appSettings.MaximumAFRDeviance;
+            set.MinimumAFRMeasurements = m_appSettings.MinimumAFRMeasurements;
+            set.AutoLoggingEnabled = m_appSettings.AutoLoggingEnabled;
+            set.AutoLogStartSign = m_appSettings.AutoLogStartSign;
+            set.AutoLogStartValue = m_appSettings.AutoLogStartValue;
+            set.AutoLogStopSign = m_appSettings.AutoLogStopSign;
+            set.AutoLogStopValue = m_appSettings.AutoLogStopValue;
+            set.AutoLogTriggerStartSymbol = m_appSettings.AutoLogTriggerStartSymbol;
+            set.AutoLogTriggerStopSymbol = m_appSettings.AutoLogTriggerStopSymbol;
+
+            if (set.ShowDialog() == DialogResult.OK)
+            {
+                m_appSettings.InterpolateLogWorksTimescale = set.InterpolateLogWorksTimescale;
+                m_appSettings.AutoSizeNewWindows = set.AutoSizeNewWindows;
+                m_appSettings.AutoSizeColumnsInWindows = set.AutoSizeColumnsInViewer;
+                m_appSettings.AutoChecksum = set.AutoUpdateChecksum;
+                m_appSettings.ShowAddressesInHex = set.ShowAddressesInHex;
+                m_appSettings.StandardFill = set.StandardFill;
+                //m_appSettings.AutoGenerateLogWorks = set.AutoGenerateLogWorksFile;
+                m_appSettings.HideSymbolTable = set.HideSymbolWindow;
+                m_appSettings.ShowGraphs = set.ShowGraphsInMapViewer;
+                m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
+                m_appSettings.Viewinhex = set.ViewTablesInHex;
+                m_appSettings.DisableMapviewerColors = set.DisableMapviewerColors;
+                m_appSettings.AutoDockSameFile = set.AutoDockSameFile;
+                m_appSettings.AutoDockSameSymbol = set.AutoDockSameSymbol;
+                m_appSettings.ShowViewerInWindows = set.ShowMapViewersInWindows;
+                m_appSettings.NewPanelsFloating = set.NewPanelsFloating;
+                m_appSettings.WriteTimestampInBinary = set.WriteTimestampInBinary;
+
+                m_appSettings.DefaultViewType = set.DefaultViewType;
+                m_appSettings.DefaultViewSize = set.DefaultViewSize;
+
+                m_appSettings.AutoLoadLastFile = set.AutoLoadLastFile;
+                m_appSettings.FancyDocking = set.FancyDocking;
+                m_appSettings.ShowTablesUpsideDown = set.ShowTablesUpsideDown;
+                m_appSettings.AlwaysRecreateRepositoryItems = set.AlwaysRecreateRepositoryItems;
+                m_appSettings.SynchronizeMapviewers = set.SynchronizeMapviewers;
+                m_appSettings.AutoFixFooter = set.AutoFixFooter;
+                m_appSettings.EnableCanLog = set.EnableCanLog;
+                m_appSettings.AutoCreateAFRMaps = set.AutoCreateAFRMaps;
+                m_appSettings.OnlyPBus = set.OnlyPBus;
+                m_appSettings.DisableCanCheck = set.DisableConnectionCheck;
+                m_appSettings.AutoUpdateSRAMViewers = set.AutoUpdateSRAMViewers;
+                m_appSettings.UseAdditionalCanbusFrames = set.UseAdditionalCanbusFrames;
+                m_appSettings.ResetRealtimeSymbolOnTabPageSwitch = set.ResetRealtimeSymbolOnTabPageSwitch;
+                m_appSettings.WideBandSymbol = set.WideBandSymbol;
+                m_appSettings.UseWidebandLambda = set.UseWidebandLambda;
+                m_appSettings.AutoUpdateInterval = set.AutoUpdateInterval;
+                m_appSettings.MeasureAFRInLambda = set.MeasureAFRInLambda;
+                m_appSettings.UseNewMapViewer = set.UseNewMapViewer;
+                m_appSettings.ProjectFolder = set.ProjectFolder;
+                m_appSettings.RequestProjectNotes = set.RequestProjectNotes;
+                m_appSettings.CANBusAdapterType = set.CANBusAdapterType;
+
+                m_appSettings.AcceptableTargetErrorPercentage = set.AcceptableTargetErrorPercentage;
+                m_appSettings.AreaCorrectionPercentage = set.AreaCorrectionPercentage;
+                m_appSettings.AutoUpdateFuelMap = set.AutoUpdateFuelMap;
+                m_appSettings.CellStableTime_ms = set.CellStableTime_ms;
+                m_appSettings.CorrectionPercentage = set.CorrectionPercentage;
+                m_appSettings.DiscardClosedThrottleMeasurements = set.DiscardClosedThrottleMeasurements;
+                m_appSettings.DiscardFuelcutMeasurements = set.DiscardFuelcutMeasurements;
+                m_appSettings.EnrichmentFilter = set.EnrichmentFilter;
+                m_appSettings.FuelCutDecayTime_ms = set.FuelCutDecayTime_ms;
+                m_appSettings.MaximumAdjustmentPerCyclePercentage = set.MaximumAdjustmentPerCyclePercentage;
+                m_appSettings.MaximumAFRDeviance = set.MaximumAFRDeviance;
+                m_appSettings.MinimumAFRMeasurements = set.MinimumAFRMeasurements;
+                m_appSettings.AutoLoggingEnabled = set.AutoLoggingEnabled;
+                m_appSettings.AutoLogStartSign = set.AutoLogStartSign;
+                m_appSettings.AutoLogStartValue = set.AutoLogStartValue;
+                m_appSettings.AutoLogStopSign = set.AutoLogStopSign;
+                m_appSettings.AutoLogStopValue = set.AutoLogStopValue;
+                m_appSettings.AutoLogTriggerStartSymbol = set.AutoLogTriggerStartSymbol;
+                m_appSettings.AutoLogTriggerStopSymbol = set.AutoLogTriggerStopSymbol;
+
+
+                if (m_appSettings.MeasureAFRInLambda)
+                {
+                    linearGauge2.MaxValue = 1.5F;
+                    linearGauge2.MinValue = 0.5F;
+                    linearGauge2.GaugeText = "λ ";
+                    labelControl11.Text = "λ";
+                    linearGauge2.NumberOfDecimals = 2;
+                    linearGauge2.NumberOfDivisions = 10;
+                    AfrViewMode = AFRViewType.LambdaMode;
+                    btnAFRFeedbackMap.Caption = "Show lambda feedback map";
+                    btnClearAFRFeedback.Caption = "Clear lambda feedback map";
+                }
+                else
+                {
+                    linearGauge2.MaxValue = 20;
+                    linearGauge2.MinValue = 10;
+                    linearGauge2.GaugeText = "AFR ";
+                    labelControl11.Text = "AFR";
+                    linearGauge2.NumberOfDecimals = 1;
+                    AfrViewMode = AFRViewType.AFRMode;
+                    btnAFRFeedbackMap.Caption = "Show AFR feedback map";
+                    btnClearAFRFeedback.Caption = "Clear AFR feedback map";
+                }
+                //UpdateSettingButtons();
+                if (!m_appSettings.FancyDocking)
+                {
+                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
+                }
+                else
+                {
+                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.VS2005;
+                }
+                if (m_appSettings.HideSymbolTable)
+                {
+                    dockSymbols.Visibility = DockVisibility.AutoHide;
+                    dockSymbols.HideImmediately();
+                }
+                else
+                {
+                    dockSymbols.Visibility = DockVisibility.Visible;
+                }
+
+            }
+            SetFilterMode();
+        }
+
+        /// <summary>
+        /// Sets or Unsets Full-Screen mode for this form, saving the old state values. 
+        /// Note, the order of calls in this function is important.
+        /// </summary>
+        /// <param name="bFullScreen">set to fullscreen if true, unset if false</param>
+        void SetFullScreenMode(bool bFullScreen)
+        {
+            // enable full screen mode only if we're NOT in fullscreen
+            if (bFullScreen && !_isFullScreenEnabled)
+            {
+                this.SuspendLayout();
+
+                // get current window state
+                _oldWindowState = this.WindowState;
+
+                // get the normal window state so we don't lose those values
+                if (this.WindowState == FormWindowState.Maximized)
+                    this.WindowState = FormWindowState.Normal;
+
+                // get the normal state values
+                _oldClientSize = this.ClientSize;
+                _oldDesktopBounds = this.DesktopBounds;
+
+                // jump to full screen
+                this.FormBorderStyle = FormBorderStyle.None;
+                this.DesktopBounds = Screen.FromControl(this).Bounds;
+
+                _isFullScreenEnabled = true;
+
+                this.ResumeLayout();
+            }
+
+            // disable full screen mode only if we're in fullscreen
+            if (!bFullScreen && _isFullScreenEnabled)
+            {
+                this.SuspendLayout();
+
+                // reset the old state
+                this.DesktopBounds = _oldDesktopBounds;
+                this.ClientSize = _oldClientSize;
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                this.WindowState = _oldWindowState;
+
+                _isFullScreenEnabled = false;
+
+                this.ResumeLayout();
+            }
+        }
+
+        private void Options_ToggleFullscreen_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (!_isFullScreenEnabled)
+            {
+                SetFullScreenMode(true);
+                TopMost = true;
+            }
+            else
+            {
+                SetFullScreenMode(false);
+                TopMost = false;
+            }
+        }
+
+        private void Options_LookupPartnumber_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            frmPartnumberLookup lookup = new frmPartnumberLookup();
+            lookup.ShowDialog();
+            if (lookup.Open_File)
+            {
+                string filename = lookup.GetFileToOpen();
+                if (filename != string.Empty)
+                {
+                    CloseProject();
+                    m_appSettings.Lastprojectname = "";
+                    OpenFile(filename, true);
+                    m_appSettings.LastOpenedType = 0;
+
+                }
+            }
+            else if (lookup.Compare_File)
+            {
+                string filename = lookup.GetFileToOpen();
+                if (filename != string.Empty)
+                {
+
+                    CompareToFile(filename);
+                }
+            }
+            //<GS-21062010>
+            else if (lookup.CreateNewFile)
+            {
+                string filename = lookup.GetFileToOpen();
+                if (filename != string.Empty)
+                {
+                    CloseProject();
+                    m_appSettings.Lastprojectname = "";
+                    File.Copy(filename, lookup.FileNameToSave);
+                    OpenFile(lookup.FileNameToSave, true);
+                    m_appSettings.LastOpenedType = 0;
+
+                }
+            }
+        }
+        #endregion
+
+        #region Projects
+
+        private string MakeDirName(string dirname)
+        {
+            string retval = dirname;
+            retval = retval.Replace(@"\", "");
+            retval = retval.Replace(@"/", "");
+            retval = retval.Replace(@":", "");
+            retval = retval.Replace(@"*", "");
+            retval = retval.Replace(@"?", "");
+            retval = retval.Replace(@">", "");
+            retval = retval.Replace(@"<", "");
+            retval = retval.Replace(@"|", "");
+            return retval;
+        }
+
+        private void Projects_btnCreateProject_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // show the project properties screen for the user to fill in
+            // if a bin file is loaded, ask the user whether this should be the new projects binary file
+            // the project XML should contain a reference to this binfile as well as a lot of other stuff
+            frmProjectProperties projectprops = new frmProjectProperties();
+            if (m_currentfile != string.Empty)
+            {
+                projectprops.BinaryFile = m_currentfile;
+                T7FileHeader fileheader = new T7FileHeader();
+                fileheader.init(m_currentfile, false);
+                projectprops.CarModel = fileheader.getCarDescription().Trim();
+
+                projectprops.ProjectName = fileheader.getPartNumber().Trim() + " " + fileheader.getSoftwareVersion().Trim();
+            }
+            if (projectprops.ShowDialog() == DialogResult.OK)
+            {
+                if (!Directory.Exists(m_appSettings.ProjectFolder)) Directory.CreateDirectory(m_appSettings.ProjectFolder);
+                // create a new folder with these project properties.
+                // also copy the binary file into the subfolder for this project
+                if (Directory.Exists(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName)))
+                {
+                    frmInfoBox info = new frmInfoBox("The chosen projectname already exists, please choose another one");
+                    //TODO: reshow the dialog
+                }
+                else
+                {
+                    // create the project
+                    Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName));
+                    // copy the selected binary file to this folder
+                    string binfilename = m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName) + "\\" + Path.GetFileName(projectprops.BinaryFile);
+                    File.Copy(projectprops.BinaryFile, binfilename);
+                    // now create the projectproperties.xml in this new folder
+                    System.Data.DataTable dtProps = new System.Data.DataTable("T5PROJECT");
+                    dtProps.Columns.Add("CARMAKE");
+                    dtProps.Columns.Add("CARMODEL");
+                    dtProps.Columns.Add("CARMY");
+                    dtProps.Columns.Add("CARVIN");
+                    dtProps.Columns.Add("NAME");
+                    dtProps.Columns.Add("BINFILE");
+                    dtProps.Columns.Add("VERSION");
+                    dtProps.Rows.Add(projectprops.CarMake, projectprops.CarModel, projectprops.CarMY, projectprops.CarVIN, MakeDirName(projectprops.ProjectName), binfilename, projectprops.Version);
+                    dtProps.WriteXml(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName) + "\\projectproperties.xml");
+                    OpenProject(projectprops.ProjectName); //?
+                }
+            }
+
+        }
+
+        private TrionicTransactionLog m_ProjectTransactionLog;
+
+        private void OpenProject(string projectname)
+        {
+            //TODO: Are there pending changes in the optionally currently opened binary file / project?
+
+            //TODO: open a selected project
+            //frmInfoBox info = new frmInfoBox("Opening project: " + projectname);
+            if (Directory.Exists(m_appSettings.ProjectFolder + "\\" + projectname))
+            {
+                m_appSettings.LastOpenedType = 1;
+                m_CurrentWorkingProject = projectname;
+                m_ProjectLog.OpenProjectLog(m_appSettings.ProjectFolder + "\\" + projectname);
+                //Load the binary file that comes with this project
+                LoadBinaryForProject(projectname);
+                //LoadAFRMapsForProject(projectname); // <GS-27072010> TODO: nog bekijken voor T7
+                if (m_currentfile != string.Empty)
+                {
+                    // transaction log <GS-15032010>
+                    m_ProjectTransactionLog = new TrionicTransactionLog();
+                    if (m_ProjectTransactionLog.OpenTransActionLog(m_appSettings.ProjectFolder, projectname))
+                    {
+                        m_ProjectTransactionLog.ReadTransactionFile();
+                        //m_trionicFile.SetTransactionLog(m_ProjectTransactionLog);
+                        if (m_ProjectTransactionLog.TransCollection.Count > 2000)
+                        {
+                            frmProjectTransactionPurge frmPurge = new frmProjectTransactionPurge();
+                            frmPurge.SetNumberOfTransactions(m_ProjectTransactionLog.TransCollection.Count);
+                            if (frmPurge.ShowDialog() == DialogResult.OK)
+                            {
+                                m_ProjectTransactionLog.Purge();
+                            }
+                        }
+                    }
+                    // transaction log <GS-15032010>
+                    btnCloseProject.Enabled = true;
+                    btnAddNoteToProject.Enabled = true;
+                    btnEditProject.Enabled = true;
+                    btnShowProjectLogbook.Enabled = true;
+                    btnProduceLatestBinary.Enabled = true;
+                    //btncreateb                    
+                    btnRebuildFile.Enabled = true;
+                    CreateProjectBackupFile();
+                    UpdateRollbackForwardControls();
+                    m_appSettings.Lastprojectname = m_CurrentWorkingProject;
+                    this.Text = "T7SuitePro [Project: " + projectname + "]";
+                }
+            }
+        }
+
+        private void UpdateRollbackForwardControls()
+        {
+            btnRollback.Enabled = false;
+            btnRollforward.Enabled = false;
+            btnShowTransactionLog.Enabled = false;
+
+            for (int t = m_ProjectTransactionLog.TransCollection.Count - 1; t >= 0; t--)
+            {
+                if (!btnShowTransactionLog.Enabled) btnShowTransactionLog.Enabled = true;
+                if (m_ProjectTransactionLog.TransCollection[t].IsRolledBack)
+                {
+                    btnRollforward.Enabled = true;
+                }
+                else
+                {
+                    btnRollback.Enabled = true;
+                }
+            }
+        }
+
+        private void CreateProjectBackupFile()
+        {
+            // create a backup file automatically! <GS-16032010>
+            if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups");
+            string filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups\\" + Path.GetFileNameWithoutExtension(GetBinaryForProject(m_CurrentWorkingProject)) + "-backup-" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".BIN";
+            File.Copy(GetBinaryForProject(m_CurrentWorkingProject), filename);
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.BackupfileCreated, filename);
+            }
+
+
+        }
+
+
+        private void LoadBinaryForProject(string projectname)
+        {
+            if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
+            {
+                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
+                projectprops.Columns.Add("CARMAKE");
+                projectprops.Columns.Add("CARMODEL");
+                projectprops.Columns.Add("CARMY");
+                projectprops.Columns.Add("CARVIN");
+                projectprops.Columns.Add("NAME");
+                projectprops.Columns.Add("BINFILE");
+                projectprops.Columns.Add("VERSION");
+                projectprops.ReadXml(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml");
+                // valid project, add it to the list
+                if (projectprops.Rows.Count > 0)
+                {
+                    OpenFile(projectprops.Rows[0]["BINFILE"].ToString(), false);
+                    //OpenWorkingFile(projectprops.Rows[0]["BINFILE"].ToString());
+                }
+            }
+        }
+
+        private string GetBinaryForProject(string projectname)
+        {
+            string retval = m_currentfile;
+            if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
+            {
+                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
+                projectprops.Columns.Add("CARMAKE");
+                projectprops.Columns.Add("CARMODEL");
+                projectprops.Columns.Add("CARMY");
+                projectprops.Columns.Add("CARVIN");
+                projectprops.Columns.Add("NAME");
+                projectprops.Columns.Add("BINFILE");
+                projectprops.Columns.Add("VERSION");
+                projectprops.ReadXml(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml");
+                // valid project, add it to the list
+                if (projectprops.Rows.Count > 0)
+                {
+                    retval = projectprops.Rows[0]["BINFILE"].ToString();
+                }
+            }
+            return retval;
+        }
+
+        private string GetBackupOlderThanDateTime(string project, DateTime mileDT)
+        {
+            string retval = m_currentfile; // default = current file
+            string BackupPath = m_appSettings.ProjectFolder + "\\" + project + "\\Backups";
+            DateTime MaxDateTime = DateTime.MinValue;
+            string foundBackupfile = string.Empty;
+            if (Directory.Exists(BackupPath))
+            {
+                string[] backupfiles = Directory.GetFiles(BackupPath, "*.bin");
+                foreach (string backupfile in backupfiles)
+                {
+                    FileInfo fi = new FileInfo(backupfile);
+                    if (fi.LastAccessTime > MaxDateTime && fi.LastAccessTime <= mileDT)
+                    {
+                        MaxDateTime = fi.LastAccessTime;
+                        foundBackupfile = backupfile;
+                    }
+                }
+            }
+            if (foundBackupfile != string.Empty)
+            {
+                retval = foundBackupfile;
+            }
+            return retval;
+        }
+
+        private void Projects_btnRebuildFile_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // show the transactionlog again and ask the user upto what datetime he wants to rebuild the file
+            // first ask a datetime
+            frmRebuildFileParameters filepar = new frmRebuildFileParameters();
+            if (filepar.ShowDialog() == DialogResult.OK)
+            {
+
+                // get the last backup that is older than the selected datetime
+                string file2Process = GetBackupOlderThanDateTime(m_CurrentWorkingProject, filepar.SelectedDateTime);
+                // now rebuild the file
+                // first create a copy of this file
+                string tempRebuildFile = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "rebuild.bin";
+                if (File.Exists(tempRebuildFile))
+                {
+                    File.Delete(tempRebuildFile);
+                }
+                // CREATE A BACKUP FILE HERE
+                CreateProjectBackupFile();
+                File.Copy(file2Process, tempRebuildFile);
+                // now do all the transactions newer than this file and older than the selected date time
+                //IECUFile m_RebuildFile = new Trionic5File();
+                //m_RebuildFile.LibraryPath = Application.StartupPath + "\\Binaries";
+
+                //IECUFileInformation m_RebuildFileInformation = new Trionic5FileInformation();
+
+                //m_RebuildFile.SelectFile(tempRebuildFile);
+                //m_RebuildFileInformation = m_RebuildFile.ParseFile();
+                FileInfo fi = new FileInfo(file2Process);
+                foreach (TransactionEntry te in m_ProjectTransactionLog.TransCollection)
+                {
+                    if (te.EntryDateTime >= fi.LastAccessTime && te.EntryDateTime <= filepar.SelectedDateTime)
+                    {
+                        // apply this change
+                        RollForwardOnFile(tempRebuildFile, te);
+                    }
+                }
+                // rename/copy file
+                if (filepar.UseAsNewProjectFile)
+                {
+                    // just delete the current file
+                    File.Delete(m_currentfile);
+                    File.Copy(tempRebuildFile, m_currentfile);
+                    File.Delete(tempRebuildFile);
+                    // done
+                }
+                else
+                {
+                    // ask for destination file
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Title = "Save rebuild file as...";
+                    sfd.Filter = "Binary files|*.bin";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        if (File.Exists(sfd.FileName)) File.Delete(sfd.FileName);
+                        File.Copy(tempRebuildFile, sfd.FileName);
+                        File.Delete(tempRebuildFile);
+                    }
+                }
+                if (m_CurrentWorkingProject != string.Empty)
+                {
+                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.ProjectFileRecreated, "Reconstruct upto " + filepar.SelectedDateTime.ToString("dd/MM/yyyy") + " selected file " + file2Process);
+                }
+                UpdateRollbackForwardControls();
+            }
+        }
+
+        private void RollForwardOnFile(string file2Rollback, TransactionEntry entry)
+        {
+            FileInfo fi = new FileInfo(file2Rollback);
+            int addressToWrite = entry.SymbolAddress;
+            while (addressToWrite > fi.Length) addressToWrite -= (int)fi.Length;
+            savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, file2Rollback, false);
+            verifychecksum(false);
+        }
+
+        private void Projects_btnOpenProject_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //TODO let the user select a project from the Project folder. If none are present, let the user know
+            if (!Directory.Exists(m_appSettings.ProjectFolder)) Directory.CreateDirectory(m_appSettings.ProjectFolder);
+            System.Data.DataTable ValidProjects = new System.Data.DataTable();
+            ValidProjects.Columns.Add("Projectname");
+            ValidProjects.Columns.Add("NumberBackups");
+            ValidProjects.Columns.Add("NumberTransactions");
+            ValidProjects.Columns.Add("DateTimeModified");
+            ValidProjects.Columns.Add("Version");
+            string[] projects = Directory.GetDirectories(m_appSettings.ProjectFolder);
+            // filter for folders with a projectproperties.xml file
+            foreach (string project in projects)
+            {
+                string[] projectfiles = Directory.GetFiles(project, "projectproperties.xml");
+
+                if (projectfiles.Length > 0)
+                {
+                    System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
+                    projectprops.Columns.Add("CARMAKE");
+                    projectprops.Columns.Add("CARMODEL");
+                    projectprops.Columns.Add("CARMY");
+                    projectprops.Columns.Add("CARVIN");
+                    projectprops.Columns.Add("NAME");
+                    projectprops.Columns.Add("BINFILE");
+                    projectprops.Columns.Add("VERSION");
+                    projectprops.ReadXml((string)projectfiles.GetValue(0));
+                    // valid project, add it to the list
+                    if (projectprops.Rows.Count > 0)
+                    {
+                        string projectName = projectprops.Rows[0]["NAME"].ToString();
+                        ValidProjects.Rows.Add(projectName, GetNumberOfBackups(projectName), GetNumberOfTransactions(projectName), GetLastAccessTime(projectprops.Rows[0]["BINFILE"].ToString()), projectprops.Rows[0]["VERSION"].ToString());
+                    }
+                }
+            }
+            if (ValidProjects.Rows.Count > 0)
+            {
+                frmProjectSelection projselection = new frmProjectSelection();
+                projselection.SetDataSource(ValidProjects);
+                if (projselection.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedproject = projselection.GetProjectName();
+                    if (selectedproject != "")
+                    {
+                        OpenProject(selectedproject);
+                    }
+
+                }
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("No projects were found, please create one first!");
+            }
+
+        }
+        private int GetNumberOfBackups(string project)
+        {
+            int retval = 0;
+            string dirname = m_appSettings.ProjectFolder + "\\" + project + "\\Backups";
+            if (!Directory.Exists(dirname)) Directory.CreateDirectory(dirname);
+            string[] backupfiles = Directory.GetFiles(dirname, "*.bin");
+            retval = backupfiles.Length;
+            return retval;
+        }
+
+        private int GetNumberOfTransactions(string project)
+        {
+            int retval = 0;
+            string filename = m_appSettings.ProjectFolder + "\\" + project + "\\TransActionLogV2.ttl";
+            if (File.Exists(filename))
+            {
+                TrionicTransactionLog translog = new TrionicTransactionLog();
+                translog.OpenTransActionLog(m_appSettings.ProjectFolder, project);
+                translog.ReadTransactionFile();
+                retval = translog.TransCollection.Count;
+            }
+            return retval;
+        }
+
+        private DateTime GetLastAccessTime(string filename)
+        {
+            DateTime retval = DateTime.MinValue;
+            if (File.Exists(filename))
+            {
+                FileInfo fi = new FileInfo(filename);
+                retval = fi.LastAccessTime;
+            }
+            return retval;
+        }
+
+        private void Projects_btnCloseProject_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            CloseProject();
+            m_appSettings.Lastprojectname = "";
+        }
+
+        private void CloseProject()
+        {
+            /*if (_ecuConnection.Opened) StopOnlineMode();// StopECUConnection();
+            if (m_CurrentWorkingProject != "")
+            {
+                if (m_AFRMaps != null)
+                {
+                    m_AFRMaps.SaveMaps();
+                }
+            }*/
+
+            m_CurrentWorkingProject = string.Empty;
+            // unload the current file
+            m_currentfile = string.Empty;
+            gridControlSymbols.DataSource = null;
+            barFilenameText.Caption = "No file";
+            //barButtonItem4.Enabled = false;
+            m_appSettings.Lastfilename = string.Empty;
+            btnCloseProject.Enabled = false;
+            btnShowProjectLogbook.Enabled = false;
+            btnProduceLatestBinary.Enabled = false;
+            btnAddNoteToProject.Enabled = false;
+            btnEditProject.Enabled = false;
+
+            btnRebuildFile.Enabled = false;
+            btnRollback.Enabled = false;
+            btnRollforward.Enabled = false;
+            btnShowTransactionLog.Enabled = false;
+            this.Text = "T7SuitePro";
+        }
+
+        private void Projects_btnShowTransactionLog_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // show new form
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+                frmTransactionLog translog = new frmTransactionLog();
+                translog.onRollBack += new frmTransactionLog.RollBack(translog_onRollBack);
+                translog.onRollForward += new frmTransactionLog.RollForward(translog_onRollForward);
+                translog.onNoteChanged += new frmTransactionLog.NoteChanged(translog_onNoteChanged);
+                foreach (TransactionEntry entry in m_ProjectTransactionLog.TransCollection)
+                {
+                    entry.SymbolName = GetSymbolNameByAddress(entry.SymbolAddress);
+
+                }
+                translog.SetTransactionLog(m_ProjectTransactionLog);
+                translog.Show();
+            }
+        }
+
+        private string GetSymbolNameByAddress(Int32 address)
+        {
+            foreach (SymbolHelper sh in m_symbols)
+            {
+                if (sh.Flash_start_address == address) return sh.Varname;
+            }
+            return address.ToString();
+        }
+
+        void translog_onNoteChanged(object sender, frmTransactionLog.RollInformationEventArgs e)
+        {
+            m_ProjectTransactionLog.SetEntryNote(e.Entry);
+        }
+
+        void translog_onRollForward(object sender, frmTransactionLog.RollInformationEventArgs e)
+        {
+            // alter the log!
+            // rollback the transaction
+            // now reload the list
+            RollForward(e.Entry);
+            if (sender is frmTransactionLog)
+            {
+                frmTransactionLog logfrm = (frmTransactionLog)sender;
+                logfrm.SetTransactionLog(m_ProjectTransactionLog);
+            }
+        }
+
+        private void RollForward(TransactionEntry entry)
+        {
+            int addressToWrite = entry.SymbolAddress;
+            while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
+            savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, m_currentfile, false);
+            verifychecksum(false);
+            //m_trionicFile.WriteDataNoLog(entry.DataAfter, (uint)addressToWrite);
+            m_ProjectTransactionLog.SetEntryRolledForward(entry.TransactionNumber);
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+
+                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionRolledforward, GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
+            }
+
+            UpdateRollbackForwardControls();
+        }
+
+        void translog_onRollBack(object sender, frmTransactionLog.RollInformationEventArgs e)
+        {
+            // alter the log!
+            // rollback the transaction
+            RollBack(e.Entry);
+            // now reload the list
+            if (sender is frmTransactionLog)
+            {
+                frmTransactionLog logfrm = (frmTransactionLog)sender;
+                logfrm.SetTransactionLog(m_ProjectTransactionLog);
+            }
+        }
+
+        private void SignalTransactionLogChanged(int SymbolAddress, string Note)
+        {
+            UpdateRollbackForwardControls();
+            // should contain the new info as well
+            // <GS-18032010> insert logbook entry here if project is opened
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionExecuted, GetSymbolNameByAddress(SymbolAddress) + " " + Note);
+            }
+        }
+
+        private void RollBack(TransactionEntry entry)
+        {
+            int addressToWrite = entry.SymbolAddress;
+            while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
+            //m_trionicFile.WriteDataNoLog(entry.DataBefore, (uint)addressToWrite);
+            savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataBefore, m_currentfile, false);
+            verifychecksum(false);
+            m_ProjectTransactionLog.SetEntryRolledBack(entry.TransactionNumber);
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionRolledback, GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
+            }
+
+            UpdateRollbackForwardControls();
+        }
+
+        private void Projects_btnRollback_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //roll back last entry in the log that has not been rolled back
+            for (int t = m_ProjectTransactionLog.TransCollection.Count - 1; t >= 0; t--)
+            {
+                if (!m_ProjectTransactionLog.TransCollection[t].IsRolledBack)
+                {
+                    RollBack(m_ProjectTransactionLog.TransCollection[t]);
+
+                    break;
+                }
+            }
+        }
+
+        private void Projects_btnRollforward_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //roll back last entry in the log that has not been rolled back
+            for (int t = 0; t < m_ProjectTransactionLog.TransCollection.Count; t++)
+            {
+                if (m_ProjectTransactionLog.TransCollection[t].IsRolledBack)
+                {
+                    RollForward(m_ProjectTransactionLog.TransCollection[t]);
+
+                    break;
+                }
+            }
+        }
+
+        private void Projects_btnEditProject_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+                EditProjectProperties(m_CurrentWorkingProject);
+            }
+        }
+
+        private void EditProjectProperties(string project)
+        {
+            // edit current project properties
+            System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
+            projectprops.Columns.Add("CARMAKE");
+            projectprops.Columns.Add("CARMODEL");
+            projectprops.Columns.Add("CARMY");
+            projectprops.Columns.Add("CARVIN");
+            projectprops.Columns.Add("NAME");
+            projectprops.Columns.Add("BINFILE");
+            projectprops.Columns.Add("VERSION");
+            projectprops.ReadXml(m_appSettings.ProjectFolder + "\\" + project + "\\projectproperties.xml");
+
+            frmProjectProperties projectproperties = new frmProjectProperties();
+            projectproperties.Version = projectprops.Rows[0]["VERSION"].ToString();
+            projectproperties.ProjectName = projectprops.Rows[0]["NAME"].ToString();
+            projectproperties.CarMake = projectprops.Rows[0]["CARMAKE"].ToString();
+            projectproperties.CarModel = projectprops.Rows[0]["CARMODEL"].ToString();
+            projectproperties.CarVIN = projectprops.Rows[0]["CARVIN"].ToString();
+            projectproperties.CarMY = projectprops.Rows[0]["CARMY"].ToString();
+            projectproperties.BinaryFile = projectprops.Rows[0]["BINFILE"].ToString();
+            bool _reopenProject = false;
+            if (projectproperties.ShowDialog() == DialogResult.OK)
+            {
+                // delete the original XML file
+                if (project != projectproperties.ProjectName)
+                {
+                    Directory.Move(m_appSettings.ProjectFolder + "\\" + project, m_appSettings.ProjectFolder + "\\" + projectproperties.ProjectName);
+                    project = projectproperties.ProjectName;
+                    m_CurrentWorkingProject = project;
+                    // set the working file to the correct folder
+                    projectproperties.BinaryFile = Path.Combine(m_appSettings.ProjectFolder + "\\" + project, Path.GetFileName(projectprops.Rows[0]["BINFILE"].ToString()));
+                    _reopenProject = true;
+                    // open this project
+
+                }
+
+                File.Delete(m_appSettings.ProjectFolder + "\\" + project + "\\projectproperties.xml");
+                System.Data.DataTable dtProps = new System.Data.DataTable("T5PROJECT");
+                dtProps.Columns.Add("CARMAKE");
+                dtProps.Columns.Add("CARMODEL");
+                dtProps.Columns.Add("CARMY");
+                dtProps.Columns.Add("CARVIN");
+                dtProps.Columns.Add("NAME");
+                dtProps.Columns.Add("BINFILE");
+                dtProps.Columns.Add("VERSION");
+                dtProps.Rows.Add(projectproperties.CarMake, projectproperties.CarModel, projectproperties.CarMY, projectproperties.CarVIN, MakeDirName(projectproperties.ProjectName), projectproperties.BinaryFile, projectproperties.Version);
+                dtProps.WriteXml(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectproperties.ProjectName) + "\\projectproperties.xml");
+                if (_reopenProject)
+                {
+                    OpenProject(m_CurrentWorkingProject);
+                }
+                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.PropertiesEdited, projectproperties.Version);
+
+            }
+
+        }
+
+        private void Projects_btnAddNoteToProject_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            frmChangeNote newNote = new frmChangeNote();
+            newNote.ShowDialog();
+            if (newNote.Note != string.Empty)
+            {
+                if (m_CurrentWorkingProject != string.Empty)
+                {
+                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.Note, newNote.Note);
+                }
+            }
+        }
+
+        private void Projects_btnShowProjectLogbook_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_CurrentWorkingProject != string.Empty)
+            {
+                frmProjectLogbook logb = new frmProjectLogbook();
+
+                logb.LoadLogbookForProject(m_appSettings.ProjectFolder, m_CurrentWorkingProject);
+                logb.Show();
+            }
+        }
+
+        private void Projects_btnProduceLatestBinary_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // save binary as
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Binary files|*.bin";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                // copy the current project file to the selected destination
+                File.Copy(m_currentfile, sfd.FileName, true);
+            }
+        }
+        #endregion
+
+        #region Actions
+        private bool CompareSymbolToCurrentFile(string symbolname, int address, int length, string filename, out double diffperc, out int diffabs, out double diffavg)
+        {
+            diffperc = 0;
+            diffabs = 0;
+            diffavg = 0;
+
+            double totalvalue1 = 0;
+            double totalvalue2 = 0;
+            bool retval = true;
+
+            if (symbolname == "CatOx2Dev")
+            {
+                LogHelper.Log("break");
+            }
+
+            if (address > 0)
+            {
+                while (address > m_currentfile_size) address -= m_currentfile_size;
+                int curaddress = (int)GetSymbolAddress(m_symbols, symbolname);
+                while (curaddress > m_currentfile_size) curaddress -= m_currentfile_size;
+                int curlength = GetSymbolLength(m_symbols, symbolname);
+                byte[] curdata = readdatafromfile(m_currentfile, curaddress, curlength);
+                byte[] compdata = readdatafromfile(filename, address, length);
+                if (curdata.Length != compdata.Length)
+                {
+                    LogHelper.Log("Lengths didn't match: " + symbolname);
+                    return false;
+                }
+                for (int offset = 0; offset < curdata.Length; offset++)
+                {
+                    if ((byte)curdata.GetValue(offset) != (byte)compdata.GetValue(offset))
+                    {
+                        retval = false;
+                        //LogHelper.Log("Difference detected in: " + symbolname + " offset=" + offset.ToString() + " value1: " + curdata[offset].ToString("X2") + " value2: " + compdata[offset].ToString("X2"));
+                        diffabs++;
+                    }
+                    totalvalue1 += (byte)curdata.GetValue(offset);
+                    totalvalue2 += (byte)compdata.GetValue(offset);
+                }
+                if (curdata.Length > 0)
+                {
+                    totalvalue1 /= curdata.Length;
+                    totalvalue2 /= compdata.Length;
+                }
+            }
+
+            diffavg = totalvalue1 - totalvalue2;
+            if (isSixteenBitTable(symbolname))
+            {
+                diffabs /= 2;
+            }
+
+            diffperc = (diffabs * 100) / length;
+
+            return retval;
+        }
+
+
+        private void Actions_CompareWithOtherBinary_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (m_currentfile != "")
+                {
+                    CompareToFile(openFileDialog1.FileName);
+
+                }
+            }
+        }
+
+        private void CompareToFile(string filename)
+        {
+            if (m_symbols.Count > 0)
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                    CompareResults tabdet = new CompareResults();
+                    tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+                    tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
+                    tabdet.Dock = DockStyle.Fill;
+                    tabdet.Filename = filename;
+                    tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
+                    dockPanel.Controls.Add(tabdet);
+                    dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
+                    dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+
+                    dockPanel.Width = 700;
+
+
+                    SymbolCollection compare_symbols = new SymbolCollection();
+                    FileInfo fi = new FileInfo(filename);
+                    Trionic7File compareFile = TryToOpenFileUsingClass(filename, out compare_symbols, (int)fi.Length, false);
+                    barProgress.EditValue = 60;
+                    barProgress.Caption = "Loading header";
+                    System.Windows.Forms.Application.DoEvents();
+
+                    T7FileHeader t7fh = new T7FileHeader();
+                    t7fh.init(filename, false);
+                    int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
+                    if (m_sramOffset == 0) m_sramOffset = compareFile.SramOffsetForOpenFile;
+                    if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
+                    barProgress.EditValue = 90;
+                    barProgress.Caption = "Starting compare";
+                    System.Windows.Forms.Application.DoEvents();
+
+                    System.Windows.Forms.Application.DoEvents();
+                    barProgress.Visibility = BarItemVisibility.Always;
+                    barProgress.Caption = "Comparing symbols in files...";
+                    barProgress.EditValue = 0;
+                    System.Windows.Forms.Application.DoEvents();
+                    System.Data.DataTable dt = new System.Data.DataTable();
+                    dt.Columns.Add("SYMBOLNAME");
+                    dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
+                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                    dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
+                    dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
+                    dt.Columns.Add("DESCRIPTION");
+                    dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
+                    dt.Columns.Add("CATEGORY", Type.GetType("System.Int32")); //0
+                    dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
+                    dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
+                    dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
+                    dt.Columns.Add("CATEGORYNAME");
+                    dt.Columns.Add("SUBCATEGORYNAME");
+                    dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
+                    dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
+                    dt.Columns.Add("Userdescription");
+                    dt.Columns.Add("MissingInOriFile", Type.GetType("System.Boolean"));
+                    dt.Columns.Add("MissingInCompareFile", Type.GetType("System.Boolean"));
+                    string category = "";
+                    string ht = string.Empty;
+                    double diffperc = 0;
+                    int diffabs = 0;
+                    double diffavg = 0;
+                    int percentageDone = 0;
+                    int symNumber = 0;
+                    XDFCategories cat = XDFCategories.Undocumented;
+                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
+                    if (compare_symbols.Count > 0)
+                    {
+                        CompareResults cr = new CompareResults();
+                        cr.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+                        cr.SetFilterMode(m_appSettings.ShowAddressesInHex);
+                        SymbolTranslator st = new SymbolTranslator();
+                        Int64 compareStartAddress = 0;
+                        Int64 orgStartAddress = 0;
+                        foreach (SymbolHelper sh_compare in compare_symbols)
+                        {
+                            try
+                            {
+                                symNumber++;
+                                percentageDone = (symNumber * 50) / compare_symbols.Count;
+                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
+                                {
+                                    barProgress.EditValue = percentageDone;
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                LogHelper.Log(E.Message);
+                            }
+
+                            string compareName = sh_compare.Varname;
+                            if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
+
+                            compareStartAddress = sh_compare.Flash_start_address;
+                            if (IsSoftwareOpen(compare_symbols))
+                            {
+                                // get address
+                                if (IsSymbolCalibration(compareName) && sh_compare.Length < 0x400 && sh_compare.Flash_start_address > m_currentfile_size)
+                                {
+                                    compareStartAddress = sh_compare.Flash_start_address - m_sramOffset;
+                                }
+                            }
+
+                            foreach (SymbolHelper sh_org in m_symbols)
+                            {
+                                string originalName = sh_org.Varname;
+                                if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
+
+                                if (compareName.Equals(originalName) && compareName != String.Empty)
+                                {
+                                    if (compareStartAddress > 0 && compareStartAddress < 0x80000)
+                                    {
+                                        orgStartAddress = (int)GetSymbolAddress(m_symbols, sh_org.Varname);
+                                        if (orgStartAddress > 0 && orgStartAddress < 0x80000)
+                                        {
+                                            if (!CompareSymbolToCurrentFile(compareName, (int)compareStartAddress, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
+                                            {
+                                                category = "";
+                                                if (sh_org.Varname.Contains("."))
+                                                {
+                                                    try
+                                                    {
+                                                        category = sh_org.Varname.Substring(0, sh_org.Varname.IndexOf("."));
+                                                    }
+                                                    catch (Exception cE)
+                                                    {
+                                                        LogHelper.Log("Failed to assign category to symbol: " + sh_org.Varname + " err: " + cE.Message);
+                                                    }
+                                                }
+                                                else if (sh_org.Userdescription.Contains("."))
+                                                {
+                                                    try
+                                                    {
+                                                        category = sh_org.Userdescription.Substring(0, sh_org.Userdescription.IndexOf("."));
+                                                    }
+                                                    catch (Exception cE)
+                                                    {
+                                                        LogHelper.Log("Failed to assign category to symbol: " + sh_org.Userdescription + " err: " + cE.Message);
+                                                    }
+                                                }
+
+                                                dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, compareStartAddress, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(sh_compare.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription, false, false);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
+                        symNumber = 0;
+                        string varnameori = string.Empty;
+                        string varnamecomp = string.Empty;
+                        foreach (SymbolHelper shtest in compare_symbols)
+                        {
+                            try
+                            {
+                                symNumber++;
+                                percentageDone = 50 + (symNumber * 25) / compare_symbols.Count;
+                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
+                                {
+                                    barProgress.EditValue = percentageDone;
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                LogHelper.Log(E.Message);
+                            }
+                            bool _foundSymbol = false;
+                            varnamecomp = shtest.Varname;
+                            if (varnamecomp.StartsWith("Symbolnumber")) varnamecomp = shtest.Userdescription;
+                            if (IsSymbolCalibration(varnamecomp))
+                            {
+                                foreach (SymbolHelper shoritest in m_symbols)
+                                {
+                                    varnameori = shoritest.Varname;
+                                    if (varnameori.StartsWith("Symbolnumber")) varnameori = shoritest.Userdescription;
+
+                                    if (varnamecomp == varnameori)
+                                    {
+                                        _foundSymbol = true;
+                                        break;
+                                    }
+                                }
+                                if (!_foundSymbol)
+                                {
+                                    // add this symbol to the MissingInOriCollection
+                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in original", "", 0, shtest.Symbol_number, shtest.Userdescription, true, false);
+                                }
+                            }
+                        }
+                        symNumber = 0;
+                        foreach (SymbolHelper shtest in m_symbols)
+                        {
+                            try
+                            {
+                                symNumber++;
+                                percentageDone = 75 + (symNumber * 25) / compare_symbols.Count;
+                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
+                                {
+                                    barProgress.EditValue = percentageDone;
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                LogHelper.Log(E.Message);
+                            }
+                            bool _foundSymbol = false;
+                            varnamecomp = shtest.Varname;
+                            if (varnamecomp.StartsWith("Symbolnumber")) varnamecomp = shtest.Userdescription;
+                            if (IsSymbolCalibration(varnamecomp))
+                            {
+                                foreach (SymbolHelper shoritest in compare_symbols)
+                                {
+                                    varnameori = shoritest.Varname;
+                                    if (varnameori.StartsWith("Symbolnumber")) varnameori = shoritest.Userdescription;
+
+                                    if (varnamecomp == varnameori)
+                                    {
+                                        _foundSymbol = true;
+                                        break;
+                                    }
+                                }
+                                if (!_foundSymbol)
+                                {
+                                    // add this symbol to the MissingInCompCollection
+                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in compare", "", 0, shtest.Symbol_number, shtest.Userdescription, false, true);
+                                }
+                            }
+                        }
+                        tabdet.CompareSymbolCollection = compare_symbols;
+                        tabdet.OriginalSymbolCollection = m_symbols;
+                        tabdet.OriginalFilename = m_currentfile;
+                        tabdet.CompareFilename = filename;
+                        tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
+                        tabdet.gridControl1.DataSource = dt.Copy();
+                        barProgress.Visibility = BarItemVisibility.Never;
+                        barProgress.Caption = "Done";
+
+                    }
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        private void StartCompareMapViewer(string SymbolName, string Filename, int SymbolAddress, int SymbolLength, SymbolCollection curSymbols, int symbolnumber)
+        {
+            try
+            {
+                // TEST SYMBOLNUMBERS
+                if (symbolnumber > 0 && SymbolName.StartsWith("Symbol"))
+                {
+                    foreach (SymbolHelper h in curSymbols)
+                    {
+                        if (h.Symbol_number == symbolnumber)
+                        {
+                            SymbolName = h.Varname;
+                        }
+                    }
+                }
+                DockPanel dockPanel;
+                bool pnlfound = false;
+                foreach (DockPanel pnl in dockManager1.Panels)
+                {
+
+                    if (pnl.Text == "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]")
+                    {
+                        if (pnl.Tag.ToString() == Filename) // <GS-10052011>
+                        {
+                            dockPanel = pnl;
+                            pnlfound = true;
+                            dockPanel.Show();
+                        }
+                    }
+                }
+                if (!pnlfound)
+                {
+                    dockManager1.BeginUpdate();
+                    try
+                    {
+                        dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                        dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
+                        IMapViewer tabdet;//= new MapViewer();
+                        if (m_appSettings.UseNewMapViewer)
+                        {
+                            tabdet = new MapViewerEx();
+                        }
+                        else
+                        {
+                            tabdet = new MapViewer();
+                        }
+
+                        tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
+                        tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
+                        tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+
+                        //tabdet.IsHexMode = barViewInHex.Checked;
+                        tabdet.Viewtype = m_appSettings.DefaultViewType;
+                        tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
+                        tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
+                        tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                        tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                        tabdet.Filename = Filename;
+                        tabdet.Map_name = SymbolName;
+                        tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
+                        tabdet.Map_cat = XDFCategories.Undocumented;
+                        tabdet.X_axisvalues = GetXaxisValues(Filename, curSymbols, tabdet.Map_name);
+                        tabdet.Y_axisvalues = GetYaxisValues(Filename, curSymbols, tabdet.Map_name);
+
+                        SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
+                        string x_axis = string.Empty;
+                        string y_axis = string.Empty;
+                        string x_axis_descr = string.Empty;
+                        string y_axis_descr = string.Empty;
+                        string z_axis_descr = string.Empty;
+                        axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
+                        tabdet.X_axis_name = x_axis_descr;
+                        tabdet.Y_axis_name = y_axis_descr;
+                        tabdet.Z_axis_name = z_axis_descr;
+
+                        /*string xdescr = string.Empty;
+                        string ydescr = string.Empty;
+                        string zdescr = string.Empty;
+                        GetAxisDescriptions(Filename, curSymbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                        tabdet.X_axis_name = xdescr;
+                        tabdet.Y_axis_name = ydescr;
+                        tabdet.Z_axis_name = zdescr;*/
+
+                        //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
+                        int columns = 8;
+                        int rows = 8;
+                        int tablewidth = GetTableMatrixWitdhByName(Filename, curSymbols, tabdet.Map_name, out columns, out rows);
+                        int address = Convert.ToInt32(SymbolAddress);
+                        if (address != 0)
+                        {
+                            while (address > m_currentfile_size) address -= m_currentfile_size;
+                            tabdet.Map_address = address;
+                            int length = SymbolLength;
+                            tabdet.Map_length = length;
+                            byte[] mapdata = readdatafromfile(Filename, address, length);
+                            tabdet.Map_content = mapdata;
+                            tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
+                            tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
+                            tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
+                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
+                            TryToAddOpenLoopTables(tabdet);
+                            tabdet.Dock = DockStyle.Fill;
+                            tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+                            tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
+                            tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
+                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
+                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
+                            tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
+
+
+                            //dockPanel.DockAsTab(dockPanel1);
+                            dockPanel.Text = "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]";
+
+                            bool isDocked = false;
+                            if (m_appSettings.AutoDockSameSymbol)
+                            {
+                                foreach (DockPanel pnl in dockManager1.Panels)
+                                {
+                                    if (pnl.Text.StartsWith("Symbol: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                                    {
+                                        dockPanel.DockAsTab(pnl, 0);
+                                        isDocked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isDocked)
+                            {
+                                if (m_appSettings.AutoDockSameFile)
+                                {
+                                    foreach (DockPanel pnl in dockManager1.Panels)
+                                    {
+                                        if ((string)pnl.Tag == Filename && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                                        {
+                                            dockPanel.DockAsTab(pnl, 0);
+                                            isDocked = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!isDocked)
+                            {
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                if (m_appSettings.AutoSizeNewWindows)
+                                {
+                                    if (tabdet.X_axisvalues.Length > 0)
+                                    {
+                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                                    }
+                                    else
+                                    {
+                                        //dockPanel.Width = this.Width - dockSymbols.Width - 10;
+
+                                    }
+                                }
+                                if (dockPanel.Width < 400) dockPanel.Width = 400;
+                                //                    dockPanel.Width = 400;
+                            }
+                            dockPanel.Controls.Add(tabdet);
+
+
+                            /*dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                            if (tabdet.X_axisvalues.Length > 0)
+                            {
+                                dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                            }
+                            else
+                            {
+                                //dockPanel.Width = this.Width - dockSymbols.Width - 10;
+
+                            }
+                            if (dockPanel.Width < 400) dockPanel.Width = 400;
+                            //                    dockPanel.Width = 400;
+                            dockPanel.Controls.Add(tabdet);*/
+                        }
+                    }
+                    catch (Exception E)
+                    {
+                        LogHelper.Log(E.Message);
+                    }
+                    dockManager1.EndUpdate();
+                }
+            }
+            catch (Exception startnewcompareE)
+            {
+                LogHelper.Log(startnewcompareE.Message);
+            }
+
+        }
+
+        private void Actions_btnCompareToSRAMSnapshot_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //Compare the data from an sram snapshot to the binary file
+            // read all symbols from list and compare to sram equivalent!
+            OpenFileDialog ofd1 = new OpenFileDialog();
+            ofd1.Title = "Select SRAM file to compare...";
+            ofd1.Filter = "SRAM dumps|*.ram";
+            ofd1.Multiselect = false;
+            if (ofd1.ShowDialog() == DialogResult.OK)
+            {
+                StartCompareToSRAMFile(ofd1.FileName);
+
+            }
+        }
+
+        private void StartCompareToSRAMFile(string sramfilename)
+        {
+            SymbolCollection scdiff = new SymbolCollection();
+            frmProgress progress = new frmProgress();
+            progress.SetProgress("Comparing to SRAM snapshot");
+            progress.Show();
+            int cnt = 0;
+            foreach (SymbolHelper sh in m_symbols)
+            {
+                int percentage = cnt * 100 / m_symbols.Count;
+                cnt++;
+                progress.SetProgressPercentage(percentage);
+
+                if (sh.Flash_start_address > 0 && sh.Start_address > 0)
+                {
+                    // get sram content and binfile content for this symbol
+                    string symbolname = sh.Varname;
+                    if (symbolname.StartsWith("Symbol:")) symbolname = sh.Userdescription;
+
+                    if (IsSymbolCalibration(symbolname))
+                    {
+                        int address = (int)sh.Flash_start_address;
+                        if (IsSoftwareOpen()/*length > 0x10*/)
+                        {
+                            address = address - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
+                            //tabdet.Map_address = address;
+                            //tabdet.IsOpenSoftware = _softwareIsOpen;
+                            //mapdata = readdatafromfile(m_currentfile, address, length);
+                        }
+                        if (address < m_currentfile_size)
+                        {
+                            byte[] sramsymbol = readdatafromSRAMfile(sramfilename, (int)sh.Start_address, (int)sh.Length);
+                            byte[] flashsymbol = readdatafromfile(m_currentfile, address, (int)sh.Length);
+                            int bdifferent = 0;
+                            if (sh.Varname == "BFuelCal.Map")
+                            {
+                                LogHelper.Log("break!");
+                            }
+                            for (int btel = 0; btel < sh.Length; btel++)
+                            {
+                                if (sramsymbol[btel] != flashsymbol[btel])
+                                {
+                                    bdifferent++;
+                                }
+                            }
+                            if (bdifferent > 0)
+                            {
+                                // symbol is not equal!
+                                scdiff.Add(sh);
+                            }
+                        }
+                    }
+                }
+            }
+            progress.Close();
+            dockManager1.BeginUpdate();
+            try
+            {
+                DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                CompareResults tabdet = new CompareResults();
+                tabdet.HideMissingSymbolIndicators();
+                tabdet.Dock = DockStyle.Fill;
+                tabdet.Filename = sramfilename;
+
+                tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectRAM);
+                dockPanel.Controls.Add(tabdet);
+                //dockPanel.DockAsTab(dockPanel1);
+                dockPanel.Text = "SRAM <> BIN Compare results: " + Path.GetFileName(sramfilename);
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.Width = 700;
+                //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
+                tabdet.CompareSymbolCollection = scdiff;
+
+                System.Data.DataTable dt = new System.Data.DataTable();
+
+                // T7
+                dt.Columns.Add("SYMBOLNAME");
+                dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
+                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
+                dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
+                dt.Columns.Add("DESCRIPTION");
+                dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
+                dt.Columns.Add("CATEGORY", Type.GetType("System.Int32")); //0
+                dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
+                dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
+                dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
+                dt.Columns.Add("CATEGORYNAME");
+                dt.Columns.Add("SUBCATEGORYNAME");
+                dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
+                dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
+                dt.Columns.Add("Userdescription");
+
+
+                foreach (SymbolHelper sh in scdiff)
+                {
+                    float diffperc = 0;
+                    int diffabs = 0;
+                    float diffavg = 0;
+                    dt.Rows.Add(sh.Varname, sh.Start_address, sh.Flash_start_address, sh.Length, sh.Length, sh.Description, false, 0, diffperc, diffabs, diffavg, sh.Category.ToString().Replace("_", " "), sh.Subcategory.ToString().Replace("_", " "), sh.Symbol_number, sh.Symbol_number, sh.Userdescription);
+                }
+                tabdet.gridControl1.DataSource = dt;
+
+                //tabdet.CompareAddressLookupCollection = compAddressLookup;
+                tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log(E.Message);
+            }
+            dockManager1.EndUpdate();
+        }
+
+        void tabdet_onSymbolSelectRAM(object sender, CompareResults.SelectSymbolEventArgs e)
+        {
+            //<GS-22042010> should be compare viewer for Pgm_mod / Pgm_status as well
+            if (!e.ShowDiffMap)
+            {
+                StartTableViewer(e.SymbolName); // normal viewer
+                StartSRAMTableViewer(e.Filename, e.SymbolName, e.SymbolLength, (int)GetSymbolAddress(m_symbols, e.SymbolName), (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName));
+            }
+            else
+            {
+                //show difference between SRAM and binary file
+                //StartCompareDifferenceViewer(e.SymbolName, e.Filename, e.SymbolAddress, e.SymbolLength);
+                StartSRAMToFlashCompareDifferenceViewer(e.SymbolName, e.Filename, m_currentfile, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), (int)GetSymbolAddress(m_symbols, e.SymbolName));
+            }
+        }
+        private void StartSRAMToFlashCompareDifferenceViewer(string SymbolName, string SRAMFilename, string FlashFilename, int SymbolLength, int SymbolAddressSRAM, int SymbolAddress)
+        {
+            DockPanel dockPanel;
+            bool pnlfound = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+
+                if (pnl.Text == "Symbol difference: " + SymbolName + " [" + Path.GetFileName(SRAMFilename) + "]")
+                {
+                    dockPanel = pnl;
+                    pnlfound = true;
+                    dockPanel.Show();
+                }
+            }
+            if (!pnlfound)
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                    dockPanel.Tag = SRAMFilename;
+                    IMapViewer tabdet;//= new MapViewer();
+                    if (m_appSettings.UseNewMapViewer)
+                    {
+                        tabdet = new MapViewerEx();
+                    }
+                    else
+                    {
+                        tabdet = new MapViewer();
+                    }
+
+                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
+                    tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
+                    //tabdet.IsHexMode = true; // always in hexmode!
+                    tabdet.Viewtype = m_appSettings.DefaultViewType;
+                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
+                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
+                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    tabdet.Filename = SRAMFilename;
+                    tabdet.Map_name = SymbolName;
+                    //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
+                    //tabdet.Map_cat = TranslateSymbolNameToCategory(tabdet.Map_name);
+                    tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
+                    tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
+                    /*string xdescr = string.Empty;
+                    string ydescr = string.Empty;
+                    string zdescr = string.Empty;
+                    GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                    tabdet.X_axis_name = xdescr;
+                    tabdet.Y_axis_name = ydescr;
+                    tabdet.Z_axis_name = zdescr;*/
+                    SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
+                    string x_axis = string.Empty;
+                    string y_axis = string.Empty;
+                    string x_axis_descr = string.Empty;
+                    string y_axis_descr = string.Empty;
+                    string z_axis_descr = string.Empty;
+                    axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
+                    tabdet.X_axis_name = x_axis_descr;
+                    tabdet.Y_axis_name = y_axis_descr;
+                    tabdet.Z_axis_name = z_axis_descr;
+
+
+                    //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
+                    int columns = 8;
+                    int rows = 8;
+                    int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
+                    int address = Convert.ToInt32(SymbolAddress);
+                    if (address != 0)
+                    {
+                        while (address > m_currentfile_size) address -= m_currentfile_size;
+                        tabdet.Map_address = address;
+                        int length = SymbolLength;
+                        tabdet.Map_length = length;
+                        byte[] mapdata = readdatafromSRAMfile(SRAMFilename, SymbolAddressSRAM, length);
+                        byte[] mapdataorig = readdatafromSRAMfile(SRAMFilename, SymbolAddressSRAM, length);
+                        byte[] mapdata2 = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, SymbolName), GetSymbolLength(m_symbols, SymbolName));
+
+                        tabdet.Map_original_content = mapdataorig;
+                        tabdet.Map_compare_content = mapdata2;
+
+                        if (mapdata.Length == mapdata2.Length)
+                        {
+                            if (isSixteenBitTable(SymbolName))
+                            {
+                                for (int bt = 0; bt < mapdata2.Length; bt += 2)
+                                {
+                                    int value1 = Convert.ToInt16(mapdata.GetValue(bt)) * 256 + Convert.ToInt16(mapdata.GetValue(bt + 1));
+                                    int value2 = Convert.ToInt16(mapdata2.GetValue(bt)) * 256 + Convert.ToInt16(mapdata2.GetValue(bt + 1));
+
+                                    value1 = Math.Abs((int)value1 - (int)value2);
+                                    byte v1 = (byte)(value1 / 256);
+                                    byte v2 = (byte)(value1 - (int)v1 * 256);
+                                    mapdata.SetValue(v1, bt);
+                                    mapdata.SetValue(v2, bt + 1);
+                                }
+                            }
+                            else
+                            {
+                                for (int bt = 0; bt < mapdata2.Length; bt++)
+                                {
+                                    LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
+                                }
+                            }
+
+                            tabdet.Map_content = mapdata;
+                            tabdet.UseNewCompare = true;
+                            tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
+                            tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
+                            tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
+                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
+                            TryToAddOpenLoopTables(tabdet);
+                            tabdet.Dock = DockStyle.Fill;
+                            tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+                            tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
+                            tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
+                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
+                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
+                            tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
+
+                            //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
+                            //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
+                            //tabdet.onSelectionChanged += new MapViewer.SelectionChanged(tabdet_onSelectionChanged);
+                            //tabdet.onSplitterMoved += new MapViewer.SplitterMoved(tabdet_onSplitterMoved);
+                            //tabdet.onSurfaceGraphViewChanged += new MapViewer.SurfaceGraphViewChanged(tabdet_onSurfaceGraphViewChanged);
+                            //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
+                            //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
+
+
+                            //dockPanel.DockAsTab(dockPanel1);
+                            dockPanel.Text = "Symbol difference: " + SymbolName + " [" + Path.GetFileName(SRAMFilename) + "]";
+                            bool isDocked = false;
+                            if (m_appSettings.AutoDockSameSymbol)
+                            {
+                                foreach (DockPanel pnl in dockManager1.Panels)
+                                {
+                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                                    {
+                                        dockPanel.DockAsTab(pnl, 0);
+                                        isDocked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isDocked)
+                            {
+                                if (m_appSettings.AutoDockSameFile)
+                                {
+                                    foreach (DockPanel pnl in dockManager1.Panels)
+                                    {
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                                        {
+                                            dockPanel.DockAsTab(pnl, 0);
+                                            isDocked = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!isDocked)
+                            {
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                if (m_appSettings.AutoSizeNewWindows)
+                                {
+                                    if (tabdet.X_axisvalues.Length > 0)
+                                    {
+                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                                    }
+                                    else
+                                    {
+                                        //dockPanel.Width = this.Width - dockSymbols.Width - 10;
+
+                                    }
+                                }
+                                if (dockPanel.Width < 400) dockPanel.Width = 400;
+
+                                //                    dockPanel.Width = 400;
+                            }
+                            dockPanel.Controls.Add(tabdet);
+
+                        }
+                        else
+                        {
+                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
+                        }
+                    }
+                }
+                catch (Exception E)
+                {
+
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        private void Actions_btnCompareSRAMSnapshots_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // ask user to point out 2 SRAM files.
+            OpenFileDialog ofd1 = new OpenFileDialog();
+
+            ofd1.Title = "First SRAM dump...";
+            ofd1.Filter = "SRAM dumps|*.ram";
+            ofd1.Multiselect = false;
+            if (ofd1.ShowDialog() == DialogResult.OK)
+            {
+                string filename_1 = ofd1.FileName;
+                ofd1.Title = "Second SRAM dump...";
+                if (ofd1.ShowDialog() == DialogResult.OK)
+                {
+                    string filename_2 = ofd1.FileName;
+                    // now compare
+                    System.Data.DataTable dt = new System.Data.DataTable();
+                    dt.Columns.Add("SYMBOLNAME");
+                    dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
+                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                    dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
+                    dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
+                    dt.Columns.Add("DESCRIPTION");
+                    dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
+                    dt.Columns.Add("CATEGORY", Type.GetType("System.Int32")); //0
+                    dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
+                    dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
+                    dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
+                    dt.Columns.Add("CATEGORYNAME");
+                    dt.Columns.Add("SUBCATEGORYNAME");
+                    dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
+                    dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
+                    dt.Columns.Add("Userdescription");
+                    int cnt = 0;
+                    frmProgress progress = new frmProgress();
+                    progress.SetProgress("Comparing SRAM snapshots");
+                    progress.Show();
+                    foreach (SymbolHelper sh in m_symbols)
+                    {
+                        int percentage = cnt * 100 / m_symbols.Count;
+                        cnt++;
+                        progress.SetProgressPercentage(percentage);
+                        //SetTaskProgress(percentage, true);
+                        string symbolname = sh.Varname;
+                        if (symbolname.StartsWith("Symbol:")) symbolname = sh.Userdescription;
+                        if (IsSymbolCalibration(symbolname))
+                        {
+
+                            byte[] data_1 = readdatafromSRAMfile(filename_1, (int)sh.Start_address, (int)sh.Length);
+                            byte[] data_2 = readdatafromSRAMfile(filename_2, (int)sh.Start_address, (int)sh.Length);
+                            if (data_1.Length != data_2.Length)
+                            {
+                                frmInfoBox info = new frmInfoBox("Sram data structure invalid... " + sh.Varname);
+                                return;
+                            }
+                            else
+                            {
+                                double diffperc = 0;
+                                int diffabs = 0;
+                                double diffavg = 0;
+                                bool isdifferent = false;
+                                if (isSixteenBitTable(sh.Varname))
+                                {
+                                    for (int i = 0; i < data_1.Length; i += 2)
+                                    {
+                                        try
+                                        {
+                                            int value1 = (int)(byte)data_1.GetValue(i) * 256;
+                                            value1 += (int)(byte)data_1.GetValue(i + 1);
+                                            int value2 = (int)(byte)data_2.GetValue(i) * 256;
+                                            value2 += (int)(byte)data_2.GetValue(i + 1);
+                                            if (value1 != value2)
+                                            {
+                                                isdifferent = true;
+                                                diffabs++;
+                                            }
+                                        }
+                                        catch (Exception E)
+                                        {
+                                            LogHelper.Log(E.Message);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < data_1.Length; i++)
+                                    {
+                                        if ((byte)data_1.GetValue(i) != (byte)data_2.GetValue(i))
+                                        {
+                                            isdifferent = true;
+                                            diffabs++;
+                                        }
+                                    }
+                                }
+                                if (isdifferent)
+                                {
+                                    int lengthvalues = sh.Length;
+                                    if (isSixteenBitTable(sh.Varname)) lengthvalues /= 2;
+                                    diffperc = (diffabs * 100) / lengthvalues;
+                                    dt.Rows.Add(sh.Varname, sh.Start_address, sh.Flash_start_address, sh.Length, lengthvalues, sh.Description, false, 0, diffperc, diffabs, diffavg, sh.Category.ToString().Replace("_", " "), sh.Subcategory.ToString().Replace("_", " "), sh.Symbol_number, sh.Symbol_number, sh.Userdescription);
+                                }
+                            }
+                        }
+
+                    }
+                    progress.Close();
+                    SymbolCollection compSymbols = new SymbolCollection();
+                    //AddressLookupCollection compAddressLookup = new AddressLookupCollection();
+                    dockManager1.BeginUpdate();
+                    try
+                    {
+                        DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                        SRAMCompareResults tabdet = new SRAMCompareResults();
+                        tabdet.Dock = DockStyle.Fill;
+                        tabdet.Filename1 = filename_1;
+                        tabdet.Filename2 = filename_2;
+                        tabdet.onSRAMSymbolSelect += new SRAMCompareResults.NotifySRAMSelectSymbol(tabdet_onSRAMSymbolSelect);
+                        dockPanel.Controls.Add(tabdet);
+                        //dockPanel.DockAsTab(dockPanel1);
+                        dockPanel.Text = "SRAM compare results: " + Path.GetFileName(filename_1) + " " + Path.GetFileName(filename_2);
+                        bool isDocked = false;
+                        foreach (DockPanel pnl in dockManager1.Panels)
+                        {
+                            if (pnl.Text.StartsWith("SRAM compare results: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                            {
+                                dockPanel.DockAsTab(pnl, 0);
+                                isDocked = true;
+                                break;
+                            }
+                        }
+                        if (!isDocked)
+                        {
+                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                            dockPanel.Width = 700;
+                        }
+                        //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
+                        tabdet.gridControl1.DataSource = dt;
+                        //tabdet.CompareTrionic5Tools.SymbolCollection = compSymbols;
+                        //tabdet.CompareAddressLookupCollection = compAddressLookup;
+                        tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
+                    }
+                    catch (Exception E)
+                    {
+                        LogHelper.Log(E.Message);
+                    }
+                    dockManager1.EndUpdate();
+                    SetStatusText("SRAM compare done");
+                    //SetTaskProgress(0, false);
+
+                }
+            }
+        }
+
+        void tabdet_onSRAMSymbolSelect(object sender, SRAMCompareResults.SelectSRAMSymbolEventArgs e)
+        {
+
+            if (!e.ShowDiffMap)
+            {
+                //StartTableViewer(e.SymbolName);
+                StartSRAMTableViewer(e.Filename1, e.SymbolName, e.SymbolLength, (int)GetSymbolAddress(m_symbols, e.SymbolName), (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName));
+                StartSRAMTableViewer(e.Filename2, e.SymbolName, e.SymbolLength, (int)GetSymbolAddress(m_symbols, e.SymbolName), (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName));
+            }
+            else
+            {
+                //Implement this viewer type in 2.0
+                StartSRAMCompareDifferenceViewer(e.SymbolName, e.Filename1, e.Filename2, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), "");
+            }
+        }
+
+        private void StartSRAMCompareDifferenceViewer(string symbolname, string filename1, string filename2, int length, int sramaddress, string symbolDescription)
+        {
+            DockPanel dockPanel;
+            bool pnlfound = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+
+                if (pnl.Text == "SRAM symbol difference: " + symbolname + " [" + Path.GetFileName(filename1) + " vs " + Path.GetFileName(filename2) + "]")
+                {
+                    dockPanel = pnl;
+                    pnlfound = true;
+                    dockPanel.Show();
+                }
+            }
+            if (!pnlfound)
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                    dockPanel.Tag = filename1;
+
+                    //IMapViewer tabdet = new MapViewerEx();
+                    IMapViewer tabdet;
+                    if (m_appSettings.UseNewMapViewer)
+                    {
+                        tabdet = new MapViewerEx();
+                    }
+                    else
+                    {
+                        tabdet = new MapViewer();
+                    }
+
+                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                    tabdet.IsCompareViewer = true;
+
+
+                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
+                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
+                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                    tabdet.Filename = filename1;
+                    tabdet.Map_name = symbolname;
+                    tabdet.Map_descr = symbolDescription;
+                    ///tabdet.Map_cat = m_trionicFileInformation.GetSymbolCategory(tabdet.Map_name);
+
+                    tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, symbolname);
+                    tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, symbolname);
+
+                    string xdescr = string.Empty;
+                    string ydescr = string.Empty;
+                    string zdescr = string.Empty;
+                    SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
+                    string x_axis = string.Empty;
+                    string y_axis = string.Empty;
+                    axestrans.GetAxisSymbols(symbolname, out x_axis, out y_axis, out xdescr, out ydescr, out zdescr);
+                    tabdet.X_axis_name = xdescr;
+                    tabdet.Y_axis_name = ydescr;
+                    tabdet.Z_axis_name = zdescr;
+
+                    //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
+                    int columns = 8;
+                    int rows = 8;
+                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out columns, out rows);
+                    int tablewidth = columns;
+                    int address = sramaddress;
+                    if (address != 0)
+                    {
+                        //while (address > m_trionicFileInformation.Filelength) address -= m_trionicFileInformation.Filelength;
+                        tabdet.Map_address = address;
+                        tabdet.Map_length = length;
+
+                        byte[] mapdata = readdatafromSRAMfile(filename1, sramaddress, length);
+                        byte[] mapdata2 = readdatafromSRAMfile(filename2, sramaddress, length);
+                        if (mapdata.Length == mapdata2.Length)
+                        {
+                            if (isSixteenBitTable(symbolname))
+                            {
+                                for (int bt = 0; bt < mapdata2.Length; bt += 2)
+                                {
+                                    int value1 = Convert.ToInt16(mapdata.GetValue(bt)) * 256 + Convert.ToInt16(mapdata.GetValue(bt + 1));
+                                    int value2 = Convert.ToInt16(mapdata2.GetValue(bt)) * 256 + Convert.ToInt16(mapdata2.GetValue(bt + 1));
+
+                                    value1 = (int)Math.Abs(value1 - value2);
+                                    byte v1 = (byte)(value1 / 256);
+                                    byte v2 = (byte)(value1 - (int)v1 * 256);
+                                    mapdata.SetValue(v1, bt);
+                                    mapdata.SetValue(v2, bt + 1);
+                                }
+                            }
+                            else
+                            {
+                                for (int bt = 0; bt < mapdata2.Length; bt++)
+                                {
+                                    //LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
+                                }
+                            }
+
+                            tabdet.Map_content = mapdata;
+
+                            tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
+                            tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
+                            tabdet.Viewtype = ViewType.Easy;
+                            tabdet.IsUpsideDown = true;//GetMapUpsideDown(tabdet.Map_name);
+                            tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
+                            tabdet.Dock = DockStyle.Fill;
+
+                            tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
+                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
+                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
+                            dockPanel.Text = "SRAM symbol difference: " + symbolname + " [" + Path.GetFileName(filename1) + " vs " + Path.GetFileName(filename2) + "]";
+                            bool isDocked = false;
+                            if (m_appSettings.AutoDockSameSymbol)
+                            {
+                                foreach (DockPanel pnl in dockManager1.Panels)
+                                {
+                                    if (pnl.Text.StartsWith("SRAM symbol difference: " + symbolname) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                                    {
+                                        dockPanel.DockAsTab(pnl, 0);
+                                        pnl.Options.ShowCloseButton = false;
+                                        isDocked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isDocked)
+                            {
+                                if (m_appSettings.AutoDockSameFile)
+                                {
+                                    foreach (DockPanel pnl in dockManager1.Panels)
+                                    {
+                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                                        {
+                                            dockPanel.DockAsTab(pnl, 0);
+                                            pnl.Options.ShowCloseButton = false;
+                                            isDocked = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!isDocked)
+                            {
+                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                if (m_appSettings.AutoSizeNewWindows)
+                                {
+                                    if (tabdet.X_axisvalues.Length > 0)
+                                    {
+                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                                    }
+                                    else
+                                    {
+                                        //dockPanel.Width = this.Width - dockSymbols.Width - 10;
+
+                                    }
+                                }
+                                if (dockPanel.Width < 400) dockPanel.Width = 400;
+
+                                //                    dockPanel.Width = 400;
+                            }
+                            dockPanel.Controls.Add(tabdet);
+
+                        }
+                        else
+                        {
+                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
+                        }
+                        if (dockPanel != null)
+                        {
+                            dockPanel.Options.ShowCloseButton = false;
+                        }
+                    }
+                }
+                catch (Exception E)
+                {
+
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+
+
+            }
+        }
+
+        private void CopySymbol(string symbolname, string fromfilename, int fromflashaddress, int fromlength, string targetfilename, int targetflashaddress, int targetlength)
+        {
+            if (symbolname == "TorqueCal.M_NominalMap")
+            {
+                LogHelper.Log("breakme");
+            }
+            if (fromlength != targetlength)
+            {
+                AddToResumeTable("Unable to transfer symbol " + symbolname + " because source and target lengths don't match!");
+            }
+            else
+            {
+                try
+                {
+                    while (fromflashaddress > m_currentfile_size) fromflashaddress -= m_currentfile_size;
+                    FileInfo fi = new FileInfo(targetfilename);
+                    while (targetflashaddress > fi.Length) targetflashaddress -= (int)fi.Length;
+                    byte[] mapdata = readdatafromfile(fromfilename, fromflashaddress, fromlength);
+                    savedatatobinary(targetflashaddress, targetlength, mapdata, targetfilename, true);
+                    AddToResumeTable("Transferred symbol " + symbolname + " successfully");
+                }
+                catch (Exception E)
+                {
+                    AddToResumeTable("Failed to transfer symbol " + symbolname + ": " + E.Message);
+                }
+            }
+        }
+
+        private bool SymbolInTransferCollection(SymbolCollection transferCollection, string mapname)
+        {
+            foreach (SymbolHelper sh_test in transferCollection)
+            {
+                if (sh_test.Selected && (sh_test.Varname == mapname || sh_test.Userdescription == mapname))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CanTransfer(SymbolHelper sh)
+        {
+            // FOR TESTING ONLY
+            //return true;
+
+            bool retval = false;
+            if (sh.Varname.Contains(".") || sh.Userdescription.Contains(".")) retval = true;
+            //cfsh.Varname != "overrun_obj" && cfsh.Varname != "REPCalType" && cfsh.Varname != "SystemCalType" && cfsh.Varname != "nEngCalType") // hinted by jse!
+            return retval;
+        }
+
+        private void TransferMapsToNewBinary(string filename)
+        {
+            SymbolCollection curSymbolCollection = new SymbolCollection();
+            //AddressLookupCollection curAddressLookupCollection = new AddressLookupCollection();
+            resumeTuning = new System.Data.DataTable();
+            resumeTuning.Columns.Add("Description");
+
+            if (filename != string.Empty)
+            {
+                frmTransferSelectionSymbolsSelection frmtransfer = new frmTransferSelectionSymbolsSelection();
+                SymbolCollection _onlyFlashSymbols = new SymbolCollection();
+                foreach (SymbolHelper shcopy in m_symbols)
+                {
+                    if (shcopy.Flash_start_address > 0 && GetSymbolAddress(m_symbols, shcopy.Varname) < 524288 && shcopy.Length > 0 && CanTransfer(shcopy))
+                    {
+                        _onlyFlashSymbols.Symbols.Add(shcopy);
+                    }
+                }
+                frmtransfer.Symbols = /*m_symbols*/_onlyFlashSymbols;
+                if (frmtransfer.ShowDialog() == DialogResult.OK)
+                {
+                    barProgress.Visibility = BarItemVisibility.Always;
+                    barProgress.Caption = "Initializing";
+                    barProgress.EditValue = 0;
+                    System.Windows.Forms.Application.DoEvents();
+                    File.Copy(filename, Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin", true);
+                    AddToResumeTable("Backup file created (" + Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin)");
+                    AddToResumeTable("Transferring data from " + Path.GetFileName(m_currentfile) + " to " + filename);
+                    //bool m_fileparsed = false;
+
+                    //listView1.Items.Clear();
+                    SetStatusText("Start symbol parsing");
+
+
+                    FileInfo fi = new FileInfo(filename);
+                    Trionic7File transferToFile = TryToOpenFileUsingClass(filename, out curSymbolCollection, (int)fi.Length, false);
+                    T7FileHeader t7fh = new T7FileHeader();
+                    t7fh.init(filename, false);
+                    int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
+                    if (m_sramOffset == 0) m_sramOffset = transferToFile.SramOffsetForOpenFile;
+                    if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
+                    curSymbolCollection.SortColumn = "Flash_start_address";
+                    curSymbolCollection.SortingOrder = GenericComparer.SortOrder.Ascending;
+                    curSymbolCollection.Sort();
+                    //progress.SetProgress("Start transfer");
+                    barProgress.Caption = "Start transferring";
+                    barProgress.EditValue = 1;
+                    System.Windows.Forms.Application.DoEvents();
+
+                    Int64 currentFlashAddress = 0;
+                    foreach (SymbolHelper sh in curSymbolCollection)
+                    {
+                        currentFlashAddress = sh.Flash_start_address;
+                        //TODO: Keep open bins in mind which have sram addresses in stead of normal addresses
+                        if (IsSoftwareOpen(curSymbolCollection))
+                        {
+                            // get address
+                            if (IsSymbolCalibration(sh.Varname) && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
+                            {
+                                currentFlashAddress = sh.Flash_start_address - m_sramOffset;
+                            }
+                        }
+
+                        if (currentFlashAddress > 0 && currentFlashAddress < m_currentfile_size && sh.Length < 0x1000)
+                        {
+                            foreach (SymbolHelper cfsh in m_symbols)
+                            {
+                                if (CanTransfer(cfsh))
+                                {
+                                    if (cfsh.Varname == sh.Varname || cfsh.Userdescription == sh.Varname || sh.Userdescription == cfsh.Varname || (cfsh.Userdescription == sh.Userdescription && sh.Userdescription != ""))
+                                    {
+                                        // set correct symbolname
+                                        string symbolname = cfsh.Varname;
+                                        if (symbolname.StartsWith("Symbolnumber"))
+                                        {
+                                            if (!sh.Varname.StartsWith("Symbolnumber")) symbolname = sh.Varname;
+                                            else if (sh.Userdescription != "") symbolname = sh.Userdescription;
+                                            else if (cfsh.Userdescription != "") symbolname = cfsh.Userdescription;
+                                        }
+                                        if (SymbolInTransferCollection(frmtransfer.Symbols, symbolname))
+                                        {
+                                            //progress.SetProgress("Transferring: " + symbolname);
+                                            barProgress.Caption = "Transferring: " + symbolname;
+                                            barProgress.EditValue = 50;
+                                            System.Windows.Forms.Application.DoEvents();
+
+                                            CopySymbol(symbolname, m_currentfile, (int)GetSymbolAddress(m_symbols, cfsh.Varname), cfsh.Length, filename, (int)currentFlashAddress, sh.Length);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //progress.SetProgress("Starting report...");
+                    barProgress.Caption = "Starting report...";
+                    barProgress.EditValue = 80;
+                    System.Windows.Forms.Application.DoEvents();
+
+                    UpdateChecksum(filename);
+                    verifychecksum(false);
+                    SetStatusText("Idle.");
+                    barProgress.EditValue = 0;
+                    barProgress.Caption = "Done";
+                    barProgress.Visibility = BarItemVisibility.Never;
+                    //progress.Close();
+                }
+            }
+        }
+
+        private void Actions_TransferMaps_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            // ask for another bin file
+            if (m_currentfile != string.Empty)
+            {
+
+                PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
+                PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
+                PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
+                PSTaskDialog.cTaskDialog.VerificationChecked = true;
+                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Transfer maps to different binary wizard", "This wizard assists you in transferring map contents from the current file to another binary.", "Make sure engine types and such are equal for both binaries!", "Happy driving!!!\nDilemma © 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after transferring data.", "", "Yes, let me select the target binary|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
+                switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
+                {
+                    case 0:
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            TransferMapsToNewBinary(openFileDialog1.FileName);
+                        }
+                        else
+                        {
+                            return;
+                        }
+                        break;
+                    case 1:
+                        // cancel
+                        break;
+                }
+                if (PSTaskDialog.cTaskDialog.VerificationChecked && PSTaskDialog.cTaskDialog.CommandButtonResult != 1)
+                {
+                    TuningReport tuningrep = new TuningReport();
+                    tuningrep.ReportTitle = "Data transfer report";
+                    tuningrep.DataSource = resumeTuning;
+                    tuningrep.CreateReport();
+                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
+                }
+            }
+        }
+
+        private void Actions_CopyAddressTable_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "T7 binary files|*.bin";
+            ofd.Multiselect = false;
+            ofd.FileName = "";
+            ofd.Title = "Select binary file to transfer the address table to...";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                int addrtaboffset = GetStartOfAddressTableOffset(m_currentfile);
+                int addrtaboffset_newfile = GetStartOfAddressTableOffset(ofd.FileName);
+                LogHelper.Log("Addresstable offset 1: " + addrtaboffset.ToString());
+                LogHelper.Log("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
+                bool _allow = false;
+                if (addrtaboffset == addrtaboffset_newfile) _allow = true;
+                if (!_allow)
+                {
+                    if (MessageBox.Show("Address table start addresses are not equal, continue anyway?", "Attention!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        _allow = true;
+                    }
+                }
+
+                if (_allow)
+                {
+                    if (addrtaboffset > 0)
+                    {
+                        FileStream fsread = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
+                        using (BinaryReader br = new BinaryReader(fsread))
+                        {
+
+                            FileStream fswrite = new FileStream(ofd.FileName, FileMode.Open);
+                            using (BinaryWriter bw = new BinaryWriter(fswrite))
+                            {
+                                fsread.Seek(addrtaboffset - 7, SeekOrigin.Begin); //was - 17
+                                fswrite.Seek(addrtaboffset_newfile - 7, SeekOrigin.Begin);
+                                bool endoftable = false;
+                                while (!endoftable)
+                                {
+                                    // steeds 10 karaketers
+                                    try
+                                    {
+                                        byte[] bytes = br.ReadBytes(10);
+                                        if (bytes.Length == 10)
+                                        {
+                                            //DumpBytesToConsole(bytes);
+                                            if ((Convert.ToInt32(bytes.GetValue(8)) != 0x00) || (Convert.ToInt32(bytes.GetValue(9)) != 0x00))
+                                            {
+                                                endoftable = true;
+                                            }
+                                            else
+                                            {
+                                                // Write to target file
+                                                bw.Write(bytes);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            endoftable = true;
+                                        }
+                                    }
+                                    catch (Exception E)
+                                    {
+                                        LogHelper.Log(E.Message);
+                                    }
+
+                                }
+                            }
+                        }
+                        frmInfoBox info = new frmInfoBox("Transfer done");
+                    }
+                }
+                else
+                {
+                    frmInfoBox info = new frmInfoBox("Transfer cancelled");
+                }
+            }
+        }
+
+        private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
+        {
+            //en-US
+            CultureInfo tci = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = tci;
+
+            try
+            {
+                bool isupsidedown = GetMapUpsideDown(mapname);
+                try
+                {
+                    if (xla == null)
+                    {
+                        xla = new Microsoft.Office.Interop.Excel.Application();
+                    }
+                }
+                catch (Exception xlaE)
+                {
+                    LogHelper.Log("Failed to create office application interface: " + xlaE.Message);
+                }
+
+                // turn mapdata upside down
+                if (isupsidedown)
+                {
+                    mapdata = TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
+                }
+
+                xla.Visible = true;
+                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(XlSheetType.xlWorksheet);
+                Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)xla.ActiveSheet;
+                ws.Name = "symboldata";
+
+                // Now create the chart.
+                ChartObjects chartObjs = (ChartObjects)ws.ChartObjects(Type.Missing);
+                ChartObject chartObj = chartObjs.Add(100, 400, 400, 300);
+                Microsoft.Office.Interop.Excel.Chart xlChart = chartObj.Chart;
+
+                int nRows = rows;
+                if (isSixteenbit) nRows /= 2;
+                int nColumns = cols;
+                string upperLeftCell = "B3";
+                int endRowNumber = System.Int32.Parse(upperLeftCell.Substring(1)) + nRows - 1;
+                char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
+                string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
+                string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
+                // Send single dimensional array to Excel:
+
+                Range rg1 = ws.get_Range("B2", "Z2");
+                double[] xarray = new double[nColumns];
+                double[] yarray = new double[nRows];
+                ws.Cells[1, 1] = "Data for " + mapname;
+                for (int i = 0; i < xarray.Length; i++)
+                {
+                    if (xaxisvalues.Length > i)
+                    {
+                        xarray[i] = (int)xaxisvalues.GetValue(i);
+                    }
+                    else
+                    {
+                        xarray[i] = i;
+                    }
+                    //ws.Cells[i + 3, 1] = xarray[i];
+                    ws.Cells[2, 2 + i] = xarray[i];
+                }
+                for (int i = 0; i < yarray.Length; i++)
+                {
+                    if (yaxisvalues.Length > i)
+                    {
+                        if (isupsidedown)
+                        {
+                            yarray[i] = (int)yaxisvalues.GetValue((yarray.Length - 1) - i);
+                        }
+                        else
+                        {
+                            yarray[i] = (int)yaxisvalues.GetValue(i);
+                        }
+                    }
+                    else
+                    {
+                        yarray[i] = i;
+                    }
+                    ws.Cells[i + 3, 1] = yarray[i];
+                    //ws.Cells[2, 2 + i] = yarray[i];
+                }
+
+                string xaxisdescr = "x-axis";
+                string yaxisdescr = "y-axis";
+                string zaxisdescr = "z-axis";
+                //GetAxisDescriptions(m_currentfile, m_symbols, mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+                SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
+                string x_axis = string.Empty;
+                string y_axis = string.Empty;
+                axestrans.GetAxisSymbols(mapname, out x_axis, out y_axis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+
+
+                Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
+                rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit);
+
+                Range chartRange = ws.get_Range("A2", lowerRightCell);
+
+                xlChart.SetSourceData(chartRange, Type.Missing);
+                if (yarray.Length > 1)
+                {
+                    xlChart.ChartType = XlChartType.xlSurface;
+                }
+
+                // Customize axes:
+                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory,
+                    XlAxisGroup.xlPrimary);
+                xAxis.HasTitle = true;
+                xAxis.AxisTitle.Text = yaxisdescr;
+                try
+                {
+                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis,
+                        XlAxisGroup.xlPrimary);
+                    yAxis.HasTitle = true;
+                    yAxis.AxisTitle.Text = xaxisdescr;
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log("Failed to set y axis: " + E.Message);
+                }
+
+
+                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue,
+                    XlAxisGroup.xlPrimary);
+                zAxis.HasTitle = true;
+                zAxis.AxisTitle.Text = zaxisdescr;
+
+                // Add title:
+                xlChart.HasTitle = true;
+
+                xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
+
+                // Remove legend:
+                xlChart.HasLegend = false;
+                // add 3d shade
+                xlChart.SurfaceGroup.Has3DShading = true;
+                /*if (File.Exists(m_currentfile + "~" + mapname + ".xls"))
+                {
+
+                }*/
+                try
+                {
+                    wb.SaveAs(m_currentfile + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
+                }
+                catch (Exception sE)
+                {
+                    LogHelper.Log("Failed to save workbook: " + sE.Message);
+                }
+
+
+                /* This following code is used to create Excel default color indices:
+                for (int i = 0; i < 14; i++)
+                {
+                    string cellString = "A" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = i + 1;
+                    cellString = "B" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 14 + i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = 14 + i + 1;
+                    cellString = "C" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 2 * 14 + i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = 2 * 14 + i + 1;
+                    cellString = "D" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 3 * 14 + i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = 3 * 14 + i + 1;
+                }*/
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log("Failed to export to excel: " + E.Message);
+            }
+            tci = new CultureInfo("nl-NL");
+            Thread.CurrentThread.CurrentCulture = tci;
+
+        }
+
+        private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
+        {
+            double[,] dataArray = new double[nRows, nColumns];
+            double[] xarray = new double[nColumns];
+            for (int i = 0; i < xarray.Length; i++)
+            {
+                xarray[i] = -3.0f + i * 0.25f;
+            }
+            double[] yarray = xarray;
+
+            int mapindex = 0;
+            for (int i = 0; i < dataArray.GetLength(0); i++)
+            {
+                for (int j = 0; j < dataArray.GetLength(1); j++)
+                {
+                    if (isSixteenbit)
+                    {
+                        byte val1 = (byte)mapdata.GetValue(mapindex++);
+                        byte val2 = (byte)mapdata.GetValue(mapindex++);
+                        bool convertSign = false;
+                        if (val1 == 0xff)
+                        {
+                            val1 = 0;
+                            val2 = (byte)(0x100 - val2);
+                            convertSign = true;
+                        }
+                        int ival1 = Convert.ToInt32(val1);
+                        int ival2 = Convert.ToInt32(val2);
+                        double value = (ival1 * 256) + ival2;
+                        if (convertSign) value = -value;
+                        dataArray[i, j] = value;
+                    }
+                    else
+                    {
+                        byte val1 = (byte)mapdata.GetValue(mapindex++);
+                        int ival1 = Convert.ToInt32(val1);
+
+                        double value = ival1;
+                        dataArray[i, j] = value;
+                    }
+                }
+            }
+            return dataArray;
+        }
+
+        private void StartExcelExport()
+        {
+            if (gridViewSymbols.SelectedRowsCount > 0)
+            {
+                int[] selrows = gridViewSymbols.GetSelectedRows();
+                if (selrows.Length > 0)
+                {
+                    SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
+
+                    //                    DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
+                    //frmTableDetail tabdet = new frmTableDetail();
+                    string Map_name = sh.Varname;
+                    if (Map_name.StartsWith("Symbol") && sh.Userdescription != "") Map_name = sh.Userdescription;
+                    int columns = 8;
+                    int rows = 8;
+                    int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, Map_name, out columns, out rows);
+                    int address = (int)GetSymbolAddress(m_symbols, Map_name);// (int)sh.Flash_start_address;
+                    if (address != 0)
+                    {
+                        while (address > m_currentfile_size) address -= m_currentfile_size;
+                        int length = sh.Length;
+                        byte[] mapdata = readdatafromfile(m_currentfile, address, length);
+                        int[] xaxis = GetXaxisValues(m_currentfile, m_symbols, Map_name);
+                        int[] yaxis = GetYaxisValues(m_currentfile, m_symbols, Map_name);
+                        ExportToExcel(Map_name, address, length, mapdata, columns, rows, isSixteenBitTable(Map_name), xaxis, yaxis);
+                    }
+                }
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("No symbol selected in the primary symbol list");
+            }
+        }
+        private System.Data.DataTable getDataFromXLS(string strFilePath)
+        {
+            try
+            {
+                string strConnectionString = string.Empty;
+                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
+                //MessageBox.Show(strConnectionString);
+                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
+                cnCSV.Open();
+                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [symboldata$]", cnCSV);
+                OleDbDataAdapter daCSV = new OleDbDataAdapter();
+                daCSV.SelectCommand = cmdSelect;
+                System.Data.DataTable dtCSV = new System.Data.DataTable();
+                daCSV.Fill(dtCSV);
+                cnCSV.Close();
+                daCSV = null;
+                return dtCSV;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                return null;
+            }
+            finally { }
+        }
+
+        private void ImportExcelSymbol(string symbolname, string filename)
+        {
+            bool issixteenbit = false;
+            System.Data.DataTable dt = getDataFromXLS(openFileDialog2.FileName);
+            if (isSixteenBitTable(symbolname)) issixteenbit = true;
+            int symbollength = GetSymbolLength(m_symbols, symbolname);
+            int datalength = symbollength;
+            if (issixteenbit) datalength /= 2;
+            int[] buffer = new int[datalength];
+            int bcount = 0;
+            //            for (int rtel = 1; rtel < dt.Rows.Count; rtel++)
+            for (int rtel = dt.Rows.Count; rtel >= 1; rtel--)
+            {
+                try
+                {
+                    int idx = 0;
+                    foreach (object o in dt.Rows[rtel].ItemArray)
+                    {
+                        if (idx > 0)
+                        {
+                            if (o != null)
+                            {
+                                if (o != DBNull.Value)
+                                {
+                                    if (bcount < buffer.Length)
+                                    {
+                                        buffer.SetValue(Convert.ToInt32(o), bcount++);
+                                    }
+                                    else
+                                    {
+                                        frmInfoBox info = new frmInfoBox("Too much information in file, abort");
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        idx++;
+                    }
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log("ImportExcelSymbol: " + E.Message);
+                }
+
+            }
+            if (bcount >= datalength)
+            {
+                byte[] data = new byte[symbollength];
+                int cellcount = 0;
+                if (issixteenbit)
+                {
+                    for (int dcnt = 0; dcnt < buffer.Length; dcnt++)
+                    {
+                        string bstr1 = "0";
+                        string bstr2 = "0";
+                        int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
+                        string svalue = cellvalue.ToString("X4");
+
+                        bstr1 = svalue.Substring(svalue.Length - 4, 2);
+                        bstr2 = svalue.Substring(svalue.Length - 2, 2);
+                        data.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
+                        data.SetValue(Convert.ToByte(bstr2, 16), cellcount++);
+                    }
+                }
+                else
+                {
+                    for (int dcnt = 0; dcnt < buffer.Length; dcnt++)
+                    {
+                        int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
+                        data.SetValue(Convert.ToByte(cellvalue.ToString()), cellcount++);
+                    }
+                }
+                savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), symbollength, data, m_currentfile, true);
+                verifychecksum(false);
+            }
+
+
+        }
+
+        private void ImportFileInExcelFormat()
+        {
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string mapname = string.Empty;
+                    int tildeindex = openFileDialog2.FileName.LastIndexOf("~");
+                    bool symbolfound = false;
+                    if (tildeindex > 0)
+                    {
+                        tildeindex++;
+                        mapname = openFileDialog2.FileName.Substring(tildeindex, openFileDialog2.FileName.Length - tildeindex);
+                        mapname = mapname.Replace(".xls", "");
+                        mapname = mapname.Replace(".XLS", "");
+                        mapname = mapname.Replace(".Xls", "");
+                        // look if it is a valid symbolname
+                        foreach (SymbolHelper sh in m_symbols)
+                        {
+                            if (sh.Varname == mapname || sh.Userdescription == mapname)
+                            {
+                                symbolfound = true;
+                                if (MessageBox.Show("Found valid symbol for import: " + mapname + ". Are you sure you want to overwrite the map in the binary?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                {
+                                    // ok, overwrite info in binary
+                                }
+                                else
+                                {
+                                    mapname = string.Empty; // do nothing
+                                }
+                            }
+                        }
+                        if (!symbolfound)
+                        {
+                            // ask user for symbol designation
+                            frmSymbolSelect frmselect = new frmSymbolSelect(m_symbols);
+                            if (frmselect.ShowDialog() == DialogResult.OK)
+                            {
+                                mapname = frmselect.SelectedSymbol;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        // ask user for symbol designation
+                        frmSymbolSelect frmselect = new frmSymbolSelect(m_symbols);
+                        if (frmselect.ShowDialog() == DialogResult.OK)
+                        {
+                            mapname = frmselect.SelectedSymbol;
+                        }
+
+                    }
+                    if (mapname != string.Empty)
+                    {
+                        ImportExcelSymbol(mapname, openFileDialog2.FileName);
+                    }
+
+                }
+                catch (Exception E)
+                {
+                    frmInfoBox info = new frmInfoBox("Failed to import map from excel: " + E.Message);
+                }
+            }
+        }
+
+        private System.Data.DataTable getDataFromXLSSymbolHelper(string strFilePath)
+        {
+            try
+            {
+                string strConnectionString = string.Empty;
+                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
+                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
+                cnCSV.Open();
+                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [Symbols$]", cnCSV);
+                OleDbDataAdapter daCSV = new OleDbDataAdapter();
+                daCSV.SelectCommand = cmdSelect;
+                System.Data.DataTable dtCSV = new System.Data.DataTable();
+                daCSV.Fill(dtCSV);
+                cnCSV.Close();
+                daCSV = null;
+                return dtCSV;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(ex.Message);
+                return null;
+            }
+            finally { }
+        }
+
+        private void Actions_ExportMapToExcel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartExcelExport();
+        }
+
+        private void Actions_ImportMapFromExcel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ImportFileInExcelFormat();
+        }
+
+        private void Actions_OpenSRAMFile_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //openFileDialog3.FileName = Path.GetFileNameWithoutExtension(m_currentfile) + ".RAM";
+            if (openFileDialog3.ShowDialog() == DialogResult.OK)
+            {
+                if (File.Exists(openFileDialog3.FileName))
+                {
+                    OpenSRAMFile(openFileDialog3.FileName);
+                }
+            }
+        }
+
+        private void OpenSRAMFile(string filename)
+        {
+            // opens the sram dump file and displays the maps inside the dump file
+            // after verifying that this ramdump matches the selected binary.
+            // this can result in a compare between flash maps and the sram map values
+            m_currentsramfile = filename;
+            barStaticItem1.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
+
+        }
+
+        private void Actions_ExtractSymboltable_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            m_symbols = new SymbolCollection();
+
+            TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
+            barProgress.EditValue = 70;
+            barProgress.Caption = "Sorting data";
+            System.Windows.Forms.Application.DoEvents();
+
+            m_symbols.SortColumn = "Length";
+            m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
+            m_symbols.Sort();
+            barProgress.EditValue = 70;
+            barProgress.Caption = "Loading data into view";
+            System.Windows.Forms.Application.DoEvents();
+
+            gridControlSymbols.DataSource = m_symbols;
+            barProgress.EditValue = 0;
+            barProgress.Caption = "Done";
+            barProgress.Visibility = BarItemVisibility.Never;
+            System.Windows.Forms.Application.DoEvents();
+
+        }
+
+        private void Actions_ViewFileHex_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartHexViewer();
+            StartSRAMHexViewer();
+        }
+
+        private void StartHexViewer()
+        {
+            if (m_currentfile != "")
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    DockPanel dockPanel;
+                    //= dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                    if (!m_appSettings.NewPanelsFloating)
+                    {
+                        dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    }
+                    else
+                    {
+                        System.Drawing.Point floatpoint = this.PointToClient(new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 30, dockSymbols.Location.Y + 10));
+                        dockPanel = dockManager1.AddPanel(floatpoint);
+                    }
+
+                    dockPanel.Text = "Hexviewer: " + Path.GetFileName(m_currentfile);
+                    HexViewer hv = new HexViewer();
+                    hv.Issramviewer = false;
+                    hv.Dock = DockStyle.Fill;
+                    dockPanel.Width = 580;
+                    hv.LoadDataFromFile(m_currentfile, m_symbols);
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.Controls.Add(hv);
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        void dockPanel_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            // force close of the file that the hexviewer had open!
+            if (sender is DockPanel)
+            {
+                DockPanel pnl = (DockPanel)sender;
+
+                foreach (Control c in pnl.Controls)
+                {
+                    if (c is HexViewer)
+                    {
+                        HexViewer vwr = (HexViewer)c;
+                        vwr.CloseFile();
+                        //UpdateChecksum(m_currentfile);
+                    }
+                    else if (c is DockPanel)
+                    {
+                        DockPanel tpnl = (DockPanel)c;
+                        foreach (Control c2 in tpnl.Controls)
+                        {
+                            if (c2 is HexViewer)
+                            {
+                                HexViewer vwr2 = (HexViewer)c2;
+                                vwr2.CloseFile();
+                                //UpdateChecksum(m_currentfile);
+                            }
+                        }
+                    }
+                    else if (c is ControlContainer)
+                    {
+                        ControlContainer cntr = (ControlContainer)c;
+                        foreach (Control c3 in cntr.Controls)
+                        {
+                            if (c3 is HexViewer)
+                            {
+                                HexViewer vwr3 = (HexViewer)c3;
+                                vwr3.CloseFile();
+                                //UpdateChecksum(m_currentfile);
+                            }
+                        }
+                    }
+                }
+                // remove the panel from the dockmanager
+                dockManager1.RemovePanel(pnl);
+            }
+        }
+
+        private void StartSRAMHexViewer()
+        {
+            if (m_currentsramfile != "")
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    dockPanel.Text = "SRAM Hexviewer: " + Path.GetFileName(m_currentfile);
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+                    HexViewer hv = new HexViewer();
+                    hv.Issramviewer = true;
+                    hv.Dock = DockStyle.Fill;
+                    dockPanel.Width = 580;
+                    hv.LoadDataFromFile(m_currentsramfile, m_symbols);
+                    dockPanel.Controls.Add(hv);
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        private void Actions_SearchMapContent_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // ask the user for which value to search and if searching should include symbolnames and/or symbol description
+            if (ValidateFile())
+            {
+                SymbolCollection result_Collection = new SymbolCollection();
+                frmSearchMaps searchoptions = new frmSearchMaps();
+                if (searchoptions.ShowDialog() == DialogResult.OK)
+                {
+                    frmProgress progress = new frmProgress();
+                    progress.SetProgress("Start searching data...");
+                    progress.SetProgressPercentage(0);
+                    progress.Show();
+                    System.Windows.Forms.Application.DoEvents();
+                    int cnt = 0;
+                    foreach (SymbolHelper sh in m_symbols)
+                    {
+                        progress.SetProgress("Searching " + sh.Varname);
+                        progress.SetProgressPercentage((cnt * 100) / m_symbols.Count);
+                        bool hit_found = false;
+                        if (searchoptions.UseSpecificMapLength)
+                        {
+                            if (sh.Length != (int)searchoptions.MapLength)
+                            {
+                                continue;
+                            }
+                        }
+                        if (searchoptions.IncludeSymbolNames)
+                        {
+                            if (searchoptions.SearchForNumericValues)
+                            {
+                                if (sh.Varname.Contains(searchoptions.NumericValueToSearchFor.ToString()))
+                                {
+                                    hit_found = true;
+                                }
+                            }
+                            if (searchoptions.SearchForStringValues)
+                            {
+                                if (searchoptions.StringValueToSearchFor != string.Empty)
+                                {
+                                    if (sh.Varname.Contains(searchoptions.StringValueToSearchFor))
+                                    {
+                                        hit_found = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (searchoptions.IncludeSymbolDescription)
+                        {
+                            if (searchoptions.SearchForNumericValues)
+                            {
+                                if (sh.Description.Contains(searchoptions.NumericValueToSearchFor.ToString()))
+                                {
+                                    hit_found = true;
+                                }
+                            }
+                            if (searchoptions.SearchForStringValues)
+                            {
+                                if (searchoptions.StringValueToSearchFor != string.Empty)
+                                {
+                                    if (sh.Description.Contains(searchoptions.StringValueToSearchFor))
+                                    {
+                                        hit_found = true;
+                                    }
+                                }
+                            }
+                        }
+                        // now search the symbol data
+                        if (sh.Flash_start_address < m_currentfile_size)
+                        {
+                            byte[] symboldata = readdatafromfile(m_currentfile, (int)sh.Flash_start_address, sh.Length);
+                            if (searchoptions.SearchForNumericValues)
+                            {
+                                if (isSixteenBitTable(sh.Varname))
+                                {
+                                    for (int i = 0; i < symboldata.Length / 2; i += 2)
+                                    {
+                                        float value = Convert.ToInt32(symboldata.GetValue(i)) * 256;
+                                        value += Convert.ToInt32(symboldata.GetValue(i + 1));
+                                        value *= (float)GetMapCorrectionFactor(sh.Varname);
+                                        value += (float)GetMapCorrectionOffset(sh.Varname);
+                                        if (value == (float)searchoptions.NumericValueToSearchFor)
+                                        {
+                                            hit_found = true;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < symboldata.Length; i++)
+                                    {
+                                        float value = Convert.ToInt32(symboldata.GetValue(i));
+                                        value *= (float)GetMapCorrectionFactor(sh.Varname);
+                                        value += (float)GetMapCorrectionOffset(sh.Varname);
+                                        if (value == (float)searchoptions.NumericValueToSearchFor)
+                                        {
+                                            hit_found = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (searchoptions.SearchForStringValues)
+                            {
+                                if (searchoptions.StringValueToSearchFor.Length > symboldata.Length)
+                                {
+                                    // possible...
+                                    string symboldataasstring = System.Text.Encoding.ASCII.GetString(symboldata);
+                                    if (symboldataasstring.Contains(searchoptions.StringValueToSearchFor))
+                                    {
+                                        hit_found = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (hit_found)
+                        {
+                            // add to collection
+                            result_Collection.Add(sh);
+                        }
+                        cnt++;
+                    }
+                    progress.Close();
+                    if (result_Collection.Count == 0)
+                    {
+                        frmInfoBox info = new frmInfoBox("No results found...");
+                    }
+                    else
+                    {
+                        // start result screen
+                        dockManager1.BeginUpdate();
+                        try
+                        {
+                            SymbolTranslator st = new SymbolTranslator();
+                            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                            CompareResults tabdet = new CompareResults();
+                            tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+                            tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
+                            tabdet.Dock = DockStyle.Fill;
+                            tabdet.UseForFind = true;
+                            tabdet.Filename = m_currentfile;
+                            tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectForFind);
+                            dockPanel.Controls.Add(tabdet);
+                            dockPanel.Text = "Search results: " + Path.GetFileName(m_currentfile);
+                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+
+                            dockPanel.Width = 700;
+
+                            System.Data.DataTable dt = new System.Data.DataTable();
+                            dt.Columns.Add("SYMBOLNAME");
+                            dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
+                            dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                            dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
+                            dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
+                            dt.Columns.Add("DESCRIPTION");
+                            dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
+                            dt.Columns.Add("CATEGORY"); //0
+                            dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
+                            dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
+                            dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
+                            dt.Columns.Add("CATEGORYNAME");
+                            dt.Columns.Add("SUBCATEGORYNAME");
+                            dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
+                            dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
+                            //string category = "";
+                            string ht = string.Empty;
+                            //double diffperc = 0;
+                            //int diffabs = 0;
+                            //double diffavg = 0;
+                            XDFCategories cat = XDFCategories.Undocumented;
+                            XDFSubCategory subcat = XDFSubCategory.Undocumented;
+                            foreach (SymbolHelper shfound in result_Collection)
+                            {
+                                string helptext = st.TranslateSymbolToHelpText(shfound.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage);
+                                if (shfound.Varname.Contains("."))
+                                {
+                                    try
+                                    {
+                                        shfound.Category = shfound.Varname.Substring(0, shfound.Varname.IndexOf("."));
+                                    }
+                                    catch (Exception cE)
+                                    {
+                                        LogHelper.Log("Failed to assign category to symbol: " + shfound.Varname + " err: " + cE.Message);
+                                    }
+                                }
+                                dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
+                            }
+                            tabdet.CompareSymbolCollection = result_Collection;
+                            tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
+                            tabdet.gridControl1.DataSource = dt.Copy();
+
+                        }
+                        catch (Exception E)
+                        {
+                            LogHelper.Log(E.Message);
+                        }
+                        dockManager1.EndUpdate();
+
+                    }
+
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// TODO: make this work with manually added symbol (user description in stead of varname
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Actions_SIDInformation_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // show SID information table from this bin and give the user the option to alter the settings from this table
+            SIDInformationTable sidinfotab = new SIDInformationTable();
+            SIDICollection entiresidcollection = sidinfotab.GetSIDInformation();
+            SIDICollection currentsidcollection = new SIDICollection();
+            SIDTranslator sidtrans = new SIDTranslator();
+
+            // so, now get the current settings from the binary
+            T7SidEdit t7SidEdit = new T7SidEdit();
+            if (!t7SidEdit.init(m_currentfile))
+            {
+                frmInfoBox info = new frmInfoBox("File not compatible!");
+            }
+            else
+            {
+                bool first = true;
+                for (int i = 0; i < t7SidEdit.getDataArrayAll().Length; i += 3)
+                {
+                    if (i + 2 < t7SidEdit.getDataArrayAll().Length)
+                    {
+                        SIDIHelper sidh = new SIDIHelper();
+                        sidh.Symbol = t7SidEdit.getDataArrayAll()[i];
+                        sidh.Symbol = sidh.Symbol.Replace((char)0x00, (char)0x20);
+                        sidh.AddressSRAM = Convert.ToInt32(t7SidEdit.getDataArrayAll()[i + 1], 16);
+                        //if (sidh.AddressSRAM < 0xF00000) sidh.AddressSRAM += 0xef02f0;
+                        sidh.Value = t7SidEdit.getDataArrayAll()[i + 2];
+                        sidh.IsReadOnly = first;
+                        first = false;
+                        sidh.Mode = 99;
+                        sidtrans.GetSidDescription(sidh);
+                        foreach (SymbolHelper sh in m_symbols)
+                        {
+                            // try to match it to a symbol in the binary file
+                            if (sh.Flash_start_address == sidh.AddressSRAM)
+                            {
+
+                                sidh.FoundT7Symbol = sh.Varname;
+                                if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
+                                {
+                                    // <GS-12102010>
+                                    sidh.FoundT7Symbol = sh.Userdescription;
+                                }
+                                break;
+                            }
+                        }
+
+                        currentsidcollection.Add(sidh);
+                    }
+                    //LogHelper.Log("ALL: " + t7SidEdit.getDataArrayAll()[i]);
+                }
+                if (t7SidEdit.getFileType() == 1)
+                {
+                    int mode = 0;
+                    int modcount = 0;
+                    first = true;
+                    for (int j = 0; j < t7SidEdit.getDataArrayNew().Length; j += 3)
+                    {
+                        if (j + 2 < t7SidEdit.getDataArrayNew().Length)
+                        {
+                            SIDIHelper sidh = new SIDIHelper();
+                            sidh.Symbol = t7SidEdit.getDataArrayNew()[j];
+                            sidh.Symbol = sidh.Symbol.Replace((char)0x00, (char)0x20);
+                            sidh.AddressSRAM = Convert.ToInt32(t7SidEdit.getDataArrayNew()[j + 1], 16);
+                            //if (sidh.AddressSRAM < 0xF00000) sidh.AddressSRAM += 0xef02f0;
+                            sidh.Value = t7SidEdit.getDataArrayNew()[j + 2];
+                            sidh.IsReadOnly = first;
+                            first = false;
+                            sidtrans.GetSidDescription(sidh);
+                            foreach (SymbolHelper sh in m_symbols)
+                            {
+                                // try to match it to a symbol in the binary file
+                                if (sh.Flash_start_address == sidh.AddressSRAM)
+                                {
+                                    sidh.FoundT7Symbol = sh.Varname;
+                                    if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
+                                    {
+                                        // <GS-12102010>
+                                        sidh.FoundT7Symbol = sh.Userdescription;
+                                    }
+                                    break;
+                                }
+                            }
+
+                            sidh.Mode = mode;//Convert.ToInt32(sh.Value);
+                            modcount++;
+                            if ((modcount % 12) == 0) mode++;
+                            currentsidcollection.Add(sidh);
+                        }
+                        //LogHelper.Log("NEW: " + t7SidEdit.getDataArrayNew()[j]);
+                    }
+                }
+                frmSIDInformation frmsid = new frmSIDInformation();
+                frmsid.ApplicationLanguage = m_appSettings.ApplicationLanguage;
+                frmsid.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+
+                frmsid.Sidcollection = currentsidcollection;
+                frmsid.Entiresidcollection = entiresidcollection;
+                frmsid.Symbols = m_symbols;
+                if (frmsid.ShowDialog() == DialogResult.OK)
+                {
+                    string[] outputarray = new string[frmsid.Get99ModeCount() * 3];
+                    int cnt = 0;
+                    foreach (SIDIHelper sh in frmsid.Sidcollection)
+                    {
+                        if (sh.Mode == 99)
+                        {
+                            outputarray.SetValue(sh.Symbol, cnt++);
+                            outputarray.SetValue(sh.AddressSRAM.ToString("X6"), cnt++);
+                            outputarray.SetValue(sh.Value.ToString(), cnt++);
+                        }
+                    }
+                    t7SidEdit.setDataArrayAll(outputarray);
+                    if (t7SidEdit.getFileType() == 1)
+                    {
+                        outputarray = new string[frmsid.GetNewModeCount() * 3];
+                        cnt = 0;
+                        foreach (SIDIHelper sh in frmsid.Sidcollection)
+                        {
+                            if (sh.Mode != 99)
+                            {
+                                outputarray.SetValue(sh.Symbol, cnt++);
+                                outputarray.SetValue(sh.AddressSRAM.ToString("X6"), cnt++);
+                                outputarray.SetValue(sh.Value.ToString(), cnt++);
+                            }
+                        }
+                        t7SidEdit.setDataArrayNew(outputarray);
+                    }
+                    t7SidEdit.saveFile();
+                    UpdateChecksum(m_currentfile);
+                    //SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
+                }
+            }
+
+            /*
+                        SIDICollection currentsidcollection = GetSidCollectionFromBinary(m_currentfile);
+                        //LogHelper.Log("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
+                        int mode = 0;
+                        int modcount = 0;
+            
+                        foreach (SIDIHelper sh in currentsidcollection)
+                        {
+                            //LogHelper.Log("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
+                            //Console.Write(Environment.NewLine); 
+                            for (int t = 0; t < sh.Symbol.Length; t++)
+                            {
+                                byte b = (byte)sh.Symbol[t];
+                                Console.Write(b.ToString("X2") + " " );
+                            }
+                            Console.Write(Environment.NewLine);
+                            sidtrans.GetSidDescription(sh);
+                            sh.Mode = mode;//Convert.ToInt32(sh.Value);
+                            modcount++;
+                            if ((modcount % 12) == 0) mode++;
+                        }
+                        frmSIDInformation frmsid = new frmSIDInformation();
+                        frmsid.Sidcollection = currentsidcollection;
+                        frmsid.Entiresidcollection = entiresidcollection;
+                        if (frmsid.ShowDialog() == DialogResult.OK)
+                        {
+                            SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
+                        }*/
+        }
+
+        private void SaveSidCollectionToBinary(string m_currentfile, SIDICollection sidicoll)
+        {
+            FileStream stream = null;
+            //long num = 0x80000L;
+            byte[] array = new byte[7];
+            byte[] buffer = new byte[3];
+            byte[] buffer3 = new byte[2];
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.ReadWrite);
+            stream.Position = 0L;
+            long num2 = 0L;
+            bool flag = false;
+            byte[] buffer2search = new byte[] { 0x41, 100, 0x70, 0x4e, 0, 0, 0 };
+            do
+            {
+                if (((byte)stream.ReadByte()) == buffer2search[0])
+                {
+                    long position = stream.Position;
+                    if (((byte)stream.ReadByte()) == buffer2search[1])
+                    {
+                        if ((((((byte)stream.ReadByte()) == buffer2search[2]) && (((byte)stream.ReadByte()) == buffer2search[3])) && ((((byte)stream.ReadByte()) == buffer2search[4]) && (((byte)stream.ReadByte()) == buffer2search[5]))) && (((byte)stream.ReadByte()) == buffer2search[6]))
+                        {
+                            flag = true;
+                            num2 = stream.Position - 7L;
+                        }
+                    }
+                    else
+                    {
+                        stream.Position = position;
+                    }
+                }
+            }
+            while (!flag && (stream.Position != 0x80000));
+            if (!flag)
+            {
+                return;
+            }
+            stream.Position -= 7L;
+            foreach (SIDIHelper sh in sidicoll)
+            {
+                array = encoding.GetBytes(sh.Symbol);
+                Array.Resize<byte>(ref array, 7);
+                stream.Write(array, 0, 7);
+                buffer = ToByteArray(sh.AddressSRAM.ToString("X6"));
+                stream.Write(buffer, 0, 3);
+                buffer3 = ToByteArray(sh.Value);
+                Array.Resize<byte>(ref buffer3, 2);
+                stream.Write(buffer3, 0, 2);
+            }
+            if (stream != null)
+            {
+                stream.Close();
+            }
+            UpdateChecksum(m_currentfile);
+        }
+
+        public static byte[] ToByteArray(string HexString)
+        {
+            int length = HexString.Length;
+            byte[] buffer = new byte[length / 2];
+            for (int i = 0; i < length; i += 2)
+            {
+                buffer[i / 2] = Convert.ToByte(HexString.Substring(i, 2), 0x10);
+            }
+            return buffer;
+        }
+
+        private SIDICollection GetSidCollectionFromBinary(string m_currentfile)
+        {
+            SIDICollection m_sidcollection = new SIDICollection();
+            FileStream stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
+            stream.Position = 0L;
+            long num2 = 0L;
+            bool flag = false;
+            byte[] buffer = new byte[] { 0x41, 100, 0x70, 0x4e, 0, 0, 0 };
+            do
+            {
+                if (((byte)stream.ReadByte()) == buffer[0])
+                {
+                    long position = stream.Position;
+                    if (((byte)stream.ReadByte()) == buffer[1])
+                    {
+                        if ((((((byte)stream.ReadByte()) == buffer[2]) && (((byte)stream.ReadByte()) == buffer[3])) && ((((byte)stream.ReadByte()) == buffer[4]) && (((byte)stream.ReadByte()) == buffer[5]))) && (((byte)stream.ReadByte()) == buffer[6]))
+                        {
+                            flag = true;
+                            num2 = stream.Position - 7L;
+                        }
+                    }
+                    else
+                    {
+                        stream.Position = position;
+                    }
+                }
+            }
+            while (!flag && (stream.Position != 0x80000));
+            if (!flag)
+            {
+                frmInfoBox info = new frmInfoBox("This T7 file is not compatible with the SIDI function in T7Suite!");
+                return m_sidcollection;
+            }
+            stream.Position -= 7L;
+
+            long start_pos = stream.Position;
+            byte[] bytes = new byte[12];
+            uint num4 = 0x53;           //?? fixed length?
+            //int num5 = 0;
+            for (int i = 0; i <= num4; i++)
+            {
+                //LogHelper.Log("*****" + i.ToString());
+                /*if (i == 65)
+                {
+                    LogHelper.Log("65");
+                }*/
+                for (int j = 0; j <= 3; j++)
+                {
+                    bytes[j] = (byte)stream.ReadByte();
+                }
+                // set text
+                SIDIHelper sidihelper = new SIDIHelper();
+                sidihelper.Symbol = Encoding.Default.GetString(bytes, 0, 4);
+                sidihelper.Symbol = sidihelper.Symbol.Replace((char)0x00, (char)0x20);
+                //LogHelper.Log(i.ToString() + " = " + Encoding.Default.GetString(bytes, 0, 4));
+                stream.Position += 3L;
+                for (int k = 0; k <= 2; k++)
+                {
+                    bytes[k] = (byte)stream.ReadByte();
+                }
+                sidihelper.AddressSRAM = Convert.ToInt32(BitConverter.ToString(bytes, 0, 3).Replace("-", ""), 16);
+                for (int m = 0; m <= 0; m++)
+                {
+                    bytes[m] = (byte)stream.ReadByte();
+                }
+                sidihelper.Value = BitConverter.ToString(bytes, 0, 1).Replace("-", "");
+                m_sidcollection.Add(sidihelper);
+                stream.Position += 1L; // skip one
+            }
+            if (stream != null)
+            {
+                stream.Close();
+            }
+            return m_sidcollection;
+        }
+
+        private void Actions_LimiterCheck_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+            // start a dockview for this <GS-26012011>
+            DockPanel dockPanel;
+            DockPanel sramdockPanel;
+            bool pnlfound = false;
+            //bool srampnlfound = false;
+
+            if (CheckAllTablesAvailable())
+            {
+                //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                dockManager1.BeginUpdate();
+                try
+                {
+                    ctrlAirmassResult airmassResult = new ctrlAirmassResult();
+                    airmassResult.Dock = DockStyle.Fill;
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    dockPanel.Tag = m_currentfile;
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.Text = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
+                    dockPanel.Width = 800;
+                    airmassResult.onStartTableViewer += new ctrlAirmassResult.StartTableViewer(airmassResult_onStartTableViewer);
+                    airmassResult.onClose += new ctrlAirmassResult.ViewerClose(airmassResult_onClose);
+                    airmassResult.Currentfile = m_currentfile;
+                    airmassResult.Symbols = m_symbols;
+                    airmassResult.CurrentSramOffsett = m_currentSramOffsett;
+                    airmassResult.Currentfile_size = m_currentfile_size;
+                    airmassResult.Calculate(m_currentfile, m_symbols);
+                    dockPanel.Controls.Add(airmassResult);
+                }
+                catch (Exception newdockE)
+                {
+                    LogHelper.Log(newdockE.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+            /*
+            if (CheckAllTablesAvailable())
+            {
+                // build a table that shows the maximum allowed airmass depending on the current limiters
+                // table show be the same size as the pedalrequest map
+                frmAirmassResult airmassresult = new frmAirmassResult();
+                airmassresult.onStartTableViewer += new frmAirmassResult.StartTableViewer(airmassresult_onStartTableViewer);
+                airmassresult.Currentfile = m_currentfile;   
+                airmassresult.Symbols = m_symbols;
+                airmassresult.CurrentSramOffsett = m_currentSramOffsett;
+                airmassresult.Currentfile_size = m_currentfile_size;
+                airmassresult.Calculate(m_currentfile, m_symbols);
+                airmassresult.Show(); // not dialog?
+            }*/
+        }
+
+        void airmassResult_onClose(object sender, EventArgs e)
+        {
+            // lookup the panel which cast this event
+            if (sender is ctrlAirmassResult)
+            {
+                string dockpanelname = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
+                foreach (DockPanel dp in dockManager1.Panels)
+                {
+                    if (dp.Text == dockpanelname)
+                    {
+                        dockManager1.RemovePanel(dp);
+                        break;
+                    }
+                }
+            }
+        }
+
+        void airmassResult_onStartTableViewer(object sender, ctrlAirmassResult.StartTableViewerEventArgs e)
+        {
+            StartAViewer(e.SymbolName);
+        }
+
+        void airmassresult_onStartTableViewer(object sender, frmAirmassResult.StartTableViewerEventArgs e)
+        {
+            // start the table viewer
+            StartAViewer(e.SymbolName);
+        }
+
+        private bool CheckAllTablesAvailable()
+        {
+            bool retval = true;
+            if (m_currentfile != "")
+            {
+                if (File.Exists(m_currentfile))
+                {
+                    if (!SymbolExists("PedalMapCal.m_RequestMap")) retval = false;
+                    if (!SymbolExists("TorqueCal.m_AirTorqMap")) retval = false;
+                    if (!SymbolExists("TorqueCal.M_NominalMap")) retval = false;
+                    if (!SymbolExists("BstKnkCal.MaxAirmass")) retval = false;
+                    //if (!SymbolExists("BstKnkCal.MaxAirmassAu")) retval = false;
+                    //if (!SymbolExists("FCutCal.m_AirInletLimit")) retval = false;
+                    if (!SymbolExists("TorqueCal.M_EngMaxTab")) retval = false;
+                    if (!SymbolExists("TorqueCal.M_EngMaxAutTab")) retval = false;
+                    //if (!SymbolExists("TorqueCal.M_ManGearLim")) retval = false;
+                    //if (!SymbolExists("TorqueCal.M_5GearLimTab")) retval = false;
+                    if (!SymbolExists("TorqueCal.m_AirXSP")) retval = false;
+                    if (!SymbolExists("TorqueCal.n_EngYSP")) retval = false;
+                    if (!SymbolExists("TorqueCal.M_EngXSP")) retval = false;
+                    //if (!SymbolExists("LimEngCal.TurboSpeedTab")) retval = false;
+                    if (!SymbolExists("BstKnkCal.OffsetXSP")) retval = false;
+                    if (!SymbolExists("BstKnkCal.n_EngYSP")) retval = false;
+                    if (!SymbolExists("PedalMapCal.n_EngineMap")) retval = false;
+                    if (!SymbolExists("PedalMapCal.X_PedalMap")) retval = false;
+
+                    /*
+LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproject.com/viewtopic.php?f=51&t=1213&p=25640&hilit=buglist+t7suite#p25640)
+                     * */
+                }
+                else retval = false;
+            }
+            else retval = false;
+            return retval;
+        }
+
+        private int TorqueToAirmass(int torque, bool E85)
+        {
+            double airmass = Convert.ToDouble(torque) * 3.1;
+            if (E85)
+            {
+                airmass /= 1.07;
+            }
+            return Convert.ToInt32(airmass);
+        }
+
+        private double GetCorrectionFactorForRpm(int rpm)
+        {
+            double correction = 1;
+            /*if (rpm >= 6000) correction = 0.97;
+            else if (rpm > 5800) correction = 0.98;
+            else if (rpm > 5400) correction = 0.985;
+            else if (rpm > 5000) correction = 0.99;
+            else if (rpm > 4600) correction = 0.995;*/
+            if (rpm >= 6000) correction = 0.85;
+            else if (rpm >= 5820) correction = 0.94;
+            else if (rpm >= 5440) correction = 0.95;
+            else if (rpm >= 5060) correction = 0.99;
+            else if (rpm >= 4680) correction = 1.00;//1.03;
+            else if (rpm >= 4300) correction = 1.00;//1.05;
+            else if (rpm >= 3920) correction = 1.00;//1.06;
+            else if (rpm >= 3540) correction = 1.00;//1.06;
+            else if (rpm >= 3160) correction = 1.00;//1.07;
+            else if (rpm >= 2780) correction = 1.00;//1.07;
+            else if (rpm >= 2400) correction = 1.00;//1.07;
+            else if (rpm >= 2020) correction = 1.00;//1.06;
+            else if (rpm >= 1640) correction = 1.00;
+            else if (rpm >= 1260) correction = 1.00;
+            else correction = 1.00;
+            return correction;
+
+        }
+
+        private int PowerToTorque(int power, int rpm, bool doCorrection)
+        {
+            double torque = (power * 7121) / rpm;
+            /*double correction = 1;
+            if (rpm >= 6000) correction = 0.88;
+            else if (rpm > 5800) correction = 0.90;
+            else if (rpm > 5400) correction = 0.92;
+            else if (rpm > 5000) correction = 0.95;
+            else if (rpm > 4600) correction = 0.98;*/
+            double correction = GetCorrectionFactorForRpm(rpm);
+            if (doCorrection)
+            {
+                torque /= correction;
+            }
+            return Convert.ToInt32(torque);
+        }
+
+        private int TorqueToPower(int torque, int rpm)
+        {
+            double power = (torque * rpm) / 7121;
+            return Convert.ToInt32(power);
+        }
+
+        private int AirmassToTorque(int airmass, bool E85)
+        {
+            double tq = Convert.ToDouble(airmass) / 3.1;
+            if (E85)
+            {
+                tq *= 1.07;
+            }
+            return Convert.ToInt32(tq);
+        }
+
+        private void gridViewSymbols_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
+        {
+            if (e.Column.Name == gcSymbolsName.Name)
+            {
+                if (e.CellValue != null)
+                {
+                    if (e.CellValue != DBNull.Value)
+                    {
+                        Color c = Color.White;
+                        if (e.CellValue.ToString().StartsWith("TorqueCal."))
+                        {
+                            c = Color.Orange;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("BoostCal."))
+                        {
+                            c = Color.OrangeRed;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("BFuelCal.") || e.CellValue.ToString().StartsWith("Inj") || e.CellValue.ToString().StartsWith("FCutCal.") || e.CellValue.ToString().StartsWith("FCompCal."))
+                        {
+                            c = Color.LightSteelBlue;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Ign") || e.CellValue.ToString().StartsWith("DI"))
+                        {
+                            c = Color.LightGreen;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("BstKnkCal."))
+                        {
+                            c = Color.LightGray;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Knk"))
+                        {
+                            c = Color.Plum;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("MAFCal."))
+                        {
+                            c = Color.Yellow;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Cruise"))
+                        {
+                            c = Color.SandyBrown;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Evap"))
+                        {
+                            c = Color.Orchid;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Idle"))
+                        {
+                            c = Color.BurlyWood;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Lambda") || e.CellValue.ToString().StartsWith("O2"))
+                        {
+                            c = Color.Goldenrod;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Missf"))
+                        {
+                            c = Color.Bisque;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("Purge"))
+                        {
+                            c = Color.Khaki;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("SAI"))
+                        {
+                            c = Color.GreenYellow;
+                        }
+                        else if (e.CellValue.ToString().StartsWith("StartCal."))
+                        {
+                            c = Color.SeaGreen;
+                        }
+                        /*
+                    else if (Convert.ToInt32(o) == (int)XDFCategories.Idle)
+                    {
+                        c = Color.BurlyWood;
+                    }*/
+                        if (c != Color.White)
+                        {
+                            //System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, c, Color.White, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
+                            System.Drawing.SolidBrush sb = new SolidBrush(c);
+                            e.Graphics.FillRectangle(sb, e.Bounds);
+                            sb.Dispose();
+                        }
+                    }
+                }
+            }
+            else if (e.Column.Name == gcSymbolsAddress.Name)
+            {
+                /*if (m_appSettings.ShowAddressesInHex)
+                {
+                    if (e.CellValue != null)
+                    {
+                        if (e.CellValue != DBNull.Value)
+                        {
+                            try
+                            {
+                                e.DisplayText = Convert.ToInt32(e.CellValue).ToString("X6");
+                            }
+                            catch (Exception E)
+                            {
+                                LogHelper.Log(E.Message);
+                            }
+                        }
+                    }
+                }*/
+            }
+            else if (e.Column.Name == gcSymbolsLength.Name)
+            {
+                /* if (m_appSettings.ShowAddressesInHex)
+                 {
+                     if (e.CellValue != null)
+                     {
+                         if (e.CellValue != DBNull.Value)
+                         {
+                             e.DisplayText = Convert.ToInt32(e.CellValue).ToString("X4");
+                         }
+                     }
+                 }*/
+            }
+        }
+
+        private void Actions_EditESP_ItemClick_1(object sender, ItemClickEventArgs e)
+        {
+            // show ESP calibration value from this bin and give the user the option to alter the setting
+
+            // so, now get the current settings from the binary
+            T7EspEdit t7EspEdit = new T7EspEdit();
+            if (!t7EspEdit.loadFile(m_currentfile))
+            {
+                frmInfoBox info = new frmInfoBox("File not compatible!");
+            }
+            else
+            {
+                frmEspSelection frmEsp = new frmEspSelection();
+                frmEsp.Esp = t7EspEdit.getEspValue();
+                if (frmEsp.ShowDialog() == DialogResult.OK)
+                {
+                    t7EspEdit.setEspValue(frmEsp.Esp);
+                    t7EspEdit.saveFile();
+                    UpdateChecksum(m_currentfile);
+                }
+            }
+        }
+
+        private void Actions_ImportAFRFeedbackMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_AFRMap != null && m_currentfile != string.Empty)
+            {
+                int rows = 0;
+                int cols = 0;
+                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out cols, out rows);
+                byte[] fuelmap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.Map"), (int)GetSymbolLength(m_symbols, "BFuelCal.Map"));
+                int[] countermap = m_AFRMap.GetAFRCountermap();
+                float[] feedbackMap = m_AFRMap.GetFeedbackMap();
+                float[] targetMap = m_AFRMap.GetTargetMap();
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        int counter = countermap[i * cols + j];
+                        if (counter > 0)
+                        {
+                            float target = targetMap[i * cols + j];
+                            float feedback = feedbackMap[i * cols + j];
+
+                            float _afr_diff_percentage = Math.Abs(((target - feedback) / target) * 100);
+                            float afr_diff_to_correct = Math.Abs(_afr_diff_percentage); // so, if lean, negative! 
+                            int _fuelcorrectionvalue = (int)fuelmap[(i * cols) + j];
+                            if (feedback > target)
+                            {
+                                // lean
+                                float _tempcorrectionvalue = _fuelcorrectionvalue;
+
+                                _tempcorrectionvalue *= 100F + afr_diff_to_correct;
+                                _tempcorrectionvalue /= 100F;
+                                if (_tempcorrectionvalue > 254) _tempcorrectionvalue = 254;
+                                _fuelcorrectionvalue = Convert.ToInt32(Math.Round(_tempcorrectionvalue));
+                            }
+                            else
+                            {
+                                // rich
+                                float _tempcorrectionvalue = _fuelcorrectionvalue;
+                                _tempcorrectionvalue *= 100F - afr_diff_to_correct;
+                                _tempcorrectionvalue /= 100F;
+                                if (_tempcorrectionvalue < 1) _tempcorrectionvalue = 1;
+                                _fuelcorrectionvalue = Convert.ToInt32(Math.Round(_tempcorrectionvalue));
+                            }
+                            if (fuelmap[(i * cols) + j] != (byte)_fuelcorrectionvalue)
+                            {
+                                fuelmap[(i * cols) + j] = (byte)_fuelcorrectionvalue;
+                            }
+                        }
+                    }
+                }
+                savedatatobinary((int)GetSymbolAddress(m_symbols, "BFuelCal.Map"), (int)GetSymbolLength(m_symbols, "BFuelCal.Map"), fuelmap, m_currentfile, true, "Imported AFR feedback data");
+                UpdateChecksum(m_currentfile);
+                ClearAFRFeedbackMap();
+                UpdateViewersWithName("BFuelCal.Map");
+                //UpdateOpenViewers();  update BFuelCal.Map
+            }
+        }
+
+        private void UpdateViewersWithName(string symbolname)
+        {
+            try
+            {
+                // convert feedback map in memory to byte[] in stead of float[]
+                int rows = 0;
+                int cols = 0;
+                GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out cols, out rows);
+                byte[] current_map = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname));
+                foreach (DockPanel pnl in dockManager1.Panels)
+                {
+                    if (pnl.Text.StartsWith("Symbol: "))
+                    {
+                        foreach (Control c in pnl.Controls)
+                        {
+                            if (c is IMapViewer)
+                            {
+                                IMapViewer vwr = (IMapViewer)c;
+                                if (vwr.Map_name == symbolname)
+                                {
+                                    vwr.Map_content = current_map;
+                                    UpdateViewer(vwr, cols, isSixteenBitTable(symbolname));
+                                }
+                            }
+                            else if (c is DockPanel)
+                            {
+                                DockPanel tpnl = (DockPanel)c;
+                                foreach (Control c2 in tpnl.Controls)
+                                {
+                                    if (c2 is IMapViewer)
+                                    {
+                                        IMapViewer vwr2 = (IMapViewer)c2;
+                                        if (vwr2.Map_name == symbolname)
+                                        {
+                                            vwr2.Map_content = current_map;
+                                            UpdateViewer(vwr2, cols, isSixteenBitTable(symbolname));
+                                        }
+                                    }
+                                }
+                            }
+                            else if (c is ControlContainer)
+                            {
+                                ControlContainer cntr = (ControlContainer)c;
+                                foreach (Control c3 in cntr.Controls)
+                                {
+                                    if (c3 is IMapViewer)
+                                    {
+                                        IMapViewer vwr3 = (IMapViewer)c3;
+                                        if (vwr3.Map_name == symbolname)
+                                        {
+                                            vwr3.Map_content = current_map;
+                                            UpdateViewer(vwr3, cols, isSixteenBitTable(symbolname));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log("Refresh viewer " + symbolname + " error: " + E.Message);
+            }
+        }
+
+        #endregion
+        
         void trionic7_onCanInfo(ITrionic.CanInfoEventArgs e)
         {
             // display progress in the statusbar
@@ -1630,6 +5661,41 @@ namespace T7
             return retval;
         }
 
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                if (_globalBDMOpened)
+                {
+                    BdmAdapter_Close();
+                }
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log("Failed to close BDM: " + E.Message);
+            }
+            if (m_CurrentWorkingProject != "")
+            {
+                CloseProject();
+            }
+            m_appSettings.ShowMenu = !ribbonControl1.Minimized;
+            SaveLayoutFiles();
+            SaveRealtimeTable();
+            SaveMRUList();
+            SaveAFRAndCounterMaps();
+
+            try
+            {
+                trionic7.Cleanup();
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log(E.Message);
+            }
+
+            LogHelper.Flush();
+            Environment.Exit(0);
+        }
 
         private void frmMain_Load(object sender, EventArgs e)
         {            
@@ -1702,7 +5768,6 @@ namespace T7
             }
             if(m_appSettings.DebugMode)
             {
-                debugActionToolStripMenuItem.Visible = true;
                 readSymbolToolStripMenuItem.Enabled = true;
             }
             if (m_appSettings.MeasureAFRInLambda)
@@ -3716,26 +7781,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return false;
         }
 
-        private void CreateRepositoryItem(string filename)
-        {
-            System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(filename));
-            dt.Columns.Add("Varname");
-            dt.Columns.Add("Description");
-            dt.Columns.Add("Flash_start_address", Type.GetType("System.Int32"));
-            dt.Columns.Add("Internal_address", Type.GetType("System.Int32"));
-            dt.Columns.Add("Length", Type.GetType("System.Int32"));
-            dt.Columns.Add("Start_address", Type.GetType("System.Int32"));
-            dt.Columns.Add("Symbol_number", Type.GetType("System.Int32"));
-            dt.Columns.Add("Symbol_number_ECU", Type.GetType("System.Int32"));
-            dt.Columns.Add("Userdescription");
-
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                dt.Rows.Add(sh.Varname, sh.Description, sh.Flash_start_address, sh.Internal_address, sh.Length, sh.Start_address, sh.Symbol_number, sh.Symbol_number_ECU, sh.Userdescription);
-            }
-            dt.WriteXml(filename);
-        }
-
         private void UpdateChecksum(string m_fileName)
         {
             T7FileHeader t7InfoHeader = null;
@@ -3754,523 +7799,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             t7InfoHeader.setChecksumF2((int)calculatedF2Checksum);
             t7InfoHeader.setChecksumFB(calculatedFBChecksum);
             t7InfoHeader.save(m_fileName);
-        }
-
-        private bool CompareSymbolToCurrentFile(string symbolname, int address, int length, string filename, out double diffperc, out int diffabs, out double diffavg)
-        {
-            diffperc = 0;
-            diffabs = 0;
-            diffavg = 0;
-            
-            double totalvalue1 = 0;
-            double totalvalue2 = 0;
-            bool retval = true;
-
-            if (symbolname == "CatOx2Dev")
-            {
-                LogHelper.Log("break");
-            }
-
-            if (address > 0)
-            {
-                while (address > m_currentfile_size) address -= m_currentfile_size;
-                int curaddress = (int)GetSymbolAddress(m_symbols, symbolname);
-                while (curaddress > m_currentfile_size) curaddress -= m_currentfile_size;
-                int curlength = GetSymbolLength(m_symbols, symbolname);
-                byte[] curdata = readdatafromfile(m_currentfile, curaddress, curlength);
-                byte[] compdata = readdatafromfile(filename, address, length);
-                if (curdata.Length != compdata.Length)
-                {
-                    LogHelper.Log("Lengths didn't match: " + symbolname);
-                    return false;
-                }
-                for (int offset = 0; offset < curdata.Length; offset++)
-                {
-                    if ((byte)curdata.GetValue(offset) != (byte)compdata.GetValue(offset))
-                    {
-                        retval = false;
-                        //LogHelper.Log("Difference detected in: " + symbolname + " offset=" + offset.ToString() + " value1: " + curdata[offset].ToString("X2") + " value2: " + compdata[offset].ToString("X2"));
-                        diffabs++;
-                    }
-                    totalvalue1 += (byte)curdata.GetValue(offset);
-                    totalvalue2 += (byte)compdata.GetValue(offset);
-                }
-                if (curdata.Length > 0)
-                {
-                    totalvalue1 /= curdata.Length;
-                    totalvalue2 /= compdata.Length;
-                }
-            }
-
-            diffavg = totalvalue1 - totalvalue2;
-            if (isSixteenBitTable(symbolname))
-            {
-                diffabs /= 2;
-            }
-
-            diffperc = (diffabs * 100) / length;
-
-            return retval;
-        }
-
-
-        private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (m_currentfile != "")
-                {
-                    CompareToFile(openFileDialog1.FileName);
-                    
-                }
-            }
-        }
-
-        private void CompareToFile(string filename)
-        {
-            if (m_symbols.Count > 0)
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                    CompareResults tabdet = new CompareResults();
-                    tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-                    tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                    tabdet.Dock = DockStyle.Fill;
-                    tabdet.Filename = filename;
-                    tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
-                    dockPanel.Controls.Add(tabdet);
-                    dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                    dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
-
-                    dockPanel.Width = 700;
-
-
-                    SymbolCollection compare_symbols = new SymbolCollection();
-                    FileInfo fi = new FileInfo(filename);
-                    Trionic7File compareFile = TryToOpenFileUsingClass(filename, out compare_symbols, (int)fi.Length, false);
-                    barProgress.EditValue = 60;
-                    barProgress.Caption = "Loading header";
-                    System.Windows.Forms.Application.DoEvents();
-
-                    T7FileHeader t7fh = new T7FileHeader();
-                    t7fh.init(filename, false);
-                    int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
-                    if (m_sramOffset == 0) m_sramOffset = compareFile.SramOffsetForOpenFile;
-                    if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
-                    barProgress.EditValue = 90;
-                    barProgress.Caption = "Starting compare";
-                    System.Windows.Forms.Application.DoEvents();
-
-                    System.Windows.Forms.Application.DoEvents();
-                    barProgress.Visibility = BarItemVisibility.Always;
-                    barProgress.Caption = "Comparing symbols in files...";
-                    barProgress.EditValue = 0;
-                    System.Windows.Forms.Application.DoEvents();
-                    System.Data.DataTable dt = new System.Data.DataTable();
-                    dt.Columns.Add("SYMBOLNAME");
-                    dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
-                    dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DESCRIPTION");
-                    dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
-                    dt.Columns.Add("CATEGORY", Type.GetType("System.Int32")); //0
-                    dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
-                    dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
-                    dt.Columns.Add("CATEGORYNAME");
-                    dt.Columns.Add("SUBCATEGORYNAME");
-                    dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
-                    dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                    dt.Columns.Add("Userdescription");
-                    dt.Columns.Add("MissingInOriFile", Type.GetType("System.Boolean"));
-                    dt.Columns.Add("MissingInCompareFile", Type.GetType("System.Boolean"));
-                    string category = "";
-                    string ht = string.Empty;
-                    double diffperc = 0;
-                    int diffabs = 0;
-                    double diffavg = 0;
-                    int percentageDone = 0;
-                    int symNumber = 0;
-                    XDFCategories cat = XDFCategories.Undocumented;
-                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                    if (compare_symbols.Count > 0)
-                    {
-                        CompareResults cr = new CompareResults();
-                        cr.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-                        cr.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                        SymbolTranslator st = new SymbolTranslator();
-                        Int64 compareStartAddress = 0;
-                        Int64 orgStartAddress = 0;
-                        foreach (SymbolHelper sh_compare in compare_symbols)
-                        {
-                            try
-                            {
-                                symNumber++;
-                                percentageDone = (symNumber * 50) / compare_symbols.Count;
-                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
-                                {
-                                    barProgress.EditValue = percentageDone;
-                                    System.Windows.Forms.Application.DoEvents();
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                LogHelper.Log(E.Message);
-                            }
-                            
-                            string compareName = sh_compare.Varname;
-                            if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
-
-                            compareStartAddress = sh_compare.Flash_start_address;
-                            if (IsSoftwareOpen(compare_symbols))
-                            {
-                                // get address
-                                if (IsSymbolCalibration(compareName) && sh_compare.Length < 0x400 && sh_compare.Flash_start_address > m_currentfile_size)
-                                {
-                                    compareStartAddress = sh_compare.Flash_start_address - m_sramOffset;
-                                }
-                            }
-
-                            foreach (SymbolHelper sh_org in m_symbols)
-                            {
-                                string originalName = sh_org.Varname;
-                                if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
-
-                                if (compareName.Equals(originalName) && compareName != String.Empty)
-                                {
-                                    if (compareStartAddress > 0 && compareStartAddress < 0x80000)
-                                    {
-                                        orgStartAddress = (int)GetSymbolAddress(m_symbols, sh_org.Varname);
-                                        if (orgStartAddress > 0 && orgStartAddress < 0x80000)
-                                        {
-                                            if (!CompareSymbolToCurrentFile(compareName, (int)compareStartAddress, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
-                                            {
-                                                category = "";
-                                                if (sh_org.Varname.Contains("."))
-                                                {
-                                                    try
-                                                    {
-                                                        category = sh_org.Varname.Substring(0, sh_org.Varname.IndexOf("."));
-                                                    }
-                                                    catch (Exception cE)
-                                                    {
-                                                        LogHelper.Log("Failed to assign category to symbol: " + sh_org.Varname + " err: " + cE.Message);
-                                                    }
-                                                }
-                                                else if (sh_org.Userdescription.Contains("."))
-                                                {
-                                                    try
-                                                    {
-                                                        category = sh_org.Userdescription.Substring(0, sh_org.Userdescription.IndexOf("."));
-                                                    }
-                                                    catch (Exception cE)
-                                                    {
-                                                        LogHelper.Log("Failed to assign category to symbol: " + sh_org.Userdescription + " err: " + cE.Message);
-                                                    }
-                                                }
-
-                                                dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, compareStartAddress, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(sh_compare.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription, false, false);
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-
-                        symNumber = 0;
-                        string varnameori = string.Empty;
-                        string varnamecomp = string.Empty;
-                        foreach (SymbolHelper shtest in compare_symbols)
-                        {
-                            try
-                            {
-                                symNumber++;
-                                percentageDone = 50 + (symNumber * 25) / compare_symbols.Count;
-                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
-                                {
-                                    barProgress.EditValue = percentageDone;
-                                    System.Windows.Forms.Application.DoEvents();
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                LogHelper.Log(E.Message);
-                            }
-                            bool _foundSymbol = false;
-                            varnamecomp = shtest.Varname;
-                            if (varnamecomp.StartsWith("Symbolnumber")) varnamecomp = shtest.Userdescription;
-                            if (IsSymbolCalibration(varnamecomp))
-                            {
-                                foreach (SymbolHelper shoritest in m_symbols)
-                                {
-                                    varnameori = shoritest.Varname;
-                                    if (varnameori.StartsWith("Symbolnumber")) varnameori = shoritest.Userdescription;
-
-                                    if (varnamecomp == varnameori)
-                                    {
-                                        _foundSymbol = true;
-                                        break;
-                                    }
-                                }
-                                if (!_foundSymbol)
-                                {
-                                    // add this symbol to the MissingInOriCollection
-                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in original", "", 0, shtest.Symbol_number, shtest.Userdescription, true, false);
-                                }
-                            }
-                        }
-                        symNumber = 0;
-                        foreach (SymbolHelper shtest in m_symbols)
-                        {
-                            try
-                            {
-                                symNumber++;
-                                percentageDone = 75 + (symNumber * 25) / compare_symbols.Count;
-                                if (Convert.ToInt32(barProgress.EditValue) != percentageDone)
-                                {
-                                    barProgress.EditValue = percentageDone;
-                                    System.Windows.Forms.Application.DoEvents();
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                LogHelper.Log(E.Message);
-                            }
-                            bool _foundSymbol = false;
-                            varnamecomp = shtest.Varname;
-                            if (varnamecomp.StartsWith("Symbolnumber")) varnamecomp = shtest.Userdescription;
-                            if (IsSymbolCalibration(varnamecomp))
-                            {
-                                foreach (SymbolHelper shoritest in compare_symbols)
-                                {
-                                    varnameori = shoritest.Varname;
-                                    if (varnameori.StartsWith("Symbolnumber")) varnameori = shoritest.Userdescription;
-
-                                    if (varnamecomp == varnameori)
-                                    {
-                                        _foundSymbol = true;
-                                        break;
-                                    }
-                                }
-                                if (!_foundSymbol)
-                                {
-                                    // add this symbol to the MissingInCompCollection
-                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in compare", "", 0, shtest.Symbol_number, shtest.Userdescription, false, true);
-                                }
-                            }
-                        }
-                        tabdet.CompareSymbolCollection = compare_symbols;
-                        tabdet.OriginalSymbolCollection = m_symbols;
-                        tabdet.OriginalFilename = m_currentfile;
-                        tabdet.CompareFilename = filename;
-                        tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-                        tabdet.gridControl1.DataSource = dt.Copy();
-                        barProgress.Visibility = BarItemVisibility.Never;
-                        barProgress.Caption = "Done";
-
-                    }
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-        }
-
-        private void StartCompareMapViewer(string SymbolName, string Filename, int SymbolAddress, int SymbolLength, SymbolCollection curSymbols, int symbolnumber)
-        {
-            try
-            {
-                // TEST SYMBOLNUMBERS
-                if (symbolnumber > 0 && SymbolName.StartsWith("Symbol"))
-                {
-                    foreach (SymbolHelper h in curSymbols)
-                    {
-                        if (h.Symbol_number == symbolnumber)
-                        {
-                            SymbolName = h.Varname;
-                        }
-                    }
-                }
-                DockPanel dockPanel;
-                bool pnlfound = false;
-                foreach (DockPanel pnl in dockManager1.Panels)
-                {
-
-                    if (pnl.Text == "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]")
-                    {
-                        if (pnl.Tag.ToString() == Filename) // <GS-10052011>
-                        {
-                            dockPanel = pnl;
-                            pnlfound = true;
-                            dockPanel.Show();
-                        }
-                    }
-                }
-                if (!pnlfound)
-                {
-                    dockManager1.BeginUpdate();
-                    try
-                    {
-                        dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
-                        IMapViewer tabdet;//= new MapViewer();
-                        if (m_appSettings.UseNewMapViewer)
-                        {
-                            tabdet = new MapViewerEx();
-                        }
-                        else
-                        {
-                            tabdet = new MapViewer();
-                        }
-
-                        tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                        tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                        tabdet.SetViewSize(m_appSettings.DefaultViewSize);
-
-                        //tabdet.IsHexMode = barViewInHex.Checked;
-                        tabdet.Viewtype = m_appSettings.DefaultViewType;
-                        tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                        tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                        tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                        tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
-                        tabdet.Filename = Filename;
-                        tabdet.Map_name = SymbolName;
-                        tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
-                        tabdet.Map_cat = XDFCategories.Undocumented;
-                        tabdet.X_axisvalues = GetXaxisValues(Filename, curSymbols, tabdet.Map_name);
-                        tabdet.Y_axisvalues = GetYaxisValues(Filename, curSymbols, tabdet.Map_name);
-
-                        SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
-                        string x_axis = string.Empty;
-                        string y_axis = string.Empty;
-                        string x_axis_descr = string.Empty;
-                        string y_axis_descr = string.Empty;
-                        string z_axis_descr = string.Empty;
-                        axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-                        tabdet.X_axis_name = x_axis_descr;
-                        tabdet.Y_axis_name = y_axis_descr;
-                        tabdet.Z_axis_name = z_axis_descr;
-
-                        /*string xdescr = string.Empty;
-                        string ydescr = string.Empty;
-                        string zdescr = string.Empty;
-                        GetAxisDescriptions(Filename, curSymbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
-                        tabdet.X_axis_name = xdescr;
-                        tabdet.Y_axis_name = ydescr;
-                        tabdet.Z_axis_name = zdescr;*/
-
-                        //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
-                        int columns = 8;
-                        int rows = 8;
-                        int tablewidth = GetTableMatrixWitdhByName(Filename, curSymbols, tabdet.Map_name, out columns, out rows);
-                        int address = Convert.ToInt32(SymbolAddress);
-                        if (address != 0)
-                        {
-                            while (address > m_currentfile_size) address -= m_currentfile_size;
-                            tabdet.Map_address = address;
-                            int length = SymbolLength;
-                            tabdet.Map_length = length;
-                            byte[] mapdata = readdatafromfile(Filename, address, length);
-                            tabdet.Map_content = mapdata;
-                            tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
-                            tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
-                            tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
-                            TryToAddOpenLoopTables(tabdet);
-                            tabdet.Dock = DockStyle.Fill;
-                            tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
-                            tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
-                            tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
-                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                            tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
-
-
-                            //dockPanel.DockAsTab(dockPanel1);
-                            dockPanel.Text = "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]";
-
-                            bool isDocked = false;
-                            if (m_appSettings.AutoDockSameSymbol)
-                            {
-                                foreach (DockPanel pnl in dockManager1.Panels)
-                                {
-                                    if (pnl.Text.StartsWith("Symbol: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                    {
-                                        dockPanel.DockAsTab(pnl, 0);
-                                        isDocked = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!isDocked)
-                            {
-                                if (m_appSettings.AutoDockSameFile)
-                                {
-                                    foreach (DockPanel pnl in dockManager1.Panels)
-                                    {
-                                        if ((string)pnl.Tag == Filename && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                        {
-                                            dockPanel.DockAsTab(pnl, 0);
-                                            isDocked = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!isDocked)
-                            {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
-                                if (m_appSettings.AutoSizeNewWindows)
-                                {
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    else
-                                    {
-                                        //dockPanel.Width = this.Width - dockSymbols.Width - 10;
-
-                                    }
-                                }
-                                if (dockPanel.Width < 400) dockPanel.Width = 400;
-                                //                    dockPanel.Width = 400;
-                            }
-                            dockPanel.Controls.Add(tabdet);
-
-
-                            /*dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
-                            if (tabdet.X_axisvalues.Length > 0)
-                            {
-                                dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                            }
-                            else
-                            {
-                                //dockPanel.Width = this.Width - dockSymbols.Width - 10;
-
-                            }
-                            if (dockPanel.Width < 400) dockPanel.Width = 400;
-                            //                    dockPanel.Width = 400;
-                            dockPanel.Controls.Add(tabdet);*/
-                        }
-                    }
-                    catch (Exception E)
-                    {
-                        LogHelper.Log(E.Message);
-                    }
-                    dockManager1.EndUpdate();
-                }
-            }
-            catch (Exception startnewcompareE)
-            {
-                LogHelper.Log(startnewcompareE.Message);
-            }
-
         }
 
         private void StartTableViewer(string symbolname)
@@ -5596,8 +9124,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     if (symcount > 10) return true;
                 }
             }
-            return false;
-            //Symbolnumber 
+            return false; 
         }
 
         private bool HasBinaryChecksumEnabled()
@@ -5708,34 +9235,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private bool _connectionWasOpenedBefore = false;
-
-        private void CheckCanwakeup()
-        {
-            if (!_connectionWasOpenedBefore)
-            {
-                string Exename = Path.Combine(System.Windows.Forms.Application.StartupPath, "WakeupCANbus.exe");
-                // see if we can spawn the exe called WakeupCANbus.exe
-                if (File.Exists(Exename))
-                {
-                    ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
-                    startinfo.CreateNoWindow = true;
-                    startinfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    //startinfo.UseShellExecute = false;
-                    startinfo.WorkingDirectory = System.Windows.Forms.Application.StartupPath;
-                    LogHelper.Log("Spawning WakeupCANbus.exe");
-                    System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                    conv_proc.WaitForExit(10000); // wait for 10 seconds max
-                    if (!conv_proc.HasExited)
-                    {
-                        LogHelper.Log("Killing WakeupCANbus.exe");
-                        conv_proc.Kill();
-                    }
-                    _connectionWasOpenedBefore = true;
-                }
-            }
-        }
-
         private bool CheckCANConnectivity()
         {
             if (m_connectedToECU)
@@ -5772,19 +9271,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 return false;
             }
             return m_connectedToECU;
-        }
-
-        private void DisableCANInteractionButtons()
-        {
-            barButtonItem17.Enabled = false;
-            barButtonItem18.Enabled = false;
-            barButtonItem19.Enabled = false;
-        }
-        private void EnableCANInteractionButtons()
-        {
-            barButtonItem17.Enabled = false;
-            barButtonItem18.Enabled = false;
-            barButtonItem19.Enabled = false;
         }
 
         private string ConvertFuelcutStatus(int value)
@@ -6248,43 +9734,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                if (_globalBDMOpened)
-                {
-                    BdmAdapter_Close();
-                }
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to close BDM: " + E.Message);
-            }
-            if (m_CurrentWorkingProject != "")
-            {
-                CloseProject();
-            }
-            m_appSettings.ShowMenu = !ribbonControl1.Minimized;
-            SaveLayoutFiles();
-            SaveRealtimeTable();
-            SaveMRUList();
-            SaveAFRAndCounterMaps();
-            
-            try
-            {
-                trionic7.Cleanup();
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log(E.Message);
-            }
-
-            LogHelper.Flush();
-            Environment.Exit(0);
-        }
-
-
         private void barButtonItem18_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             // first stop the canbus interface 
@@ -6321,187 +9770,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
             }
             return _symbols;
-        }
-
-        private void barButtonItem5_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            frmSettings set = new frmSettings();
-            set.AppSettings = m_appSettings;
-            set.Symbols = GetRealtimeNotificationSymbols();
-            set.StandardFill = m_appSettings.StandardFill;
-            set.InterpolateLogWorksTimescale = m_appSettings.InterpolateLogWorksTimescale;
-            set.AutoSizeNewWindows = m_appSettings.AutoSizeNewWindows;
-            set.AutoSizeColumnsInViewer = m_appSettings.AutoSizeColumnsInWindows;
-            set.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-            set.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-            //set.AutoGenerateLogWorksFile = m_appSettings.AutoGenerateLogWorks;
-            set.HideSymbolWindow = m_appSettings.HideSymbolTable;
-            set.ShowGraphsInMapViewer = m_appSettings.ShowGraphs;
-            set.UseRedAndWhiteMaps = m_appSettings.ShowRedWhite;
-            set.ViewTablesInHex = m_appSettings.Viewinhex;
-            set.AutoDockSameFile = m_appSettings.AutoDockSameFile;
-            set.AutoDockSameSymbol = m_appSettings.AutoDockSameSymbol;
-            set.DisableMapviewerColors = m_appSettings.DisableMapviewerColors;
-            set.ShowMapViewersInWindows = m_appSettings.ShowViewerInWindows;
-            set.NewPanelsFloating = m_appSettings.NewPanelsFloating;
-            set.AutoLoadLastFile = m_appSettings.AutoLoadLastFile;
-            set.AlwaysRecreateRepositoryItems = m_appSettings.AlwaysRecreateRepositoryItems;
-            set.DefaultViewType = m_appSettings.DefaultViewType;
-            set.DefaultViewSize = m_appSettings.DefaultViewSize;
-            set.SynchronizeMapviewers = m_appSettings.SynchronizeMapviewers;
-            set.FancyDocking = m_appSettings.FancyDocking;
-            set.ShowTablesUpsideDown = m_appSettings.ShowTablesUpsideDown;
-            set.WriteTimestampInBinary = m_appSettings.WriteTimestampInBinary;
-            set.AutoFixFooter = m_appSettings.AutoFixFooter;
-            set.EnableCanLog = m_appSettings.EnableCanLog;
-            set.OnlyPBus = m_appSettings.OnlyPBus;
-            set.DisableConnectionCheck = m_appSettings.DisableCanCheck;
-            set.AutoCreateAFRMaps = m_appSettings.AutoCreateAFRMaps;
-            set.AutoUpdateSRAMViewers = m_appSettings.AutoUpdateSRAMViewers;
-            set.UseAdditionalCanbusFrames = false;// m_appSettings.UseAdditionalCanbusFrames;
-            set.ResetRealtimeSymbolOnTabPageSwitch = m_appSettings.ResetRealtimeSymbolOnTabPageSwitch;
-            set.UseWidebandLambda = m_appSettings.UseWidebandLambda;
-            set.WideBandSymbol = m_appSettings.WideBandSymbol;
-            set.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-            set.MeasureAFRInLambda = m_appSettings.MeasureAFRInLambda;
-            set.UseNewMapViewer = m_appSettings.UseNewMapViewer;
-            set.ProjectFolder = m_appSettings.ProjectFolder;
-            set.RequestProjectNotes = m_appSettings.RequestProjectNotes;
-            set.CANBusAdapterType = m_appSettings.CANBusAdapterType;
-
-            set.AcceptableTargetErrorPercentage = m_appSettings.AcceptableTargetErrorPercentage;
-            set.AreaCorrectionPercentage = m_appSettings.AreaCorrectionPercentage;
-            set.AutoUpdateFuelMap = m_appSettings.AutoUpdateFuelMap;
-            set.CellStableTime_ms = m_appSettings.CellStableTime_ms;
-            set.CorrectionPercentage = m_appSettings.CorrectionPercentage;
-            set.DiscardClosedThrottleMeasurements = m_appSettings.DiscardClosedThrottleMeasurements;
-            set.DiscardFuelcutMeasurements = m_appSettings.DiscardFuelcutMeasurements;
-            set.DisableClosedLoopOnStartAutotune = m_appSettings.DisableClosedLoopOnStartAutotune;
-            set.PlayCellProcessedSound = m_appSettings.PlayCellProcessedSound;
-            set.AllowIdleAutoTune = m_appSettings.AllowIdleAutoTune;
-            set.EnrichmentFilter = m_appSettings.EnrichmentFilter;
-            set.FuelCutDecayTime_ms = m_appSettings.FuelCutDecayTime_ms;
-            set.MaximumAdjustmentPerCyclePercentage = m_appSettings.MaximumAdjustmentPerCyclePercentage;
-            set.MaximumAFRDeviance = m_appSettings.MaximumAFRDeviance;
-            set.MinimumAFRMeasurements = m_appSettings.MinimumAFRMeasurements;
-            set.AutoLoggingEnabled = m_appSettings.AutoLoggingEnabled;
-            set.AutoLogStartSign = m_appSettings.AutoLogStartSign;
-            set.AutoLogStartValue = m_appSettings.AutoLogStartValue;
-            set.AutoLogStopSign = m_appSettings.AutoLogStopSign;
-            set.AutoLogStopValue = m_appSettings.AutoLogStopValue;
-            set.AutoLogTriggerStartSymbol = m_appSettings.AutoLogTriggerStartSymbol;
-            set.AutoLogTriggerStopSymbol = m_appSettings.AutoLogTriggerStopSymbol;
-
-            if (set.ShowDialog() == DialogResult.OK)
-            {
-                m_appSettings.InterpolateLogWorksTimescale = set.InterpolateLogWorksTimescale;
-                m_appSettings.AutoSizeNewWindows = set.AutoSizeNewWindows;
-                m_appSettings.AutoSizeColumnsInWindows = set.AutoSizeColumnsInViewer;
-                m_appSettings.AutoChecksum = set.AutoUpdateChecksum;
-                m_appSettings.ShowAddressesInHex = set.ShowAddressesInHex;
-                m_appSettings.StandardFill = set.StandardFill;
-                //m_appSettings.AutoGenerateLogWorks = set.AutoGenerateLogWorksFile;
-                m_appSettings.HideSymbolTable = set.HideSymbolWindow;
-                m_appSettings.ShowGraphs = set.ShowGraphsInMapViewer;
-                m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
-                m_appSettings.Viewinhex = set.ViewTablesInHex;
-                m_appSettings.DisableMapviewerColors = set.DisableMapviewerColors;
-                m_appSettings.AutoDockSameFile = set.AutoDockSameFile;
-                m_appSettings.AutoDockSameSymbol = set.AutoDockSameSymbol;
-                m_appSettings.ShowViewerInWindows = set.ShowMapViewersInWindows;
-                m_appSettings.NewPanelsFloating = set.NewPanelsFloating;
-                m_appSettings.WriteTimestampInBinary = set.WriteTimestampInBinary;
-
-                m_appSettings.DefaultViewType = set.DefaultViewType;
-                m_appSettings.DefaultViewSize = set.DefaultViewSize;
-
-                m_appSettings.AutoLoadLastFile = set.AutoLoadLastFile;
-                m_appSettings.FancyDocking = set.FancyDocking;
-                m_appSettings.ShowTablesUpsideDown = set.ShowTablesUpsideDown;
-                m_appSettings.AlwaysRecreateRepositoryItems = set.AlwaysRecreateRepositoryItems;
-                m_appSettings.SynchronizeMapviewers = set.SynchronizeMapviewers;
-                m_appSettings.AutoFixFooter = set.AutoFixFooter;
-                m_appSettings.EnableCanLog = set.EnableCanLog;
-                m_appSettings.AutoCreateAFRMaps = set.AutoCreateAFRMaps;
-                m_appSettings.OnlyPBus = set.OnlyPBus;
-                m_appSettings.DisableCanCheck = set.DisableConnectionCheck;
-                m_appSettings.AutoUpdateSRAMViewers = set.AutoUpdateSRAMViewers;
-                m_appSettings.UseAdditionalCanbusFrames = set.UseAdditionalCanbusFrames;
-                m_appSettings.ResetRealtimeSymbolOnTabPageSwitch = set.ResetRealtimeSymbolOnTabPageSwitch;
-                m_appSettings.WideBandSymbol = set.WideBandSymbol;
-                m_appSettings.UseWidebandLambda = set.UseWidebandLambda;
-                m_appSettings.AutoUpdateInterval = set.AutoUpdateInterval;
-                m_appSettings.MeasureAFRInLambda = set.MeasureAFRInLambda;
-                m_appSettings.UseNewMapViewer = set.UseNewMapViewer;
-                m_appSettings.ProjectFolder = set.ProjectFolder;
-                m_appSettings.RequestProjectNotes = set.RequestProjectNotes;
-                m_appSettings.CANBusAdapterType = set.CANBusAdapterType;
-
-                m_appSettings.AcceptableTargetErrorPercentage = set.AcceptableTargetErrorPercentage;
-                m_appSettings.AreaCorrectionPercentage = set.AreaCorrectionPercentage;
-                m_appSettings.AutoUpdateFuelMap = set.AutoUpdateFuelMap;
-                m_appSettings.CellStableTime_ms = set.CellStableTime_ms;
-                m_appSettings.CorrectionPercentage = set.CorrectionPercentage;
-                m_appSettings.DiscardClosedThrottleMeasurements = set.DiscardClosedThrottleMeasurements;
-                m_appSettings.DiscardFuelcutMeasurements = set.DiscardFuelcutMeasurements;
-                m_appSettings.EnrichmentFilter = set.EnrichmentFilter;
-                m_appSettings.FuelCutDecayTime_ms = set.FuelCutDecayTime_ms;
-                m_appSettings.MaximumAdjustmentPerCyclePercentage = set.MaximumAdjustmentPerCyclePercentage;
-                m_appSettings.MaximumAFRDeviance = set.MaximumAFRDeviance;
-                m_appSettings.MinimumAFRMeasurements = set.MinimumAFRMeasurements;
-                m_appSettings.AutoLoggingEnabled = set.AutoLoggingEnabled;
-                m_appSettings.AutoLogStartSign = set.AutoLogStartSign;
-                m_appSettings.AutoLogStartValue = set.AutoLogStartValue;
-                m_appSettings.AutoLogStopSign = set.AutoLogStopSign;
-                m_appSettings.AutoLogStopValue = set.AutoLogStopValue;
-                m_appSettings.AutoLogTriggerStartSymbol = set.AutoLogTriggerStartSymbol;
-                m_appSettings.AutoLogTriggerStopSymbol = set.AutoLogTriggerStopSymbol;
-
-
-                if (m_appSettings.MeasureAFRInLambda)
-                {
-                    linearGauge2.MaxValue = 1.5F;
-                    linearGauge2.MinValue = 0.5F;
-                    linearGauge2.GaugeText = "λ ";
-                    labelControl11.Text = "λ";
-                    linearGauge2.NumberOfDecimals = 2;
-                    linearGauge2.NumberOfDivisions = 10;
-                    AfrViewMode = AFRViewType.LambdaMode;
-                    btnAFRFeedbackMap.Caption = "Show lambda feedback map";
-                    btnClearAFRFeedback.Caption = "Clear lambda feedback map";
-                }
-                else
-                {
-                    linearGauge2.MaxValue = 20;
-                    linearGauge2.MinValue = 10;
-                    linearGauge2.GaugeText = "AFR ";
-                    labelControl11.Text = "AFR";
-                    linearGauge2.NumberOfDecimals = 1;
-                    AfrViewMode = AFRViewType.AFRMode;
-                    btnAFRFeedbackMap.Caption = "Show AFR feedback map";
-                    btnClearAFRFeedback.Caption = "Clear AFR feedback map";
-                }
-                //UpdateSettingButtons();
-                if (!m_appSettings.FancyDocking)
-                {
-                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
-                }
-                else
-                {
-                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.VS2005;
-                }
-                if (m_appSettings.HideSymbolTable)
-                {
-                    dockSymbols.Visibility = DockVisibility.AutoHide;
-                    dockSymbols.HideImmediately();
-                }
-                else
-                {
-                    dockSymbols.Visibility = DockVisibility.Visible;
-                }
-
-            }
-            SetFilterMode();
         }
 
         private void SetFilterMode()
@@ -6630,7 +9898,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             return false;
         }
-
 
         private void frmMain_Shown(object sender, EventArgs e)
         {
@@ -6902,7 +10169,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        // NEW
         private void AddToResumeTable(string description)
         {
             if (resumeTuning != null)
@@ -6911,329 +10177,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 {
                     resumeTuning.Rows.Add(description);
                 }
-            }
-        }
-
-
-        private void CopySymbol(string symbolname, string fromfilename, int fromflashaddress, int fromlength, string targetfilename, int targetflashaddress, int targetlength)
-        {
-            if (symbolname == "TorqueCal.M_NominalMap")
-            {
-                LogHelper.Log("breakme");
-            }
-            if (fromlength != targetlength)
-            {
-                AddToResumeTable("Unable to transfer symbol " + symbolname + " because source and target lengths don't match!");
-            }
-            else
-            {
-                try
-                {
-                    while (fromflashaddress > m_currentfile_size) fromflashaddress -= m_currentfile_size;
-                    FileInfo fi = new FileInfo(targetfilename);
-                    while (targetflashaddress > fi.Length) targetflashaddress -= (int)fi.Length;
-                    byte[] mapdata = readdatafromfile(fromfilename, fromflashaddress, fromlength);
-                    savedatatobinary(targetflashaddress, targetlength, mapdata, targetfilename, true);
-                    AddToResumeTable("Transferred symbol " + symbolname + " successfully");
-                }
-                catch (Exception E)
-                {
-                    AddToResumeTable("Failed to transfer symbol " + symbolname + ": " + E.Message);
-                }
-            }
-        }
-
-        private bool SymbolInTransferCollection(SymbolCollection transferCollection, string mapname)
-        {
-            foreach (SymbolHelper sh_test in transferCollection)
-            {
-                if (sh_test.Selected && (sh_test.Varname == mapname || sh_test.Userdescription == mapname))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool CanTransfer(SymbolHelper sh)
-        {
-            // FOR TESTING ONLY
-            //return true;
-
-            bool retval = false;
-            if(sh.Varname.Contains(".") || sh.Userdescription.Contains(".")) retval = true;
-            //cfsh.Varname != "overrun_obj" && cfsh.Varname != "REPCalType" && cfsh.Varname != "SystemCalType" && cfsh.Varname != "nEngCalType") // hinted by jse!
-            return retval;
-        }
-
-        private void TransferMapsToNewBinary(string filename)
-        {
-            SymbolCollection curSymbolCollection = new SymbolCollection();
-            //AddressLookupCollection curAddressLookupCollection = new AddressLookupCollection();
-            resumeTuning = new System.Data.DataTable();
-            resumeTuning.Columns.Add("Description");
-
-            if (filename != string.Empty)
-            {
-                frmTransferSelectionSymbolsSelection frmtransfer = new frmTransferSelectionSymbolsSelection();
-                SymbolCollection _onlyFlashSymbols = new SymbolCollection();
-                foreach (SymbolHelper shcopy in m_symbols)
-                {
-                    if (shcopy.Flash_start_address > 0 && GetSymbolAddress(m_symbols, shcopy.Varname) < 524288 && shcopy.Length > 0 && CanTransfer(shcopy))
-                    {
-                        _onlyFlashSymbols.Symbols.Add(shcopy);
-                    }
-                }
-                frmtransfer.Symbols = /*m_symbols*/_onlyFlashSymbols;
-                if (frmtransfer.ShowDialog() == DialogResult.OK)
-                {
-                    barProgress.Visibility = BarItemVisibility.Always;
-                    barProgress.Caption = "Initializing";
-                    barProgress.EditValue = 0;
-                    System.Windows.Forms.Application.DoEvents();
-                    File.Copy(filename, Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin", true);
-                    AddToResumeTable("Backup file created (" + Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin)");
-                    AddToResumeTable("Transferring data from " + Path.GetFileName(m_currentfile) + " to " + filename);
-                    //bool m_fileparsed = false;
-
-                    //listView1.Items.Clear();
-                    SetStatusText("Start symbol parsing");
-
-
-                    FileInfo fi = new FileInfo(filename);
-                    Trionic7File transferToFile = TryToOpenFileUsingClass(filename, out curSymbolCollection, (int)fi.Length, false);
-                    T7FileHeader t7fh = new T7FileHeader();
-                    t7fh.init(filename, false);
-                    int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
-                    if (m_sramOffset == 0) m_sramOffset = transferToFile.SramOffsetForOpenFile;
-                    if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
-                    curSymbolCollection.SortColumn = "Flash_start_address";
-                    curSymbolCollection.SortingOrder = GenericComparer.SortOrder.Ascending;
-                    curSymbolCollection.Sort();
-                    //progress.SetProgress("Start transfer");
-                    barProgress.Caption = "Start transferring";
-                    barProgress.EditValue = 1;
-                    System.Windows.Forms.Application.DoEvents();
-
-                    Int64 currentFlashAddress = 0;
-                    foreach (SymbolHelper sh in curSymbolCollection)
-                    {
-                        currentFlashAddress = sh.Flash_start_address;
-                        //TODO: Keep open bins in mind which have sram addresses in stead of normal addresses
-                        if (IsSoftwareOpen(curSymbolCollection))
-                        {
-                            // get address
-                            if (IsSymbolCalibration(sh.Varname) && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
-                            {
-                                currentFlashAddress = sh.Flash_start_address - m_sramOffset;
-                            }
-                        }
-
-                        if (currentFlashAddress > 0 && currentFlashAddress < m_currentfile_size && sh.Length < 0x1000)
-                        {
-                            foreach (SymbolHelper cfsh in m_symbols)
-                            {
-                                if (CanTransfer(cfsh))
-                                {
-                                    if (cfsh.Varname == sh.Varname || cfsh.Userdescription == sh.Varname || sh.Userdescription == cfsh.Varname || (cfsh.Userdescription == sh.Userdescription && sh.Userdescription != ""))
-                                    {
-                                        // set correct symbolname
-                                        string symbolname = cfsh.Varname;
-                                        if (symbolname.StartsWith("Symbolnumber"))
-                                        {
-                                            if (!sh.Varname.StartsWith("Symbolnumber")) symbolname = sh.Varname;
-                                            else if (sh.Userdescription != "") symbolname = sh.Userdescription;
-                                            else if (cfsh.Userdescription != "") symbolname = cfsh.Userdescription;
-                                        }
-                                        if (SymbolInTransferCollection(frmtransfer.Symbols, symbolname))
-                                        {
-                                            //progress.SetProgress("Transferring: " + symbolname);
-                                            barProgress.Caption = "Transferring: " + symbolname;
-                                            barProgress.EditValue = 50;
-                                            System.Windows.Forms.Application.DoEvents();
-
-                                            CopySymbol(symbolname, m_currentfile, (int)GetSymbolAddress(m_symbols, cfsh.Varname), cfsh.Length, filename, (int)currentFlashAddress, sh.Length);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    //progress.SetProgress("Starting report...");
-                    barProgress.Caption = "Starting report...";
-                    barProgress.EditValue = 80;
-                    System.Windows.Forms.Application.DoEvents();
-
-                    UpdateChecksum(filename);
-                    verifychecksum(false);
-                    SetStatusText("Idle.");
-                    barProgress.EditValue = 0;
-                    barProgress.Caption = "Done";
-                    barProgress.Visibility = BarItemVisibility.Never;
-                    //progress.Close();
-                }
-            }
-        }
-
-        private void barButtonItem60_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-          
-        }
-
-        private void barButtonItem24_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            // ask for another bin file
-            if (m_currentfile != string.Empty)
-            {
-
-                PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
-                PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
-                PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
-                PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Transfer maps to different binary wizard", "This wizard assists you in transferring map contents from the current file to another binary.", "Make sure engine types and such are equal for both binaries!", "Happy driving!!!\nDilemma © 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after transferring data.", "", "Yes, let me select the target binary|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
-                switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
-                {
-                    case 0:
-                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            TransferMapsToNewBinary(openFileDialog1.FileName);
-                        }
-                        else
-                        {
-                            return;
-                        }
-                        break;
-                    case 1:
-                        // cancel
-                        break;
-                }
-                if (PSTaskDialog.cTaskDialog.VerificationChecked && PSTaskDialog.cTaskDialog.CommandButtonResult != 1)
-                {
-                    TuningReport tuningrep = new TuningReport();
-                    tuningrep.ReportTitle = "Data transfer report";
-                    tuningrep.DataSource = resumeTuning;
-                    tuningrep.CreateReport();
-                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                }
-            }
-        }
-
-        private void gridViewSymbols_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
-        {
-            if (e.Column.Name == gcSymbolsName.Name)
-            {
-                if (e.CellValue != null)
-                {
-                    if (e.CellValue != DBNull.Value)
-                    {
-                        Color c = Color.White;
-                        if (e.CellValue.ToString().StartsWith("TorqueCal."))
-                        {
-                            c = Color.Orange;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("BoostCal."))
-                        {
-                            c = Color.OrangeRed;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("BFuelCal.") || e.CellValue.ToString().StartsWith("Inj") || e.CellValue.ToString().StartsWith("FCutCal.") || e.CellValue.ToString().StartsWith("FCompCal."))
-                        {
-                            c = Color.LightSteelBlue;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Ign") || e.CellValue.ToString().StartsWith("DI"))
-                        {
-                            c = Color.LightGreen;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("BstKnkCal."))
-                        {
-                            c = Color.LightGray;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Knk"))
-                        {
-                            c = Color.Plum;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("MAFCal."))
-                        {
-                            c = Color.Yellow;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Cruise"))
-                        {
-                            c = Color.SandyBrown;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Evap"))
-                        {
-                            c = Color.Orchid;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Idle"))
-                        {
-                            c = Color.BurlyWood;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Lambda")|| e.CellValue.ToString().StartsWith("O2"))
-                        {
-                            c = Color.Goldenrod;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Missf"))
-                        {
-                            c = Color.Bisque;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("Purge"))
-                        {
-                            c = Color.Khaki;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("SAI"))
-                        {
-                            c = Color.GreenYellow;
-                        }
-                        else if (e.CellValue.ToString().StartsWith("StartCal."))
-                        {
-                            c = Color.SeaGreen;
-                        }
-                            /*
-                        else if (Convert.ToInt32(o) == (int)XDFCategories.Idle)
-                        {
-                            c = Color.BurlyWood;
-                        }*/
-                        if (c != Color.White)
-                        {
-                            //System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, c, Color.White, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-                            System.Drawing.SolidBrush sb = new SolidBrush(c);
-                            e.Graphics.FillRectangle(sb, e.Bounds);
-                            sb.Dispose();
-                        }
-                    }
-                }
-            }
-            else if (e.Column.Name == gcSymbolsAddress.Name)
-            {
-                /*if (m_appSettings.ShowAddressesInHex)
-                {
-                    if (e.CellValue != null)
-                    {
-                        if (e.CellValue != DBNull.Value)
-                        {
-                            try
-                            {
-                                e.DisplayText = Convert.ToInt32(e.CellValue).ToString("X6");
-                            }
-                            catch (Exception E)
-                            {
-                                LogHelper.Log(E.Message);
-                            }
-                        }
-                    }
-                }*/
-            }
-            else if (e.Column.Name == gcSymbolsLength.Name)
-            {
-               /* if (m_appSettings.ShowAddressesInHex)
-                {
-                    if (e.CellValue != null)
-                    {
-                        if (e.CellValue != DBNull.Value)
-                        {
-                            e.DisplayText = Convert.ToInt32(e.CellValue).ToString("X4");
-                        }
-                    }
-                }*/
             }
         }
 
@@ -8762,69 +11705,6 @@ If boost regulation reports errors you can increase the difference between boost
             SetToolstripTheme();
         }
 
-        /// <summary>
-        /// Sets or Unsets Full-Screen mode for this form, saving the old state values. 
-        /// Note, the order of calls in this function is important.
-        /// </summary>
-        /// <param name="bFullScreen">set to fullscreen if true, unset if false</param>
-        void SetFullScreenMode(bool bFullScreen)
-        {
-            // enable full screen mode only if we're NOT in fullscreen
-            if (bFullScreen && !_isFullScreenEnabled)
-            {
-                this.SuspendLayout();
-
-                // get current window state
-                _oldWindowState = this.WindowState;
-
-                // get the normal window state so we don't lose those values
-                if (this.WindowState == FormWindowState.Maximized)
-                    this.WindowState = FormWindowState.Normal;
-
-                // get the normal state values
-                _oldClientSize = this.ClientSize;
-                _oldDesktopBounds = this.DesktopBounds;
-
-                // jump to full screen
-                this.FormBorderStyle = FormBorderStyle.None;
-                this.DesktopBounds = Screen.FromControl(this).Bounds;
-
-                _isFullScreenEnabled = true;
-
-                this.ResumeLayout();
-            }
-
-            // disable full screen mode only if we're in fullscreen
-            if (!bFullScreen && _isFullScreenEnabled)
-            {
-                this.SuspendLayout();
-
-                // reset the old state
-                this.DesktopBounds = _oldDesktopBounds;
-                this.ClientSize = _oldClientSize;
-                FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-                this.WindowState = _oldWindowState;
-
-                _isFullScreenEnabled = false;
-
-                this.ResumeLayout();
-            }
-        }
-
-        private void barButtonItem42_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (!_isFullScreenEnabled)
-            {
-                SetFullScreenMode(true);
-                TopMost = true;
-            }
-            else
-            {
-                SetFullScreenMode(false);
-                TopMost = false;
-            }
-        }
-
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (gridViewSymbols.FocusedRowHandle >= 0)
@@ -9332,7 +12212,7 @@ If boost regulation reports errors you can increase the difference between boost
                     Thread.Sleep(0);//<GS-11022010>
 
                 }
-                // <GS-29072010> if the multiadapter is in use 
+                // <GS-29072010> if the combiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
                 if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI)
                 {
@@ -10822,87 +13702,6 @@ dt.Columns.Add("SymbolName");
             {
                 LogHelper.Log(E.Message);
             }
-
-        }
-
-        private void barButtonItem45_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "T7 binary files|*.bin";
-            ofd.Multiselect = false;
-            ofd.FileName = "";
-            ofd.Title = "Select binary file to transfer the address table to...";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                int addrtaboffset = GetStartOfAddressTableOffset(m_currentfile);
-                int addrtaboffset_newfile = GetStartOfAddressTableOffset(ofd.FileName);
-                LogHelper.Log("Addresstable offset 1: " + addrtaboffset.ToString());
-                LogHelper.Log("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
-                bool _allow = false;
-                if (addrtaboffset == addrtaboffset_newfile) _allow = true;
-                if (!_allow)
-                {
-                    if (MessageBox.Show("Address table start addresses are not equal, continue anyway?", "Attention!", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        _allow = true;
-                    }
-                }
-
-                if (_allow)
-                {
-                    if (addrtaboffset > 0)
-                    {
-                        FileStream fsread = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
-                        using (BinaryReader br = new BinaryReader(fsread))
-                        {
-
-                            FileStream fswrite = new FileStream(ofd.FileName, FileMode.Open);
-                            using (BinaryWriter bw = new BinaryWriter(fswrite))
-                            {
-                                fsread.Seek(addrtaboffset - 7, SeekOrigin.Begin); //was - 17
-                                fswrite.Seek(addrtaboffset_newfile - 7, SeekOrigin.Begin);
-                                bool endoftable = false;
-                                while (!endoftable)
-                                {
-                                    // steeds 10 karaketers
-                                    try
-                                    {
-                                        byte[] bytes = br.ReadBytes(10);
-                                        if (bytes.Length == 10)
-                                        {
-                                            //DumpBytesToConsole(bytes);
-                                            if ((Convert.ToInt32(bytes.GetValue(8)) != 0x00) || (Convert.ToInt32(bytes.GetValue(9)) != 0x00))
-                                            {
-                                                endoftable = true;
-                                            }
-                                            else
-                                            {
-                                                // Write to target file
-                                                bw.Write(bytes);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            endoftable = true;
-                                        }
-                                    }
-                                    catch (Exception E)
-                                    {
-                                        LogHelper.Log(E.Message);
-                                    }
-
-                                }
-                            }
-                        }
-                        frmInfoBox info = new frmInfoBox("Transfer done");
-                    }
-                }
-                else
-                {
-                    frmInfoBox info = new frmInfoBox("Transfer cancelled");
-                }
-            }
-
         }
         
         private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
@@ -10919,490 +13718,6 @@ dt.Columns.Add("SymbolName");
                 }
             }
             return mapdatanew;
-        }
-
-        private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
-        {
-            //en-US
-            CultureInfo tci = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture = tci;
-
-            try
-            {
-                bool isupsidedown = GetMapUpsideDown(mapname);
-                try
-                {
-                    if (xla == null)
-                    {
-                        xla = new Microsoft.Office.Interop.Excel.Application();
-                    }
-                }
-                catch (Exception xlaE)
-                {
-                    LogHelper.Log("Failed to create office application interface: " + xlaE.Message);
-                }
-
-                // turn mapdata upside down
-                if (isupsidedown)
-                {
-                    mapdata = TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
-                }
-
-                xla.Visible = true;
-                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(XlSheetType.xlWorksheet);
-                Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)xla.ActiveSheet;
-                ws.Name = "symboldata";
-
-                // Now create the chart.
-                    ChartObjects chartObjs = (ChartObjects)ws.ChartObjects(Type.Missing);
-                    ChartObject chartObj = chartObjs.Add(100, 400, 400, 300);
-                    Microsoft.Office.Interop.Excel.Chart xlChart = chartObj.Chart;
-
-                int nRows = rows;
-                if (isSixteenbit) nRows /= 2;
-                int nColumns = cols;
-                string upperLeftCell = "B3";
-                int endRowNumber = System.Int32.Parse(upperLeftCell.Substring(1)) + nRows - 1;
-                char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
-                string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
-                string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
-                // Send single dimensional array to Excel:
-
-                Range rg1 = ws.get_Range("B2", "Z2");
-                double[] xarray = new double[nColumns];
-                double[] yarray = new double[nRows];
-                ws.Cells[1, 1] = "Data for " + mapname;
-                for (int i = 0; i < xarray.Length; i++)
-                {
-                    if (xaxisvalues.Length > i)
-                    {
-                        xarray[i] = (int)xaxisvalues.GetValue(i);
-                    }
-                    else
-                    {
-                        xarray[i] = i;
-                    }
-                    //ws.Cells[i + 3, 1] = xarray[i];
-                    ws.Cells[2, 2 + i] = xarray[i];
-                }
-                for (int i = 0; i < yarray.Length; i++)
-                {
-                    if (yaxisvalues.Length > i)
-                    {
-                        if (isupsidedown)
-                        {
-                            yarray[i] = (int)yaxisvalues.GetValue((yarray.Length - 1) - i);
-                        }
-                        else
-                        {
-                            yarray[i] = (int)yaxisvalues.GetValue(i);
-                        }
-                    }
-                    else
-                    {
-                        yarray[i] = i;
-                    }
-                    ws.Cells[i + 3, 1] = yarray[i];
-                    //ws.Cells[2, 2 + i] = yarray[i];
-                }
-
-                string xaxisdescr = "x-axis";
-                string yaxisdescr = "y-axis";
-                string zaxisdescr = "z-axis";
-                //GetAxisDescriptions(m_currentfile, m_symbols, mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
-                string x_axis = string.Empty;
-                string y_axis = string.Empty;
-                axestrans.GetAxisSymbols(mapname, out x_axis, out y_axis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-
-
-                Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
-                rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit);
-
-                Range chartRange = ws.get_Range("A2", lowerRightCell);
-
-                xlChart.SetSourceData(chartRange, Type.Missing);
-                if (yarray.Length > 1)
-                {
-                    xlChart.ChartType = XlChartType.xlSurface;
-                }
-
-                // Customize axes:
-                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory,
-                    XlAxisGroup.xlPrimary);
-                xAxis.HasTitle = true;
-                xAxis.AxisTitle.Text = yaxisdescr;
-                try
-                {
-                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis,
-                        XlAxisGroup.xlPrimary);
-                    yAxis.HasTitle = true;
-                    yAxis.AxisTitle.Text = xaxisdescr;
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log("Failed to set y axis: " + E.Message);
-                }
-
-
-                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue,
-                    XlAxisGroup.xlPrimary);
-                zAxis.HasTitle = true;
-                zAxis.AxisTitle.Text = zaxisdescr;
-
-                // Add title:
-                xlChart.HasTitle = true;
-
-                xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
-
-                // Remove legend:
-                xlChart.HasLegend = false;
-                // add 3d shade
-                xlChart.SurfaceGroup.Has3DShading = true;
-                /*if (File.Exists(m_currentfile + "~" + mapname + ".xls"))
-                {
-
-                }*/
-                try
-                {
-                    wb.SaveAs(m_currentfile + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
-                }
-                catch (Exception sE)
-                {
-                    LogHelper.Log("Failed to save workbook: " + sE.Message);
-                }
-
-
-                /* This following code is used to create Excel default color indices:
-                for (int i = 0; i < 14; i++)
-                {
-                    string cellString = "A" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = i + 1;
-                    cellString = "B" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 14 + i + 1;
-                    cellString = "C" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 2 * 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 2 * 14 + i + 1;
-                    cellString = "D" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 3 * 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 3 * 14 + i + 1;
-                }*/
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Failed to export to excel: " + E.Message);
-            }
-            tci = new CultureInfo("nl-NL");
-            Thread.CurrentThread.CurrentCulture = tci;
-
-        }
-
-        private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
-        {
-            double[,] dataArray = new double[nRows, nColumns];
-            double[] xarray = new double[nColumns];
-            for (int i = 0; i < xarray.Length; i++)
-            {
-                xarray[i] = -3.0f + i * 0.25f;
-            }
-            double[] yarray = xarray;
-
-            int mapindex = 0;
-            for (int i = 0; i < dataArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < dataArray.GetLength(1); j++)
-                {
-                    if (isSixteenbit)
-                    {
-                        byte val1 = (byte)mapdata.GetValue(mapindex++);
-                        byte val2 = (byte)mapdata.GetValue(mapindex++);
-                        bool convertSign = false;
-                        if (val1 == 0xff)
-                        {
-                            val1 = 0;
-                            val2 = (byte)(0x100 - val2);
-                            convertSign = true;
-                        }
-                        int ival1 = Convert.ToInt32(val1);
-                        int ival2 = Convert.ToInt32(val2);
-                        double value = (ival1 * 256) + ival2;
-                        if (convertSign) value = -value;
-                        dataArray[i, j] = value;
-                    }
-                    else
-                    {
-                        byte val1 = (byte)mapdata.GetValue(mapindex++);
-                        int ival1 = Convert.ToInt32(val1);
-
-                        double value = ival1;
-                        dataArray[i, j] = value;
-                    }
-                }
-            }
-            return dataArray;
-        }
-
-        private void StartExcelExport()
-        {
-            if (gridViewSymbols.SelectedRowsCount > 0)
-            {
-                int[] selrows = gridViewSymbols.GetSelectedRows();
-                if (selrows.Length > 0)
-                {
-                    SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-
-//                    DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    //frmTableDetail tabdet = new frmTableDetail();
-                    string Map_name = sh.Varname;
-                    if (Map_name.StartsWith("Symbol") && sh.Userdescription != "") Map_name = sh.Userdescription;
-                    int columns = 8;
-                    int rows = 8;
-                    int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, Map_name, out columns, out rows);
-                    int address = (int)GetSymbolAddress(m_symbols, Map_name);// (int)sh.Flash_start_address;
-                    if (address != 0)
-                    {
-                        while (address > m_currentfile_size) address -= m_currentfile_size;
-                        int length = sh.Length;
-                        byte[] mapdata = readdatafromfile(m_currentfile, address, length);
-                        int[] xaxis = GetXaxisValues(m_currentfile, m_symbols, Map_name);
-                        int[] yaxis = GetYaxisValues(m_currentfile, m_symbols, Map_name);
-                        ExportToExcel(Map_name, address, length, mapdata, columns, rows, isSixteenBitTable(Map_name), xaxis, yaxis);
-                    }
-                }
-            }
-            else
-            {
-                frmInfoBox info = new frmInfoBox("No symbol selected in the primary symbol list");
-            }
-        }
-        private System.Data.DataTable getDataFromXLS(string strFilePath)
-        {
-            try
-            {
-                string strConnectionString = string.Empty;
-                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
-                //MessageBox.Show(strConnectionString);
-                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
-                cnCSV.Open();
-                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [symboldata$]", cnCSV);
-                OleDbDataAdapter daCSV = new OleDbDataAdapter();
-                daCSV.SelectCommand = cmdSelect;
-                System.Data.DataTable dtCSV = new System.Data.DataTable();
-                daCSV.Fill(dtCSV);
-                cnCSV.Close();
-                daCSV = null;
-                return dtCSV;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
-                return null;
-            }
-            finally { }
-        }
-
-        private void ImportExcelSymbol(string symbolname, string filename)
-        {
-            bool issixteenbit = false;
-            System.Data.DataTable dt = getDataFromXLS(openFileDialog2.FileName);
-            if (isSixteenBitTable(symbolname)) issixteenbit = true;
-            int symbollength = GetSymbolLength(m_symbols, symbolname);
-            int datalength = symbollength;
-            if (issixteenbit) datalength /= 2;
-            int[] buffer = new int[datalength];
-            int bcount = 0;
-//            for (int rtel = 1; rtel < dt.Rows.Count; rtel++)
-            for (int rtel = dt.Rows.Count; rtel >= 1 ; rtel--)
-            {
-                try
-                {
-                    int idx = 0;
-                    foreach (object o in dt.Rows[rtel].ItemArray)
-                    {
-                        if (idx > 0)
-                        {
-                            if (o != null)
-                            {
-                                if (o != DBNull.Value)
-                                {
-                                    if (bcount < buffer.Length)
-                                    {
-                                        buffer.SetValue(Convert.ToInt32(o), bcount++);
-                                    }
-                                    else
-                                    {
-                                        frmInfoBox info = new frmInfoBox("Too much information in file, abort");
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                        idx++;
-                    }
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log("ImportExcelSymbol: " + E.Message);
-                }
-
-            }
-            if (bcount >= datalength)
-            {
-                byte[] data = new byte[symbollength];
-                int cellcount = 0;
-                if (issixteenbit)
-                {
-                    for (int dcnt = 0; dcnt < buffer.Length; dcnt++)
-                    {
-                        string bstr1 = "0";
-                        string bstr2 = "0";
-                        int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
-                        string svalue = cellvalue.ToString("X4");
-
-                        bstr1 = svalue.Substring(svalue.Length - 4, 2);
-                        bstr2 = svalue.Substring(svalue.Length - 2, 2);
-                        data.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
-                        data.SetValue(Convert.ToByte(bstr2, 16), cellcount++);
-                    }
-                }
-                else
-                {
-                    for (int dcnt = 0; dcnt < buffer.Length; dcnt++)
-                    {
-                        int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
-                        data.SetValue(Convert.ToByte(cellvalue.ToString()), cellcount++);
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), symbollength, data, m_currentfile, true);
-                verifychecksum(false);
-            }
-
-           
-        }
-
-        private void ImportFileInExcelFormat()
-        {
-            if (openFileDialog2.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    string mapname = string.Empty;
-                    int tildeindex = openFileDialog2.FileName.LastIndexOf("~");
-                    bool symbolfound = false;
-                    if (tildeindex > 0)
-                    {
-                        tildeindex++;
-                        mapname = openFileDialog2.FileName.Substring(tildeindex, openFileDialog2.FileName.Length - tildeindex);
-                        mapname = mapname.Replace(".xls", "");
-                        mapname = mapname.Replace(".XLS", "");
-                        mapname = mapname.Replace(".Xls", "");
-                        // look if it is a valid symbolname
-                        foreach (SymbolHelper sh in m_symbols)
-                        {
-                            if (sh.Varname == mapname || sh.Userdescription == mapname)
-                            {
-                                symbolfound = true;
-                                if (MessageBox.Show("Found valid symbol for import: " + mapname + ". Are you sure you want to overwrite the map in the binary?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                {
-                                    // ok, overwrite info in binary
-                                }
-                                else
-                                {
-                                    mapname = string.Empty; // do nothing
-                                }
-                            }
-                        }
-                        if (!symbolfound)
-                        {
-                            // ask user for symbol designation
-                            frmSymbolSelect frmselect = new frmSymbolSelect(m_symbols);
-                            if (frmselect.ShowDialog() == DialogResult.OK)
-                            {
-                                mapname = frmselect.SelectedSymbol;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        // ask user for symbol designation
-                        frmSymbolSelect frmselect = new frmSymbolSelect(m_symbols);
-                        if (frmselect.ShowDialog() == DialogResult.OK)
-                        {
-                            mapname = frmselect.SelectedSymbol;
-                        }
-
-                    }
-                    if (mapname != string.Empty)
-                    {
-                        ImportExcelSymbol(mapname, openFileDialog2.FileName);
-                    }
-
-                }
-                catch (Exception E)
-                {
-                    frmInfoBox info = new frmInfoBox("Failed to import map from excel: " + E.Message);
-                }
-            }
-        }
-
-        private System.Data.DataTable getDataFromXLSSymbolHelper(string strFilePath)
-        {
-            try
-            {
-                string strConnectionString = string.Empty;
-                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
-                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
-                cnCSV.Open();
-                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [Symbols$]", cnCSV);
-                OleDbDataAdapter daCSV = new OleDbDataAdapter();
-                daCSV.SelectCommand = cmdSelect;
-                System.Data.DataTable dtCSV = new System.Data.DataTable();
-                daCSV.Fill(dtCSV);
-                cnCSV.Close();
-                daCSV = null;
-                return dtCSV;
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Log(ex.Message);
-                return null;
-            }
-            finally { }
-        }
-
-        private void barButtonItem47_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartExcelExport();
-        }
-
-        private void barButtonItem48_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ImportFileInExcelFormat();
-        }
-
-        private void barButtonItem49_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            //openFileDialog3.FileName = Path.GetFileNameWithoutExtension(m_currentfile) + ".RAM";
-            if (openFileDialog3.ShowDialog() == DialogResult.OK)
-            {
-                if (File.Exists(openFileDialog3.FileName))
-                {
-                    OpenSRAMFile(openFileDialog3.FileName);
-                }
-            }
-        }
-
-        private void OpenSRAMFile(string filename)
-        {
-            // opens the sram dump file and displays the maps inside the dump file
-            // after verifying that this ramdump matches the selected binary.
-            // this can result in a compare between flash maps and the sram map values
-            m_currentsramfile = filename;
-            barStaticItem1.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
-
         }
 
         private void StartSRAMTableViewer()
@@ -11975,350 +14290,6 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-        private void barButtonItem50_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            m_symbols = new SymbolCollection();
-            
-            TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
-            barProgress.EditValue = 70;
-            barProgress.Caption = "Sorting data";
-            System.Windows.Forms.Application.DoEvents();
-
-            m_symbols.SortColumn = "Length";
-            m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
-            m_symbols.Sort();
-            barProgress.EditValue = 70;
-            barProgress.Caption = "Loading data into view";
-            System.Windows.Forms.Application.DoEvents();
-
-            gridControlSymbols.DataSource = m_symbols;
-            barProgress.EditValue = 0;
-            barProgress.Caption = "Done";
-            barProgress.Visibility = BarItemVisibility.Never;
-            System.Windows.Forms.Application.DoEvents();
-
-        }
-
-        private void barButtonItem51_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartHexViewer();
-            StartSRAMHexViewer();
-        }
-
-        private void StartHexViewer()
-        {
-            if (m_currentfile != "")
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    DockPanel dockPanel;
-                    //= dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
-                    if (!m_appSettings.NewPanelsFloating)
-                    {
-                        dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-                    }
-                    else
-                    {
-                        System.Drawing.Point floatpoint = this.PointToClient(new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 30, dockSymbols.Location.Y + 10));
-                        dockPanel = dockManager1.AddPanel(floatpoint);
-                    }
-
-                    dockPanel.Text = "Hexviewer: " + Path.GetFileName(m_currentfile);
-                    HexViewer hv = new HexViewer();
-                    hv.Issramviewer = false;
-                    hv.Dock = DockStyle.Fill;
-                    dockPanel.Width = 580;
-                    hv.LoadDataFromFile(m_currentfile, m_symbols);
-                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
-                    dockPanel.Controls.Add(hv);
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-        }
-
-        void dockPanel_ClosedPanel(object sender, DockPanelEventArgs e)
-        {
-            // force close of the file that the hexviewer had open!
-            if (sender is DockPanel)
-            {
-                DockPanel pnl = (DockPanel)sender;
-
-                foreach (Control c in pnl.Controls)
-                {
-                    if (c is HexViewer)
-                    {
-                        HexViewer vwr = (HexViewer)c;
-                        vwr.CloseFile();
-                        //UpdateChecksum(m_currentfile);
-                    }
-                    else if (c is DockPanel)
-                    {
-                        DockPanel tpnl = (DockPanel)c;
-                        foreach (Control c2 in tpnl.Controls)
-                        {
-                            if (c2 is HexViewer)
-                            {
-                                HexViewer vwr2 = (HexViewer)c2;
-                                vwr2.CloseFile();
-                                //UpdateChecksum(m_currentfile);
-                            }
-                        }
-                    }
-                    else if (c is ControlContainer)
-                    {
-                        ControlContainer cntr = (ControlContainer)c;
-                        foreach (Control c3 in cntr.Controls)
-                        {
-                            if (c3 is HexViewer)
-                            {
-                                HexViewer vwr3 = (HexViewer)c3;
-                                vwr3.CloseFile();
-                                //UpdateChecksum(m_currentfile);
-                            }
-                        }
-                    }
-                }
-                // remove the panel from the dockmanager
-                dockManager1.RemovePanel(pnl);
-            }
-        }
-
-
-        private void StartSRAMHexViewer()
-        {
-            if (m_currentsramfile != "")
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-                    dockPanel.Text = "SRAM Hexviewer: " + Path.GetFileName(m_currentfile);
-                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
-                    HexViewer hv = new HexViewer();
-                    hv.Issramviewer = true;
-                    hv.Dock = DockStyle.Fill;
-                    dockPanel.Width = 580;
-                    hv.LoadDataFromFile(m_currentsramfile, m_symbols);
-                    dockPanel.Controls.Add(hv);
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-        }
-
-        private void barButtonItem52_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // ask the user for which value to search and if searching should include symbolnames and/or symbol description
-            if (ValidateFile())
-            {
-                SymbolCollection result_Collection = new SymbolCollection();
-                frmSearchMaps searchoptions = new frmSearchMaps();
-                if (searchoptions.ShowDialog() == DialogResult.OK)
-                {
-                    frmProgress progress = new frmProgress();
-                    progress.SetProgress("Start searching data...");
-                    progress.SetProgressPercentage(0);
-                    progress.Show();
-                    System.Windows.Forms.Application.DoEvents();
-                    int cnt = 0;
-                    foreach (SymbolHelper sh in m_symbols)
-                    {
-                        progress.SetProgress("Searching " + sh.Varname);
-                        progress.SetProgressPercentage((cnt * 100) / m_symbols.Count);
-                        bool hit_found = false;
-                        if (searchoptions.UseSpecificMapLength)
-                        {
-                            if (sh.Length != (int)searchoptions.MapLength)
-                            {
-                                continue;
-                            }
-                        }
-                        if (searchoptions.IncludeSymbolNames)
-                        {
-                            if (searchoptions.SearchForNumericValues)
-                            {
-                                if (sh.Varname.Contains(searchoptions.NumericValueToSearchFor.ToString()))
-                                {
-                                    hit_found = true;
-                                }
-                            }
-                            if (searchoptions.SearchForStringValues)
-                            {
-                                if (searchoptions.StringValueToSearchFor != string.Empty)
-                                {
-                                    if (sh.Varname.Contains(searchoptions.StringValueToSearchFor))
-                                    {
-                                        hit_found = true;
-                                    }
-                                }
-                            }
-                        }
-                        if (searchoptions.IncludeSymbolDescription)
-                        {
-                            if (searchoptions.SearchForNumericValues)
-                            {
-                                if (sh.Description.Contains(searchoptions.NumericValueToSearchFor.ToString()))
-                                {
-                                    hit_found = true;
-                                }
-                            }
-                            if (searchoptions.SearchForStringValues)
-                            {
-                                if (searchoptions.StringValueToSearchFor != string.Empty)
-                                {
-                                    if (sh.Description.Contains(searchoptions.StringValueToSearchFor))
-                                    {
-                                        hit_found = true;
-                                    }
-                                }
-                            }
-                        }
-                        // now search the symbol data
-                        if (sh.Flash_start_address < m_currentfile_size)
-                        {
-                            byte[] symboldata = readdatafromfile(m_currentfile, (int)sh.Flash_start_address, sh.Length);
-                            if (searchoptions.SearchForNumericValues)
-                            {
-                                if (isSixteenBitTable(sh.Varname))
-                                {
-                                    for (int i = 0; i < symboldata.Length / 2; i += 2)
-                                    {
-                                        float value = Convert.ToInt32(symboldata.GetValue(i)) * 256;
-                                        value += Convert.ToInt32(symboldata.GetValue(i + 1));
-                                        value *= (float)GetMapCorrectionFactor(sh.Varname);
-                                        value += (float)GetMapCorrectionOffset(sh.Varname);
-                                        if (value == (float)searchoptions.NumericValueToSearchFor)
-                                        {
-                                            hit_found = true;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    for (int i = 0; i < symboldata.Length; i++)
-                                    {
-                                        float value = Convert.ToInt32(symboldata.GetValue(i));
-                                        value *= (float)GetMapCorrectionFactor(sh.Varname);
-                                        value += (float)GetMapCorrectionOffset(sh.Varname);
-                                        if (value == (float)searchoptions.NumericValueToSearchFor)
-                                        {
-                                            hit_found = true;
-                                        }
-                                    }
-                                }
-                            }
-                            if (searchoptions.SearchForStringValues)
-                            {
-                                if (searchoptions.StringValueToSearchFor.Length > symboldata.Length)
-                                {
-                                    // possible...
-                                    string symboldataasstring = System.Text.Encoding.ASCII.GetString(symboldata);
-                                    if (symboldataasstring.Contains(searchoptions.StringValueToSearchFor))
-                                    {
-                                        hit_found = true;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (hit_found)
-                        {
-                            // add to collection
-                            result_Collection.Add(sh);
-                        }
-                        cnt++;
-                    }
-                    progress.Close();
-                    if (result_Collection.Count == 0)
-                    {
-                        frmInfoBox info = new frmInfoBox("No results found...");
-                    }
-                    else
-                    {
-                        // start result screen
-                        dockManager1.BeginUpdate();
-                        try
-                        {
-                            SymbolTranslator st = new SymbolTranslator();
-                            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                            CompareResults tabdet = new CompareResults();
-                            tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-                            tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                            tabdet.Dock = DockStyle.Fill;
-                            tabdet.UseForFind = true;
-                            tabdet.Filename = m_currentfile;
-                            tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectForFind);
-                            dockPanel.Controls.Add(tabdet);
-                            dockPanel.Text = "Search results: " + Path.GetFileName(m_currentfile);
-                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
-
-                            dockPanel.Width = 700;
-
-                            System.Data.DataTable dt = new System.Data.DataTable();
-                            dt.Columns.Add("SYMBOLNAME");
-                            dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
-                            dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                            dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
-                            dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
-                            dt.Columns.Add("DESCRIPTION");
-                            dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
-                            dt.Columns.Add("CATEGORY"); //0
-                            dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
-                            dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
-                            dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
-                            dt.Columns.Add("CATEGORYNAME");
-                            dt.Columns.Add("SUBCATEGORYNAME");
-                            dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
-                            dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                            //string category = "";
-                            string ht = string.Empty;
-                            //double diffperc = 0;
-                            //int diffabs = 0;
-                            //double diffavg = 0;
-                            XDFCategories cat = XDFCategories.Undocumented;
-                            XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                            foreach (SymbolHelper shfound in result_Collection)
-                            {
-                                string helptext = st.TranslateSymbolToHelpText(shfound.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage);
-                                if (shfound.Varname.Contains("."))
-                                {
-                                    try
-                                    {
-                                        shfound.Category = shfound.Varname.Substring(0, shfound.Varname.IndexOf("."));
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        LogHelper.Log("Failed to assign category to symbol: " + shfound.Varname + " err: " + cE.Message);
-                                    }
-                                }
-                                dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
-                            }
-                            tabdet.CompareSymbolCollection = result_Collection;
-                            tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-                            tabdet.gridControl1.DataSource = dt.Copy();
-
-                        }
-                        catch (Exception E)
-                        {
-                            LogHelper.Log(E.Message);
-                        }
-                        dockManager1.EndUpdate();
-
-                    }
-
-
-                }
-            }
-        }
-
         private void barButtonItem53_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartAViewer("BstKnkCal.MaxAirmassAu");
@@ -12438,22 +14409,6 @@ dt.Columns.Add("SymbolName");
             {
                 readFromSRAMFileToolStripMenuItem.Enabled = false;
             }
-        }
-
-        private void debugActionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UpdateViewersWithName("BFuelCal.Map");
-            
-
-           /* if (gridViewSymbols.FocusedRowHandle >= 0)
-            {
-                SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
-                byte[] data = readdatafromfile(m_currentfile, (int)sh.Flash_start_address, (int)sh.Length);
-                frmSRAMSymbolHexView ramview = new frmSRAMSymbolHexView();
-                ramview.SetData(data);
-                ramview.ShowDialog();
-            }*/
-
         }
 
         private void barButtonItem61_ItemClick(object sender, ItemClickEventArgs e)
@@ -12674,318 +14629,6 @@ dt.Columns.Add("SymbolName");
             StartAViewer("IgnE85Cal.fi_AbsMap");
         }
 
-        /// <summary>
-        /// TODO: make this work with manually added symbol (user description in stead of varname
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void barButtonItem78_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // show SID information table from this bin and give the user the option to alter the settings from this table
-            SIDInformationTable sidinfotab = new SIDInformationTable();
-            SIDICollection entiresidcollection = sidinfotab.GetSIDInformation();
-            SIDICollection currentsidcollection = new SIDICollection();
-            SIDTranslator sidtrans = new SIDTranslator();
-
-            // so, now get the current settings from the binary
-            T7SidEdit t7SidEdit = new T7SidEdit();
-            if (!t7SidEdit.init(m_currentfile))
-            {
-                frmInfoBox info = new frmInfoBox("File not compatible!");
-            }
-            else
-            {
-                bool first = true;
-                for (int i = 0; i < t7SidEdit.getDataArrayAll().Length; i += 3)
-                {
-                    if (i + 2 < t7SidEdit.getDataArrayAll().Length)
-                    {
-                        SIDIHelper sidh = new SIDIHelper();
-                        sidh.Symbol = t7SidEdit.getDataArrayAll()[i];
-                        sidh.Symbol = sidh.Symbol.Replace((char)0x00, (char)0x20);
-                        sidh.AddressSRAM = Convert.ToInt32(t7SidEdit.getDataArrayAll()[i + 1], 16);
-                        //if (sidh.AddressSRAM < 0xF00000) sidh.AddressSRAM += 0xef02f0;
-                        sidh.Value = t7SidEdit.getDataArrayAll()[i + 2];
-                        sidh.IsReadOnly = first;
-                        first = false;
-                        sidh.Mode = 99;
-                        sidtrans.GetSidDescription(sidh);
-                        foreach (SymbolHelper sh in m_symbols)
-                        {
-                            // try to match it to a symbol in the binary file
-                            if (sh.Flash_start_address == sidh.AddressSRAM)
-                            {
-
-                                sidh.FoundT7Symbol = sh.Varname;
-                                if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
-                                {
-                                    // <GS-12102010>
-                                    sidh.FoundT7Symbol = sh.Userdescription;
-                                }
-                                break;
-                            }
-                        }
-
-                        currentsidcollection.Add(sidh);
-                    }
-                    //LogHelper.Log("ALL: " + t7SidEdit.getDataArrayAll()[i]);
-                }
-                if (t7SidEdit.getFileType() == 1)
-                {
-                    int mode = 0;
-                    int modcount = 0;
-                    first = true;
-                    for (int j = 0; j < t7SidEdit.getDataArrayNew().Length; j += 3)
-                    {
-                        if (j + 2 < t7SidEdit.getDataArrayNew().Length)
-                        {
-                            SIDIHelper sidh = new SIDIHelper();
-                            sidh.Symbol = t7SidEdit.getDataArrayNew()[j];
-                            sidh.Symbol = sidh.Symbol.Replace((char)0x00, (char)0x20);
-                            sidh.AddressSRAM = Convert.ToInt32(t7SidEdit.getDataArrayNew()[j + 1], 16);
-                            //if (sidh.AddressSRAM < 0xF00000) sidh.AddressSRAM += 0xef02f0;
-                            sidh.Value = t7SidEdit.getDataArrayNew()[j + 2];
-                            sidh.IsReadOnly = first;
-                            first = false;
-                            sidtrans.GetSidDescription(sidh);
-                            foreach (SymbolHelper sh in m_symbols)
-                            {
-                                // try to match it to a symbol in the binary file
-                                if (sh.Flash_start_address == sidh.AddressSRAM)
-                                {
-                                    sidh.FoundT7Symbol = sh.Varname;
-                                    if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
-                                    {
-                                        // <GS-12102010>
-                                        sidh.FoundT7Symbol = sh.Userdescription;
-                                    }
-                                    break;
-                                }
-                            }
-
-                            sidh.Mode = mode;//Convert.ToInt32(sh.Value);
-                            modcount++;
-                            if ((modcount % 12) == 0) mode++;
-                            currentsidcollection.Add(sidh);
-                        }
-                        //LogHelper.Log("NEW: " + t7SidEdit.getDataArrayNew()[j]);
-                    }
-                }
-                frmSIDInformation frmsid = new frmSIDInformation();
-                frmsid.ApplicationLanguage = m_appSettings.ApplicationLanguage;
-                frmsid.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-
-                frmsid.Sidcollection = currentsidcollection;
-                frmsid.Entiresidcollection = entiresidcollection;
-                frmsid.Symbols = m_symbols;
-                if (frmsid.ShowDialog() == DialogResult.OK)
-                {
-                    string[] outputarray = new string[frmsid.Get99ModeCount() * 3];
-                    int cnt = 0;
-                    foreach (SIDIHelper sh in frmsid.Sidcollection)
-                    {
-                        if (sh.Mode == 99)
-                        {
-                            outputarray.SetValue(sh.Symbol, cnt++);
-                            outputarray.SetValue(sh.AddressSRAM.ToString("X6"), cnt++);
-                            outputarray.SetValue(sh.Value.ToString(), cnt++);
-                        }
-                    }
-                    t7SidEdit.setDataArrayAll(outputarray);
-                    if (t7SidEdit.getFileType() == 1)
-                    {
-                        outputarray = new string[frmsid.GetNewModeCount() * 3];
-                        cnt = 0;
-                        foreach (SIDIHelper sh in frmsid.Sidcollection)
-                        {
-                            if (sh.Mode != 99)
-                            {
-                                outputarray.SetValue(sh.Symbol, cnt++);
-                                outputarray.SetValue(sh.AddressSRAM.ToString("X6"), cnt++);
-                                outputarray.SetValue(sh.Value.ToString(), cnt++);
-                            }
-                        }
-                        t7SidEdit.setDataArrayNew(outputarray);
-                    }
-                    t7SidEdit.saveFile();
-                    UpdateChecksum(m_currentfile);
-                    //SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
-                }
-            }
-
-            /*
-                        SIDICollection currentsidcollection = GetSidCollectionFromBinary(m_currentfile);
-                        //LogHelper.Log("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
-                        int mode = 0;
-                        int modcount = 0;
-            
-                        foreach (SIDIHelper sh in currentsidcollection)
-                        {
-                            //LogHelper.Log("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
-                            //Console.Write(Environment.NewLine); 
-                            for (int t = 0; t < sh.Symbol.Length; t++)
-                            {
-                                byte b = (byte)sh.Symbol[t];
-                                Console.Write(b.ToString("X2") + " " );
-                            }
-                            Console.Write(Environment.NewLine);
-                            sidtrans.GetSidDescription(sh);
-                            sh.Mode = mode;//Convert.ToInt32(sh.Value);
-                            modcount++;
-                            if ((modcount % 12) == 0) mode++;
-                        }
-                        frmSIDInformation frmsid = new frmSIDInformation();
-                        frmsid.Sidcollection = currentsidcollection;
-                        frmsid.Entiresidcollection = entiresidcollection;
-                        if (frmsid.ShowDialog() == DialogResult.OK)
-                        {
-                            SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
-                        }*/
-        }
-
-        private void SaveSidCollectionToBinary(string m_currentfile, SIDICollection sidicoll)
-        {
-            FileStream stream = null;
-            //long num = 0x80000L;
-            byte[] array = new byte[7];
-            byte[] buffer = new byte[3];
-            byte[] buffer3 = new byte[2];
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.ReadWrite);
-            stream.Position = 0L;
-            long num2 = 0L;
-            bool flag = false;
-            byte[] buffer2search = new byte[] { 0x41, 100, 0x70, 0x4e, 0, 0, 0 };
-            do
-            {
-                if (((byte)stream.ReadByte()) == buffer2search[0])
-                {
-                    long position = stream.Position;
-                    if (((byte)stream.ReadByte()) == buffer2search[1])
-                    {
-                        if ((((((byte)stream.ReadByte()) == buffer2search[2]) && (((byte)stream.ReadByte()) == buffer2search[3])) && ((((byte)stream.ReadByte()) == buffer2search[4]) && (((byte)stream.ReadByte()) == buffer2search[5]))) && (((byte)stream.ReadByte()) == buffer2search[6]))
-                        {
-                            flag = true;
-                            num2 = stream.Position - 7L;
-                        }
-                    }
-                    else
-                    {
-                        stream.Position = position;
-                    }
-                }
-            }
-            while (!flag && (stream.Position != 0x80000));
-            if (!flag)
-            {
-                return;
-            }
-            stream.Position -= 7L;
-            foreach (SIDIHelper sh in sidicoll)
-            {
-                array = encoding.GetBytes(sh.Symbol);
-                Array.Resize<byte>(ref array, 7);
-                stream.Write(array, 0, 7);
-                buffer = ToByteArray(sh.AddressSRAM.ToString("X6"));
-                stream.Write(buffer, 0, 3);
-                buffer3 = ToByteArray(sh.Value);
-                Array.Resize<byte>(ref buffer3, 2);
-                stream.Write(buffer3, 0, 2);
-            }
-            if (stream != null)
-            {
-                stream.Close();
-            }
-            UpdateChecksum(m_currentfile);
-        }
-
-        public static byte[] ToByteArray(string HexString)
-        {
-            int length = HexString.Length;
-            byte[] buffer = new byte[length / 2];
-            for (int i = 0; i < length; i += 2)
-            {
-                buffer[i / 2] = Convert.ToByte(HexString.Substring(i, 2), 0x10);
-            }
-            return buffer;
-        }
-
-        private SIDICollection GetSidCollectionFromBinary(string m_currentfile)
-        {
-            SIDICollection m_sidcollection = new SIDICollection();
-            FileStream stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
-            stream.Position = 0L;
-            long num2 = 0L;
-            bool flag = false;
-            byte[] buffer = new byte[] { 0x41, 100, 0x70, 0x4e, 0, 0, 0 };
-            do
-            {
-                if (((byte)stream.ReadByte()) == buffer[0])
-                {
-                    long position = stream.Position;
-                    if (((byte)stream.ReadByte()) == buffer[1])
-                    {
-                        if ((((((byte)stream.ReadByte()) == buffer[2]) && (((byte)stream.ReadByte()) == buffer[3])) && ((((byte)stream.ReadByte()) == buffer[4]) && (((byte)stream.ReadByte()) == buffer[5]))) && (((byte)stream.ReadByte()) == buffer[6]))
-                        {
-                            flag = true;
-                            num2 = stream.Position - 7L;
-                        }
-                    }
-                    else
-                    {
-                        stream.Position = position;
-                    }
-                }
-            }
-            while (!flag && (stream.Position != 0x80000));
-            if (!flag)
-            {
-                frmInfoBox info = new frmInfoBox("This T7 file is not compatible with the SIDI function in T7Suite!");
-                return m_sidcollection;
-            }
-            stream.Position -= 7L;
-
-            long start_pos = stream.Position;
-            byte[] bytes = new byte[12];
-            uint num4 = 0x53;           //?? fixed length?
-            //int num5 = 0;
-            for (int i = 0; i <= num4; i++)
-            {
-                //LogHelper.Log("*****" + i.ToString());
-                /*if (i == 65)
-                {
-                    LogHelper.Log("65");
-                }*/
-                for (int j = 0; j <= 3; j++)
-                {
-                    bytes[j] = (byte)stream.ReadByte();
-                }
-                // set text
-                SIDIHelper sidihelper = new SIDIHelper();
-                sidihelper.Symbol = Encoding.Default.GetString(bytes, 0, 4);
-                sidihelper.Symbol = sidihelper.Symbol.Replace((char)0x00, (char)0x20);
-                //LogHelper.Log(i.ToString() + " = " + Encoding.Default.GetString(bytes, 0, 4));
-                stream.Position += 3L;
-                for (int k = 0; k <= 2; k++)
-                {
-                    bytes[k] = (byte)stream.ReadByte();
-                }
-                sidihelper.AddressSRAM = Convert.ToInt32(BitConverter.ToString(bytes, 0, 3).Replace("-", ""), 16);
-                for (int m = 0; m <= 0; m++)
-                {
-                    bytes[m] = (byte)stream.ReadByte();
-                }
-                sidihelper.Value = BitConverter.ToString(bytes, 0, 1).Replace("-", "");
-                m_sidcollection.Add(sidihelper);
-                stream.Position += 1L; // skip one
-            }
-            if (stream != null)
-            {
-                stream.Close();
-            }
-            return m_sidcollection;
-        }
-
         private void gridViewSymbols_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
             if (e.Column.Name == gcSymbolsUserDescription.Name)
@@ -13080,87 +14723,6 @@ dt.Columns.Add("SymbolName");
             dockManager1.EndUpdate();
         }
 
-        private void BtnLimiterCheck_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-            // start a dockview for this <GS-26012011>
-            DockPanel dockPanel;
-            DockPanel sramdockPanel;
-            bool pnlfound = false;
-            //bool srampnlfound = false;
-
-            if (CheckAllTablesAvailable())
-            {
-                //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                dockManager1.BeginUpdate();
-                try
-                {
-                    ctrlAirmassResult airmassResult = new ctrlAirmassResult();
-                    airmassResult.Dock = DockStyle.Fill;
-                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-                    dockPanel.Tag = m_currentfile;
-                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
-                    dockPanel.Text = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
-                    dockPanel.Width = 800;
-                    airmassResult.onStartTableViewer += new ctrlAirmassResult.StartTableViewer(airmassResult_onStartTableViewer);
-                    airmassResult.onClose += new ctrlAirmassResult.ViewerClose(airmassResult_onClose);
-                    airmassResult.Currentfile = m_currentfile;
-                    airmassResult.Symbols = m_symbols;
-                    airmassResult.CurrentSramOffsett = m_currentSramOffsett;
-                    airmassResult.Currentfile_size = m_currentfile_size;
-                    airmassResult.Calculate(m_currentfile, m_symbols);
-                    dockPanel.Controls.Add(airmassResult);
-                }
-                catch (Exception newdockE)
-                {
-                    LogHelper.Log(newdockE.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-            /*
-            if (CheckAllTablesAvailable())
-            {
-                // build a table that shows the maximum allowed airmass depending on the current limiters
-                // table show be the same size as the pedalrequest map
-                frmAirmassResult airmassresult = new frmAirmassResult();
-                airmassresult.onStartTableViewer += new frmAirmassResult.StartTableViewer(airmassresult_onStartTableViewer);
-                airmassresult.Currentfile = m_currentfile;   
-                airmassresult.Symbols = m_symbols;
-                airmassresult.CurrentSramOffsett = m_currentSramOffsett;
-                airmassresult.Currentfile_size = m_currentfile_size;
-                airmassresult.Calculate(m_currentfile, m_symbols);
-                airmassresult.Show(); // not dialog?
-            }*/
-        }
-
-        void airmassResult_onClose(object sender, EventArgs e)
-        {
-            // lookup the panel which cast this event
-            if (sender is ctrlAirmassResult)
-            {
-                string dockpanelname = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
-                foreach (DockPanel dp in dockManager1.Panels)
-                {
-                    if (dp.Text == dockpanelname)
-                    {
-                        dockManager1.RemovePanel(dp);
-                        break;
-                    }
-                }
-            }
-        }
-
-        void airmassResult_onStartTableViewer(object sender, ctrlAirmassResult.StartTableViewerEventArgs e)
-        {
-            StartAViewer(e.SymbolName);
-        }
-
-        void airmassresult_onStartTableViewer(object sender, frmAirmassResult.StartTableViewerEventArgs e)
-        {
-            // start the table viewer
-            StartAViewer(e.SymbolName);
-        }
-
         private bool SymbolExists(string symbolname)
         {
             foreach (SymbolHelper sh in m_symbols)
@@ -13168,112 +14730,6 @@ dt.Columns.Add("SymbolName");
                 if (sh.Varname == symbolname || sh.Userdescription == symbolname) return true;
             }
             return false;
-        }
-
-        private bool CheckAllTablesAvailable()
-        {
-            bool retval = true;
-            if (m_currentfile != "")
-            {
-                if (File.Exists(m_currentfile))
-                {
-                    if (!SymbolExists("PedalMapCal.m_RequestMap")) retval = false;
-                    if (!SymbolExists("TorqueCal.m_AirTorqMap")) retval = false;
-                    if (!SymbolExists("TorqueCal.M_NominalMap")) retval = false;
-                    if (!SymbolExists("BstKnkCal.MaxAirmass")) retval = false;
-                    //if (!SymbolExists("BstKnkCal.MaxAirmassAu")) retval = false;
-                    //if (!SymbolExists("FCutCal.m_AirInletLimit")) retval = false;
-                    if (!SymbolExists("TorqueCal.M_EngMaxTab")) retval = false;
-                    if (!SymbolExists("TorqueCal.M_EngMaxAutTab")) retval = false;
-                    //if (!SymbolExists("TorqueCal.M_ManGearLim")) retval = false;
-                    //if (!SymbolExists("TorqueCal.M_5GearLimTab")) retval = false;
-                    if (!SymbolExists("TorqueCal.m_AirXSP")) retval = false;
-                    if (!SymbolExists("TorqueCal.n_EngYSP")) retval = false;
-                    if (!SymbolExists("TorqueCal.M_EngXSP")) retval = false;
-                    //if (!SymbolExists("LimEngCal.TurboSpeedTab")) retval = false;
-                    if (!SymbolExists("BstKnkCal.OffsetXSP")) retval = false;
-                    if (!SymbolExists("BstKnkCal.n_EngYSP")) retval = false;
-                    if (!SymbolExists("PedalMapCal.n_EngineMap")) retval = false;
-                    if (!SymbolExists("PedalMapCal.X_PedalMap")) retval = false;
-
-                    /*
-LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproject.com/viewtopic.php?f=51&t=1213&p=25640&hilit=buglist+t7suite#p25640)
-                     * */
-                }
-                else retval = false;
-            }
-            else retval = false;
-            return retval;
-        }
-
-        private int TorqueToAirmass(int torque, bool E85)
-        {
-            double airmass = Convert.ToDouble(torque) * 3.1;
-            if (E85)
-            {
-                airmass /= 1.07;
-            }
-            return Convert.ToInt32(airmass);
-        }
-
-        private double GetCorrectionFactorForRpm(int rpm)
-        {
-            double correction = 1;
-            /*if (rpm >= 6000) correction = 0.97;
-            else if (rpm > 5800) correction = 0.98;
-            else if (rpm > 5400) correction = 0.985;
-            else if (rpm > 5000) correction = 0.99;
-            else if (rpm > 4600) correction = 0.995;*/
-            if (rpm >= 6000) correction = 0.85;
-            else if (rpm >= 5820) correction = 0.94;
-            else if (rpm >= 5440) correction = 0.95;
-            else if (rpm >= 5060) correction = 0.99;
-            else if (rpm >= 4680) correction = 1.00;//1.03;
-            else if (rpm >= 4300) correction = 1.00;//1.05;
-            else if (rpm >= 3920) correction = 1.00;//1.06;
-            else if (rpm >= 3540) correction = 1.00;//1.06;
-            else if (rpm >= 3160) correction = 1.00;//1.07;
-            else if (rpm >= 2780) correction = 1.00;//1.07;
-            else if (rpm >= 2400) correction = 1.00;//1.07;
-            else if (rpm >= 2020) correction = 1.00;//1.06;
-            else if (rpm >= 1640) correction = 1.00;
-            else if (rpm >= 1260) correction = 1.00;
-            else correction = 1.00;
-            return correction;
-
-        }
-
-        private int PowerToTorque(int power, int rpm, bool doCorrection)
-        {
-            double torque = (power * 7121) / rpm;
-            /*double correction = 1;
-            if (rpm >= 6000) correction = 0.88;
-            else if (rpm > 5800) correction = 0.90;
-            else if (rpm > 5400) correction = 0.92;
-            else if (rpm > 5000) correction = 0.95;
-            else if (rpm > 4600) correction = 0.98;*/
-            double correction = GetCorrectionFactorForRpm(rpm);
-            if (doCorrection)
-            {
-                torque /= correction;
-            }
-            return Convert.ToInt32(torque);
-        }
-
-        private int TorqueToPower(int torque, int rpm)
-        {
-            double power = (torque * rpm) / 7121;
-            return Convert.ToInt32(power);
-        }
-
-        private int AirmassToTorque(int airmass, bool E85)
-        {
-            double tq = Convert.ToDouble(airmass) / 3.1;
-            if (E85)
-            {
-                tq *= 1.07;
-            }
-            return Convert.ToInt32(tq);
         }
 
         private byte[] GetPedalMap(int maxairmass, int peakHP, bool E85)
@@ -14374,47 +15830,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     LogHelper.Log(E.Message);
                 }
                 m_prohibitReading = false;
-            }
-        }
-
-        private void barButtonItem83_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            frmPartnumberLookup lookup = new frmPartnumberLookup();
-            lookup.ShowDialog();
-            if (lookup.Open_File)
-            {
-                string filename = lookup.GetFileToOpen();
-                if (filename != string.Empty)
-                {
-                    CloseProject();
-                    m_appSettings.Lastprojectname = "";
-                    OpenFile(filename, true);
-                    m_appSettings.LastOpenedType = 0;
-
-                }
-            }
-            else if (lookup.Compare_File)
-            {
-                string filename = lookup.GetFileToOpen();
-                if (filename != string.Empty)
-                {
-
-                    CompareToFile(filename);
-                }
-            }
-            //<GS-21062010>
-            else if (lookup.CreateNewFile)
-            {
-                string filename = lookup.GetFileToOpen();
-                if (filename != string.Empty)
-                {
-                    CloseProject();
-                    m_appSettings.Lastprojectname = "";
-                    File.Copy(filename, lookup.FileNameToSave);
-                    OpenFile(lookup.FileNameToSave, true);
-                    m_appSettings.LastOpenedType = 0;
-
-                }
             }
         }
 
@@ -15524,661 +16939,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
                     }
                 }
-            }
-        }
-
-        private string MakeDirName(string dirname)
-        {
-            string retval = dirname;
-            retval = retval.Replace(@"\", "");
-            retval = retval.Replace(@"/", "");
-            retval = retval.Replace(@":", "");
-            retval = retval.Replace(@"*", "");
-            retval = retval.Replace(@"?", "");
-            retval = retval.Replace(@">", "");
-            retval = retval.Replace(@"<", "");
-            retval = retval.Replace(@"|", "");
-            return retval;
-        }
-
-        private void btnCreateProject_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // show the project properties screen for the user to fill in
-            // if a bin file is loaded, ask the user whether this should be the new projects binary file
-            // the project XML should contain a reference to this binfile as well as a lot of other stuff
-            frmProjectProperties projectprops = new frmProjectProperties();
-            if (m_currentfile != string.Empty)
-            {
-                projectprops.BinaryFile = m_currentfile;
-                T7FileHeader fileheader = new T7FileHeader();
-                fileheader.init(m_currentfile, false);
-                projectprops.CarModel = fileheader.getCarDescription().Trim();
-
-                projectprops.ProjectName = fileheader.getPartNumber().Trim() + " " + fileheader.getSoftwareVersion().Trim();
-            }
-            if (projectprops.ShowDialog() == DialogResult.OK)
-            {
-                if (!Directory.Exists(m_appSettings.ProjectFolder)) Directory.CreateDirectory(m_appSettings.ProjectFolder);
-                // create a new folder with these project properties.
-                // also copy the binary file into the subfolder for this project
-                if (Directory.Exists(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName)))
-                {
-                    frmInfoBox info = new frmInfoBox("The chosen projectname already exists, please choose another one");
-                    //TODO: reshow the dialog
-                }
-                else
-                {
-                    // create the project
-                    Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName));
-                    // copy the selected binary file to this folder
-                    string binfilename = m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName) + "\\" + Path.GetFileName(projectprops.BinaryFile);
-                    File.Copy(projectprops.BinaryFile, binfilename);
-                    // now create the projectproperties.xml in this new folder
-                    System.Data.DataTable dtProps = new System.Data.DataTable("T5PROJECT");
-                    dtProps.Columns.Add("CARMAKE");
-                    dtProps.Columns.Add("CARMODEL");
-                    dtProps.Columns.Add("CARMY");
-                    dtProps.Columns.Add("CARVIN");
-                    dtProps.Columns.Add("NAME");
-                    dtProps.Columns.Add("BINFILE");
-                    dtProps.Columns.Add("VERSION");
-                    dtProps.Rows.Add(projectprops.CarMake, projectprops.CarModel, projectprops.CarMY, projectprops.CarVIN, MakeDirName(projectprops.ProjectName), binfilename, projectprops.Version);
-                    dtProps.WriteXml(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName) + "\\projectproperties.xml");
-                    OpenProject(projectprops.ProjectName); //?
-                }
-            }
-
-        }
-
-        private TrionicTransactionLog m_ProjectTransactionLog;
-
-        private void OpenProject(string projectname)
-        {
-            //TODO: Are there pending changes in the optionally currently opened binary file / project?
-
-            //TODO: open a selected project
-            //frmInfoBox info = new frmInfoBox("Opening project: " + projectname);
-            if (Directory.Exists(m_appSettings.ProjectFolder + "\\" + projectname))
-            {
-                m_appSettings.LastOpenedType = 1;
-                m_CurrentWorkingProject = projectname;
-                m_ProjectLog.OpenProjectLog(m_appSettings.ProjectFolder + "\\" + projectname);
-                //Load the binary file that comes with this project
-                LoadBinaryForProject(projectname);
-                //LoadAFRMapsForProject(projectname); // <GS-27072010> TODO: nog bekijken voor T7
-                if (m_currentfile != string.Empty)
-                {
-                    // transaction log <GS-15032010>
-                    m_ProjectTransactionLog = new TrionicTransactionLog();
-                    if (m_ProjectTransactionLog.OpenTransActionLog(m_appSettings.ProjectFolder, projectname))
-                    {
-                        m_ProjectTransactionLog.ReadTransactionFile();
-                        //m_trionicFile.SetTransactionLog(m_ProjectTransactionLog);
-                        if (m_ProjectTransactionLog.TransCollection.Count > 2000)
-                        {
-                            frmProjectTransactionPurge frmPurge = new frmProjectTransactionPurge();
-                            frmPurge.SetNumberOfTransactions(m_ProjectTransactionLog.TransCollection.Count);
-                            if (frmPurge.ShowDialog() == DialogResult.OK)
-                            {
-                                m_ProjectTransactionLog.Purge();
-                            }
-                        }
-                    }
-                    // transaction log <GS-15032010>
-                    btnCloseProject.Enabled = true;
-                    btnAddNoteToProject.Enabled = true;
-                    btnEditProject.Enabled = true;
-                    btnShowProjectLogbook.Enabled = true;
-                    btnProduceLatestBinary.Enabled = true;
-                    //btncreateb                    
-                    btnRebuildFile.Enabled = true;
-                    CreateProjectBackupFile();
-                    UpdateRollbackForwardControls();
-                    m_appSettings.Lastprojectname = m_CurrentWorkingProject;
-                    this.Text = "T7SuitePro [Project: " + projectname + "]";
-                }
-            }
-        }
-
-        private void UpdateRollbackForwardControls()
-        {
-            btnRollback.Enabled = false;
-            btnRollforward.Enabled = false;
-            btnShowTransactionLog.Enabled = false;
-
-            for (int t = m_ProjectTransactionLog.TransCollection.Count - 1; t >= 0; t--)
-            {
-                if (!btnShowTransactionLog.Enabled) btnShowTransactionLog.Enabled = true;
-                if (m_ProjectTransactionLog.TransCollection[t].IsRolledBack)
-                {
-                    btnRollforward.Enabled = true;
-                }
-                else
-                {
-                    btnRollback.Enabled = true;
-                }
-            }
-        }
-
-        private void CreateProjectBackupFile()
-        {
-            // create a backup file automatically! <GS-16032010>
-            if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups");
-            string filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups\\" + Path.GetFileNameWithoutExtension(GetBinaryForProject(m_CurrentWorkingProject)) + "-backup-" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".BIN";
-            File.Copy(GetBinaryForProject(m_CurrentWorkingProject), filename);
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.BackupfileCreated, filename);
-            }
-
-
-        }
-
-
-        private void LoadBinaryForProject(string projectname)
-        {
-            if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
-            {
-                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
-                projectprops.Columns.Add("CARMAKE");
-                projectprops.Columns.Add("CARMODEL");
-                projectprops.Columns.Add("CARMY");
-                projectprops.Columns.Add("CARVIN");
-                projectprops.Columns.Add("NAME");
-                projectprops.Columns.Add("BINFILE");
-                projectprops.Columns.Add("VERSION");
-                projectprops.ReadXml(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml");
-                // valid project, add it to the list
-                if (projectprops.Rows.Count > 0)
-                {
-                    OpenFile(projectprops.Rows[0]["BINFILE"].ToString(), false);
-                    //OpenWorkingFile(projectprops.Rows[0]["BINFILE"].ToString());
-                }
-            }
-        }
-
-        private string GetBinaryForProject(string projectname)
-        {
-            string retval = m_currentfile;
-            if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
-            {
-                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
-                projectprops.Columns.Add("CARMAKE");
-                projectprops.Columns.Add("CARMODEL");
-                projectprops.Columns.Add("CARMY");
-                projectprops.Columns.Add("CARVIN");
-                projectprops.Columns.Add("NAME");
-                projectprops.Columns.Add("BINFILE");
-                projectprops.Columns.Add("VERSION");
-                projectprops.ReadXml(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml");
-                // valid project, add it to the list
-                if (projectprops.Rows.Count > 0)
-                {
-                    retval = projectprops.Rows[0]["BINFILE"].ToString();
-                }
-            }
-            return retval;
-        }
-
-        private string GetBackupOlderThanDateTime(string project, DateTime mileDT)
-        {
-            string retval = m_currentfile; // default = current file
-            string BackupPath = m_appSettings.ProjectFolder + "\\" + project + "\\Backups";
-            DateTime MaxDateTime = DateTime.MinValue;
-            string foundBackupfile = string.Empty;
-            if (Directory.Exists(BackupPath))
-            {
-                string[] backupfiles = Directory.GetFiles(BackupPath, "*.bin");
-                foreach (string backupfile in backupfiles)
-                {
-                    FileInfo fi = new FileInfo(backupfile);
-                    if (fi.LastAccessTime > MaxDateTime && fi.LastAccessTime <= mileDT)
-                    {
-                        MaxDateTime = fi.LastAccessTime;
-                        foundBackupfile = backupfile;
-                    }
-                }
-            }
-            if (foundBackupfile != string.Empty)
-            {
-                retval = foundBackupfile;
-            }
-            return retval;
-        }
-
-        private void btnRebuildFile_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // show the transactionlog again and ask the user upto what datetime he wants to rebuild the file
-            // first ask a datetime
-            frmRebuildFileParameters filepar = new frmRebuildFileParameters();
-            if (filepar.ShowDialog() == DialogResult.OK)
-            {
-
-                // get the last backup that is older than the selected datetime
-                string file2Process = GetBackupOlderThanDateTime(m_CurrentWorkingProject, filepar.SelectedDateTime);
-                // now rebuild the file
-                // first create a copy of this file
-                string tempRebuildFile = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "rebuild.bin";
-                if (File.Exists(tempRebuildFile))
-                {
-                    File.Delete(tempRebuildFile);
-                }
-                // CREATE A BACKUP FILE HERE
-                CreateProjectBackupFile();
-                File.Copy(file2Process, tempRebuildFile);
-                // now do all the transactions newer than this file and older than the selected date time
-                //IECUFile m_RebuildFile = new Trionic5File();
-                //m_RebuildFile.LibraryPath = Application.StartupPath + "\\Binaries";
-
-                //IECUFileInformation m_RebuildFileInformation = new Trionic5FileInformation();
-
-                //m_RebuildFile.SelectFile(tempRebuildFile);
-                //m_RebuildFileInformation = m_RebuildFile.ParseFile();
-                FileInfo fi = new FileInfo(file2Process);
-                foreach (TransactionEntry te in m_ProjectTransactionLog.TransCollection)
-                {
-                    if (te.EntryDateTime >= fi.LastAccessTime && te.EntryDateTime <= filepar.SelectedDateTime)
-                    {
-                        // apply this change
-                        RollForwardOnFile(tempRebuildFile, te);
-                    }
-                }
-                // rename/copy file
-                if (filepar.UseAsNewProjectFile)
-                {
-                    // just delete the current file
-                    File.Delete(m_currentfile);
-                    File.Copy(tempRebuildFile, m_currentfile);
-                    File.Delete(tempRebuildFile);
-                    // done
-                }
-                else
-                {
-                    // ask for destination file
-                    SaveFileDialog sfd = new SaveFileDialog();
-                    sfd.Title = "Save rebuild file as...";
-                    sfd.Filter = "Binary files|*.bin";
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        if (File.Exists(sfd.FileName)) File.Delete(sfd.FileName);
-                        File.Copy(tempRebuildFile, sfd.FileName);
-                        File.Delete(tempRebuildFile);
-                    }
-                }
-                if (m_CurrentWorkingProject != string.Empty)
-                {
-                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.ProjectFileRecreated, "Reconstruct upto " + filepar.SelectedDateTime.ToString("dd/MM/yyyy") + " selected file " + file2Process);
-                }
-                UpdateRollbackForwardControls();
-            }
-        }
-
-        private void RollForwardOnFile(string file2Rollback, TransactionEntry entry)
-        {
-            FileInfo fi = new FileInfo(file2Rollback);
-            int addressToWrite = entry.SymbolAddress;
-            while (addressToWrite > fi.Length) addressToWrite -= (int)fi.Length;
-            savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, file2Rollback, false);
-            verifychecksum(false);
-        }
-
-        private void btnOpenProject_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            //TODO let the user select a project from the Project folder. If none are present, let the user know
-            if (!Directory.Exists(m_appSettings.ProjectFolder)) Directory.CreateDirectory(m_appSettings.ProjectFolder);
-            System.Data.DataTable ValidProjects = new System.Data.DataTable();
-            ValidProjects.Columns.Add("Projectname");
-            ValidProjects.Columns.Add("NumberBackups");
-            ValidProjects.Columns.Add("NumberTransactions");
-            ValidProjects.Columns.Add("DateTimeModified");
-            ValidProjects.Columns.Add("Version");
-            string[] projects = Directory.GetDirectories(m_appSettings.ProjectFolder);
-            // filter for folders with a projectproperties.xml file
-            foreach (string project in projects)
-            {
-                string[] projectfiles = Directory.GetFiles(project, "projectproperties.xml");
-
-                if (projectfiles.Length > 0)
-                {
-                    System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
-                    projectprops.Columns.Add("CARMAKE");
-                    projectprops.Columns.Add("CARMODEL");
-                    projectprops.Columns.Add("CARMY");
-                    projectprops.Columns.Add("CARVIN");
-                    projectprops.Columns.Add("NAME");
-                    projectprops.Columns.Add("BINFILE");
-                    projectprops.Columns.Add("VERSION");
-                    projectprops.ReadXml((string)projectfiles.GetValue(0));
-                    // valid project, add it to the list
-                    if (projectprops.Rows.Count > 0)
-                    {
-                        string projectName = projectprops.Rows[0]["NAME"].ToString();
-                        ValidProjects.Rows.Add(projectName, GetNumberOfBackups(projectName), GetNumberOfTransactions(projectName), GetLastAccessTime(projectprops.Rows[0]["BINFILE"].ToString()), projectprops.Rows[0]["VERSION"].ToString());
-                    }
-                }
-            }
-            if (ValidProjects.Rows.Count > 0)
-            {
-                frmProjectSelection projselection = new frmProjectSelection();
-                projselection.SetDataSource(ValidProjects);
-                if (projselection.ShowDialog() == DialogResult.OK)
-                {
-                    string selectedproject = projselection.GetProjectName();
-                    if (selectedproject != "")
-                    {
-                        OpenProject(selectedproject);
-                    }
-
-                }
-            }
-            else
-            {
-                frmInfoBox info = new frmInfoBox("No projects were found, please create one first!");
-            }
-
-        }
-        private int GetNumberOfBackups(string project)
-        {
-            int retval = 0;
-            string dirname = m_appSettings.ProjectFolder + "\\" + project + "\\Backups";
-            if (!Directory.Exists(dirname)) Directory.CreateDirectory(dirname);
-            string[] backupfiles = Directory.GetFiles(dirname, "*.bin");
-            retval = backupfiles.Length;
-            return retval;
-        }
-
-        private int GetNumberOfTransactions(string project)
-        {
-            int retval = 0;
-            string filename = m_appSettings.ProjectFolder + "\\" + project + "\\TransActionLogV2.ttl";
-            if (File.Exists(filename))
-            {
-                TrionicTransactionLog translog = new TrionicTransactionLog();
-                translog.OpenTransActionLog(m_appSettings.ProjectFolder, project);
-                translog.ReadTransactionFile();
-                retval = translog.TransCollection.Count;
-            }
-            return retval;
-        }
-
-        private DateTime GetLastAccessTime(string filename)
-        {
-            DateTime retval = DateTime.MinValue;
-            if (File.Exists(filename))
-            {
-                FileInfo fi = new FileInfo(filename);
-                retval = fi.LastAccessTime;
-            }
-            return retval;
-        }
-
-        private void btnCloseProject_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            CloseProject();
-            m_appSettings.Lastprojectname = "";
-        }
-
-        private void CloseProject()
-        {
-            /*if (_ecuConnection.Opened) StopOnlineMode();// StopECUConnection();
-            if (m_CurrentWorkingProject != "")
-            {
-                if (m_AFRMaps != null)
-                {
-                    m_AFRMaps.SaveMaps();
-                }
-            }*/
-
-            m_CurrentWorkingProject = string.Empty;
-            // unload the current file
-            m_currentfile = string.Empty;
-            gridControlSymbols.DataSource = null;
-            barFilenameText.Caption = "No file";
-            //barButtonItem4.Enabled = false;
-            m_appSettings.Lastfilename = string.Empty;
-            btnCloseProject.Enabled = false;
-            btnShowProjectLogbook.Enabled = false;
-            btnProduceLatestBinary.Enabled = false;
-            btnAddNoteToProject.Enabled = false;
-            btnEditProject.Enabled = false;
-
-            btnRebuildFile.Enabled = false;
-            btnRollback.Enabled = false;
-            btnRollforward.Enabled = false;
-            btnShowTransactionLog.Enabled = false;
-            this.Text = "T7SuitePro";
-        }
-
-        private void btnShowTransactionLog_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // show new form
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-                frmTransactionLog translog = new frmTransactionLog();
-                translog.onRollBack += new frmTransactionLog.RollBack(translog_onRollBack);
-                translog.onRollForward += new frmTransactionLog.RollForward(translog_onRollForward);
-                translog.onNoteChanged += new frmTransactionLog.NoteChanged(translog_onNoteChanged);
-                foreach (TransactionEntry entry in m_ProjectTransactionLog.TransCollection)
-                {
-                    entry.SymbolName = GetSymbolNameByAddress(entry.SymbolAddress);
-
-                }
-                translog.SetTransactionLog(m_ProjectTransactionLog);
-                translog.Show();
-            }
-        }
-
-        private string GetSymbolNameByAddress(Int32 address)
-        {
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                if (sh.Flash_start_address == address) return sh.Varname;
-            }
-            return address.ToString();
-        }
-
-        void translog_onNoteChanged(object sender, frmTransactionLog.RollInformationEventArgs e)
-        {
-            m_ProjectTransactionLog.SetEntryNote(e.Entry);
-        }
-
-        void translog_onRollForward(object sender, frmTransactionLog.RollInformationEventArgs e)
-        {
-            // alter the log!
-            // rollback the transaction
-            // now reload the list
-            RollForward(e.Entry);
-            if (sender is frmTransactionLog)
-            {
-                frmTransactionLog logfrm = (frmTransactionLog)sender;
-                logfrm.SetTransactionLog(m_ProjectTransactionLog);
-            }
-        }
-
-        private void RollForward(TransactionEntry entry)
-        {
-            int addressToWrite = entry.SymbolAddress;
-            while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
-            savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, m_currentfile, false);
-            verifychecksum(false);
-            //m_trionicFile.WriteDataNoLog(entry.DataAfter, (uint)addressToWrite);
-            m_ProjectTransactionLog.SetEntryRolledForward(entry.TransactionNumber);
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionRolledforward, GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
-            }
-
-            UpdateRollbackForwardControls();
-        }
-
-        void translog_onRollBack(object sender, frmTransactionLog.RollInformationEventArgs e)
-        {
-            // alter the log!
-            // rollback the transaction
-            RollBack(e.Entry);
-            // now reload the list
-            if (sender is frmTransactionLog)
-            {
-                frmTransactionLog logfrm = (frmTransactionLog)sender;
-                logfrm.SetTransactionLog(m_ProjectTransactionLog);
-            }
-        }
-
-        private void SignalTransactionLogChanged(int SymbolAddress, string Note)
-        {
-            UpdateRollbackForwardControls();
-            // should contain the new info as well
-            // <GS-18032010> insert logbook entry here if project is opened
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionExecuted, GetSymbolNameByAddress(SymbolAddress) + " " + Note);
-            }
-        }
-
-        private void RollBack(TransactionEntry entry)
-        {
-            int addressToWrite = entry.SymbolAddress;
-            while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
-            //m_trionicFile.WriteDataNoLog(entry.DataBefore, (uint)addressToWrite);
-            savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataBefore, m_currentfile, false);
-            verifychecksum(false);
-            m_ProjectTransactionLog.SetEntryRolledBack(entry.TransactionNumber);
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionRolledback, GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
-            }
-
-            UpdateRollbackForwardControls();
-        }
-
-        private void btnRollback_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            //roll back last entry in the log that has not been rolled back
-            for (int t = m_ProjectTransactionLog.TransCollection.Count - 1; t >= 0; t--)
-            {
-                if (!m_ProjectTransactionLog.TransCollection[t].IsRolledBack)
-                {
-                    RollBack(m_ProjectTransactionLog.TransCollection[t]);
-
-                    break;
-                }
-            }
-        }
-
-        private void btnRollforward_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            //roll back last entry in the log that has not been rolled back
-            for (int t = 0; t < m_ProjectTransactionLog.TransCollection.Count; t++)
-            {
-                if (m_ProjectTransactionLog.TransCollection[t].IsRolledBack)
-                {
-                    RollForward(m_ProjectTransactionLog.TransCollection[t]);
-
-                    break;
-                }
-            }
-        }
-
-        private void btnEditProject_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-                EditProjectProperties(m_CurrentWorkingProject);
-            }
-        }
-
-        private void EditProjectProperties(string project)
-        {
-            // edit current project properties
-            System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
-            projectprops.Columns.Add("CARMAKE");
-            projectprops.Columns.Add("CARMODEL");
-            projectprops.Columns.Add("CARMY");
-            projectprops.Columns.Add("CARVIN");
-            projectprops.Columns.Add("NAME");
-            projectprops.Columns.Add("BINFILE");
-            projectprops.Columns.Add("VERSION");
-            projectprops.ReadXml(m_appSettings.ProjectFolder + "\\" + project + "\\projectproperties.xml");
-
-            frmProjectProperties projectproperties = new frmProjectProperties();
-            projectproperties.Version = projectprops.Rows[0]["VERSION"].ToString();
-            projectproperties.ProjectName = projectprops.Rows[0]["NAME"].ToString();
-            projectproperties.CarMake = projectprops.Rows[0]["CARMAKE"].ToString();
-            projectproperties.CarModel = projectprops.Rows[0]["CARMODEL"].ToString();
-            projectproperties.CarVIN = projectprops.Rows[0]["CARVIN"].ToString();
-            projectproperties.CarMY = projectprops.Rows[0]["CARMY"].ToString();
-            projectproperties.BinaryFile = projectprops.Rows[0]["BINFILE"].ToString();
-            bool _reopenProject = false;
-            if (projectproperties.ShowDialog() == DialogResult.OK)
-            {
-                // delete the original XML file
-                if (project != projectproperties.ProjectName)
-                {
-                    Directory.Move(m_appSettings.ProjectFolder + "\\" + project, m_appSettings.ProjectFolder + "\\" + projectproperties.ProjectName);
-                    project = projectproperties.ProjectName;
-                    m_CurrentWorkingProject = project;
-                    // set the working file to the correct folder
-                    projectproperties.BinaryFile = Path.Combine(m_appSettings.ProjectFolder + "\\" + project, Path.GetFileName(projectprops.Rows[0]["BINFILE"].ToString()));
-                    _reopenProject = true;
-                    // open this project
-
-                }
-
-                File.Delete(m_appSettings.ProjectFolder + "\\" + project + "\\projectproperties.xml");
-                System.Data.DataTable dtProps = new System.Data.DataTable("T5PROJECT");
-                dtProps.Columns.Add("CARMAKE");
-                dtProps.Columns.Add("CARMODEL");
-                dtProps.Columns.Add("CARMY");
-                dtProps.Columns.Add("CARVIN");
-                dtProps.Columns.Add("NAME");
-                dtProps.Columns.Add("BINFILE");
-                dtProps.Columns.Add("VERSION");
-                dtProps.Rows.Add(projectproperties.CarMake, projectproperties.CarModel, projectproperties.CarMY, projectproperties.CarVIN, MakeDirName(projectproperties.ProjectName), projectproperties.BinaryFile, projectproperties.Version);
-                dtProps.WriteXml(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectproperties.ProjectName) + "\\projectproperties.xml");
-                if (_reopenProject)
-                {
-                    OpenProject(m_CurrentWorkingProject);
-                }
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.PropertiesEdited, projectproperties.Version);
-
-            }
-
-        }
-
-        private void btnAddNoteToProject_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            frmChangeNote newNote = new frmChangeNote();
-            newNote.ShowDialog();
-            if (newNote.Note != string.Empty)
-            {
-                if (m_CurrentWorkingProject != string.Empty)
-                {
-                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.Note, newNote.Note);
-                }
-            }
-        }
-
-        private void btnShowProjectLogbook_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (m_CurrentWorkingProject != string.Empty)
-            {
-                frmProjectLogbook logb = new frmProjectLogbook();
-
-                logb.LoadLogbookForProject(m_appSettings.ProjectFolder, m_CurrentWorkingProject);
-                logb.Show();
-            }
-        }
-
-        private void btnProduceLatestBinary_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // save binary as
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Binary files|*.bin";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                // copy the current project file to the selected destination
-                File.Copy(m_currentfile, sfd.FileName, true);
             }
         }
 
@@ -18400,702 +19160,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             SpawnSaabOpenTech("M", false);
         }
 
-        private void btnCompareToSRAMSnapshot_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            //Compare the data from an sram snapshot to the binary file
-            // read all symbols from list and compare to sram equivalent!
-            OpenFileDialog ofd1 = new OpenFileDialog();
-            ofd1.Title = "Select SRAM file to compare...";
-            ofd1.Filter = "SRAM dumps|*.ram";
-            ofd1.Multiselect = false;
-            if (ofd1.ShowDialog() == DialogResult.OK)
-            {
-                StartCompareToSRAMFile(ofd1.FileName);
-
-            }
-        }
-
-        private void StartCompareToSRAMFile(string sramfilename)
-        {
-            SymbolCollection scdiff = new SymbolCollection();
-            frmProgress progress = new frmProgress();
-            progress.SetProgress("Comparing to SRAM snapshot");
-            progress.Show();
-            int cnt = 0;
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                int percentage = cnt * 100 / m_symbols.Count;
-                cnt++;
-                progress.SetProgressPercentage(percentage);
-
-                if (sh.Flash_start_address > 0 && sh.Start_address > 0)
-                {
-                    // get sram content and binfile content for this symbol
-                    string symbolname = sh.Varname;
-                    if (symbolname.StartsWith("Symbol:")) symbolname = sh.Userdescription;
-
-                    if (IsSymbolCalibration(symbolname))
-                    {
-                        int address = (int)sh.Flash_start_address;
-                        if (IsSoftwareOpen()/*length > 0x10*/)
-                        {
-                            address = address - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
-                            //tabdet.Map_address = address;
-                            //tabdet.IsOpenSoftware = _softwareIsOpen;
-                            //mapdata = readdatafromfile(m_currentfile, address, length);
-                        }
-                        if (address < m_currentfile_size)
-                        {
-                            byte[] sramsymbol = readdatafromSRAMfile(sramfilename, (int)sh.Start_address, (int)sh.Length);
-                            byte[] flashsymbol = readdatafromfile(m_currentfile, address, (int)sh.Length);
-                            int bdifferent = 0;
-                            if (sh.Varname == "BFuelCal.Map")
-                            {
-                                LogHelper.Log("break!");
-                            }
-                            for (int btel = 0; btel < sh.Length; btel++)
-                            {
-                                if (sramsymbol[btel] != flashsymbol[btel])
-                                {
-                                    bdifferent++;
-                                }
-                            }
-                            if (bdifferent > 0)
-                            {
-                                // symbol is not equal!
-                                scdiff.Add(sh);
-                            }
-                        }
-                    }
-                }
-            }
-            progress.Close();
-            dockManager1.BeginUpdate();
-            try
-            {
-                DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                CompareResults tabdet = new CompareResults();
-                tabdet.HideMissingSymbolIndicators();
-                tabdet.Dock = DockStyle.Fill;
-                tabdet.Filename = sramfilename;
-
-                tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectRAM);
-                dockPanel.Controls.Add(tabdet);
-                //dockPanel.DockAsTab(dockPanel1);
-                dockPanel.Text = "SRAM <> BIN Compare results: " + Path.GetFileName(sramfilename);
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
-                dockPanel.Width = 700;
-                //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
-                tabdet.CompareSymbolCollection = scdiff;
-
-                System.Data.DataTable dt = new System.Data.DataTable();
-
-                // T7
-                dt.Columns.Add("SYMBOLNAME");
-                dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
-                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
-                dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
-                dt.Columns.Add("DESCRIPTION");
-                dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
-                dt.Columns.Add("CATEGORY", Type.GetType("System.Int32")); //0
-                dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
-                dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
-                dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
-                dt.Columns.Add("CATEGORYNAME");
-                dt.Columns.Add("SUBCATEGORYNAME");
-                dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
-                dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                dt.Columns.Add("Userdescription");
-
-
-                foreach (SymbolHelper sh in scdiff)
-                {
-                    float diffperc = 0;
-                    int diffabs = 0;
-                    float diffavg = 0;
-                    dt.Rows.Add(sh.Varname, sh.Start_address, sh.Flash_start_address, sh.Length, sh.Length, sh.Description, false, 0, diffperc, diffabs, diffavg, sh.Category.ToString().Replace("_", " "), sh.Subcategory.ToString().Replace("_", " "), sh.Symbol_number, sh.Symbol_number, sh.Userdescription);
-                }
-                tabdet.gridControl1.DataSource = dt;
-
-                //tabdet.CompareAddressLookupCollection = compAddressLookup;
-                tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log(E.Message);
-            }
-            dockManager1.EndUpdate();
-        }
-
-        void tabdet_onSymbolSelectRAM(object sender, CompareResults.SelectSymbolEventArgs e)
-        {
-            //<GS-22042010> should be compare viewer for Pgm_mod / Pgm_status as well
-            if (!e.ShowDiffMap)
-            {
-                StartTableViewer(e.SymbolName); // normal viewer
-                StartSRAMTableViewer(e.Filename, e.SymbolName, e.SymbolLength, (int)GetSymbolAddress(m_symbols, e.SymbolName), (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName));
-            }
-            else
-            {
-                //show difference between SRAM and binary file
-                //StartCompareDifferenceViewer(e.SymbolName, e.Filename, e.SymbolAddress, e.SymbolLength);
-                StartSRAMToFlashCompareDifferenceViewer(e.SymbolName, e.Filename, m_currentfile, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), (int)GetSymbolAddress(m_symbols, e.SymbolName));
-            }
-        }
-        private void StartSRAMToFlashCompareDifferenceViewer(string SymbolName, string SRAMFilename, string FlashFilename, int SymbolLength, int SymbolAddressSRAM, int SymbolAddress)
-        {
-            DockPanel dockPanel;
-            bool pnlfound = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-
-                if (pnl.Text == "Symbol difference: " + SymbolName + " [" + Path.GetFileName(SRAMFilename) + "]")
-                {
-                    dockPanel = pnl;
-                    pnlfound = true;
-                    dockPanel.Show();
-                }
-            }
-            if (!pnlfound)
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                    dockPanel.Tag = SRAMFilename;
-                    IMapViewer tabdet;//= new MapViewer();
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                    tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                    //tabdet.IsHexMode = true; // always in hexmode!
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
-                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
-                    tabdet.Filename = SRAMFilename;
-                    tabdet.Map_name = SymbolName;
-                    //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
-                    //tabdet.Map_cat = TranslateSymbolNameToCategory(tabdet.Map_name);
-                    tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
-                    tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
-                    /*string xdescr = string.Empty;
-                    string ydescr = string.Empty;
-                    string zdescr = string.Empty;
-                    GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
-                    tabdet.X_axis_name = xdescr;
-                    tabdet.Y_axis_name = ydescr;
-                    tabdet.Z_axis_name = zdescr;*/
-                    SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
-                    string x_axis = string.Empty;
-                    string y_axis = string.Empty;
-                    string x_axis_descr = string.Empty;
-                    string y_axis_descr = string.Empty;
-                    string z_axis_descr = string.Empty;
-                    axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-                    tabdet.X_axis_name = x_axis_descr;
-                    tabdet.Y_axis_name = y_axis_descr;
-                    tabdet.Z_axis_name = z_axis_descr;
-
-
-                    //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
-                    int columns = 8;
-                    int rows = 8;
-                    int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
-                    int address = Convert.ToInt32(SymbolAddress);
-                    if (address != 0)
-                    {
-                        while (address > m_currentfile_size) address -= m_currentfile_size;
-                        tabdet.Map_address = address;
-                        int length = SymbolLength;
-                        tabdet.Map_length = length;
-                        byte[] mapdata = readdatafromSRAMfile(SRAMFilename, SymbolAddressSRAM, length);
-                        byte[] mapdataorig = readdatafromSRAMfile(SRAMFilename, SymbolAddressSRAM, length);
-                        byte[] mapdata2 = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, SymbolName), GetSymbolLength(m_symbols, SymbolName));
-
-                        tabdet.Map_original_content = mapdataorig;
-                        tabdet.Map_compare_content = mapdata2;
-
-                        if (mapdata.Length == mapdata2.Length)
-                        {
-                            if (isSixteenBitTable(SymbolName))
-                            {
-                                for (int bt = 0; bt < mapdata2.Length; bt += 2)
-                                {
-                                    int value1 = Convert.ToInt16(mapdata.GetValue(bt)) * 256 + Convert.ToInt16(mapdata.GetValue(bt + 1));
-                                    int value2 = Convert.ToInt16(mapdata2.GetValue(bt)) * 256 + Convert.ToInt16(mapdata2.GetValue(bt + 1));
-
-                                    value1 = Math.Abs((int)value1 - (int)value2);
-                                    byte v1 = (byte)(value1 / 256);
-                                    byte v2 = (byte)(value1 - (int)v1 * 256);
-                                    mapdata.SetValue(v1, bt);
-                                    mapdata.SetValue(v2, bt + 1);
-                                }
-                            }
-                            else
-                            {
-                                for (int bt = 0; bt < mapdata2.Length; bt++)
-                                {
-                                    LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
-                                    mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
-                                }
-                            }
-
-                            tabdet.Map_content = mapdata;
-                            tabdet.UseNewCompare = true;
-                            tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
-                            tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
-                            tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
-                            TryToAddOpenLoopTables(tabdet);
-                            tabdet.Dock = DockStyle.Fill;
-                            tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
-                            tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
-                            tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
-                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                            tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
-
-                            //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
-                            //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
-                            //tabdet.onSelectionChanged += new MapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                            //tabdet.onSplitterMoved += new MapViewer.SplitterMoved(tabdet_onSplitterMoved);
-                            //tabdet.onSurfaceGraphViewChanged += new MapViewer.SurfaceGraphViewChanged(tabdet_onSurfaceGraphViewChanged);
-                            //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
-                            //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
-
-
-                            //dockPanel.DockAsTab(dockPanel1);
-                            dockPanel.Text = "Symbol difference: " + SymbolName + " [" + Path.GetFileName(SRAMFilename) + "]";
-                            bool isDocked = false;
-                            if (m_appSettings.AutoDockSameSymbol)
-                            {
-                                foreach (DockPanel pnl in dockManager1.Panels)
-                                {
-                                    if (pnl.Text.StartsWith("Symbol difference: " + SymbolName) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                    {
-                                        dockPanel.DockAsTab(pnl, 0);
-                                        isDocked = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!isDocked)
-                            {
-                                if (m_appSettings.AutoDockSameFile)
-                                {
-                                    foreach (DockPanel pnl in dockManager1.Panels)
-                                    {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                        {
-                                            dockPanel.DockAsTab(pnl, 0);
-                                            isDocked = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!isDocked)
-                            {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
-                                if (m_appSettings.AutoSizeNewWindows)
-                                {
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    else
-                                    {
-                                        //dockPanel.Width = this.Width - dockSymbols.Width - 10;
-
-                                    }
-                                }
-                                if (dockPanel.Width < 400) dockPanel.Width = 400;
-
-                                //                    dockPanel.Width = 400;
-                            }
-                            dockPanel.Controls.Add(tabdet);
-
-                        }
-                        else
-                        {
-                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
-                        }
-                    }
-                }
-                catch (Exception E)
-                {
-
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-        }
-
-        private void btnCompareSRAMSnapshots_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // ask user to point out 2 SRAM files.
-            OpenFileDialog ofd1 = new OpenFileDialog();
-
-            ofd1.Title = "First SRAM dump...";
-            ofd1.Filter = "SRAM dumps|*.ram";
-            ofd1.Multiselect = false;
-            if (ofd1.ShowDialog() == DialogResult.OK)
-            {
-                string filename_1 = ofd1.FileName;
-                ofd1.Title = "Second SRAM dump...";
-                if (ofd1.ShowDialog() == DialogResult.OK)
-                {
-                    string filename_2 = ofd1.FileName;
-                    // now compare
-                    System.Data.DataTable dt = new System.Data.DataTable();
-                    dt.Columns.Add("SYMBOLNAME");
-                    dt.Columns.Add("SRAMADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("LENGTHBYTES", Type.GetType("System.Int32"));
-                    dt.Columns.Add("LENGTHVALUES", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DESCRIPTION");
-                    dt.Columns.Add("ISCHANGED", Type.GetType("System.Boolean"));
-                    dt.Columns.Add("CATEGORY", Type.GetType("System.Int32")); //0
-                    dt.Columns.Add("DIFFPERCENTAGE", Type.GetType("System.Double"));
-                    dt.Columns.Add("DIFFABSOLUTE", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DIFFAVERAGE", Type.GetType("System.Double"));
-                    dt.Columns.Add("CATEGORYNAME");
-                    dt.Columns.Add("SUBCATEGORYNAME");
-                    dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
-                    dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                    dt.Columns.Add("Userdescription");
-                    int cnt = 0;
-                    frmProgress progress = new frmProgress();
-                    progress.SetProgress("Comparing SRAM snapshots");
-                    progress.Show();
-                    foreach (SymbolHelper sh in m_symbols)
-                    {
-                        int percentage = cnt * 100 / m_symbols.Count;
-                        cnt++;
-                        progress.SetProgressPercentage(percentage);
-                        //SetTaskProgress(percentage, true);
-                        string symbolname = sh.Varname;
-                        if (symbolname.StartsWith("Symbol:")) symbolname = sh.Userdescription;
-                        if (IsSymbolCalibration(symbolname))
-                        {
-
-                            byte[] data_1 = readdatafromSRAMfile(filename_1, (int)sh.Start_address, (int)sh.Length);
-                            byte[] data_2 = readdatafromSRAMfile(filename_2, (int)sh.Start_address, (int)sh.Length);
-                            if (data_1.Length != data_2.Length)
-                            {
-                                frmInfoBox info = new frmInfoBox("Sram data structure invalid... " + sh.Varname);
-                                return;
-                            }
-                            else
-                            {
-                                double diffperc = 0;
-                                int diffabs = 0;
-                                double diffavg = 0;
-                                bool isdifferent = false;
-                                if (isSixteenBitTable(sh.Varname))
-                                {
-                                    for (int i = 0; i < data_1.Length; i += 2)
-                                    {
-                                        try
-                                        {
-                                            int value1 = (int)(byte)data_1.GetValue(i) * 256;
-                                            value1 += (int)(byte)data_1.GetValue(i + 1);
-                                            int value2 = (int)(byte)data_2.GetValue(i) * 256;
-                                            value2 += (int)(byte)data_2.GetValue(i + 1);
-                                            if (value1 != value2)
-                                            {
-                                                isdifferent = true;
-                                                diffabs++;
-                                            }
-                                        }
-                                        catch (Exception E)
-                                        {
-                                            LogHelper.Log(E.Message);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    for (int i = 0; i < data_1.Length; i++)
-                                    {
-                                        if ((byte)data_1.GetValue(i) != (byte)data_2.GetValue(i))
-                                        {
-                                            isdifferent = true;
-                                            diffabs++;
-                                        }
-                                    }
-                                }
-                                if (isdifferent)
-                                {
-                                    int lengthvalues = sh.Length;
-                                    if (isSixteenBitTable(sh.Varname)) lengthvalues /= 2;
-                                    diffperc = (diffabs * 100) / lengthvalues;
-                                    dt.Rows.Add(sh.Varname, sh.Start_address, sh.Flash_start_address, sh.Length, lengthvalues, sh.Description, false, 0, diffperc, diffabs, diffavg, sh.Category.ToString().Replace("_", " "), sh.Subcategory.ToString().Replace("_", " "), sh.Symbol_number, sh.Symbol_number, sh.Userdescription);
-                                }
-                            }
-                        }
-
-                    }
-                    progress.Close();
-                    SymbolCollection compSymbols = new SymbolCollection();
-                    //AddressLookupCollection compAddressLookup = new AddressLookupCollection();
-                    dockManager1.BeginUpdate();
-                    try
-                    {
-                        DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        SRAMCompareResults tabdet = new SRAMCompareResults();
-                        tabdet.Dock = DockStyle.Fill;
-                        tabdet.Filename1 = filename_1;
-                        tabdet.Filename2 = filename_2;
-                        tabdet.onSRAMSymbolSelect += new SRAMCompareResults.NotifySRAMSelectSymbol(tabdet_onSRAMSymbolSelect);
-                        dockPanel.Controls.Add(tabdet);
-                        //dockPanel.DockAsTab(dockPanel1);
-                        dockPanel.Text = "SRAM compare results: " + Path.GetFileName(filename_1) + " " + Path.GetFileName(filename_2);
-                        bool isDocked = false;
-                        foreach (DockPanel pnl in dockManager1.Panels)
-                        {
-                            if (pnl.Text.StartsWith("SRAM compare results: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                            {
-                                dockPanel.DockAsTab(pnl, 0);
-                                isDocked = true;
-                                break;
-                            }
-                        }
-                        if (!isDocked)
-                        {
-                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
-                            dockPanel.Width = 700;
-                        }
-                        //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
-                        tabdet.gridControl1.DataSource = dt;
-                        //tabdet.CompareTrionic5Tools.SymbolCollection = compSymbols;
-                        //tabdet.CompareAddressLookupCollection = compAddressLookup;
-                        tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-                    }
-                    catch (Exception E)
-                    {
-                        LogHelper.Log(E.Message);
-                    }
-                    dockManager1.EndUpdate();
-                    SetStatusText("SRAM compare done");
-                    //SetTaskProgress(0, false);
-
-                }
-            }
-        }
-
-        void tabdet_onSRAMSymbolSelect(object sender, SRAMCompareResults.SelectSRAMSymbolEventArgs e)
-        {
-
-            if (!e.ShowDiffMap)
-            {
-                //StartTableViewer(e.SymbolName);
-                StartSRAMTableViewer(e.Filename1, e.SymbolName, e.SymbolLength, (int)GetSymbolAddress(m_symbols, e.SymbolName), (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName));
-                StartSRAMTableViewer(e.Filename2, e.SymbolName, e.SymbolLength, (int)GetSymbolAddress(m_symbols, e.SymbolName), (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName));
-            }
-            else
-            {
-                //Implement this viewer type in 2.0
-                StartSRAMCompareDifferenceViewer(e.SymbolName, e.Filename1, e.Filename2, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), "");
-            }
-        }
-
-        private void StartSRAMCompareDifferenceViewer(string symbolname, string filename1, string filename2, int length, int sramaddress, string symbolDescription)
-        {
-            DockPanel dockPanel;
-            bool pnlfound = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-
-                if (pnl.Text == "SRAM symbol difference: " + symbolname + " [" + Path.GetFileName(filename1) + " vs " + Path.GetFileName(filename2) + "]")
-                {
-                    dockPanel = pnl;
-                    pnlfound = true;
-                    dockPanel.Show();
-                }
-            }
-            if (!pnlfound)
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                    dockPanel.Tag = filename1;
-
-                    //IMapViewer tabdet = new MapViewerEx();
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsCompareViewer = true;
-
-
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
-                    tabdet.Filename = filename1;
-                    tabdet.Map_name = symbolname;
-                    tabdet.Map_descr = symbolDescription;
-                    ///tabdet.Map_cat = m_trionicFileInformation.GetSymbolCategory(tabdet.Map_name);
-
-                    tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, symbolname);
-                    tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, symbolname);
-
-                    string xdescr = string.Empty;
-                    string ydescr = string.Empty;
-                    string zdescr = string.Empty;
-                    SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
-                    string x_axis = string.Empty;
-                    string y_axis = string.Empty;
-                    axestrans.GetAxisSymbols(symbolname, out x_axis, out y_axis, out xdescr, out ydescr, out zdescr);
-                    tabdet.X_axis_name = xdescr;
-                    tabdet.Y_axis_name = ydescr;
-                    tabdet.Z_axis_name = zdescr;
-
-                    //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
-                    int columns = 8;
-                    int rows = 8;
-                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out columns, out rows);
-                    int tablewidth = columns;
-                    int address = sramaddress;
-                    if (address != 0)
-                    {
-                        //while (address > m_trionicFileInformation.Filelength) address -= m_trionicFileInformation.Filelength;
-                        tabdet.Map_address = address;
-                        tabdet.Map_length = length;
-
-                        byte[] mapdata = readdatafromSRAMfile(filename1, sramaddress, length);
-                        byte[] mapdata2 = readdatafromSRAMfile(filename2, sramaddress, length);
-                        if (mapdata.Length == mapdata2.Length)
-                        {
-                            if (isSixteenBitTable(symbolname))
-                            {
-                                for (int bt = 0; bt < mapdata2.Length; bt += 2)
-                                {
-                                    int value1 = Convert.ToInt16(mapdata.GetValue(bt)) * 256 + Convert.ToInt16(mapdata.GetValue(bt + 1));
-                                    int value2 = Convert.ToInt16(mapdata2.GetValue(bt)) * 256 + Convert.ToInt16(mapdata2.GetValue(bt + 1));
-
-                                    value1 = (int)Math.Abs(value1 - value2);
-                                    byte v1 = (byte)(value1 / 256);
-                                    byte v2 = (byte)(value1 - (int)v1 * 256);
-                                    mapdata.SetValue(v1, bt);
-                                    mapdata.SetValue(v2, bt + 1);
-                                }
-                            }
-                            else
-                            {
-                                for (int bt = 0; bt < mapdata2.Length; bt++)
-                                {
-                                    //LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
-                                    mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
-                                }
-                            }
-
-                            tabdet.Map_content = mapdata;
-
-                            tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
-                            tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
-                            tabdet.Viewtype = ViewType.Easy;
-                            tabdet.IsUpsideDown = true;//GetMapUpsideDown(tabdet.Map_name);
-                            tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
-                            tabdet.Dock = DockStyle.Fill;
-
-                            tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
-                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                            dockPanel.Text = "SRAM symbol difference: " + symbolname + " [" + Path.GetFileName(filename1) + " vs " + Path.GetFileName(filename2) + "]";
-                            bool isDocked = false;
-                            if (m_appSettings.AutoDockSameSymbol)
-                            {
-                                foreach (DockPanel pnl in dockManager1.Panels)
-                                {
-                                    if (pnl.Text.StartsWith("SRAM symbol difference: " + symbolname) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                    {
-                                        dockPanel.DockAsTab(pnl, 0);
-                                        pnl.Options.ShowCloseButton = false;
-                                        isDocked = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!isDocked)
-                            {
-                                if (m_appSettings.AutoDockSameFile)
-                                {
-                                    foreach (DockPanel pnl in dockManager1.Panels)
-                                    {
-                                        if ((string)pnl.Tag == m_currentfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                        {
-                                            dockPanel.DockAsTab(pnl, 0);
-                                            pnl.Options.ShowCloseButton = false;
-                                            isDocked = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!isDocked)
-                            {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
-                                if (m_appSettings.AutoSizeNewWindows)
-                                {
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    else
-                                    {
-                                        //dockPanel.Width = this.Width - dockSymbols.Width - 10;
-
-                                    }
-                                }
-                                if (dockPanel.Width < 400) dockPanel.Width = 400;
-
-                                //                    dockPanel.Width = 400;
-                            }
-                            dockPanel.Controls.Add(tabdet);
-
-                        }
-                        else
-                        {
-                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
-                        }
-                        if (dockPanel != null)
-                        {
-                            dockPanel.Options.ShowCloseButton = false;
-                        }
-                    }
-                }
-                catch (Exception E)
-                {
-
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-
-
-            }
-        }
-
         private void ViewRealtime_KeyDown(object sender, KeyEventArgs e)
         {
             // control arrow UP = move UP
@@ -19116,131 +19180,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void ViewRealtime_DoubleClick(object sender, EventArgs e)
         {
             EditSelectedSymbol();
-        }
-
-        private void btnImportAFRFeedbackMap_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (m_AFRMap != null && m_currentfile != string.Empty)
-            {
-                int rows = 0;
-                int cols = 0;
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out cols, out rows);
-                byte[] fuelmap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BFuelCal.Map"), (int)GetSymbolLength(m_symbols, "BFuelCal.Map"));
-                int[] countermap = m_AFRMap.GetAFRCountermap();
-                float[] feedbackMap = m_AFRMap.GetFeedbackMap();
-                float[] targetMap = m_AFRMap.GetTargetMap();
-                for (int i = 0; i < rows; i++)
-                {
-                    for (int j = 0; j < cols; j++)
-                    {
-                        int counter = countermap[i * cols + j];
-                        if (counter > 0)
-                        {
-                            float target = targetMap[i * cols + j];
-                            float feedback = feedbackMap[i * cols + j];
-
-                            float _afr_diff_percentage = Math.Abs(((target - feedback) / target) * 100);
-                            float afr_diff_to_correct = Math.Abs(_afr_diff_percentage); // so, if lean, negative! 
-                            int _fuelcorrectionvalue = (int)fuelmap[(i * cols) + j];
-                            if (feedback > target)
-                            {
-                                // lean
-                                float _tempcorrectionvalue = _fuelcorrectionvalue;
-
-                                _tempcorrectionvalue *= 100F + afr_diff_to_correct;
-                                _tempcorrectionvalue /= 100F;
-                                if (_tempcorrectionvalue > 254) _tempcorrectionvalue = 254;
-                                _fuelcorrectionvalue = Convert.ToInt32(Math.Round(_tempcorrectionvalue));
-                            }
-                            else
-                            {
-                                // rich
-                                float _tempcorrectionvalue = _fuelcorrectionvalue;
-                                _tempcorrectionvalue *= 100F - afr_diff_to_correct;
-                                _tempcorrectionvalue /= 100F;
-                                if (_tempcorrectionvalue < 1) _tempcorrectionvalue = 1;
-                                _fuelcorrectionvalue = Convert.ToInt32(Math.Round(_tempcorrectionvalue));
-                            }
-                            if (fuelmap[(i * cols) + j] != (byte)_fuelcorrectionvalue)
-                            {
-                                fuelmap[(i * cols) + j] = (byte)_fuelcorrectionvalue;
-                            }
-                        }
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "BFuelCal.Map"), (int)GetSymbolLength(m_symbols, "BFuelCal.Map"), fuelmap, m_currentfile, true, "Imported AFR feedback data");
-                UpdateChecksum(m_currentfile);
-                ClearAFRFeedbackMap();
-                UpdateViewersWithName("BFuelCal.Map");
-                //UpdateOpenViewers();  update BFuelCal.Map
-            }
-        }
-
-        private void UpdateViewersWithName(string symbolname)
-        {
-            try
-            {
-                // convert feedback map in memory to byte[] in stead of float[]
-                int rows = 0;
-                int cols = 0;
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out cols, out rows);
-                byte[] current_map = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname));
-                foreach (DockPanel pnl in dockManager1.Panels)
-                {
-                    if (pnl.Text.StartsWith("Symbol: "))
-                    {
-                        foreach (Control c in pnl.Controls)
-                        {
-                            if (c is IMapViewer)
-                            {
-                                IMapViewer vwr = (IMapViewer)c;
-                                if (vwr.Map_name == symbolname)
-                                {
-                                    vwr.Map_content = current_map;
-                                    UpdateViewer(vwr, cols, isSixteenBitTable(symbolname));
-                                }
-                            }
-                            else if (c is DockPanel)
-                            {
-                                DockPanel tpnl = (DockPanel)c;
-                                foreach (Control c2 in tpnl.Controls)
-                                {
-                                    if (c2 is IMapViewer)
-                                    {
-                                        IMapViewer vwr2 = (IMapViewer)c2;
-                                        if (vwr2.Map_name == symbolname)
-                                        {
-                                            vwr2.Map_content = current_map;
-                                            UpdateViewer(vwr2, cols, isSixteenBitTable(symbolname));
-                                        }
-                                    }
-                                }
-                            }
-                            else if (c is ControlContainer)
-                            {
-                                ControlContainer cntr = (ControlContainer)c;
-                                foreach (Control c3 in cntr.Controls)
-                                {
-                                    if (c3 is IMapViewer)
-                                    {
-                                        IMapViewer vwr3 = (IMapViewer)c3;
-                                        if (vwr3.Map_name == symbolname)
-                                        {
-                                            vwr3.Map_content = current_map;
-                                            UpdateViewer(vwr3, cols, isSixteenBitTable(symbolname));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("Refresh viewer " + symbolname + " error: " + E.Message);
-            }
         }
 
         private void btnReleaseNotes_ItemClick(object sender, ItemClickEventArgs e)
@@ -19431,29 +19370,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     ribbonControl1.Pages.RemoveAt(3);
                 }
                 LoadMyMaps();
-            }
-        }
-
-        private void barButtonItem92_ItemClick_1(object sender, ItemClickEventArgs e)
-        {
-            // show ESP calibration value from this bin and give the user the option to alter the setting
-
-            // so, now get the current settings from the binary
-            T7EspEdit t7EspEdit = new T7EspEdit();
-            if (!t7EspEdit.loadFile(m_currentfile))
-            {
-                frmInfoBox info = new frmInfoBox("File not compatible!");
-            }
-            else
-            {
-                frmEspSelection frmEsp = new frmEspSelection();
-                frmEsp.Esp = t7EspEdit.getEspValue();
-                if (frmEsp.ShowDialog() == DialogResult.OK)
-                {
-                    t7EspEdit.setEspValue(frmEsp.Esp);
-                    t7EspEdit.saveFile();
-                    UpdateChecksum(m_currentfile);
-                }
             }
         }
 
