@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -517,6 +517,7 @@
       <DependentUpon>HexViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="HighlightGroup.cs" />
+    <Compile Include="IdaProIdcFile.cs" />
     <Compile Include="IMapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

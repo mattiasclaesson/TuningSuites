@@ -727,6 +727,8 @@ namespace T8SuitePro
             SetProgressIdle();
             //UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
             if (m_currentfile != string.Empty) LoadRealtimeTable();
+
+            IdaProIdcFile.create(m_currentfile, m_symbols);
         }
 
         private void SetProgressIdle()
