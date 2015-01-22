@@ -3231,6 +3231,7 @@ namespace T7
                 }
                 catch (Exception xlaE)
                 {
+                    frmInfoBox info = new frmInfoBox("Failed to create office application interface");
                     LogHelper.Log("Failed to create office application interface: " + xlaE.Message);
                 }
 
@@ -12717,12 +12718,10 @@ dt.Columns.Add("SymbolName");
             switch (symbolname)
             {
                 case "ActualIn.n_Engine": // rpm
-                    //if (m_appSettings.DebugMode) value = 2500; //TODO: <GS-25012011> REMOVE AFTER TESTING
                     digitalDisplayControl1.DigitText = value.ToString("F0");
                     _currentEngineStatus.CurrentRPM = value;
                     break;
                 case "ActualIn.T_Engine": // engine temp
-                    //if (m_appSettings.DebugMode) value = 85; //TODO: <GS-25012011> REMOVE AFTER TESTING
                     digitalDisplayControl2.DigitText = value.ToString("F0");
                     _currentEngineStatus.CurrentEngineTemp = value;
                     break;
@@ -12786,7 +12785,6 @@ dt.Columns.Add("SymbolName");
                     _currentEngineStatus.CurrentThrottlePosition = value;
                     break;
                 case "MAF.m_AirInlet": // actual airmass
-                    //if (m_appSettings.DebugMode) value = 500; //TODO: <GS-25012011> REMOVE AFTER TESTING
                     linearGauge1.Value = value;
                     _currentEngineStatus.CurrentAirmassPerCombustion = value;
                     break;
@@ -12796,13 +12794,7 @@ dt.Columns.Add("SymbolName");
                     {
                         if (symbolname == "DisplProt.AD_Scanner")
                         {
-                            // first convert the value to AFR
-                            // value to volt first
-                            //value = value / 204.6F;
-                            //LogHelper.Log("1: " + value.ToString());
                             value = (float)ConvertToWidebandAFR(value);
-                            //if (m_appSettings.DebugMode) value = 13; //TODO: <GS-25012011> REMOVE AFTER TESTING
-                            //LogHelper.Log("2: " + value.ToString());
                         }
 
                         float valTextLambda = value / 14.7F;
