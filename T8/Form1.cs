@@ -9147,9 +9147,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 fh.init(filename);
                 if (fh.SoftwareVersion.Trim().StartsWith("FD0M", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (MessageBox.Show("Do you want to load the known symbollist for FD0M files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    // if (MessageBox.Show("Do you want to load the known symbollist for FD0M files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string BioPowerXmlFile = String.Format("{0}\\FD0M_C_FMEP_14_FIEF_80l.xml", System.Windows.Forms.Application.StartupPath);
+                        string BioPowerXmlFile = String.Format("{0}\\FD0M_C.xml", System.Windows.Forms.Application.StartupPath);
                         if (File.Exists(BioPowerXmlFile))
                         {
                             string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
@@ -9161,16 +9161,16 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
                                 dt.Columns.Add("DESCRIPTION");
                                 dt.ReadXml(BioPowerXmlFile);
-                                createRepositoryFile = true;
+                                createRepositoryFile = false;
                             }
                         }
                     }
                 }
                 else if (fh.SoftwareVersion.Trim().StartsWith("FD0I", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (MessageBox.Show("Do you want to load the known symbollist for FD0I files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    //if (MessageBox.Show("Do you want to load the known symbollist for FD0I files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string BioPowerXmlFile = String.Format("{0}\\FD0I_Closed.xml", System.Windows.Forms.Application.StartupPath);
+                        string BioPowerXmlFile = String.Format("{0}\\FD0I_C.xml", System.Windows.Forms.Application.StartupPath);
                         if (File.Exists(BioPowerXmlFile))
                         {
                             string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
@@ -9182,11 +9182,116 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
                                 dt.Columns.Add("DESCRIPTION");
                                 dt.ReadXml(BioPowerXmlFile);
-                                createRepositoryFile = true;
+                                createRepositoryFile = false;
                             }
                         }
                     }
                 }
+                else if (fh.SoftwareVersion.Trim().StartsWith("FC0N", StringComparison.OrdinalIgnoreCase))
+                {
+                    //if (MessageBox.Show("Do you want to load the known symbollist for FC0N files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\FC0N_C.xml", System.Windows.Forms.Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new System.Data.DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = false;
+                            }
+                        }
+                    }
+                }
+                else if (fh.SoftwareVersion.Trim().StartsWith("FC0U", StringComparison.OrdinalIgnoreCase))
+                {
+                    //if (MessageBox.Show("Do you want to load the known symbollist for FC0U files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\FC0U_C.xml", System.Windows.Forms.Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new System.Data.DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = false;
+                            }
+                        }
+                    }
+                }
+                else if (fh.SoftwareVersion.Trim().StartsWith("FD0F", StringComparison.OrdinalIgnoreCase))
+                {
+                    //if (MessageBox.Show("Do you want to load the known symbollist for FD0F files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\FD0F_C.xml", System.Windows.Forms.Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new System.Data.DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = false;
+                            }
+                        }
+                    }
+                }
+                else if (fh.SoftwareVersion.Trim().StartsWith("FD0G", StringComparison.OrdinalIgnoreCase))
+                {
+                    //if (MessageBox.Show("Do you want to load the known symbollist for FD0G files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\FD0G_C.xml", System.Windows.Forms.Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new System.Data.DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = false;
+                            }
+                        }
+                    }
+                }
+                //else if (fh.SoftwareVersion.Trim().StartsWith("FF0L", StringComparison.OrdinalIgnoreCase))
+                //{
+                //    //if (MessageBox.Show("Do you want to load the known symbollist for FF0L files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                //    {
+                //        string BioPowerXmlFile = String.Format("{0}\\FF0L_C.xml", System.Windows.Forms.Application.StartupPath);
+                //        if (File.Exists(BioPowerXmlFile))
+                //        {
+                //            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                //            if (binname != string.Empty)
+                //            {
+                //                dt = new System.Data.DataTable(binname);
+                //                dt.Columns.Add("SYMBOLNAME");
+                //                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                //                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                //                dt.Columns.Add("DESCRIPTION");
+                //                dt.ReadXml(BioPowerXmlFile);
+                //                createRepositoryFile = false;
+                //            }
+                //        }
+                //    }
+                //}
             
             }
             foreach (SymbolHelper sh in coll2load)
