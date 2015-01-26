@@ -807,6 +807,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9411684B7DEC4404828DD1DD401C7D50"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_95E36799AA214B2598540296327AE816"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1552,6 +1558,12 @@
         "Entry"
         {
         "MsmKey" = "8:_FC8DA52EDFD44C1C9B10932C97B9A1CF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FD19F96422834F30A0C055929DE35C05"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3787,6 +3799,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9411684B7DEC4404828DD1DD401C7D50"
+            {
+            "SourcePath" = "8:..\\T8\\ASM-Mode.xshd"
+            "TargetName" = "8:ASM-Mode.xshd"
+            "Tag" = "8:"
+            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_95E36799AA214B2598540296327AE816"
             {
             "SourcePath" = "8:..\\Binaries\\55353231_FA5I_C_FME3_71_FIEF_80d.BIN"
@@ -5100,6 +5132,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FD19F96422834F30A0C055929DE35C05"
+            {
+            "SourcePath" = "8:..\\T8\\T8.ico"
+            "TargetName" = "8:T8.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FEE175DB791B4A2FBECD09473DB5F53A"
             {
             "SourcePath" = "8:..\\Binaries\\55353231_FA5B_C_FMEP_46_FIEF_82m.BIN"
@@ -5360,7 +5412,7 @@
             "Target" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
             "Folder" = "8:_136685F66FA145DF882ABEA6B4B40C49"
             "WorkingFolder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
-            "Icon" = "8:"
+            "Icon" = "8:_FD19F96422834F30A0C055929DE35C05"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DF024C0961C042A29849E0841874B87C"
@@ -5374,7 +5426,7 @@
             "Target" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
             "Folder" = "8:_9FD76EC66F2347A38C887F2910B2265D"
             "WorkingFolder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
-            "Icon" = "8:"
+            "Icon" = "8:_FD19F96422834F30A0C055929DE35C05"
             "Feature" = "8:"
             }
         }
