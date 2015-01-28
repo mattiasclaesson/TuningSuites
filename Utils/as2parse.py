@@ -1,6 +1,6 @@
 #
 # AS2 Parser
-# Version: 0.4
+# Version: 0.5
 #
 import sys, getopt
 
@@ -126,11 +126,11 @@ def parse_symbol_data(symbol_name, symbol_data):
             else:
                 if item[0] == ' ':
                     if len(item.split('"')) == 2:
-                        my_symbol[SYBOL_DESCRIPTION] = my_symbol[SYBOL_DESCRIPTION] + ' ' + item.split('"')[0].strip().replace('\xb0', 'degrees')
+                        my_symbol[SYBOL_DESCRIPTION] = my_symbol[SYBOL_DESCRIPTION] + ' ' + item.split('"')[0].strip().replace('\xb0', 'degrees').replace('"', '\'')
                         if debug:
-                            print "END: " + item.split('"')[0].strip().replace('\xb0', 'degrees')
+                            print "END: " + item.split('"')[0].strip().replace('\xb0', 'degrees').replace('"', '\'')
                     else:
-                        my_symbol[SYBOL_DESCRIPTION] = my_symbol[SYBOL_DESCRIPTION] + ' ' + item.strip().replace('\xb0', 'degrees')
+                        my_symbol[SYBOL_DESCRIPTION] = my_symbol[SYBOL_DESCRIPTION] + ' ' + item.strip().replace('\xb0', 'degrees').replace('"', '\'')
                         if debug:
                             print "MID: " + item.strip()
     if debug:
