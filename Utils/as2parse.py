@@ -60,6 +60,7 @@ namespace T8SuitePro
                     subcategory = XDFSubCategory.Undocumented;
                     break;
 """
+    
     if debug:
         print symbol_list
     
@@ -68,7 +69,8 @@ namespace T8SuitePro
     fh_sym = open(out_sym_trans, 'w')    
     fh_sym.write(in_code)
     for a_symbol in symbol_list:
-        fh_form1.write('            else if (symbolname == \"' + a_symbol[SYMBOL_NAME] + '\") returnvalue = ' + str(a_symbol[SYMBOL_UNIT_VAL]) +';\n')
+        #fh_form1.write('            else if (symbolname == \"' + a_symbol[SYMBOL_NAME] + '\") returnvalue = ' + str(a_symbol[SYMBOL_UNIT_VAL]) +';\n')
+        fh_form1.write('            {\"' + a_symbol[SYMBOL_NAME] + '\",' + str(a_symbol[SYMBOL_UNIT_VAL]) + '},\n')
         my_desc = ''
         if a_symbol.has_key(SYBOL_DESCRIPTION):
             my_desc = a_symbol[SYBOL_DESCRIPTION]
