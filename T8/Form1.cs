@@ -8696,7 +8696,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                    {"FC0N", "{0}\\FC0N_C.xml"},
                                                    {"FC0U", "{0}\\FC0U_C.xml"},
                                                    {"FD0F", "{0}\\FD0F_C.xml"},
-                                                   //{"FF0L", "{0}\\FF0L_C.xml"},
+                                                   {"FF0L", "{0}\\FF0L_C.xml"},
                                                    {"FD0G", "{0}\\FD0G_C.xml"}};
             if (dt.Rows.Count == 0)
             {

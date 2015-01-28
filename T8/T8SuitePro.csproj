@@ -874,6 +874,7 @@
     <Content Include="FD0G_C.xml" />
     <Content Include="FD0I_C.xml" />
     <Content Include="FD0M_C.xml" />
+    <Content Include="FF0L_C.xml" />
     <Content Include="knock.wav" />
     <None Include="Resources\log4net.config.xml">
     </None>
