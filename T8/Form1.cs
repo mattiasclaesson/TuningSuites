@@ -3685,6 +3685,11 @@ namespace T8SuitePro
                         int rows = 8;
                         int tablewidth = GetTableMatrixWitdhByName(Filename, curSymbols, tabdet.Map_name, out columns, out rows);
                         int address = Convert.ToInt32(SymbolAddress);
+
+                        if (tabdet.X_axisvalues.Length > 1) columns = tabdet.X_axisvalues.Length;
+                        if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
+                        tablewidth = columns;
+
                         if (address != 0)
                         {
                             while (address > m_currentfile_size) address -= m_currentfile_size;
@@ -3867,6 +3872,11 @@ namespace T8SuitePro
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
                     int address = Convert.ToInt32(SymbolAddress);
+
+                    if (tabdet.X_axisvalues.Length > 1) columns = tabdet.X_axisvalues.Length;
+                    if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
+                    tablewidth = columns;
+
                     if (address != 0)
                     {
                         while (address > m_currentfile_size) address -= m_currentfile_size;
