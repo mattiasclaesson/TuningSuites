@@ -3085,6 +3085,7 @@ namespace T8SuitePro
                                 tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                                 tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
                                 tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
+                                tabdet.onAxisEditorRequested += new IMapViewer.AxisEditorRequested(tabdet_onAxisEditorRequested);
 
                                 //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
                                 //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
@@ -3217,6 +3218,10 @@ namespace T8SuitePro
                 }
             }
 
+        }
+        void tabdet_onAxisEditorRequested(object sender, IMapViewer.ReadSymbolEventArgs e)
+        {
+            StartTableViewer(e.SymbolName);
         }
 
         void tabdet_onSymbolRead(object sender, IMapViewer.ReadSymbolEventArgs e)

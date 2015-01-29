@@ -336,7 +336,7 @@ namespace T8SuitePro
         public delegate void ViewerClose(object sender, EventArgs e);
         abstract public event ViewerClose onClose;
 
-        public delegate void AxisEditorRequested(object sender, AxisEditorRequestedEventArgs e);
+        public delegate void AxisEditorRequested(object sender, ReadSymbolEventArgs e);
         abstract public event MapViewerEx.AxisEditorRequested onAxisEditorRequested;
 
         public delegate void ReadDataFromSRAM(object sender, ReadFromSRAMEventArgs e);

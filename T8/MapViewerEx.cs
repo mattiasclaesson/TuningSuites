@@ -4588,7 +4588,8 @@ namespace T8SuitePro
         {
             if (onAxisEditorRequested != null)
             {
-                onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.X_Axis, m_map_name, m_filename));
+                // onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.X_Axis, m_map_name, m_filename));ReadSymbolEventArgs
+                onAxisEditorRequested(this, new ReadSymbolEventArgs(SymbolDictionary.GetSymbolXAxis(m_map_name), m_filename));
             }
         }
 
@@ -4601,7 +4602,8 @@ namespace T8SuitePro
         {
             if (onAxisEditorRequested != null)
             {
-                onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.Y_Axis, m_map_name, m_filename));
+                //onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.Y_Axis, m_map_name, m_filename));
+                onAxisEditorRequested(this, new ReadSymbolEventArgs(SymbolDictionary.GetSymbolYAxis(m_map_name), m_filename));
             }
         }
 
