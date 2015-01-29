@@ -1,6 +1,6 @@
 #
 # AS2 Parser
-# Version: 0.5
+# Version: 0.6
 #
 import sys, getopt
 
@@ -28,7 +28,7 @@ symbol_list = []
 #my_symbol[SYMBOL_UNIT_VAL]
 #my_symbol[SYBOL_DESCRIPTION]
 
-def create_files(out_file_form1, out_sym_trans):
+def create_files(out_sym_dict, out_sym_trans):
     in_code  = """using System;
 using System.Collections.Generic;
 using System.Text;
@@ -64,22 +64,23 @@ namespace T8SuitePro
     if debug:
         print symbol_list
     
-    fh_form1 = open(out_file_form1, 'w')    
-    fh_form1.write('            /** vanaf hier */\n\n')
-    fh_sym = open(out_sym_trans, 'w')    
-    fh_sym.write(in_code)
+    fh_dict = open(out_sym_dict, 'w')    
+    fh_dict.write('            /** vanaf hier */\n\n')
+    fh_trans = open(out_sym_trans, 'w')    
+    fh_trans.write(in_code)
     for a_symbol in symbol_list:
-        #fh_form1.write('            else if (symbolname == \"' + a_symbol[SYMBOL_NAME] + '\") returnvalue = ' + str(a_symbol[SYMBOL_UNIT_VAL]) +';\n')
-        fh_form1.write('            {\"' + a_symbol[SYMBOL_NAME] + '\",' + str(a_symbol[SYMBOL_UNIT_VAL]) + '},\n')
+        #fh_dict.write('            else if (symbolname == \"' + a_symbol[SYMBOL_NAME] + '\") returnvalue = ' + str(a_symbol[SYMBOL_UNIT_VAL]) +';\n')
+        if str(a_symbol[SYMBOL_UNIT_VAL]) != "1.0":
+            fh_dict.write('            {\"' + a_symbol[SYMBOL_NAME] + '\",' + str(a_symbol[SYMBOL_UNIT_VAL]) + '},\n')		
         my_desc = ''
         if a_symbol.has_key(SYBOL_DESCRIPTION):
             my_desc = a_symbol[SYBOL_DESCRIPTION]
-        fh_sym.write(switch_code.replace('THE_SYMBOL_NAME', a_symbol[SYMBOL_NAME]).replace('THE_SYMBOL_DESCRIPTION', my_desc))
+        fh_trans.write(switch_code.replace('THE_SYMBOL_NAME', a_symbol[SYMBOL_NAME]).replace('THE_SYMBOL_DESCRIPTION', my_desc))
 
-    fh_form1.write('\n\n            /** tot hier **/\n')
-    fh_sym.write(out_code)
-    fh_form1.close()
-    fh_sym.close()
+    fh_dict.write('\n\n            /** tot hier **/\n')
+    fh_trans.write(out_code)
+    fh_dict.close()
+    fh_trans.close()
         
 
 
@@ -147,7 +148,7 @@ def main():
     global num_TABLENOSP
     global symbol_list
     ifile=''
-    ffile='Form1_contrib.cs'
+    ffile='SymbolDictionary.cs'
     sfile='SymbolTranslator.cs'
  
     # Read command line args
@@ -155,7 +156,7 @@ def main():
         myopts, args = getopt.getopt(sys.argv[1:],"i:f:s:")
     except getopt.GetoptError as e:
         print (str(e))
-        print("Usage: %s -i input [-f form1_filename] [-s symbol_translator_filename]" % sys.argv[0])
+        print("Usage: %s -i input [-f symbol_dictionary_filename] [-s symbol_translator_filename]" % sys.argv[0])
         sys.exit(2)     
 
     for o, a in myopts:
@@ -166,14 +167,14 @@ def main():
         elif o == '-s':
             sfile=a
         else:
-            print("Usage: %s -i input [-f form1_filename] [-s symbol_translator_filename]" % sys.argv[0])
+            print("Usage: %s -i input [-f symbol_dictionary_filename] [-s symbol_translator_filename]" % sys.argv[0])
         
     if ifile == '':
         print "No input file provided."
-        print("Usage: %s -i input [-f form1_filename] [-s symbol_translator_filename]" % sys.argv[0])
+        print("Usage: %s -i input [-f symbol_dictionary_filename] [-s symbol_translator_filename]" % sys.argv[0])
         sys.exit(2)
         
-    print ("Input file : %s\nForm1 file: %s\nSymbolTranslator file: %s" % (ifile,ffile,sfile) )    
+    print ("Input file : %s\nSymbolDictionary file: %s\nSymbolTranslator file: %s" % (ifile,ffile,sfile) )    
     fh = open(ifile)
     
     # Read headers
