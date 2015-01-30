@@ -207,8 +207,8 @@ namespace T7
             System.Windows.Forms.Application.DoEvents();
             InitializeComponent();
             m_AFRMap = new AFRMap();
-            m_AFRMap.onCellLocked += new AFRMap.CellLocked(m_AFRMap_onCellLocked);
-            m_AFRMap.onFuelmapCellChanged += new AFRMap.FuelmapCellChanged(m_AFRMap_onFuelmapCellChanged);
+            m_AFRMap.onCellLocked += m_AFRMap_onCellLocked;
+            m_AFRMap.onFuelmapCellChanged += m_AFRMap_onFuelmapCellChanged;
 
             try
             {
@@ -271,7 +271,7 @@ namespace T7
             try
             {
                 // should be done only once!
-                this.fio_callback = new FIOCallback(this.on_fio);
+                this.fio_callback = this.on_fio;
                 BdmAdapter_SetFIOCallback(this.fio_callback);
                 LogHelper.Log("BDM adapter callback set!");
                 // should be done only once!
@@ -281,9 +281,10 @@ namespace T7
             {
                 LogHelper.Log("BDM init failed: " + BDMException.Message);
             }
+
             try
             {
-                m_DelegateStartReleaseNotePanel = new DelegateStartReleaseNotePanel(this.StartReleaseNotesViewer);
+                m_DelegateStartReleaseNotePanel = this.StartReleaseNotesViewer;
 
             }
             catch (Exception E)
@@ -311,6 +312,124 @@ namespace T7
         {
             LogHelper.Log("Rx frame: 0x" + e.Message.getID().ToString("X4") + " 0x" + e.Message.getData().ToString("X16"));
             UpdateFrame(e);
+        }
+
+        void trionic7_onCanInfo(ITrionic.CanInfoEventArgs e)
+        {
+            // display progress in the statusbar
+            //TODO: For testing only
+            SetProgress(e.Info);
+        }
+
+
+        void trionic7_onCanFrame(ITrionic.CanFrameEventArgs e)
+        {
+            //TODO: handle additional information from the canbus
+            // the messages have been filtered already
+            // only handle this when the realtime stuff is running... otherwise just ignore
+            if (m_appSettings.UseAdditionalCanbusFrames)
+            {
+                ulong _data = e.Message.getData();
+                switch (e.Message.getID())
+                {
+                    case 0x1A0:         //1A0h - Engine information
+                        // rpm is 16 bit value (RPM0 and RPM1 which are byte 1 and 2)
+                        int _rpm = Convert.ToInt32(e.Message.getCanData(1)) * 256;
+                        _rpm += Convert.ToInt32(e.Message.getCanData(2));
+                        UpdateRealtimeInformation("ActualIn.n_Engine", _rpm);
+                        int _tps = Convert.ToInt32(e.Message.getCanData(5));
+                        UpdateRealtimeInformation("Out.X_AccPedal", _tps);
+                        break;
+                    case 0x280:         //280h - Pedals, reverse gear
+                        // reverse = msg.data(1) & 0x02 
+                        // clutch = msg.data(2) & 0x08
+                        // brake = msg.data(2) & 0x0A
+                        // cruise = msg.data(4) & 0x20
+
+                        break;
+                    case 0x290:         //290h - Steering wheel and SID buttons
+                        /*
+                If (msg.data(2) And &H4) = &H4 Then LabelSteeringWheel.Text = "NXT"
+                If (msg.data(2) And &H8) = &H8 Then LabelSteeringWheel.Text = "SEEK-"
+                If (msg.data(2) And &H10) = &H10 Then LabelSteeringWheel.Text = "SEEK+"
+                If (msg.data(2) And &H20) = &H20 Then LabelSteeringWheel.Text = "SRC"
+                If (msg.data(2) And &H40) = &H40 Then LabelSteeringWheel.Text = "VOL+"
+                If (msg.data(2) And &H80) = &H80 Then LabelSteeringWheel.Text = "VOL-"
+
+                If (msg.data(3) And &H10) = &H10 Then LabelSID.Text = "+"
+                If (msg.data(3) And &H40) = &H40 Then LabelSID.Text = "SET"
+                If (msg.data(3) And &H80) = &H80 Then LabelSID.Text = "CLR"                         * */
+                        break;
+                    case 0x2F0:         //2F0h - Vehicle speed
+                        break;
+                    case 0x320:         //320h - Doors, central locking and seat belts
+                        //msg.data(1) & 0x80 = central locking = unlocked
+                        //msg.data(1) & 0x40 = Front left door
+                        //msg.data(1) & 0x20 = Front right door
+                        //msg.data(1) & 0x10 = Back left door
+                        //msg.data(1) & 0x08 = Back right door
+                        //msg.data(1) & 0x04 = Hatch door
+
+                        break;
+                    case 0x370:         //370h - Mileage
+                        break;
+                    case 0x3A0:         //3A0h - Vehicle speed
+                        int _speed = Convert.ToInt32(e.Message.getCanData(3)) * 256;
+                        _speed += Convert.ToInt32(e.Message.getCanData(4));
+                        float spd = (float)_speed;
+                        spd /= 10F;
+                        UpdateRealtimeInformation("In.v_Vehicle", spd);
+                        break;
+                    case 0x3B0:         //3B0h - Head lights
+                        int _lightStatus = Convert.ToInt32(e.Message.getCanData(1));
+                        if ((_lightStatus & 0x0001) > 0)
+                        {
+                            _currentEngineStatus.HeadlightsOn = true;
+                        }
+                        else
+                        {
+                            _currentEngineStatus.HeadlightsOn = false;
+                        }
+                        break;
+                    case 0x3E0:         //3E0h - Automatic Gearbox
+                        break;
+                    case 0x410:         //410h - Light dimmer and light sensor
+                        break;
+                    case 0x430:         //430h - SID beep request (interesting for Knock indicator?)
+                        break;
+                    case 0x460:         //460h - Engine rpm and speed
+                        _rpm = Convert.ToInt32(e.Message.getCanData(1)) * 256;
+                        _rpm += Convert.ToInt32(e.Message.getCanData(2));
+                        UpdateRealtimeInformation("ActualIn.n_Engine", _rpm);
+                        // rpm = msg.data(1) * 255 + msg.data(2)
+                        // speed = (msg.data(3) * 255 + msg.data(4)) / 10
+                        _speed = Convert.ToInt32(e.Message.getCanData(3)) * 256;
+                        _speed += Convert.ToInt32(e.Message.getCanData(4));
+                        spd = (float)_speed;
+                        spd /= 10F;
+                        UpdateRealtimeInformation("In.v_Vehicle", spd);
+                        break;
+                    case 0x4A0:         //4A0h - Steering wheel, Vehicle Identification Number
+                        //msg.data(2) & 0x40 = left signal indicator
+                        //msg.data(2) & 0x20 = right signal indicator
+                        break;
+                    case 0x520:         //520h - ACC, inside temperature
+                        // temperature = msg.data(5) - 40                                        
+                        break;
+                    case 0x530:         //530h - ACC
+                        break;
+                    case 0x5C0:         //5C0h - Coolant temperature, air pressure
+                        break;
+                    case 0x630:         //630h - Fuel usage
+                        break;
+                    case 0x640:         //640h - Mileage
+                        break;
+                    case 0x7A0:         //7A0h - Outside temperature
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private void updateStatusInBox(ITrionic.CanInfoEventArgs e)
@@ -4277,7 +4396,7 @@ namespace T7
             return buffer;
         }
 
-        private SIDICollection GetSidCollectionFromBinary(string m_currentfile)
+        private static SIDICollection GetSidCollectionFromBinary(string m_currentfile)
         {
             SIDICollection m_sidcollection = new SIDICollection();
             FileStream stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
@@ -4355,12 +4474,8 @@ namespace T7
 
         private void Actions_LimiterCheck_ItemClick(object sender, ItemClickEventArgs e)
         {
-
             // start a dockview for this <GS-26012011>
             DockPanel dockPanel;
-            DockPanel sramdockPanel;
-            bool pnlfound = false;
-            //bool srampnlfound = false;
 
             if (CheckAllTablesAvailable())
             {
@@ -4425,12 +4540,6 @@ namespace T7
 
         void airmassResult_onStartTableViewer(object sender, ctrlAirmassResult.StartTableViewerEventArgs e)
         {
-            StartAViewer(e.SymbolName);
-        }
-
-        void airmassresult_onStartTableViewer(object sender, frmAirmassResult.StartTableViewerEventArgs e)
-        {
-            // start the table viewer
             StartAViewer(e.SymbolName);
         }
 
@@ -4808,124 +4917,825 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         }
 
         #endregion
-        
-        void trionic7_onCanInfo(ITrionic.CanInfoEventArgs e)
+
+        #region Information
+        private void btnVinDecoder_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // display progress in the statusbar
-            //TODO: For testing only
-            SetProgress(e.Info);
+            frmDecodeVIN decode = new frmDecodeVIN();
+            if (m_currentfile != string.Empty)
+            {
+                T7FileHeader t7InfoHeader = new T7FileHeader();
+                t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
+                decode.SetVinNumber(t7InfoHeader.getChassisID());
+            }
+            decode.ShowDialog();
         }
 
-
-        void trionic7_onCanFrame(ITrionic.CanFrameEventArgs e)
+        private void btnShowDisassembly_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //TODO: handle additional information from the canbus
-            // the messages have been filtered already
-            // only handle this when the realtime stuff is running... otherwise just ignore
-            if (m_appSettings.UseAdditionalCanbusFrames)
+            if (t7file != null)
             {
-                ulong _data = e.Message.getData();
-                switch (e.Message.getID())
+                string outputfile = Path.GetDirectoryName(t7file.FileName);
+                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(t7file.FileName) + ".asm");
+                System.Windows.Forms.Application.DoEvents();
+                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
+                ctrlDisassembler disasmcontrol = new ctrlDisassembler() { TrionicFile = t7file, Dock = DockStyle.Fill };
+                panel.Controls.Add(disasmcontrol);
+                panel.Text = "T7Suite Disassembler";
+                panel.Width = this.ClientSize.Width - dockSymbols.Width;
+                System.Windows.Forms.Application.DoEvents();
+                disasmcontrol.DisassembleFile(outputfile);
+            }
+        }
+
+        private void btnShowFullDisassembly_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string outputfile = Path.GetDirectoryName(m_currentfile);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
+            if (!AssemblerViewerActive(true, outputfile))
+            {
+                frmProgress progress = new frmProgress();
+                progress.Show();
+                progress.SetProgress("Start disassembler");
+                if (!File.Exists(outputfile))
                 {
-                    case 0x1A0:         //1A0h - Engine information
-                        // rpm is 16 bit value (RPM0 and RPM1 which are byte 1 and 2)
-                        int _rpm = Convert.ToInt32(e.Message.getCanData(1)) * 256;
-                        _rpm += Convert.ToInt32(e.Message.getCanData(2));
-                        UpdateRealtimeInformation("ActualIn.n_Engine", _rpm);
-                        int _tps = Convert.ToInt32(e.Message.getCanData(5));
-                        UpdateRealtimeInformation("Out.X_AccPedal", _tps);
-                        break;
-                    case 0x280:         //280h - Pedals, reverse gear
-                        // reverse = msg.data(1) & 0x02 
-                        // clutch = msg.data(2) & 0x08
-                        // brake = msg.data(2) & 0x0A
-                        // cruise = msg.data(4) & 0x20
+                    progress.SetProgress("Disassembler running...");
+                    Disassembler dis = new Disassembler();
+                    dis.DisassembleFileRtf(m_currentfile, outputfile, m_currentfile_size, m_symbols);
+                    progress.SetProgress("Disassembler done...");
+                }
+                progress.SetProgress("Loading assembler file");
+                StartAssemblerViewer(outputfile, progress);
+                progress.Close();
+            }
+        }
 
-                        break;
-                    case 0x290:         //290h - Steering wheel and SID buttons
-                        /*
-                If (msg.data(2) And &H4) = &H4 Then LabelSteeringWheel.Text = "NXT"
-                If (msg.data(2) And &H8) = &H8 Then LabelSteeringWheel.Text = "SEEK-"
-                If (msg.data(2) And &H10) = &H10 Then LabelSteeringWheel.Text = "SEEK+"
-                If (msg.data(2) And &H20) = &H20 Then LabelSteeringWheel.Text = "SRC"
-                If (msg.data(2) And &H40) = &H40 Then LabelSteeringWheel.Text = "VOL+"
-                If (msg.data(2) And &H80) = &H80 Then LabelSteeringWheel.Text = "VOL-"
-
-                If (msg.data(3) And &H10) = &H10 Then LabelSID.Text = "+"
-                If (msg.data(3) And &H40) = &H40 Then LabelSID.Text = "SET"
-                If (msg.data(3) And &H80) = &H80 Then LabelSID.Text = "CLR"                         * */
-                        break;
-                    case 0x2F0:         //2F0h - Vehicle speed
-                        break;
-                    case 0x320:         //320h - Doors, central locking and seat belts
-                        //msg.data(1) & 0x80 = central locking = unlocked
-                        //msg.data(1) & 0x40 = Front left door
-                        //msg.data(1) & 0x20 = Front right door
-                        //msg.data(1) & 0x10 = Back left door
-                        //msg.data(1) & 0x08 = Back right door
-                        //msg.data(1) & 0x04 = Hatch door
-
-                        break;
-                    case 0x370:         //370h - Mileage
-                        break;
-                    case 0x3A0:         //3A0h - Vehicle speed
-                        int _speed = Convert.ToInt32(e.Message.getCanData(3)) * 256;
-                        _speed += Convert.ToInt32(e.Message.getCanData(4));
-                        float spd = (float)_speed;
-                        spd /= 10F;
-                        UpdateRealtimeInformation("In.v_Vehicle", spd);
-                        break;
-                    case 0x3B0:         //3B0h - Head lights
-                        int _lightStatus = Convert.ToInt32(e.Message.getCanData(1));
-                        if ((_lightStatus & 0x0001) > 0)
+        private bool AssemblerViewerActive(bool ShowIfActive, string filename)
+        {
+            bool retval = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                if (pnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
+                {
+                    retval = true;
+                    if (ShowIfActive)
+                    {
+                        pnl.Show();
+                        dockManager1.ActivePanel = pnl;
+                    }
+                }
+                else
+                {
+                    foreach (Control c in pnl.Controls)
+                    {
+                        if (c is DockPanel)
                         {
-                            _currentEngineStatus.HeadlightsOn = true;
+                            DockPanel tpnl = (DockPanel)c;
+                            if (tpnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
+                            {
+                                retval = true;
+                                if (ShowIfActive)
+                                {
+                                    tpnl.Show();
+                                    dockManager1.ActivePanel = tpnl;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return retval;
+        }
+
+        private void StartAssemblerViewer(string filename, frmProgress progress)
+        {
+            if (m_currentfile != "")
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
+                    AsmViewer av = new AsmViewer() { Dock = DockStyle.Fill };
+                    dockPanel.Width = 800;
+                    dockPanel.Controls.Add(av);
+                    progress.SetProgress("Loading assembler file ...");
+                    av.LoadDataFromFile(filename, m_symbols);
+                    progress.SetProgress("Finding starting address in file");
+                    av.FindStartAddress(m_currentfile);
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log(E.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        private void Information_firmwareInformation_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // show firmware information screen!
+            bool _correctFooter = m_appSettings.AutoFixFooter;
+            frmFirmwareInformation frminfo = new frmFirmwareInformation();
+
+            if (m_currentfile != null)
+            {
+                if (File.Exists(m_currentfile))
+                {
+                    T7FileHeader t7InfoHeader = new T7FileHeader();
+                    t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
+                    string swVersion = t7InfoHeader.getSoftwareVersion();
+                    PartNumberConverter pnc = new PartNumberConverter();
+                    ECUInformation ecuinfo = pnc.GetECUInfo(t7InfoHeader.getPartNumber().Trim(), "");
+                    frminfo.SIDDate = t7InfoHeader.getSIDDate();
+                    if (ecuinfo.Valid)
+                    {
+                        frminfo.OriginalCarType = ecuinfo.Carmodel.ToString();
+                        frminfo.OriginalEngineType = ecuinfo.Enginetype.ToString();
+                    }
+
+                    if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
+                    {
+                        // additional requirements for the bytes in that location
+                        // http://www.trionictuning.com/forum/viewtopic.php?f=17&t=109&p=8569#p8537
+
+
+
+                        // set these options correct
+                        if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
+                        {
+                            if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
+                                (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
+                                (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
+                            {
+                                frminfo.EnableSIDAdvancedOptions(true);
+                                if (/*CheckBytesInFile(m_currentfile, 0x495FA, 0, 2) &&*/ CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) && CheckBytesInFile(m_currentfile, 0x496B4, 0, 2))
+                                {
+                                    frminfo.SIDDisableStartScreen = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableStartScreen = false;
+                                }
+                                if (CheckBytesInFile(m_currentfile, 0x49760, 0, 2)) // should be 0x49760 in stead of 0x4975E
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = false;
+                                }
+                                /*
+                                 *  Remove startup screen:
+                                    change to 00 00 instead of 00 80 
+                                    000495FA // not needed!!! <GS-11042011>
+                                    0004968E 
+                                    000496B4                              
+                                    Remove adaptation messages:
+                                    Change 0x49760 to 00 00 instead of 00 80
+                                 */
+                            }
+                            else
+                            {
+                                frminfo.EnableSIDAdvancedOptions(false);
+                            }
                         }
                         else
                         {
-                            _currentEngineStatus.HeadlightsOn = false;
+                            if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
+                                (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
+                            {
+                                frminfo.EnableSIDAdvancedOptions(true);
+
+                                //Disable startscreen, change 0x00046F4D to 00 in stead of 80
+                                if (CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1))
+                                {
+                                    frminfo.SIDDisableStartScreen = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableStartScreen = false;
+                                }
+                                //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
+                                if (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1))
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = true;
+                                }
+                                else
+                                {
+                                    frminfo.SIDDisableAdaptionMessages = false;
+                                }
+                            }
+                            else
+                            {
+                                frminfo.EnableSIDAdvancedOptions(false);
+                            }
+
                         }
-                        break;
-                    case 0x3E0:         //3E0h - Automatic Gearbox
-                        break;
-                    case 0x410:         //410h - Light dimmer and light sensor
-                        break;
-                    case 0x430:         //430h - SID beep request (interesting for Knock indicator?)
-                        break;
-                    case 0x460:         //460h - Engine rpm and speed
-                        _rpm = Convert.ToInt32(e.Message.getCanData(1)) * 256;
-                        _rpm += Convert.ToInt32(e.Message.getCanData(2));
-                        UpdateRealtimeInformation("ActualIn.n_Engine", _rpm);
-                        // rpm = msg.data(1) * 255 + msg.data(2)
-                        // speed = (msg.data(3) * 255 + msg.data(4)) / 10
-                        _speed = Convert.ToInt32(e.Message.getCanData(3)) * 256;
-                        _speed += Convert.ToInt32(e.Message.getCanData(4));
-                        spd = (float)_speed;
-                        spd /= 10F;
-                        UpdateRealtimeInformation("In.v_Vehicle", spd);
-                        break;
-                    case 0x4A0:         //4A0h - Steering wheel, Vehicle Identification Number
-                        //msg.data(2) & 0x40 = left signal indicator
-                        //msg.data(2) & 0x20 = right signal indicator
-                        break;
-                    case 0x520:         //520h - ACC, inside temperature
-                        // temperature = msg.data(5) - 40                                        
-                        break;
-                    case 0x530:         //530h - ACC
-                        break;
-                    case 0x5C0:         //5C0h - Coolant temperature, air pressure
-                        break;
-                    case 0x630:         //630h - Fuel usage
-                        break;
-                    case 0x640:         //640h - Mileage
-                        break;
-                    case 0x7A0:         //7A0h - Outside temperature
-                        break;
-                    default:
-                        break;
+                    }
+                    else
+                    {
+                        frminfo.EnableSIDAdvancedOptions(false);
+                    }
+
+                    // Pavel Angelov created this modification. 
+                    // Disable effect of the emission limitation function.
+                    if (swVersion.Trim().StartsWith("EU0AF01C"))
+                    {
+                        if (CheckBytesInFile(m_currentfile, 0x13837, 0x03, 1))
+                        {
+                            frminfo.EmissionLimitation = true;
+                            frminfo.EnableEmissionLimitation(true);
+                        }
+                        else if (CheckBytesInFile(m_currentfile, 0x13837, 0x02, 1))
+                        {
+                            frminfo.EmissionLimitation = false;
+                            frminfo.EnableEmissionLimitation(true);
+                        }
+                        else
+                        {
+                            frminfo.EnableEmissionLimitation(false);
+                        }
+                    }
+                    else
+                    {
+                        frminfo.EnableEmissionLimitation(false);
+                    }
+
+
+                    frminfo.SoftwareID = t7InfoHeader.getSoftwareVersion();
+                    frminfo.ChassisID = t7InfoHeader.getChassisID();
+                    frminfo.EngineType = t7InfoHeader.getCarDescription();
+                    frminfo.Partnumber = t7InfoHeader.getPartNumber();
+                    frminfo.ImmoID = t7InfoHeader.getImmobilizerID();
+                    frminfo.SoftwareIsOpen = IsBinaryFileOpen();
+                    frminfo.BioPowerSoftware = IsBinaryBiopower();
+                    frminfo.BioPowerEnabled = IsBioPowerEnabled();
+                    frminfo.CompressedSymboltable = IsBinaryPackedVersion(m_currentfile);
+                    frminfo.MissingSymbolTable = IsBinaryMissingSymbolTable();
+                    if (frminfo.MissingSymbolTable) frminfo.BioPowerSoftware = true; // only missing in biopower software
+                    frminfo.ChecksumEnabled = HasBinaryChecksumEnabled();
+                    frminfo.TorqueLimitersEnabled = HasBinaryTorqueLimiterEnabled();
+                    if (!HasBinaryTorqueLimiters()) frminfo.TorqueLimitersPresent = false;
+                    //if (!frminfo.MissingSymbolTable)
+                    {
+                        frminfo.OBDIIPresent = HasBinaryOBDIIMaps();
+                        if (!frminfo.OBDIIPresent)
+                        {
+                            frminfo.OBDIIEnabled = false;
+                        }
+                        else
+                        {
+                            frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
+                        }
+                    }
+                    if (HasBinaryOBDIIMaps())
+                    {
+                        frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
+                    }
+                    frminfo.SecondLambdaEnabled = HasBinarySecondLambdaEnabled();
+
+                    if (!HasBinarySecondLambdaMap()) frminfo.SecondLambdaPresent = false;
+
+                    if (!HasBinaryTipInOutParameters()) frminfo.FastThrottleResponsePresent = false;
+                    else frminfo.FastThrottleResponsePresent = true;
+                    frminfo.FastThrottleReponse = HasBinaryFastThrottleResponse();
+                    frminfo.ExtraFastThrottleReponse = HasBinaryExtraFastThrottleResponse();
+                    if (!HasBinaryTipInOutParameters())
+                    {
+                        frminfo.FastThrottleReponse = false;
+                        frminfo.ExtraFastThrottleReponse = false;
+                    }
+                    if (!HasBinaryCatalystLightOffParameters()) frminfo.CatalystLightoffPresent = false;
+                    else frminfo.CatalystLightoffPresent = true;
+                    frminfo.CatalystLightOff = HasBinaryCatalystLightOffEnabled();
+                    frminfo.ProgrammingDateTime = GetProgrammingDateTime();
+                    if (!m_appSettings.WriteTimestampInBinary)
+                    {
+                        frminfo.DisableTimeStamping();
+                    }
+                    if (frminfo.ShowDialog() == DialogResult.OK)
+                    {
+                        if (t7InfoHeader.IsTISBinary(m_currentfile))
+                        {
+                            // user is trying to update a TIS file, ask for footer correction.
+                            if ((frminfo.ImmoID != t7InfoHeader.getImmobilizerID()) || frminfo.ChassisID != t7InfoHeader.getChassisID())
+                            {
+                                if (!_correctFooter)
+                                {
+                                    if (MessageBox.Show("It seems you are trying to update data in a TIS file, would you like T7Suite to correct the footer information?", "TIS file question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    {
+                                        //_correctFooter = true;
+                                        // create a backup file at this point
+                                        File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup", true);
+                                        t7InfoHeader.init(m_currentfile, true);
+                                    }
+                                }
+                            }
+                        }
+                        t7InfoHeader.setImmobilizerID(frminfo.ImmoID);
+                        t7InfoHeader.setSoftwareVersion(frminfo.SoftwareID);
+                        t7InfoHeader.setCarDescription(frminfo.EngineType);
+                        t7InfoHeader.setChassisID(frminfo.ChassisID);
+                        t7InfoHeader.setSIDDate(frminfo.SIDDate);
+                        if (GetProgrammingDateTime() != frminfo.ProgrammingDateTime)
+                        {
+                            SetProgrammingDateTime(frminfo.ProgrammingDateTime);
+                        }
+
+                        if (frminfo.SoftwareIsOpen)
+                        {
+                            SetBinaryFileOpen();
+                        }
+                        else
+                        {
+                            SetBinaryFileClosed();
+                        }
+                        if (frminfo.TorqueLimitersEnabled && !HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
+                        {
+                            SetTorqueLimiterEnabled(true);
+                        }
+                        else if (!frminfo.TorqueLimitersEnabled && HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
+                        {
+                            SetTorqueLimiterEnabled(false);
+                        }
+                        if (frminfo.OBDIIEnabled && !HasBinaryOBDIIEnabled())
+                        {
+                            SetOBDIIEnabled(true);
+                        }
+                        else if (!frminfo.OBDIIEnabled && HasBinaryOBDIIEnabled())
+                        {
+                            SetOBDIIEnabled(false);
+                        }
+                        if (frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap()/*&& !HasBinarySecondLambdaEnabled()*/)
+                        {
+                            SetSecondLambdaEnabled(true);
+                        }
+                        else if (!frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap() && HasBinarySecondLambdaEnabled())
+                        {
+                            SetSecondLambdaEnabled(false);
+                        }
+                        if (HasBinaryTipInOutParameters())
+                        {
+                            if (frminfo.FastThrottleReponse && !HasBinaryFastThrottleResponse())
+                            {
+                                SetFastThrottleResponse(true);
+                            }
+                            else if (!frminfo.FastThrottleReponse && HasBinaryFastThrottleResponse())
+                            {
+                                SetFastThrottleResponse(false);
+                            }
+                            if (frminfo.ExtraFastThrottleReponse && !HasBinaryExtraFastThrottleResponse())
+                            {
+                                SetExtraFastThrottleResponse(true);
+                            }
+                            else if (!frminfo.ExtraFastThrottleReponse && !frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
+                            {
+                                SetExtraFastThrottleResponse(false);
+                            }
+                            else if (!frminfo.ExtraFastThrottleReponse && frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
+                            {
+                                SetActG2(false);
+                            }
+
+                        }
+                        if (HasBinaryCatalystLightOffParameters())
+                        {
+                            if (frminfo.CatalystLightOff && !HasBinaryCatalystLightOffEnabled())
+                            {
+                                SetCatalystLightOff(true);
+                            }
+                            else if (!frminfo.CatalystLightOff && HasBinaryCatalystLightOffEnabled())
+                            {
+                                SetCatalystLightOff(false);
+                            }
+
+                        }
+                        if (IsBinaryBiopower())
+                        {
+                            if (frminfo.BioPowerEnabled && !IsBioPowerEnabled())
+                            {
+                                SetBioPowerEnabled(true);
+                            }
+                            else if (!frminfo.BioPowerEnabled && IsBioPowerEnabled())
+                            {
+                                SetBioPowerEnabled(false);
+                            }
+                        }
+                        t7InfoHeader.save(m_currentfile);
+
+                        if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
+                        {
+                            if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
+                            {
+                                if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
+                                    (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
+                                    (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
+                                {
+
+                                    if (frminfo.SIDDisableStartScreen)
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x00, 1);
+                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x80, 1);
+                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
+                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
+                                    }
+                                    if (frminfo.SIDDisableAdaptionMessages)
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x00, 1);
+                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[2];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        data2write.SetValue((byte)0x80, 1);
+                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
+                                    (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
+                                {
+
+                                    //Disable startscreen, change 0x00046F4D to 00 in stead of 80
+                                    //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
+                                    if (frminfo.SIDDisableStartScreen)
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x80, 0);
+                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
+                                    }
+                                    if (frminfo.SIDDisableAdaptionMessages)
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x00, 0);
+                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
+                                    }
+                                    else
+                                    {
+                                        byte[] data2write = new byte[1];
+                                        data2write.SetValue((byte)0x80, 0);
+                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
+                                    }
+                                }
+                            }
+                        }
+
+                        // Disable effect of the emission limitation function.
+                        if (swVersion.Trim().StartsWith("EU0AF01C"))
+                        {
+                            if (frminfo.EmissionLimitation)
+                            {
+                                byte[] data2write = new byte[1];
+                                data2write.SetValue((byte)0x03, 0);
+                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
+                            }
+                            else
+                            {
+                                byte[] data2write = new byte[1];
+                                data2write.SetValue((byte)0x02, 0);
+                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
+                            }
+                        }
+
+                        UpdateChecksum(m_currentfile);
+                    }
                 }
             }
         }
+
+        private void Information_browseAxisInformation_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+            AxisBrowser tabdet = new AxisBrowser();
+            tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
+            tabdet.ApplicationLanguage = m_appSettings.ApplicationLanguage;
+            tabdet.Dock = DockStyle.Fill;
+            dockPanel.Controls.Add(tabdet);
+            tabdet.ShowSymbolCollection(m_symbols);
+            dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
+            bool isDocked = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                {
+                    dockPanel.DockAsTab(pnl, 0);
+                    isDocked = true;
+                    break;
+                }
+            }
+            if (!isDocked)
+            {
+                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.Width = 700;
+            }
+        }
+        #endregion
+
+        #region BDM
+
+        private uint fio_bytes;
+        private FIOCallback fio_callback = null;
+
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_Break();
+        [DllImport("usb_bdm.dll")]
+        public static extern void BdmAdapter_Close();
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_DumpECU(string file_name, ecu_t ecu);
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_EraseECU(ecu_t ecu);
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_FlashECU(string file_name, ecu_t ecu);
+        [DllImport("usb_bdm.dll")]
+        public static extern string BdmAdapter_GetLastErrorStr();
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_GetVerifyFlash();
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_GetVersion(ref ushort version);
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_Open();
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_Reset();
+        [DllImport("usb_bdm.dll")]
+        public static extern void BdmAdapter_SetFIOCallback(FIOCallback func);
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_SetVerifyFlash(bool verify);
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_Stop();
+        [DllImport("usb_bdm.dll")]
+        public static extern bool BdmAdapter_UpdateFirmware(string file_name);
+
+
+        //======================================================
+        //Recreate all executable resources
+        //======================================================
+        private void mRecreateAllScriptResources(string path)
+        {
+            // Get Current Assembly refrence
+            Assembly currentAssembly = Assembly.GetExecutingAssembly();
+            // Get all imbedded resources
+            string[] arrResources = currentAssembly.GetManifestResourceNames();
+
+            foreach (string resourceName in arrResources)
+            {
+                if (resourceName.EndsWith(".do") || resourceName.EndsWith(".msg") || resourceName.EndsWith(".d32"))
+                { //or other extension desired
+                    //Name of the file saved on disk
+                    string saveAsName = resourceName;
+                    saveAsName = saveAsName.Replace("T7.scripts.", "");
+                    if (!Directory.Exists(Path.Combine(path, "scripts")))
+                    {
+                        Directory.CreateDirectory(Path.Combine(path, "scripts"));
+                    }
+                    FileInfo fileInfoOutputFile = new FileInfo(path + "\\scripts\\" + saveAsName);
+                    //CHECK IF FILE EXISTS AND DO SOMETHING DEPENDING ON YOUR NEEDS
+                    LogHelper.Log("Extracting: " + fileInfoOutputFile.FullName);
+                    if (fileInfoOutputFile.Exists)
+                    {
+                        //overwrite if desired  (depending on your needs)
+                        //fileInfoOutputFile.Delete();
+                    }
+                    //OPEN NEWLY CREATING FILE FOR WRITTING
+                    FileStream streamToOutputFile = fileInfoOutputFile.OpenWrite();
+                    //GET THE STREAM TO THE RESOURCES
+                    Stream streamToResourceFile =
+                                        currentAssembly.GetManifestResourceStream(resourceName);
+
+                    //---------------------------------
+                    //SAVE TO DISK OPERATION
+                    //---------------------------------
+                    const int size = 4096;
+                    byte[] bytes = new byte[4096];
+                    int numBytes;
+                    while ((numBytes = streamToResourceFile.Read(bytes, 0, size)) > 0)
+                    {
+                        streamToOutputFile.Write(bytes, 0, numBytes);
+                    }
+
+                    streamToOutputFile.Close();
+                    streamToResourceFile.Close();
+                }//end_if
+
+            }//end_foreach
+        }//end_mRecreateAllExecutableResources 
+
+        private void DeleteScripts(string path)
+        {
+            // remove the entire folder
+            path += "\\scripts";
+            LogHelper.Log("Deleting scripts folder: " + path);
+            Directory.Delete(path, true);
+        }
+
+        private void on_fio(int bytes)
+        {
+
+            this.fio_bytes += (uint)bytes;
+            //LogHelper.Log("on_fio: " + this.fio_bytes.ToString());
+            if (!this.IsDisposed)
+            {
+                try
+                {
+                    this.Invoke(m_DelegateUpdateBDMProgress, this.fio_bytes);
+                }
+                catch (Exception E)
+                {
+                    LogHelper.Log(E.Message);
+                }
+            }
+            //this.fio_invoke();
+        }
+
+        private void ReportBDMProgress(uint bytes)
+        {
+            try
+            {
+                string str;
+                int percentage = 0;
+                int max_bytes = 0x80000;
+                switch (_globalECUType)
+                {
+                    case ecu_t.Trionic52:
+                        max_bytes = 0x20000;
+                        break;
+                    case ecu_t.Trionic55:
+                        max_bytes = 0x40000;
+                        break;
+                    case ecu_t.Trionic5529:
+                        max_bytes = 0x40000;
+                        break;
+                    case ecu_t.Trionic7:
+                        max_bytes = 0x80000;
+                        break;
+                }
+                percentage = ((int)this.fio_bytes * 100) / max_bytes;
+                if (Convert.ToInt32(barProgress.EditValue) != percentage)
+                {
+                    // need to calculate the percentage
+                    barProgress.EditValue = percentage;
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log("fio_invoke: " + E.Message);
+            }
+        }
+
+        private void barButtonItem81_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // read ECU
+            bool _continue = true;
+            try
+            {
+                if (!_globalBDMOpened)
+                {
+                    if (!BdmAdapter_Open())
+                    {
+                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
+                        _continue = false;
+                    }
+                }
+                if (_continue)
+                {
+                    _globalBDMOpened = true;
+                    if (BDMversion == 0)
+                    {
+                        if (!BdmAdapter_GetVersion(ref BDMversion))
+                        {
+                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
+                            _continue = false;
+                        }
+                    }
+                    if (_continue)
+                    {
+                        // adapter opened and version is compatible
+                        //BdmAdapter_GetVerifyFlash();
+                        // read ECU through USB BDM
+
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.Filter = "Binary files|*.bin";
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+
+                            mRecreateAllScriptResources(Path.GetDirectoryName(sfd.FileName));
+                            barProgress.Visibility = BarItemVisibility.Always;
+                            barProgress.EditValue = 0;
+                            barProgress.Caption = "Dumping ECU";
+                            System.Windows.Forms.Application.DoEvents();
+
+                            _globalECUType = ecu_t.Trionic7;
+                            fio_bytes = 0;
+                            if (!BdmAdapter_DumpECU(sfd.FileName, ecu_t.Trionic7))
+                            {
+                                frmInfoBox info = new frmInfoBox("Failed to dump ECU");
+                            }
+                            DeleteScripts(Path.GetDirectoryName(sfd.FileName));
+                        }
+
+                    }
+                }
+                barProgress.Caption = "Dumping ECU";
+                barProgress.EditValue = 0;
+                barProgress.Visibility = BarItemVisibility.Never;
+                System.Windows.Forms.Application.DoEvents();
+            }
+            catch (Exception BDMException)
+            {
+                LogHelper.Log("Failed to dump ECU: " + BDMException.Message);
+                frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
+            }
+        }
+
+        private void barButtonItem82_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // flash ECU
+            bool _continue = true;
+            try
+            {
+                if (!_globalBDMOpened)
+                {
+                    if (!BdmAdapter_Open())
+                    {
+                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
+                        _continue = false;
+                    }
+                }
+                if (_continue)
+                {
+                    _globalBDMOpened = true;
+                    if (BDMversion == 0)
+                    {
+                        if (!BdmAdapter_GetVersion(ref BDMversion))
+                        {
+                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
+                            _continue = false;
+                        }
+                    }
+                    if (_continue)
+                    {
+                        // adapter opened and version is compatible
+                        BdmAdapter_GetVerifyFlash();
+                        // program ECU through USB BDM
+                        OpenFileDialog ofd = new OpenFileDialog();
+                        ofd.Filter = "Binary files|*.bin";
+                        ofd.Multiselect = false;
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            mRecreateAllScriptResources(Path.GetDirectoryName(ofd.FileName));
+                            fio_bytes = 0;
+                            barProgress.Visibility = BarItemVisibility.Always;
+                            barProgress.Caption = "Erasing ECU";
+                            System.Windows.Forms.Application.DoEvents();
+                            _globalECUType = ecu_t.Trionic7;
+                            BdmAdapter_EraseECU(ecu_t.Trionic7);
+                            barProgress.Caption = "Flashing ECU";
+                            System.Windows.Forms.Application.DoEvents();
+                            Thread.Sleep(100);
+                            BdmAdapter_FlashECU(ofd.FileName, ecu_t.Trionic7);
+                            barProgress.Caption = "Resetting ECU";
+                            System.Windows.Forms.Application.DoEvents();
+                            Thread.Sleep(100);
+                            DeleteScripts(Path.GetDirectoryName(ofd.FileName));
+                        }
+
+                    }
+                }
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Idle";
+                barProgress.Visibility = BarItemVisibility.Never;
+                System.Windows.Forms.Application.DoEvents();
+            }
+            catch (Exception BDMException)
+            {
+                LogHelper.Log("Failed to program ECU: " + BDMException.Message);
+                frmInfoBox info = new frmInfoBox("Failed to program ECU: " + BDMException.Message);
+            }
+        }
+        #endregion
 
         private bool _softwareIsOpen = false;
         private bool _softwareIsOpenDetermined = false;
@@ -5032,8 +5842,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private Trionic7File TryToOpenFileUsingClass(string filename, out SymbolCollection symbol_collection, int filename_size, bool isWorkingFile)
         {
             Trionic7File retval = new Trionic7File();
-            
-            retval.onProgress += new Trionic7File.Progress(retval_onProgress);
+
+            retval.onProgress += retval_onProgress;
             SymbolTranslator translator = new SymbolTranslator();
             string help = string.Empty;
             _softwareIsOpen = false;
@@ -5140,7 +5950,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             System.Windows.Forms.Application.DoEvents();
         }
 
-        private int ReverseInt(int value)
+        private static int ReverseInt(int value)
         {
             // input            0x34FCEF00
             // desired output   0x00EFFC34; 
@@ -5156,7 +5966,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
         }
 
-        private string GetFileDescriptionFromFile(string file)
+        private static string GetFileDescriptionFromFile(string file)
         {
             string retval = string.Empty;
             try
@@ -5328,7 +6138,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
         }
 
-        private int GetStartOfAddressTableOffset(string filename)
+        private static int GetStartOfAddressTableOffset(string filename)
         {
             byte[] searchsequence = new byte[9];
             searchsequence.SetValue((byte)0x00, 0);
@@ -5455,7 +6265,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             return AddressTableOffset;
         }
 
-        private int GetAddressFromOffset(int offset, string filename)
+        private static int GetAddressFromOffset(int offset, string filename)
         {
             int retval = 0;
             if (filename != string.Empty)
@@ -5485,7 +6295,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         }
 
 
-        private int GetLengthFromOffset(int offset, string filename)
+        private static int GetLengthFromOffset(int offset, string filename)
         {
             int retval = 0;
             if (filename != string.Empty)
@@ -5868,6 +6678,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
                 m_currentfile = string.Empty;
             }
+            LogHelper.Log("Number of symbols loaded: " + m_symbols.Count);
+
             try
             {
                 int _width = 18;
@@ -5884,7 +6696,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 LogHelper.Log("Failed to load AFR maps: " + E.Message);
             }
-            LogHelper.Log("Number of symbols loaded: " + m_symbols.Count.ToString());
+
             try
             {
                 T7FileHeader t7header = new T7FileHeader();
@@ -5899,6 +6711,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 LogHelper.Log(E.Message);
             }
+
             if (m_currentfile != string.Empty) LoadRealtimeTable();
             // <GS-07072011> If the opened file is a BioPower file, then BFuelCal.StartMap = the actual fuel E85 map
             if (IsBinaryBiopower())
@@ -5912,12 +6725,10 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 barButtonItem69.Caption = "Startup VE map";
             }
 
-            IdaProIdcFile.create(m_currentfile, m_symbols);
-
             System.Windows.Forms.Application.DoEvents();
         }
 
-        private bool CheckFileInLibrary(string partnumber)
+        private static bool CheckFileInLibrary(string partnumber)
         {
             bool retval = false;
             if (Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\Binaries"))
@@ -10181,6 +10992,44 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
+        private void StartAViewer(string symbolname)
+        {
+            if (m_connectedToECU)
+            {
+                ShowRealtimeMapFromECU(symbolname);
+            }
+            else
+            {
+                StartTableViewer(symbolname);
+            }
+        }
+
+        private void barButtonItem37_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            // E85
+            StartAViewer("TorqueCal.M_EngMaxE85Tab");
+        }
+
+        private void barButtonItem38_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_ManGearLim");
+        }
+
+        private void barButtonItem39_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_5GearLimTab");
+        }
+
+        private void barButtonItem40_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_OverBoostTab");
+        }
+
+        private void btnTorqueCalM_EngXSP_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_EngXSP");
+        }
+
         private void barButtonItem31_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             StartAViewer("BoostCal.RegMap");
@@ -10225,100 +11074,122 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             StartAViewer("TorqueCal.M_EngMaxAutTab");
         }
-        /*
-        private void barButtonItem25_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+
+        private void barButtonItem95_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // tune to stage 1!!!
+            // E85 and Automatic
+            StartAViewer("TorqueCal.M_EngMaxE85TabAut");
+        }
 
-            if (ValidateFile())
+        private void barButtonItem53_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("BstKnkCal.MaxAirmassAu");
+        }
+
+        private void barButtonItem54_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_CabGearLim");
+        }
+
+        private void barButtonItem55_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_NominalMap");
+
+        }
+
+        private void barButtonItem56_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.m_AirTorqMap");
+
+        }
+
+        private void barButtonItem57_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.m_AirXSP");
+
+        }
+
+        private void barButtonItem64_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("IgnNormCal.Map");
+        }
+
+        private void barButtonItem66_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("IgnKnkCal.IndexMap");
+        }
+
+        private void barButtonItem67_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("BFuelCal.Map");
+        }
+
+        private void barButtonItem68_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // injector constant
+            StartAViewer("InjCorrCal.InjectorConst");
+        }
+
+        private void barButtonItem69_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (IsBinaryBiopower())
             {
-                // get the software ID from the binary
-
-                // look up parameters for this sw id
-
-                // read tuned marker to see if binary has been tuned before
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(m_currentfile, m_appSettings.AutoFixFooter);
-                //fh.getPartNumber()
-                PartNumberConverter pnc = new PartNumberConverter();
-                ECUInformation ecuinfo = pnc.GetECUInfo(fh.getPartNumber(), "");
-                string msg = "Partnumber not recognized, tuning will continue anyway, please verify settings afterwards";
-                if (ecuinfo.Valid)
-                {
-                    msg = "Partnumber " + fh.getPartNumber() + ", carmodel " + ecuinfo.Carmodel.ToString() + ", engine " + ecuinfo.Enginetype.ToString();
-                    msg += Environment.NewLine + " stage I airmass " + ecuinfo.Stage1airmass.ToString() + " mg/c and torque " + ecuinfo.Stage1torque.ToString() + " Nm";
-                }
-                PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
-                PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
-                PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
-                PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me up™ to stage I wizard", "This wizard will tune your binary to a stage I equivalent.", "Several maps will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma © 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me to stage I|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
-                switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
-                {
-                    case 0:
-                        // tune to stage 1
-                        TuneToStage(1, ecuinfo.Stage1airmass, ecuinfo.Stage1torque, ecuinfo.Enginetype);
-                        break;
-                    case 1:
-                        // cancel
-                        break;
-                }
-                if (PSTaskDialog.cTaskDialog.VerificationChecked && PSTaskDialog.cTaskDialog.CommandButtonResult != 1)
-                {
-                    TuningReport tuningrep = new TuningReport();
-                    tuningrep.DataSource = resumeTuning;
-                    tuningrep.CreateReport();
-                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                }
+                StartAViewer("BFuelCal.E85Map");
+            }
+            else
+            {
+                StartAViewer("BFuelCal.StartMap");
             }
         }
 
-        private void barButtonItem26_ItemClick(object sender, ItemClickEventArgs e)
+        private void barButtonItem70_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // tune to stage II
-            if (ValidateFile())
-            {
-                // get the software ID from the binary
-
-                // look up parameters for this sw id
-
-                // read tuned marker to see if binary has been tuned before
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(m_currentfile, m_appSettings.AutoFixFooter);
-                //fh.getPartNumber()
-                PartNumberConverter pnc = new PartNumberConverter();
-                ECUInformation ecuinfo = pnc.GetECUInfo(fh.getPartNumber(), "");
-                string msg = "Partnumber not recognized, tuning will continue anyway, please verify settings afterwards";
-                if (ecuinfo.Valid)
-                {
-                    msg = "Partnumber " + fh.getPartNumber() + ", carmodel " + ecuinfo.Carmodel.ToString() + ", engine " + ecuinfo.Enginetype.ToString();
-                    msg += Environment.NewLine + " stage II airmass " + ecuinfo.Stage2airmass.ToString() + " mg/c and torque " + ecuinfo.Stage2torque.ToString() + " Nm";
-                }
-                PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
-                PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
-                PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
-                PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me up™ to stage II wizard", "This wizard will tune your binary to a stage II equivalent.", "Several maps will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma © 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me to stage II|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
-                switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
-                {
-                    case 0:
-                        // tune to stage 2
-                        TuneToStage(2, ecuinfo.Stage2airmass, ecuinfo.Stage2torque, ecuinfo.Enginetype);
-                        break;
-                    case 1:
-                        // cancel
-                        break;
-                }
-                if (PSTaskDialog.cTaskDialog.VerificationChecked && PSTaskDialog.cTaskDialog.CommandButtonResult != 1)
-                {
-                    TuningReport tuningrep = new TuningReport();
-                    tuningrep.DataSource = resumeTuning;
-                    tuningrep.CreateReport();
-                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                }
-            }
+            StartAViewer("KnkFuelCal.EnrichmentMap");
         }
-        */
+
+        private void barButtonItem71_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("KnkFuelCal.fi_MapMaxOff");
+        }
+
+        private void barButtonItem72_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("KnkDetCal.RefFactorMap");
+        }
+
+        private void barButtonItem73_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("BoostCal.RegMap");
+        }
+
+        private void barButtonItem74_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("TorqueCal.M_OverBoostTab");
+        }
+
+        private void barButtonItem75_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // p factors
+            StartAViewer("BoostCal.PMap");
+        }
+
+        private void barButtonItem76_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // I factors
+            StartAViewer("BoostCal.IMap");
+        }
+
+        private void barButtonItem77_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // D factors
+            StartAViewer("BoostCal.DMap");
+        }
+
+        private void barButtonItem65_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("IgnE85Cal.fi_AbsMap");
+        }
+        
         private int GetClosedIndicatorOffset(out bool IsOpen)
         {
             bool indicatorfound = false;
@@ -10430,53 +11301,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
             }
         }
-
-        /*private void barButtonItem27_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // tune to stage III
-            if (ValidateFile())
-            {
-                // get the software ID from the binary
-
-                // look up parameters for this sw id
-
-                // read tuned marker to see if binary has been tuned before
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(m_currentfile, m_appSettings.AutoFixFooter);
-                //fh.getPartNumber()
-                PartNumberConverter pnc = new PartNumberConverter();
-                ECUInformation ecuinfo = pnc.GetECUInfo(fh.getPartNumber(), "");
-                string msg = "Partnumber not recognized, tuning will continue anyway, please verify settings afterwards";
-                if (ecuinfo.Valid)
-                {
-                    msg = "Partnumber " + fh.getPartNumber() + ", carmodel " + ecuinfo.Carmodel.ToString() + ", engine " + ecuinfo.Enginetype.ToString();
-                    msg += Environment.NewLine + " stage III airmass " + ecuinfo.Stage3airmass.ToString() + " mg/c and torque " + ecuinfo.Stage3torque.ToString() + " Nm";
-                }
-                PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
-                PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
-                PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
-                PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me up™ to stage III wizard", "This wizard will tune your binary to a stage III equivalent.", "Several maps will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma © 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me to stage III|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
-                switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
-                {
-                    case 0:
-                        // tune to stage 3
-                        TuneToStage(3, ecuinfo.Stage3airmass, ecuinfo.Stage3torque, ecuinfo.Enginetype);
-                        break;
-                    case 1:
-                        // cancel
-                        break;
-                }
-                if (PSTaskDialog.cTaskDialog.VerificationChecked && PSTaskDialog.cTaskDialog.CommandButtonResult != 1)
-                {
-                    TuningReport tuningrep = new TuningReport();
-                    tuningrep.DataSource = resumeTuning;
-                    tuningrep.CreateReport();
-                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                }
-            }
-        }*/
-
 
         /*
          * 
@@ -11048,555 +11872,6 @@ If boost regulation reports errors you can increase the difference between boost
 
             // refresh open viewers
 
-        }
-
-
-        private void TuneToStage(int stage, double maxairmass, double maxtorque, EngineType enginetype)
-        {
-            frmProgress progress = new frmProgress();
-            progress.Show();
-            progress.SetProgress("Checking current configuration...");
-            resumeTuning = new System.Data.DataTable();
-            resumeTuning.Columns.Add("Description");
-            AddToResumeTable("Tuning your binary to stage: " + stage.ToString());
-
-            progress.SetProgress("Creating backup file...");
-            File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetuningtostage" + stage.ToString() + ".bin", true);
-            AddToResumeTable("Backup file created (" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetuningtostage" + stage.ToString() + ".bin" + ")");
-
-            // tune maps
-            //step 1a) Alter x axis for TorqueCal.M_NominalMap (=TorqueCal.m_AirXSP) so that the airmass 
-            // reaches the maximum desired airmass at the last column (e.g. for a stage 4 1400 mg/c)
-            progress.SetProgress("Tuning TorqueCal.m_AirXSP...");
-            int max_airflow_requested = (int)maxairmass; 
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirXSP") > 0)
-            {
-                byte[] torquenominalx = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(m_symbols, "TorqueCal.m_AirXSP"));
-                int cols = 0;
-                int rows = 0;
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.m_AirXSP", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.m_AirXSP")) rows /= 2;
-                int offset1 = (torquenominalx.Length - 2);
-                int offset2 = (torquenominalx.Length - 1);
-                int boostcalvalue = Convert.ToInt32(torquenominalx[offset1]) * 256 + Convert.ToInt32(torquenominalx[offset2]);
-                boostcalvalue = max_airflow_requested;
-                byte b1 = Convert.ToByte(boostcalvalue / 256);
-                byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                torquenominalx[offset1] = b1;
-                torquenominalx[offset2] = b2;
-
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(m_symbols, "TorqueCal.m_AirXSP"), torquenominalx, m_currentfile, true);
-                AddToResumeTable("Tuned x axis for nominal torquemap (TorqueCal.m_AirXSP)");
-            }
-            UpdateChecksum(m_currentfile);
-
-            /*** TorqueCal.M_NominalMap ***/
-            /*** Data-matrix for nominal Torque. Engine speed and airmass are used as support points. 
-            The value in the matrix will be the engine output torque when inlet airmass (- friction airmass) 
-            is used together with actual engine speed as pointers ***/
-            // formula = replace last column with estimated values of max_torque (= last column * 1.3)
-            int max_torque = GetMaxTorque();
-
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_NominalMap") > 0)
-            {
-                byte[] torquemap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(m_symbols, "TorqueCal.M_NominalMap"));
-
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_NominalMap", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_NominalMap")) rows /= 2;
-                
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    for (int ct = cols - 1; ct < cols; ct++)
-                    {
-                        int offset1 = (rt * cols * 2) + (ct * 2);
-                        int offset2 = (rt * cols * 2) + (ct * 2) + 1;
-                        int boostcalvalue = Convert.ToInt32(torquemap[offset1]) * 256 + Convert.ToInt32(torquemap[offset2]);
-                        boostcalvalue *= 11;
-                        boostcalvalue /= 10;
-                        if (boostcalvalue > max_torque) boostcalvalue = max_torque;
-
-                        byte b1 = Convert.ToByte(boostcalvalue / 256);
-                        byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                        torquemap[offset1] = b1;
-                        torquemap[offset2] = b2;
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(m_symbols, "TorqueCal.M_NominalMap"), torquemap, m_currentfile, true);
-                AddToResumeTable("Tuned nominal torque map (TorqueCal.M_NominalMap)");
-            }
-            UpdateChecksum(m_currentfile);
-
-            // step 1b) Alter TorqueCal.m_AirTorqMap so that the maximum torquecolumn requests the desired airmass.
-            /*** TorqueCal.m_AirTorqMap ***/
-            /*** Data-matrix for nominal airmass. Engine speed and torque are used as support points. 
-            The value in the matrix + friction airmass (idle airmass) will create the pointed torque at the pointed engine speed. 
-            Resolution is   1 mg/c. ***/
-            progress.SetProgress("Tuning TorqueCal.m_AirTorqMap...");
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirTorqMap") > 0)
-            {
-                byte[] torquemap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirTorqMap"), GetSymbolLength(m_symbols, "TorqueCal.m_AirTorqMap"));
-
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.m_AirTorqMap", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.m_AirTorqMap")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    for (int ct = cols - 1; ct < cols; ct++)
-                    {
-                        int offset1 = (rt * cols * 2) + (ct * 2);
-                        int offset2 = (rt * cols * 2) + (ct * 2) + 1;
-                        int boostcalvalue = Convert.ToInt32(torquemap[offset1]) * 256 + Convert.ToInt32(torquemap[offset2]);
-                        boostcalvalue *= 13;
-                        boostcalvalue /= 10;
-                        //boostcalvalue = max_airflow_requested;
-                        if (boostcalvalue > max_airflow_requested) boostcalvalue = max_airflow_requested;
-                        //if (boostcalvalue > max_torque) max_torque = boostcalvalue;
-
-                        byte b1 = Convert.ToByte(boostcalvalue / 256);
-                        byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                        torquemap[offset1] = b1;
-                        torquemap[offset2] = b2;
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirTorqMap"), GetSymbolLength(m_symbols, "TorqueCal.m_AirTorqMap"), torquemap, m_currentfile, true);
-                AddToResumeTable("Tuned nominal airmass map (TorqueCal.m_AirTorqMap)");
-            }
-            // update the checksum
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.m_PedYSP...");
-
-            // step 1c) Alter the pedal request Y axis to meet the airmass request. TorqueCal.m_PedYSP
-            /********** TorqueCal.m_PedYSP ***********/
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.m_PedYSP") > 0)
-            {
-                byte[] pedalmapysp = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.m_PedYSP"), GetSymbolLength(m_symbols, "TorqueCal.m_PedYSP"));
-                // up the highest three rows with respectively 1.1, 1.2 and 1.3 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.m_PedYSP", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.m_PedYSP")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = rows - 3; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(pedalmapysp[offset1]) * 256 + Convert.ToInt32(pedalmapysp[offset2]);
-                    if (rt == rows - 3)
-                    {
-                        boostcalvalue *= 11;
-                        boostcalvalue /= 10;
-                    }
-                    else if (rt == rows - 2)
-                    {
-                        boostcalvalue *= 12;
-                        boostcalvalue /= 10;
-                    }
-                    else
-                    {
-                        boostcalvalue *= 13;
-                        boostcalvalue /= 10;
-                    }
-                    if (boostcalvalue > maxairmass) boostcalvalue = (int)maxairmass;
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    pedalmapysp[offset1] = b1;
-                    pedalmapysp[offset2] = b2;
-
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.m_PedYSP"), GetSymbolLength(m_symbols, "TorqueCal.m_PedYSP"), pedalmapysp, m_currentfile, true);
-                AddToResumeTable("Tuned airmass pedalmap y axis (TorqueCal.m_PedYSP)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning PedalMapCal.m_RequestMap...");
-
-
-            // step 1d) Alter the pedal request map to meet the desired airmass in the top 2 rows (90-100%). PedalMapCal.m_RequestMap
-            /********** PedalMapCal.m_RequestMap ***********/
-            if ((int)GetSymbolAddress(m_symbols, "PedalMapCal.m_RequestMap") > 0)
-            {
-                byte[] pedalmap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(m_symbols, "PedalMapCal.m_RequestMap"));
-                // up the highest three rows with respectively 1.1, 1.2 and 1.3 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "PedalMapCal.m_RequestMap", out cols, out rows);
-                if (isSixteenBitTable("PedalMapCal.m_RequestMap")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = rows - 3; rt < rows; rt++)
-                {
-                    for (int ct = 0; ct < cols; ct++)
-                    {
-                        int offset1 = (rt * cols * 2) + (ct * 2);
-                        int offset2 = (rt * cols * 2) + (ct * 2) + 1;
-                        int boostcalvalue = Convert.ToInt32(pedalmap[offset1]) * 256 + Convert.ToInt32(pedalmap[offset2]);
-                        if (rt == rows - 3)
-                        {
-                            boostcalvalue *= 11;
-                            boostcalvalue /= 10;
-                        }
-                        else if (rt == rows - 2)
-                        {
-                            boostcalvalue *= 12;
-                            boostcalvalue /= 10;
-                        }
-                        else
-                        {
-                            boostcalvalue *= 13;
-                            boostcalvalue /= 10;
-                        }
-                        if (boostcalvalue > maxairmass) boostcalvalue = (int)maxairmass;
-                        byte b1 = Convert.ToByte(boostcalvalue / 256);
-                        byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                        pedalmap[offset1] = b1;
-                        pedalmap[offset2] = b2;
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(m_symbols, "PedalMapCal.m_RequestMap"), pedalmap, m_currentfile, true);
-                AddToResumeTable("Tuned airmass request map (PedalMapCal.m_RequestMap)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning BstKnkCal.MaxAirmass...");
-
-            // step 2) Increase the airmass limit table to allow for more airmass in the desired areas. BstKnkCal.MaxAirmass.
-            /********** BstKnkCal.MaxAirmass ***********/
-            if ((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmass") > 0)
-            {
-                byte[] maxairmasstab = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmass"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmass"));
-                // up the upper right quadrant > 800 mg/c and > 2000 rpm
-                // start off with factor 1.3 for stage I
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BstKnkCal.MaxAirmass", out cols, out rows);
-                if (isSixteenBitTable("BstKnkCal.MaxAirmass")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    for (int ct = 0; ct < cols; ct++)
-                    {
-                        int offset1 = (rt * cols * 2) + (ct * 2);
-                        int offset2 = (rt * cols * 2) + (ct * 2) + 1;
-                        int boostcalvalue = Convert.ToInt32(maxairmasstab[offset1]) * 256 + Convert.ToInt32(maxairmasstab[offset2]);
-                        // multiply by 1.3
-                        boostcalvalue *= 13;
-                        boostcalvalue /= 10;
-                        if (boostcalvalue > maxairmass) boostcalvalue = (int)maxairmass;
-                        byte b1 = Convert.ToByte(boostcalvalue / 256);
-                        byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                        maxairmasstab[offset1] = b1;
-                        maxairmasstab[offset2] = b2;
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmass"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmass"), maxairmasstab, m_currentfile, true);
-                AddToResumeTable("Tuned airmass limiter for manual transmission (BstKnkCal.MaxAirmass)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning BstKnkCal.MaxAirmassAu...");
-            if ((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmassAu") > 0)
-            {
-                /********** BstKnkCal.MaxAirmassAu ***********/
-                byte[] maxairmassaut = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmassAu"));
-                // up the upper right quadrant > 800 mg/c and > 2000 rpm
-                // start off with factor 1.3 for stage I
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BstKnkCal.MaxAirmassAu", out cols, out rows);
-                if (isSixteenBitTable("BstKnkCal.MaxAirmassAu")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    for (int ct = 0; ct < cols; ct++)
-                    {
-                        int offset1 = (rt * cols * 2) + (ct * 2);
-                        int offset2 = (rt * cols * 2) + (ct * 2) + 1;
-                        int boostcalvalue = Convert.ToInt32(maxairmassaut[offset1]) * 256 + Convert.ToInt32(maxairmassaut[offset2]);
-                        // multiply by 1.3
-                        boostcalvalue *= 13;
-                        boostcalvalue /= 10;
-                        if (boostcalvalue > maxairmass) boostcalvalue = (int)maxairmass;
-                        byte b1 = Convert.ToByte(boostcalvalue / 256);
-                        byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                        maxairmassaut[offset1] = b1;
-                        maxairmassaut[offset2] = b2;
-                    }
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmassAu"), maxairmassaut, m_currentfile, true);
-                AddToResumeTable("Tuned airmass limiter for automatic transmission (BstKnkCal.MaxAirmassAu)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.M_EngMaxAutTab...");
-
-            // step 3 – Increasing engine torque limiters. Up the engine limiters so that the limiter 
-            // is higher than the maximum torque in the request maps. 
-            // (TorqueCal.M_EngMaxTab, TorqueCal.M_ManGearLim, TorqueCal.M_CabGearLim, TorqueCal.M_5GearLimTab)
-            /********** TorqueCal.M_EngMaxAutTab ***********/
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxAutTab") > 0)
-            {
-                byte[] maxtorqueaut = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxAutTab"));
-                // up with 1.3 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_EngMaxAutTab", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_EngMaxAutTab")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(maxtorqueaut[offset1]) * 256 + Convert.ToInt32(maxtorqueaut[offset2]);
-                    boostcalvalue = 400;
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    maxtorqueaut[offset1] = b1;
-                    maxtorqueaut[offset2] = b2;
-
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxAutTab"), maxtorqueaut, m_currentfile, true);
-                AddToResumeTable("Tuned torque limiter for automatic transmission (TorqueCal.M_EngMaxAutTab)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.M_EngMaxTab...");
-            /********** TorqueCal.M_EngMaxTab ***********/
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxTab") > 0)
-            {
-                byte[] maxtorquetab = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxTab"));
-                // up with 1.3 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_EngMaxTab", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_EngMaxTab")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(maxtorquetab[offset1]) * 256 + Convert.ToInt32(maxtorquetab[offset2]);
-                    if (boostcalvalue > maxtorque) boostcalvalue = (int)maxtorque;
-                    boostcalvalue = 400;
-
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    maxtorquetab[offset1] = b1;
-                    maxtorquetab[offset2] = b2;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxTab"), maxtorquetab, m_currentfile, true);
-                AddToResumeTable("Tuned torque limiter for manual transmission (TorqueCal.M_EngMaxTab)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.M_EngMaxE85Tab...");
-            /********** TorqueCal.M_EndMaxE85Tab ***********/
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxE85Tab") > 0)
-            {
-                byte[] maxtorquetab = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxE85Tab"));
-                // up with 1.3 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_EngMaxE85Tab", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_EngMaxE85Tab")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(maxtorquetab[offset1]) * 256 + Convert.ToInt32(maxtorquetab[offset2]);
-                    if (boostcalvalue > maxtorque) boostcalvalue = (int)maxtorque;
-                    boostcalvalue = 400;
-
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    maxtorquetab[offset1] = b1;
-                    maxtorquetab[offset2] = b2;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxE85Tab"), maxtorquetab, m_currentfile, true);
-                AddToResumeTable("Tuned torque limiter for manual transmission on E85 fuel (TorqueCal.M_EngMaxE85Tab)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.M_ManGearLim...");
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_ManGearLim") > 0)
-            {
-                //TorqueCal.M_ManGearLim
-                byte[] maxtorquemangear = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_ManGearLim"), GetSymbolLength(m_symbols, "TorqueCal.M_ManGearLim"));
-                // up with 1.4 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_ManGearLim", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_ManGearLim")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(maxtorquemangear[offset1]) * 256 + Convert.ToInt32(maxtorquemangear[offset2]);
-                    if (boostcalvalue > maxtorque) boostcalvalue = (int)maxtorque;
-                    boostcalvalue = 400;
-
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    maxtorquemangear[offset1] = b1;
-                    maxtorquemangear[offset2] = b2;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_ManGearLim"), GetSymbolLength(m_symbols, "TorqueCal.M_ManGearLim"), maxtorquemangear, m_currentfile, true);
-                AddToResumeTable("Tuned torque limiter for manual transmission gears (TorqueCal.M_ManGearLim)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.M_CabGearLim...");
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_CabGearLim") > 0)
-            {
-                //TorqueCal.M_ManGearLim
-                byte[] maxtorquemangear = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_CabGearLim"), GetSymbolLength(m_symbols, "TorqueCal.M_CabGearLim"));
-                // up with 1.4 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_CabGearLim", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_CabGearLim")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(maxtorquemangear[offset1]) * 256 + Convert.ToInt32(maxtorquemangear[offset2]);
-                    if (boostcalvalue > maxtorque) boostcalvalue = (int)maxtorque;
-                    boostcalvalue = 400;
-
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    maxtorquemangear[offset1] = b1;
-                    maxtorquemangear[offset2] = b2;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_CabGearLim"), GetSymbolLength(m_symbols, "TorqueCal.M_CabGearLim"), maxtorquemangear, m_currentfile, true);
-                AddToResumeTable("Tuned torque limiter for cabrialet cars (TorqueCal.M_CabGearLim)");
-            }
-            UpdateChecksum(m_currentfile);
-            progress.SetProgress("Tuning TorqueCal.M_5GearLimTab...");
-
-            if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_5GearLimTab") > 0)
-            {
-                //TorqueCal.M_ManGearLim
-                byte[] maxtorquemangear = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(m_symbols, "TorqueCal.M_5GearLimTab"));
-                // up with 1.4 factor
-                int cols = 0;
-                int rows = 0;
-
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "TorqueCal.M_5GearLimTab", out cols, out rows);
-                if (isSixteenBitTable("TorqueCal.M_5GearLimTab")) rows /= 2;
-                // row > 5 and col > 4
-                for (int rt = 0; rt < rows; rt++)
-                {
-                    int offset1 = (rt * cols * 2);
-                    int offset2 = (rt * cols * 2) + 1;
-                    int boostcalvalue = Convert.ToInt32(maxtorquemangear[offset1]) * 256 + Convert.ToInt32(maxtorquemangear[offset2]);
-                    if (boostcalvalue > maxtorque) boostcalvalue = (int)maxtorque;
-                    boostcalvalue = 400;
-
-                    byte b1 = Convert.ToByte(boostcalvalue / 256);
-                    byte b2 = Convert.ToByte(boostcalvalue - (int)b1 * 256);
-                    maxtorquemangear[offset1] = b1;
-                    maxtorquemangear[offset2] = b2;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(m_symbols, "TorqueCal.M_5GearLimTab"), maxtorquemangear, m_currentfile, true);
-                AddToResumeTable("Tuned torque limiter for manual transmission in 5th gear (TorqueCal.M_5GearLimTab)");
-            }
-            UpdateChecksum(m_currentfile);
-
-            // step 4 – Adapt fuel delivery.
-            // step 4a) You should make sure the fuel supply is good in all ranges by recalibrating BFuelCal.Map. Altering the maximum allowed airmass will also require more fuel. Check this with a wideband O2 sensor.
-            // step 4b) If you change injectors you should change the injector constant InjCorrCal.InjectorConst and the battery voltage correction table InjCorrCal.BattCorrTab accordingly.
-
-            //Step 5 – Increase fuel cur level
-            // Increase the fuelcut limit to above the airmass desired. E.g. if you target 1350 mg/c the fuelcut limit should be higher e.g. 1450 or 1500. FCutCal.m_AirInletLimit.
-
-            /********** FCutCal.m_AirInletLimit ***********/
-
-            progress.SetProgress("Tuning FCutCal.m_AirInletLimit...");
-            // write 1450 to fuelcut limit
-            if ((int)GetSymbolAddress(m_symbols, "FCutCal.m_AirInletLimit") > 0)
-            {
-                byte[] fuelcutmap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(m_symbols, "FCutCal.m_AirInletLimit"));
-                if (fuelcutmap.Length == 2)
-                {
-                    fuelcutmap[0] = 0x05;
-                    fuelcutmap[1] = 0xAA;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(m_symbols, "FCutCal.m_AirInletLimit"), fuelcutmap, m_currentfile, true);
-                AddToResumeTable("Tuned fuelcut limiter (FCutCal.m_AirInletLimit)");
-            }
-            UpdateChecksum(m_currentfile);
-
-            //Boost regulation error supression
-            //If boost regulation reports errors you can increase the difference between boost pressure and requested pressure above which a fault report is generated. BoostDiagCal.m_FaultDiff. Set to 200 in stead of 100 for example.         
-            progress.SetProgress("Tuning BoosDiagCal.m_FaultDiff...");
-
-            if ((int)GetSymbolAddress(m_symbols, "BoosDiagCal.m_FaultDiff") > 0)
-            {
-                byte[] fuelcutmap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "BoosDiagCal.m_FaultDiff"), GetSymbolLength(m_symbols, "BoosDiagCal.m_FaultDiff"));
-                if (fuelcutmap.Length == 2)
-                {
-                    fuelcutmap[0] = 0x00;
-                    fuelcutmap[1] = 0xC8;
-                }
-                savedatatobinary((int)GetSymbolAddress(m_symbols, "BoosDiagCal.m_FaultDiff"), GetSymbolLength(m_symbols, "BoosDiagCal.m_FaultDiff"), fuelcutmap, m_currentfile, true);
-                AddToResumeTable("Tuned boost fault indication level (BoosDiagCal.m_FaultDiff)");
-            }
-            UpdateChecksum(m_currentfile);
-
-            // mark binary as tuned to stage I
-
-            //AddToResumeTable("Updated binary description with tuned stage");
-            progress.SetProgress("Generating report...");
-
-
-            AddToResumeTable("Updated checksum.");
-
-            progress.Close();
-
-            // refresh open viewers
-
-        }
-
-        private void StartAViewer(string symbolname)
-        {
-            if (m_connectedToECU)
-            {
-                ShowRealtimeMapFromECU(symbolname);
-            }
-            else
-            {
-                StartTableViewer(symbolname);
-            }
-        }
-
-        private void barButtonItem37_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            // E85
-            StartAViewer("TorqueCal.M_EngMaxE85Tab");
-        }
-
-        private void barButtonItem38_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_ManGearLim");
-        }
-
-        private void barButtonItem39_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_5GearLimTab");
-        }
-
-        private void barButtonItem40_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_OverBoostTab");
         }
 
         private void barButtonItem41_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -14282,34 +14557,6 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-        private void barButtonItem53_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("BstKnkCal.MaxAirmassAu");
-        }
-
-        private void barButtonItem54_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_CabGearLim");
-        }
-
-        private void barButtonItem55_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_NominalMap");
-            
-        }
-
-        private void barButtonItem56_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.m_AirTorqMap");
-            
-        }
-
-        private void barButtonItem57_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.m_AirXSP");
-            
-        }
-
         private void browseAxisInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string symbolname = string.Empty;
@@ -14358,9 +14605,7 @@ dt.Columns.Add("SymbolName");
         void tabdet_onStartSymbolViewer(object sender, AxisBrowser.SymbolViewerRequestedEventArgs e)
         {
             StartAViewer(e.Mapname);
-        }
-
-        
+        } 
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
@@ -14539,88 +14784,6 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-        private void barButtonItem64_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("IgnNormCal.Map");
-        }
-
-        private void barButtonItem66_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("IgnKnkCal.IndexMap");
-        }
-
-        private void barButtonItem67_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("BFuelCal.Map");
-        }
-
-        private void barButtonItem68_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // injector constant
-            StartAViewer("InjCorrCal.InjectorConst");
-        }
-
-        private void barButtonItem69_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (IsBinaryBiopower())
-            {
-                StartAViewer("BFuelCal.E85Map");
-            }
-            else
-            {
-                StartAViewer("BFuelCal.StartMap");
-            }
-        }
-
-        private void barButtonItem70_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("KnkFuelCal.EnrichmentMap");
-        }
-
-        private void barButtonItem71_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("KnkFuelCal.fi_MapMaxOff");
-        }
-
-        private void barButtonItem72_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("KnkDetCal.RefFactorMap");
-        }
-
-        private void barButtonItem73_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("BoostCal.RegMap");
-        }
-
-        private void barButtonItem74_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_OverBoostTab");
-        }
-
-        private void barButtonItem75_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // p factors
-            StartAViewer("BoostCal.PMap");
-        }
-
-        private void barButtonItem76_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // I factors
-            StartAViewer("BoostCal.IMap");
-        }
-
-        private void barButtonItem77_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // D factors
-            StartAViewer("BoostCal.DMap");
-
-        }
-
-        private void barButtonItem65_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("IgnE85Cal.fi_AbsMap");
-        }
-
         private void gridViewSymbols_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
             if (e.Column.Name == gcSymbolsUserDescription.Name)
@@ -14671,40 +14834,11 @@ dt.Columns.Add("SymbolName");
             }
         }
 
-        private void tmrSymbolReadProcessChecker_Tick(object sender, EventArgs e)
-        {
-//            if (flash != null)
-//            {
-//                if (frmSymbolReadProgress != null)
-//                {
-//                    float numberkb = (float)flash.getNrOfBytesRead() / 1024F;
-//                    frmSymbolReadProgress.SetProgress("Downloaded " + numberkb.ToString("F1"));
-//                    int percentage = ((int)numberkb * 100) / 128;
-//                    frmSymbolReadProgress.SetProgressPercentage(percentage);
-//                }
-////                if (flash.getStatus() == T7.Flasher.T7Flasher.FlashStatus.Completed)
-//                {
-//                    tmrSymbolReadProcessChecker.Enabled = false;
-//                    EnableCANInteractionButtons();
-//                    //MessageBox.Show("Done downloading binary file!");
-//                    if (frmSymbolReadProgress != null)
-//                    {
-//                        frmSymbolReadProgress.Close();
-//                    }
-//                    if (File.Exists(m_filename))
-//                    {
-//                        readSymbolTable(m_filename);
-//                    }
-//                    tmrRealtime.Enabled = true;
-//                }
-//            }
-        }
-
         private void StartReleaseNotesViewer(string xmlfilename, string version)
         {
             dockManager1.BeginUpdate();
             DockPanel dp = dockManager1.AddPanel(DockingStyle.Right);
-            dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+            dp.ClosedPanel += dockPanel_ClosedPanel;
             dp.Tag = xmlfilename;
             ctrlReleaseNotes mv = new ctrlReleaseNotes();
             mv.LoadXML(xmlfilename);
@@ -15147,289 +15281,6 @@ dt.Columns.Add("SymbolName");
                 }*/
             }
         }
-
-        #region BDM
-
-        private uint fio_bytes;
-        private FIOCallback fio_callback = null;
-
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Break();
-        [DllImport("usb_bdm.dll")]
-        public static extern void BdmAdapter_Close();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_DumpECU(string file_name, ecu_t ecu);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_EraseECU(ecu_t ecu);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_FlashECU(string file_name, ecu_t ecu);
-        [DllImport("usb_bdm.dll")]
-        public static extern string BdmAdapter_GetLastErrorStr();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_GetVerifyFlash();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_GetVersion(ref ushort version);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Open();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Reset();
-        [DllImport("usb_bdm.dll")]
-        public static extern void BdmAdapter_SetFIOCallback(FIOCallback func);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_SetVerifyFlash(bool verify);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Stop();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_UpdateFirmware(string file_name);
-
-
-        //======================================================
-        //Recreate all executable resources
-        //======================================================
-        private void mRecreateAllScriptResources(string path)
-        {
-            // Get Current Assembly refrence
-            Assembly currentAssembly = Assembly.GetExecutingAssembly();
-            // Get all imbedded resources
-            string[] arrResources = currentAssembly.GetManifestResourceNames();
-
-            foreach (string resourceName in arrResources)
-            {
-                if (resourceName.EndsWith(".do") || resourceName.EndsWith(".msg") || resourceName.EndsWith(".d32"))
-                { //or other extension desired
-                    //Name of the file saved on disk
-                    string saveAsName = resourceName;
-                    saveAsName = saveAsName.Replace("T7.scripts.", "");
-                    if (!Directory.Exists(Path.Combine(path, "scripts")))
-                    {
-                        Directory.CreateDirectory(Path.Combine(path, "scripts"));
-                    }
-                    FileInfo fileInfoOutputFile = new FileInfo(path + "\\scripts\\" + saveAsName);
-                    //CHECK IF FILE EXISTS AND DO SOMETHING DEPENDING ON YOUR NEEDS
-                    LogHelper.Log("Extracting: " + fileInfoOutputFile.FullName);
-                    if (fileInfoOutputFile.Exists)
-                    {
-                        //overwrite if desired  (depending on your needs)
-                        //fileInfoOutputFile.Delete();
-                    }
-                    //OPEN NEWLY CREATING FILE FOR WRITTING
-                    FileStream streamToOutputFile = fileInfoOutputFile.OpenWrite();
-                    //GET THE STREAM TO THE RESOURCES
-                    Stream streamToResourceFile =
-                                        currentAssembly.GetManifestResourceStream(resourceName);
-
-                    //---------------------------------
-                    //SAVE TO DISK OPERATION
-                    //---------------------------------
-                    const int size = 4096;
-                    byte[] bytes = new byte[4096];
-                    int numBytes;
-                    while ((numBytes = streamToResourceFile.Read(bytes, 0, size)) > 0)
-                    {
-                        streamToOutputFile.Write(bytes, 0, numBytes);
-                    }
-
-                    streamToOutputFile.Close();
-                    streamToResourceFile.Close();
-                }//end_if
-
-            }//end_foreach
-        }//end_mRecreateAllExecutableResources 
-
-        private void DeleteScripts(string path)
-        {
-            // remove the entire folder
-            path += "\\scripts";
-            LogHelper.Log("Deleting scripts folder: " + path);
-            Directory.Delete(path, true);
-        }
-
-        private void on_fio(int bytes)
-        {
-
-            this.fio_bytes += (uint)bytes;
-            //LogHelper.Log("on_fio: " + this.fio_bytes.ToString());
-            if (!this.IsDisposed)
-            {
-                try
-                {
-                    this.Invoke(m_DelegateUpdateBDMProgress, this.fio_bytes);
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                }
-            }
-            //this.fio_invoke();
-        }
-
-        private void ReportBDMProgress(uint bytes)
-        {
-            try
-            {
-                string str;
-                int percentage = 0;
-                int max_bytes = 0x80000;
-                switch (_globalECUType)
-                {
-                    case ecu_t.Trionic52:
-                        max_bytes = 0x20000;
-                        break;
-                    case ecu_t.Trionic55:
-                        max_bytes = 0x40000;
-                        break;
-                    case ecu_t.Trionic5529:
-                        max_bytes = 0x40000;
-                        break;
-                    case ecu_t.Trionic7:
-                        max_bytes = 0x80000;
-                        break;
-                }
-                percentage = ((int)this.fio_bytes * 100) / max_bytes;
-                if (Convert.ToInt32(barProgress.EditValue) != percentage)
-                {
-                    // need to calculate the percentage
-                    barProgress.EditValue = percentage;
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception E)
-            {
-                LogHelper.Log("fio_invoke: " + E.Message);
-            }
-        }
-
-        private void barButtonItem81_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // read ECU
-            bool _continue = true;
-            try
-            {
-                if (!_globalBDMOpened)
-                {
-                    if (!BdmAdapter_Open())
-                    {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
-                        _continue = false;
-                    }
-                }
-                if (_continue)
-                {
-                    _globalBDMOpened = true;
-                    if (BDMversion == 0)
-                    {
-                        if (!BdmAdapter_GetVersion(ref BDMversion))
-                        {
-                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
-                            _continue = false;
-                        }
-                    }
-                    if (_continue)
-                    {
-                        // adapter opened and version is compatible
-                        //BdmAdapter_GetVerifyFlash();
-                        // read ECU through USB BDM
-
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "Binary files|*.bin";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-
-                            mRecreateAllScriptResources(Path.GetDirectoryName(sfd.FileName));
-                            barProgress.Visibility = BarItemVisibility.Always;
-                            barProgress.EditValue = 0;
-                            barProgress.Caption = "Dumping ECU";
-                            System.Windows.Forms.Application.DoEvents();
-
-                            _globalECUType = ecu_t.Trionic7;
-                            fio_bytes = 0;
-                            if (!BdmAdapter_DumpECU(sfd.FileName, ecu_t.Trionic7))
-                            {
-                                frmInfoBox info = new frmInfoBox("Failed to dump ECU");
-                            }
-                            DeleteScripts(Path.GetDirectoryName(sfd.FileName));
-                        }
-
-                    }
-                }
-                barProgress.Caption = "Dumping ECU";
-                barProgress.EditValue = 0;
-                barProgress.Visibility = BarItemVisibility.Never;
-                System.Windows.Forms.Application.DoEvents();
-            }
-            catch (Exception BDMException)
-            {
-                LogHelper.Log("Failed to dump ECU: " + BDMException.Message);
-                frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
-            }
-        }
-
-        private void barButtonItem82_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // flash ECU
-            bool _continue = true;
-            try
-            {
-                if (!_globalBDMOpened)
-                {
-                    if (!BdmAdapter_Open())
-                    {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
-                        _continue = false;
-                    }
-                }
-                if (_continue)
-                {
-                    _globalBDMOpened = true;
-                    if (BDMversion == 0)
-                    {
-                        if (!BdmAdapter_GetVersion(ref BDMversion))
-                        {
-                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
-                            _continue = false;
-                        }
-                    }
-                    if (_continue)
-                    {
-                        // adapter opened and version is compatible
-                        BdmAdapter_GetVerifyFlash();
-                        // program ECU through USB BDM
-                        OpenFileDialog ofd = new OpenFileDialog();
-                        ofd.Filter = "Binary files|*.bin";
-                        ofd.Multiselect = false;
-                        if (ofd.ShowDialog() == DialogResult.OK)
-                        {
-                            mRecreateAllScriptResources(Path.GetDirectoryName(ofd.FileName));
-                            fio_bytes = 0;
-                            barProgress.Visibility = BarItemVisibility.Always;
-                            barProgress.Caption = "Erasing ECU";
-                            System.Windows.Forms.Application.DoEvents();
-                            _globalECUType = ecu_t.Trionic7;
-                            BdmAdapter_EraseECU(ecu_t.Trionic7);
-                            barProgress.Caption = "Flashing ECU";
-                            System.Windows.Forms.Application.DoEvents();
-                            Thread.Sleep(100);
-                            BdmAdapter_FlashECU(ofd.FileName, ecu_t.Trionic7);
-                            barProgress.Caption = "Resetting ECU";
-                            System.Windows.Forms.Application.DoEvents();
-                            Thread.Sleep(100);
-                            DeleteScripts(Path.GetDirectoryName(ofd.FileName));
-                        }
-
-                    }
-                }
-                barProgress.EditValue = 0;
-                barProgress.Caption = "Idle";
-                barProgress.Visibility = BarItemVisibility.Never;
-                System.Windows.Forms.Application.DoEvents();
-            }
-            catch (Exception BDMException)
-            {
-                LogHelper.Log("Failed to program ECU: " + BDMException.Message);
-                frmInfoBox info = new frmInfoBox("Failed to program ECU: " + BDMException.Message);
-            }
-        }
-        #endregion
 
         private void AddToRealtimeTable(System.Data.DataTable dt, string varname, string description, int symbolnumber, double value, double offset, double correction, double peak, double minimum, double maximum, int convertedSymbolnumber, uint sramaddress, int length, int delay)
         {
@@ -16932,11 +16783,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                 }
             }
-        }
-
-        private void btnTorqueCalM_EngXSP_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartAViewer("TorqueCal.M_EngXSP");
         }
 
         private void btnVectors_ItemClick(object sender, ItemClickEventArgs e)
@@ -19365,12 +19211,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
-        private void barButtonItem95_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // E85 and Automatic
-            StartAViewer("TorqueCal.M_EngMaxE85TabAut");
-        }
-
         private void exportSymbollistAsCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // export as CSV
@@ -19390,540 +19230,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
-        #region Information
-        private void btnVinDecoder_ItemClick(object sender, ItemClickEventArgs e)
+        private void barIdcGenerate_ItemClick(object sender, ItemClickEventArgs e)
         {
-            frmDecodeVIN decode = new frmDecodeVIN();
-            if (m_currentfile != string.Empty)
-            {
-                T7FileHeader t7InfoHeader = new T7FileHeader();
-                t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
-                decode.SetVinNumber(t7InfoHeader.getChassisID());
-            }
-            decode.ShowDialog();
+            IdaProIdcFile.create(m_currentfile, m_symbols);
         }
-
-        private void btnShowDisassembly_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (t7file != null)
-            {
-                string outputfile = Path.GetDirectoryName(t7file.FileName);
-                outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(t7file.FileName) + ".asm");
-                System.Windows.Forms.Application.DoEvents();
-                DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
-                ctrlDisassembler disasmcontrol = new ctrlDisassembler() { TrionicFile = t7file, Dock = DockStyle.Fill };
-                panel.Controls.Add(disasmcontrol);
-                panel.Text = "T7Suite Disassembler";
-                panel.Width = this.ClientSize.Width - dockSymbols.Width;
-                System.Windows.Forms.Application.DoEvents();
-                disasmcontrol.DisassembleFile(outputfile);
-            }
-        }
-
-        private void btnShowFullDisassembly_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            string outputfile = Path.GetDirectoryName(m_currentfile);
-            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
-            if (!AssemblerViewerActive(true, outputfile))
-            {
-                frmProgress progress = new frmProgress();
-                progress.Show();
-                progress.SetProgress("Start disassembler");
-                if (!File.Exists(outputfile))
-                {
-                    progress.SetProgress("Disassembler running...");
-                    Disassembler dis = new Disassembler();
-                    dis.DisassembleFileRtf(m_currentfile, outputfile, m_currentfile_size, m_symbols);
-                    progress.SetProgress("Disassembler done...");
-                }
-                progress.SetProgress("Loading assembler file");
-                StartAssemblerViewer(outputfile, progress);
-                progress.Close();
-            }
-        }
-
-        private bool AssemblerViewerActive(bool ShowIfActive, string filename)
-        {
-            bool retval = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-                if (pnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
-                {
-                    retval = true;
-                    if (ShowIfActive)
-                    {
-                        pnl.Show();
-                        dockManager1.ActivePanel = pnl;
-                    }
-                }
-                else
-                {
-                    foreach (Control c in pnl.Controls)
-                    {
-                        if (c is DockPanel)
-                        {
-                            DockPanel tpnl = (DockPanel)c;
-                            if (tpnl.Text.StartsWith("Assembler: " + Path.GetFileName(filename)))
-                            {
-                                retval = true;
-                                if (ShowIfActive)
-                                {
-                                    tpnl.Show();
-                                    dockManager1.ActivePanel = tpnl;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return retval;
-        }
-
-        private void StartAssemblerViewer(string filename, frmProgress progress)
-        {
-            if (m_currentfile != "")
-            {
-                dockManager1.BeginUpdate();
-                try
-                {
-                    DockPanel dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-                    dockPanel.Text = "Assembler: " + Path.GetFileName(filename);
-                    AsmViewer av = new AsmViewer() { Dock = DockStyle.Fill };
-                    dockPanel.Width = 800;
-                    dockPanel.Controls.Add(av);
-                    progress.SetProgress("Loading assembler file ...");
-                    av.LoadDataFromFile(filename, m_symbols);
-                    progress.SetProgress("Finding starting address in file");
-                    av.FindStartAddress(m_currentfile);
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log(E.Message);
-                }
-                dockManager1.EndUpdate();
-            }
-        }
-
-        private void Information_firmwareInformation_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // show firmware information screen!
-            bool _correctFooter = m_appSettings.AutoFixFooter;
-            frmFirmwareInformation frminfo = new frmFirmwareInformation();
-
-            if (m_currentfile != null)
-            {
-                if (File.Exists(m_currentfile))
-                {
-                    T7FileHeader t7InfoHeader = new T7FileHeader();
-                    t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
-                    string swVersion = t7InfoHeader.getSoftwareVersion();
-                    PartNumberConverter pnc = new PartNumberConverter();
-                    ECUInformation ecuinfo = pnc.GetECUInfo(t7InfoHeader.getPartNumber().Trim(), "");
-                    frminfo.SIDDate = t7InfoHeader.getSIDDate();
-                    if (ecuinfo.Valid)
-                    {
-                        frminfo.OriginalCarType = ecuinfo.Carmodel.ToString();
-                        frminfo.OriginalEngineType = ecuinfo.Enginetype.ToString();
-                    }
-
-                    if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
-                    {
-                        // additional requirements for the bytes in that location
-                        // http://www.trionictuning.com/forum/viewtopic.php?f=17&t=109&p=8569#p8537
-
-
-
-                        // set these options correct
-                        if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
-                        {
-                            if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
-                                (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
-                                (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
-                            {
-                                frminfo.EnableSIDAdvancedOptions(true);
-                                if (/*CheckBytesInFile(m_currentfile, 0x495FA, 0, 2) &&*/ CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) && CheckBytesInFile(m_currentfile, 0x496B4, 0, 2))
-                                {
-                                    frminfo.SIDDisableStartScreen = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableStartScreen = false;
-                                }
-                                if (CheckBytesInFile(m_currentfile, 0x49760, 0, 2)) // should be 0x49760 in stead of 0x4975E
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = false;
-                                }
-                                /*
-                                 *  Remove startup screen:
-                                    change to 00 00 instead of 00 80 
-                                    000495FA // not needed!!! <GS-11042011>
-                                    0004968E 
-                                    000496B4                              
-                                    Remove adaptation messages:
-                                    Change 0x49760 to 00 00 instead of 00 80
-                                 */
-                            }
-                            else
-                            {
-                                frminfo.EnableSIDAdvancedOptions(false);
-                            }
-                        }
-                        else
-                        {
-                            if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
-                                (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
-                            {
-                                frminfo.EnableSIDAdvancedOptions(true);
-
-                                //Disable startscreen, change 0x00046F4D to 00 in stead of 80
-                                if (CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1))
-                                {
-                                    frminfo.SIDDisableStartScreen = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableStartScreen = false;
-                                }
-                                //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
-                                if (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1))
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = true;
-                                }
-                                else
-                                {
-                                    frminfo.SIDDisableAdaptionMessages = false;
-                                }
-                            }
-                            else
-                            {
-                                frminfo.EnableSIDAdvancedOptions(false);
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        frminfo.EnableSIDAdvancedOptions(false);
-                    }
-
-                    // Pavel Angelov created this modification. 
-                    // Disable effect of the emission limitation function.
-                    if (swVersion.Trim().StartsWith("EU0AF01C"))
-                    {
-                        if (CheckBytesInFile(m_currentfile, 0x13837, 0x03, 1))
-                        {
-                            frminfo.EmissionLimitation = true;
-                            frminfo.EnableEmissionLimitation(true);
-                        }
-                        else if (CheckBytesInFile(m_currentfile, 0x13837, 0x02, 1))
-                        {
-                            frminfo.EmissionLimitation = false;
-                            frminfo.EnableEmissionLimitation(true);
-                        }
-                        else
-                        {
-                            frminfo.EnableEmissionLimitation(false);
-                        }
-                    }
-                    else
-                    {
-                        frminfo.EnableEmissionLimitation(false);
-                    }
-
-
-                    frminfo.SoftwareID = t7InfoHeader.getSoftwareVersion();
-                    frminfo.ChassisID = t7InfoHeader.getChassisID();
-                    frminfo.EngineType = t7InfoHeader.getCarDescription();
-                    frminfo.Partnumber = t7InfoHeader.getPartNumber();
-                    frminfo.ImmoID = t7InfoHeader.getImmobilizerID();
-                    frminfo.SoftwareIsOpen = IsBinaryFileOpen();
-                    frminfo.BioPowerSoftware = IsBinaryBiopower();
-                    frminfo.BioPowerEnabled = IsBioPowerEnabled();
-                    frminfo.CompressedSymboltable = IsBinaryPackedVersion(m_currentfile);
-                    frminfo.MissingSymbolTable = IsBinaryMissingSymbolTable();
-                    if (frminfo.MissingSymbolTable) frminfo.BioPowerSoftware = true; // only missing in biopower software
-                    frminfo.ChecksumEnabled = HasBinaryChecksumEnabled();
-                    frminfo.TorqueLimitersEnabled = HasBinaryTorqueLimiterEnabled();
-                    if (!HasBinaryTorqueLimiters()) frminfo.TorqueLimitersPresent = false;
-                    //if (!frminfo.MissingSymbolTable)
-                    {
-                        frminfo.OBDIIPresent = HasBinaryOBDIIMaps();
-                        if (!frminfo.OBDIIPresent)
-                        {
-                            frminfo.OBDIIEnabled = false;
-                        }
-                        else
-                        {
-                            frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
-                        }
-                    }
-                    if (HasBinaryOBDIIMaps())
-                    {
-                        frminfo.OBDIIEnabled = HasBinaryOBDIIEnabled();
-                    }
-                    frminfo.SecondLambdaEnabled = HasBinarySecondLambdaEnabled();
-
-                    if (!HasBinarySecondLambdaMap()) frminfo.SecondLambdaPresent = false;
-
-                    if (!HasBinaryTipInOutParameters()) frminfo.FastThrottleResponsePresent = false;
-                    else frminfo.FastThrottleResponsePresent = true;
-                    frminfo.FastThrottleReponse = HasBinaryFastThrottleResponse();
-                    frminfo.ExtraFastThrottleReponse = HasBinaryExtraFastThrottleResponse();
-                    if (!HasBinaryTipInOutParameters())
-                    {
-                        frminfo.FastThrottleReponse = false;
-                        frminfo.ExtraFastThrottleReponse = false;
-                    }
-                    if (!HasBinaryCatalystLightOffParameters()) frminfo.CatalystLightoffPresent = false;
-                    else frminfo.CatalystLightoffPresent = true;
-                    frminfo.CatalystLightOff = HasBinaryCatalystLightOffEnabled();
-                    frminfo.ProgrammingDateTime = GetProgrammingDateTime();
-                    if (!m_appSettings.WriteTimestampInBinary)
-                    {
-                        frminfo.DisableTimeStamping();
-                    }
-                    if (frminfo.ShowDialog() == DialogResult.OK)
-                    {
-                        if (t7InfoHeader.IsTISBinary(m_currentfile))
-                        {
-                            // user is trying to update a TIS file, ask for footer correction.
-                            if ((frminfo.ImmoID != t7InfoHeader.getImmobilizerID()) || frminfo.ChassisID != t7InfoHeader.getChassisID())
-                            {
-                                if (!_correctFooter)
-                                {
-                                    if (MessageBox.Show("It seems you are trying to update data in a TIS file, would you like T7Suite to correct the footer information?", "TIS file question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                    {
-                                        //_correctFooter = true;
-                                        // create a backup file at this point
-                                        File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + DateTime.Now.ToString("yyyyMMddHHmmss") + ".binarybackup", true);
-                                        t7InfoHeader.init(m_currentfile, true);
-                                    }
-                                }
-                            }
-                        }
-                        t7InfoHeader.setImmobilizerID(frminfo.ImmoID);
-                        t7InfoHeader.setSoftwareVersion(frminfo.SoftwareID);
-                        t7InfoHeader.setCarDescription(frminfo.EngineType);
-                        t7InfoHeader.setChassisID(frminfo.ChassisID);
-                        t7InfoHeader.setSIDDate(frminfo.SIDDate);
-                        if (GetProgrammingDateTime() != frminfo.ProgrammingDateTime)
-                        {
-                            SetProgrammingDateTime(frminfo.ProgrammingDateTime);
-                        }
-
-                        if (frminfo.SoftwareIsOpen)
-                        {
-                            SetBinaryFileOpen();
-                        }
-                        else
-                        {
-                            SetBinaryFileClosed();
-                        }
-                        if (frminfo.TorqueLimitersEnabled && !HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
-                        {
-                            SetTorqueLimiterEnabled(true);
-                        }
-                        else if (!frminfo.TorqueLimitersEnabled && HasBinaryTorqueLimiterEnabled() && HasBinaryTorqueLimiters())
-                        {
-                            SetTorqueLimiterEnabled(false);
-                        }
-                        if (frminfo.OBDIIEnabled && !HasBinaryOBDIIEnabled())
-                        {
-                            SetOBDIIEnabled(true);
-                        }
-                        else if (!frminfo.OBDIIEnabled && HasBinaryOBDIIEnabled())
-                        {
-                            SetOBDIIEnabled(false);
-                        }
-                        if (frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap()/*&& !HasBinarySecondLambdaEnabled()*/)
-                        {
-                            SetSecondLambdaEnabled(true);
-                        }
-                        else if (!frminfo.SecondLambdaEnabled && HasBinarySecondLambdaMap() && HasBinarySecondLambdaEnabled())
-                        {
-                            SetSecondLambdaEnabled(false);
-                        }
-                        if (HasBinaryTipInOutParameters())
-                        {
-                            if (frminfo.FastThrottleReponse && !HasBinaryFastThrottleResponse())
-                            {
-                                SetFastThrottleResponse(true);
-                            }
-                            else if (!frminfo.FastThrottleReponse && HasBinaryFastThrottleResponse())
-                            {
-                                SetFastThrottleResponse(false);
-                            }
-                            if (frminfo.ExtraFastThrottleReponse && !HasBinaryExtraFastThrottleResponse())
-                            {
-                                SetExtraFastThrottleResponse(true);
-                            }
-                            else if (!frminfo.ExtraFastThrottleReponse && !frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
-                            {
-                                SetExtraFastThrottleResponse(false);
-                            }
-                            else if (!frminfo.ExtraFastThrottleReponse && frminfo.FastThrottleReponse && HasBinaryExtraFastThrottleResponse())
-                            {
-                                SetActG2(false);
-                            }
-
-                        }
-                        if (HasBinaryCatalystLightOffParameters())
-                        {
-                            if (frminfo.CatalystLightOff && !HasBinaryCatalystLightOffEnabled())
-                            {
-                                SetCatalystLightOff(true);
-                            }
-                            else if (!frminfo.CatalystLightOff && HasBinaryCatalystLightOffEnabled())
-                            {
-                                SetCatalystLightOff(false);
-                            }
-
-                        }
-                        if (IsBinaryBiopower())
-                        {
-                            if (frminfo.BioPowerEnabled && !IsBioPowerEnabled())
-                            {
-                                SetBioPowerEnabled(true);
-                            }
-                            else if (!frminfo.BioPowerEnabled && IsBioPowerEnabled())
-                            {
-                                SetBioPowerEnabled(false);
-                            }
-                        }
-                        t7InfoHeader.save(m_currentfile);
-
-                        if (swVersion.Trim() == "EU0AF01C.55P" || swVersion.Trim() == "EU0AF01C.46T" || swVersion.Trim().StartsWith("ET02U01C") || swVersion.Trim() == "ET03F01C.46S")
-                        {
-                            if (swVersion.Trim().StartsWith("EU0AF01C") || swVersion.Trim() == "ET03F01C.46S")
-                            {
-                                if ((CheckBytesInFile(m_currentfile, 0x4968E, 0, 2) || (CheckBytesInFile(m_currentfile, 0x4968E, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x4968F, 0x80, 1))) &&
-                                    (CheckBytesInFile(m_currentfile, 0x496B4, 0, 2) || (CheckBytesInFile(m_currentfile, 0x496B4, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x496B5, 0x80, 1))) &&
-                                    (CheckBytesInFile(m_currentfile, 0x49760, 0, 2) || (CheckBytesInFile(m_currentfile, 0x49760, 0x00, 1) && CheckBytesInFile(m_currentfile, 0x49761, 0x80, 1))))
-                                {
-
-                                    if (frminfo.SIDDisableStartScreen)
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x00, 1);
-                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x80, 1);
-                                        //savedatatobinary(0x495FA, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x4968E, 2, data2write, m_currentfile, false);
-                                        savedatatobinary(0x496B4, 2, data2write, m_currentfile, false);
-                                    }
-                                    if (frminfo.SIDDisableAdaptionMessages)
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x00, 1);
-                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[2];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        data2write.SetValue((byte)0x80, 1);
-                                        savedatatobinary(0x49760, 2, data2write, m_currentfile, false);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if ((CheckBytesInFile(m_currentfile, 0x46F4D, 0, 1) || CheckBytesInFile(m_currentfile, 0x46F4D, 0x80, 1)) &&
-                                    (CheckBytesInFile(m_currentfile, 0x4701F, 0, 1) || CheckBytesInFile(m_currentfile, 0x4701F, 0x80, 1)))
-                                {
-
-                                    //Disable startscreen, change 0x00046F4D to 00 in stead of 80
-                                    //Remove the adaption messages, change 0x0004701F to 00 in stead of 80
-                                    if (frminfo.SIDDisableStartScreen)
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x80, 0);
-                                        savedatatobinary(0x46F4D, 1, data2write, m_currentfile, false);
-                                    }
-                                    if (frminfo.SIDDisableAdaptionMessages)
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x00, 0);
-                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
-                                    }
-                                    else
-                                    {
-                                        byte[] data2write = new byte[1];
-                                        data2write.SetValue((byte)0x80, 0);
-                                        savedatatobinary(0x4701F, 1, data2write, m_currentfile, false);
-                                    }
-                                }
-                            }
-                        }
-
-                        // Disable effect of the emission limitation function.
-                        if (swVersion.Trim().StartsWith("EU0AF01C"))
-                        {
-                            if (frminfo.EmissionLimitation)
-                            {
-                                byte[] data2write = new byte[1];
-                                data2write.SetValue((byte)0x03, 0);
-                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
-                            }
-                            else
-                            {
-                                byte[] data2write = new byte[1];
-                                data2write.SetValue((byte)0x02, 0);
-                                savedatatobinary(0x13837, 1, data2write, m_currentfile, false);
-                            }
-                        }
-
-                        UpdateChecksum(m_currentfile);
-                    }
-                }
-            }
-        }
-
-        private void Information_browseAxisInformation_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-            AxisBrowser tabdet = new AxisBrowser();
-            tabdet.onStartSymbolViewer += new AxisBrowser.StartSymbolViewer(tabdet_onStartSymbolViewer);
-            tabdet.ApplicationLanguage = m_appSettings.ApplicationLanguage;
-            tabdet.Dock = DockStyle.Fill;
-            dockPanel.Controls.Add(tabdet);
-            tabdet.ShowSymbolCollection(m_symbols);
-            dockPanel.Text = "Axis browser: " + Path.GetFileName(m_currentfile);
-            bool isDocked = false;
-            foreach (DockPanel pnl in dockManager1.Panels)
-            {
-                if (pnl.Text.StartsWith("Axis browser: ") && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                {
-                    dockPanel.DockAsTab(pnl, 0);
-                    isDocked = true;
-                    break;
-                }
-            }
-            if (!isDocked)
-            {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
-                dockPanel.Width = 700;
-            }
-        }
-        #endregion
     }
 }

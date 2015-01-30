@@ -939,8 +939,5 @@ namespace T7
             }
             DialogResult = DialogResult.None;
         }
-
-
-
     }
 }

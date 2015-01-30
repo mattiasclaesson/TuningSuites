@@ -3932,9 +3932,6 @@
         wtEN0kW7DxTJyiGXwuWG/AgQi87ui8jRzFsV6QfaedPAb07ZbszKzK86AAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="tmrSymbolReadProcessChecker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>638, 54</value>
-  </metadata>
   <metadata name="sndTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 54</value>
   </metadata>
