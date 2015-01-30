@@ -116,6 +116,10 @@ namespace T8SuitePro
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.popupContainerEdit1 = new DevExpress.XtraEditors.PopupContainerEdit();
+            this.simpleButton8 = new DevExpress.XtraEditors.SimpleButton();
+            this.simpleButton9 = new DevExpress.XtraEditors.SimpleButton();
+            this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.simpleButton10 = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
@@ -155,17 +159,17 @@ namespace T8SuitePro
             this.simpleButton3.Size = new System.Drawing.Size(92, 23);
             this.simpleButton3.TabIndex = 9;
             this.simpleButton3.Text = "Undo changes";
+            this.simpleButton3.Visible = false;
             this.simpleButton3.Click += new System.EventHandler(this.simpleButton3_Click);
             // 
             // simpleButton2
             // 
             this.simpleButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.simpleButton2.Enabled = false;
             this.simpleButton2.Location = new System.Drawing.Point(715, 628);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 8;
-            this.simpleButton2.Text = "Save";
+            this.simpleButton2.Text = "Save to file";
             this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click);
             // 
             // simpleButton1
@@ -585,14 +589,14 @@ namespace T8SuitePro
             this.xtraTabPage1.Controls.Add(this.simpleButton7);
             this.xtraTabPage1.Controls.Add(this.surfaceGraphViewer1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(836, 275);
+            this.xtraTabPage1.Size = new System.Drawing.Size(835, 274);
             this.xtraTabPage1.Text = "3D Graph";
             // 
             // simpleButton4
             // 
             this.simpleButton4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.simpleButton4.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton4.Image")));
-            this.simpleButton4.Location = new System.Drawing.Point(814, 60);
+            this.simpleButton4.Location = new System.Drawing.Point(813, 60);
             this.simpleButton4.Name = "simpleButton4";
             this.simpleButton4.Size = new System.Drawing.Size(23, 23);
             this.simpleButton4.TabIndex = 12;
@@ -603,7 +607,7 @@ namespace T8SuitePro
             // 
             this.simpleButton5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.simpleButton5.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton5.Image")));
-            this.simpleButton5.Location = new System.Drawing.Point(814, 89);
+            this.simpleButton5.Location = new System.Drawing.Point(813, 89);
             this.simpleButton5.Name = "simpleButton5";
             this.simpleButton5.Size = new System.Drawing.Size(23, 23);
             this.simpleButton5.TabIndex = 11;
@@ -614,7 +618,7 @@ namespace T8SuitePro
             // 
             this.simpleButton6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.simpleButton6.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton6.Image")));
-            this.simpleButton6.Location = new System.Drawing.Point(814, 32);
+            this.simpleButton6.Location = new System.Drawing.Point(813, 32);
             this.simpleButton6.Name = "simpleButton6";
             this.simpleButton6.Size = new System.Drawing.Size(23, 23);
             this.simpleButton6.TabIndex = 10;
@@ -625,7 +629,7 @@ namespace T8SuitePro
             // 
             this.simpleButton7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.simpleButton7.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton7.Image")));
-            this.simpleButton7.Location = new System.Drawing.Point(814, 3);
+            this.simpleButton7.Location = new System.Drawing.Point(813, 3);
             this.simpleButton7.Name = "simpleButton7";
             this.simpleButton7.Size = new System.Drawing.Size(23, 23);
             this.simpleButton7.TabIndex = 9;
@@ -655,7 +659,8 @@ namespace T8SuitePro
             this.surfaceGraphViewer1.Pov_x = 30;
             this.surfaceGraphViewer1.Pov_y = 56;
             this.surfaceGraphViewer1.Pov_z = 21;
-            this.surfaceGraphViewer1.Size = new System.Drawing.Size(808, 275);
+            this.surfaceGraphViewer1.ShowinBlue = false;
+            this.surfaceGraphViewer1.Size = new System.Drawing.Size(807, 271);
             this.toolTipController1.SetSuperTip(this.surfaceGraphViewer1, null);
             this.surfaceGraphViewer1.TabIndex = 0;
             this.surfaceGraphViewer1.X_axis = null;
@@ -672,7 +677,7 @@ namespace T8SuitePro
             this.xtraTabPage2.Controls.Add(this.trackBarControl1);
             this.xtraTabPage2.Controls.Add(this.chartControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(836, 275);
+            this.xtraTabPage2.Size = new System.Drawing.Size(835, 274);
             this.xtraTabPage2.Text = "2D Graph";
             // 
             // labelControl9
@@ -889,7 +894,8 @@ namespace T8SuitePro
             this.toolStripComboBox3.Items.AddRange(new object[] {
             "Hex view ",
             "Decimal view ",
-            "Easy view"});
+            "Easy view",
+            "ASCII"});
             this.toolStripComboBox3.Name = "toolStripComboBox3";
             this.toolStripComboBox3.Size = new System.Drawing.Size(160, 25);
             this.toolStripComboBox3.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox3_SelectedIndexChanged);
@@ -977,7 +983,43 @@ namespace T8SuitePro
             superToolTip1.Items.Add(toolTipTitleItem1);
             this.popupContainerEdit1.SuperTip = superToolTip1;
             this.popupContainerEdit1.TabIndex = 11;
+            this.popupContainerEdit1.Visible = false;
             this.popupContainerEdit1.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.popupContainerEdit1_CustomDisplayText);
+            // 
+            // simpleButton8
+            // 
+            this.simpleButton8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.simpleButton8.Location = new System.Drawing.Point(516, 628);
+            this.simpleButton8.Name = "simpleButton8";
+            this.simpleButton8.Size = new System.Drawing.Size(85, 23);
+            this.simpleButton8.TabIndex = 12;
+            this.simpleButton8.Text = "Save to ECU";
+            this.simpleButton8.Click += new System.EventHandler(this.simpleButton8_Click);
+            // 
+            // simpleButton9
+            // 
+            this.simpleButton9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.simpleButton9.Location = new System.Drawing.Point(408, 628);
+            this.simpleButton9.Name = "simpleButton9";
+            this.simpleButton9.Size = new System.Drawing.Size(102, 23);
+            this.simpleButton9.TabIndex = 13;
+            this.simpleButton9.Text = "Read from ECU";
+            this.simpleButton9.Click += new System.EventHandler(this.simpleButton9_Click);
+            // 
+            // timer5
+            // 
+            this.timer5.Interval = 10000;
+            this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
+            // 
+            // simpleButton10
+            // 
+            this.simpleButton10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.simpleButton10.Location = new System.Drawing.Point(607, 628);
+            this.simpleButton10.Name = "simpleButton10";
+            this.simpleButton10.Size = new System.Drawing.Size(102, 23);
+            this.simpleButton10.TabIndex = 14;
+            this.simpleButton10.Text = "Read from file";
+            this.simpleButton10.Click += new System.EventHandler(this.simpleButton10_Click);
             // 
             // MapViewer
             // 
@@ -986,7 +1028,10 @@ namespace T8SuitePro
             this.Appearance.Options.UseFont = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.simpleButton10);
+            this.Controls.Add(this.simpleButton9);
             this.Controls.Add(this.simpleButton1);
+            this.Controls.Add(this.simpleButton8);
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.simpleButton3);
@@ -1063,7 +1108,6 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.LabelControl labelControl11;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private SurfaceGraphViewer surfaceGraphViewer1;
-        //private ChartControl chart;
         private DevExpress.XtraCharts.ChartControl chartControl1;
         private DevExpress.XtraTab.XtraTabControl xtraTabControl1;
         private DevExpress.XtraTab.XtraTabPage xtraTabPage1;
@@ -1109,5 +1153,9 @@ namespace T8SuitePro
         private System.Windows.Forms.ToolStripMenuItem editXaxisSymbolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editYaxisSymbolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem smoothSelectionToolStripMenuItem;
+        private DevExpress.XtraEditors.SimpleButton simpleButton8;
+        private DevExpress.XtraEditors.SimpleButton simpleButton9;
+        private System.Windows.Forms.Timer timer5;
+        private DevExpress.XtraEditors.SimpleButton simpleButton10;
     }
 }

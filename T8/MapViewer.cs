@@ -7,8 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
-using DevExpress.Charts;
 using System.Runtime.InteropServices;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.XtraBars.Docking;
+using System.IO;
 using CommonSuite;
 
 namespace T8SuitePro
@@ -82,7 +84,7 @@ namespace T8SuitePro
         ExtraSmallView
     }
 
-    public partial class MapViewer : DevExpress.XtraEditors.XtraUserControl
+    public partial class MapViewer : /*DevExpress.XtraEditors.XtraUserControl*/ IMapViewer
     {
         private bool m_issixteenbit = false;
         private int m_TableWidth = 8;
@@ -97,7 +99,30 @@ namespace T8SuitePro
         private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
 
-        public void SetViewSize(ViewSize vs)
+        byte[] open_loop;
+
+        public override byte[] Open_loop
+        {
+            get { return open_loop; }
+            set { open_loop = value; }
+        }
+
+        private double m_Yaxiscorrectionfactor = 1;
+
+        public double Yaxiscorrectionfactor
+        {
+            get { return m_Yaxiscorrectionfactor; }
+            set { m_Yaxiscorrectionfactor = value; }
+        }
+        private double m_Xaxiscorrectionfactor = 1;
+
+        public double Xaxiscorrectionfactor
+        {
+            get { return m_Xaxiscorrectionfactor; }
+            set { m_Xaxiscorrectionfactor = value; }
+        }
+
+        public override void SetViewSize(ViewSize vs)
         {
             m_vs = vs; 
             if (vs == ViewSize.SmallView)
@@ -120,13 +145,13 @@ namespace T8SuitePro
         
         private SymbolCollection m_SymbolCollection = new SymbolCollection();
 
-        public SymbolCollection mapSymbolCollection
+        public override SymbolCollection mapSymbolCollection
         {
             get { return m_SymbolCollection; }
             set { m_SymbolCollection = value; }
         }
 
-        public ViewType Viewtype
+        public override ViewType Viewtype
         {
             get { return m_viewtype; }
             set
@@ -138,13 +163,13 @@ namespace T8SuitePro
             }
         }
 
-        public int MaxValueInTable
+        public override int MaxValueInTable
         {
             get { return m_MaxValueInTable; }
             set { m_MaxValueInTable = value; }
         }
 
-        public bool AutoSizeColumns
+        public override bool AutoSizeColumns
         {
             set
             {
@@ -154,7 +179,7 @@ namespace T8SuitePro
 
         private bool m_disablecolors = false;
 
-        public bool DisableColors
+        public override bool DisableColors
         {
             get
             {
@@ -179,13 +204,13 @@ namespace T8SuitePro
 
         private bool m_tableVisible = false;
 
-/*        public int SliderPosition
+        public override int SliderPosition
         {
             get { return (int)trackBarControl1.EditValue; }
             set { trackBarControl1.EditValue = value; }
-        }*/
+        }
 
-        public bool TableVisible
+        public override bool TableVisible
         {
             get { return m_tableVisible; }
             set
@@ -195,7 +220,7 @@ namespace T8SuitePro
             }
         }
 
-        public int LockMode
+        public override int LockMode
         {
             get
             {
@@ -212,7 +237,7 @@ namespace T8SuitePro
 
         private double _max_y_axis_value = 0;
 
-        public double Max_y_axis_value
+        public override double Max_y_axis_value
         {
             get
             {
@@ -236,15 +261,34 @@ namespace T8SuitePro
 
         private bool m_isRAMViewer = false;
 
-        public bool IsRAMViewer
+        public override bool IsRAMViewer
         {
             get { return m_isRAMViewer; }
-            set { m_isRAMViewer = value; }
+            set
+            {
+                m_isRAMViewer = value;
+                //simpleButton8.Enabled = m_isRAMViewer;
+                //simpleButton9.Enabled = m_isRAMViewer;
+            }
+        }
+
+        private bool m_isOpenSoftware = false;
+
+
+        public override bool IsOpenSoftware
+        {
+            get { return m_isOpenSoftware; }
+            set
+            {
+                m_isOpenSoftware = value;
+                //simpleButton8.Enabled = m_isOpenSoftware;
+                //simpleButton9.Enabled = m_isOpenSoftware;
+            }
         }
 
         private bool m_isUpsideDown = false;
 
-        public bool IsUpsideDown
+        public override bool IsUpsideDown
         {
             get { return m_isUpsideDown; }
             set { m_isUpsideDown = value; }
@@ -252,20 +296,20 @@ namespace T8SuitePro
 
         private double correction_factor = 1;
 
-        public double Correction_factor
+        public override double Correction_factor
         {
             get { return correction_factor; }
             set { correction_factor = value; }
         }
         private double correction_offset = 0;
 
-        public double Correction_offset
+        public override double Correction_offset
         {
             get { return correction_offset; }
             set { correction_offset = value; }
         }
 
-        public bool GraphVisible
+        public override bool GraphVisible
         {
             get
             {
@@ -277,7 +321,7 @@ namespace T8SuitePro
             }
         }
 
-        public bool IsRedWhite
+        public override bool IsRedWhite
         {
             get { return m_isRedWhite; }
             set { m_isRedWhite = value; }
@@ -289,28 +333,54 @@ namespace T8SuitePro
             set { m_isHexMode = value; }
         }*/
 
-        public string Filename
+        public override string Filename
         {
             get { return m_filename; }
             set { m_filename = value; }
         }
 
 
-        public bool DatasourceMutated
+        public override bool DatasourceMutated
         {
             get { return m_datasourceMutated; }
             set { m_datasourceMutated = value; }
         }
+
+        private bool _isCompareViewer = false;
+
+        public override bool IsCompareViewer
+        {
+            get { return _isCompareViewer; }
+            set
+            {
+                _isCompareViewer = value;
+                if (_isCompareViewer)
+                {
+                    gridView1.OptionsBehavior.Editable = false; // don't let the user edit a compare viewer
+                    toolStripButton3.Enabled = false;
+                    toolStripTextBox1.Enabled = false;
+                    toolStripComboBox1.Enabled = false;
+                    smoothSelectionToolStripMenuItem.Enabled = false;
+                    pasteSelectedCellsToolStripMenuItem.Enabled = false;
+                    //exportMapToolStripMenuItem.Enabled = false;
+                    simpleButton2.Enabled = false;
+                    //simpleButton3.Enabled = false;
+                    //btnSaveToRAM.Enabled = false;
+                    //btnReadFromRAM.Enabled = false;
+                }
+            }
+        }
+
         private bool m_SaveChanges = false;
 
-        public bool SaveChanges
+        public override bool SaveChanges
         {
             get { return m_SaveChanges; }
             set { m_SaveChanges = value; }
         }
         private byte[] m_map_content;
 
-        public byte[] Map_content
+        public override byte[] Map_content
         {
             get { return m_map_content; }
             set { m_map_content = value; }
@@ -318,7 +388,7 @@ namespace T8SuitePro
 
         private byte[] m_map_compare_content;
 
-        public byte[] Map_compare_content
+        public override byte[] Map_compare_content
         {
             get { return m_map_compare_content; }
             set { m_map_compare_content = value; }
@@ -326,22 +396,57 @@ namespace T8SuitePro
 
         private byte[] m_map_original_content;
 
-        public byte[] Map_original_content
+        public override byte[] Map_original_content
         {
             get { return m_map_original_content; }
             set { m_map_original_content = value; }
         }
         private bool m_UseNewCompare = false;
 
-        public bool UseNewCompare
+        public override bool UseNewCompare
         {
             get { return m_UseNewCompare; }
             set { m_UseNewCompare = value; }
         }
 
+        private bool m_OnlineMode = false;
+
+        public override bool OnlineMode
+        {
+            get { return m_OnlineMode; }
+            set
+            {
+                m_OnlineMode = value;
+                if (m_OnlineMode)
+                {
+                    surfaceGraphViewer1.ShowinBlue = true;
+                }
+                else
+                {
+                    surfaceGraphViewer1.ShowinBlue = false;
+                }
+            }
+        }
+
+        private bool _autoUpdateIfSRAM = false;
+
+        public override bool AutoUpdateIfSRAM
+        {
+            get { return _autoUpdateIfSRAM; }
+            set { _autoUpdateIfSRAM = value; }
+        }
+
+        private int _autoUpdateInterval = 20;
+
+        public override int AutoUpdateInterval
+        {
+            get { return _autoUpdateInterval; }
+            set { _autoUpdateInterval = value; }
+        }
+
         private Int32 m_map_address = 0;
 
-        public Int32 Map_address
+        public override Int32 Map_address
         {
             get { return m_map_address; }
             set { m_map_address = value; }
@@ -350,21 +455,21 @@ namespace T8SuitePro
 
         private Int32 m_map_sramaddress = 0;
 
-        public Int32 Map_sramaddress
+        public override Int32 Map_sramaddress
         {
             get { return m_map_sramaddress; }
             set { m_map_sramaddress = value; }
         }
         private Int32 m_map_length = 0;
 
-        public Int32 Map_length
+        public override Int32 Map_length
         {
             get { return m_map_length; }
             set { m_map_length = value; }
         }
         private string m_map_name = string.Empty;
 
-        public string Map_name
+        public override string Map_name
         {
             get { return m_map_name; }
             set
@@ -378,7 +483,7 @@ namespace T8SuitePro
 
         private string m_map_descr = string.Empty;
 
-        public string Map_descr
+        public override string Map_descr
         {
             get { return m_map_descr; }
             set
@@ -390,7 +495,7 @@ namespace T8SuitePro
 
         private XDFCategories m_map_cat = XDFCategories.Undocumented;
 
-        public XDFCategories Map_cat
+        public override XDFCategories Map_cat
         {
             get { return m_map_cat; }
             set
@@ -403,21 +508,21 @@ namespace T8SuitePro
 
         private string m_x_axis_name = string.Empty;
 
-        public string X_axis_name
+        public override string X_axis_name
         {
             get { return m_x_axis_name; }
             set { m_x_axis_name = value; }
         }
         private string m_y_axis_name = string.Empty;
 
-        public string Y_axis_name
+        public override string Y_axis_name
         {
             get { return m_y_axis_name; }
             set { m_y_axis_name = value; }
         }
         private string m_z_axis_name = string.Empty;
 
-        public string Z_axis_name
+        public override string Z_axis_name
         {
             get { return m_z_axis_name; }
             set { m_z_axis_name = value; }
@@ -425,22 +530,26 @@ namespace T8SuitePro
 
         private int[] x_axisvalues;
 
-        public int[] X_axisvalues
+        public override int[] X_axisvalues
         {
             get { return x_axisvalues; }
             set { x_axisvalues = value; }
         }
         private int[] y_axisvalues;
 
-        public int[] Y_axisvalues
+        public override int[] Y_axisvalues
         {
             get { return y_axisvalues; }
             set { y_axisvalues = value; }
         }
 
-        public delegate void AxisEditorRequested(object sender, AxisEditorRequestedEventArgs e);
+        /*public delegate void AxisEditorRequested(object sender, AxisEditorRequestedEventArgs e);
         public event MapViewer.AxisEditorRequested onAxisEditorRequested;
 
+        public delegate void ReadDataFromSRAM(object sender, ReadFromSRAMEventArgs e);
+        public event MapViewer.ReadDataFromSRAM onReadFromSRAM;
+        public delegate void WriteDataToSRAM(object sender, WriteToSRAMEventArgs e);
+        public event MapViewer.WriteDataToSRAM onWriteToSRAM;
 
         public delegate void ViewTypeChanged(object sender, ViewTypeChangedEventArgs e);
         public event MapViewer.ViewTypeChanged onViewTypeChanged;
@@ -466,11 +575,23 @@ namespace T8SuitePro
 
         public delegate void NotifySliderMove(object sender, SliderMoveEventArgs e);
         public event MapViewer.NotifySliderMove onSliderMove;
-
-
         
         public delegate void ViewerClose(object sender, EventArgs e);
-        public event MapViewer.ViewerClose onClose;
+        public event MapViewer.ViewerClose onClose;*/
+        public override event IMapViewer.ViewerClose onClose;
+        public override event IMapViewer.AxisEditorRequested onAxisEditorRequested;
+        public override event IMapViewer.ReadDataFromSRAM onReadFromSRAM;
+        public override event IMapViewer.WriteDataToSRAM onWriteToSRAM;
+        public override event IMapViewer.ViewTypeChanged onViewTypeChanged;
+        public override event IMapViewer.GraphSelectionChanged onGraphSelectionChanged;
+        public override event IMapViewer.SurfaceGraphViewChanged onSurfaceGraphViewChanged;
+        public override event IMapViewer.SurfaceGraphViewChangedEx onSurfaceGraphViewChangedEx;
+        public override event IMapViewer.NotifySaveSymbol onSymbolSave;
+        public override event IMapViewer.NotifyReadSymbol onSymbolRead;
+        public override event IMapViewer.SplitterMoved onSplitterMoved;
+        public override event IMapViewer.SelectionChanged onSelectionChanged;
+        public override event IMapViewer.NotifyAxisLock onAxisLock;
+        public override event IMapViewer.NotifySliderMove onSliderMove;
 
         public MapViewer()
         {
@@ -484,8 +605,45 @@ namespace T8SuitePro
             
             chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
             timer4.Enabled = false;
+            gridView1.MouseMove += new MouseEventHandler(gridView1_MouseMove);
 /*            chartControl1.Series[0].ArgumentDataMember = "X";*/
 
+        }
+
+        void gridView1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (m_map_name == "TargetAFR" || m_map_name == "FeedbackAFR" || m_map_name == "FeedbackvsTargetAFR")
+            {
+                ShowHitInfo(gridView1.CalcHitInfo(new Point(e.X, e.Y)));
+            }
+        }
+
+        int[] afr_counter;
+
+        public override int[] Afr_counter
+        {
+            get { return afr_counter; }
+            set { afr_counter = value; }
+        }
+
+        private void ShowHitInfo(GridHitInfo hi)
+        {
+            if (hi.InRowCell)
+            {
+
+                if (afr_counter != null)
+                {
+                    // fetch correct counter
+                    int current_afrcounter = (int)afr_counter[(afr_counter.Length - ((hi.RowHandle + 1) * m_TableWidth)) + hi.Column.AbsoluteIndex];
+                    // show number of measurements in balloon
+                    string detailline = "# measurements: " + current_afrcounter.ToString();
+                    toolTipController1.ShowHint(detailline, "Information", Cursor.Position);
+                }
+            }
+            else
+            {
+                toolTipController1.HideHint();
+            }
         }
 
         void surfaceGraphViewer1_onGraphChanged(object sender, SurfaceGraphViewer.GraphChangedEventArgs e)
@@ -493,7 +651,7 @@ namespace T8SuitePro
             CastSurfaceGraphChangedEvent(e.Pov_x, e.Pov_y, e.Pov_z, e.Pan_x, e.Pan_y, e.Pov_d);
         }
 
-        public bool SaveData()
+        public override bool SaveData()
         {
             bool retval = false;
             if (simpleButton2.Enabled)
@@ -504,19 +662,8 @@ namespace T8SuitePro
             return retval;
         }
 
-        private bool MapIsScalableFor3Bar(string symbolname)
-        {
-            bool retval = false;
-            if (symbolname.StartsWith("Tryck_mat")) retval = true; // boost request map
-            else if (symbolname.StartsWith("Regl_tryck")) retval = true; // 1st and second gear limiters
-            else if (symbolname.StartsWith("Tryck_vakt_tab")) retval = true; // maximum boost
-            else if (symbolname.StartsWith("Idle_tryck")) retval = true; // idle boost
-            else if (symbolname.StartsWith("Limp_tryck_konst")) retval = true; // Maximum limp home boost
-            else if (symbolname.StartsWith("Knock_press_tab")) retval = true; // Maximum limp home boost
-            return retval;
-        }
 
-        public void ShowTable(int tablewidth, bool issixteenbits)
+        public override void ShowTable(int tablewidth, bool issixteenbits)
         {
             m_MaxValueInTable = 0;
             lblName.Text = m_map_name;
@@ -595,12 +742,13 @@ namespace T8SuitePro
                                     b = -b;
                                 }
                                 // TEST!!!
-                               /* else if ((b & 0x8000) > 0)
-                                {
-                                    //valtot = 0x10000 - valtot;
-                                    b &= 0x7FFF;
-                                    b = -b;
-                                }*/
+                                /* else if ((b & 0x8000) > 0)
+                                 {
+                                     //valtot = 0x10000 - valtot;
+                                     b &= 0x7FFF;
+                                     b = -b;
+                                 }*/
+
                                 
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
                                 // TEST
@@ -611,6 +759,20 @@ namespace T8SuitePro
                                 if (m_viewtype == ViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X4"), j);
+                                }
+                                else if (m_viewtype == ViewType.ASCII)
+                                {
+                                    //objarr.SetValue(b.ToString("X4"), j);
+                                    // show as ascii characters
+                                    try
+                                    {
+                                        objarr.SetValue(Convert.ToChar(b), j);
+                                    }
+                                    catch (Exception E)
+                                    {
+                                        LogHelper.Log("Failed to convert to ascii: " + E.Message);
+                                        objarr.SetValue(Convert.ToChar(0x20), j);
+                                    }
                                 }
                                 else
                                 {
@@ -640,14 +802,14 @@ namespace T8SuitePro
                             for (int v = map_offset; v < m_map_length - 1; v++)
                             {
                                 //b = (byte)m_map_content.GetValue(map_offset++);
-                                if (map_offset <= m_map_content.Length-1)
+                                if (map_offset <= m_map_content.Length - 1)
                                 {
                                     b = (byte)m_map_content.GetValue(map_offset++);
                                     b *= 256;
                                     b += (byte)m_map_content.GetValue(map_offset++);
                                     if (b > 0xF000)
                                     {
-                                        //b ^= 0xFFFF;
+                                        //                                        b ^= 0xFFFF;
                                         b = 0x10000 - b;
 
                                         b = -b;
@@ -658,19 +820,18 @@ namespace T8SuitePro
                                         b = -b;
                                     }*/
                                     // TEST!!!
-                                  /*  else if ((b & 0x8000) > 0)
-                                    {
-                                        //valtot = 0x10000 - valtot;
-                                        b &= 0x7FFF;
-                                        b = -b;
-                                    }*/
+                                    /*  else if ((b & 0x8000) > 0)
+                                      {
+                                          //valtot = 0x10000 - valtot;
+                                          b &= 0x7FFF;
+                                          b = -b;
+                                      }*/
                                     /*if ((b & 0x8000) > 0)
                                     {
                                         //valtot = 0x10000 - valtot;
                                         b &= 0x7FFF;
                                         b = -b;
                                     }*/
-                                    
                                     if (b > m_MaxValueInTable) m_MaxValueInTable = b;
                                     // TEST
                                     //b = (int)(correction_factor * (double)b);
@@ -678,10 +839,16 @@ namespace T8SuitePro
 
                                     // TEST
 
-//                                    if (m_isHexMode)
+                                    //                                    if (m_isHexMode)
                                     if (m_viewtype == ViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
+                                    }
+                                    else if (m_viewtype == ViewType.ASCII)
+                                    {
+                                        //objarr.SetValue(b.ToString("X4"), j);
+                                        // show as ascii characters
+                                        objarr.SetValue(Convert.ToChar(b), sicnt);
                                     }
                                     else
                                     {
@@ -720,7 +887,6 @@ namespace T8SuitePro
                             for (int j = 0; j < (tablewidth); j++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
-                                
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
                                 // TEST
                                 //b = (byte)(correction_factor * (double)b);
@@ -732,6 +898,12 @@ namespace T8SuitePro
                                 if (m_viewtype == ViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), j);
+                                }
+                                else if (m_viewtype == ViewType.ASCII)
+                                {
+                                    //objarr.SetValue(b.ToString("X4"), j);
+                                    // show as ascii characters
+                                    objarr.SetValue(Convert.ToChar(b), j);
                                 }
                                 else
                                 {
@@ -759,7 +931,6 @@ namespace T8SuitePro
                             for (int v = map_offset; v < m_map_length /*- 1*/; v++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
-                                
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
                                 // TEST
                                 //b = (byte)(correction_factor * (double)b);
@@ -771,6 +942,12 @@ namespace T8SuitePro
                                 if (m_viewtype == ViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), sicnt);
+                                }
+                                else if (m_viewtype == ViewType.ASCII)
+                                {
+                                    //objarr.SetValue(b.ToString("X4"), j);
+                                    // show as ascii characters
+                                    objarr.SetValue(Convert.ToChar(b), sicnt);
                                 }
                                 else
                                 {
@@ -797,7 +974,7 @@ namespace T8SuitePro
 
                 if (!gridView1.OptionsView.ColumnAutoWidth)
                 {
-                    for (int c = 0; c< gridView1.Columns.Count; c ++ )
+                    for (int c = 0; c < gridView1.Columns.Count; c++)
                     {
                         gridView1.Columns[c].Width = 40;
                     }
@@ -814,10 +991,12 @@ namespace T8SuitePro
                     {
                         yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
                     }
-                    
+                    if (m_y_axis_name == "MAP")
+                    {
+                    }
                     Graphics g = gridControl1.CreateGraphics();
                     SizeF size = g.MeasureString(yval, this.Font);
-                    if(size.Width > indicatorwidth) indicatorwidth = (int)size.Width;
+                    if (size.Width > indicatorwidth) indicatorwidth = (int)size.Width;
                     m_textheight = (int)size.Height;
                     g.Dispose();
 
@@ -839,17 +1018,17 @@ namespace T8SuitePro
                         x_axisvalues.SetValue(xval, i);
                     }
 
-                   /* if (xval > 0x10000)
-                    {
-                        xval ^= 0xFFFF;
-                        xval = -xval;
-                    }
-                    else if ((xval & 0x8000) > 0)
-                    {
-                        //valtot = 0x10000 - valtot;
-                        xval &= 0x7FFF;
-                        xval = -xval;
-                    }*/
+                    /* if (xval > 0x10000)
+                     {
+                         xval ^= 0xFFFF;
+                         xval = -xval;
+                     }
+                     else if ((xval & 0x8000) > 0)
+                     {
+                         //valtot = 0x10000 - valtot;
+                         xval &= 0x7FFF;
+                         xval = -xval;
+                     }*/
 
                     if (xval > maxxval) maxxval = xval;
                 }
@@ -865,6 +1044,7 @@ namespace T8SuitePro
             surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
             surfaceGraphViewer1.Map_length = m_map_length;
             surfaceGraphViewer1.Map_content = m_map_content;
+
             surfaceGraphViewer1.Map_original_content = m_map_original_content;
             surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
 
@@ -872,7 +1052,7 @@ namespace T8SuitePro
             surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
             surfaceGraphViewer1.Pov_d = 0.3;
             SetViewTypeParams(m_vs);
-            
+
             surfaceGraphViewer1.IsUpsideDown = true;
             surfaceGraphViewer1.NormalizeData();
             XYDiagram diag = ((XYDiagram)chartControl1.Diagram);
@@ -900,14 +1080,14 @@ namespace T8SuitePro
 
                 surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
                 surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-//                surfaceGraphViewer1.Pov_d = 0.3;
+                //                surfaceGraphViewer1.Pov_d = 0.3;
                 surfaceGraphViewer1.Pov_d = 0.3;
                 SetViewTypeParams(m_vs);
                 surfaceGraphViewer1.IsUpsideDown = true;
 
                 surfaceGraphViewer1.NormalizeData();
                 trackBarControl1.Properties.Minimum = 0;
-                trackBarControl1.Properties.Maximum = x_axisvalues.Length-1;
+                trackBarControl1.Properties.Maximum = x_axisvalues.Length - 1;
                 labelControl8.Text = X_axis_name + " values";
                 trackBarControl1.Value = 0;
                 byte[] bts = GetDataFromGridView(false);
@@ -918,15 +1098,15 @@ namespace T8SuitePro
                 y = "RPM";
                 z = "Degrees";
                  */
-            } 
-            else if(m_TableWidth == 1)
+            }
+            else if (m_TableWidth == 1)
             {
                 xtraTabControl1.SelectedTabPage = xtraTabPage2;
                 //surfaceGraphViewer1.Visible = false;
                 //chartControl1.;
                 /*** test ***/
                 surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-                
+
                 surfaceGraphViewer1.Map_name = m_map_name;
                 surfaceGraphViewer1.X_axis = x_axisvalues;
                 surfaceGraphViewer1.Y_axis = y_axisvalues;
@@ -955,7 +1135,7 @@ namespace T8SuitePro
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = 0;
                 trackBarControl1.Enabled = false;
-                labelControl8.Text = X_axis_name ;
+                labelControl8.Text = X_axis_name;
 
                 DataTable chartdt = new DataTable();
                 chartdt.Columns.Add("X", Type.GetType("System.Double"));
@@ -975,7 +1155,7 @@ namespace T8SuitePro
                 }
                 else
                 {
-                    for (int t = 0; t < m_map_length; t ++)
+                    for (int t = 0; t < m_map_length; t++)
                     {
                         double yval = valcount;
                         double value = Convert.ToDouble(m_map_content.GetValue(t));
@@ -996,6 +1176,16 @@ namespace T8SuitePro
             }
             m_trackbarBlocked = false;
 
+            if (this.m_map_address >= 0xF00000 || (m_isOpenSoftware && m_isRAMViewer))
+            {
+                this.m_isRAMViewer = true;
+                this.OnlineMode = true;
+                if (_autoUpdateIfSRAM)
+                {
+                    timer5.Interval = _autoUpdateInterval * 1000;
+                    timer5.Enabled = true;
+                }
+            }
         }
 
         private void SetViewTypeParams(ViewSize vs)
@@ -1053,7 +1243,7 @@ namespace T8SuitePro
                     // TEST!!!
                     if (value > 32000)
                     {
-                        value = 65536 - value;
+                        value = 65535 - value;
                         value = -value;
                     }
                     value *= correction_factor;
@@ -1128,6 +1318,20 @@ namespace T8SuitePro
             }
         }
 
+        private int m_StandardFill = 0;
+
+        public override int StandardFill
+        {
+            get
+            {
+                return m_StandardFill;
+            }
+            set
+            {
+                m_StandardFill = value;
+            }
+        }
+
         private void gridView1_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
         {
             
@@ -1159,7 +1363,20 @@ namespace T8SuitePro
                         int green = 128;
                         int blue = 128;
                         Color c = Color.White;
-                        if (!m_isRedWhite)
+                        if (m_OnlineMode)
+                        {
+                            b /= 2;
+                            red = b;
+                            if (red < 0) red = 0;
+                            if (red > 255) red = 255;
+                            if (b > 255) b = 255;
+                            green = 255 - red;
+                            blue = 255 - red;
+                            c = Color.FromArgb(red, green, blue);
+                            // if (b == 0) c = Color.Transparent;
+
+                        }
+                        else if (!m_isRedWhite)
                         {
                             red = b;
                             if (red < 0) red = 0;
@@ -1180,7 +1397,7 @@ namespace T8SuitePro
                             SolidBrush sb = new SolidBrush(c);
                             e.Graphics.FillRectangle(sb, e.Bounds);
                         }
-                        if (m_viewtype == ViewType.Easy)
+                        if (m_viewtype == ViewType.Easy )
                         {
                             float dispvalue = 0;
                             dispvalue = (float)cellvalue;
@@ -1218,6 +1435,59 @@ namespace T8SuitePro
                                 e.DisplayText = dispvalue.ToString("F0") + @"%";
                             }
                         }
+                        if (X_axis_name.ToLower() == "mg/c" && Y_axis_name.ToLower() == "rpm")
+                        {
+
+                            try
+                            {
+                                if (open_loop != null)
+                                {
+                                    int airmassvalue = GetXaxisValue(e.Column.AbsoluteIndex);
+                                    int rpmvalue = GetYaxisValue(e.RowHandle);
+                                    if (open_loop.Length > 0)
+                                    {
+                                        int mapopenloop = GetOpenLoopValue(e.RowHandle);
+                                        if (mapopenloop > airmassvalue)
+                                        {
+                                            //e.Graphics.FillEllipse(Brushes.Black, e.Bounds.X, e.Bounds.Y, e.Bounds.X + 10, e.Bounds.Y+10);
+                                            //e.Graphics.FillEllipse(Brushes.Yellow, e.Bounds.X+2, e.Bounds.Y+2, 4,4);
+                                            if (m_StandardFill == 0)
+                                            {
+
+                                            }
+                                            else if (m_StandardFill == 1)
+                                            {
+                                                Pen p = new Pen(Brushes.Black, 2);
+                                                e.Graphics.DrawRectangle(p, e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
+                                                p.Dispose();
+                                            }
+                                            else
+                                            {
+                                                Point[] pnts = new Point[4];
+                                                pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y), 0);
+                                                pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width - (e.Bounds.Height / 2), e.Bounds.Y), 1);
+                                                pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y + (e.Bounds.Height / 2)), 2);
+                                                pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y), 3);
+                                                e.Graphics.FillPolygon(Brushes.SeaGreen, pnts, System.Drawing.Drawing2D.FillMode.Winding);
+                                            }                                            
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                LogHelper.Log(E.Message);
+                            }
+
+                        }
+                    }
+                }
+                if (m_selectedrowhandle >= 0 && m_selectedcolumnindex >= 0)
+                {
+                    if (e.RowHandle == m_selectedrowhandle && e.Column.AbsoluteIndex == m_selectedcolumnindex)
+                    {
+                        SolidBrush sbsb = new SolidBrush(Color.Yellow);
+                        e.Graphics.FillRectangle(sbsb, e.Bounds);
                     }
                 }
             }
@@ -1226,31 +1496,57 @@ namespace T8SuitePro
                 LogHelper.Log(E.Message);
             }
         }
+        private int GetOpenLoopValue(int index)
+        {
+            index = (y_axisvalues.Length - 1) - index;
+            //int retval = (int)open_loop[(open_loop.Length - e.RowHandle) - 1];
+            int retval = 0;
+            retval = Convert.ToInt32(open_loop.GetValue(index * 2));
+            retval *= 256;
+            retval += Convert.ToInt32(open_loop.GetValue((index * 2) + 1));
 
+            return retval;
+        }
+
+        private int GetXaxisValue(int index)
+        {
+            int retval = 0;
+            retval = (int)x_axisvalues.GetValue(index);
+            return retval;
+        }
+
+        private int GetYaxisValue(int index)
+        {
+            int retval = 0;
+            retval = (int)y_axisvalues.GetValue(index);
+            /*retval *= 256;
+            retval += (int)y_axisvalues.GetValue((index * 2) + 1);*/
+            return retval;
+        }
         private void gridView1_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
         {
             m_datasourceMutated = true;
             simpleButton2.Enabled = true;
-            simpleButton3.Enabled = true;
+            //simpleButton3.Enabled = true;
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
         {
             ShowTable(m_TableWidth, m_issixteenbit);
             m_datasourceMutated = false;
-            simpleButton2.Enabled = false;
-            simpleButton3.Enabled = false;
+            //simpleButton2.Enabled = false;
+            //simpleButton3.Enabled = false;
         }
 
         private void simpleButton2_Click(object sender, EventArgs e)
         {
-            if (m_isRAMViewer) return;
-            else
-            {
+            //if (m_isRAMViewer) return;
+            //else
+            //{
                 m_SaveChanges = true;
                 m_datasourceMutated = false;
                 CastSaveEvent();
-            }
+            //}
         }
 
         private byte[] GetDataFromGridView(bool upsidedown)
@@ -1306,7 +1602,6 @@ namespace T8SuitePro
                                         else
                                         {
                                             double v = Convert.ToDouble(o);
-
                                             retval.SetValue(Convert.ToByte((int)Math.Floor(v)), cellcount++);
                                         }
                                     }
@@ -1447,7 +1742,7 @@ namespace T8SuitePro
 
         }
 
-        public void SelectCell(int rowhandle, int colindex)
+        public override void SelectCell(int rowhandle, int colindex)
         {
             try
             {
@@ -1462,7 +1757,7 @@ namespace T8SuitePro
             }
         }
 
-        public void SetSplitter(int panel1height, int panel2height, int splitdistance, bool panel1collapsed, bool panel2collapsed)
+        public override void SetSplitter(int panel1height, int panel2height, int splitdistance, bool panel1collapsed, bool panel2collapsed)
         {
             try
             {
@@ -1504,8 +1799,8 @@ namespace T8SuitePro
                 byte[] mutateddata = GetDataFromGridView(m_isUpsideDown);
                 onSymbolSave(this, new SaveSymbolEventArgs(m_map_address, m_map_length, mutateddata, m_map_name, Filename));
                 m_datasourceMutated = false;
-                simpleButton2.Enabled = false;
-                simpleButton3.Enabled = false;
+                //simpleButton2.Enabled = false;
+                //simpleButton3.Enabled = false;
             }
             else
             {
@@ -1541,393 +1836,10 @@ namespace T8SuitePro
             }
         }
 
-        public class AxisLockEventArgs : System.EventArgs
-        {
-            private int _y_axis_max_value;
-            private string _mapname;
-            private string _filename;
-            private int _lock_mode;
+        
 
-            public int AxisMaxValue
-            {
-                get
-                {
-                    return _y_axis_max_value;
-                }
-            }
-
-            public int LockMode
-            {
-                get
-                {
-                    return _lock_mode;
-                }
-            }
-
-            public string SymbolName
-            {
-                get
-                {
-                    return _mapname;
-                }
-            }
-
-
-            public string Filename
-            {
-                get
-                {
-                    return _filename;
-                }
-            }
-
-            public AxisLockEventArgs(int max_value, int lockmode, string mapname, string filename)
-            {
-                this._y_axis_max_value = max_value;
-                this._lock_mode = lockmode;
-                this._mapname = mapname;
-                this._filename = filename;
-            }
-        }
-
-        public class SliderMoveEventArgs : System.EventArgs
-        {
-            private int _slider_position;
-            private string _mapname;
-            private string _filename;
-
-            public int SliderPosition
-            {
-                get
-                {
-                    return _slider_position;
-                }
-            }
-
-            public string SymbolName
-            {
-                get
-                {
-                    return _mapname;
-                }
-            }
-
-
-            public string Filename
-            {
-                get
-                {
-                    return _filename;
-                }
-            }
-
-            public SliderMoveEventArgs(int slider_position, string mapname, string filename)
-            {
-                this._slider_position = slider_position;
-                this._mapname = mapname;
-                this._filename = filename;
-            }
-        }
-
-        public class SplitterMovedEventArgs : System.EventArgs
-        {
-            private int _splitdistance;
-
-            public int Splitdistance
-            {
-                get { return _splitdistance; }
-                set { _splitdistance = value; }
-            }
-
-
-            private int _panel1height;
-
-            public int Panel1height
-            {
-                get { return _panel1height; }
-                set { _panel1height = value; }
-            }
-            private int _panel2height;
-
-            public int Panel2height
-            {
-                get { return _panel2height; }
-                set { _panel2height = value; }
-            }
-            private bool _panel1collapsed;
-
-            public bool Panel1collapsed
-            {
-                get { return _panel1collapsed; }
-                set { _panel1collapsed = value; }
-            }
-            private bool _panel2collapsed;
-
-            public bool Panel2collapsed
-            {
-                get { return _panel2collapsed; }
-                set { _panel2collapsed = value; }
-            }
-
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            public SplitterMovedEventArgs(int panel1height, int panel2height, int splitdistance, bool panel1collapsed, bool panel2collapsed, string mapname)
-            {
-                this._splitdistance = splitdistance;
-                this._panel1collapsed = panel1collapsed;
-                this._panel1height = panel1height;
-                this._panel2collapsed = panel2collapsed;
-                this._panel2height = panel2height;
-                this._mapname = mapname;
-            }
-        }
-
-        public class CellSelectionChangedEventArgs : System.EventArgs
-        {
-            private int _rowhandle;
-
-            public int Rowhandle
-            {
-                get { return _rowhandle; }
-                set { _rowhandle = value; }
-            }
-            private int _colindex;
-
-            public int Colindex
-            {
-                get { return _colindex; }
-                set { _colindex = value; }
-            }
-
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            public CellSelectionChangedEventArgs(int rowhandle, int colindex, string mapname)
-            {
-                this._rowhandle = rowhandle;
-                this._colindex = colindex;
-                this._mapname = mapname;
-            }
-
-        }
-
-        public enum AxisIdent : int
-        {
-            X_Axis = 0,
-            Y_Axis = 1,
-            Z_Axis = 2
-        }
-
-        public class AxisEditorRequestedEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-
-            private AxisIdent _axisident;
-
-            public AxisIdent Axisident
-            {
-                get { return _axisident; }
-                set { _axisident = value; }
-            }
-
-            public AxisEditorRequestedEventArgs(AxisIdent ident, string mapname)
-            {
-                this._axisident = ident;
-                this._mapname = mapname;
-            }
-        }
-
-        public class ViewTypeChangedEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            private ViewType _view;
-
-            public ViewType View
-            {
-                get { return _view; }
-                set { _view = value; }
-            }
-
-
-            public ViewTypeChangedEventArgs(ViewType view, string mapname)
-            {
-                this._view = view;
-                this._mapname = mapname;
-            }
-        }
-
-        public class GraphSelectionChangedEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            private int _tabpageindex;
-
-            public int Tabpageindex
-            {
-                get { return _tabpageindex; }
-                set { _tabpageindex = value; }
-            }
-
-            
-            public GraphSelectionChangedEventArgs(int tabpageindex, string mapname)
-            {
-                this._tabpageindex = tabpageindex;
-                this._mapname = mapname;
-            }
-        }
-
-
-        public class SurfaceGraphViewChangedEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            private int _pov_x;
-
-            public int Pov_x
-            {
-                get { return _pov_x; }
-                set { _pov_x = value; }
-            }
-            private int _pov_y;
-
-            public int Pov_y
-            {
-                get { return _pov_y; }
-                set { _pov_y = value; }
-            }
-            private int _pov_z;
-
-            public int Pov_z
-            {
-                get { return _pov_z; }
-                set { _pov_z = value; }
-            }
-            private int _pan_x;
-
-            public int Pan_x
-            {
-                get { return _pan_x; }
-                set { _pan_x = value; }
-            }
-            private int _pan_y;
-
-            public int Pan_y
-            {
-                get { return _pan_y; }
-                set { _pan_y = value; }
-            }
-            private double _pov_d;
-
-            public double Pov_d
-            {
-                get { return _pov_d; }
-                set { _pov_d = value; }
-            }
-
-            public SurfaceGraphViewChangedEventArgs(int povx, int povy, int povz, int panx, int pany, double povd, string mapname)
-            {
-                this._pan_x = panx;
-                this._pan_y = pany;
-                this._pov_d = povd;
-                this._pov_x = povx;
-                this._pov_y = povy;
-                this._pov_z = povz;
-                this._mapname = mapname;
-            }
-        }
-
-        public class SaveSymbolEventArgs : System.EventArgs
-        {
-            private int _address;
-            private int _length;
-            private byte[] _mapdata;
-            private string _mapname;
-            private string _filename;
-
-            public int SymbolAddress
-            {
-                get
-                {
-                    return _address;
-                }
-            }
-
-            public int SymbolLength
-            {
-                get
-                {
-                    return _length;
-                }
-            }
-            public byte[] SymbolDate
-            {
-                get
-                {
-                    return _mapdata;
-                }
-            }
-            public string SymbolName
-            {
-                get
-                {
-                    return _mapname;
-                }
-            }
-
-
-            public string Filename
-            {
-                get
-                {
-                    return _filename;
-                }
-            }
-            public SaveSymbolEventArgs(int address, int length, byte[] mapdata, string mapname, string filename)
-            {
-                this._address = address;
-                this._length = length;
-                this._mapdata = mapdata;
-                this._mapname = mapname;
-                this._filename = filename;
-            }
-        }
+        
+        
 
         private void groupControl2_Paint(object sender, PaintEventArgs e)
         {
@@ -1939,7 +1851,7 @@ namespace T8SuitePro
             
             m_datasourceMutated = true;
             simpleButton2.Enabled = true;
-            simpleButton3.Enabled = true;
+            //simpleButton3.Enabled = true;
             if (surfaceGraphViewer1.Visible)
             {
                 StartSurfaceChartUpdateTimer();
@@ -2002,14 +1914,8 @@ namespace T8SuitePro
                             }
                             else
                             {
-                                if (MapIsScalableFor3Bar(m_map_name))
-                                {
-                                    if (value > 306) value = 306;
-                                }
-                                else
-                                {
-                                    if (value > 0xFF) value = 0xFF;
-                                }
+                                if (value > 0xFF) value = 0xFF;
+                                
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
                             }
                         }
@@ -2025,16 +1931,7 @@ namespace T8SuitePro
                             }
                             else
                             {
-
-                                if (MapIsScalableFor3Bar(m_map_name))
-                                {
-                                    if (value > 306) value = 306;
-                                }
-                                else
-                                {
-                                    if (value > 0xFF) value = 0xFF;
-                                }
-
+                                if (value > 0xFF) value = 0xFF;
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
                             }
 
@@ -2105,15 +2002,7 @@ namespace T8SuitePro
                             else
                             {
 
-                                if (MapIsScalableFor3Bar(m_map_name))
-                                {
-                                    if (value > 306) value = 306;
-                                }
-                                else
-                                {
-                                    if (value > 0xFF) value = 0xFF;
-                                }
-
+                                if (value > 0xFF) value = 0xFF;
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
                             }
                         }
@@ -2129,16 +2018,7 @@ namespace T8SuitePro
                             }
                             else
                             {
-
-                                if (MapIsScalableFor3Bar(m_map_name))
-                                {
-                                    if (value > 306) value = 306;
-                                }
-                                else
-                                {
-                                    if (value > 0xFF) value = 0xFF;
-                                }
-
+                                if (value > 0xFF) value = 0xFF;
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
                             }
 
@@ -2207,17 +2087,7 @@ namespace T8SuitePro
                             }
                             else
                             {
-
-                                if (MapIsScalableFor3Bar(m_map_name))
-                                {
-                                    value = 306;
-                                }
-                                else
-                                {
-                                    value = 0xFF;
-                                }
-
-
+                                value = 0xFF;
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
                             }
                             if (value > m_MaxValueInTable) m_MaxValueInTable = value;
@@ -2234,15 +2104,7 @@ namespace T8SuitePro
                             else
                             {
 
-                                if (MapIsScalableFor3Bar(m_map_name))
-                                {
-                                    value = 306;
-                                }
-                                else
-                                {
-                                    value = 0xFF;
-                                }
-
+                                value = 0xFF;
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
                             }
                             if (value > m_MaxValueInTable) m_MaxValueInTable = value;
@@ -2311,7 +2173,7 @@ namespace T8SuitePro
                             {
                                 yvalue = Convert.ToInt32(/*y_axisvalues.GetValue(e.RowHandle)*/y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle)).ToString("X4");
                             }
-                           
+
                             Rectangle r = new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
                             e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
                             System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
@@ -2343,48 +2205,6 @@ namespace T8SuitePro
                             {
                                 xvalue = Convert.ToInt32(x_axisvalues.GetValue(e.Column.VisibleIndex)).ToString(m_xformatstringforhex);
                             }
-                            else if (m_viewtype == ViewType.Decimal)
-                            {
-                                if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
-                                {
-                                    int tempvalue = Convert.ToInt32(x_axisvalues.GetValue(e.Column.VisibleIndex));
-                                    xvalue = tempvalue.ToString();
-                                }
-                            }
-                            if (m_viewtype == ViewType.Easy)
-                            {
-                                if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
-                                {
-                                    try
-                                    {
-                                        float v = (float)Convert.ToDouble(xvalue);
-                                        v *= (float)0.01F;
-                                        if (m_x_axis_name == "MAP")
-                                        {
-                                            v -= 1;
-                                        }
-                                        xvalue = v.ToString("F2");
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        LogHelper.Log(cE.Message);
-                                    }
-                                }
-                                /*if (m_map_name.StartsWith("P_fors") || m_map_name.StartsWith("I_fors") || m_map_name.StartsWith("D_fors"))
-                                {
-                                    try
-                                    {
-                                        float v = (float)Convert.ToDouble(xvalue);
-                                        v *= (float)0.01F;
-                                        xvalue = v.ToString("F2");
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        LogHelper.Log(cE.Message);
-                                    }
-                                }*/
-                            }
-
                             Rectangle r = new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
                             e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
                             System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
@@ -2560,7 +2380,7 @@ namespace T8SuitePro
             timer2.Enabled = false;
         }
 
-        public void SetSelectedTabPageIndex(int tabpageindex)
+        public override void SetSelectedTabPageIndex(int tabpageindex)
         {
             xtraTabControl1.SelectedTabPageIndex = tabpageindex;
             Invalidate();
@@ -2658,7 +2478,7 @@ namespace T8SuitePro
                     
                     double yaxissize = (double)((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValue - (double)((XYDiagram)chartControl1.Diagram).AxisY.Range.MinValue;
 
-                    double yaxissizepxls = chartControl1.Height /*- (((XYDiagram)chartControl1.Diagram).Padding.Top + ((XYDiagram)chartControl1.Diagram).Padding.Bottom)*/ - (chartControl1.Margin.Top + chartControl1.Margin.Bottom);
+                    double yaxissizepxls = chartControl1.Height /* - (((XYDiagram)chartControl1.Diagram).Padding.Top + ((XYDiagram)chartControl1.Diagram).Padding.Bottom)*/ - (chartControl1.Margin.Top + chartControl1.Margin.Bottom);
                     yaxissizepxls -= 64;//(yaxissizepxls / 6);
                     //chartControl1.d
                     double deltavalue = delta_y * (yaxissize / yaxissizepxls);
@@ -2767,15 +2587,7 @@ namespace T8SuitePro
                         else
                         {
 
-                            if (MapIsScalableFor3Bar(m_map_name))
-                            {
-                                if (value > 306) value = 306;
-                            }
-                            else
-                            {
-                                if (value > 0xFF) value = 0xFF;
-                            }
-
+                            if (value > 0xFF) value = 0xFF;
                             txtedit.Text = value.ToString("X2");
                         }
                     }
@@ -3077,7 +2889,7 @@ namespace T8SuitePro
                                     ivalue = Convert.ToInt32(vals.GetValue(2).ToString());
                                     dvalue = ivalue;
                                 }
-                                else if (vtclip == ViewType.Decimal )
+                                else if (vtclip == ViewType.Decimal)
                                 {
                                     ivalue = Convert.ToInt32(vals.GetValue(2));
                                     dvalue = ivalue;
@@ -3153,12 +2965,12 @@ namespace T8SuitePro
                                 ivalue = Convert.ToInt32(vals.GetValue(2).ToString());
                                 dvalue = ivalue;
                             }
-                            else if (vtclip == ViewType.Decimal )
+                            else if (vtclip == ViewType.Decimal)
                             {
                                 ivalue = Convert.ToInt32(vals.GetValue(2));
                                 dvalue = ivalue;
                             }
-                            else if (vtclip == ViewType.Easy )
+                            else if (vtclip == ViewType.Easy)
                             {
                                 dvalue = Convert.ToDouble(vals.GetValue(2));
                             }
@@ -3264,7 +3076,6 @@ namespace T8SuitePro
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    
                                     else if (m_viewtype == ViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
@@ -3532,7 +3343,7 @@ namespace T8SuitePro
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, decvalue.ToString());
                                     }
-                                   
+                                    
 
                                 }
                                 catch (Exception cE)
@@ -3816,7 +3627,25 @@ namespace T8SuitePro
             }
         }
 
-        internal void SetSurfaceGraphView(int pov_x, int pov_y, int pov_z, int pan_x, int pan_y, double pov_d)
+        public override void SetSurfaceGraphViewEx(float depthx, float depthy, float zoom, float rotation, float elevation)
+        {
+            try
+            {
+                /*nChartControl1.Charts[0].Projection.XDepth = depthx;
+                nChartControl1.Charts[0].Projection.YDepth = depthy;
+                nChartControl1.Charts[0].Projection.Zoom = zoom;
+                nChartControl1.Charts[0].Projection.Rotation = rotation;
+                nChartControl1.Charts[0].Projection.Elevation = elevation;
+                nChartControl1.Refresh();*/
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log("SetSurfaceGraphViewEx:" + E.Message);
+            }
+
+        }
+
+        public override void SetSurfaceGraphView(int pov_x, int pov_y, int pov_z, int pan_x, int pan_y, double pov_d)
         {
             try
             {
@@ -3850,7 +3679,6 @@ namespace T8SuitePro
                 case 3:
                     m_viewtype = ViewType.ASCII;
                     break;
-
                 default:
                     m_viewtype = ViewType.Hexadecimal;
                     break;
@@ -3951,7 +3779,6 @@ namespace T8SuitePro
                         e.ErrorText = hE.Message;
                     }
                 }
-                
                 else
                 {
                     double dvalue = Convert.ToDouble(e.Value);
@@ -4002,7 +3829,7 @@ namespace T8SuitePro
         private float ConvertToEasyValue(float editorvalue)
         {
             float retval = editorvalue;
-            if (m_viewtype == ViewType.Easy)
+            if (m_viewtype == ViewType.Easy )
             {
                 retval = (float)((float)editorvalue * (float)correction_factor) + (float)correction_offset;
             }
@@ -4026,7 +3853,7 @@ namespace T8SuitePro
                 edit.Properties.LookUpData.DataSource = clone;
             }
             */
-            if (m_viewtype == ViewType.Easy)
+            if (m_viewtype == ViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
                 LogHelper.Log("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
@@ -4056,9 +3883,13 @@ namespace T8SuitePro
             surfaceGraphViewer1.HighlightInGraph(-1, -1);
         }
 
-        internal void HighlightCell(int tpsindex, int rpmindex)
+        private int m_selectedrowhandle = -1;
+        private int m_selectedcolumnindex = -1;
+
+
+        public override void HighlightCell(int tpsindex, int rpmindex)
         {
-            
+            /*
           //  gridView1.BeginUpdate();
             try
             {
@@ -4088,7 +3919,53 @@ namespace T8SuitePro
             {
                 LogHelper.Log(E.Message);
             }
-          //  gridView1.EndUpdate();
+          //  gridView1.EndUpdate();*/
+
+            //  gridView1.BeginUpdate();
+            try
+            {
+                int numberofrows = m_map_content.Length / m_TableWidth;
+                if (m_issixteenbit)
+                {
+                    numberofrows /= 2;
+                }
+
+                // controleer of het verandert is
+                /*                DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
+                                if (cellcollection.Length > 1)
+                                {
+                                    gridView1.ClearSelection();
+                                }
+                                else if (cellcollection.Length == 1)
+                                {
+                                    // normal situation
+                                    DevExpress.XtraGrid.Views.Base.GridCell cell = (DevExpress.XtraGrid.Views.Base.GridCell)cellcollection.GetValue(0);
+
+                                    if (cell.RowHandle != ( (numberofrows - 1) - rpmindex) || cell.Column.AbsoluteIndex != tpsindex)
+                                    {
+                                        gridView1.ClearSelection();
+                                        gridView1.SelectCell((numberofrows - 1) - rpmindex, gridView1.Columns[tpsindex]);
+                                    }
+                                }
+                                else
+                                {
+                                    gridView1.SelectCell((numberofrows-1) - rpmindex, gridView1.Columns[tpsindex]);
+                                }*/
+                m_selectedrowhandle = (numberofrows - 1) - rpmindex;
+                m_selectedcolumnindex = tpsindex;
+
+                if (m_selectedrowhandle > numberofrows) m_selectedrowhandle = numberofrows;
+                if (m_selectedcolumnindex > m_TableWidth) m_selectedcolumnindex = m_TableWidth;
+
+                gridControl1.Invalidate();
+
+                surfaceGraphViewer1.HighlightInGraph(tpsindex, rpmindex);
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log(E.Message);
+            }
+            //  gridView1.EndUpdate();
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -4098,8 +3975,16 @@ namespace T8SuitePro
             string y = sat.GetYaxisSymbol(m_map_name);
             if (x != string.Empty)
             {
-                editXaxisSymbolToolStripMenuItem.Enabled = true;
-                editXaxisSymbolToolStripMenuItem.Text = "Edit x-axis (" + x + ")";
+                if (Char.IsDigit(x[0]))
+                {
+                    editXaxisSymbolToolStripMenuItem.Enabled = false;
+                    editXaxisSymbolToolStripMenuItem.Text = "Static x-axis (" + x + ")";
+                }
+                else
+                {
+                    editXaxisSymbolToolStripMenuItem.Enabled = true;
+                    editXaxisSymbolToolStripMenuItem.Text = "Edit x-axis (" + x + ")";
+                }
             }
             else
             {
@@ -4108,8 +3993,16 @@ namespace T8SuitePro
             }
             if (y != string.Empty)
             {
-                editYaxisSymbolToolStripMenuItem.Enabled = true;
-                editYaxisSymbolToolStripMenuItem.Text = "Edit y-axis (" + y + ")";
+                if (Char.IsDigit(y[0]))
+                {
+                    editYaxisSymbolToolStripMenuItem.Enabled = false;
+                    editYaxisSymbolToolStripMenuItem.Text = "Static y-axis (" + y + ")";
+                }
+                else
+                {
+                    editYaxisSymbolToolStripMenuItem.Enabled = true;
+                    editYaxisSymbolToolStripMenuItem.Text = "Edit y-axis (" + y + ")";
+                }
             }
             else
             {
@@ -4127,7 +4020,7 @@ namespace T8SuitePro
         {
             if (onAxisEditorRequested != null)
             {
-                onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.X_Axis, m_map_name));
+                onAxisEditorRequested(this, new ReadSymbolEventArgs(SymbolDictionary.GetSymbolXAxis(m_map_name), m_filename));
             }
         }
 
@@ -4140,7 +4033,23 @@ namespace T8SuitePro
         {
             if (onAxisEditorRequested != null)
             {
-                onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.Y_Axis, m_map_name));
+                onAxisEditorRequested(this, new ReadSymbolEventArgs(SymbolDictionary.GetSymbolYAxis(m_map_name), m_filename));
+            }
+        }
+
+        private void CastReadFromSRAM()
+        {
+            if (onReadFromSRAM != null)
+            {
+                onReadFromSRAM(this, new ReadFromSRAMEventArgs(m_map_name));
+            }
+        }
+
+        private void CastWriteToSRAM()
+        {
+            if (onWriteToSRAM != null)
+            {
+                onWriteToSRAM(this, new WriteToSRAMEventArgs(m_map_name, GetDataFromGridView(m_isUpsideDown)));
             }
         }
 
@@ -4262,7 +4171,7 @@ namespace T8SuitePro
                     }
 
                 }
-                simpleButton3.Enabled = false;
+                //simpleButton3.Enabled = false;
             }
 
         }
@@ -4271,6 +4180,35 @@ namespace T8SuitePro
         {
             gridView1.Columns.Clear();
             gridControl1.DataSource = null;
+        }
+
+        private void simpleButton9_Click(object sender, EventArgs e)
+        {
+            CastReadFromSRAM();
+            // switch to ramviewer!
+        }
+
+        private void simpleButton8_Click(object sender, EventArgs e)
+        {
+            CastWriteToSRAM();
+        }
+
+        private void timer5_Tick(object sender, EventArgs e)
+        {
+            timer5.Enabled = false;
+            try
+            {
+                if (!m_datasourceMutated)
+                {
+                    CastReadFromSRAM(); // only if no changed made to gridView
+                }
+            }
+            catch (Exception E)
+            {
+                LogHelper.Log(E.Message);
+            }
+            timer5.Enabled = true;
+
         }
 
         private void toolStripComboBox3_KeyDown(object sender, KeyEventArgs e)
@@ -4325,5 +4263,24 @@ namespace T8SuitePro
                 }
             }
         }
+
+        private void CastReadEvent()
+        {
+            if (onSymbolRead != null)
+            {
+                onSymbolRead(this, new ReadSymbolEventArgs(m_map_name, m_filename));
+                m_datasourceMutated = false;
+            }
+        }
+
+        private void simpleButton10_Click(object sender, EventArgs e)
+        {
+            // refresh data from binary file!.. switch to non ram viewer!
+            CastReadEvent();
+
+        }
+
+        
+        
     }
 }

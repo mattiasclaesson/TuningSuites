@@ -250,7 +250,7 @@ namespace T8SuitePro
             }
         }
 
-        public bool AutoMapDetectionActive
+        public bool UseRedAndWhiteMaps
         {
             get
             {
@@ -322,6 +322,29 @@ namespace T8SuitePro
             }
         }
 
+        public bool UseNewMapViewer
+        {
+            get
+            {
+                return checkEdit30.Checked;
+            }
+            set
+            {
+                checkEdit30.Checked = value;
+            }
+        }
+
+        public bool AutoMapDetectionActive
+        {
+            get
+            {
+                return checkEdit21.Checked;
+            }
+            set
+            {
+                checkEdit21.Checked = value;
+            }
+        }
 
         private void frmSettings_Load(object sender, EventArgs e)
         {
@@ -460,9 +483,5 @@ namespace T8SuitePro
                 DialogResult = DialogResult.None;
             }
         }
-
-
-
-
     }
 }

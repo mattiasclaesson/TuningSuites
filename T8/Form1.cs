@@ -2896,9 +2896,15 @@ namespace T8SuitePro
                         dockManager1.BeginUpdate();
                         try
                         {
-
-
-                            IMapViewer tabdet = new MapViewerEx(); //<GS-03012011>
+                            IMapViewer tabdet;
+                            if (m_appSettings.UseNewMapViewer)
+                            {
+                                tabdet = new MapViewerEx();
+                            }
+                            else
+                            {
+                                tabdet = new MapViewer();
+                            }
                             tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                             tabdet.Visible = false;
                             tabdet.Filename = m_currentfile;
@@ -3507,7 +3513,15 @@ namespace T8SuitePro
             ribbonControl1.Minimized = true;
             try
             {
-                IMapViewer mv = new MapViewerEx();
+                IMapViewer tabdet;
+                if (m_appSettings.UseNewMapViewer)
+                {
+                    tabdet = new MapViewerEx();
+                }
+                else
+                {
+                    tabdet = new MapViewer();
+                }
             }
             catch (Exception E)
             {
@@ -3681,7 +3695,15 @@ namespace T8SuitePro
                     {
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
-                        IMapViewer tabdet = new MapViewerEx(); //<GS-03012011>
+                        IMapViewer tabdet;
+                        if (m_appSettings.UseNewMapViewer)
+                        {
+                            tabdet = new MapViewerEx();
+                        }
+                        else
+                        {
+                            tabdet = new MapViewer();
+                        }
                         tabdet.SetViewSize(m_appSettings.DefaultViewSize);
 
                         //tabdet.IsHexMode = barViewInHex.Checked;
@@ -3869,7 +3891,15 @@ namespace T8SuitePro
                 {
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
-                    IMapViewer tabdet = new MapViewerEx();
+                    IMapViewer tabdet;
+                    if (m_appSettings.UseNewMapViewer)
+                    {
+                        tabdet = new MapViewerEx();
+                    }
+                    else
+                    {
+                        tabdet = new MapViewer();
+                    }
                     //tabdet.IsHexMode = true; // always in hexmode!
                     tabdet.Viewtype = m_appSettings.DefaultViewType;
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
@@ -5815,6 +5845,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
             set.SynchronizeMapviewers = m_appSettings.SynchronizeMapviewers;
             set.FancyDocking = m_appSettings.FancyDocking;
             set.ShowTablesUpsideDown = m_appSettings.ShowTablesUpsideDown;
+            set.UseNewMapViewer = m_appSettings.UseNewMapViewer;
+            set.UseRedAndWhiteMaps = m_appSettings.ShowRedWhite;
 
             set.RequestProjectNotes = m_appSettings.RequestProjectNotes;
             set.ProjectFolder = m_appSettings.ProjectFolder;
@@ -5838,6 +5870,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.NewPanelsFloating = set.NewPanelsFloating;
                 m_appSettings.CANBusAdapterType = set.CANBusAdapterType;
                 m_appSettings.OnlyPBus = set.OnlyPBus;
+                m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
+                m_appSettings.UseNewMapViewer = set.UseNewMapViewer;
 
                 m_appSettings.ResetRealtimeSymbolOnTabPageSwitch = set.ResetRealtimeSymbolOnTabPageSwitch;
 
@@ -12958,8 +12992,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
-                    IMapViewer tabdet;//= new MapViewer();
-                    tabdet = new MapViewerEx();
+                    IMapViewer tabdet;
+                    if (m_appSettings.UseNewMapViewer)
+                    {
+                        tabdet = new MapViewerEx();
+                    }
+                    else
+                    {
+                        tabdet = new MapViewer();
+                    }
                     tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
                     //tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
                     tabdet.SetViewSize(m_appSettings.DefaultViewSize);
@@ -13467,8 +13508,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 dockPanel.FloatSize = new Size(650, 450);
                             }
                             dockPanel.Tag = m_currentsramfile;
-                            IMapViewer tabdet;//= new MapViewer();
-                            tabdet = new MapViewerEx();
+                            IMapViewer tabdet;
+                            if (m_appSettings.UseNewMapViewer)
+                            {
+                                tabdet = new MapViewerEx();
+                            }
+                            else
+                            {
+                                tabdet = new MapViewer();
+                            }
                             tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
                             //tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
                             tabdet.SetViewSize(m_appSettings.DefaultViewSize);

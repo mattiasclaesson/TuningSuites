@@ -956,6 +956,17 @@ namespace T8SuitePro
             }
         }
 
+        private bool m_UseNewMapViewer = true;
+
+        public bool UseNewMapViewer
+        {
+            get { return m_UseNewMapViewer; }
+            set
+            {
+                m_UseNewMapViewer = value;
+                SaveRegistrySetting("UseNewMapViewer", m_UseNewMapViewer);
+            }
+        }
 
         private bool m_AutoExtractSymbols = true;
 
@@ -1085,6 +1096,7 @@ namespace T8SuitePro
                 saveSettings.SetValue("AllowAskForPartnumber", m_AllowAskForPartnumber);
                 saveSettings.SetValue("ShowTablesUpsideDown", m_ShowTablesUpsideDown);
                 saveSettings.SetValue("ShowMenu", m_ShowMenu);
+                saveSettings.SetValue("UseNewMapViewer", m_UseNewMapViewer);
 
                 saveSettings.SetValue("RequestProjectNotes", m_RequestProjectNotes);
                 saveSettings.SetValue("LastProjectname", m_lastprojectname);
@@ -1506,6 +1518,10 @@ namespace T8SuitePro
                             else if (a == "ResetRealtimeSymbolOnTabPageSwitch")
                             {
                                 m_ResetRealtimeSymbolOnTabPageSwitch = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "UseNewMapViewer")
+                            {
+                                m_UseNewMapViewer = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "CANBusAdapterType")
                             {
