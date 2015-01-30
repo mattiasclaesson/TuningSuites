@@ -727,8 +727,6 @@ namespace T8SuitePro
             SetProgressIdle();
             //UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
             if (m_currentfile != string.Empty) LoadRealtimeTable();
-
-            IdaProIdcFile.create(m_currentfile, m_symbols);
         }
 
         private void SetProgressIdle()
@@ -15290,6 +15288,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         break;
                 }
             }
+        }
+
+        private void barIdcGenerate_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            IdaProIdcFile.create(m_currentfile, m_symbols);
         }
     }
 

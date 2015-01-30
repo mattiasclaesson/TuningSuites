@@ -28,21 +28,27 @@ namespace T8SuitePro
         /// </summary>
         private void InitializeComponent()
         {
+            DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip2 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem2 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem2 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip3 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem3 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem3 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip4 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem4 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem4 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip5 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem5 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem5 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip6 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem6 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem6 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip7 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem7 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem7 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip5 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem5 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem5 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip8 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem8 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem8 = new DevExpress.Utils.ToolTipItem();
@@ -76,24 +82,20 @@ namespace T8SuitePro
             DevExpress.Utils.SuperToolTip superToolTip18 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem18 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem18 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip2 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem2 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem2 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
+            this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
+            this.checkEdit30 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit20 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit17 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit3 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit16 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.checkEdit13 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit15 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.checkEdit14 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit13 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit12 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit11 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit10 = new DevExpress.XtraEditors.CheckEdit();
@@ -120,19 +122,19 @@ namespace T8SuitePro
             this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.checkEdit30 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit30.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit20.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit17.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit16.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit15.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit11.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit10.Properties)).BeginInit();
@@ -155,8 +157,6 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit3.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit30.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -191,6 +191,35 @@ namespace T8SuitePro
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "User interface settings";
             this.groupControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupControl1_Paint);
+            // 
+            // checkEdit2
+            // 
+            this.checkEdit2.Location = new System.Drawing.Point(10, 78);
+            this.checkEdit2.Name = "checkEdit2";
+            this.checkEdit2.Properties.Caption = "Use red and white maps";
+            this.checkEdit2.Size = new System.Drawing.Size(212, 19);
+            toolTipTitleItem1.Text = "Use red and white maps";
+            toolTipItem1.LeftIndent = 6;
+            toolTipItem1.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
+                "o display low values and red for higher values.";
+            superToolTip1.Items.Add(toolTipTitleItem1);
+            superToolTip1.Items.Add(toolTipItem1);
+            this.checkEdit2.SuperTip = superToolTip1;
+            this.checkEdit2.TabIndex = 23;
+            // 
+            // checkEdit30
+            // 
+            this.checkEdit30.Location = new System.Drawing.Point(460, 53);
+            this.checkEdit30.Name = "checkEdit30";
+            this.checkEdit30.Properties.Caption = "Use new mapviewer";
+            this.checkEdit30.Size = new System.Drawing.Size(212, 19);
+            toolTipTitleItem2.Text = "Use new mapviewer";
+            toolTipItem2.LeftIndent = 6;
+            toolTipItem2.Text = "If checked, the new type of mapviewer will be used to display data.";
+            superToolTip2.Items.Add(toolTipTitleItem2);
+            superToolTip2.Items.Add(toolTipItem2);
+            this.checkEdit30.SuperTip = superToolTip2;
+            this.checkEdit30.TabIndex = 22;
             // 
             // checkEdit20
             // 
@@ -261,6 +290,22 @@ namespace T8SuitePro
             this.comboBoxEdit2.Size = new System.Drawing.Size(210, 20);
             this.comboBoxEdit2.TabIndex = 16;
             // 
+            // checkEdit13
+            // 
+            this.checkEdit13.Location = new System.Drawing.Point(460, 177);
+            this.checkEdit13.Name = "checkEdit13";
+            this.checkEdit13.Properties.Caption = "Show map preview popup";
+            this.checkEdit13.Size = new System.Drawing.Size(212, 19);
+            toolTipTitleItem5.Text = "Always re-create repository items";
+            toolTipItem5.LeftIndent = 6;
+            toolTipItem5.Text = "When checked, T8Suite will always re-create the repository items. This will slow " +
+                "down overall performance, but will ensure that an actual version is used all the" +
+                " time.";
+            superToolTip5.Items.Add(toolTipTitleItem5);
+            superToolTip5.Items.Add(toolTipItem5);
+            this.checkEdit13.SuperTip = superToolTip5;
+            this.checkEdit13.TabIndex = 11;
+            // 
             // checkEdit15
             // 
             this.checkEdit15.EditValue = true;
@@ -314,22 +359,6 @@ namespace T8SuitePro
             superToolTip7.Items.Add(toolTipItem7);
             this.checkEdit14.SuperTip = superToolTip7;
             this.checkEdit14.TabIndex = 12;
-            // 
-            // checkEdit13
-            // 
-            this.checkEdit13.Location = new System.Drawing.Point(460, 177);
-            this.checkEdit13.Name = "checkEdit13";
-            this.checkEdit13.Properties.Caption = "Show map preview popup";
-            this.checkEdit13.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem5.Text = "Always re-create repository items";
-            toolTipItem5.LeftIndent = 6;
-            toolTipItem5.Text = "When checked, T8Suite will always re-create the repository items. This will slow " +
-                "down overall performance, but will ensure that an actual version is used all the" +
-                " time.";
-            superToolTip5.Items.Add(toolTipTitleItem5);
-            superToolTip5.Items.Add(toolTipItem5);
-            this.checkEdit13.SuperTip = superToolTip5;
-            this.checkEdit13.TabIndex = 11;
             // 
             // checkEdit12
             // 
@@ -463,10 +492,10 @@ namespace T8SuitePro
             this.checkEdit4.SuperTip = superToolTip16;
             this.checkEdit4.TabIndex = 2;
             // 
-            // checkEdit2
+            // checkEdit21
             // 
             this.checkEdit21.Location = new System.Drawing.Point(460, 202);
-            this.checkEdit21.Name = "checkEdit2";
+            this.checkEdit21.Name = "checkEdit21";
             this.checkEdit21.Properties.Caption = "Auto mapdetection active";
             this.checkEdit21.Size = new System.Drawing.Size(212, 19);
             toolTipTitleItem17.Text = "Auto map detection active";
@@ -643,35 +672,6 @@ namespace T8SuitePro
             this.comboBoxEdit3.TabIndex = 26;
             this.comboBoxEdit3.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
             // 
-            // checkEdit30
-            // 
-            this.checkEdit30.Location = new System.Drawing.Point(460, 53);
-            this.checkEdit30.Name = "checkEdit30";
-            this.checkEdit30.Properties.Caption = "Use new mapviewer";
-            this.checkEdit30.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem2.Text = "Use new mapviewer";
-            toolTipItem2.LeftIndent = 6;
-            toolTipItem2.Text = "If checked, the new type of mapviewer will be used to display data.";
-            superToolTip2.Items.Add(toolTipTitleItem2);
-            superToolTip2.Items.Add(toolTipItem2);
-            this.checkEdit30.SuperTip = superToolTip2;
-            this.checkEdit30.TabIndex = 22;
-            // 
-            // checkEdit21
-            // 
-            this.checkEdit2.Location = new System.Drawing.Point(10, 78);
-            this.checkEdit2.Name = "checkEdit21";
-            this.checkEdit2.Properties.Caption = "Use red and white maps";
-            this.checkEdit2.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem1.Text = "Use red and white maps";
-            toolTipItem1.LeftIndent = 6;
-            toolTipItem1.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
-                "o display low values and red for higher values.";
-            superToolTip1.Items.Add(toolTipTitleItem1);
-            superToolTip1.Items.Add(toolTipItem1);
-            this.checkEdit2.SuperTip = superToolTip1;
-            this.checkEdit2.TabIndex = 23;
-            // 
             // frmSettings
             // 
             this.AcceptButton = this.simpleButton1;
@@ -695,15 +695,17 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
             this.groupControl1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit30.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit20.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit17.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit16.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit15.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit11.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit10.Properties)).EndInit();
@@ -728,8 +730,6 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit3.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit30.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
