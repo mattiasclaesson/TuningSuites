@@ -2546,20 +2546,6 @@ namespace T8SuitePro
             int multiplier = 1;
             if (symbolname == "FuelDynCal.FuelModFacTab") issixteenbit = false;
 
-            if (symbolname == "TrqLimCal.Trq_ManGear")
-            {
-                retval = new int[8];
-                retval.SetValue(0, 0);
-                retval.SetValue(1, 1);
-                retval.SetValue(2, 2);
-                retval.SetValue(3, 3);
-                retval.SetValue(4, 4);
-                retval.SetValue(5, 5);
-                retval.SetValue(6, 6);
-                retval.SetValue(-1, 7);
-                return retval;
-            }
-
             SymbolAxesTranslator axistranslator = new SymbolAxesTranslator();
             string x_axis = string.Empty;
             string y_axis = string.Empty;
@@ -2570,6 +2556,26 @@ namespace T8SuitePro
             {
                 if (y_axis != "")
                 {
+                    if (Char.IsDigit(y_axis[0]))
+                    {
+                        string[] tmp = y_axis.Split(':');
+
+                        if (tmp.Length == 2)
+                        {
+                            int y_len = Convert.ToInt32(tmp[0]);
+                            retval = new int[y_len];
+                            int y_index = 0;
+                            string[] y_vals = tmp[1].Trim().Split(' ');
+                            foreach (string y_val in y_vals)
+                            {
+                                if (y_index < y_len) // Should never go wrong, but may. TBD: Raise error if happens.
+                                {
+                                    retval.SetValue(Convert.ToInt32(y_val), y_index++);
+                                }
+                            }
+                            return retval;
+                        }
+                    }
                     yaxislength = GetSymbolLength(curSymbols, y_axis);
                     yaxisaddress = (int)GetSymbolAddress(curSymbols, y_axis);
                 }
@@ -2638,7 +2644,26 @@ namespace T8SuitePro
                     {
                         if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
                     }
+                    if (Char.IsDigit(x_axis[0]))
+                    {
+                        string[] tmp = x_axis.Split(':');
 
+                        if (tmp.Length == 2)
+                        {
+                            int x_len = Convert.ToInt32(tmp[0]);
+                            retval = new int[x_len];
+                            int x_index = 0;
+                            string[] x_vals = tmp[1].Trim().Split(' ');
+                            foreach (string x_val in x_vals)
+                            {
+                                if (x_index < x_len) // Should never go wrong, but may. TBD: Raise error if happens.
+                                {
+                                    retval.SetValue(Convert.ToInt32(x_val), x_index++);
+                                }
+                            }
+                            return retval;
+                        }
+                    }
                     xaxislength = GetSymbolLength(curSymbols, x_axis);
                     xaxisaddress = (int)GetSymbolAddress(curSymbols, x_axis);
                 }
@@ -3553,7 +3578,6 @@ namespace T8SuitePro
             if (GetSymbolAddress(m_symbols, symbolname) > 0)
             {
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
-
                 SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
                 int rtel = 0;
                 foreach (SymbolHelper sh in sc)

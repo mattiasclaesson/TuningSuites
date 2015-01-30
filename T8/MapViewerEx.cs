@@ -4559,8 +4559,16 @@ namespace T8SuitePro
             string y = sat.GetYaxisSymbol(m_map_name);
             if (x != string.Empty)
             {
-                editXaxisSymbolToolStripMenuItem.Enabled = true;
-                editXaxisSymbolToolStripMenuItem.Text = "Edit x-axis (" + x + ")";
+                if (Char.IsDigit(x[0]))
+                {
+                    editXaxisSymbolToolStripMenuItem.Enabled = false;
+                    editXaxisSymbolToolStripMenuItem.Text = "Static x-axis (" + x + ")";
+                }
+                else
+                {
+                    editXaxisSymbolToolStripMenuItem.Enabled = true;
+                    editXaxisSymbolToolStripMenuItem.Text = "Edit x-axis (" + x + ")";
+                }
             }
             else
             {
@@ -4569,8 +4577,16 @@ namespace T8SuitePro
             }
             if (y != string.Empty)
             {
-                editYaxisSymbolToolStripMenuItem.Enabled = true;
-                editYaxisSymbolToolStripMenuItem.Text = "Edit y-axis (" + y + ")";
+                if (Char.IsDigit(y[0]))
+                {
+                    editYaxisSymbolToolStripMenuItem.Enabled = false;
+                    editYaxisSymbolToolStripMenuItem.Text = "Static y-axis (" + y + ")";
+                }
+                else
+                {
+                    editYaxisSymbolToolStripMenuItem.Enabled = true;
+                    editYaxisSymbolToolStripMenuItem.Text = "Edit y-axis (" + y + ")";
+                }
             }
             else
             {
