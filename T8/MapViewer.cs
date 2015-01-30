@@ -1269,8 +1269,7 @@ namespace T8SuitePro
                 }
             }
 
-            //chartControl1.Series[0].Label.Text = m_map_name;
-            chartControl1.Series[0].LegendText = m_map_name;
+            chartControl1.Legend.Visible = false;
             chartControl1.DataSource = chartdt;
 
            
