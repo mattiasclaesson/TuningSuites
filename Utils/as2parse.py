@@ -1,14 +1,16 @@
 #
 # AS2 Parser
-# Version: 0.8
+# Version: 0.9
 #
-import sys, getopt
+import sys
+import os.path
 
 # Debug-mode
 debug = False
 
 #
 SYMBOL_NAME = 				'dict_symbol_name'
+SYMBOL_SOURCE =             'dict_symbol_source'
 SYMBOL_TYPE = 				'dict_symbol_type'
 SYMBOL_UNIT_OF_MEASURE = 	'dict_symbol_unit_of_measure'
 SYMBOL_UNIT_VAL = 			'dict_ssymbol_unit_val'
@@ -29,9 +31,10 @@ num_SCALAR = 0
 num_MAP = 0
 num_TABLE = 0
 num_TABLENOSP = 0
+num_DUP = 0
 symbol_list = []
 
-def create_files(out_sym_dict_file):
+def create_files(out_sym_dict_file, source_file):
     in_sym_dict = """using System;
 using System.Collections.Generic;
 namespace T8SuitePro
@@ -47,7 +50,7 @@ namespace T8SuitePro
         public string yAxis;
         public string yAxisFunction;
         
-        public MySymbol(string inType, double inUnitVal, string inUnitOfMeasure, 
+        public MySymbol(string inSource, string inType, double inUnitVal, string inUnitOfMeasure, 
                         string inDescription, string inXAxis, string inXAxisFunction, 
                         string inYAxis, string inYAxisFunction)
         {
@@ -68,7 +71,7 @@ namespace T8SuitePro
             
             
     out_sym_dict = """
-            {"END", new MySymbol("",0,"","", "","","","")}
+            {"END", new MySymbol("", "",0,"","", "","","","")}
         };
 
         public static double GetSymbolUnit(string word)
@@ -167,12 +170,15 @@ namespace T8SuitePro
 
     # Heading
     fh_sym_dic = open(out_sym_dict_file, 'w')    
+    fh_sym_dic.write("//\n// WARNING WARNING WARNING\n//\n// This is a GENERATED file, do not edit.\n// Run as2parse.py in Utils directory instead!!!\n")
+    fh_sym_dic.write("//\n// Source of symbols: " + source_file + "\n//\n//\n")
     fh_sym_dic.write(in_sym_dict)
     
-    # Repetetive
+    # Repetitive
     for a_symbol in symbol_list:
         fh_sym_dic.write('\n            {"' + 
                             a_symbol[SYMBOL_NAME] + '\", new MySymbol(\"' +\
+                            a_symbol[SYMBOL_SOURCE] +             '\", \"' +\
                             a_symbol[SYMBOL_TYPE] +               '\", ' +\
                             str(a_symbol[SYMBOL_UNIT_VAL]) +           ', \"' +\
                             a_symbol[SYMBOL_UNIT_OF_MEASURE] +    '\", \"' +\
@@ -184,8 +190,19 @@ namespace T8SuitePro
     # Tail
     fh_sym_dic.write(out_sym_dict)
     fh_sym_dic.close()
-        
-def parse_symbol_data(symbol_name, symbol_data):
+
+def symbol_exist_already(symbol_name):
+    global num_DUP
+    for a_symbol in symbol_list:
+        if a_symbol[SYMBOL_NAME] == symbol_name:
+            num_DUP = num_DUP + 1
+            if debug:
+                print "Found duplicated symbol " + symbol_name
+            return True
+    
+    return False
+    
+def parse_symbol_data(symbol_name, symbol_source, symbol_data):
     global num_SCALAR
     global num_MAP
     global num_TABLE
@@ -193,6 +210,7 @@ def parse_symbol_data(symbol_name, symbol_data):
     
     my_symbol = {};
     my_symbol[SYMBOL_NAME] = symbol_name
+    my_symbol[SYMBOL_SOURCE] = symbol_source
     my_symbol[SYMBOL_X_AXIS] = ""
     my_symbol[SYMBOL_X_AXIS_FUNC] = ""
     my_symbol[SYMBOL_Y_AXIS] = ""
@@ -255,64 +273,61 @@ def main():
     global num_MAP
     global num_TABLE
     global num_TABLENOSP
+    global num_DUP
     global symbol_list
-    ifile=''
     dfile='SymbolDictionary.cs'
- 
-    # Read command line args
-    try:
-        myopts, args = getopt.getopt(sys.argv[1:],"i:f:s:d:")
-    except getopt.GetoptError as e:
-        print (str(e))
-        print("Usage: %s -i input [-d symbol_dictionary_filename]" % sys.argv[0])
-        sys.exit(2)     
+    f_versions = ''
 
-    for o, a in myopts:
-        if o == '-i':
-            ifile=a
-        elif o == '-d':
-            dfile=a
-        else:
-            print("Usage: %s -i input [-d symbol_dictionary_filename]" % sys.argv[0])
+    if len(sys.argv) < 2:
+        print("Usage: %s as2_input_1 [as2_input_n*]" % sys.argv[0])
+        exit(1)
         
-    if ifile == '':
-        print "No input file provided."
-        print("Usage: %s -i input [-d symbol_dictionary_filename]" % sys.argv[0])
-        sys.exit(2)
-        
-    print ("Input file : %s\nSymbolDictionary file:%s" % (ifile,dfile) )    
-    fh = open(ifile)
+    for idx, arg in enumerate(sys.argv):
+        if idx != 0:
+            if not os.path.exists(arg):
+                print "Input .as2 file '%s' does not exist" % arg
+                exit(1)
+             
+            print "Input file : %s" % arg   
+            fh = open(arg)
     
-    # Read headers
-    file_version = fh.readline().strip()
-    symbols = int(fh.readline().split(':')[1].strip())
-
-    if debug:
-        print("File version:      " + file_version)
-        print("Number of symbols: " + str(symbols))
-    
-    data = fh.readlines()
-    searching = True
-    symbol_data = []
-    for line in data:
-        if searching:
-            if line[0] == '*':
-                symbol_name = line[1:].strip()
-                if debug:
-                    print("Found symbol: " + symbol_name)
-                searching = False
-        else:
-            if line[0] == '\n':
-                if debug:
-                    print("Found end of symbol " + symbol_name)
-                symbol_list.append(parse_symbol_data(symbol_name, symbol_data))
-                searching = True
-                symbol_data = []
+            # Read headers
+            file_version = fh.readline().strip()
+            symbols = int(fh.readline().split(':')[1].strip())
+            
+            if idx == 1:
+                f_versions = file_version
             else:
-                symbol_data.append(line)
+                f_versions = f_versions + ", " + file_version
+
+            if debug:
+                print("File version:      " + file_version)
+                print("Number of symbols: " + str(symbols))
+            
+            data = fh.readlines()
+            searching = True
+            symbol_data = []
+            for line in data:
+                if searching:
+                    if line[0] == '*':
+                        symbol_name = line[1:].strip()
+                        if debug:
+                            print("Found symbol: " + symbol_name)
+                        searching = False
+                else:
+                    if line[0] == '\n':
+                        if debug:
+                            print("Found end of symbol " + symbol_name)
+                        if not symbol_exist_already(symbol_name):
+                            symbol_list.append(parse_symbol_data(symbol_name, file_version, symbol_data))
+                        searching = True
+                        symbol_data = []
+                    else:
+                        symbol_data.append(line)
+            fh.close()
  
     # Create output files
-    create_files(dfile)
+    create_files(dfile, f_versions)
     print "Parsed %s symbols successfully" % str(num_SCALAR + num_MAP + num_TABLE + num_TABLENOSP)
 
     # Check file consistency
@@ -320,6 +335,7 @@ def main():
         print("Mismatch!")
         print("Number of symbols to be found:" + str(symbols))
         print("Number of symbols found: " + str(num_SCALAR + num_MAP + num_TABLE + num_TABLENOSP))
+        print("Number of duplicates found: " + str(num_DUP))
         print(" - SCALAR:  " + str(num_SCALAR))
         print(" - MAP:     " + str(num_MAP))
         print(" - TABLE:   " + str(num_TABLE))
