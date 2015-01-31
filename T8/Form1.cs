@@ -2193,7 +2193,7 @@ namespace T8SuitePro
             m_appSettings.Lastfilename = m_currentfile;
             gridViewSymbols.BestFitColumns();
             UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
-
+            DynamicTuningMenu();
             m_appSettings.LastOpenedType = 0;
         }
 
@@ -3541,7 +3541,7 @@ namespace T8SuitePro
                     m_appSettings.Lastfilename = m_currentfile;
                     gridViewSymbols.BestFitColumns();
                     UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
-
+                    DynamicTuningMenu();
 
                 }
             }
@@ -3562,8 +3562,7 @@ namespace T8SuitePro
                             m_appSettings.Lastfilename = m_currentfile;
                             gridViewSymbols.BestFitColumns();
                             UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
-
-
+                            DynamicTuningMenu();
                         }
                     }
                 }
@@ -3583,7 +3582,59 @@ namespace T8SuitePro
 
             LoadMyMaps();
         }
-
+        private void DynamicTuningMenu()
+        {
+            //
+            // Show Tuning menu shortcuts depening on which file version that was loaded.
+            //
+            if (m_currentfile != string.Empty)
+            {
+                if (File.Exists(m_currentfile))
+                {
+                    T8Header t8header = new T8Header();
+                    t8header.init(m_currentfile);
+                    string swVersion = t8header.SoftwareVersion.Trim();
+                    if (swVersion.Length > 2)
+                    {
+                        int v = Convert.ToInt32(swVersion[1]);
+                        if (v <= 'C')
+                        {
+                            this.btnMaxAirmassMapManual.Caption = "Max airmass map (manual)";
+                            this.btnMaxAirmassMapManual.Tag = "Old";
+                            this.btnMaxAirmassMapAuto.Caption = "Max airmass map (auto)";
+                            this.btnMaxAirmassMapAuto.Tag = "Old";
+                            this.barButtonItem13.Caption = "Trq limit auto 175+ hp";
+                            this.barButtonItem13.Tag = "Old";
+                            this.barButtonItem14.Caption = "Trq limit auto 150 hp";
+                            this.barButtonItem14.Tag = "Old";
+                            this.barButtonItem15.Caption = "Trq limit manual 175+ hp";
+                            this.barButtonItem15.Tag = "Old";
+                            this.barButtonItem16.Caption = "Trq limit manual 150 hp";
+                            this.barButtonItem16.Tag = "Old";
+                            this.barButtonItem41.Visibility = BarItemVisibility.Never;
+                            this.barButtonItem41.Tag = "Old";
+                        }
+                        else
+                        {
+                            this.btnMaxAirmassMapManual.Caption = "Max airmass map #1";
+                            this.btnMaxAirmassMapManual.Tag = "New";
+                            this.btnMaxAirmassMapAuto.Caption = "Max airmass map #2";
+                            this.btnMaxAirmassMapManual.Tag = "New";
+                            this.barButtonItem13.Caption = "Trq limit 175/200hp";
+                            this.barButtonItem13.Tag = "New";
+                            this.barButtonItem14.Caption = "Trq limit 150hp";
+                            this.barButtonItem14.Tag = "New";
+                            this.barButtonItem15.Caption = "Trq limit E85 175/200hp";
+                            this.barButtonItem15.Tag = "New";
+                            this.barButtonItem16.Caption = "Trq limit E85 150hp";
+                            this.barButtonItem16.Tag = "New";
+                            this.barButtonItem41.Visibility = BarItemVisibility.Always;
+                            this.barButtonItem41.Tag = "New";
+                        }
+                    }
+                }
+            }
+        }
         private void StartTableViewer(string symbolname)
         {
             bool _vwrstarted = false;
@@ -5714,7 +5765,10 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void btnMaxAirmassMapAuto_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartTableViewer("BstKnkCal.MaxAirmassAu");
+            if (this.btnMaxAirmassMapAuto.Tag == "Old")
+                StartTableViewer("BstKnkCal.MaxAirmassAu");
+            else
+                StartTableViewer("FFAirCal.m_maxAirmass");
         }
 
         private void btnInjectionEndangleMap_ItemClick(object sender, ItemClickEventArgs e)
@@ -5750,24 +5804,36 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem14_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab2");
+            if (this.barButtonItem14.Tag == "Old")
+                StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab2");
+            else
+                StartTableViewer("TrqLimCal.Trq_MaxEngineTab2");
         }
 
         private void barButtonItem13_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab1");
+            if (this.barButtonItem13.Tag == "Old")
+                StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab1");
+            else
+                StartTableViewer("TrqLimCal.Trq_MaxEngineTab1");
 
         }
 
         private void barButtonItem16_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartTableViewer("TrqLimCal.Trq_MaxEngineManTab2");
+            if (this.barButtonItem16.Tag == "Old")
+                StartTableViewer("TrqLimCal.Trq_MaxEngineManTab2");
+            else
+                StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab2");
 
         }
 
         private void barButtonItem15_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartTableViewer("TrqLimCal.Trq_MaxEngineManTab1");
+            if (this.barButtonItem15.Tag == "Old")
+                StartTableViewer("TrqLimCal.Trq_MaxEngineManTab1");
+            else
+                StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab1");
 
         }
 
@@ -6879,7 +6945,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     m_appSettings.Lastfilename = m_currentfile;
                     gridViewSymbols.BestFitColumns();
                     UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
-
+                    DynamicTuningMenu();
                     m_appSettings.LastOpenedType = 0;
                 }
             }
@@ -9767,6 +9833,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     m_appSettings.Lastfilename = m_currentfile;
                     gridViewSymbols.BestFitColumns();
                     UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
+                    DynamicTuningMenu();
 
                     //OpenWorkingFile(projectprops.Rows[0]["BINFILE"].ToString());
                 }
@@ -15293,6 +15360,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void barIdcGenerate_ItemClick(object sender, ItemClickEventArgs e)
         {
             IdaProIdcFile.create(m_currentfile, m_symbols);
+        }
+
+        private void barButtonItem41_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (this.barButtonItem41.Tag != "Old")
+                StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
     }
 
