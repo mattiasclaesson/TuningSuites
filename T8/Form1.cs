@@ -3597,7 +3597,11 @@ namespace T8SuitePro
                     if (swVersion.Length > 2)
                     {
                         int v = Convert.ToInt32(swVersion[1]);
-                        if (v <= 'C')
+                        int m = Convert.ToInt32(swVersion[3]);
+                        // Below is an ASSUMPTION!
+                        // FC01 is of old type. FC0N is new type. 
+                        // Assuming breakpoint is FC0N.
+                        if (v <= 'C' && m < 'N')
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map (manual)";
                             this.btnMaxAirmassMapManual.Tag = "Old";
@@ -3613,6 +3617,10 @@ namespace T8SuitePro
                             this.barButtonItem16.Tag = "Old";
                             this.barButtonItem41.Visibility = BarItemVisibility.Never;
                             this.barButtonItem41.Tag = "Old";
+                            /* Conditional FlexFuel */
+                            this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Always;
+                            this.barButtonItem15.Visibility = BarItemVisibility.Always;
+                            this.barButtonItem16.Visibility = BarItemVisibility.Always;
                         }
                         else
                         {
@@ -3630,6 +3638,27 @@ namespace T8SuitePro
                             this.barButtonItem16.Tag = "New";
                             this.barButtonItem41.Visibility = BarItemVisibility.Always;
                             this.barButtonItem41.Tag = "New";
+                            /* Conditional FlexFuel */
+                            // FA = MY03-06 Gasoline / front wheel drive
+                            // FC = MY07-11 Gasoline / front wheel drive
+                            // FD = MY07-10 BioPower / front wheel drive
+                            // FE = MY09-11 Gasoline / all wheel drive
+                            // FF = MY10 BioPower AWD or MY11 Gasoline/BioPower FWD/AWD
+                            if (swVersion.StartsWith("FA") ||
+                                swVersion.StartsWith("FC") ||
+                                swVersion.StartsWith("FE"))
+                            {
+                                this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Never;
+                                this.barButtonItem15.Visibility = BarItemVisibility.Never;
+                                this.barButtonItem16.Visibility = BarItemVisibility.Never;
+                            }
+                            else
+                            {
+                                this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Always;
+                                this.barButtonItem15.Visibility = BarItemVisibility.Always;
+                                this.barButtonItem16.Visibility = BarItemVisibility.Always;
+                            }
+
                         }
                     }
                 }
