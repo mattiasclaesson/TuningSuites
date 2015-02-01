@@ -3599,9 +3599,9 @@ namespace T8SuitePro
                         int v = Convert.ToInt32(swVersion[1]);
                         int m = Convert.ToInt32(swVersion[3]);
                         // Below is an ASSUMPTION!
-                        // FC01 is of old type. FC0N is new type. 
-                        // Assuming breakpoint is FC0N.
-                        if (v <= 'C' && m < 'N')
+                        // Assuming breakpoint is FC00.
+                        // FC01 Open is special, treated as old.  
+                        if (v < 'C' || swVersion.Substring(0,6) == "FC01_C")
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map (manual)";
                             this.btnMaxAirmassMapManual.Tag = "Old";
