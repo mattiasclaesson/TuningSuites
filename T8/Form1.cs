@@ -3618,7 +3618,7 @@ namespace T8SuitePro
                             this.barButtonItem41.Visibility = BarItemVisibility.Never;
                             this.barButtonItem41.Tag = "Old";
                             /* Conditional FlexFuel */
-                            this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Always;
+                            this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Never;
                             this.barButtonItem15.Visibility = BarItemVisibility.Always;
                             this.barButtonItem16.Visibility = BarItemVisibility.Always;
                         }
