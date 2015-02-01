@@ -8518,7 +8518,7 @@ namespace T8SuitePro
             }
             else
             {
-                return 0;
+                return 1.0;
             }
         }
         public static string GetSymbolUnitOfMeasure(string word)
