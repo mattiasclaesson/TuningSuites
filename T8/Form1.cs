@@ -3601,7 +3601,7 @@ namespace T8SuitePro
                         // Below is an ASSUMPTION!
                         // Assuming breakpoint is FC00.
                         // FC01 Open is special, treated as old.  
-                        if (v < 'C' || swVersion.Substring(0,6) == "FC01_C")
+                        if (v < 'C' || swVersion.Substring(0,6) == "FC01_O")
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map (manual)";
                             this.btnMaxAirmassMapManual.Tag = "Old";
