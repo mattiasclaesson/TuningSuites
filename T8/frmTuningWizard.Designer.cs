@@ -161,9 +161,9 @@
             this.labelControl4.Appearance.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.labelControl4.Location = new System.Drawing.Point(25, 66);
             this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(353, 13);
+            this.labelControl4.Size = new System.Drawing.Size(373, 13);
             this.labelControl4.TabIndex = 3;
-            this.labelControl4.Text = "The Tuning Action cannot be revered, se ensure you have a copy stored.";
+            this.labelControl4.Text = "The Tuning Action cannot be revered, please ensure you have a copy stored.";
             // 
             // lblTuningActionConfirm
             // 
