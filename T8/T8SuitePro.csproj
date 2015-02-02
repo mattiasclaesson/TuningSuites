@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -149,6 +149,7 @@
     <Reference Include="DevExpress.XtraVerticalGrid.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="DevExpress.XtraWizard.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -496,6 +497,12 @@
     </Compile>
     <Compile Include="frmTuneBinary.designer.cs">
       <DependentUpon>frmTuneBinary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTuningWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTuningWizard.Designer.cs">
+      <DependentUpon>frmTuningWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="frmUpdateAvailable.cs">
       <SubType>Form</SubType>
@@ -846,6 +853,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmTuneBinary.resx">
       <DependentUpon>frmTuneBinary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTuningWizard.resx">
+      <DependentUpon>frmTuningWizard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmVectorlist.resx">

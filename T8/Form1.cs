@@ -8070,7 +8070,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void barButtonItem29_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // stage II
+            frmTuningWizard frmTunWiz = new frmTuningWizard(this, m_currentfile);
+            frmTunWiz.ShowDialog();
         }
 
         private void barButtonItem30_ItemClick(object sender, ItemClickEventArgs e)
