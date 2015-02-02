@@ -164,6 +164,10 @@ namespace T8SuitePro
             splash.Show();
             System.Windows.Forms.Application.DoEvents();
             InitializeComponent();
+#if (DEBUG)
+            // Only have this enabled in debug mode until ready
+            this.barButtonItem29.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
+#endif
 
             try
             {
@@ -15399,9 +15403,22 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         }
         public int performTuningAction(TuningAction tuneAction)
         {
-            MessageBox.Show("Applying: " + tuneAction.ToString());
-            return 0;
+            int retval = 0;
+           // MessageBox.Show("Applying: " + tuneAction.ToString());
+            if (tuneAction.GetWizardType() == TuneWizardType.Embedded)
+            {
+                if ((tuneAction.GetWizardIdOrFilename()) == "ap_ST1Plus")
+                {
+                }
+                else if ((tuneAction.GetWizardIdOrFilename()) == "ap_175hp")
+                {
+                }
+                else
+                {
+                    retval = 1;
+                }
+            }
+            return retval;
         }
     }
-
 }

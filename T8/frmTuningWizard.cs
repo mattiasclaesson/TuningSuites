@@ -45,9 +45,26 @@ namespace T8SuitePro
             // At this stage, it is to late. Modifications has been done.
             else if(e.Page.Name == "wizConfirmPage")
             {
+                // Disable turning back
                 this.wizCompletedPage.AllowCancel = false;
                 TuningAction selAction = (TuningAction)this.listTuningActions.SelectedItem;
-                parent.performTuningAction(selAction);
+                // Perform the tuning action
+                if (parent.performTuningAction(selAction) == 0)
+                {
+                    // Inform the user of the tuning action
+                    // FIX: Maybe list all maps that were updated?
+                    this.wizCompletedPage.FinishText = "You have now completed the Tuning Action '" +
+                        this.listTuningActions.SelectedItem.ToString() +
+                        "'. Please check the modified maps so that they are what you expect them to be." +
+                        " Easiest way to do that is to compare to the original binary.";
+                }
+                else
+                {
+                    this.wizCompletedPage.FinishText = "The Tuning Action '" + 
+                        this.listTuningActions.SelectedItem.ToString() +
+                        "' failed! You should likely not use this binary at this point.";
+
+                }
             }
         }
         private void wizardTuning_PrevClick(object sender, DevExpress.XtraWizard.WizardCommandButtonClickEventArgs e)

@@ -140,7 +140,7 @@
             // 
             // wizCompletedPage
             // 
-            this.wizCompletedPage.FinishText = "You have completed the seelcted tuning action.";
+            this.wizCompletedPage.FinishText = "You have completed the selected tuning action.";
             this.wizCompletedPage.Name = "wizCompletedPage";
             this.wizCompletedPage.Size = new System.Drawing.Size(314, 184);
             this.wizCompletedPage.Text = "Completed Tuning Wizard";
@@ -161,9 +161,10 @@
             this.labelControl4.Appearance.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.labelControl4.Location = new System.Drawing.Point(25, 66);
             this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(353, 13);
+            this.labelControl4.Size = new System.Drawing.Size(410, 13);
             this.labelControl4.TabIndex = 3;
-            this.labelControl4.Text = "The Tuning Action cannot be revered, se ensure you have a copy stored.";
+            this.labelControl4.Text = "The Tuning Action cannot be revered, ensure you have a copy of your binary stored" +
+                ".";
             // 
             // lblTuningActionConfirm
             // 
