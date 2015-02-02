@@ -15397,6 +15397,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (this.barButtonItem41.Tag != "Old")
                 StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
+        public int performTuningAction(TuningAction tuneAction)
+        {
+            MessageBox.Show("Applying: " + tuneAction.ToString());
+            return 0;
+        }
     }
 
 }
