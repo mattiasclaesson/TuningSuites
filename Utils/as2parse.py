@@ -20,6 +20,7 @@ SYMBOL_X_AXIS =             'dict_x_axis'
 SYMBOL_X_AXIS_FUNC =        'dict_x_axis_func'
 SYMBOL_Y_AXIS =             'dict_y_axis'
 SYMBOL_Y_AXIS_FUNC =        'dict_y_axis_func'
+SYMBOL_DUPLICATE =          'dict_symbol_duplicate'
 
 TYPE_SCALAR = 'SCALAR'
 TYPE_MAP = 'MAP'
@@ -33,6 +34,7 @@ num_TABLE = 0
 num_TABLENOSP = 0
 num_DUP = 0
 symbol_list = []
+f_versions = ''
 
 def create_files(out_sym_dict_file, source_file):
     in_sym_dict = """using System;
@@ -41,6 +43,7 @@ namespace T8SuitePro
 {
     class MySymbol
     {
+        public string source;
         public string type;
         public double unitVal;
         public string unitOfMeasure;
@@ -49,11 +52,13 @@ namespace T8SuitePro
         public string xAxisFunction;
         public string yAxis;
         public string yAxisFunction;
+        public bool duplicateExist;
         
         public MySymbol(string inSource, string inType, double inUnitVal, string inUnitOfMeasure, 
                         string inDescription, string inXAxis, string inXAxisFunction, 
-                        string inYAxis, string inYAxisFunction)
+                        string inYAxis, string inYAxisFunction, bool inDuplicateExist)
         {
+            source = inSource;
             type = inType;
             unitVal = inUnitVal;
             unitOfMeasure = inUnitOfMeasure;
@@ -62,6 +67,7 @@ namespace T8SuitePro
             xAxisFunction = inXAxisFunction;
             yAxis = inYAxis;
             yAxisFunction = inYAxisFunction;
+            duplicateExist = inDuplicateExist;
         }
     }
     static class SymbolDictionary
@@ -71,7 +77,7 @@ namespace T8SuitePro
             
             
     out_sym_dict = """
-            {"END", new MySymbol("", "",0,"","", "","","","")}
+            {"END", new MySymbol("", "",0,"","", "","","","", false)}
         };
 
         public static double GetSymbolUnit(string word)
@@ -113,6 +119,28 @@ namespace T8SuitePro
                 return "";
             }
         }
+        public static string GetSymbolXAxisOldFile(string word, string symbolTail)
+        {
+            // Try to get the result in the static Dictionary
+            MySymbol result;
+            MySymbol dupResult;
+            if (_dict.TryGetValue(word, out result))
+            {
+                if (result.duplicateExist)
+                {
+                    // An old version exist, fetch it's axis instead.
+                    if (_dict.TryGetValue(word + "." + symbolTail, out dupResult))
+                    {
+                        return dupResult.xAxis;
+                    }
+                }
+                return result.xAxis;
+            }
+            else
+            {
+                return "";
+            }
+        }
         public static string GetSymbolXAxis(string word)
         {
             // Try to get the result in the static Dictionary
@@ -132,6 +160,28 @@ namespace T8SuitePro
             MySymbol result;
             if (_dict.TryGetValue(word, out result))
             {
+                return result.yAxis;
+            }
+            else
+            {
+                return "";
+            }
+        }
+        public static string GetSymbolYAxisOldFile(string word, string symbolTail)
+        {
+            // Try to get the result in the static Dictionary
+            MySymbol result;
+            MySymbol dupResult;
+            if (_dict.TryGetValue(word, out result))
+            {
+                if (result.duplicateExist)
+                {
+                    // An old version exist, fetch it's axis instead.
+                    if (_dict.TryGetValue(word + "." + symbolTail, out dupResult))
+                    {
+                        return dupResult.yAxis;
+                    }
+                }
                 return result.yAxis;
             }
             else
@@ -165,6 +215,14 @@ namespace T8SuitePro
                 return "";
             }
         }
+        public static string returnOldSoftware()
+        {
+"""
+    out_sym_dict_tail = """
+            if (usedVersions.Length > 1)
+                return usedVersions[1];
+            return "";
+        }
     }
 }"""
 
@@ -186,9 +244,13 @@ namespace T8SuitePro
                             a_symbol[SYMBOL_X_AXIS] +             '\", \"' +\
                             a_symbol[SYMBOL_X_AXIS_FUNC] +        '\", \"' +\
                             a_symbol[SYMBOL_Y_AXIS] +             '\", \"' +\
-                            a_symbol[SYMBOL_Y_AXIS_FUNC] +        '\")},')
+                            a_symbol[SYMBOL_Y_AXIS_FUNC] +        '\", ' +\
+                            a_symbol[SYMBOL_DUPLICATE] +          ')},')
     # Tail
     fh_sym_dic.write(out_sym_dict)
+    #"            string[] usedVersions = new string[] { "FF0L", "FC01"};"
+    fh_sym_dic.write("            string[] usedVersions = new string[] {" + f_versions + "};")
+    fh_sym_dic.write(out_sym_dict_tail)
     fh_sym_dic.close()
 
 def symbol_exist_already(symbol_name, the_symbol):
@@ -197,20 +259,24 @@ def symbol_exist_already(symbol_name, the_symbol):
         if a_symbol[SYMBOL_NAME] == symbol_name:
             num_DUP = num_DUP + 1
             if (a_symbol[SYMBOL_X_AXIS] != the_symbol[SYMBOL_X_AXIS]):
+                a_symbol[SYMBOL_DUPLICATE] = "true"
                 #print symbol_name
                 print "Found x-axis mismatch for map '" + symbol_name + "'"
                 print "File A: '" + a_symbol[SYMBOL_X_AXIS] + "'"
                 print "File B: '" + the_symbol[SYMBOL_X_AXIS] + "'"
+                return "YesSaveDup"
             if (a_symbol[SYMBOL_Y_AXIS] != the_symbol[SYMBOL_Y_AXIS]):
+                a_symbol[SYMBOL_DUPLICATE] = "true"
                 #print symbol_name
                 print "Found x-axis mismatch for map '" + symbol_name + "'"
                 print "File A: '" + a_symbol[SYMBOL_Y_AXIS] + "'"
                 print "File B: '" + the_symbol[SYMBOL_Y_AXIS] + "'"
+                return "YesSaveDup"
             if debug:
                 print "Found duplicated symbol " + symbol_name
-            return True
+            return "YesNoSave"
     
-    return False
+    return "No"
     
 def parse_symbol_data(symbol_name, symbol_source, symbol_data):
     global num_SCALAR
@@ -226,6 +292,7 @@ def parse_symbol_data(symbol_name, symbol_source, symbol_data):
     my_symbol[SYMBOL_Y_AXIS] = ""
     my_symbol[SYMBOL_Y_AXIS_FUNC] = ""
     my_symbol[SYBOL_DESCRIPTION] = ""
+    my_symbol[SYMBOL_DUPLICATE] = "false"
     desc_index = 0
     
     # Store symbol type
@@ -286,7 +353,7 @@ def main():
     global num_DUP
     global symbol_list
     dfile='SymbolDictionary.cs'
-    f_versions = ''
+    global f_versions
 
     if len(sys.argv) < 2:
         print("Usage: %s as2_input_1 [as2_input_n*]" % sys.argv[0])
@@ -306,9 +373,9 @@ def main():
             symbols = int(fh.readline().split(':')[1].strip())
             
             if idx == 1:
-                f_versions = file_version
+                f_versions = '\"' + file_version + '\"'
             else:
-                f_versions = f_versions + ", " + file_version
+                f_versions = f_versions + ", " + '\"' + file_version + '\"'
 
             if debug:
                 print("File version:      " + file_version)
@@ -328,9 +395,22 @@ def main():
                     if line[0] == '\n':
                         if debug:
                             print("Found end of symbol " + symbol_name)
+                        #found_symbol = parse_symbol_data(symbol_name, file_version, symbol_data)
+                        #if not symbol_exist_already(symbol_name, found_symbol):
+                        #    symbol_list.append(found_symbol)
                         found_symbol = parse_symbol_data(symbol_name, file_version, symbol_data)
-                        if not symbol_exist_already(symbol_name, found_symbol):
+                        dup_found = symbol_exist_already(symbol_name, found_symbol)
+                        if dup_found == "YesSaveDup":
+                            # A duplicate that needs to be stored found, rename it and add trailing source information
+                            found_symbol[SYMBOL_NAME] = found_symbol[SYMBOL_NAME] + "." + found_symbol[SYMBOL_SOURCE]
                             symbol_list.append(found_symbol)
+                        elif dup_found == "No":
+                            symbol_list.append(found_symbol)
+                        elif dup_found == "YesNoSave":
+                            # Do nothing
+                            if debug:
+                                print "Found a duplicate, will not save it though"
+                        
                         searching = True
                         symbol_data = []
                     else:
