@@ -1,6 +1,6 @@
 #
 # AS2 Parser
-# Version: 0.10
+# Version: 0.11
 #
 import sys
 import os.path
@@ -21,6 +21,7 @@ SYMBOL_X_AXIS_FUNC =        'dict_x_axis_func'
 SYMBOL_Y_AXIS =             'dict_y_axis'
 SYMBOL_Y_AXIS_FUNC =        'dict_y_axis_func'
 SYMBOL_DUPLICATE =          'dict_symbol_duplicate'
+SYMBOL_DUP_NAME =           'dict_dup_name'
 
 TYPE_SCALAR = 'SCALAR'
 TYPE_MAP = 'MAP'
@@ -52,11 +53,12 @@ namespace T8SuitePro
         public string xAxisFunction;
         public string yAxis;
         public string yAxisFunction;
+        public string duplicateName;
         public bool duplicateExist;
         
         public MySymbol(string inSource, string inType, double inUnitVal, string inUnitOfMeasure, 
                         string inDescription, string inXAxis, string inXAxisFunction, 
-                        string inYAxis, string inYAxisFunction, bool inDuplicateExist)
+                        string inYAxis, string inYAxisFunction, string inDuplicateName, bool inDuplicateExist)
         {
             source = inSource;
             type = inType;
@@ -67,6 +69,7 @@ namespace T8SuitePro
             xAxisFunction = inXAxisFunction;
             yAxis = inYAxis;
             yAxisFunction = inYAxisFunction;
+            duplicateName = inDuplicateName;
             duplicateExist = inDuplicateExist;
         }
     }
@@ -77,7 +80,7 @@ namespace T8SuitePro
             
             
     out_sym_dict = """
-            {"END", new MySymbol("", "",0,"","", "","","","", false)}
+            {"END", new MySymbol("", "",0,"","", "","","","", "", false)}
         };
 
         public static double GetSymbolUnit(string word)
@@ -119,28 +122,6 @@ namespace T8SuitePro
                 return "";
             }
         }
-        public static string GetSymbolXAxisOldFile(string word, string symbolTail)
-        {
-            // Try to get the result in the static Dictionary
-            MySymbol result;
-            MySymbol dupResult;
-            if (_dict.TryGetValue(word, out result))
-            {
-                if (result.duplicateExist)
-                {
-                    // An old version exist, fetch it's axis instead.
-                    if (_dict.TryGetValue(word + "." + symbolTail, out dupResult))
-                    {
-                        return dupResult.xAxis;
-                    }
-                }
-                return result.xAxis;
-            }
-            else
-            {
-                return "";
-            }
-        }
         public static string GetSymbolXAxis(string word)
         {
             // Try to get the result in the static Dictionary
@@ -160,28 +141,6 @@ namespace T8SuitePro
             MySymbol result;
             if (_dict.TryGetValue(word, out result))
             {
-                return result.yAxis;
-            }
-            else
-            {
-                return "";
-            }
-        }
-        public static string GetSymbolYAxisOldFile(string word, string symbolTail)
-        {
-            // Try to get the result in the static Dictionary
-            MySymbol result;
-            MySymbol dupResult;
-            if (_dict.TryGetValue(word, out result))
-            {
-                if (result.duplicateExist)
-                {
-                    // An old version exist, fetch it's axis instead.
-                    if (_dict.TryGetValue(word + "." + symbolTail, out dupResult))
-                    {
-                        return dupResult.yAxis;
-                    }
-                }
                 return result.yAxis;
             }
             else
@@ -215,6 +174,26 @@ namespace T8SuitePro
                 return "";
             }
         }
+        public static bool doesDuplicateExist(string word, out char ax_type, out string alt_axis)
+        {
+            MySymbol result;
+            ax_type = ' ';
+            alt_axis = "";
+            if (_dict.TryGetValue(word, out result))
+            {
+                // E.g. "X.BstKnkCal.OffsetXSP"
+                if (result.duplicateExist)
+                {
+                    ax_type = (char)result.duplicateName[0];
+                    alt_axis = result.duplicateName.Substring(2);
+                }
+                return result.duplicateExist;
+            }
+            else
+            {
+                return false;
+            }            
+        }
         public static string returnOldSoftware()
         {
 """
@@ -244,7 +223,8 @@ namespace T8SuitePro
                             a_symbol[SYMBOL_X_AXIS] +             '\", \"' +\
                             a_symbol[SYMBOL_X_AXIS_FUNC] +        '\", \"' +\
                             a_symbol[SYMBOL_Y_AXIS] +             '\", \"' +\
-                            a_symbol[SYMBOL_Y_AXIS_FUNC] +        '\", ' +\
+                            a_symbol[SYMBOL_Y_AXIS_FUNC] +        '\", \"' +\
+                            a_symbol[SYMBOL_DUP_NAME] +           '\", ' +\
                             a_symbol[SYMBOL_DUPLICATE] +          ')},')
     # Tail
     fh_sym_dic.write(out_sym_dict)
@@ -258,8 +238,14 @@ def symbol_exist_already(symbol_name, the_symbol):
     for a_symbol in symbol_list:
         if a_symbol[SYMBOL_NAME] == symbol_name:
             num_DUP = num_DUP + 1
+            if a_symbol[SYMBOL_TYPE] != the_symbol[SYMBOL_TYPE]:
+                print "Found type mismatch for map '" + symbol_name + "'"
+                return "TypeMismatch"
             if (a_symbol[SYMBOL_X_AXIS] != the_symbol[SYMBOL_X_AXIS]):
                 a_symbol[SYMBOL_DUPLICATE] = "true"
+                the_symbol[SYMBOL_DUPLICATE] = "true"
+                a_symbol[SYMBOL_DUP_NAME] = "X." + the_symbol[SYMBOL_X_AXIS]
+                the_symbol[SYMBOL_DUP_NAME] = "X." + a_symbol[SYMBOL_X_AXIS]
                 #print symbol_name
                 print "Found x-axis mismatch for map '" + symbol_name + "'"
                 print "File A: '" + a_symbol[SYMBOL_X_AXIS] + "'"
@@ -267,6 +253,9 @@ def symbol_exist_already(symbol_name, the_symbol):
                 return "YesSaveDup"
             if (a_symbol[SYMBOL_Y_AXIS] != the_symbol[SYMBOL_Y_AXIS]):
                 a_symbol[SYMBOL_DUPLICATE] = "true"
+                the_symbol[SYMBOL_DUPLICATE] = "true"
+                a_symbol[SYMBOL_DUP_NAME] = "Y." + the_symbol[SYMBOL_Y_AXIS]
+                the_symbol[SYMBOL_DUP_NAME] = "Y." + a_symbol[SYMBOL_Y_AXIS]
                 #print symbol_name
                 print "Found x-axis mismatch for map '" + symbol_name + "'"
                 print "File A: '" + a_symbol[SYMBOL_Y_AXIS] + "'"
@@ -293,6 +282,7 @@ def parse_symbol_data(symbol_name, symbol_source, symbol_data):
     my_symbol[SYMBOL_Y_AXIS_FUNC] = ""
     my_symbol[SYBOL_DESCRIPTION] = ""
     my_symbol[SYMBOL_DUPLICATE] = "false"
+    my_symbol[SYMBOL_DUP_NAME] = ""
     desc_index = 0
     
     # Store symbol type

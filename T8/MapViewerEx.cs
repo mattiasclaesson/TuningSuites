@@ -4566,6 +4566,15 @@ namespace T8SuitePro
                 }
                 else
                 {
+                    char axis_x_or_y = ' ';
+                    string alt_axis = "";
+                    if (SymbolDictionary.doesDuplicateExist(m_map_name, out axis_x_or_y, out alt_axis))
+                    {
+                        if (!SymbolExists(x))
+                        {
+                            x = alt_axis;
+                        }
+                    }
                     editXaxisSymbolToolStripMenuItem.Enabled = true;
                     editXaxisSymbolToolStripMenuItem.Text = "Edit x-axis (" + x + ")";
                 }
@@ -4584,6 +4593,15 @@ namespace T8SuitePro
                 }
                 else
                 {
+                    char axis_x_or_y = ' ';
+                    string alt_axis = "";
+                    if (SymbolDictionary.doesDuplicateExist(m_map_name, out axis_x_or_y, out alt_axis))
+                    {
+                        if (!SymbolExists(x))
+                        {
+                            y = alt_axis;
+                        }
+                    }
                     editYaxisSymbolToolStripMenuItem.Enabled = true;
                     editYaxisSymbolToolStripMenuItem.Text = "Edit y-axis (" + y + ")";
                 }
@@ -4604,8 +4622,17 @@ namespace T8SuitePro
         {
             if (onAxisEditorRequested != null)
             {
-                // onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.X_Axis, m_map_name, m_filename));ReadSymbolEventArgs
-                onAxisEditorRequested(this, new ReadSymbolEventArgs(SymbolDictionary.GetSymbolXAxis(m_map_name), m_filename));
+                char axis_x_or_y = ' ';
+                string alt_axis = "";
+                string x = SymbolDictionary.GetSymbolXAxis(m_map_name);
+                if (SymbolDictionary.doesDuplicateExist(m_map_name, out axis_x_or_y, out alt_axis))
+                {
+                    if (!SymbolExists(x))
+                    {
+                        x = alt_axis;
+                    }
+                }
+                onAxisEditorRequested(this, new ReadSymbolEventArgs(x, m_filename));
             }
         }
 
@@ -4618,8 +4645,17 @@ namespace T8SuitePro
         {
             if (onAxisEditorRequested != null)
             {
-                //onAxisEditorRequested(this, new AxisEditorRequestedEventArgs(AxisIdent.Y_Axis, m_map_name, m_filename));
-                onAxisEditorRequested(this, new ReadSymbolEventArgs(SymbolDictionary.GetSymbolYAxis(m_map_name), m_filename));
+                char axis_x_or_y = ' ';
+                string alt_axis = "";
+                string y = SymbolDictionary.GetSymbolYAxis(m_map_name);
+                if (SymbolDictionary.doesDuplicateExist(m_map_name, out axis_x_or_y, out alt_axis))
+                {
+                    if (!SymbolExists(y))
+                    {
+                        y = alt_axis;
+                    }
+                }
+                onAxisEditorRequested(this, new ReadSymbolEventArgs(y, m_filename));
             }
         }
 
@@ -4856,7 +4892,13 @@ namespace T8SuitePro
         {
             CastReadEvent();
         }
-
-        
+        public bool SymbolExists(string symbolname)
+        {
+            foreach (SymbolHelper sh in Form1.m_symbols)
+            {
+                if (sh.Varname == symbolname || sh.Userdescription == symbolname) return true;
+            }
+            return false;
+        }
     }
 }

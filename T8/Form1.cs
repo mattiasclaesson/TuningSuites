@@ -141,7 +141,7 @@ namespace T8SuitePro
 
         string m_currentfile = string.Empty;
         AppSettings m_appSettings = new AppSettings();
-        SymbolCollection m_symbols = new SymbolCollection();
+        public static SymbolCollection m_symbols = new SymbolCollection();
         int m_currentMapHelperRowHandle = -1;
         private frmMapHelper m_mapHelper = new frmMapHelper();
         private string m_currentMapname = string.Empty;
@@ -2241,11 +2241,17 @@ namespace T8SuitePro
             string y_axis_descr = string.Empty;
             string z_axis_descr = string.Empty;
             axestrans.GetAxisSymbols(symbolname, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-            if (x_axis == "BstKnkCal.OffsetXSP")
+            // Check if there are duplicates
+            string alt_axis="";
+            char axis_x_or_y = 'X';
+            if (SymbolDictionary.doesDuplicateExist(symbolname, out axis_x_or_y, out alt_axis))
             {
-                if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
+                // Check if the current loaded axis exist in the file
+                if (!SymbolExists(x_axis))
+                {
+                    x_axis = alt_axis;
+                }
             }
-
             x = x_axis_descr;
             y = y_axis_descr;
             z = z_axis_descr;
@@ -2642,9 +2648,16 @@ namespace T8SuitePro
             {
                 if (x_axis != "")
                 {
-                    if (x_axis == "BstKnkCal.OffsetXSP")
+                    // Check if there are duplicates
+                    string alt_axis = "";
+                    char axis_x_or_y = 'X';
+                    if (SymbolDictionary.doesDuplicateExist(symbolname, out axis_x_or_y, out alt_axis))
                     {
-                        if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
+                        // Check if the current loaded axis exist in the file
+                        if (!SymbolExists(x_axis))
+                        {
+                            x_axis = alt_axis;
+                        }
                     }
                     if (Char.IsDigit(x_axis[0]))
                     {
@@ -2926,9 +2939,16 @@ namespace T8SuitePro
                             string y_axis_descr = string.Empty;
                             string z_axis_descr = string.Empty;
                             axestrans.GetAxisSymbols(varname, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-                            if (x_axis == "BstKnkCal.OffsetXSP")
+                            // Check if there are duplicates
+                            string alt_axis = "";
+                            char axis_x_or_y = 'X';
+                            if (SymbolDictionary.doesDuplicateExist(varname, out axis_x_or_y, out alt_axis))
                             {
-                                if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
+                                // Check if the current loaded axis exist in the file
+                                if (!SymbolExists(x_axis))
+                                {
+                                    x_axis = alt_axis;
+                                }
                             }
 
                             tabdet.X_axis_name = x_axis_descr;
@@ -3631,7 +3651,7 @@ namespace T8SuitePro
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map #1";
                             this.btnMaxAirmassMapManual.Tag = "New";
                             this.btnMaxAirmassMapAuto.Caption = "Max airmass map #2";
-                            this.btnMaxAirmassMapManual.Tag = "New";
+                            this.btnMaxAirmassMapAuto.Tag = "New";
                             this.barButtonItem13.Caption = "Trq limit 175/200hp";
                             this.barButtonItem13.Tag = "New";
                             this.barButtonItem14.Caption = "Trq limit 150hp";
@@ -5687,9 +5707,16 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 string y_axis_descr = string.Empty;
                 string z_axis_descr = string.Empty;
                 axestrans.GetAxisSymbols(m_currentMapname, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-                if (x_axis == "BstKnkCal.OffsetXSP")
+                // Check if there are duplicates
+                string alt_axis = "";
+                char axis_x_or_y = 'X';
+                if (SymbolDictionary.doesDuplicateExist(m_currentMapname, out axis_x_or_y, out alt_axis))
                 {
-                    if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
+                    // Check if the current loaded axis exist in the file
+                    if (!SymbolExists(x_axis))
+                    {
+                        x_axis = alt_axis;
+                    }
                 }
 
                 m_mapHelper.mapViewer1.X_axis_name = x_axis_descr;
@@ -13185,9 +13212,16 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     string z_axis_descr = string.Empty;
                     axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
 
-                    if (x_axis == "BstKnkCal.OffsetXSP")
+                    // Check if there are duplicates
+                    char axis_x_or_y = ' ';
+                    string alt_axis = "";
+                    if (SymbolDictionary.doesDuplicateExist(symbolname, out axis_x_or_y, out alt_axis))
                     {
-                        if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
+                        // Check if the current loaded axis exist in the file
+                        if (!SymbolExists(x_axis))
+                        {
+                            x_axis = alt_axis;
+                        }
                     }
 
                     tabdet.X_axis_name = x_axis_descr;
@@ -13782,9 +13816,16 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             string y_axis_descr = string.Empty;
                             string z_axis_descr = string.Empty;
                             axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-                            if (x_axis == "BstKnkCal.OffsetXSP")
+                            // Check if there are duplicates
+                            string alt_axis = "";
+                            char axis_x_or_y = 'X';
+                            if (SymbolDictionary.doesDuplicateExist(tabdet.Map_name, out axis_x_or_y, out alt_axis))
                             {
-                                if (!SymbolExists(x_axis)) x_axis = "BstKnkCal.fi_offsetXSP";
+                                // Check if the current loaded axis exist in the file
+                                if (!SymbolExists(x_axis))
+                                {
+                                    x_axis = alt_axis;
+                                }
                             }
 
                             tabdet.X_axis_name = x_axis_descr;
