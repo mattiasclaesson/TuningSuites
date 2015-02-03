@@ -1,6 +1,6 @@
 #
 # AS2 Parser
-# Version: 0.9
+# Version: 0.10
 #
 import sys
 import os.path
@@ -191,11 +191,21 @@ namespace T8SuitePro
     fh_sym_dic.write(out_sym_dict)
     fh_sym_dic.close()
 
-def symbol_exist_already(symbol_name):
+def symbol_exist_already(symbol_name, the_symbol):
     global num_DUP
     for a_symbol in symbol_list:
         if a_symbol[SYMBOL_NAME] == symbol_name:
             num_DUP = num_DUP + 1
+            if (a_symbol[SYMBOL_X_AXIS] != the_symbol[SYMBOL_X_AXIS]):
+                #print symbol_name
+                print "Found x-axis mismatch for map '" + symbol_name + "'"
+                print "File A: '" + a_symbol[SYMBOL_X_AXIS] + "'"
+                print "File B: '" + the_symbol[SYMBOL_X_AXIS] + "'"
+            if (a_symbol[SYMBOL_Y_AXIS] != the_symbol[SYMBOL_Y_AXIS]):
+                #print symbol_name
+                print "Found x-axis mismatch for map '" + symbol_name + "'"
+                print "File A: '" + a_symbol[SYMBOL_Y_AXIS] + "'"
+                print "File B: '" + the_symbol[SYMBOL_Y_AXIS] + "'"
             if debug:
                 print "Found duplicated symbol " + symbol_name
             return True
@@ -318,8 +328,9 @@ def main():
                     if line[0] == '\n':
                         if debug:
                             print("Found end of symbol " + symbol_name)
-                        if not symbol_exist_already(symbol_name):
-                            symbol_list.append(parse_symbol_data(symbol_name, file_version, symbol_data))
+                        found_symbol = parse_symbol_data(symbol_name, file_version, symbol_data)
+                        if not symbol_exist_already(symbol_name, found_symbol):
+                            symbol_list.append(found_symbol)
                         searching = True
                         symbol_data = []
                     else:
