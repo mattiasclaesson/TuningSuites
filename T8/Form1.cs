@@ -2255,7 +2255,7 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Length;
                 }
@@ -2267,7 +2267,7 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Flash_start_address;
                 }
@@ -2279,7 +2279,7 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Symbol_number;
                 }
@@ -2291,7 +2291,7 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Start_address;
                 }
@@ -2853,11 +2853,7 @@ namespace T8SuitePro
 
                     if (sh == null) return;
 
-                    string varname = sh.Varname;
-                    if (varname.StartsWith("Symbol") && sh.Userdescription != "")
-                    {
-                        varname = sh.Userdescription;
-                    }
+                    string varname = sh.SmartVarname;
                     if (sh.BitMask > 0)
                     {
                         // get all other symbols with the same address
@@ -3489,27 +3485,6 @@ namespace T8SuitePro
             }
         }
 
-
-        private void CreateRepositoryItem(string filename)
-        {
-            System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(filename));
-            dt.Columns.Add("Varname");
-            dt.Columns.Add("Description");
-            dt.Columns.Add("Flash_start_address", Type.GetType("System.Int32"));
-            dt.Columns.Add("Internal_address", Type.GetType("System.Int32"));
-            dt.Columns.Add("Length", Type.GetType("System.Int32"));
-            dt.Columns.Add("Start_address", Type.GetType("System.Int32"));
-            dt.Columns.Add("Symbol_number", Type.GetType("System.Int32"));
-            dt.Columns.Add("Symbol_number_ECU", Type.GetType("System.Int32"));
-            dt.Columns.Add("Userdescription");
-
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                dt.Rows.Add(sh.Varname, sh.Description, sh.Flash_start_address, sh.Internal_address, sh.Length, sh.Start_address, sh.Symbol_number, sh.Symbol_number_ECU, sh.Userdescription);
-            }
-            dt.WriteXml(filename);
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             ribbonControl1.Minimized = true;
@@ -3668,9 +3643,9 @@ namespace T8SuitePro
                 }
             }
         }
+
         private void StartTableViewer(string symbolname)
         {
-            bool _vwrstarted = false;
             if (GetSymbolAddress(m_symbols, symbolname) > 0)
             {
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
@@ -3678,7 +3653,7 @@ namespace T8SuitePro
                 int rtel = 0;
                 foreach (SymbolHelper sh in sc)
                 {
-                    if (sh.Varname == symbolname)
+                    if (sh.SmartVarname == symbolname)
                     {
                         try
                         {
@@ -3687,11 +3662,8 @@ namespace T8SuitePro
                             gridViewSymbols.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
                             gridViewSymbols.ClearSelection();
                             gridViewSymbols.SelectRow(rhandle);
-                            //gridViewSymbols.SelectRows(rhandle, rhandle);
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
-                            //gridViewSymbols.SelectRange(rhandle, rhandle);
-                            _vwrstarted = true;
                             StartTableViewer();
                             break;
                         }
@@ -3702,36 +3674,6 @@ namespace T8SuitePro
                     }
 
                     rtel++;
-                }
-                if (!_vwrstarted)
-                {
-                    rtel = 0;
-                    foreach (SymbolHelper sh in sc)
-                    {
-                        if (sh.Userdescription == symbolname)
-                        {
-                            try
-                            {
-                                int rhandle = gridViewSymbols.GetRowHandle(rtel);
-                                gridViewSymbols.OptionsSelection.MultiSelect = true;
-                                gridViewSymbols.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-                                gridViewSymbols.ClearSelection();
-                                gridViewSymbols.SelectRow(rhandle);
-                                //gridViewSymbols.SelectRows(rhandle, rhandle);
-                                gridViewSymbols.MakeRowVisible(rhandle, true);
-                                gridViewSymbols.FocusedRowHandle = rhandle;
-                                //gridViewSymbols.SelectRange(rhandle, rhandle);
-                                _vwrstarted = true;
-                                StartTableViewer();
-                                break;
-                            }
-                            catch (Exception E)
-                            {
-                                MessageBox.Show(E.Message);
-                            }
-                        }
-                        rtel++;
-                    }
                 }
             }
             else
@@ -6044,10 +5986,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 {
                     SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
 
-                    //                    DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    //frmTableDetail tabdet = new frmTableDetail();
-                    string Map_name = sh.Varname;
-                    if (Map_name.StartsWith("Symbol:") && sh.Userdescription != "") Map_name = sh.Userdescription;
+                    string Map_name = sh.SmartVarname;
                     int columns = 8;
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, Map_name, out columns, out rows);
@@ -6189,7 +6128,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         // look if it is a valid symbolname
                         foreach (SymbolHelper sh in m_symbols)
                         {
-                            if (sh.Varname == mapname || sh.Userdescription == mapname)
+                            if (sh.SmartVarname == mapname)
                             {
                                 symbolfound = true;
                                 if (MessageBox.Show("Found valid symbol for import: " + mapname + ". Are you sure you want to overwrite the map in the binary?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -7009,10 +6948,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private bool CanTransfer(SymbolHelper sh)
         {
-            // FOR TESTING ONLY
-            //return true;
             bool retval = false;
-            if (sh.Varname.Contains(".") || sh.Userdescription.Contains(".")) retval = true;
+            if (sh.SmartVarname.Contains("."))
+                retval = true;
             return retval;
         }
 
@@ -7065,23 +7003,18 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         {
                             foreach (SymbolHelper cfsh in m_symbols)
                             {
-                                if (CanTransfer(cfsh))
+                                string symbolname = cfsh.SmartVarname;
+                                if (symbolname.Contains("."))
                                 {
-                                    if (cfsh.Varname == sh.Varname || cfsh.Userdescription == sh.Varname)
+                                    string currentSymbolname = sh.SmartVarname;
+                                    if (symbolname == currentSymbolname)
                                     {
-                                        string symbolname = cfsh.Varname;
-                                        if (symbolname.StartsWith("Symbolnumber"))
-                                        {
-                                            if (!sh.Varname.StartsWith("Symbolnumber")) symbolname = sh.Varname;
-                                            else if (sh.Userdescription != "") symbolname = sh.Userdescription;
-                                            else if (cfsh.Userdescription != "") symbolname = cfsh.Userdescription;
-                                        }
                                         if (SymbolInTransferCollection(frmtransfer.Symbols, symbolname))
                                         {
-                                            SetProgress("Transferring: " + sh.Varname);
+                                            SetProgress("Transferring: " + currentSymbolname);
                                             int percentage = symidx * 100 / curSymbolCollection.Count;
                                             SetProgressPercentage(percentage);
-                                            CopySymbol(sh.Varname, m_currentfile, (int)cfsh.Flash_start_address, cfsh.Length, filename, (int)sh.Flash_start_address, sh.Length);
+                                            CopySymbol(currentSymbolname, m_currentfile, (int)cfsh.Flash_start_address, cfsh.Length, filename, (int)sh.Flash_start_address, sh.Length);
                                         }
                                     }
                                 }
@@ -7102,7 +7035,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
         {
             foreach (SymbolHelper sh_test in transferCollection)
             {
-                if (sh_test.Selected && (sh_test.Varname == mapname || sh_test.Userdescription == mapname))
+                if (sh_test.Selected && sh_test.SmartVarname == mapname)
                 {
                     return true;
                 }
@@ -7706,16 +7639,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
         {
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname.StartsWith("TrqLimCal.Trq_MaxEngine") || sh.Userdescription.StartsWith("TrqLimCal.Trq_MaxEngine"))
+                string limitername = sh.SmartVarname;
+                if (limitername.StartsWith("TrqLimCal.Trq_MaxEngine") || limitername.StartsWith("TMCCal.Trq_MaxEngine"))
                 {
-                    string limitername = sh.Varname;
-                    if (limitername.StartsWith("Symbol")) limitername = sh.Userdescription;
-                    TuneTorqueLimiter(limitername, maxtorque);
-                }
-                else if (sh.Varname.StartsWith("TMCCal.Trq_MaxEngine") || sh.Userdescription.StartsWith("TMCCal.Trq_MaxEngine"))
-                {
-                    string limitername = sh.Varname;
-                    if (limitername.StartsWith("Symbol")) limitername = sh.Userdescription;
                     TuneTorqueLimiter(limitername, maxtorque);
                 }
             }
@@ -8906,25 +8832,33 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             {
                                 if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
                                 {
-                                    sh.Userdescription = dr["DESCRIPTION"].ToString();
+                                    if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                                    {
+                                        sh.Userdescription = sh.Varname;
+                                        sh.Varname = dr["DESCRIPTION"].ToString();
+                                    }
+                                    else
+                                    {
+                                        sh.Userdescription = dr["DESCRIPTION"].ToString();
+                                    }
                                     string helptext = string.Empty;
                                     XDFCategories cat = XDFCategories.Undocumented;
                                     XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub);
+                                    sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub);
 
                                     //if(sh.Category == 
                                     if (sh.Category == "Undocumented" || sh.Category == "")
                                     {
-                                        if (sh.Userdescription.Contains("."))
+                                        if (sh.Varname.Contains("."))
                                         {
                                             try
                                             {
-                                                sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                                //LogHelper.Log("Set cat to " + sh.Category + " for " + sh.Userdescription);
+                                                sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
+                                                //LogHelper.Log(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
                                             }
                                             catch (Exception cE)
                                             {
-                                                LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                                             }
                                         }
 
@@ -8952,7 +8886,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname) return true;
+                if (sh.SmartVarname == symbolname) return true;
             }
             return false;
         }
@@ -9182,20 +9116,30 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             T8Header fh = new T8Header();
             fh.init(m_currentfile);
             string checkstring = fh.PartNumber + fh.SoftwareVersion;
-            string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(m_currentfile) + File.GetCreationTime(m_currentfile).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
-            if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\repository"))
+            string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
+            if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
             {
-                Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
+                if (File.Exists(xmlfilename))
+                {
+                    File.Delete(xmlfilename);
+                }
             }
-            if (File.Exists(xmlfilename))
+            else
             {
-                File.Delete(xmlfilename);
+                Directory.CreateDirectory(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath));
             }
             foreach (SymbolHelper sh in m_symbols)
             {
                 if (sh.Userdescription != "")
                 {
-                    dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
+                    if (sh.Userdescription == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                    {
+                        dt.Rows.Add(sh.Userdescription, sh.Symbol_number, sh.Flash_start_address, sh.Varname);
+                    }
+                    else
+                    {
+                        dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
+                    }
                 }
             }
             dt.WriteXml(xmlfilename);
@@ -9591,7 +9535,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == symbolName || sh.Userdescription == symbolName)
+                if (sh.SmartVarname == symbolName)
                 {
                     SymbolHelper shNew = new SymbolHelper();
                     shNew.Start_address = sh.Start_address;
@@ -9719,7 +9663,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Userdescription;
                 }
@@ -10666,14 +10610,17 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                         bool sfound = false;
                                         foreach (SymbolHelper sh in sc)
                                         {
-                                            if (sh.Varname == varname || sh.Userdescription == varname)
+                                            if (sh.SmartVarname == varname)
                                             {
                                                 sfound = true;
                                             }
                                         }
                                         SymbolHelper nsh = new SymbolHelper();
                                         nsh.Varname = varname;
-                                        if (!sfound) sc.Add(nsh);
+                                        if (!sfound)
+                                        {
+                                            sc.Add(nsh);
+                                        }
                                     }
                                 }
                             }
@@ -11902,9 +11849,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == "ExhaustCal.ST_Enable" || sh.Userdescription == "ExhaustCal.ST_Enable")
+                if (sh.SmartVarname == "ExhaustCal.ST_Enable")
                 {
-                    byte[] toqruelimdata = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, sh.Varname), sh.Length);
+                    byte[] toqruelimdata = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, sh.SmartVarname), sh.Length);
                     if (sh.Length == 1)
                     {
                         if ((byte)toqruelimdata.GetValue(0) != 0x00)
@@ -14582,11 +14529,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 foreach (SymbolHelper sh in m_symbols)
                 {
-                    string varname = sh.Varname;
-                    if (varname.StartsWith("Symbol") && sh.Userdescription != "")
-                    {
-                        varname = sh.Userdescription;
-                    }
+                    string varname = sh.SmartVarname;
                     if (varname == symbolname)
                     {
                         // convert to realtime symbol
@@ -15030,45 +14973,42 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if (line.StartsWith("*"))
                     {
                         symbolnumber++;
-                        //AddLog(line);
+                        //Console.WriteLine(line);
                         string[] values = line.Split(sep);
                         try
                         {
-
-                            string varname = (string)values.GetValue(0);
-                            varname = varname.Substring(1);
+                            //string varname = (string)values.GetValue(0);
+                            string varname = line.Substring(1);
                             int idxSymTab = 0;
                             foreach (SymbolHelper sh in m_symbols)
                             {
-                                if (sh.Length > 0) idxSymTab++;
+                                if (sh.Length > 0)
+                                {
+                                    idxSymTab++;
+                                }
                                 if (idxSymTab == symbolnumber)
-                                //if (sh.Symbol_number == symbolnumber)
                                 {
                                     sh.Userdescription = varname;
                                     string helptext = string.Empty;
                                     XDFCategories cat = XDFCategories.Undocumented;
                                     XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub);
-                                    //if(sh.Category == 
+                                    sh.Description = st.TranslateSymbolToHelpText(varname, out helptext, out cat, out sub);
+                                    
                                     if (sh.Category == "Undocumented" || sh.Category == "")
                                     {
-                                        if (sh.Userdescription.Contains("."))
+                                        if (varname.Contains("."))
                                         {
                                             try
                                             {
-                                                sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                                //LogHelper.Log("Set cat to " + sh.Category + " for " + sh.Userdescription);
+                                                sh.Category = varname.Substring(0, varname.IndexOf("."));
                                             }
                                             catch (Exception cE)
                                             {
                                                 LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
                                             }
                                         }
-
                                     }
-
                                     break;
-
                                 }
                             }
                         }
@@ -15357,11 +15297,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
                 // add to realtime table
-                string symName = sh.Varname;
-                if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
-                {
-                    symName = sh.Userdescription;
-                }
+                string symName = sh.SmartVarname;
 
                 switch (symName)
                 {

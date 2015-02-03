@@ -59,17 +59,9 @@ namespace T8SuitePro
             string zaxisdescr = "";
             foreach (SymbolHelper sh in sc)
             {
-                string symboldescr=  "";
-                if (sh.Varname.StartsWith("Symbol") && sh.Userdescription != "")
-                {
-                    sat.GetAxisSymbols(sh.Userdescription, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                    symboldescr = symtrans.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out subcat);
-                }
-                else
-                {
-                    sat.GetAxisSymbols(sh.Varname, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                    symboldescr = symtrans.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out subcat);
-                }
+                string name = sh.SmartVarname;
+                sat.GetAxisSymbols(name, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+                String symboldescr = symtrans.TranslateSymbolToHelpText(name, out helptext, out cat, out subcat);
                 
                 if (xaxis != "")
                 {
@@ -81,7 +73,7 @@ namespace T8SuitePro
                 }
                 if (xaxis != "" || yaxis != "")
                 {
-                    dt.Rows.Add(sh.Varname, symboldescr, xaxis, xaxisdescr, yaxis, yaxisdescr);
+                    dt.Rows.Add(name, symboldescr, xaxis, xaxisdescr, yaxis, yaxisdescr);
                 }
             }
             gridControl1.DataSource = dt;
