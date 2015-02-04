@@ -139,7 +139,7 @@ namespace T8SuitePro
         private EngineStatus _currentEngineStatus = new EngineStatus();
         private AFRViewType AfrViewMode = AFRViewType.AFRMode;
 
-        string m_currentfile = string.Empty;
+        public static string m_currentfile = string.Empty;
         AppSettings m_appSettings = new AppSettings();
         public static SymbolCollection m_symbols = new SymbolCollection();
         int m_currentMapHelperRowHandle = -1;
@@ -2257,7 +2257,7 @@ namespace T8SuitePro
             z = z_axis_descr;
         }
 
-        private int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
+        public static int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
@@ -2269,7 +2269,7 @@ namespace T8SuitePro
             return 0;
         }
 
-        private Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
+        public static Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
@@ -2305,7 +2305,7 @@ namespace T8SuitePro
             return 0;
         }
 
-        private int GetTableMatrixWitdhByName(string filename, SymbolCollection curSymbols, string symbolname, out int columns, out int rows)
+        public static int GetTableMatrixWitdhByName(string filename, SymbolCollection curSymbols, string symbolname, out int columns, out int rows)
         {
 
             columns = 1;
@@ -2517,7 +2517,7 @@ namespace T8SuitePro
             return retval;
         }
 
-        private byte[] readdatafromfile(string filename, int address, int length)
+        public static  byte[] readdatafromfile(string filename, int address, int length)
         {
             if (length <= 0) return new byte[1];
             byte[] retval = new byte[length];
@@ -2753,6 +2753,34 @@ namespace T8SuitePro
             }
         }
 
+        //Faanskit: Sorry for the duplicate code below. Will try to find a way to fix it.
+        //          Reason is because frmTuneWizard calls Form1 and it need to be public static
+        public static void savedatatobinary_silent(int address, int length, byte[] data, string filename)
+        {
+            if (address > 0 && address < 0x100000)
+            {
+                try
+                {
+                    byte[] beforedata = readdatafromfile(filename, address, length);
+                    FileStream fsi1 = File.OpenWrite(filename);
+                    BinaryWriter bw1 = new BinaryWriter(fsi1);
+                    fsi1.Position = address;
+                    for (int i = 0; i < length; i++)
+                    {
+                        bw1.Write((byte)data.GetValue(i));
+                    }
+                    fsi1.Flush();
+                    bw1.Close();
+                    fsi1.Close();
+                    fsi1.Dispose();
+
+                }
+                catch (Exception E)
+                {
+                    frmInfoBox info = new frmInfoBox("Failed to write to binary. Is it read-only? Details: " + E.Message);
+                }
+            }
+        }
         void tabdet_onSymbolSave(object sender, IMapViewer.SaveSymbolEventArgs e)
         {
             if (sender is IMapViewer)
@@ -8029,6 +8057,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             frmTuningWizard frmTunWiz = new frmTuningWizard(this, m_currentfile);
             frmTunWiz.ShowDialog();
+            UpdateChecksum(m_currentfile, true);
         }
 
         private void barButtonItem30_ItemClick(object sender, ItemClickEventArgs e)
@@ -15432,13 +15461,40 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // Add(new Form1.TuningAction("Mackanized ST1+", "ap_ST1Plus", Form1.TuneWizardType.Embedded));
                 WizName = "Convert 150mp maps to 175hp maps";
                 WizIdOrFilename = "ap_175hp";
-                impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", 
-                                                   "FFTrqCal.FFTrq_MaxEngineTab2" };
+                impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", "FFTrqCal.FFTrq_MaxEngineTab2" };
             }
 
             public override int performTuningAction()
             {
-                return 0;
+                string [] fromLimiter = new string [] { "FFTrqCal.FFTrq_MaxEngineTab1", "TrqLimCal.Trq_MaxEngineTab1"};
+                string[] toLimiter = new string[] { "FFTrqCal.FFTrq_MaxEngineTab2", "TrqLimCal.Trq_MaxEngineTab2" };
+                int retval = 1; // Assume fail
+                for (int i = 0; i < 2; i++)
+                {
+                    File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-beforetuningto-" + WizIdOrFilename + "-mg.bin", true);
+                    if ((int)Form1.GetSymbolAddress(m_symbols, fromLimiter[i]) > 0)
+                    {
+                        if ((int)Form1.GetSymbolAddress(m_symbols, toLimiter[i]) > 0)
+                        {
+                            int fromCols, fromRows;
+                            int toCols, toRows;
+                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, fromLimiter[i], out fromCols, out fromRows);
+                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, toLimiter[i], out toCols, out toRows);
+                            if (fromCols == toCols && fromRows == toRows)
+                            {
+                                byte[] from = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, fromLimiter[i]), GetSymbolLength(m_symbols, fromLimiter[i]));
+                                // Calling duplicated code; really needs to be fixed
+                                savedatatobinary_silent((int)GetSymbolAddress(m_symbols, toLimiter[i]), GetSymbolLength(m_symbols, toLimiter[i]), from, m_currentfile);
+                                retval = 0;
+                            }
+                            else
+                            {
+                                retval = 1;
+                            }
+                        }
+                    }
+                }
+                return retval;
             }
         }
 

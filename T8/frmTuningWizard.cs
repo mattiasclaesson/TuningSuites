@@ -11,6 +11,7 @@ namespace T8SuitePro
     {
         readonly Form1 parent;
 
+        // NOT A GOOD DESIGN PATTERN TO CALL FUNCTIONS IN PARENT WINDOW; needs to be fixed somehow.
         public frmTuningWizard(Form1 inParent, string in_m_currentfile)
         {
             InitializeComponent();
