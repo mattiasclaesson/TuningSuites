@@ -37,6 +37,7 @@
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.listTuningActions = new DevExpress.XtraEditors.ListBoxControl();
             this.wizCompletedPage = new DevExpress.XtraWizard.CompletionWizardPage();
+            this.listModifiedMaps = new DevExpress.XtraEditors.ListBoxControl();
             this.wizConfirmPage = new DevExpress.XtraWizard.WizardPage();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.lblTuningActionConfirm = new DevExpress.XtraEditors.LabelControl();
@@ -48,6 +49,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
             this.splitContainerControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listTuningActions)).BeginInit();
+            this.wizCompletedPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.listModifiedMaps)).BeginInit();
             this.wizConfirmPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkIUnderstand.Properties)).BeginInit();
             this.SuspendLayout();
@@ -85,7 +88,7 @@
             this.wizWelcomePage.IntroductionText = "This wizard will help you apply a pre-defined set of Tuning Actions to your binar" +
                 "y file. You will be given a choice of Tuning Actions in the coming pages.";
             this.wizWelcomePage.Name = "wizWelcomePage";
-            this.wizWelcomePage.Size = new System.Drawing.Size(314, 184);
+            this.wizWelcomePage.Size = new System.Drawing.Size(314, 183);
             this.wizWelcomePage.Text = "Tuning Wizard";
             // 
             // wizSelectActionPage
@@ -93,7 +96,7 @@
             this.wizSelectActionPage.Controls.Add(this.splitContainerControl1);
             this.wizSelectActionPage.DescriptionText = "Selection your wanted Tuning Action from the list below and click Next";
             this.wizSelectActionPage.Name = "wizSelectActionPage";
-            this.wizSelectActionPage.Size = new System.Drawing.Size(499, 173);
+            this.wizSelectActionPage.Size = new System.Drawing.Size(499, 171);
             this.wizSelectActionPage.Text = "Select Tuning Action";
             // 
             // splitContainerControl1
@@ -106,7 +109,7 @@
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.listTuningActions);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(499, 173);
+            this.splitContainerControl1.Size = new System.Drawing.Size(499, 171);
             this.splitContainerControl1.SplitterPosition = 101;
             this.splitContainerControl1.TabIndex = 0;
             this.splitContainerControl1.Text = "splitContainerControl1";
@@ -135,15 +138,23 @@
             this.listTuningActions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listTuningActions.Location = new System.Drawing.Point(0, 0);
             this.listTuningActions.Name = "listTuningActions";
-            this.listTuningActions.Size = new System.Drawing.Size(386, 173);
+            this.listTuningActions.Size = new System.Drawing.Size(393, 171);
             this.listTuningActions.TabIndex = 0;
             // 
             // wizCompletedPage
             // 
+            this.wizCompletedPage.Controls.Add(this.listModifiedMaps);
             this.wizCompletedPage.FinishText = "You have completed the selected tuning action.";
             this.wizCompletedPage.Name = "wizCompletedPage";
-            this.wizCompletedPage.Size = new System.Drawing.Size(314, 184);
+            this.wizCompletedPage.Size = new System.Drawing.Size(314, 183);
             this.wizCompletedPage.Text = "Completed Tuning Wizard";
+            // 
+            // listModifiedMaps
+            // 
+            this.listModifiedMaps.Location = new System.Drawing.Point(0, 67);
+            this.listModifiedMaps.Name = "listModifiedMaps";
+            this.listModifiedMaps.Size = new System.Drawing.Size(314, 86);
+            this.listModifiedMaps.TabIndex = 0;
             // 
             // wizConfirmPage
             // 
@@ -153,7 +164,7 @@
             this.wizConfirmPage.Controls.Add(this.labelControl2);
             this.wizConfirmPage.DescriptionText = "Please confirm your Tuning Action and click Next";
             this.wizConfirmPage.Name = "wizConfirmPage";
-            this.wizConfirmPage.Size = new System.Drawing.Size(499, 173);
+            this.wizConfirmPage.Size = new System.Drawing.Size(499, 171);
             this.wizConfirmPage.Text = "Confirm Tuning Action";
             // 
             // labelControl4
@@ -211,6 +222,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).EndInit();
             this.splitContainerControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listTuningActions)).EndInit();
+            this.wizCompletedPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.listModifiedMaps)).EndInit();
             this.wizConfirmPage.ResumeLayout(false);
             this.wizConfirmPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkIUnderstand.Properties)).EndInit();
@@ -234,5 +247,6 @@
         private DevExpress.XtraEditors.CheckEdit checkIUnderstand;
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.ListBoxControl listModifiedMaps;
     }
 }

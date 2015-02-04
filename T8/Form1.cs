@@ -15378,24 +15378,93 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (this.barButtonItem41.Tag != "Old")
                 StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
-        public int performTuningAction(TuningAction tuneAction)
+        public enum TuneWizardType
         {
-            int retval = 0;
-           // MessageBox.Show("Applying: " + tuneAction.ToString());
-            if (tuneAction.GetWizardType() == TuneWizardType.Embedded)
+            None = 0,       // Should never happen
+            Embedded,       // Hard coded routines
+            TuningFile      // Future: Tuning Packages when installing solution.
+        };
+
+        public class TuningAction
+        {
+            public string WizName;
+            public string WizIdOrFilename;
+            public TuneWizardType WizType;
+            public string[] impactedMaps;
+
+            public TuningAction() 
             {
-                if ((tuneAction.GetWizardIdOrFilename()) == "ap_ST1Plus")
-                {
-                }
-                else if ((tuneAction.GetWizardIdOrFilename()) == "ap_175hp")
-                {
-                }
-                else
-                {
-                    retval = 1;
-                }
+                WizType = TuneWizardType.Embedded;
+                WizName = "";
+                WizIdOrFilename = "";
             }
-            return retval;
+
+            public override string ToString()
+            {
+                return WizName;
+            }
+
+            public string GetWizardIdOrFilename()
+            {
+                return WizIdOrFilename;
+            }
+
+            public TuneWizardType GetWizardType()
+            {
+                return WizType;
+            }
+
+            public string[] getImpactedMaps()
+            {
+                return impactedMaps;
+            }
+
+            public virtual int performTuningAction()
+            {
+                return 0;
+            }
         }
+
+        public class Copy175hpMaps : TuningAction
+        {
+            public Copy175hpMaps()
+            {
+                // Add(new Form1.TuningAction("Mackanized ST1+", "ap_ST1Plus", Form1.TuneWizardType.Embedded));
+                WizName = "Convert 150mp maps to 175hp maps";
+                WizIdOrFilename = "ap_175hp";
+                impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", 
+                                                   "FFTrqCal.FFTrq_MaxEngineTab2" };
+            }
+
+            public override int performTuningAction()
+            {
+                return 0;
+            }
+        }
+
+        public class MackanizedST1Plus : TuningAction
+        {
+            public MackanizedST1Plus()
+            {
+                // Add(new Form1.TuningAction(, , Form1.TuneWizardType.Embedded));
+                this.WizName = "Mackanized ST1+";
+                this.WizIdOrFilename = "ap_ST1Plus";
+                this.impactedMaps = new string[] {  "TrqLimCal.Trq_MaxEngineTab", 
+                                                    "TrqLimCal.Trq_MaxEngineTab2", 
+                                                    "FFTrqCal.FFTrq_MaxEngineTab2",
+                                                    "FFTrqCal.FFTrq_MaxEngineTab2"};
+            }
+
+            public override int performTuningAction()
+            {
+                return 0;
+            }
+        }
+
+        public static List <TuningAction> installedTunings = new List<TuningAction>
+        {
+            new Copy175hpMaps(),
+            new MackanizedST1Plus()
+        };
     }
 }

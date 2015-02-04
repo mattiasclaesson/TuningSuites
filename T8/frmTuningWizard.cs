@@ -9,7 +9,7 @@ namespace T8SuitePro
 {
     public partial class frmTuningWizard : Form
     {
-        Form1 parent;
+        readonly Form1 parent;
 
         public frmTuningWizard(Form1 inParent, string in_m_currentfile)
         {
@@ -18,10 +18,10 @@ namespace T8SuitePro
             // Set-up some navigation rules
             this.wizConfirmPage.AllowNext = false;
             this.wizCompletedPage.AllowBack = false;
-            // Install pre-defined tuning packages
-            // FIX: Should come from a static structure and coded like this.
-            this.listTuningActions.Items.Add(new TuningAction("Convert 150mp maps to 175hp maps", "ap_175hp", TuneWizardType.Embedded));
-            this.listTuningActions.Items.Add(new TuningAction("Mackanized ST1+", "ap_ST1Plus", TuneWizardType.Embedded));
+            // List all tuning packages
+            foreach (Form1.TuningAction t in Form1.installedTunings )
+                this.listTuningActions.Items.Add(t);
+            
             // Read software version from binary
             if (in_m_currentfile != string.Empty)
             {
@@ -47,33 +47,34 @@ namespace T8SuitePro
             {
                 // Disable turning back
                 this.wizCompletedPage.AllowCancel = false;
-                TuningAction selAction = (TuningAction)this.listTuningActions.SelectedItem;
+                Form1.TuningAction selAction = (Form1.TuningAction)this.listTuningActions.SelectedItem;
                 // Perform the tuning action
-                if (parent.performTuningAction(selAction) == 0)
+                //if (parent.performTuningAction(selAction) == 0)
+                if(selAction.performTuningAction() == 0)
                 {
                     // Inform the user of the tuning action
-                    // FIX: Maybe list all maps that were updated?
+                    string[] imactedMaps = selAction.getImpactedMaps(); // FIX: Maybe list all maps that were updated?
                     this.wizCompletedPage.FinishText = "You have now completed the Tuning Action '" +
                         this.listTuningActions.SelectedItem.ToString() +
                         "'. Please check the modified maps so that they are what you expect them to be." +
                         " Easiest way to do that is to compare to the original binary.";
+                    foreach (string impM in imactedMaps)
+                        this.listModifiedMaps.Items.Add(impM);
                 }
                 else
                 {
                     this.wizCompletedPage.FinishText = "The Tuning Action '" + 
                         this.listTuningActions.SelectedItem.ToString() +
                         "' failed! You should likely not use this binary at this point.";
-
                 }
             }
         }
+
         private void wizardTuning_PrevClick(object sender, DevExpress.XtraWizard.WizardCommandButtonClickEventArgs e)
         {
             // Uncheck confirmation when used clicked back from confirmation page. He is ambivalent.
             if (e.Page.Name == "wizConfirmPage")
-            {
                 this.checkIUnderstand.Checked = false;
-            }
         }
 
         private void checkIUnderstand_CheckedChanged(object sender, EventArgs e)
@@ -89,40 +90,6 @@ namespace T8SuitePro
                     this.wizConfirmPage.AllowNext = false;
                     break;
             }
-        }
-    }
-
-    public enum TuneWizardType
-    {
-        None = 0,       // Should never happen
-        Embedded,       // Hard coded routines
-        TuningFile      // Future: Tuning Packages when installing solution.
-    };
-
-    public class TuningAction
-    {
-        private string WizName;
-        private string WizIdOrFilename;
-        private TuneWizardType WizType;
-
-        public TuningAction() { }
-        public TuningAction(string wizName, string wizIdOrFilename, TuneWizardType wizType)
-        {
-            WizName = wizName;
-            WizIdOrFilename = wizIdOrFilename;
-            WizType = wizType;
-        }
-        public override string ToString()
-        {
-            return WizName;
-        }
-        public string GetWizardIdOrFilename()
-        {
-            return WizIdOrFilename;
-        }
-        public TuneWizardType GetWizardType()
-        {
-            return WizType;
         }
     }
 }
