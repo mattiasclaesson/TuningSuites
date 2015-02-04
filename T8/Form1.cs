@@ -674,7 +674,7 @@ namespace T8SuitePro
                     }
                     catch (Exception cE)
                     {
-                        LogHelper.Log("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
+                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                     }
                 }
                 if (sh.Varname.StartsWith("Symbolnumber"))
@@ -1394,7 +1394,7 @@ namespace T8SuitePro
                     }
                     catch (Exception cE)
                     {
-                        LogHelper.Log("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
+                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                     }
                 }
             }
@@ -1503,7 +1503,7 @@ namespace T8SuitePro
                     }
                     catch (Exception cE)
                     {
-                        LogHelper.Log("Failed to assign category to symbol: " + sh.Varname + " err: " + cE.Message);
+                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                     }
                 }
             }
@@ -4242,7 +4242,6 @@ namespace T8SuitePro
                         dt.Columns.Add("MissingInOriFile", Type.GetType("System.Boolean"));
                         dt.Columns.Add("MissingInCompareFile", Type.GetType("System.Boolean"));
 
-                        string category = "";
                         string ht = string.Empty;
                         double diffperc = 0;
                         int diffabs = 0;
@@ -4276,14 +4275,10 @@ namespace T8SuitePro
                                     LogHelper.Log(E.Message);
                                 }
 
-                                string compareName = sh_compare.Varname;
-                                if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
-
+                                string compareName = sh_compare.SmartVarname;
                                 foreach (SymbolHelper sh_org in m_symbols)
                                 {
-                                    string originalName = sh_org.Varname;
-                                    if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
-
+                                    string originalName = sh_org.SmartVarname;
                                     if (compareName.Equals(originalName) && compareName != String.Empty)
                                     {
                                         if (sh_compare.Flash_start_address > 0 && sh_compare.Flash_start_address < 0x100000)
@@ -4292,30 +4287,18 @@ namespace T8SuitePro
                                             {
                                                 if (!CompareSymbolToCurrentFile(compareName, (int)sh_compare.Flash_start_address, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
                                                 {
-                                                    category = "";
-                                                    if (sh_org.Varname.Contains("."))
+                                                    string category = "";
+                                                    if (originalName.Contains("."))
                                                     {
                                                         try
                                                         {
-                                                            category = sh_org.Varname.Substring(0, sh_org.Varname.IndexOf("."));
+                                                            category = originalName.Substring(0, originalName.IndexOf("."));
                                                         }
                                                         catch (Exception cE)
                                                         {
-                                                            LogHelper.Log("Failed to assign category to symbol: " + sh_org.Varname + " err: " + cE.Message);
+                                                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", originalName, cE.Message));
                                                         }
                                                     }
-                                                    else if (sh_org.Userdescription.Contains("."))
-                                                    {
-                                                        try
-                                                        {
-                                                            category = sh_org.Userdescription.Substring(0, sh_org.Userdescription.IndexOf("."));
-                                                        }
-                                                        catch (Exception cE)
-                                                        {
-                                                            LogHelper.Log("Failed to assign category to symbol: " + sh_org.Userdescription + " err: " + cE.Message);
-                                                        }
-                                                    }
-
                                                     dt.Rows.Add(originalName, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(compareName, out ht, out cat, out subcat), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription);
                                                     break;
                                                 }
@@ -4324,8 +4307,8 @@ namespace T8SuitePro
                                     }
                                 }
                             }
+
                             symNumber = 0;
-                            string varnameori = string.Empty;
                             string varnamecomp = string.Empty;
                             foreach (SymbolHelper shtest in compare_symbols)
                             {
@@ -4344,16 +4327,12 @@ namespace T8SuitePro
                                     LogHelper.Log(E.Message);
                                 }
                                 bool _foundSymbol = false;
-                                varnamecomp = shtest.Varname;
-                                if (varnamecomp.StartsWith("Symbolnumber")) varnamecomp = shtest.Userdescription;
+                                varnamecomp = shtest.SmartVarname;
                                 if (IsSymbolCalibration(varnamecomp))
                                 {
                                     foreach (SymbolHelper shoritest in m_symbols)
                                     {
-                                        varnameori = shoritest.Varname;
-                                        if (varnameori.StartsWith("Symbolnumber")) varnameori = shoritest.Userdescription;
-
-                                        if (varnamecomp == varnameori)
+                                        if (varnamecomp == shoritest.SmartVarname)
                                         {
                                             _foundSymbol = true;
                                             break;
@@ -4366,6 +4345,7 @@ namespace T8SuitePro
                                     }
                                 }
                             }
+
                             symNumber = 0;
                             foreach (SymbolHelper shtest in m_symbols)
                             {
@@ -4384,16 +4364,12 @@ namespace T8SuitePro
                                     LogHelper.Log(E.Message);
                                 }
                                 bool _foundSymbol = false;
-                                varnamecomp = shtest.Varname;
-                                if (varnamecomp.StartsWith("Symbolnumber")) varnamecomp = shtest.Userdescription;
+                                varnamecomp = shtest.SmartVarname;
                                 if (IsSymbolCalibration(varnamecomp))
                                 {
                                     foreach (SymbolHelper shoritest in compare_symbols)
                                     {
-                                        varnameori = shoritest.Varname;
-                                        if (varnameori.StartsWith("Symbolnumber")) varnameori = shoritest.Userdescription;
-
-                                        if (varnamecomp == varnameori)
+                                        if (varnamecomp == shoritest.SmartVarname)
                                         {
                                             _foundSymbol = true;
                                             break;
@@ -6712,7 +6688,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                     }
                                     catch (Exception cE)
                                     {
-                                        LogHelper.Log("Failed to assign category to symbol: " + shfound.Varname + " err: " + cE.Message);
+                                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", shfound.Varname, cE.Message));
                                     }
                                 }
                                 dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
@@ -8910,7 +8886,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                             try
                                             {
                                                 sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                                                //LogHelper.Log(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
                                             }
                                             catch (Exception cE)
                                             {
@@ -14993,11 +14968,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                         try
                                         {
                                             sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                            //LogHelper.Log("Set cat to " + sh.Category + " for " + sh.Userdescription);
                                         }
                                         catch (Exception cE)
                                         {
-                                            LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                                         }
                                     }
 
@@ -15074,7 +15048,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                             }
                                             catch (Exception cE)
                                             {
-                                                LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                                             }
                                         }
                                     }

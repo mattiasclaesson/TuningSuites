@@ -568,7 +568,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                             }
                             catch (Exception cE)
                             {
-                                LogHelper.Log("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
+                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                             }
                         }
 
