@@ -11,8 +11,7 @@ namespace T8SuitePro
     {
         protected internal static void create(string filename, SymbolCollection symbols)
         {
-            string outputfile = Path.GetDirectoryName(filename);
-            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(filename) + "-autogen.idc");
+            string outputfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + "-autogen.idc");
             using (StreamWriter sw = new StreamWriter(outputfile))
             {
                 sw.WriteLine("//                                           ");
@@ -148,12 +147,7 @@ namespace T8SuitePro
 
                 foreach (SymbolHelper sh in symbols)
                 {
-                    string name = sh.Varname;
-                    if (name.StartsWith("Symbol") && sh.Userdescription != "")
-                    {
-                        name = sh.Userdescription;
-                    }
-
+                    string name = sh.SmartVarname;
                     if (sh.Flash_start_address > 0x100000)
                     {
                         sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", name.Replace(" ", "_"), sh.Start_address.ToString("X"), sh.Length.ToString("X")));

@@ -68,7 +68,7 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Userdescription == symbolname || sh.Varname == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Flash_start_address;
                 }
@@ -79,7 +79,7 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Userdescription == symbolname || sh.Varname == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Length;
                 }
@@ -130,7 +130,7 @@ namespace T8SuitePro
             bool retval = false;
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == "TrqLimCal.EnableOverBoost" || sh.Userdescription == "TrqLimCal.EnableOverBoost")
+                if (sh.SmartVarname == "TrqLimCal.EnableOverBoost")
                 {
                     // read data from file and verify if the value is > 0
                     byte[] overboostenable = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqLimCal.EnableOverBoost"), (int)GetSymbolLength(m_symbols, "TrqLimCal.EnableOverBoost"));
@@ -148,8 +148,7 @@ namespace T8SuitePro
         {
            foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == "FFTrqCal.FFTrq_MaxEngineTab1" || sh.Userdescription == "FFTrqCal.FFTrq_MaxEngineTab1" ||
-                    sh.Varname == "FFTrqCal.FFTrq_MaxEngineTab2" || sh.Userdescription == "FFTrqCal.FFTrq_MaxEngineTab2")
+                if (sh.SmartVarname == "FFTrqCal.FFTrq_MaxEngineTab1" || sh.SmartVarname == "FFTrqCal.FFTrq_MaxEngineTab2")
                 {
                     return true;
                 }
@@ -359,7 +358,10 @@ namespace T8SuitePro
         {
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname) return true;
+                if (sh.SmartVarname == symbolname)
+                {
+                    return true;
+                }
             }
             return false;
         }

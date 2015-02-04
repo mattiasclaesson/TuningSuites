@@ -468,7 +468,7 @@ namespace T8SuitePro
                             {
                                 foreach (SymbolHelper sh in m_originalSymbolCollection)
                                 {
-                                    if (sh.Varname == varname || sh.Userdescription == varname)
+                                    if (sh.SmartVarname == varname)
                                     {
                                         scToExport.Add(sh);
                                         break;
@@ -479,7 +479,7 @@ namespace T8SuitePro
                             {
                                 foreach (SymbolHelper sh in m_compareSymbolCollection)
                                 {
-                                    if (sh.Varname == varname || sh.Userdescription == varname)
+                                    if (sh.SmartVarname == varname)
                                     {
                                         scToExport.Add(sh);
                                         break;

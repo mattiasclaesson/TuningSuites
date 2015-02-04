@@ -517,26 +517,12 @@ namespace T8SuitePro
             {
                 if (caddr != 0 && sh.Flash_start_address == caddr)
                 {
-                    if (sh.Userdescription != "")
-                    {
-                        symbol = "ROM_" + sh.Userdescription;
-                    }
-                    else
-                    {
-                        symbol = "ROM_" + sh.Varname;
-                    }
+                    symbol = "ROM_" + sh.SmartVarname;
                     retval = 1;
                 }
                 else if (caddr != 0 && sh.Start_address == caddr)
                 {
-                    if (sh.Userdescription != "")
-                    {
-                        symbol = "RAM_" + sh.Userdescription;
-                    }
-                    else
-                    {
-                        symbol = "RAM_" + sh.Varname;
-                    }
+                    symbol = "RAM_" + sh.SmartVarname;
                     retval = 1;
                 }
             }
