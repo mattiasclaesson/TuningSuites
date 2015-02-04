@@ -78,7 +78,7 @@ namespace T8Test
             Assert.AreEqual(2004, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
             Assert.AreEqual(VINEngineType.B235L, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.MitsubishiTD04, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15T_5, actual.TurboModel);
             Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series I, Driver and passenger airbags", actual.Series);
@@ -99,7 +99,7 @@ namespace T8Test
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
             Assert.AreEqual(VINEngineType.B235R, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.MitsubishiTD04, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15T_5, actual.TurboModel);
             Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series IV, Driver and passenger airbags", actual.Series);
@@ -120,7 +120,7 @@ namespace T8Test
             Assert.AreEqual(2008, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
             Assert.AreEqual(VINEngineType.B284R, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.MitsubishiTD04, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15TK, actual.TurboModel);
             Assert.AreEqual("6 speed automatic / all wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-3)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-3 TurboX", actual.Series);
@@ -141,7 +141,7 @@ namespace T8Test
             Assert.AreEqual(2005, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
             Assert.AreEqual(VINEngineType.B235L, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.MitsubishiTD04, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15T_5, actual.TurboModel);
             Assert.AreEqual("5 speed automatic / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series I, Driver and passenger airbags", actual.Series);
@@ -162,7 +162,7 @@ namespace T8Test
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("4 door sedan (SN)", actual.Body);
             Assert.AreEqual(VINEngineType.A28NER_LAU, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.Unknown, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_19TK3, actual.TurboModel);
             Assert.AreEqual("6 speed automatic / all wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan (9-5)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-5 Aero", actual.Series);
@@ -183,7 +183,7 @@ namespace T8Test
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
             Assert.AreEqual(VINEngineType.B207S, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.Unknown, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04L_14T, actual.TurboModel);
             Assert.AreEqual("6 speed manual / all wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-3)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-3 X", actual.Series);
@@ -203,8 +203,8 @@ namespace T8Test
             Assert.AreEqual(VINCarModel.Saab95new, actual.CarModel);
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("4 door sedan (SN)", actual.Body);
-            Assert.AreEqual(VINEngineType.A20NFT_LHU, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.Unknown, actual.TurboModel);
+            Assert.AreEqual(VINEngineType.A20NFT_LHU_BP, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.BorgWarnerK04_2277DCB, actual.TurboModel);
             Assert.AreEqual("6 speed automatic / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan (9-5)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-5 Vector", actual.Series);
@@ -266,7 +266,7 @@ namespace T8Test
             Assert.AreEqual(VINCarModel.OpelVectra, actual.CarModel);
             Assert.AreEqual(2005, actual.Makeyear);
             Assert.AreEqual(VINEngineType.Z20NET, actual.EngineType);
-            Assert.AreEqual(VINTurboModel.Unknown, actual.TurboModel);
+            Assert.AreEqual(VINTurboModel.GarrettGT2052, actual.TurboModel);
             // Serialnumber not decoded 095720
         }
     }
