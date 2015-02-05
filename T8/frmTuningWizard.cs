@@ -11,14 +11,15 @@ namespace T8SuitePro
     {
         readonly Form1 parent;
 
-        // NOT A GOOD DESIGN PATTERN TO CALL FUNCTIONS IN PARENT WINDOW; needs to be fixed somehow.
         public frmTuningWizard(Form1 inParent, string in_m_currentfile)
         {
             InitializeComponent();
             parent = inParent;
+
             // Set-up some navigation rules
             this.wizConfirmPage.AllowNext = false;
             this.wizCompletedPage.AllowBack = false;
+
             // List all tuning packages
             foreach (Form1.TuningAction t in Form1.installedTunings )
                 this.listTuningActions.Items.Add(t);
@@ -42,6 +43,7 @@ namespace T8SuitePro
             {
                 this.lblTuningActionConfirm.Text = this.listTuningActions.SelectedItem.ToString();
             }
+
             // Perform the selected tuning action, and disable possibility to press cancel. 
             // At this stage, it is to late. Modifications has been done.
             else if(e.Page.Name == "wizConfirmPage")
@@ -49,9 +51,9 @@ namespace T8SuitePro
                 // Disable turning back
                 this.wizCompletedPage.AllowCancel = false;
                 Form1.TuningAction selAction = (Form1.TuningAction)this.listTuningActions.SelectedItem;
+
                 // Perform the tuning action
-                //if (parent.performTuningAction(selAction) == 0)
-                if(selAction.performTuningAction() == 0)
+                if(selAction.performTuningAction(parent) == 0)
                 {
                     // Inform the user of the tuning action
                     string[] imactedMaps = selAction.getImpactedMaps(); // FIX: Maybe list all maps that were updated?
@@ -59,6 +61,8 @@ namespace T8SuitePro
                         this.listTuningActions.SelectedItem.ToString() +
                         "'. Please check the modified maps so that they are what you expect them to be." +
                         " Easiest way to do that is to compare to the original binary.";
+
+                    // Fill list with impacted maps
                     foreach (string impM in imactedMaps)
                         this.listModifiedMaps.Items.Add(impM);
                 }

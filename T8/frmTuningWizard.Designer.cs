@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.wizardTuning = new DevExpress.XtraWizard.WizardControl();
-            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.wizWelcomePage = new DevExpress.XtraWizard.WelcomeWizardPage();
             this.wizSelectActionPage = new DevExpress.XtraWizard.WizardPage();
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
@@ -57,7 +56,6 @@
             // 
             // wizardTuning
             // 
-            this.wizardTuning.Controls.Add(this.labelControl3);
             this.wizardTuning.Controls.Add(this.wizWelcomePage);
             this.wizardTuning.Controls.Add(this.wizSelectActionPage);
             this.wizardTuning.Controls.Add(this.wizCompletedPage);
@@ -73,15 +71,6 @@
             this.wizardTuning.Size = new System.Drawing.Size(531, 316);
             this.wizardTuning.PrevClick += new DevExpress.XtraWizard.WizardCommandButtonClickEventHandler(this.wizardTuning_PrevClick);
             this.wizardTuning.NextClick += new DevExpress.XtraWizard.WizardCommandButtonClickEventHandler(this.wizardTuning_NextClick);
-            // 
-            // labelControl3
-            // 
-            this.labelControl3.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.labelControl3.Location = new System.Drawing.Point(24, 290);
-            this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(190, 16);
-            this.labelControl3.TabIndex = 16;
-            this.labelControl3.Text = "EXPERIMENTAL - Not yet working";
             // 
             // wizWelcomePage
             // 
@@ -217,7 +206,6 @@
             this.Text = "Tuning Wizard";
             ((System.ComponentModel.ISupportInitialize)(this.wizardTuning)).EndInit();
             this.wizardTuning.ResumeLayout(false);
-            this.wizardTuning.PerformLayout();
             this.wizSelectActionPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).EndInit();
             this.splitContainerControl1.ResumeLayout(false);
@@ -242,7 +230,6 @@
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.LabelControl lblSoftwareVersion;
         private DevExpress.XtraEditors.ListBoxControl listTuningActions;
-        private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl lblTuningActionConfirm;
         private DevExpress.XtraEditors.CheckEdit checkIUnderstand;
         private DevExpress.XtraEditors.LabelControl labelControl2;

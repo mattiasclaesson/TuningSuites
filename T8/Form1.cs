@@ -139,7 +139,7 @@ namespace T8SuitePro
         private EngineStatus _currentEngineStatus = new EngineStatus();
         private AFRViewType AfrViewMode = AFRViewType.AFRMode;
 
-        public static string m_currentfile = string.Empty;
+        private string m_currentfile = string.Empty;
         AppSettings m_appSettings = new AppSettings();
         public static SymbolCollection m_symbols = new SymbolCollection();
         int m_currentMapHelperRowHandle = -1;
@@ -2257,7 +2257,7 @@ namespace T8SuitePro
             z = z_axis_descr;
         }
 
-        public static int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
+        private int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
@@ -2269,7 +2269,7 @@ namespace T8SuitePro
             return 0;
         }
 
-        public static Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
+        private Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
@@ -2305,7 +2305,7 @@ namespace T8SuitePro
             return 0;
         }
 
-        public static int GetTableMatrixWitdhByName(string filename, SymbolCollection curSymbols, string symbolname, out int columns, out int rows)
+        private int GetTableMatrixWitdhByName(string filename, SymbolCollection curSymbols, string symbolname, out int columns, out int rows)
         {
 
             columns = 1;
@@ -2517,7 +2517,7 @@ namespace T8SuitePro
             return retval;
         }
 
-        public static  byte[] readdatafromfile(string filename, int address, int length)
+        private byte[] readdatafromfile(string filename, int address, int length)
         {
             if (length <= 0) return new byte[1];
             byte[] retval = new byte[length];
@@ -2753,34 +2753,6 @@ namespace T8SuitePro
             }
         }
 
-        //Faanskit: Sorry for the duplicate code below. Will try to find a way to fix it.
-        //          Reason is because frmTuneWizard calls Form1 and it need to be public static
-        public static void savedatatobinary_silent(int address, int length, byte[] data, string filename)
-        {
-            if (address > 0 && address < 0x100000)
-            {
-                try
-                {
-                    byte[] beforedata = readdatafromfile(filename, address, length);
-                    FileStream fsi1 = File.OpenWrite(filename);
-                    BinaryWriter bw1 = new BinaryWriter(fsi1);
-                    fsi1.Position = address;
-                    for (int i = 0; i < length; i++)
-                    {
-                        bw1.Write((byte)data.GetValue(i));
-                    }
-                    fsi1.Flush();
-                    bw1.Close();
-                    fsi1.Close();
-                    fsi1.Dispose();
-
-                }
-                catch (Exception E)
-                {
-                    frmInfoBox info = new frmInfoBox("Failed to write to binary. Is it read-only? Details: " + E.Message);
-                }
-            }
-        }
         void tabdet_onSymbolSave(object sender, IMapViewer.SaveSymbolEventArgs e)
         {
             if (sender is IMapViewer)
@@ -2870,6 +2842,29 @@ namespace T8SuitePro
 
                 }
             }
+        }
+
+        private void DisposeTableViewers()
+        {
+            DockPanel dockPanel;
+            bool found = true;
+            while (found)
+            {
+                found = false;
+                for (int i = 0; i < dockManager1.Panels.Count; i++)
+                {
+                    // dockPanel = pnl.Controls.
+                    if (dockManager1.Panels[i].Text != string.Empty)
+                        if ((dockManager1.Panels[i].Text.Substring(0, 7) == "Symbol:"))
+                        {
+                            if (!dockManager1.Panels[i].Disposing)
+                                dockManager1.Panels[i].Dispose();
+                            found  = true;
+                            break;
+                        }
+                }
+            }
+            
         }
 
         private void StartTableViewer()
@@ -8033,7 +8028,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             frmTuningWizard frmTunWiz = new frmTuningWizard(this, m_currentfile);
             frmTunWiz.ShowDialog();
-            UpdateChecksum(m_currentfile, true);
         }
 
         private void barButtonItem30_ItemClick(object sender, ItemClickEventArgs e)
@@ -15422,8 +15416,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 return impactedMaps;
             }
 
-            public virtual int performTuningAction()
+            public virtual int performTuningAction(Form1 p) 
             {
+                // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
+                //       we need to call Form1 functions though the instance of it
                 return 0;
             }
         }
@@ -15432,33 +15428,42 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             public Copy175hpMaps()
             {
-                // Add(new Form1.TuningAction("Mackanized ST1+", "ap_ST1Plus", Form1.TuneWizardType.Embedded));
                 WizName = "Convert 150mp maps to 175hp maps";
                 WizIdOrFilename = "ap_175hp";
                 impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", "FFTrqCal.FFTrq_MaxEngineTab2" };
             }
 
-            public override int performTuningAction()
+            public override int performTuningAction(Form1 p)
             {
-                string [] fromLimiter = new string [] { "FFTrqCal.FFTrq_MaxEngineTab1", "TrqLimCal.Trq_MaxEngineTab1"};
-                string[] toLimiter = new string[] { "FFTrqCal.FFTrq_MaxEngineTab2", "TrqLimCal.Trq_MaxEngineTab2" };
-                int retval = 1; // Assume fail
-                for (int i = 0; i < 2; i++)
+                // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
+                //       we need to call Form1 functions though the instance of it
+                string[] fromLimiter = new string[] { "FFTrqCal.FFTrq_MaxEngineTab1", "TrqLimCal.Trq_MaxEngineTab1" };
+                string[] toLimiter = new string[]   { "FFTrqCal.FFTrq_MaxEngineTab2", "TrqLimCal.Trq_MaxEngineTab2" };
+                int retval = 1;
+
+                // Backup the current file before the tuning action
+                File.Copy(p.m_currentfile, Path.GetDirectoryName(p.m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-beforetuningto-" + WizIdOrFilename + "-mg.bin", true);
+                for (int i = 0; i < fromLimiter.Length; i++)
                 {
-                    File.Copy(m_currentfile, Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-beforetuningto-" + WizIdOrFilename + "-mg.bin", true);
-                    if ((int)Form1.GetSymbolAddress(m_symbols, fromLimiter[i]) > 0)
+                    // Ensure sending symbol exist
+                    if ((int)p.GetSymbolAddress(m_symbols, fromLimiter[i]) > 0)
                     {
-                        if ((int)Form1.GetSymbolAddress(m_symbols, toLimiter[i]) > 0)
+                        // Ensure receiving symbol exist
+                        if ((int)p.GetSymbolAddress(m_symbols, toLimiter[i]) > 0)
                         {
+                            // Secure sending and receiving sumbyls have same axist legth's
                             int fromCols, fromRows;
                             int toCols, toRows;
-                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, fromLimiter[i], out fromCols, out fromRows);
-                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, toLimiter[i], out toCols, out toRows);
+                            p.GetTableMatrixWitdhByName(p.m_currentfile, m_symbols, fromLimiter[i], out fromCols, out fromRows);
+                            p.GetTableMatrixWitdhByName(p.m_currentfile, m_symbols, toLimiter[i], out toCols, out toRows);
                             if (fromCols == toCols && fromRows == toRows)
                             {
-                                byte[] from = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, fromLimiter[i]), GetSymbolLength(m_symbols, fromLimiter[i]));
-                                // Calling duplicated code; really needs to be fixed
-                                savedatatobinary_silent((int)GetSymbolAddress(m_symbols, toLimiter[i]), GetSymbolLength(m_symbols, toLimiter[i]), from, m_currentfile);
+                                // Copy by read/save and then update checksums
+                                byte[] from = p.readdatafromfile(p.m_currentfile, (int)p.GetSymbolAddress(m_symbols, fromLimiter[i]), p.GetSymbolLength(m_symbols, fromLimiter[i]));
+                                p.savedatatobinary((int)p.GetSymbolAddress(m_symbols, toLimiter[i]), p.GetSymbolLength(m_symbols, toLimiter[i]), from, p.m_currentfile, true);
+                                p.UpdateChecksum(p.m_currentfile, true);
+
+                                // Success
                                 retval = 0;
                             }
                             else
@@ -15468,6 +15473,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                     }
                 }
+                // Next should become refresh open symbol maps, 
+                // for now at least close them so they look correcy
+                p.DisposeTableViewers();
                 return retval;
             }
         }
@@ -15476,7 +15484,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             public MackanizedST1Plus()
             {
-                // Add(new Form1.TuningAction(, , Form1.TuneWizardType.Embedded));
                 this.WizName = "Mackanized ST1+";
                 this.WizIdOrFilename = "ap_ST1Plus";
                 this.impactedMaps = new string[] {  "TrqLimCal.Trq_MaxEngineTab", 
@@ -15485,8 +15492,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     "FFTrqCal.FFTrq_MaxEngineTab2"};
             }
 
-            public override int performTuningAction()
+            public override int performTuningAction(Form1 p)
             {
+                // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
+                //       we need to call Form1 functions though the instance of it
                 return 0;
             }
         }
