@@ -10,6 +10,7 @@ namespace T8SuitePro
     public partial class frmTuningWizard : Form
     {
         readonly Form1 parent;
+        private string softwareVersion;
 
         public frmTuningWizard(Form1 inParent, string in_m_currentfile)
         {
@@ -20,10 +21,6 @@ namespace T8SuitePro
             this.wizConfirmPage.AllowNext = false;
             this.wizCompletedPage.AllowBack = false;
 
-            // List all tuning packages
-            foreach (Form1.TuningAction t in Form1.installedTunings )
-                this.listTuningActions.Items.Add(t);
-            
             // Read software version from binary
             if (in_m_currentfile != string.Empty)
             {
@@ -31,9 +28,17 @@ namespace T8SuitePro
                 {
                     T8Header t8header = new T8Header();
                     t8header.init(in_m_currentfile);
-                    this.lblSoftwareVersion.Text = t8header.SoftwareVersion.Trim().Substring(0,4);
+                    softwareVersion = t8header.SoftwareVersion.Trim();
+                    this.lblSoftwareVersion.Text = softwareVersion.Substring(0, 4);
                 }
             }
+            // List all compatible tuning packages
+            foreach (Form1.TuningAction t in Form1.installedTunings)
+                if (t.compatibelBinType(softwareVersion))
+                    this.listTuningActions.Items.Add(t);
+            if (this.listTuningActions.ItemCount <= 0)
+                this.wizSelectActionPage.AllowNext = false;
+
         }
 
         private void wizardTuning_NextClick(object sender, DevExpress.XtraWizard.WizardCommandButtonClickEventArgs e)

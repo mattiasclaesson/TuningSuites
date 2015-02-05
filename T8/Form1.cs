@@ -2844,6 +2844,23 @@ namespace T8SuitePro
             }
         }
 
+        private void RefreshTableViewers()
+        {
+            DockPanel dockPanel;
+            bool found = true;
+            for (int i = 0; i < dockManager1.Panels.Count; i++)
+            {
+                // dockPanel = pnl.Controls.
+                if (dockManager1.Panels[i].Text != string.Empty)
+                    if ((dockManager1.Panels[i].Text.Substring(0, 7) == "Symbol:"))
+                    {
+                        string symName = dockManager1.Panels[i].Text.Split(' ')[1].Trim();
+                        dockManager1.Panels[i].Dispose();
+                        StartTableViewer(symName);
+                    }
+            }
+
+        }
         private void DisposeTableViewers()
         {
             DockPanel dockPanel;
@@ -15382,18 +15399,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             TuningFile      // Future: Tuning Packages when installing solution.
         };
 
+        public enum BinaryType
+        {
+            None = 0,       // Should never happen
+            OldBin,         // BIN Older than FC01
+            NewBin,         // BIN Newer than FC01
+            BothBin
+        };
+
         public class TuningAction
         {
             public string WizName;
             public string WizIdOrFilename;
             public TuneWizardType WizType;
             public string[] impactedMaps;
+            public BinaryType WizBinType;
 
             public TuningAction() 
             {
-                WizType = TuneWizardType.Embedded;
+                WizType = TuneWizardType.None;
                 WizName = "";
                 WizIdOrFilename = "";
+                WizBinType = BinaryType.None;
             }
 
             public override string ToString()
@@ -15416,6 +15443,36 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 return impactedMaps;
             }
 
+            public BinaryType GetWizBinaryType()
+            {
+                return WizBinType;
+            }
+            public bool compatibelBinType(string binVersion)
+            {
+                if (binVersion.Length > 2)
+                {
+                    int v = Convert.ToInt32(binVersion[1]);
+                    // Below is an ASSUMPTION!
+                    // Assuming breakpoint is FC00.
+                    // FC01 Open is special, treated as old.  
+                    if (v < 'C' || binVersion.Substring(0, 6) == "FC01_O")
+                    {
+                        if (WizBinType == BinaryType.OldBin || WizBinType == BinaryType.BothBin)
+                            return true;
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        if (WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin)
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                return false;
+            }
+
             public virtual int performTuningAction(Form1 p) 
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
@@ -15428,6 +15485,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             public Copy175hpMaps()
             {
+                WizType = TuneWizardType.Embedded;
+                WizBinType = BinaryType.NewBin;
                 WizName = "Convert 150mp maps to 175hp maps";
                 WizIdOrFilename = "ap_175hp";
                 impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", "FFTrqCal.FFTrq_MaxEngineTab2" };
@@ -15475,7 +15534,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 // Next should become refresh open symbol maps, 
                 // for now at least close them so they look correcy
-                p.DisposeTableViewers();
+                p.RefreshTableViewers(); //DisposeTableViewers();
                 return retval;
             }
         }
@@ -15484,12 +15543,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             public MackanizedST1Plus()
             {
-                this.WizName = "Mackanized ST1+";
-                this.WizIdOrFilename = "ap_ST1Plus";
-                this.impactedMaps = new string[] {  "TrqLimCal.Trq_MaxEngineTab", 
-                                                    "TrqLimCal.Trq_MaxEngineTab2", 
-                                                    "FFTrqCal.FFTrq_MaxEngineTab2",
-                                                    "FFTrqCal.FFTrq_MaxEngineTab2"};
+                WizType = TuneWizardType.Embedded;
+                WizBinType = BinaryType.NewBin;
+                WizName = "Mackanized ST1+";
+                WizIdOrFilename = "ap_ST1Plus";
+                impactedMaps = new string[] {  "TrqLimCal.Trq_MaxEngineTab", 
+                                               "TrqLimCal.Trq_MaxEngineTab2", 
+                                               "FFTrqCal.FFTrq_MaxEngineTab2",
+                                               "FFTrqCal.FFTrq_MaxEngineTab2"};
             }
 
             public override int performTuningAction(Form1 p)
