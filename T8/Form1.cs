@@ -2854,9 +2854,13 @@ namespace T8SuitePro
                 if (dockManager1.Panels[i].Text != string.Empty)
                     if ((dockManager1.Panels[i].Text.Substring(0, 7) == "Symbol:"))
                     {
+                        bool isVisible = false;
+                        if (dockManager1.Panels[i].Visibility == DockVisibility.Visible)
+                            isVisible = true;
                         string symName = dockManager1.Panels[i].Text.Split(' ')[1].Trim();
                         dockManager1.Panels[i].Dispose();
-                        StartTableViewer(symName);
+                        if (isVisible)
+                            StartTableViewer(symName);
                     }
             }
 
@@ -15487,7 +15491,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public Copy175hpMaps()
             {
                 WizType = TuneWizardType.Embedded;
-                WizBinType = BinaryType.NewBin;
+                WizBinType = BinaryType.BothBin;
                 WizName = "Convert 150mp maps to 175hp maps";
                 WizIdOrFilename = "ap_175hp";
                 impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", "FFTrqCal.FFTrq_MaxEngineTab2" };
@@ -15498,9 +15502,21 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
                 string[] fromLimiter = new string[] { 
-                    "FFTrqCal.FFTrq_MaxEngineTab1", "TrqLimCal.Trq_MaxEngineTab1", "BoostDiagCal.n_HighLim175", "TMCCal.Trq_MaxEngineTab",    "TMCCal.Trq_MaxEngineFFTab" };
+                    "FFTrqCal.FFTrq_MaxEngineTab1", 
+                    "TrqLimCal.Trq_MaxEngineTab1", 
+                    "BoostDiagCal.n_HighLim175", 
+                    "TMCCal.Trq_MaxEngineTab",    
+                    "TMCCal.Trq_MaxEngineFFTab",
+                    "TrqLimCal.Trq_MaxEngineManTab1",
+                    "TrqLimCal.Trq_MaxEngineAutTab1"};
                 string[] toLimiter = new string[]   { 
-                    "FFTrqCal.FFTrq_MaxEngineTab2", "TrqLimCal.Trq_MaxEngineTab2", "BoostDiagCal.n_HighLim150", "TMCCal.Trq_MaxEngineLowTab", "TMCCal.Trq_MaxEngineLowFFTab" };
+                    "FFTrqCal.FFTrq_MaxEngineTab2", 
+                    "TrqLimCal.Trq_MaxEngineTab2", 
+                    "BoostDiagCal.n_HighLim150", 
+                    "TMCCal.Trq_MaxEngineLowTab", 
+                    "TMCCal.Trq_MaxEngineLowFFTab",
+                    "TrqLimCal.Trq_MaxEngineManTab2",
+                    "TrqLimCal.Trq_MaxEngineAutTab2"};
                 int retval = 1;
                 out_mod_symbols = new List<string>();
 
