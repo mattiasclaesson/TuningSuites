@@ -93,6 +93,7 @@ using T7;
 using CommonSuite;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
+using System.Security.Cryptography;
 
 namespace T8SuitePro
 {
@@ -165,6 +166,7 @@ namespace T8SuitePro
             System.Windows.Forms.Application.DoEvents();
             InitializeComponent();
 #if (DEBUG)
+            addWizTuneFilePacks();
             // Only have this enabled in debug mode until ready
             this.barButtonItem29.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
 #endif
@@ -2523,19 +2525,21 @@ namespace T8SuitePro
             byte[] retval = new byte[length];
             try
             {
-                FileStream fsi1 = File.OpenRead(filename);
-                while (address > fsi1.Length) address -= (int)fsi1.Length;
-                BinaryReader br1 = new BinaryReader(fsi1);
-                fsi1.Position = address;
-                string temp = string.Empty;
-                for (int i = 0; i < length; i++)
+                using (FileStream fsi1 = File.OpenRead(filename))
                 {
-                    retval.SetValue(br1.ReadByte(), i);
+                    while (address > fsi1.Length) address -= (int)fsi1.Length;
+                    BinaryReader br1 = new BinaryReader(fsi1);
+                    fsi1.Position = address;
+                    string temp = string.Empty;
+                    for (int i = 0; i < length; i++)
+                    {
+                        retval.SetValue(br1.ReadByte(), i);
+                    }
+                    fsi1.Flush();
+                    br1.Close();
+                    fsi1.Close();
+                    fsi1.Dispose();
                 }
-                fsi1.Flush();
-                br1.Close();
-                fsi1.Close();
-                fsi1.Dispose();
             }
             catch (Exception E)
             {
@@ -2726,17 +2730,19 @@ namespace T8SuitePro
                 try
                 {
                     byte[] beforedata = readdatafromfile(filename, address, length);
-                    FileStream fsi1 = File.OpenWrite(filename);
-                    BinaryWriter bw1 = new BinaryWriter(fsi1);
-                    fsi1.Position = address;
-                    for (int i = 0; i < length; i++)
+                    using (FileStream fsi1 = File.OpenWrite(filename))
                     {
-                        bw1.Write((byte)data.GetValue(i));
+                        BinaryWriter bw1 = new BinaryWriter(fsi1);
+                        fsi1.Position = address;
+                        for (int i = 0; i < length; i++)
+                        {
+                            bw1.Write((byte)data.GetValue(i));
+                        }
+                        fsi1.Flush();
+                        bw1.Close();
+                        fsi1.Close();
+                        fsi1.Dispose();
                     }
-                    fsi1.Flush();
-                    bw1.Close();
-                    fsi1.Close();
-                    fsi1.Dispose();
 
                     if (m_ProjectTransactionLog != null && DoTransActionEntry)
                     {
@@ -9461,80 +9467,131 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
+        public class FileTuningPackage
+        {
+            public SymbolHelper sh_Import;
+            public int addressInFile;
+            public byte[] dataToInsert;
+            public bool succesful;
+
+            public FileTuningPackage(SymbolHelper _sh_Import, int _addressInFile, byte[] _dataToInsert, bool _successful)
+            {
+                succesful = _successful;
+                sh_Import = _sh_Import;
+                addressInFile = _addressInFile;
+                dataToInsert = _dataToInsert;
+            }
+        }
+
         private void ImportTuningPackage()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Trionic 8 packages|*.t8p";
             ofd.Multiselect = false;
-            char[] sep = new char[1];
-            sep.SetValue(',', 0);
 
-            SymbolCollection scToImport = new SymbolCollection();
             System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("Map");
             dt.Columns.Add("Result");
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                //TODO: create a list of maps to import .. maybe?
-                using (StreamReader sr = new StreamReader(ofd.FileName))
-                {
-                    string line = string.Empty;
-                    SymbolHelper sh_Import = new SymbolHelper();
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("symbol="))
-                        {
-                            //
-                            sh_Import = new SymbolHelper();
-                            sh_Import.Varname = line.Replace("symbol=", "");
-                        }
-                        else if (line.StartsWith("length="))
-                        {
-                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
-                        }
-                        else if (line.StartsWith("data="))
-                        {
-                            //
-                            try
-                            {
-                                string dataBytes = line.Replace("data=", "");
-                                // split using ','
-                                string[] bytesInStrings = dataBytes.Split(sep);
-                                byte[] dataToInsert = new byte[sh_Import.Length];
-                                for (int t = 0; t < sh_Import.Length; t++)
-                                {
-                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
-                                    dataToInsert.SetValue(b, t);
-                                }
-                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
-                                if (addressInFile > 0)
-                                {
-                                    savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                    // add successful
-                                    dt.Rows.Add(sh_Import.Varname, "Success");
-                                }
-                                else
-                                {
-                                    // add failure
-                                    dt.Rows.Add(sh_Import.Varname, "Fail");
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                // add failure
-                                dt.Rows.Add(sh_Import.Varname, "Fail");
-                                LogHelper.Log(E.Message);
-                            }
-                        }
-                    }
-                }
-                UpdateChecksum(m_currentfile, true);
+                List<FileTuningPackage> tuningPackages;
+                string binType = "";
+                tuningPackages = ReadTuningPackageFile(ofd.FileName, out binType);
+
+                ApplyTuningPackage(tuningPackages);
+                foreach (FileTuningPackage tp in tuningPackages)
+                    if(tp.succesful)
+                        dt.Rows.Add(tp.sh_Import.Varname, "Success");
+                    else
+                        dt.Rows.Add(tp.sh_Import.Varname, "Fail");
+
                 frmImportResults res = new frmImportResults();
                 res.SetDataTable(dt);
                 res.ShowDialog();
-
+                RefreshTableViewers();
             }
+    
+        }
+
+        private List<FileTuningPackage> ReadTuningPackageFile(string tpFile, out string binSwType)
+        {
+            char[] sep = new char[1];
+            sep.SetValue(',', 0);
+            binSwType = "";
+            List<FileTuningPackage> lstTp = new List<FileTuningPackage>();
+
+            using (StreamReader sr = new StreamReader(tpFile))
+            {
+                string line = string.Empty;
+                SymbolHelper sh_Import = new SymbolHelper();
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (line.StartsWith("packname="))
+                    {
+                    }
+                    else if (line.StartsWith("bintype="))
+                    {
+                        binSwType = line.Replace("bintype=", "");
+                    }
+                    else if (line.StartsWith("symbol="))
+                    {
+                        //
+                        sh_Import = new SymbolHelper();
+                        sh_Import.Varname = line.Replace("symbol=", "");
+                    }
+                    else if (line.StartsWith("length="))
+                    {
+                        sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
+                    }
+                    else if (line.StartsWith("data="))
+                    {
+                        try
+                        {
+                            string dataBytes = line.Replace("data=", "");
+                            // split using ','
+                            string[] bytesInStrings = dataBytes.Split(sep);
+                            byte[] dataToInsert = new byte[sh_Import.Length];
+                            for (int t = 0; t < sh_Import.Length; t++)
+                            {
+                                byte b = Convert.ToByte(bytesInStrings[t], 16);
+                                dataToInsert.SetValue(b, t);
+                            }
+                            int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
+                            if (addressInFile != 0)
+                            {
+                                FileTuningPackage fileTP = new FileTuningPackage(sh_Import, addressInFile, dataToInsert, true);
+                                lstTp.Add(fileTP);
+                            }
+                            else
+                            {
+                                FileTuningPackage fileTP = new FileTuningPackage(sh_Import, addressInFile, dataToInsert, false);
+                                lstTp.Add(fileTP);
+                            }
+                        }
+                        catch (Exception E)
+                        {
+                            // add failure
+                            byte[] dataToInsert = new byte[0];
+                            FileTuningPackage fileTP = new FileTuningPackage(sh_Import, 0, dataToInsert, false);
+                            lstTp.Add(fileTP);
+                        }
+                    }
+                }
+            }
+            return lstTp;
+        }
+
+        private void ApplyTuningPackage(List<FileTuningPackage> fileTP)
+        {
+            foreach (FileTuningPackage fTP in fileTP)
+            {
+                if (fTP.addressInFile > 0)
+                {
+                    savedatatobinary(fTP.addressInFile, fTP.sh_Import.Length, fTP.dataToInsert, m_currentfile, true);
+                }
+            }
+            UpdateChecksum(m_currentfile, true);
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -15453,6 +15510,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             public bool compatibelBinType(string binVersion)
             {
+                if (binVersion == "OLD" && ((WizBinType == BinaryType.OldBin || WizBinType == BinaryType.BothBin)))
+                    return true;
+                if (binVersion == "NEW" && ((WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin)))
+                    return true;
+                if (binVersion == "BOTH" && ((WizBinType == BinaryType.OldBin || WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin)))
+                    return true;
+
                 if (binVersion.Length > 2)
                 {
                     int v = Convert.ToInt32(binVersion[1]);
@@ -15482,6 +15546,38 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
                 out_mod_symbols = new List<string>();
+                return 0;
+            }
+        }
+        public class FileTuningAction : TuningAction
+        {
+            public FileTuningAction(string name, string filename, BinaryType type)
+            {
+                WizName = name;
+                WizIdOrFilename = filename;
+                WizType = TuneWizardType.TuningFile;
+                WizBinType = type;
+            }
+            public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
+            {
+                out_mod_symbols = new List<string>();
+                List<FileTuningPackage> tuningPackages;
+                string binType = string.Empty;
+
+                tuningPackages = p.ReadTuningPackageFile(WizIdOrFilename, out binType);
+
+                if (compatibelBinType(binType))
+                {
+
+                    p.ApplyTuningPackage(tuningPackages);
+                    foreach (FileTuningPackage tp in tuningPackages)
+                        if (tp.succesful)
+                            out_mod_symbols.Add("OK: " + tp.sh_Import.Varname);
+                        else
+                            out_mod_symbols.Add("Fail: " + tp.sh_Import.Varname);
+
+                    p.RefreshTableViewers();
+                }
                 return 0;
             }
         }
@@ -15588,5 +15684,82 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             new Copy175hpMaps(),
             new MackanizedST1Plus()
         };
+
+        public void addWizTuneFilePacks()
+        {
+            // List all files in start-up directory, System.Windows.Forms.Application.StartupPath
+            string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath, "*.t8x");
+            foreach (string file in files)
+            {
+                using (StreamReader sr = new StreamReader(file))
+                {
+                    bool pn = false;
+                    bool sw = false;
+                    bool cs = false;
+                    string line = String.Empty;
+                    string packname = string.Empty;
+                    string sPacktype = string.Empty;
+                    string checksum = string.Empty;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        Form1.BinaryType packtype = Form1.BinaryType.None;
+                        if (line.StartsWith("packname="))
+                        {
+                            pn = true;
+                            packname = line.Replace("packname=", "");
+                        }
+                        else if (line.StartsWith("checksum="))
+                        {
+                            cs = true;
+                            checksum = line.Replace("checksum=", "");
+                        }
+                        else if (line.StartsWith("bintype="))
+                        {
+                            sPacktype = line.Replace("bintype=", "");
+                            if (sPacktype == "OLD")
+                            {
+                                sw = true;
+                                packtype = Form1.BinaryType.OldBin;
+                            }
+                            else if (sPacktype == "NEW")
+                            {
+                                sw = true;
+                                packtype = BinaryType.NewBin;
+                            }
+                            else if (sPacktype == "BOTH")
+                            {
+                                sw = true;
+                                packtype = BinaryType.BothBin;
+                            }
+                        }
+                        if (pn && sw && cs)
+                        {
+                            string cal_check = CalculateMD5Hash(packname+"T8SUITE");
+                            if (checksum == cal_check)
+                            {
+                                FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype);
+                                installedTunings.Add(tp);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public string CalculateMD5Hash(string input)
+        {
+            // step 1, calculate MD5 hash from input
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            // step 2, convert byte array to hex string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("x2"));
+            }
+            return sb.ToString();
+        }
     }
 }
