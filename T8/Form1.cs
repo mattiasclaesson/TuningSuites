@@ -15473,10 +15473,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 return false;
             }
 
-            public virtual int performTuningAction(Form1 p) 
+            public virtual int performTuningAction(Form1 p, out List<string> out_mod_symbols) 
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
+                out_mod_symbols = new List<string>();
                 return 0;
             }
         }
@@ -15492,13 +15493,16 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", "FFTrqCal.FFTrq_MaxEngineTab2" };
             }
 
-            public override int performTuningAction(Form1 p)
+            public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
-                string[] fromLimiter = new string[] { "FFTrqCal.FFTrq_MaxEngineTab1", "TrqLimCal.Trq_MaxEngineTab1" };
-                string[] toLimiter = new string[]   { "FFTrqCal.FFTrq_MaxEngineTab2", "TrqLimCal.Trq_MaxEngineTab2" };
+                string[] fromLimiter = new string[] { 
+                    "FFTrqCal.FFTrq_MaxEngineTab1", "TrqLimCal.Trq_MaxEngineTab1", "BoostDiagCal.n_HighLim175", "TMCCal.Trq_MaxEngineTab",    "TMCCal.Trq_MaxEngineFFTab" };
+                string[] toLimiter = new string[]   { 
+                    "FFTrqCal.FFTrq_MaxEngineTab2", "TrqLimCal.Trq_MaxEngineTab2", "BoostDiagCal.n_HighLim150", "TMCCal.Trq_MaxEngineLowTab", "TMCCal.Trq_MaxEngineLowFFTab" };
                 int retval = 1;
+                out_mod_symbols = new List<string>();
 
                 // Backup the current file before the tuning action
                 File.Copy(p.m_currentfile, Path.GetDirectoryName(p.m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-beforetuningto-" + WizIdOrFilename + "-mg.bin", true);
@@ -15517,6 +15521,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             p.GetTableMatrixWitdhByName(p.m_currentfile, m_symbols, toLimiter[i], out toCols, out toRows);
                             if (fromCols == toCols && fromRows == toRows)
                             {
+                                out_mod_symbols.Add(toLimiter[i]);
                                 // Copy by read/save and then update checksums
                                 byte[] from = p.readdatafromfile(p.m_currentfile, (int)p.GetSymbolAddress(m_symbols, fromLimiter[i]), p.GetSymbolLength(m_symbols, fromLimiter[i]));
                                 p.savedatatobinary((int)p.GetSymbolAddress(m_symbols, toLimiter[i]), p.GetSymbolLength(m_symbols, toLimiter[i]), from, p.m_currentfile, true);
@@ -15553,10 +15558,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                "FFTrqCal.FFTrq_MaxEngineTab2"};
             }
 
-            public override int performTuningAction(Form1 p)
+            public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
+                out_mod_symbols = new List<string>();
                 return 0;
             }
         }
