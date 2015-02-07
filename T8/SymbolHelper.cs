@@ -145,5 +145,19 @@ namespace CommonSuite
                 return varname;
             }
         }
+
+        public void createAndUpdateCategory(string name)
+        {
+            if (name.Contains("."))
+            {
+                try
+                {
+                    _category = name.Substring(0, name.IndexOf("."));
+                }
+                catch (Exception cE)
+                {
+                }
+            }
+        }
     }
 }

@@ -559,28 +559,9 @@ KnkDetCal.fi_knkWinSizeMAP	6374
 
                     if (sh.Category == "Undocumented" || sh.Category == "")
                     {
-                        if (sh.Userdescription.Contains("."))
-                        {
-                            try
-                            {
-                                sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                //LogHelper.Log("Set cat to " + sh.Category + " for " + sh.Userdescription);
-                            }
-                            catch (Exception cE)
-                            {
-                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
-                            }
-                        }
-
+                        sh.createAndUpdateCategory(sh.Userdescription);
                     }
                 }
-
-
-
-
-
-
-
             }
             return retval;
         }

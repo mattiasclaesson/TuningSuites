@@ -664,24 +664,9 @@ namespace T8SuitePro
             {
                 LogHelper.Log("TryOpenFile failed: " + filename + " err: " + E.Message);
             }
-            foreach (SymbolHelper sh in /*m_symbols*/ symbol_collection)
+            foreach (SymbolHelper sh in symbol_collection)
             {
-                if (sh.Varname.Contains("."))
-                {
-                    try
-                    {
-                        sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                    }
-                    catch (Exception cE)
-                    {
-                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
-                    }
-                }
-                if (sh.Varname.StartsWith("Symbolnumber"))
-                {
-                    // do not allow realtime interaction with this type of files loaded (no symboltable)
-                    _hideRealtime = true;
-                }
+                sh.createAndUpdateCategory(sh.Varname);
             }
             try
             {
@@ -697,24 +682,24 @@ namespace T8SuitePro
                 LogHelper.Log(E.Message);
             }
 
-            _hideRealtime = false;
+            //_hideRealtime = false;
 
-            if (_hideRealtime)
-            {
-                btnToggleRealtime.Enabled = false;
-                btnSRAMSnapshot.Enabled = false;
-                btnGetECUInfo.Enabled = false;
-                btnGetFlashContent.Enabled = false;
-                btnWriteLogMarker.Enabled = false;
-            }
-            else
-            {
-                btnToggleRealtime.Enabled = true;
-                btnSRAMSnapshot.Enabled = true;
-                btnGetECUInfo.Enabled = true;
-                btnGetFlashContent.Enabled = true;
-                btnWriteLogMarker.Enabled = true;
-            }
+            //if (_hideRealtime)
+            //{
+            //    btnToggleRealtime.Enabled = false;
+            //    btnSRAMSnapshot.Enabled = false;
+            //    btnGetECUInfo.Enabled = false;
+            //    btnGetFlashContent.Enabled = false;
+            //    btnWriteLogMarker.Enabled = false;
+            //}
+            //else
+            //{
+            //    btnToggleRealtime.Enabled = true;
+            //    btnSRAMSnapshot.Enabled = true;
+            //    btnGetECUInfo.Enabled = true;
+            //    btnGetFlashContent.Enabled = true;
+            //    btnWriteLogMarker.Enabled = true;
+            //}
             SetProgress("Loading data into view... ");
             SetProgressPercentage(95);
             System.Windows.Forms.Application.DoEvents();
@@ -730,7 +715,10 @@ namespace T8SuitePro
 
             SetProgressIdle();
             //UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
-            if (m_currentfile != string.Empty) LoadRealtimeTable();
+            if (m_currentfile != string.Empty)
+            {
+                LoadRealtimeTable();
+            }
         }
 
         private void SetProgressIdle()
@@ -1386,126 +1374,7 @@ namespace T8SuitePro
             foreach (SymbolHelper sh in symbol_collection)
             {
                 sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat);
-                if (sh.Varname.Contains("."))
-                {
-                    try
-                    {
-                        sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                    }
-                    catch (Exception cE)
-                    {
-                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
-                    }
-                }
-            }
-        }
-
-        private void AddNamesToSymbolsFromTableTmpOld(SymbolCollection symbol_collection)
-        {
-            SymbolTranslator translator = new SymbolTranslator();
-            using (StreamReader sr = new StreamReader(Path.Combine(System.Windows.Forms.Application.StartupPath, "XTABLE.TMP")))
-            {
-                sr.ReadLine();// header
-                sr.ReadLine();//
-                sr.ReadLine();//
-                sr.ReadLine();//15092009
-                string line = string.Empty;
-                int flashaddress = 0;
-                int length = 0;
-
-                string addresses = string.Empty;
-                string symbol = string.Empty;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    try
-                    {
-                        if (line.Length > 2)
-                        {
-                            if (!line.Contains(" "))
-                            {
-                                // dan is het een symbool
-                                symbol = line.Trim();
-
-                            }
-                            else
-                            {
-                                addresses = line;
-                                char[] sep = new char[1];
-                                sep.SetValue(' ', 0);
-                                string[] addvalues = addresses.Split(sep);
-                                if (addvalues.Length >= 3)
-                                {
-                                    flashaddress = Convert.ToInt32((string)addvalues.GetValue(0), 16);
-                                    length = Convert.ToInt32((string)addvalues.GetValue(1), 16);
-                                    foreach (SymbolHelper sh in symbol_collection)
-                                    {
-                                        if (sh.Flash_start_address == flashaddress)
-                                        {
-                                            sh.Varname = symbol;
-                                            //sh.Flash_start_address = flashaddress;
-                                            sh.Length = length;
-                                            /*if (symbol.StartsWith("BstKnkCal."))
-                                            {
-                                                LogHelper.Log("Sym: " + symbol + " addr: " + flashaddress.ToString("X8") + " len: " + length.ToString());
-                                            }
-                                            if (flashaddress == 0x000ABA38)
-                                            {
-                                                LogHelper.Log("Address match: " + symbol);
-                                            }*/
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception E)
-                    {
-                        LogHelper.Log("Failed to add symbolnames: " + E.Message + " line: " + line);
-                    }
-                }
-            }
-            using (StreamReader sr = new StreamReader(Path.Combine(System.Windows.Forms.Application.StartupPath, "COMPR.TXT")))
-            {
-                string line = string.Empty;
-                int flashaddress = 0;
-                int length = 0;
-
-                string addresses = string.Empty;
-                string symbol = string.Empty;
-                int idx = 0;
-                sr.ReadLine();
-                while ((line = sr.ReadLine()) != null)
-                {
-                    try
-                    {
-                        //LogHelper.Log("Current name: " + symbol_collection[idx].Varname);
-                        symbol_collection[idx++].Varname = line;
-
-                    }
-                    catch (Exception E)
-                    {
-                        LogHelper.Log("Failed to add symbolnames: " + E.Message + " line (2): " + line);
-                    }
-                }
-            }
-
-            string help = string.Empty;
-            XDFCategories category = XDFCategories.Undocumented;
-            XDFSubCategory subcat = XDFSubCategory.Undocumented;
-            foreach (SymbolHelper sh in symbol_collection)
-            {
-                sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat);
-                if (sh.Varname.Contains("."))
-                {
-                    try
-                    {
-                        sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                    }
-                    catch (Exception cE)
-                    {
-                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
-                    }
-                }
+                sh.createAndUpdateCategory(sh.Varname);
             }
         }
 
@@ -4307,19 +4176,8 @@ namespace T8SuitePro
                                             {
                                                 if (!CompareSymbolToCurrentFile(compareName, (int)sh_compare.Flash_start_address, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
                                                 {
-                                                    string category = "";
-                                                    if (originalName.Contains("."))
-                                                    {
-                                                        try
-                                                        {
-                                                            category = originalName.Substring(0, originalName.IndexOf("."));
-                                                        }
-                                                        catch (Exception cE)
-                                                        {
-                                                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", originalName, cE.Message));
-                                                        }
-                                                    }
-                                                    dt.Rows.Add(originalName, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(compareName, out ht, out cat, out subcat), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription);
+                                                    sh_org.createAndUpdateCategory(sh_org.SmartVarname);
+                                                    dt.Rows.Add(originalName, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(compareName, out ht, out cat, out subcat), false, 0, diffperc, diffabs, diffavg, sh_org.Category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription);
                                                     break;
                                                 }
                                             }
@@ -6700,18 +6558,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             foreach (SymbolHelper shfound in result_Collection)
                             {
                                 string helptext = st.TranslateSymbolToHelpText(shfound.Varname, out ht, out cat, out subcat);
-                                if (shfound.Varname.Contains("."))
-                                {
-                                    try
-                                    {
-                                        shfound.Category = shfound.Varname.Substring(0, shfound.Varname.IndexOf("."));
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", shfound.Varname, cE.Message));
-                                    }
-                                }
-                                dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
+                                shfound.createAndUpdateCategory(shfound.SmartVarname);
+                                dt.Rows.Add(shfound.SmartVarname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
                             }
                             tabdet.CompareSymbolCollection = result_Collection;
                             tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
@@ -8879,43 +8727,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         if (dr["SYMBOLNAME"].ToString() == sh.Varname)
                         {
-                            //if (sh.Symbol_number == Convert.ToInt32(dr["SYMBOLNUMBER"]))
+                            if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
                             {
-                                if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
+                                // Swap varname and userdescription
+                                if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
                                 {
-                                    if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                                    {
-                                        sh.Userdescription = sh.Varname;
-                                        sh.Varname = dr["DESCRIPTION"].ToString();
-                                    }
-                                    else
-                                    {
-                                        sh.Userdescription = dr["DESCRIPTION"].ToString();
-                                    }
-                                    string helptext = string.Empty;
-                                    XDFCategories cat = XDFCategories.Undocumented;
-                                    XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub);
-
-                                    //if(sh.Category == 
-                                    if (sh.Category == "Undocumented" || sh.Category == "")
-                                    {
-                                        if (sh.Varname.Contains("."))
-                                        {
-                                            try
-                                            {
-                                                sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                                            }
-                                            catch (Exception cE)
-                                            {
-                                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
-                                            }
-                                        }
-
-                                    }
-
-                                    break;
+                                    sh.Userdescription = sh.Varname;
+                                    sh.Varname = dr["DESCRIPTION"].ToString();
                                 }
+                                else
+                                {
+                                    sh.Userdescription = dr["DESCRIPTION"].ToString();
+                                }
+                                string helptext = string.Empty;
+                                XDFCategories cat = XDFCategories.Undocumented;
+                                XDFSubCategory sub = XDFSubCategory.Undocumented;
+                                sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub);
+
+                                if (sh.Category == "Undocumented" || sh.Category == "")
+                                {
+                                    sh.createAndUpdateCategory(sh.Varname);
+                                }
+                                break;
                             }
                         }
                     }
@@ -15036,21 +14869,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 XDFCategories cat = XDFCategories.Undocumented;
                                 XDFSubCategory sub = XDFSubCategory.Undocumented;
                                 sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub);
-                                //if(sh.Category == 
                                 if (sh.Category == "Undocumented" || sh.Category == "")
                                 {
-                                    if (sh.Userdescription.Contains("."))
-                                    {
-                                        try
-                                        {
-                                            sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                        }
-                                        catch (Exception cE)
-                                        {
-                                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
-                                        }
-                                    }
-
+                                    sh.createAndUpdateCategory(sh.Userdescription);
                                 }
                             }
                         }
@@ -15084,8 +14905,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             try
             {
                 SymbolTranslator st = new SymbolTranslator();
-                char[] sep = new char[1];
-                sep.SetValue(';', 0);
                 string[] fileContent = File.ReadAllLines(filename);
                 int symbolnumber = 0;
                 foreach (string line in fileContent)
@@ -15093,11 +14912,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if (line.StartsWith("*"))
                     {
                         symbolnumber++;
-                        //Console.WriteLine(line);
-                        string[] values = line.Split(sep);
                         try
                         {
-                            //string varname = (string)values.GetValue(0);
                             string varname = line.Substring(1);
                             int idxSymTab = 0;
                             foreach (SymbolHelper sh in m_symbols)
@@ -15116,17 +14932,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     
                                     if (sh.Category == "Undocumented" || sh.Category == "")
                                     {
-                                        if (varname.Contains("."))
-                                        {
-                                            try
-                                            {
-                                                sh.Category = varname.Substring(0, varname.IndexOf("."));
-                                            }
-                                            catch (Exception cE)
-                                            {
-                                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
-                                            }
-                                        }
+                                        sh.createAndUpdateCategory(sh.Userdescription);
                                     }
                                     break;
                                 }
