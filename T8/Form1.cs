@@ -165,11 +165,9 @@ namespace T8SuitePro
             splash.Show();
             System.Windows.Forms.Application.DoEvents();
             InitializeComponent();
-#if (DEBUG)
             addWizTuneFilePacks();
             // Only have this enabled in debug mode until ready
             this.barButtonItem29.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
-#endif
 
             try
             {
@@ -15479,7 +15477,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public string WizName;
             public string WizIdOrFilename;
             public TuneWizardType WizType;
-            public string[] impactedMaps;
             public BinaryType WizBinType;
 
             public TuningAction() 
@@ -15503,11 +15500,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public TuneWizardType GetWizardType()
             {
                 return WizType;
-            }
-
-            public string[] getImpactedMaps()
-            {
-                return impactedMaps;
             }
 
             public BinaryType GetWizBinaryType()
@@ -15594,9 +15586,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 WizType = TuneWizardType.Embedded;
                 WizBinType = BinaryType.BothBin;
-                WizName = "Convert 150mp maps to 175hp maps";
+                WizName = "Copy 150mp maps to 175hp maps";
                 WizIdOrFilename = "ap_175hp";
-                impactedMaps = new string[] { "TrqLimCal.Trq_MaxEngineTab2", "FFTrqCal.FFTrq_MaxEngineTab2" };
             }
 
             public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
@@ -15670,10 +15661,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 WizBinType = BinaryType.NewBin;
                 WizName = "Mackanized ST1+";
                 WizIdOrFilename = "ap_ST1Plus";
-                impactedMaps = new string[] {  "TrqLimCal.Trq_MaxEngineTab", 
-                                               "TrqLimCal.Trq_MaxEngineTab2", 
-                                               "FFTrqCal.FFTrq_MaxEngineTab2",
-                                               "FFTrqCal.FFTrq_MaxEngineTab2"};
             }
 
             public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
@@ -15681,6 +15668,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
                 out_mod_symbols = new List<string>();
+                string [] fake = new string[] {  "Removed Torque Limiters in code",
+                                                 "TrqLimCal.Trq_MaxEngineTab", 
+                                                 "TrqLimCal.Trq_MaxEngineTab2", 
+                                                 "FFTrqCal.FFTrq_MaxEngineTab2",
+                                                 "FFTrqCal.FFTrq_MaxEngineTab2"};
+                foreach (string tmp in fake)
+                {
+                    out_mod_symbols.Add(tmp);
+                }
                 return 0;
             }
         }
@@ -15688,7 +15684,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         public static List <TuningAction> installedTunings = new List<TuningAction>
         {
             new Copy175hpMaps(),
+#if (DEBUG)
             new MackanizedST1Plus()
+#endif
         };
 
         public void addWizTuneFilePacks()

@@ -62,7 +62,6 @@ namespace T8SuitePro
                 if (selAction.performTuningAction(parent, out outList) == 0)
                 {
                     // Inform the user of the tuning action
-                    string[] imactedMaps = selAction.getImpactedMaps(); // FIX: Maybe list all maps that were updated?
                     this.wizCompletedPage.FinishText = "You have now completed the Tuning Action '" +
                         this.listTuningActions.SelectedItem.ToString() +
                         "'. Please check the modified maps below so that they are what you expect them to be." +
