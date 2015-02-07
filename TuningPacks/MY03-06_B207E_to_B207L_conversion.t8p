@@ -1,3 +1,5 @@
+packname=Convert MY 03-06 B207E to B207L
+bintype=OLD
 symbol=BoostDiagCal.n_HighLim
 length=2
 data=13,88,

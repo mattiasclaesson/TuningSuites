@@ -15497,52 +15497,56 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         public void addWizTuneFilePacks()
         {
-            // List all files in start-up directory, System.Windows.Forms.Application.StartupPath
-            string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath, "*.t8x");
-            foreach (string file in files)
+            // List all files in start-up directory/TuningPacks
+            string path = Path.Combine(System.Windows.Forms.Application.StartupPath, "TuningPacks");
+            if (Directory.Exists(path))
             {
-                using (StreamReader sr = new StreamReader(file))
+                string[] files = Directory.GetFiles(path, "*.t8x");
+                foreach (string file in files)
                 {
-                    bool pn = false;
-                    bool sw = false;
-                    string line = String.Empty;
-                    string enc_line = String.Empty;
-                    string packname = string.Empty;
-                    string sPacktype = string.Empty;
-                    string checksum = string.Empty;
-                    while ((enc_line = sr.ReadLine()) != null)
+                    using (StreamReader sr = new StreamReader(file))
                     {
-                        line = decode_aes(enc_line).Trim();
-                        Form1.BinaryType packtype = Form1.BinaryType.None;
-                        if (line.StartsWith("packname="))
+                        bool pn = false;
+                        bool sw = false;
+                        string line = String.Empty;
+                        string enc_line = String.Empty;
+                        string packname = string.Empty;
+                        string sPacktype = string.Empty;
+                        string checksum = string.Empty;
+                        while ((enc_line = sr.ReadLine()) != null)
                         {
-                            pn = true;
-                            packname = line.Replace("packname=", "");
-                        }
-                        else if (line.StartsWith("bintype="))
-                        {
-                            sPacktype = line.Replace("bintype=", "");
-                            if (sPacktype == "OLD")
+                            line = decode_aes(enc_line).Trim();
+                            Form1.BinaryType packtype = Form1.BinaryType.None;
+                            if (line.StartsWith("packname="))
                             {
-                                sw = true;
-                                packtype = Form1.BinaryType.OldBin;
+                                pn = true;
+                                packname = line.Replace("packname=", "");
                             }
-                            else if (sPacktype == "NEW")
+                            else if (line.StartsWith("bintype="))
                             {
-                                sw = true;
-                                packtype = BinaryType.NewBin;
+                                sPacktype = line.Replace("bintype=", "");
+                                if (sPacktype == "OLD")
+                                {
+                                    sw = true;
+                                    packtype = Form1.BinaryType.OldBin;
+                                }
+                                else if (sPacktype == "NEW")
+                                {
+                                    sw = true;
+                                    packtype = BinaryType.NewBin;
+                                }
+                                else if (sPacktype == "BOTH")
+                                {
+                                    sw = true;
+                                    packtype = BinaryType.BothBin;
+                                }
                             }
-                            else if (sPacktype == "BOTH")
+                            if (pn && sw)
                             {
-                                sw = true;
-                                packtype = BinaryType.BothBin;
+                                FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype);
+                                installedTunings.Add(tp);
+                                break;
                             }
-                        }
-                        if (pn && sw)
-                        {
-                            FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype);
-                            installedTunings.Add(tp);
-                            break;
                         }
                     }
                 }
