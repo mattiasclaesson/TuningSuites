@@ -9497,7 +9497,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 List<FileTuningPackage> tuningPackages;
                 string binType = "";
-                tuningPackages = ReadTuningPackageFile(ofd.FileName, out binType);
+                tuningPackages = ReadTuningPackageFile(false, ofd.FileName, out binType);
 
                 ApplyTuningPackage(tuningPackages);
                 foreach (FileTuningPackage tp in tuningPackages)
@@ -9514,7 +9514,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
     
         }
 
-        private List<FileTuningPackage> ReadTuningPackageFile(string tpFile, out string binSwType)
+        private List<FileTuningPackage> ReadTuningPackageFile(bool encoded, string tpFile, out string binSwType)
         {
             char[] sep = new char[1];
             sep.SetValue(',', 0);
@@ -9524,9 +9524,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             using (StreamReader sr = new StreamReader(tpFile))
             {
                 string line = string.Empty;
+                string in_line = string.Empty;
                 SymbolHelper sh_Import = new SymbolHelper();
-                while ((line = sr.ReadLine()) != null)
+                while ((in_line = sr.ReadLine()) != null)
                 {
+                    if (encoded)
+                        line = decode_aes(in_line).Trim();
+                    else
+                        line = in_line.Trim();
+
                     if (line.StartsWith("packname="))
                     {
                     }
@@ -15564,7 +15570,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 List<FileTuningPackage> tuningPackages;
                 string binType = string.Empty;
 
-                tuningPackages = p.ReadTuningPackageFile(WizIdOrFilename, out binType);
+                tuningPackages = p.ReadTuningPackageFile(true, WizIdOrFilename, out binType);
 
                 if (compatibelBinType(binType))
                 {
@@ -15695,23 +15701,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     bool pn = false;
                     bool sw = false;
-                    bool cs = false;
                     string line = String.Empty;
+                    string enc_line = String.Empty;
                     string packname = string.Empty;
                     string sPacktype = string.Empty;
                     string checksum = string.Empty;
-                    while ((line = sr.ReadLine()) != null)
+                    while ((enc_line = sr.ReadLine()) != null)
                     {
+                        line = decode_aes(enc_line).Trim();
                         Form1.BinaryType packtype = Form1.BinaryType.None;
                         if (line.StartsWith("packname="))
                         {
                             pn = true;
                             packname = line.Replace("packname=", "");
-                        }
-                        else if (line.StartsWith("checksum="))
-                        {
-                            cs = true;
-                            checksum = line.Replace("checksum=", "");
                         }
                         else if (line.StartsWith("bintype="))
                         {
@@ -15732,15 +15734,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 packtype = BinaryType.BothBin;
                             }
                         }
-                        if (pn && sw && cs)
+                        if (pn && sw)
                         {
-                            string cal_check = CalculateMD5Hash(packname+"T8SUITE");
-                            if (checksum == cal_check)
-                            {
-                                FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype);
-                                installedTunings.Add(tp);
-                                break;
-                            }
+                            FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype);
+                            installedTunings.Add(tp);
+                            break;
                         }
                     }
                 }
@@ -15760,6 +15758,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 sb.Append(hash[i].ToString("x2"));
             }
             return sb.ToString();
+        }
+
+        public string decode_aes(string input)
+        {
+            var textEncoder = new UTF8Encoding();
+            var aes = new AesManaged();
+            aes.Key = textEncoder.GetBytes("T8SuiteTunesSaab");
+            aes.IV = textEncoder.GetBytes("1234567812345678");
+            var decryptor = aes.CreateDecryptor();
+            var cipher = Convert.FromBase64String(input);
+            var text_bytes = decryptor.TransformFinalBlock(cipher, 0, cipher.Length);
+            var text = textEncoder.GetString(text_bytes);
+            return text;
         }
     }
 }
