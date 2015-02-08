@@ -1,6 +1,6 @@
 #
 # t8p Encrypt
-# Version: 0.1
+# Version: 0.2
 #
 import sys
 import os.path
@@ -8,11 +8,67 @@ import base64
 import binascii
 import StringIO
 from Crypto.Cipher import AES
-
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Signature import PKCS1_PSS
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA
+import hashlib
 
 # Debug-mode
 debug = False
 
+def sign_RSA(message):
+    '''
+    param: public_key_loc Path to public key
+    param: message String to be encrypted
+    return base64 encoded encrypted string
+    '''
+    key = open('T8Priv.pem', "r").read()
+    h = SHA.new(message)
+    rsakey = RSA.importKey(key)
+    signer = PKCS1_v1_5.new(rsakey)
+    signature = signer.sign(h)
+    return signature.encode('base64') 
+
+def check_sign_RSA(message, signature):
+    key = open('T8Priv.pem', "r").read()
+    rsakey = RSA.importKey(key)
+    h = SHA.new(message)
+    verifier = PKCS1_v1_5.new(rsakey)
+    if verifier.verify(h, signature.decode('base64')):
+        return True
+    else:
+        return False
+
+
+def encrypt_RSA(message):
+    '''
+    param: public_key_loc Path to public key
+    param: message String to be encrypted
+    return base64 encoded encrypted string
+    '''
+    key = open('T8Pub.pem', "r").read()
+    rsakey = RSA.importKey(key)
+    rsakey = PKCS1_OAEP.new(rsakey)
+    encrypted = rsakey.encrypt(message)
+    return encrypted.encode('base64') 
+       
+def decrypt_RSA(package):
+    '''
+    param: public_key_loc Path to your private key
+    param: package String to be decrypted
+    return decrypted string
+    '''
+    from Crypto.PublicKey import RSA
+    from Crypto.Cipher import PKCS1_OAEP
+    from base64 import b64decode
+    key = open('T8Pub.pem', "r").read()
+    rsakey = RSA.importKey(key)
+    rsakey = PKCS1_OAEP.new(rsakey)
+    decrypted = rsakey.decrypt(b64decode(package))
+    return decrypted 
+    
 class PKCS7Encoder(object):
     def __init__(self, k=16):
         self.k = k
@@ -79,7 +135,13 @@ def decode_file(encoded_file):
     # Close
     enc_file.close()
     return out
-   
+    
+def file_prepender(filename, data):
+    with open(filename, 'r+') as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write("<SIGNATURE>\n" + data + "</SIGNATURE>\n"+ content)   
+        
 def main():
 
     if len(sys.argv) < 2:
@@ -103,15 +165,25 @@ def main():
             fh.close()
 
             # Define output file
-            out_file = arg.split('.')[0] + ".t8x"
+            #out_file = os.path.basename(arg).split('.')[0] + ".t8x"
+            out_file =  os.path.dirname(arg) + "\\" + os.path.basename(arg).split('.')[0] + ".t8x"
  
             # Create output files
             encode_file(out_file, data)
             
+            # Create a MD5 hash of original file
+            hash = hashlib.md5(open(arg, 'rb').read()).hexdigest()
             if debug:
-                test_file = open(str(idx) + 'test.t8p', 'w')
-                test_file.write(decode_file(out_file))
-                test_file.close()
+                print hash
+                
+            # Create a signature out of MD5 hash
+            signature = sign_RSA(hash)
+            if debug:
+                if(check_sign_RSA(hash, signature)):
+                    print "Signature OK"
+            
+            # Add signature at beginning of file
+            file_prepender(out_file, signature)
         
 if __name__ == '__main__':
     main()
