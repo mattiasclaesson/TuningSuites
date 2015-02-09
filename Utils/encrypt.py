@@ -1,6 +1,6 @@
 #
 # t8p Encrypt
-# Version: 0.2
+# Version: 0.3
 #
 import sys
 import os.path
@@ -19,11 +19,6 @@ import hashlib
 debug = False
 
 def sign_RSA(message):
-    '''
-    param: public_key_loc Path to public key
-    param: message String to be encrypted
-    return base64 encoded encrypted string
-    '''
     key = open('T8Priv.pem', "r").read()
     h = SHA.new(message)
     rsakey = RSA.importKey(key)
@@ -31,8 +26,8 @@ def sign_RSA(message):
     signature = signer.sign(h)
     return signature.encode('base64') 
 
-def check_sign_RSA(message, signature):
-    key = open('T8Priv.pem', "r").read()
+def verify_sign_RSA(message, signature):
+    key = open('T8Pub.pem', "r").read()
     rsakey = RSA.importKey(key)
     h = SHA.new(message)
     verifier = PKCS1_v1_5.new(rsakey)
@@ -41,13 +36,7 @@ def check_sign_RSA(message, signature):
     else:
         return False
 
-
 def encrypt_RSA(message):
-    '''
-    param: public_key_loc Path to public key
-    param: message String to be encrypted
-    return base64 encoded encrypted string
-    '''
     key = open('T8Pub.pem', "r").read()
     rsakey = RSA.importKey(key)
     rsakey = PKCS1_OAEP.new(rsakey)
@@ -55,15 +44,10 @@ def encrypt_RSA(message):
     return encrypted.encode('base64') 
        
 def decrypt_RSA(package):
-    '''
-    param: public_key_loc Path to your private key
-    param: package String to be decrypted
-    return decrypted string
-    '''
     from Crypto.PublicKey import RSA
     from Crypto.Cipher import PKCS1_OAEP
     from base64 import b64decode
-    key = open('T8Pub.pem', "r").read()
+    key = open('T8Priv.pem', "r").read()
     rsakey = RSA.importKey(key)
     rsakey = PKCS1_OAEP.new(rsakey)
     decrypted = rsakey.decrypt(b64decode(package))
@@ -149,7 +133,7 @@ def main():
         exit(1)
    
     for idx, arg in enumerate(sys.argv):      
-        if idx > 0: #t8p file
+        if idx > 0:
             if not os.path.exists(arg):
                 print "Input Tuning Pack File (.t8p) '%s' does not exist" % arg
                 exit(1)
@@ -165,7 +149,6 @@ def main():
             fh.close()
 
             # Define output file
-            #out_file = os.path.basename(arg).split('.')[0] + ".t8x"
             out_file =  os.path.dirname(arg) + "\\" + os.path.basename(arg).split('.')[0] + ".t8x"
  
             # Create output files
@@ -173,14 +156,9 @@ def main():
             
             # Create a MD5 hash of original file
             hash = hashlib.md5(open(arg, 'rb').read()).hexdigest()
-            if debug:
-                print hash
                 
             # Create a signature out of MD5 hash
             signature = sign_RSA(hash)
-            if debug:
-                if(check_sign_RSA(hash, signature)):
-                    print "Signature OK"
             
             # Add signature at beginning of file
             file_prepender(out_file, signature)
