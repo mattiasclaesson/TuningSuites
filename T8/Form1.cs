@@ -9297,19 +9297,64 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
+        public enum FileTuningPackType 
+        {
+            None =  0,
+            SymbolTp,
+            ApplyBin
+        };
+
         public class FileTuningPackage
+        {
+            public FileTuningPackType type;
+            public bool succesful;
+            public FileTuningPackage() { }
+            public string result;
+            public bool hasResult = false;
+
+            public virtual string GetNameTPAction()
+            {
+                return "";
+            }
+
+        }
+
+        public class SymbolFileTuningPackage : FileTuningPackage
         {
             public SymbolHelper sh_Import;
             public int addressInFile;
             public byte[] dataToInsert;
-            public bool succesful;
 
-            public FileTuningPackage(SymbolHelper _sh_Import, int _addressInFile, byte[] _dataToInsert, bool _successful)
+            public SymbolFileTuningPackage(SymbolHelper _sh_Import, int _addressInFile, byte[] _dataToInsert, bool _successful)
             {
+                type = FileTuningPackType.SymbolTp;
                 succesful = _successful;
                 sh_Import = _sh_Import;
                 addressInFile = _addressInFile;
                 dataToInsert = _dataToInsert;
+            }
+
+            public override string GetNameTPAction()
+            {
+                return sh_Import.Varname;
+            }
+        }
+        public class BinFileTuningPackage : FileTuningPackage
+        {
+            string _binAction;
+
+            public BinFileTuningPackage(string binAction)
+            {
+                type = FileTuningPackType.ApplyBin;
+                _binAction = binAction;
+            }
+
+            public override string GetNameTPAction()
+            {
+                if (!hasResult)
+                    return _binAction;
+                else
+                    return result;
             }
         }
 
@@ -9332,9 +9377,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 ApplyTuningPackage(tuningPackages);
                 foreach (FileTuningPackage tp in tuningPackages)
                     if(tp.succesful)
-                        dt.Rows.Add(tp.sh_Import.Varname, "Success");
+                        dt.Rows.Add(tp.GetNameTPAction(), "Success");
                     else
-                        dt.Rows.Add(tp.sh_Import.Varname, "Fail");
+                        dt.Rows.Add(tp.GetNameTPAction(), "Fail");
 
                 frmImportResults res = new frmImportResults();
                 res.SetDataTable(dt);
@@ -9386,6 +9431,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         binSwType = line.Replace("bintype=", "");
                     }
+                    else if (line.StartsWith("binaction="))
+                    {
+                        string inS = line.Replace("binaction=", "");
+                        FileTuningPackage binTP = new BinFileTuningPackage(inS);
+                        lstTp.Add(binTP);
+                    }
                     else if (line.StartsWith("symbol="))
                     {
                         //
@@ -9412,12 +9463,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
                             if (addressInFile != 0)
                             {
-                                FileTuningPackage fileTP = new FileTuningPackage(sh_Import, addressInFile, dataToInsert, true);
+                                FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, true);
                                 lstTp.Add(fileTP);
                             }
                             else
                             {
-                                FileTuningPackage fileTP = new FileTuningPackage(sh_Import, addressInFile, dataToInsert, false);
+                                FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, false);
                                 lstTp.Add(fileTP);
                             }
                         }
@@ -9425,7 +9476,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             // add failure
                             byte[] dataToInsert = new byte[0];
-                            FileTuningPackage fileTP = new FileTuningPackage(sh_Import, 0, dataToInsert, false);
+                            FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, 0, dataToInsert, false);
                             lstTp.Add(fileTP);
                         }
                     }
@@ -9436,14 +9487,111 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void ApplyTuningPackage(List<FileTuningPackage> fileTP)
         {
+
             foreach (FileTuningPackage fTP in fileTP)
             {
-                if (fTP.addressInFile > 0)
+                if (fTP.type == FileTuningPackType.SymbolTp)
                 {
-                    savedatatobinary(fTP.addressInFile, fTP.sh_Import.Length, fTP.dataToInsert, m_currentfile, true);
+                    SymbolFileTuningPackage sTP = (SymbolFileTuningPackage)fTP;
+                    if (sTP.addressInFile > 0)
+                    {
+                        savedatatobinary(sTP.addressInFile, sTP.sh_Import.Length, sTP.dataToInsert, m_currentfile, true);
+                    }
+                }
+                else if (fTP.type == FileTuningPackType.ApplyBin)
+                {
+                    string result = "";
+                    fTP.succesful = performBinAction(fTP.GetNameTPAction(), out result);
+                    if (result != "")
+                    {
+                        fTP.hasResult = true;
+                        fTP.result = result;
+                    }
                 }
             }
             UpdateChecksum(m_currentfile, true);
+        }
+
+        public bool performBinAction(string binAction, out string result)
+        {
+            bool retval = false;
+            result = "";
+            if (binAction == "hikeTL1to400")
+            {
+                int num = applyHikeTL1to400();
+                if (num > 0)
+                {
+                    result = "Successfully hiked " + num.ToString() + " Torque Limiters #1 to 400,0nm";
+                    retval = true;
+                }
+                else
+                {
+                    result = "Failed to hike Torque Limiter #1";
+                    retval = false;
+                };
+            }
+            else
+            {
+                result = "Failed with binaction=" + binAction;
+                retval = false;
+            }
+            return retval;
+        }
+
+        // This function performs a search and replace and 
+        // by doing so hikes the torque limiter to 400nm
+        public int applyHikeTL1to400()
+        {
+            // Search for 3D7C0C4E, replace with 3D7C0FA0
+            byte [] find_p = new byte[] {0x3D, 0x7C, 0x0C, 0x4E};
+            byte[] replace_p = new byte[] { 0x3D, 0x7C, 0x0F, 0xA0 };
+
+            // Read the complete file
+            byte[] buff = File.ReadAllBytes(m_currentfile);
+            
+            // Search and replace
+            int num_replacements = ReplaceBytePattern(buff, find_p, replace_p, 0xFF, 0xFE);
+
+            // Store the file
+            File.WriteAllBytes(m_currentfile, buff);
+
+            return num_replacements;
+        }
+
+        // Searches for a pattern and replaces it.
+        // The "trail safe" routine can be further improved,
+        // but performs its task.
+        public int ReplaceBytePattern(byte[] data, byte[] find_pattern, byte[] replace_pattern, byte trail_safe_1, byte trail_safe_2)
+        {
+            int matches = 0;
+            for (int i = 0; i < data.Length - find_pattern.Length; i++)
+            {
+                bool match = true;
+                for (int k = 0; k < find_pattern.Length; k++)
+                {
+                    if (data[i + k] != find_pattern[k])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match)
+                {
+                    if ((i + find_pattern.Length) < data.Length)
+                    {
+                        if (data[i + find_pattern.Length] == trail_safe_1 || data[i + find_pattern.Length] == trail_safe_2)
+                        {
+                            matches++;
+                            for (int j = 0; j < find_pattern.Length; j++)
+                            {
+                                data[i + j] = replace_pattern[j];
+
+                            }
+                        }
+                    }
+                }
+            }
+            return matches;
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -15377,6 +15525,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 WizType = TuneWizardType.TuningFile;
                 WizBinType = type;
             }
+
             public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
             {
                 out_mod_symbols = new List<string>();
@@ -15387,14 +15536,22 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                 if (compatibelBinType(binType))
                 {
+                    // Save a copy
+                    File.Copy(p.m_currentfile, Path.GetDirectoryName(p.m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD-" + WizName + ".bin", true);
 
                     p.ApplyTuningPackage(tuningPackages);
                     foreach (FileTuningPackage tp in tuningPackages)
-                        if (tp.succesful)
-                            out_mod_symbols.Add("OK: " + tp.sh_Import.Varname);
+                        if (tp.hasResult)
+                        {
+                            out_mod_symbols.Add(tp.result);
+                        }
                         else
-                            out_mod_symbols.Add("Fail: " + tp.sh_Import.Varname);
-
+                        {
+                            if (tp.succesful)
+                                out_mod_symbols.Add("OK: " + tp.GetNameTPAction());
+                            else
+                                out_mod_symbols.Add("Fail: " + tp.GetNameTPAction());
+                        }
                     p.RefreshTableViewers();
                 }
                 return 0;
