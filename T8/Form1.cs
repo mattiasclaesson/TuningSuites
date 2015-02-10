@@ -9538,60 +9538,127 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             return retval;
         }
 
-        // This function performs a search and replace and 
-        // by doing so hikes the torque limiter to 400nm
-        public int applyHikeTL1to400()
+        public class SearchReplacePattern
         {
-            // Search for 3D7C0C4E, replace with 3D7C0FA0
-            byte [] find_p = new byte[] {0x3D, 0x7C, 0x0C, 0x4E};
-            byte[] replace_p = new byte[] { 0x3D, 0x7C, 0x0F, 0xA0 };
-
-            // Read the complete file
-            byte[] buff = File.ReadAllBytes(m_currentfile);
-            
-            // Search and replace
-            int num_replacements = ReplaceBytePattern(buff, find_p, replace_p, 0xFF, 0xFE);
-
-            // Store the file
-            File.WriteAllBytes(m_currentfile, buff);
-
-            return num_replacements;
+            public byte[] SearchPattern;
+            public byte[] ReplaceWith;
+            public byte[][][] CheckHeadAndTail; //(Head XXYY and Tail AABB) or (Head ZZWW and Tail CCDD) or ...
+            public SearchReplacePattern(byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail)
+            {
+                SearchPattern = _SearchPattern;
+                ReplaceWith = _ReplaceWith;
+                CheckHeadAndTail = _CheckHeadAndTail;
+            }
         }
 
-        // Searches for a pattern and replaces it.
-        // The "trail safe" routine can be further improved,
-        // but performs its task.
-        public int ReplaceBytePattern(byte[] data, byte[] find_pattern, byte[] replace_pattern, byte trail_safe_1, byte trail_safe_2)
+        public int ReplaceBytePattern(byte[] data, SearchReplacePattern[] seachAndReplaces)
         {
             int matches = 0;
-            for (int i = 0; i < data.Length - find_pattern.Length; i++)
-            {
-                bool match = true;
-                for (int k = 0; k < find_pattern.Length; k++)
-                {
-                    if (data[i + k] != find_pattern[k])
-                    {
-                        match = false;
-                        break;
-                    }
-                }
-                if (match)
-                {
-                    if ((i + find_pattern.Length) < data.Length)
-                    {
-                        if (data[i + find_pattern.Length] == trail_safe_1 || data[i + find_pattern.Length] == trail_safe_2)
-                        {
-                            matches++;
-                            for (int j = 0; j < find_pattern.Length; j++)
-                            {
-                                data[i + j] = replace_pattern[j];
 
+            // Will browse the file multiple times
+            // Can be made more effective to read once and match
+            // all SearchReplacePattern at each position
+            foreach (SearchReplacePattern srp in seachAndReplaces)
+            {
+                for (int i = 0; i < data.Length - srp.SearchPattern.Length; i++)
+                {
+                    bool match = true;
+                    for (int k = 0; k < srp.SearchPattern.Length; k++)
+                    {
+                        if (data[i + k] != srp.SearchPattern[k])
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    if (match)
+                    {
+                        // Check if the Head AND Tail is matching
+                        foreach (byte[][] htArray in srp.CheckHeadAndTail)
+                        {
+                            // Head in htArray[0]
+                            bool headmatch = true;
+                            for (int j = 0; j < htArray[0].Length; j++)
+                            {
+                                if (data[i - htArray[0].Length + j] == htArray[0][j])
+                                {
+                                    headmatch = true;
+                                }
+                                else
+                                {
+                                    headmatch = false;
+                                    break;
+                                }
+                            }
+
+                            // Tail in htArray[1]
+                            bool tailmatch = true;
+                            for (int j = 0; j < htArray[1].Length; j++)
+                            {
+                                if (data[i + srp.SearchPattern.Length + j] == htArray[1][j])
+                                {
+                                    tailmatch = true;
+                                }
+                                else
+                                {
+                                    tailmatch = false;
+                                    break;
+                                }
+                            }
+
+                            if (match && headmatch && tailmatch)
+                            {
+                                // Do the actual replacement
+                                matches++;
+                                for (int j = 0; j < srp.SearchPattern.Length; j++)
+                                {
+                                    data[i + j] = srp.ReplaceWith[j];
+
+                                }
+                                break;
                             }
                         }
                     }
                 }
             }
             return matches;
+        }
+
+        // This function performs a search and replace and 
+        // by doing so hikes the torque limiter to 400nm
+        public int applyHikeTL1to400()
+        {
+
+            // Search for (hex)3D7C0C4E, replace with (hex)3D7C0FA0
+            // No head, either 0xFF or 0xFE in tail
+            int num_replacements = 0;
+            SearchReplacePattern[] sp = new SearchReplacePattern[] 
+            {   new SearchReplacePattern(
+                    new byte [] { 0x3D, 0x7C, 0x0C, 0x4E }, 
+                    new byte [] { 0x3D, 0x7C, 0x0F, 0xA0 }, 
+                    new byte [][][] 
+                    {
+                        new byte [][] {new byte[] {}, new byte [] {0xFF}}, 
+                        new byte [][] {new byte[] {}, new byte [] {0xFE}}
+                    }
+                )
+            };
+
+            // Read the complete file into memory since we will scan it over and over again
+            if (File.Exists(m_currentfile))
+            {
+                byte[] buff = File.ReadAllBytes(m_currentfile);
+
+                // Search and replace
+                //int num_replacements = ReplaceBytePattern(buff, find_p, replace_p, 0xFF, 0xFE);
+                num_replacements = ReplaceBytePattern(buff, sp);
+
+                // Store the file
+                File.WriteAllBytes(m_currentfile, buff);
+            }
+
+            return num_replacements;
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
