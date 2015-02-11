@@ -9302,7 +9302,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             None =  0,
             SymbolTp,
-            ApplyBin
+            ApplyBin,
+            SearchAndReplace
         };
 
         public class FileTuningPackage
@@ -9340,6 +9341,122 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 return sh_Import.Varname;
             }
         }
+
+        public class SearchReplaceTuningPackage : FileTuningPackage
+        {
+            string _name;
+            public SearchReplacePattern srp; // byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail
+            public SearchReplaceTuningPackage(string searchReplace)
+            {
+                type = FileTuningPackType.SearchAndReplace;
+                byte[] bSearch = new byte[] {};
+                byte[] bReplace = new byte[] { };
+                List<byte[][]> headTailList = new List<byte[][]>();
+                string[] headtail;
+                string[] inputString = searchReplace.Split(';');
+                if (inputString.Length == 4)
+                {
+                    _name = inputString[0];
+                    if (inputString[1][0] == '{' && inputString[1][inputString[1].Length - 1] == '}')
+                    {
+                        string [] search = inputString[1].Trim('{', '}').Split(',');
+                        bSearch = new byte[search.Length];
+                        for(int i=0;i<search.Length;i++)
+                        {
+                            bSearch[i] = Convert.ToByte(search[i], 16); 
+                        }
+
+                    }
+                    if (inputString[2][0] == '{' && inputString[2][inputString[2].Length - 1] == '}')
+                    {
+                        string[] replace = inputString[2].Trim('{', '}').Split(',');
+                        bReplace = new byte[replace.Length];
+                        for (int i = 0; i < replace.Length; i++)
+                        {
+                            bReplace[i] = Convert.ToByte(replace[i], 16);
+                        }
+
+                    }
+                    if (inputString[3][0] == '{' && inputString[3][inputString[3].Length - 1] == '}')
+                    {
+                        inputString[3] = inputString[3].Remove(1, 1);
+                        inputString[3] = inputString[3].Remove(inputString[3].Length - 1, 1);
+                        headtail = inputString[3].Split(':');
+                        for (int i = 0; i < headtail.Length; i++)
+                        {
+                            if (headtail[i][0] == '{' && headtail[i][headtail[i].Length - 1] == '}')
+                            {
+                                headtail[i] = headtail[i].Remove(1, 1);
+                                headtail[i] = headtail[i].Remove(headtail[i].Length - 1, 1);
+                            }
+                        }
+                        foreach (string htl in headtail)
+                        {
+                            string [] ht = htl.Split('_');
+                            if (ht.Length == 2)
+                            {
+                                byte [] bHead = {};
+                                byte [] bTail = {};
+                                if (ht[0][0] == '{' && ht[0][ht[0].Length - 1] == '}')
+                                {
+                                    ht[0] = ht[0].Trim('{', '}');
+                                    string [] lHead = ht[0].Split(',');
+                                    bHead = new byte[lHead.Length];
+                                    for (int i = 0; i < lHead.Length; i++)
+                                    {
+                                        if (lHead[i].Length > 0)
+                                        {
+                                            bHead[i] = Convert.ToByte(lHead[i], 16);
+                                        }
+                                        else
+                                        {
+                                            bHead = new byte[] { };
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (ht[1][0] == '{' && ht[1][ht[1].Length - 1] == '}')
+                                {
+                                    ht[1] = ht[1].Trim('{', '}');
+                                    string[] lTail = ht[1].Split(',');
+                                    bTail = new byte[lTail.Length];
+                                    for (int i = 0; i < lTail.Length; i++)
+                                    {
+                                        if (lTail[i].Length > 0)
+                                        {
+                                            bTail[i] = Convert.ToByte(lTail[i], 16);
+                                        }
+                                        else
+                                        {
+                                            bTail = new byte[] { };
+                                            break;
+                                        }
+                                    }
+                                }
+                                byte[][] bHeadTail = { bHead, bTail };
+                                headTailList.Add(bHeadTail);
+                            }
+                        }
+
+                        byte[][][] myCheckHeadAndTail = new byte[headTailList.Count][][];
+                        for(int i=0;i<headTailList.Count;i++)
+                        {
+                            myCheckHeadAndTail[i] = headTailList[i];
+                        }
+                        srp = new SearchReplacePattern ( bSearch, bReplace, myCheckHeadAndTail );
+                    }
+                }
+            }
+
+            public override string GetNameTPAction()
+            {
+                if (!hasResult)
+                    return _name;
+                else
+                    return result;
+            }
+        }
+
         public class BinFileTuningPackage : FileTuningPackage
         {
             string _binAction;
@@ -9438,6 +9555,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         FileTuningPackage binTP = new BinFileTuningPackage(inS);
                         lstTp.Add(binTP);
                     }
+                    else if (line.StartsWith("searchreplace="))
+                    {
+                        string inS = line.Replace("searchreplace=", "");
+                        FileTuningPackage srTP = new SearchReplaceTuningPackage(inS);
+                        lstTp.Add(srTP);
+                    }
                     else if (line.StartsWith("symbol="))
                     {
                         //
@@ -9509,6 +9632,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         fTP.result = result;
                     }
                 }
+                else if (fTP.type == FileTuningPackType.SearchAndReplace)
+                {
+                    int num = 0;
+                    SearchReplaceTuningPackage srtp = (SearchReplaceTuningPackage)fTP;
+                    num = performSearchAndReplace(srtp.srp);
+                    srtp.result = srtp.GetNameTPAction() + ": " + num.ToString() + " replacements";
+                    srtp.hasResult = true;
+                }
             }
             UpdateChecksum(m_currentfile, true);
         }
@@ -9552,73 +9683,70 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        public int ReplaceBytePattern(byte[] data, SearchReplacePattern[] seachAndReplaces)
+        public int ReplaceBytePattern(byte[] data, SearchReplacePattern srp)
         {
             int matches = 0;
 
             // Will browse the file multiple times
             // Can be made more effective to read once and match
             // all SearchReplacePattern at each position
-            foreach (SearchReplacePattern srp in seachAndReplaces)
+            for (int i = 0; i < data.Length - srp.SearchPattern.Length; i++)
             {
-                for (int i = 0; i < data.Length - srp.SearchPattern.Length; i++)
+                bool match = true;
+                for (int k = 0; k < srp.SearchPattern.Length; k++)
                 {
-                    bool match = true;
-                    for (int k = 0; k < srp.SearchPattern.Length; k++)
+                    if (data[i + k] != srp.SearchPattern[k])
                     {
-                        if (data[i + k] != srp.SearchPattern[k])
-                        {
-                            match = false;
-                            break;
-                        }
+                        match = false;
+                        break;
                     }
+                }
 
-                    if (match)
+                if (match)
+                {
+                    // Check if the Head AND Tail is matching
+                    foreach (byte[][] htArray in srp.CheckHeadAndTail)
                     {
-                        // Check if the Head AND Tail is matching
-                        foreach (byte[][] htArray in srp.CheckHeadAndTail)
+                        // Head in htArray[0]
+                        bool headmatch = true;
+                        for (int j = 0; j < htArray[0].Length; j++)
                         {
-                            // Head in htArray[0]
-                            bool headmatch = true;
-                            for (int j = 0; j < htArray[0].Length; j++)
+                            if (data[i - htArray[0].Length + j] == htArray[0][j])
                             {
-                                if (data[i - htArray[0].Length + j] == htArray[0][j])
-                                {
-                                    headmatch = true;
-                                }
-                                else
-                                {
-                                    headmatch = false;
-                                    break;
-                                }
+                                headmatch = true;
                             }
-
-                            // Tail in htArray[1]
-                            bool tailmatch = true;
-                            for (int j = 0; j < htArray[1].Length; j++)
+                            else
                             {
-                                if (data[i + srp.SearchPattern.Length + j] == htArray[1][j])
-                                {
-                                    tailmatch = true;
-                                }
-                                else
-                                {
-                                    tailmatch = false;
-                                    break;
-                                }
-                            }
-
-                            if (match && headmatch && tailmatch)
-                            {
-                                // Do the actual replacement
-                                matches++;
-                                for (int j = 0; j < srp.SearchPattern.Length; j++)
-                                {
-                                    data[i + j] = srp.ReplaceWith[j];
-
-                                }
+                                headmatch = false;
                                 break;
                             }
+                        }
+
+                        // Tail in htArray[1]
+                        bool tailmatch = true;
+                        for (int j = 0; j < htArray[1].Length; j++)
+                        {
+                            if (data[i + srp.SearchPattern.Length + j] == htArray[1][j])
+                            {
+                                tailmatch = true;
+                            }
+                            else
+                            {
+                                tailmatch = false;
+                                break;
+                            }
+                        }
+
+                        if (match && headmatch && tailmatch)
+                        {
+                            // Do the actual replacement
+                            matches++;
+                            for (int j = 0; j < srp.SearchPattern.Length; j++)
+                            {
+                                data[i + j] = srp.ReplaceWith[j];
+
+                            }
+                            break;
                         }
                     }
                 }
@@ -9634,8 +9762,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // Search for (hex)3D7C0C4E, replace with (hex)3D7C0FA0
             // No head, either 0xFF or 0xFE in tail
             int num_replacements = 0;
-            SearchReplacePattern[] sp = new SearchReplacePattern[] 
-            {   new SearchReplacePattern(
+            SearchReplacePattern sp = new SearchReplacePattern(
                     new byte [] { 0x3D, 0x7C, 0x0C, 0x4E }, 
                     new byte [] { 0x3D, 0x7C, 0x0F, 0xA0 }, 
                     new byte [][][] 
@@ -9643,8 +9770,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         new byte [][] {new byte[] {}, new byte [] {0xFF}}, 
                         new byte [][] {new byte[] {}, new byte [] {0xFE}}
                     }
-                )
-            };
+                );
+
+
+            return performSearchAndReplace(sp);
+        }
+
+        public int performSearchAndReplace(SearchReplacePattern sp)
+        {
+            int num_replacements = 0;
 
             // Read the complete file into memory since we will scan it over and over again
             if (File.Exists(m_currentfile))
@@ -9658,7 +9792,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // Store the file
                 File.WriteAllBytes(m_currentfile, buff);
             }
-
             return num_replacements;
         }
 
