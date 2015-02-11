@@ -9639,6 +9639,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     num = performSearchAndReplace(srtp.srp);
                     srtp.result = srtp.GetNameTPAction() + ": " + num.ToString() + " replacements";
                     srtp.hasResult = true;
+                    if (num > 0)
+                        srtp.succesful = true;
                 }
             }
             UpdateChecksum(m_currentfile, true);
@@ -9648,19 +9650,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             bool retval = false;
             result = "";
-            if (binAction == "hikeTL1to400")
+            if (binAction == "") // Name your binaction
             {
-                int num = applyHikeTL1to400();
-                if (num > 0)
-                {
-                    result = "Successfully hiked " + num.ToString() + " Torque Limiters #1 to 400,0nm";
-                    retval = true;
-                }
-                else
-                {
-                    result = "Failed to hike Torque Limiter #1";
-                    retval = false;
-                };
+                // Apply your binaction
+                result = "Failed undefined binaction";
+                retval = false;
             }
             else
             {
@@ -9752,28 +9746,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
             }
             return matches;
-        }
-
-        // This function performs a search and replace and 
-        // by doing so hikes the torque limiter to 400nm
-        public int applyHikeTL1to400()
-        {
-
-            // Search for (hex)3D7C0C4E, replace with (hex)3D7C0FA0
-            // No head, either 0xFF or 0xFE in tail
-            int num_replacements = 0;
-            SearchReplacePattern sp = new SearchReplacePattern(
-                    new byte [] { 0x3D, 0x7C, 0x0C, 0x4E }, 
-                    new byte [] { 0x3D, 0x7C, 0x0F, 0xA0 }, 
-                    new byte [][][] 
-                    {
-                        new byte [][] {new byte[] {}, new byte [] {0xFF}}, 
-                        new byte [][] {new byte[] {}, new byte [] {0xFE}}
-                    }
-                );
-
-
-            return performSearchAndReplace(sp);
         }
 
         public int performSearchAndReplace(SearchReplacePattern sp)
