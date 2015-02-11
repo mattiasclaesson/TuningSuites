@@ -89,7 +89,7 @@ namespace CommonSuite
             this.gridView1.OptionsView.ShowGroupPanel = false;
             this.gridView1.OptionsView.ShowIndicator = false;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
-            new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcVersion, DevExpress.Data.ColumnSortOrder.Descending)});
+            new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcDate, DevExpress.Data.ColumnSortOrder.Descending)});
             // 
             // gcVersion
             // 
@@ -97,6 +97,9 @@ namespace CommonSuite
             this.gcVersion.FieldName = "version";
             this.gcVersion.GroupFormat.FormatString = "\"{0}: [#image]{1} {2}\"";
             this.gcVersion.Name = "gcVersion";
+            this.gcVersion.Visible = true;
+            this.gcVersion.VisibleIndex = 0;
+            this.gcDate.Width = 100;
             // 
             // gcDescription
             // 
@@ -104,7 +107,7 @@ namespace CommonSuite
             this.gcDescription.FieldName = "description";
             this.gcDescription.Name = "gcDescription";
             this.gcDescription.Visible = true;
-            this.gcDescription.VisibleIndex = 2;
+            this.gcDescription.VisibleIndex = 3;
             this.gcDescription.Width = 138;
             // 
             // gcTitle
@@ -113,7 +116,7 @@ namespace CommonSuite
             this.gcTitle.FieldName = "title";
             this.gcTitle.Name = "gcTitle";
             this.gcTitle.Visible = true;
-            this.gcTitle.VisibleIndex = 0;
+            this.gcTitle.VisibleIndex = 1;
             this.gcTitle.Width = 347;
             // 
             // gcDate
@@ -122,8 +125,8 @@ namespace CommonSuite
             this.gcDate.FieldName = "Date";
             this.gcDate.Name = "gcDate";
             this.gcDate.Visible = true;
-            this.gcDate.VisibleIndex = 1;
-            this.gcDate.Width = 81;
+            this.gcDate.VisibleIndex = 2;
+            this.gcDate.Width = 100;
             // 
             // gcLink
             // 
