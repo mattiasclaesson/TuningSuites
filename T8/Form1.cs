@@ -74,6 +74,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
 using T8SuitePro;
@@ -9349,103 +9350,161 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public SearchReplaceTuningPackage(string searchReplace)
             {
                 type = FileTuningPackType.SearchAndReplace;
+
+                //
+                // Parses a string and transform it to byte arrays
+                // 'Name',{SEARCH},{REPLACE},{{{HEAD_1},{TAIL_1}},{{HEAD_N},{TAIL__N}}}
+                // E.g.
+                // 'NEW',{0x3D,0x7C,0x0C,0x4E},{0x3D,0x7C,0x0F,0xA0},{{{0x01, 0xAA},{0xFF}},{{},{0xFE}}}
+                // 'NEW',{0x3D,0x7C},{0x0F,0xA0},{{{0x01, 0xAA},{0xFF}}}
+                //
+                int foundS1 = 0;
+                int foundS2 = 0;
                 byte[] bSearch = new byte[] {};
-                byte[] bReplace = new byte[] { };
+                byte[] bReplace = new byte[] {};
+                byte[][][] myCheckHeadAndTail = new byte[][][] {};
                 List<byte[][]> headTailList = new List<byte[][]>();
-                string[] headtail;
-                string[] inputString = searchReplace.Split(';');
-                if (inputString.Length == 4)
+
+                // Validate input
+                int count_in = 0;
+                int count_out = 0;
+                int count_st = 0;
+                int count_cm = 0;
+                foreach (char c in searchReplace)
                 {
-                    _name = inputString[0];
-                    if (inputString[1][0] == '{' && inputString[1][inputString[1].Length - 1] == '}')
-                    {
-                        string [] search = inputString[1].Trim('{', '}').Split(',');
-                        bSearch = new byte[search.Length];
-                        for(int i=0;i<search.Length;i++)
-                        {
-                            bSearch[i] = Convert.ToByte(search[i], 16); 
-                        }
-
-                    }
-                    if (inputString[2][0] == '{' && inputString[2][inputString[2].Length - 1] == '}')
-                    {
-                        string[] replace = inputString[2].Trim('{', '}').Split(',');
-                        bReplace = new byte[replace.Length];
-                        for (int i = 0; i < replace.Length; i++)
-                        {
-                            bReplace[i] = Convert.ToByte(replace[i], 16);
-                        }
-
-                    }
-                    if (inputString[3][0] == '{' && inputString[3][inputString[3].Length - 1] == '}')
-                    {
-                        inputString[3] = inputString[3].Remove(1, 1);
-                        inputString[3] = inputString[3].Remove(inputString[3].Length - 1, 1);
-                        headtail = inputString[3].Split(':');
-                        for (int i = 0; i < headtail.Length; i++)
-                        {
-                            if (headtail[i][0] == '{' && headtail[i][headtail[i].Length - 1] == '}')
-                            {
-                                headtail[i] = headtail[i].Remove(1, 1);
-                                headtail[i] = headtail[i].Remove(headtail[i].Length - 1, 1);
-                            }
-                        }
-                        foreach (string htl in headtail)
-                        {
-                            string [] ht = htl.Split('_');
-                            if (ht.Length == 2)
-                            {
-                                byte [] bHead = {};
-                                byte [] bTail = {};
-                                if (ht[0][0] == '{' && ht[0][ht[0].Length - 1] == '}')
-                                {
-                                    ht[0] = ht[0].Trim('{', '}');
-                                    string [] lHead = ht[0].Split(',');
-                                    bHead = new byte[lHead.Length];
-                                    for (int i = 0; i < lHead.Length; i++)
-                                    {
-                                        if (lHead[i].Length > 0)
-                                        {
-                                            bHead[i] = Convert.ToByte(lHead[i], 16);
-                                        }
-                                        else
-                                        {
-                                            bHead = new byte[] { };
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (ht[1][0] == '{' && ht[1][ht[1].Length - 1] == '}')
-                                {
-                                    ht[1] = ht[1].Trim('{', '}');
-                                    string[] lTail = ht[1].Split(',');
-                                    bTail = new byte[lTail.Length];
-                                    for (int i = 0; i < lTail.Length; i++)
-                                    {
-                                        if (lTail[i].Length > 0)
-                                        {
-                                            bTail[i] = Convert.ToByte(lTail[i], 16);
-                                        }
-                                        else
-                                        {
-                                            bTail = new byte[] { };
-                                            break;
-                                        }
-                                    }
-                                }
-                                byte[][] bHeadTail = { bHead, bTail };
-                                headTailList.Add(bHeadTail);
-                            }
-                        }
-
-                        byte[][][] myCheckHeadAndTail = new byte[headTailList.Count][][];
-                        for(int i=0;i<headTailList.Count;i++)
-                        {
-                            myCheckHeadAndTail[i] = headTailList[i];
-                        }
-                        srp = new SearchReplacePattern ( bSearch, bReplace, myCheckHeadAndTail );
-                    }
+                    if (c == '{') count_in++;
+                    if (c == '}') count_out++;
+                    if (c == '\'') count_st++;
+                    if (c == ',') count_cm++;
                 }
+                if ((count_in < 6 || count_in != count_out || count_st != 2 || count_cm < 4))
+                {
+                    _name = "Fail";
+                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                    return;
+                }
+                
+                // Create a string to work with
+                string inputStr = searchReplace.Trim();
+                
+                // Extract the name
+                foundS1 = inputStr.IndexOf('\'') + 1;
+                foundS2 = inputStr.IndexOf('\'', foundS1);
+                _name = inputStr.Substring(foundS1, foundS2 - foundS1);
+                inputStr = inputStr.Remove(0, foundS2 + 2);
+                
+                // Remove all whitespace
+                inputStr = Regex.Replace(inputStr, @"\s+", "");
+
+                // Extract search pattern
+                foundS1 = inputStr.IndexOf('{') + 1;
+                foundS2 = inputStr.IndexOf('}');
+                string [] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                bSearch = new byte[searchString.Length];
+                for (int i = 0; i < searchString.Length; i++)
+                {
+                    bSearch[i] = Convert.ToByte(searchString[i].Trim(), 16);
+                }
+                inputStr = inputStr.Remove(0, foundS2 + 2);
+
+                // Extract replace pattern
+                foundS1 = inputStr.IndexOf('{') + 1;
+                foundS2 = inputStr.IndexOf('}');
+                string [] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                bReplace = new byte[replaceString.Length];
+                for (int i = 0; i < replaceString.Length; i++)
+                {
+                    bReplace[i] = Convert.ToByte(replaceString[i].Trim(), 16);
+                }
+                inputStr = inputStr.Remove(0, foundS2 + 2);
+
+                // Check that the search and replace match in length
+                if(bSearch.Length != bReplace.Length)
+                {
+                    bSearch = new byte[] {};
+                    bReplace = new byte[] {};
+                    _name = "Fail";
+                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                    return;
+                }
+
+                // Parse the head/tail arrays, e.g. {{{0xAA,0xBB},{0xCC,0xDD}},{{0xEE,0xFF},{0x11, 0x22}}}
+                // Remove leading "{{{"
+                for (int i = 0; i < 3; i++)
+                    inputStr = inputStr.Remove(0, inputStr.IndexOf('{') + 1);
+
+                // Split the multiple headtails found by "}},{{". Whitespace already removed
+                string[] headTails = Regex.Split(inputStr, @"}},{{");
+
+                // Parse through the results, always start with a number or }
+                foreach (string headTail in headTails)
+                {
+                    byte[] bHead = {};
+                    byte[] bTail = {};
+                    string ht = headTail;
+
+                    // Extract the head
+                    foundS1 = 0;
+                    foundS2 = headTail.IndexOf('}');
+                    string head = headTail.Substring(0, foundS2);
+
+                    // Find the start of tail
+                    foundS1 = ht.IndexOf('{');
+                    ht = ht.Remove(0, foundS1 + 1);
+
+                    // Find the end of the tail
+                    foundS1 = 0;
+                    foundS2 = ht.IndexOf('}');
+                    string tail;
+                    if (foundS2 <= 0) //All but last string lacks a }
+                        tail = ht;
+                    else
+                        tail = ht.Substring(0, foundS2);
+
+                    // Convert head to byte array
+                    string[] lHead = head.Split(',');
+                    bHead = new byte[lHead.Length];
+                    for (int i = 0; i < lHead.Length; i++)
+                    {
+                        if (lHead[i].Length > 0)
+                        {
+                            bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                        }
+                        else
+                        {
+                            bHead = new byte[] { };
+                            break;
+                        }
+                    }
+
+                    // Convert tail to byte array
+                    string[] lTail = tail.Split(',');
+                    bTail = new byte[lTail.Length];
+                    for (int i = 0; i < lTail.Length; i++)
+                    {
+                        if (lTail[i].Length > 0)
+                        {
+                            bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
+                        }
+                        else
+                        {
+                            bTail = new byte[] { };
+                            break;
+                        }
+                    }
+
+                    // Add headtail to list
+                    byte[][] bHeadTail = { bHead, bTail };
+                    headTailList.Add(bHeadTail);
+                }
+
+                // Store headtail for output
+                myCheckHeadAndTail = new byte[headTailList.Count][][];
+                for (int i = 0; i < headTailList.Count; i++)
+                {
+                    myCheckHeadAndTail[i] = headTailList[i];
+                }
+                srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
             }
 
             public override string GetNameTPAction()
