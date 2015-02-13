@@ -905,7 +905,7 @@
     <Content Include="knock.wav" />
     <None Include="Resources\log4net.config.xml">
     </None>
-    <Content Include="T8Pub.pem">
+    <Content Include="..\Utils\T8Pub.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="T8.ico" />
