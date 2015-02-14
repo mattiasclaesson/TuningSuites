@@ -9548,8 +9548,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 List<FileTuningPackage> tuningPackages;
-                string binType = "";
-                tuningPackages = ReadTuningPackageFile(false, ofd.FileName, out binType);
+                string binType = string.Empty;
+                string whitelist = string.Empty;  // Not used in t8p
+                string blacklist = string.Empty;  // Not used in t8p
+                string code = string.Empty;       // Not used in t8p
+                tuningPackages = ReadTuningPackageFile(false, ofd.FileName, out binType, out whitelist, out blacklist, out code);
 
                 ApplyTuningPackage(tuningPackages);
                 foreach (FileTuningPackage tp in tuningPackages)
@@ -9566,11 +9569,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
     
         }
 
-        private List<FileTuningPackage> ReadTuningPackageFile(bool encoded, string tpFile, out string binSwType)
+        private List<FileTuningPackage> ReadTuningPackageFile(bool encoded, string tpFile, out string binSwType, out string whitelist, out string blacklist, out string code)
         {
             char[] sep = new char[1];
             sep.SetValue(',', 0);
-            binSwType = "";
+            binSwType = string.Empty;
+            whitelist = string.Empty;
+            blacklist = string.Empty;
+            code = string.Empty;
             List<FileTuningPackage> lstTp = new List<FileTuningPackage>();
 
             using (StreamReader sr = new StreamReader(tpFile))
@@ -9603,10 +9609,23 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                     if (line.StartsWith("packname="))
                     {
+                        // Do nothing
                     }
                     else if (line.StartsWith("bintype="))
                     {
-                        binSwType = line.Replace("bintype=", "");
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("whitelist="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("blacklist="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("code="))
+                    {
+                        // Do nothing
                     }
                     else if (line.StartsWith("binaction="))
                     {
@@ -15679,13 +15698,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public string WizIdOrFilename;
             public TuneWizardType WizType;
             public BinaryType WizBinType;
+            public string[] WizWhitelist;
+            public string[] WizBlacklist;
+            public string WizCode;
 
             public TuningAction() 
             {
                 WizType = TuneWizardType.None;
-                WizName = "";
-                WizIdOrFilename = "";
+                WizName = string.Empty;
+                WizIdOrFilename = string.Empty;
                 WizBinType = BinaryType.None;
+                WizWhitelist = new string [] {};
+                WizBlacklist = new string[] { };
+                WizCode = string.Empty;
             }
 
             public override string ToString()
@@ -15707,40 +15732,76 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 return WizBinType;
             }
-            public bool compatibelBinType(string binVersion)
-            {
-                if (binVersion == "OLD" && ((WizBinType == BinaryType.OldBin || WizBinType == BinaryType.BothBin)))
-                    return true;
-                if (binVersion == "NEW" && ((WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin)))
-                    return true;
-                if (binVersion == "BOTH" && ((WizBinType == BinaryType.OldBin || WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin)))
-                    return true;
 
-                if (binVersion.Length > 2)
+            public bool compatibelSoftware(string software)
+            {
+                int v = Convert.ToInt32(software[1]);
+
+                // Check if software is compatible with bintype
+                if (v < 'C' || software.Substring(0, 6) == "FC01_O")
                 {
-                    int v = Convert.ToInt32(binVersion[1]);
-                    // Below is an ASSUMPTION!
-                    // Assuming breakpoint is FC00.
-                    // FC01 Open is special, treated as old.  
-                    if (v < 'C' || binVersion.Substring(0, 6) == "FC01_O")
+                    if (!(WizBinType == BinaryType.OldBin || WizBinType == BinaryType.BothBin))
+                        return false;
+                }
+                else
+                {
+                    if (!(WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin))
+                        return false;
+                }
+
+                bool inWhiteList=true; // If no whitelist exist, it is ok
+                if(WizWhitelist.Length > 0)
+                {
+                    inWhiteList = false; // When whitelist exist, make sure it's in there
+                    foreach (string white in WizWhitelist)
                     {
-                        if (WizBinType == BinaryType.OldBin || WizBinType == BinaryType.BothBin)
-                            return true;
+                        if (white.Length <= 0)
+                            continue;
+
+                        int ast = white.IndexOf('*');
+                        string strComp = string.Empty;
+                        if (ast != -1)
+                            strComp = white.Substring(0, ast);
                         else
-                            return false;
-                    }
-                    else
-                    {
-                        if (WizBinType == BinaryType.NewBin || WizBinType == BinaryType.BothBin)
-                            return true;
-                        else
-                            return false;
+                            strComp = white;
+
+                        if (software.StartsWith(strComp))
+                        {
+                            // We have a white list match, we are now done
+                            inWhiteList = true;
+                            break;
+                        }
                     }
                 }
+
+                bool inBlackList = false; // Assume not in blacklist
+                foreach (string black in WizBlacklist)
+                {
+                    if (black.Length <= 0)
+                        continue;
+
+                    int ast = black.IndexOf('*');
+                    string strComp = string.Empty;
+                    if (ast != -1)
+                        strComp = black.Substring(0, ast);
+                    else
+                        strComp = black;
+
+                    if (software.StartsWith(strComp))
+                    {
+                        // We have a white list match, we are now done
+                        inBlackList = true;
+                        break;
+                    }
+                }
+
+                if (inWhiteList && !inBlackList)
+                    return true;
+ 
                 return false;
             }
 
-            public virtual int performTuningAction(Form1 p, out List<string> out_mod_symbols) 
+            public virtual int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols) 
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
@@ -15750,23 +15811,30 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         }
         public class FileTuningAction : TuningAction
         {
-            public FileTuningAction(string name, string filename, BinaryType type)
+            public FileTuningAction(string name, string filename, BinaryType type, string [] whitelist, string [] blacklist, string code)
             {
                 WizName = name;
                 WizIdOrFilename = filename;
                 WizType = TuneWizardType.TuningFile;
                 WizBinType = type;
+                WizWhitelist = whitelist;
+                WizBlacklist = blacklist;
+                WizCode = code;
             }
 
-            public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
+            public override int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols)
             {
                 out_mod_symbols = new List<string>();
                 List<FileTuningPackage> tuningPackages;
                 string binType = string.Empty;
+                string whitelist = string.Empty;  // Not used in t8p
+                string blacklist = string.Empty;  // Not used in t8p
+                string code = string.Empty;       // Not used in t8p
 
-                tuningPackages = p.ReadTuningPackageFile(true, WizIdOrFilename, out binType);
+                tuningPackages = p.ReadTuningPackageFile(true, WizIdOrFilename, out binType, out whitelist, out blacklist, out code);
 
-                if (compatibelBinType(binType))
+                // Here we need the software version in memory
+                if (compatibelSoftware(software))
                 {
                     // Save a copy
                     File.Copy(p.m_currentfile, Path.GetDirectoryName(p.m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD-" + WizName + ".bin", true);
@@ -15800,7 +15868,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 WizIdOrFilename = "ap_175hp";
             }
 
-            public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
+            public override int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols)
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
@@ -15873,7 +15941,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 WizIdOrFilename = "ap_ST1Plus";
             }
 
-            public override int performTuningAction(Form1 p, out List<string> out_mod_symbols)
+            public override int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols)
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
@@ -15916,6 +15984,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         string packname = string.Empty;
                         string sPacktype = string.Empty;
                         string signature = string.Empty;
+                        string code = string.Empty;
+                        string[] whitelist = new string [] {};
+                        string[] blacklist = new string [] {};
                         Form1.BinaryType packtype = Form1.BinaryType.None;
 
                         // Read signature
@@ -15955,12 +16026,27 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     packtype = BinaryType.BothBin;
                                 }
                             }
+                            else if (line.StartsWith("whitelist="))
+                            {
+                                line = Regex.Replace(line, @"\s+", "");
+                                whitelist = line.Replace("whitelist=", "").Split(',');
+                            }
+                            else if (line.StartsWith("blacklist="))
+                            {
+                                line = Regex.Replace(line, @"\s+", "");
+                                blacklist = line.Replace("blacklist=", "").Split(',');
+                            }
+                            else if (line.StartsWith("code="))
+                            {
+                                line = Regex.Replace(line, @"\s+", "");
+                                code = line.Replace("code=", "");
+                            }
                         }
 
                         // Calculate MD5 of content and verify it against signature
                         if (Crypto.VerifyRSASignature(Crypto.CalculateMD5Hash(file_for_md5), signature))
                         {
-                            FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype);
+                            FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype, whitelist, blacklist, code);
                             installedTunings.Add(tp);
                         }
                     }

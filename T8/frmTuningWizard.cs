@@ -34,7 +34,7 @@ namespace T8SuitePro
             }
             // List all compatible tuning packages
             foreach (Form1.TuningAction t in Form1.installedTunings)
-                if (t.compatibelBinType(softwareVersion))
+                if (t.compatibelSoftware(softwareVersion))
                     this.listTuningActions.Items.Add(t);
             if (this.listTuningActions.ItemCount <= 0)
                 this.wizSelectActionPage.AllowNext = false;
@@ -59,7 +59,7 @@ namespace T8SuitePro
 
                 // Perform the tuning action
                 List<string> outList = new List<string>();
-                if (selAction.performTuningAction(parent, out outList) == 0)
+                if (selAction.performTuningAction(parent, softwareVersion, out outList) == 0)
                 {
                     // Inform the user of the tuning action
                     this.wizCompletedPage.FinishText = "You have now completed the Tuning Action '" +
