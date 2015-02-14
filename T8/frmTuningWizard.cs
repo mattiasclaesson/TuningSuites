@@ -47,6 +47,16 @@ namespace T8SuitePro
             if (e.Page.Name == "wizSelectActionPage")
             {
                 this.lblTuningActionConfirm.Text = this.listTuningActions.SelectedItem.ToString();
+                Form1.TuningAction selAction = (Form1.TuningAction)this.listTuningActions.SelectedItem;
+                if (selAction.WizCode != string.Empty)
+                {
+                    this.textPassword.Text = "";
+                    this.textPassword.Focus();
+                    this.theCode.Text = selAction.WizCode;
+                    this.wizardCodePage.Visible = true;
+                    this.wizardCodePage.AllowNext = false;
+                    this.lblCode.Text = "The Tuning Package \'" + this.listTuningActions.SelectedItem.ToString() + "\' requires that you enter the correct code.";
+                }
             }
 
             // Perform the selected tuning action, and disable possibility to press cancel. 
@@ -100,6 +110,23 @@ namespace T8SuitePro
                     this.wizConfirmPage.AllowNext = false;
                     break;
             }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Specify that the link was visited. 
+            this.linkLabel1.LinkVisited = true;
+
+            // Navigate to a URL.
+            System.Diagnostics.Process.Start("http://www.trionictuning.com");
+        }
+
+        private void textPassword_TextChanged(object sender, EventArgs e)
+        {
+            if (this.textPassword.Text == this.theCode.Text)
+                this.wizardCodePage.AllowNext = true;
+            else
+                this.wizardCodePage.AllowNext = false;
         }
     }
 }

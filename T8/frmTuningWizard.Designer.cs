@@ -42,6 +42,13 @@
             this.lblTuningActionConfirm = new DevExpress.XtraEditors.LabelControl();
             this.checkIUnderstand = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
+            this.wizardCodePage = new DevExpress.XtraWizard.WizardPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.textPassword = new System.Windows.Forms.TextBox();
+            this.lblCode = new System.Windows.Forms.Label();
+            this.theCode = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wizardTuning)).BeginInit();
             this.wizardTuning.SuspendLayout();
             this.wizSelectActionPage.SuspendLayout();
@@ -52,6 +59,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.listModifiedMaps)).BeginInit();
             this.wizConfirmPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkIUnderstand.Properties)).BeginInit();
+            this.wizardCodePage.SuspendLayout();
             this.SuspendLayout();
             // 
             // wizardTuning
@@ -60,17 +68,19 @@
             this.wizardTuning.Controls.Add(this.wizSelectActionPage);
             this.wizardTuning.Controls.Add(this.wizCompletedPage);
             this.wizardTuning.Controls.Add(this.wizConfirmPage);
+            this.wizardTuning.Controls.Add(this.wizardCodePage);
             this.wizardTuning.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wizardTuning.Location = new System.Drawing.Point(0, 0);
             this.wizardTuning.Name = "wizardTuning";
             this.wizardTuning.Pages.AddRange(new DevExpress.XtraWizard.BaseWizardPage[] {
             this.wizWelcomePage,
             this.wizSelectActionPage,
+            this.wizardCodePage,
             this.wizConfirmPage,
             this.wizCompletedPage});
             this.wizardTuning.Size = new System.Drawing.Size(531, 316);
-            this.wizardTuning.PrevClick += new DevExpress.XtraWizard.WizardCommandButtonClickEventHandler(this.wizardTuning_PrevClick);
             this.wizardTuning.NextClick += new DevExpress.XtraWizard.WizardCommandButtonClickEventHandler(this.wizardTuning_NextClick);
+            this.wizardTuning.PrevClick += new DevExpress.XtraWizard.WizardCommandButtonClickEventHandler(this.wizardTuning_PrevClick);
             // 
             // wizWelcomePage
             // 
@@ -195,6 +205,81 @@
             this.labelControl2.TabIndex = 0;
             this.labelControl2.Text = "Your loaded binary file will now be modified with the following Tuning Action:";
             // 
+            // wizardCodePage
+            // 
+            this.wizardCodePage.Controls.Add(this.theCode);
+            this.wizardCodePage.Controls.Add(this.label2);
+            this.wizardCodePage.Controls.Add(this.label1);
+            this.wizardCodePage.Controls.Add(this.linkLabel1);
+            this.wizardCodePage.Controls.Add(this.textPassword);
+            this.wizardCodePage.Controls.Add(this.lblCode);
+            this.wizardCodePage.DescriptionText = "This Tuning Package requires that you have a code";
+            this.wizardCodePage.Name = "wizardCodePage";
+            this.wizardCodePage.Size = new System.Drawing.Size(499, 171);
+            this.wizardCodePage.Text = "Enter Tuning Code";
+            this.wizardCodePage.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(137, 64);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(181, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "forum to learn more and earn a code.";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.Location = new System.Drawing.Point(10, 64);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Visit the";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(52, 64);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(87, 13);
+            this.linkLabel1.TabIndex = 3;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "trionictuning.com";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // textPassword
+            // 
+            this.textPassword.Location = new System.Drawing.Point(13, 25);
+            this.textPassword.Name = "textPassword";
+            this.textPassword.PasswordChar = '*';
+            this.textPassword.Size = new System.Drawing.Size(100, 20);
+            this.textPassword.TabIndex = 2;
+            this.textPassword.TextChanged += new System.EventHandler(this.textPassword_TextChanged);
+            // 
+            // lblCode
+            // 
+            this.lblCode.AutoSize = true;
+            this.lblCode.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lblCode.Location = new System.Drawing.Point(10, 9);
+            this.lblCode.Name = "lblCode";
+            this.lblCode.Size = new System.Drawing.Size(111, 13);
+            this.lblCode.TabIndex = 1;
+            this.lblCode.Text = "Please enter the code";
+            // 
+            // theCode
+            // 
+            this.theCode.AutoSize = true;
+            this.theCode.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.theCode.Location = new System.Drawing.Point(10, 99);
+            this.theCode.Name = "theCode";
+            this.theCode.Size = new System.Drawing.Size(39, 13);
+            this.theCode.TabIndex = 6;
+            this.theCode.Text = "hidden";
+            this.theCode.Visible = false;
+            // 
             // frmTuningWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -215,6 +300,8 @@
             this.wizConfirmPage.ResumeLayout(false);
             this.wizConfirmPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkIUnderstand.Properties)).EndInit();
+            this.wizardCodePage.ResumeLayout(false);
+            this.wizardCodePage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -235,5 +322,12 @@
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl4;
         private DevExpress.XtraEditors.ListBoxControl listModifiedMaps;
+        private DevExpress.XtraWizard.WizardPage wizardCodePage;
+        private System.Windows.Forms.Label lblCode;
+        private System.Windows.Forms.TextBox textPassword;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label theCode;
     }
 }
