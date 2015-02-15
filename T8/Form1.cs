@@ -664,8 +664,12 @@ namespace T8SuitePro
             {
                 LogHelper.Log("TryOpenFile failed: " + filename + " err: " + E.Message);
             }
+            int cnt = 0;
+            SetProgress("Updating symbol category... ");
             foreach (SymbolHelper sh in symbol_collection)
             {
+                cnt = cnt + 1;
+                SetProgressPercentage((int)(((float)cnt / (float)symbol_collection.Count) * 100));
                 sh.createAndUpdateCategory(sh.Varname);
             }
             try
@@ -8695,6 +8699,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                    {"FF0L", "{0}\\FF0L_C.xml"},
                                                    {"FE09", "{0}\\FE09_C.xml"},
                                                    {"FD0G", "{0}\\FD0G_C.xml"}};
+            SetProgress("Reading symboltable... ");
             if (dt.Rows.Count == 0)
             {
                 fh.init(filename);
@@ -8720,8 +8725,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                 }
             }
+            SetProgress("Importing symbols... ");
+            int numSym = coll2load.Count;
+            int cnt=0;
             foreach (SymbolHelper sh in coll2load)
             {
+                cnt = cnt + 1;
+                SetProgressPercentage((int)(((float)cnt / (float)numSym)*100));
                 foreach (DataRow dr in dt.Rows)
                 {
                     try
