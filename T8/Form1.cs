@@ -15715,6 +15715,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             public override string ToString()
             {
+                if (WizCode != string.Empty)
+                    return WizName + " [Protected]";
+
                 return WizName;
             }
 
