@@ -51,7 +51,7 @@ namespace T8SuitePro
                 if (selAction.WizCode != string.Empty)
                 {
                     this.textPassword.Text = "";
-                    this.textPassword.Focus();
+                    //this.textPassword.Focus()
                     this.theCode.Text = selAction.WizCode;
                     this.wizardCodePage.Visible = true;
                     this.wizardCodePage.AllowNext = false;
@@ -112,21 +112,23 @@ namespace T8SuitePro
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void textPassword_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        {
+            if (this.textPassword.Text == this.theCode.Text)
+                this.wizardCodePage.AllowNext = true;
+            else
+                this.wizardCodePage.AllowNext = false;
+
+        }
+
+        private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Specify that the link was visited. 
             this.linkLabel1.LinkVisited = true;
 
             // Navigate to a URL.
             System.Diagnostics.Process.Start("http://www.trionictuning.com");
-        }
 
-        private void textPassword_TextChanged(object sender, EventArgs e)
-        {
-            if (this.textPassword.Text == this.theCode.Text)
-                this.wizardCodePage.AllowNext = true;
-            else
-                this.wizardCodePage.AllowNext = false;
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.wizardTuning = new DevExpress.XtraWizard.WizardControl();
             this.wizWelcomePage = new DevExpress.XtraWizard.WelcomeWizardPage();
             this.wizSelectActionPage = new DevExpress.XtraWizard.WizardPage();
@@ -43,12 +44,17 @@
             this.checkIUnderstand = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.wizardCodePage = new DevExpress.XtraWizard.WizardPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.textPassword = new System.Windows.Forms.TextBox();
-            this.lblCode = new System.Windows.Forms.Label();
-            this.theCode = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.theCode = new DevExpress.XtraEditors.LabelControl();
+            this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
+            this.textPassword = new DevExpress.XtraEditors.TextEdit();
+            this.lblCode = new DevExpress.XtraEditors.LabelControl();
+            this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutConverter1 = new DevExpress.XtraLayout.Converter.LayoutConverter(this.components);
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wizardTuning)).BeginInit();
             this.wizardTuning.SuspendLayout();
             this.wizSelectActionPage.SuspendLayout();
@@ -60,6 +66,12 @@
             this.wizConfirmPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkIUnderstand.Properties)).BeginInit();
             this.wizardCodePage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
+            this.layoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.textPassword.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             this.SuspendLayout();
             // 
             // wizardTuning
@@ -85,7 +97,7 @@
             // wizWelcomePage
             // 
             this.wizWelcomePage.IntroductionText = "This wizard will help you apply a pre-defined set of Tuning Actions to your binar" +
-                "y file. You will be given a choice of Tuning Actions in the coming pages.";
+    "y file. You will be given a choice of Tuning Actions in the coming pages.";
             this.wizWelcomePage.Name = "wizWelcomePage";
             this.wizWelcomePage.Size = new System.Drawing.Size(314, 183);
             this.wizWelcomePage.Text = "Tuning Wizard";
@@ -174,7 +186,7 @@
             this.labelControl4.Size = new System.Drawing.Size(410, 13);
             this.labelControl4.TabIndex = 3;
             this.labelControl4.Text = "The Tuning Action cannot be revered, ensure you have a copy of your binary stored" +
-                ".";
+    ".";
             // 
             // lblTuningActionConfirm
             // 
@@ -207,78 +219,125 @@
             // 
             // wizardCodePage
             // 
-            this.wizardCodePage.Controls.Add(this.theCode);
             this.wizardCodePage.Controls.Add(this.label2);
-            this.wizardCodePage.Controls.Add(this.label1);
             this.wizardCodePage.Controls.Add(this.linkLabel1);
-            this.wizardCodePage.Controls.Add(this.textPassword);
-            this.wizardCodePage.Controls.Add(this.lblCode);
+            this.wizardCodePage.Controls.Add(this.label1);
+            this.wizardCodePage.Controls.Add(this.theCode);
+            this.wizardCodePage.Controls.Add(this.layoutControl1);
             this.wizardCodePage.DescriptionText = "This Tuning Package requires that you have a code";
             this.wizardCodePage.Name = "wizardCodePage";
             this.wizardCodePage.Size = new System.Drawing.Size(499, 171);
             this.wizardCodePage.Text = "Enter Tuning Code";
             this.wizardCodePage.Visible = false;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(137, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(181, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "forum to learn more and earn a code.";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(10, 64);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Visit the";
-            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(52, 64);
+            this.linkLabel1.Location = new System.Drawing.Point(66, 123);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(87, 13);
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "trionictuning.com";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked_1);
             // 
-            // textPassword
+            // label1
             // 
-            this.textPassword.Location = new System.Drawing.Point(13, 25);
-            this.textPassword.Name = "textPassword";
-            this.textPassword.PasswordChar = '*';
-            this.textPassword.Size = new System.Drawing.Size(100, 20);
-            this.textPassword.TabIndex = 2;
-            this.textPassword.TextChanged += new System.EventHandler(this.textPassword_TextChanged);
-            // 
-            // lblCode
-            // 
-            this.lblCode.AutoSize = true;
-            this.lblCode.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.lblCode.Location = new System.Drawing.Point(10, 9);
-            this.lblCode.Name = "lblCode";
-            this.lblCode.Size = new System.Drawing.Size(111, 13);
-            this.lblCode.TabIndex = 1;
-            this.lblCode.Text = "Please enter the code";
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.Location = new System.Drawing.Point(9, 123);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Please visit ";
             // 
             // theCode
             // 
-            this.theCode.AutoSize = true;
-            this.theCode.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.theCode.Location = new System.Drawing.Point(10, 99);
+            this.theCode.Location = new System.Drawing.Point(27, 156);
             this.theCode.Name = "theCode";
-            this.theCode.Size = new System.Drawing.Size(39, 13);
-            this.theCode.TabIndex = 6;
-            this.theCode.Text = "hidden";
+            this.theCode.Size = new System.Drawing.Size(63, 13);
+            this.theCode.TabIndex = 1;
+            this.theCode.Text = "labelControl5";
             this.theCode.Visible = false;
+            // 
+            // layoutControl1
+            // 
+            this.layoutControl1.Controls.Add(this.textPassword);
+            this.layoutControl1.Controls.Add(this.lblCode);
+            this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.layoutControl1.Location = new System.Drawing.Point(0, 0);
+            this.layoutControl1.Name = "layoutControl1";
+            this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(1012, 151, 250, 350);
+            this.layoutControl1.Root = this.layoutControlGroup1;
+            this.layoutControl1.Size = new System.Drawing.Size(499, 120);
+            this.layoutControl1.TabIndex = 0;
+            this.layoutControl1.Text = "layoutControl1";
+            // 
+            // textPassword
+            // 
+            this.textPassword.Location = new System.Drawing.Point(71, 29);
+            this.textPassword.Name = "textPassword";
+            this.textPassword.Size = new System.Drawing.Size(416, 20);
+            this.textPassword.StyleController = this.layoutControl1;
+            this.textPassword.TabIndex = 7;
+            this.textPassword.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.textPassword_EditValueChanging);
+            // 
+            // lblCode
+            // 
+            this.lblCode.Appearance.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lblCode.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
+            this.lblCode.Location = new System.Drawing.Point(12, 12);
+            this.lblCode.Name = "lblCode";
+            this.lblCode.Size = new System.Drawing.Size(475, 13);
+            this.lblCode.StyleController = this.layoutControl1;
+            this.lblCode.TabIndex = 4;
+            this.lblCode.Text = "labelControl3";
+            // 
+            // layoutControlGroup1
+            // 
+            this.layoutControlGroup1.CustomizationFormText = "layoutControlGroup1";
+            this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.layoutControlGroup1.GroupBordersVisible = false;
+            this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItem1,
+            this.layoutControlItem3});
+            this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroup1.Name = "layoutControlGroup1";
+            this.layoutControlGroup1.Size = new System.Drawing.Size(499, 120);
+            this.layoutControlGroup1.Text = "layoutControlGroup1";
+            this.layoutControlGroup1.TextVisible = false;
+            // 
+            // layoutControlItem1
+            // 
+            this.layoutControlItem1.Control = this.lblCode;
+            this.layoutControlItem1.CustomizationFormText = "layoutControlItem1";
+            this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItem1.Name = "layoutControlItem1";
+            this.layoutControlItem1.Size = new System.Drawing.Size(479, 17);
+            this.layoutControlItem1.Text = "layoutControlItem1";
+            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem1.TextToControlDistance = 0;
+            this.layoutControlItem1.TextVisible = false;
+            // 
+            // layoutControlItem3
+            // 
+            this.layoutControlItem3.Control = this.textPassword;
+            this.layoutControlItem3.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 17);
+            this.layoutControlItem3.Name = "layoutControlItem3";
+            this.layoutControlItem3.Size = new System.Drawing.Size(479, 83);
+            this.layoutControlItem3.Text = "Enter code:";
+            this.layoutControlItem3.TextSize = new System.Drawing.Size(56, 13);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(149, 123);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(158, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "and learn how to earn the code.";
             // 
             // frmTuningWizard
             // 
@@ -302,6 +361,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.checkIUnderstand.Properties)).EndInit();
             this.wizardCodePage.ResumeLayout(false);
             this.wizardCodePage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
+            this.layoutControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.textPassword.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -323,11 +388,16 @@
         private DevExpress.XtraEditors.LabelControl labelControl4;
         private DevExpress.XtraEditors.ListBoxControl listModifiedMaps;
         private DevExpress.XtraWizard.WizardPage wizardCodePage;
-        private System.Windows.Forms.Label lblCode;
-        private System.Windows.Forms.TextBox textPassword;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private DevExpress.XtraLayout.LayoutControl layoutControl1;
+        private DevExpress.XtraEditors.LabelControl lblCode;
+        private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
+        private DevExpress.XtraLayout.Converter.LayoutConverter layoutConverter1;
+        private DevExpress.XtraEditors.LabelControl theCode;
+        private DevExpress.XtraEditors.TextEdit textPassword;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Label theCode;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
