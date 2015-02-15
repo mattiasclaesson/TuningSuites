@@ -9379,7 +9379,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 if ((count_in < 6 || count_in != count_out || count_st != 2 || count_cm < 4))
                 {
-                    _name = "Fail";
+                    _name = "FAIL IN VALIDATION: " + searchReplace.Substring(0,6) + "...";
                     srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
                     return;
                 }
@@ -9423,7 +9423,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     bSearch = new byte[] {};
                     bReplace = new byte[] {};
-                    _name = "Fail";
+                    _name = _name + " failing due to mismatch in length";
                     srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
                     return;
                 }
@@ -15840,7 +15840,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (compatibelSoftware(software))
                 {
                     // Save a copy
-                    File.Copy(p.m_currentfile, Path.GetDirectoryName(p.m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD-" + WizName + ".bin", true);
+                    string backup_file = Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD-" + WizName + ".bin";
+                    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+                    backup_file = r.Replace(backup_file, "");
+                    
+                    backup_file = Path.GetDirectoryName(p.m_currentfile) + "\\" + backup_file;
+                    File.Copy(p.m_currentfile, backup_file, true);
 
                     p.ApplyTuningPackage(tuningPackages);
                     foreach (FileTuningPackage tp in tuningPackages)
