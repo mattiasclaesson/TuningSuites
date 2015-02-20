@@ -3537,6 +3537,8 @@ namespace T8SuitePro
                             this.barButtonItem16.Tag = "Old";
                             this.barButtonItem41.Visibility = BarItemVisibility.Never;
                             this.barButtonItem41.Tag = "Old";
+                            this.barButtonItem42.Visibility = BarItemVisibility.Never;
+                            this.barButtonItem42.Tag = "Old";
                             /* Conditional FlexFuel */
                             this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Never;
                             this.barButtonItem15.Visibility = BarItemVisibility.Always;
@@ -3558,6 +3560,8 @@ namespace T8SuitePro
                             this.barButtonItem16.Tag = "New";
                             this.barButtonItem41.Visibility = BarItemVisibility.Always;
                             this.barButtonItem41.Tag = "New";
+                            this.barButtonItem42.Visibility = BarItemVisibility.Always;
+                            this.barButtonItem42.Tag = "New";
                             /* Conditional FlexFuel */
                             // FA = MY03-06 Gasoline / front wheel drive
                             // FC = MY07-11 Gasoline / front wheel drive
@@ -15685,8 +15689,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void barButtonItem41_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (this.barButtonItem41.Tag != "Old")
+                StartTableViewer("TMCCal.Trq_MaxEngineLowTab");
+        }
+
+        private void barButtonItem42_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (this.barButtonItem42.Tag != "Old")
                 StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
+
         public enum TuneWizardType
         {
             None = 0,       // Should never happen
@@ -15882,7 +15893,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public Copy175hpMaps()
             {
                 WizType = TuneWizardType.Embedded;
-                WizBinType = BinaryType.BothBin;
+                WizBinType = BinaryType.NewBin;
                 WizName = "Copy 150mp maps to 175hp maps";
                 WizIdOrFilename = "ap_175hp";
             }
@@ -15980,8 +15991,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         public static List <TuningAction> installedTunings = new List<TuningAction>
         {
-            new Copy175hpMaps(),
 #if (DEBUG)
+            new Copy175hpMaps(),
             new MackanizedST1Plus()
 #endif
         };
