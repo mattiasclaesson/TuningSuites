@@ -9703,39 +9703,52 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void ApplyTuningPackage(List<FileTuningPackage> fileTP)
         {
+            string log_file = Path.GetFileNameWithoutExtension(m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD.log";
+            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            log_file = r.Replace(log_file, "");
+            log_file = Path.GetDirectoryName(m_currentfile) + "\\" + log_file;
 
-            foreach (FileTuningPackage fTP in fileTP)
+            using (StreamWriter log = new StreamWriter(log_file))
             {
-                if (fTP.type == FileTuningPackType.SymbolTp)
+                foreach (FileTuningPackage fTP in fileTP)
                 {
-                    SymbolFileTuningPackage sTP = (SymbolFileTuningPackage)fTP;
-                    if (sTP.addressInFile > 0)
+                    if (fTP.type == FileTuningPackType.SymbolTp)
                     {
-                        savedatatobinary(sTP.addressInFile, sTP.sh_Import.Length, sTP.dataToInsert, m_currentfile, true);
+                        SymbolFileTuningPackage sTP = (SymbolFileTuningPackage)fTP;
+                        if (sTP.addressInFile > 0)
+                        {
+                            log.WriteLine("Updating symbol: " + sTP.GetNameTPAction());
+                            savedatatobinary(sTP.addressInFile, sTP.sh_Import.Length, sTP.dataToInsert, m_currentfile, true);
+                        }
+                    }
+                    else if (fTP.type == FileTuningPackType.ApplyBin)
+                    {
+                        string result = "";
+                        fTP.succesful = performBinAction(fTP.GetNameTPAction(), out result);
+                        if (result != "")
+                        {
+                            fTP.hasResult = true;
+                            fTP.result = result;
+                        }
+                        log.WriteLine("Applied binaction: " + fTP.GetNameTPAction());
+
+                    }
+                    else if (fTP.type == FileTuningPackType.SearchAndReplace)
+                    {
+                        int num = 0;
+                        SearchReplaceTuningPackage srtp = (SearchReplaceTuningPackage)fTP;
+                        num = performSearchAndReplace(srtp.srp);
+                        srtp.result = srtp.GetNameTPAction() + ": " + num.ToString() + " replacements";
+                        srtp.hasResult = true;
+                        if (num > 0)
+                            srtp.succesful = true;
+                        
+                        log.WriteLine("Applied searchandreplace: " + fTP.GetNameTPAction());
                     }
                 }
-                else if (fTP.type == FileTuningPackType.ApplyBin)
-                {
-                    string result = "";
-                    fTP.succesful = performBinAction(fTP.GetNameTPAction(), out result);
-                    if (result != "")
-                    {
-                        fTP.hasResult = true;
-                        fTP.result = result;
-                    }
-                }
-                else if (fTP.type == FileTuningPackType.SearchAndReplace)
-                {
-                    int num = 0;
-                    SearchReplaceTuningPackage srtp = (SearchReplaceTuningPackage)fTP;
-                    num = performSearchAndReplace(srtp.srp);
-                    srtp.result = srtp.GetNameTPAction() + ": " + num.ToString() + " replacements";
-                    srtp.hasResult = true;
-                    if (num > 0)
-                        srtp.succesful = true;
-                }
+                UpdateChecksum(m_currentfile, true);
             }
-            UpdateChecksum(m_currentfile, true);
         }
 
         public bool performBinAction(string binAction, out string result)
