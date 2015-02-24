@@ -9476,34 +9476,74 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         tail = ht.Substring(0, foundS2);
 
                     // Convert head to byte array
-                    string[] lHead = head.Split(',');
-                    bHead = new byte[lHead.Length];
-                    for (int i = 0; i < lHead.Length; i++)
+                    if (head.Length > 0)
                     {
-                        if (lHead[i].Length > 0)
+                        if (head[0] == '*')
                         {
-                            bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                            // This is as symbol, find it's flash address (XXXTBDXXX)
+                            string searchSymbol = head.Substring(1);
+                            foreach (SymbolHelper cfsh in m_symbols)
+                            {
+                                if (cfsh.SmartVarname == searchSymbol)
+                                {
+                                    bHead = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                    Array.Reverse(bHead);
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
-                            bHead = new byte[] { };
-                            break;
+                            string[] lHead = head.Split(',');
+                            bHead = new byte[lHead.Length];
+                            for (int i = 0; i < lHead.Length; i++)
+                            {
+                                if (lHead[i].Length > 0)
+                                {
+                                    bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                                }
+                                else
+                                {
+                                    bHead = new byte[] { };
+                                    break;
+                                }
+                            }
                         }
                     }
 
                     // Convert tail to byte array
-                    string[] lTail = tail.Split(',');
-                    bTail = new byte[lTail.Length];
-                    for (int i = 0; i < lTail.Length; i++)
+                    if (tail.Length > 0)
                     {
-                        if (lTail[i].Length > 0)
+                        if (tail[0] == '*')
                         {
-                            bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
+                            // This is as symbol, find it's flash address (XXXTBDXXX)
+                            string searchSymbol = tail.Substring(1);
+                            foreach (SymbolHelper cfsh in m_symbols)
+                            {
+                                if (cfsh.SmartVarname == searchSymbol)
+                                {
+                                    bTail = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                    Array.Reverse(bTail);
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
-                            bTail = new byte[] { };
-                            break;
+                            string[] lTail = tail.Split(',');
+                            bTail = new byte[lTail.Length];
+                            for (int i = 0; i < lTail.Length; i++)
+                            {
+                                if (lTail[i].Length > 0)
+                                {
+                                    bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
+                                }
+                                else
+                                {
+                                    bTail = new byte[] { };
+                                    break;
+                                }
+                            }
                         }
                     }
 
