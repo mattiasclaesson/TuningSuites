@@ -9382,20 +9382,36 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // Validate input
                 int count_in = 0;
                 int count_out = 0;
+                int count_in_br = 0;
+                int count_out_br = 0;
                 int count_st = 0;
                 int count_cm = 0;
                 foreach (char c in searchReplace)
                 {
                     if (c == '{') count_in++;
                     if (c == '}') count_out++;
+                    if (c == '[') count_in_br++;
+                    if (c == ']') count_out_br++;
                     if (c == '\'') count_st++;
                     if (c == ',') count_cm++;
                 }
-                if ((count_in < 6 || count_in != count_out || count_st != 2 || count_cm < 4))
+                if (count_in_br > 0)
                 {
-                    _name = "FAIL IN VALIDATION: " + searchReplace.Substring(0,6) + "...";
-                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
-                    return;
+                    if ((count_in != 2 || count_in != count_out || count_in_br != 1 || count_in_br != count_out_br || count_st != 2 || count_cm < 2))
+                    {
+                        _name = "FAIL IN REP VALIDATION: " + searchReplace.Substring(0, 6) + "...";
+                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        return;
+                    }
+                }
+                else
+                {
+                    if ((count_in < 6 || count_in != count_out || count_st != 2 || count_cm < 4))
+                    {
+                        _name = "FAIL IN SnR VALIDATION: " + searchReplace.Substring(0, 6) + "...";
+                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        return;
+                    }
                 }
                 
                 // Create a string to work with
@@ -9413,11 +9429,37 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // Extract search pattern
                 foundS1 = inputStr.IndexOf('{') + 1;
                 foundS2 = inputStr.IndexOf('}');
-                string [] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
-                bSearch = new byte[searchString.Length];
-                for (int i = 0; i < searchString.Length; i++)
+                
+                // Simple replace
+                int foundS1B = 0;
+                int foundS2B = 0;
+                string adress_string = string.Empty;
+                int address=-1;
+
+                if ((foundS1B = inputStr.IndexOf('[')) >= 0)
                 {
-                    bSearch[i] = Convert.ToByte(searchString[i].Trim(), 16);
+                    foundS1B++;
+                    foundS2B = inputStr.IndexOf(']');
+                    adress_string = inputStr.Substring(foundS1B, foundS2B - foundS1B);
+                    adress_string = adress_string.Replace("0x", "");
+                    address = Int32.Parse(adress_string, System.Globalization.NumberStyles.HexNumber);
+                    if (address == -1)
+                    {
+                        bSearch = new byte[] { };
+                        bReplace = new byte[] { };
+                        _name = _name + " failing for unknown reason";
+                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        return;
+                    }
+                }
+                else
+                {
+                    string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                    bSearch = new byte[searchString.Length];
+                    for (int i = 0; i < searchString.Length; i++)
+                    {
+                        bSearch[i] = Convert.ToByte(searchString[i].Trim(), 16);
+                    }
                 }
                 inputStr = inputStr.Remove(0, foundS2 + 2);
 
@@ -9430,10 +9472,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     bReplace[i] = Convert.ToByte(replaceString[i].Trim(), 16);
                 }
-                inputStr = inputStr.Remove(0, foundS2 + 2);
 
                 // Check that the search and replace match in length
-                if(bSearch.Length != bReplace.Length)
+                if ((address == -1) && (bSearch.Length != bReplace.Length))
                 {
                     bSearch = new byte[] {};
                     bReplace = new byte[] {};
@@ -9442,123 +9483,132 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     return;
                 }
 
-                // Parse the head/tail arrays, e.g. {{{0xAA,0xBB},{0xCC,0xDD}},{{0xEE,0xFF},{0x11, 0x22}}}
-                // Remove leading "{{{"
-                for (int i = 0; i < 3; i++)
-                    inputStr = inputStr.Remove(0, inputStr.IndexOf('{') + 1);
-
-                // Split the multiple headtails found by "}},{{". Whitespace already removed
-                string[] headTails = Regex.Split(inputStr, @"}},{{");
-
-                // Parse through the results, always start with a number or }
-                foreach (string headTail in headTails)
+                if (address == -1) // No head/tail in a replace
                 {
-                    byte[] bHead = {};
-                    byte[] bTail = {};
-                    string ht = headTail;
+                    // Parse the head/tail arrays, e.g. {{{0xAA,0xBB},{0xCC,0xDD}},{{0xEE,0xFF},{0x11, 0x22}}}
+                    // Remove leading "{{{"
+                    inputStr = inputStr.Remove(0, foundS2 + 2);
+                    for (int i = 0; i < 3; i++)
+                        inputStr = inputStr.Remove(0, inputStr.IndexOf('{') + 1);
 
-                    // Extract the head
-                    foundS1 = 0;
-                    foundS2 = headTail.IndexOf('}');
-                    string head = headTail.Substring(0, foundS2);
+                    // Split the multiple headtails found by "}},{{". Whitespace already removed
+                    string[] headTails = Regex.Split(inputStr, @"}},{{");
 
-                    // Find the start of tail
-                    foundS1 = ht.IndexOf('{');
-                    ht = ht.Remove(0, foundS1 + 1);
-
-                    // Find the end of the tail
-                    foundS1 = 0;
-                    foundS2 = ht.IndexOf('}');
-                    string tail;
-                    if (foundS2 <= 0) //All but last string lacks a }
-                        tail = ht;
-                    else
-                        tail = ht.Substring(0, foundS2);
-
-                    // Convert head to byte array
-                    if (head.Length > 0)
+                    // Parse through the results, always start with a number or }
+                    foreach (string headTail in headTails)
                     {
-                        if (head[0] == '*')
-                        {
-                            // This is as symbol, find it's flash address (XXXTBDXXX)
-                            string searchSymbol = head.Substring(1);
-                            foreach (SymbolHelper cfsh in m_symbols)
-                            {
-                                if (cfsh.SmartVarname == searchSymbol)
-                                {
-                                    bHead = BitConverter.GetBytes((int)cfsh.Flash_start_address);
-                                    Array.Reverse(bHead);
-                                    break;
-                                }
-                            }
-                        }
+                        byte[] bHead = { };
+                        byte[] bTail = { };
+                        string ht = headTail;
+
+                        // Extract the head
+                        foundS1 = 0;
+                        foundS2 = headTail.IndexOf('}');
+                        string head = headTail.Substring(0, foundS2);
+
+                        // Find the start of tail
+                        foundS1 = ht.IndexOf('{');
+                        ht = ht.Remove(0, foundS1 + 1);
+
+                        // Find the end of the tail
+                        foundS1 = 0;
+                        foundS2 = ht.IndexOf('}');
+                        string tail;
+                        if (foundS2 <= 0) //All but last string lacks a }
+                            tail = ht;
                         else
+                            tail = ht.Substring(0, foundS2);
+
+                        // Convert head to byte array
+                        if (head.Length > 0)
                         {
-                            string[] lHead = head.Split(',');
-                            bHead = new byte[lHead.Length];
-                            for (int i = 0; i < lHead.Length; i++)
+                            if (head[0] == '*')
                             {
-                                if (lHead[i].Length > 0)
+                                // This is as symbol, find it's flash address (XXXTBDXXX)
+                                string searchSymbol = head.Substring(1);
+                                foreach (SymbolHelper cfsh in m_symbols)
                                 {
-                                    bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                                    if (cfsh.SmartVarname == searchSymbol)
+                                    {
+                                        bHead = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                        Array.Reverse(bHead);
+                                        break;
+                                    }
                                 }
-                                else
+                            }
+                            else
+                            {
+                                string[] lHead = head.Split(',');
+                                bHead = new byte[lHead.Length];
+                                for (int i = 0; i < lHead.Length; i++)
                                 {
-                                    bHead = new byte[] { };
-                                    break;
+                                    if (lHead[i].Length > 0)
+                                    {
+                                        bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                                    }
+                                    else
+                                    {
+                                        bHead = new byte[] { };
+                                        break;
+                                    }
                                 }
                             }
                         }
+
+                        // Convert tail to byte array
+                        if (tail.Length > 0)
+                        {
+                            if (tail[0] == '*')
+                            {
+                                // This is as symbol, find it's flash address (XXXTBDXXX)
+                                string searchSymbol = tail.Substring(1);
+                                foreach (SymbolHelper cfsh in m_symbols)
+                                {
+                                    if (cfsh.SmartVarname == searchSymbol)
+                                    {
+                                        bTail = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                        Array.Reverse(bTail);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                string[] lTail = tail.Split(',');
+                                bTail = new byte[lTail.Length];
+                                for (int i = 0; i < lTail.Length; i++)
+                                {
+                                    if (lTail[i].Length > 0)
+                                    {
+                                        bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
+                                    }
+                                    else
+                                    {
+                                        bTail = new byte[] { };
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Add headtail to list
+                        byte[][] bHeadTail = { bHead, bTail };
+                        headTailList.Add(bHeadTail);
                     }
 
-                    // Convert tail to byte array
-                    if (tail.Length > 0)
+                    // Store headtail for output
+                    myCheckHeadAndTail = new byte[headTailList.Count][][];
+                    for (int i = 0; i < headTailList.Count; i++)
                     {
-                        if (tail[0] == '*')
-                        {
-                            // This is as symbol, find it's flash address (XXXTBDXXX)
-                            string searchSymbol = tail.Substring(1);
-                            foreach (SymbolHelper cfsh in m_symbols)
-                            {
-                                if (cfsh.SmartVarname == searchSymbol)
-                                {
-                                    bTail = BitConverter.GetBytes((int)cfsh.Flash_start_address);
-                                    Array.Reverse(bTail);
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            string[] lTail = tail.Split(',');
-                            bTail = new byte[lTail.Length];
-                            for (int i = 0; i < lTail.Length; i++)
-                            {
-                                if (lTail[i].Length > 0)
-                                {
-                                    bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
-                                }
-                                else
-                                {
-                                    bTail = new byte[] { };
-                                    break;
-                                }
-                            }
-                        }
+                        myCheckHeadAndTail[i] = headTailList[i];
                     }
-
-                    // Add headtail to list
-                    byte[][] bHeadTail = { bHead, bTail };
-                    headTailList.Add(bHeadTail);
+                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
                 }
-
-                // Store headtail for output
-                myCheckHeadAndTail = new byte[headTailList.Count][][];
-                for (int i = 0; i < headTailList.Count; i++)
+                else
                 {
-                    myCheckHeadAndTail[i] = headTailList[i];
+                    srp = new SearchReplacePattern(address, bReplace);
                 }
-                srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                     
             }
 
             public override string GetNameTPAction()
@@ -9811,18 +9861,42 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         public class SearchReplacePattern
         {
+            public int ReplaceAddress;
             public byte[] SearchPattern;
             public byte[] ReplaceWith;
             public byte[][][] CheckHeadAndTail; //(Head XXYY and Tail AABB) or (Head ZZWW and Tail CCDD) or ...
             public SearchReplacePattern(byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail)
             {
+                ReplaceAddress = 0;
                 SearchPattern = _SearchPattern;
                 ReplaceWith = _ReplaceWith;
                 CheckHeadAndTail = _CheckHeadAndTail;
             }
+
+            public SearchReplacePattern(int _ReplaceAddress, byte[] _ReplaceWith)
+            {
+                ReplaceAddress = _ReplaceAddress;
+                ReplaceWith = _ReplaceWith;
+            }
+
+            public bool isDirectReplace()
+            {
+                if (ReplaceAddress == 0)
+                    return false;
+                else
+                    return true;
+            }
         }
 
-        public int ReplaceBytePattern(byte[] data, SearchReplacePattern srp)
+        public void ReplaceBytePattern(byte[] data, SearchReplacePattern srp)
+        {
+            for (int j = 0; j < srp.ReplaceWith.Length; j++)
+            {
+                data[srp.ReplaceAddress+j] = srp.ReplaceWith[j];
+            }
+        }
+
+        public int SearchReplaceBytePattern(byte[] data, SearchReplacePattern srp)
         {
             int matches = 0;
 
@@ -9904,7 +9978,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                 // Search and replace
                 //int num_replacements = ReplaceBytePattern(buff, find_p, replace_p, 0xFF, 0xFE);
-                num_replacements = ReplaceBytePattern(buff, sp);
+                if (sp.isDirectReplace())
+                {
+                    num_replacements = 1;
+                    ReplaceBytePattern(buff, sp);
+                }
+                else
+                {
+                    num_replacements = SearchReplaceBytePattern(buff, sp);
+                }
 
                 // Store the file
                 File.WriteAllBytes(m_currentfile, buff);
