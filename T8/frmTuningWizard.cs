@@ -80,6 +80,14 @@ namespace T8SuitePro
                     // Fill list with impacted maps
                     foreach (string impM in outList)
                         this.listModifiedMaps.Items.Add(impM);
+
+                    Form1.TuningAction nameDate = Form1.installedTunings.ElementAt(0);
+                    if (nameDate.WizIdOrFilename == "ap_dateName")
+                    {
+                        nameDate.performTuningAction(parent, softwareVersion, out outList);
+                        foreach (string impM in outList)
+                            this.listModifiedMaps.Items.Add(impM);
+                    }
                 }
                 else
                 {

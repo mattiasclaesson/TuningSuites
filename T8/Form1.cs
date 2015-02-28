@@ -16023,102 +16023,79 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        public class Copy175hpMaps : TuningAction
+        public class DateAndName : TuningAction
         {
-            public Copy175hpMaps()
+            public DateAndName()
             {
                 WizType = TuneWizardType.Embedded;
-                WizBinType = BinaryType.NewBin;
-                WizName = "Copy 150mp maps to 175hp maps";
-                WizIdOrFilename = "ap_175hp";
+                WizBinType = BinaryType.None;
+                WizName = "Update PI Area";
+                WizIdOrFilename = "ap_dateName";
             }
 
             public override int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols)
             {
                 // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
                 //       we need to call Form1 functions though the instance of it
-                string[] fromLimiter = new string[] { 
-                    "FFTrqCal.FFTrq_MaxEngineTab1", 
-                    "TrqLimCal.Trq_MaxEngineTab1", 
-                    "BoostDiagCal.n_HighLim175", 
-                    "TMCCal.Trq_MaxEngineTab",    
-                    "TMCCal.Trq_MaxEngineFFTab",
-                    "TrqLimCal.Trq_MaxEngineManTab1",
-                    "TrqLimCal.Trq_MaxEngineAutTab1"};
-                string[] toLimiter = new string[]   { 
-                    "FFTrqCal.FFTrq_MaxEngineTab2", 
-                    "TrqLimCal.Trq_MaxEngineTab2", 
-                    "BoostDiagCal.n_HighLim150", 
-                    "TMCCal.Trq_MaxEngineLowTab", 
-                    "TMCCal.Trq_MaxEngineLowFFTab",
-                    "TrqLimCal.Trq_MaxEngineManTab2",
-                    "TrqLimCal.Trq_MaxEngineAutTab2"};
-                int retval = 1;
                 out_mod_symbols = new List<string>();
+                out_mod_symbols.Add("Update PI Area");
+                byte[] new_ascii = { 0x54, 0x38, 0x53, 0x75, 0x69, 0x74, 0x65 };
+                string programmer_name = string.Empty;
+                string programming_date = string.Empty;
+                if (p.m_currentfile == "") return -1;
+                int m_ChecksumAreaOffset = p.GetChecksumAreaOffset(p.m_currentfile);
+                int m_EndOfPIArea = p.GetEmptySpaceStartFrom(p.m_currentfile, m_ChecksumAreaOffset);
+                int name_pos = 0;
+                int name_len = 0;
+                int date_pos = 0;
+                int date_len = 0;
 
-                // Backup the current file before the tuning action
-                File.Copy(p.m_currentfile, Path.GetDirectoryName(p.m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-beforetuningto-" + WizIdOrFilename + "-mg.bin", true);
-                for (int i = 0; i < fromLimiter.Length; i++)
+                byte[] piarea = p.readdatafromfile(p.m_currentfile, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
+                for (int t = 0; t < piarea.Length; t++)
                 {
-                    // Ensure sending symbol exist
-                    if ((int)p.GetSymbolAddress(m_symbols, fromLimiter[i]) > 0)
+                    // Name (0x1D) e.g. "Staffan Mossberg"
+                    if ((byte)((byte)(piarea[t] + 0xD6) ^ 0x21) == 0x1D)
                     {
-                        // Ensure receiving symbol exist
-                        if ((int)p.GetSymbolAddress(m_symbols, toLimiter[i]) > 0)
-                        {
-                            // Secure sending and receiving sumbyls have same axist legth's
-                            int fromCols, fromRows;
-                            int toCols, toRows;
-                            p.GetTableMatrixWitdhByName(p.m_currentfile, m_symbols, fromLimiter[i], out fromCols, out fromRows);
-                            p.GetTableMatrixWitdhByName(p.m_currentfile, m_symbols, toLimiter[i], out toCols, out toRows);
-                            if (fromCols == toCols && fromRows == toRows)
-                            {
-                                out_mod_symbols.Add(toLimiter[i]);
-                                // Copy by read/save and then update checksums
-                                byte[] from = p.readdatafromfile(p.m_currentfile, (int)p.GetSymbolAddress(m_symbols, fromLimiter[i]), p.GetSymbolLength(m_symbols, fromLimiter[i]));
-                                p.savedatatobinary((int)p.GetSymbolAddress(m_symbols, toLimiter[i]), p.GetSymbolLength(m_symbols, toLimiter[i]), from, p.m_currentfile, true);
-                                p.UpdateChecksum(p.m_currentfile, true);
-
-                                // Success
-                                retval = 0;
-                            }
-                            else
-                            {
-                                retval = 1;
-                            }
-                        }
+                        name_pos = t + 1;
+                        name_len = (byte)((byte)(piarea[t - 1] + 0xD6) ^ 0x21);
+                        if (date_pos != 0)
+                            break;
                     }
+                    // Release date (0x0A), e.g. "2004-08-12 14:13:34"
+                    if ((byte)((byte)(piarea[t] + 0xD6) ^ 0x21) == 0x0A)
+                    {
+                        date_pos = t + 1;
+                        date_len = (byte)((byte)(piarea[t - 1] + 0xD6) ^ 0x21);
+                        if (name_pos != 0)
+                            break;
+                    }
+
                 }
-                // Next should become refresh open symbol maps, 
-                // for now at least close them so they look correcy
-                p.RefreshTableViewers(); //DisposeTableViewers();
-                return retval;
-            }
-        }
 
-        public class MackanizedST1Plus : TuningAction
-        {
-            public MackanizedST1Plus()
-            {
-                WizType = TuneWizardType.Embedded;
-                WizBinType = BinaryType.NewBin;
-                WizName = "Mackanized ST1+";
-                WizIdOrFilename = "ap_ST1Plus";
-            }
-
-            public override int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols)
-            {
-                // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
-                //       we need to call Form1 functions though the instance of it
-                out_mod_symbols = new List<string>();
-                string [] fake = new string[] {  "Removed Torque Limiters in code",
-                                                 "TrqLimCal.Trq_MaxEngineTab", 
-                                                 "TrqLimCal.Trq_MaxEngineTab2", 
-                                                 "FFTrqCal.FFTrq_MaxEngineTab2",
-                                                 "FFTrqCal.FFTrq_MaxEngineTab2"};
-                foreach (string tmp in fake)
+                if ((name_pos != 0) && (name_len != 0) && (name_len >= new_ascii.Length))
                 {
-                    out_mod_symbols.Add(tmp);
+                    byte[] new_name = new byte[name_len];
+                    for (int x = 0; x < name_len; x++)
+                        new_name[x] = 0x20;
+                    for (int x = 0; x < new_ascii.Length; x++)
+                        new_name[x] = new_ascii[x];
+                    for (int x = 0; x < new_name.Length; x++)
+                        new_name[x] = (byte)((byte)(new_name[x] ^ 0x21) - 0xD6);
+
+                    p.savedatatobinary(m_ChecksumAreaOffset + name_pos, name_len, new_name, p.m_currentfile, false);
+
+                }
+
+                if ((date_pos != 0) && (date_len != 0))
+                {
+                    byte[] now = Encoding.ASCII.GetBytes(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    if (now.Length == date_len)
+                    {
+                        for (int x = 0; x < now.Length; x++)
+                            now[x] = (byte)((byte)(now[x] ^ 0x21) - 0xD6);
+
+                        p.savedatatobinary(m_ChecksumAreaOffset + date_pos, date_len, now, p.m_currentfile, false);
+                    }
                 }
                 return 0;
             }
@@ -16126,10 +16103,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         public static List <TuningAction> installedTunings = new List<TuningAction>
         {
-#if (DEBUG)
-            new Copy175hpMaps(),
-            new MackanizedST1Plus()
-#endif
+            new DateAndName() // This SHOULD BE IN POSITION #1
         };
 
         public void addWizTuneFilePacks()
