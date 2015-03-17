@@ -797,5 +797,73 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
         {
             UpdateVin("                 ");
         }
+
+        internal void UpdateProgrammerName()
+        {
+            if (m_fileName == "") return;
+            int m_ChecksumAreaOffset = GetChecksumAreaOffset(m_fileName);
+            int m_EndOfPIArea = GetEmptySpaceStartFrom(m_fileName, m_ChecksumAreaOffset);
+
+            //Console.WriteLine("Area: " + m_ChecksumAreaOffset.ToString("X8") + " - " + m_EndOfPIArea.ToString("X8"));
+            byte[] piarea = readdatafromfile(m_fileName, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
+            //Console.WriteLine("Size: " + piarea.Length.ToString());
+            for (int t = 0; t < piarea.Length; t++)
+            {
+                piarea[t] += 0xD6;
+                piarea[t] ^= 0x21;
+            }
+            int i = 0;
+            int len = 0;
+            int type = 0;
+            do
+            {
+                if (i == piarea.Length) break;
+                len = Convert.ToInt32(piarea[i++]);
+                type = Convert.ToInt32(piarea[i++]);
+                if (len == 0xF7 && type == 0xF7) break;
+
+                Console.WriteLine("Len: " + len.ToString("X2") + " Type = " + type.ToString("X2"));
+
+                if (type == 0x92 || type == 0x97 || type == 0x0C || type == 0xC1 || type == 0x08 || type == 0x1D || type == 0x10 || type == 0x0A || type == 0x0F || type == 0x16)
+                {
+                    for (int f = 0; f < len; f++)
+                    {
+                        switch (type)
+                        {
+                            case 0x10:
+                                piarea[i++] = Convert.ToByte(m_programmerDevice[f]);
+                                break;
+                            case 0x1D:
+                                piarea[i++] = Convert.ToByte(m_programmerName[f]);
+                                break;
+                            case 0x0A:
+                                piarea[i++] = Convert.ToByte(m_releaseDate[f]);
+                                break;
+                            case 0x08:
+                                //piarea[i++] = Convert.ToByte(m_SoftwareVersion[f]);
+                                i++;
+                                break;
+                            case 0xC1:
+                                piarea[i++] = Convert.ToByte(m_PartNumber[f]);
+                                break;
+                            case 0x92:
+                                piarea[i++] = Convert.ToByte(m_hardwareID[f]);
+                                break;
+                            case 0x97:
+                                piarea[i++] = Convert.ToByte(m_deviceType[f]);
+                                break;
+                        }
+                    }
+                }
+            } while (i < piarea.Length - 1);
+
+            for (int t = 0; t < piarea.Length; t++)
+            {
+                piarea[t] ^= 0x21;
+                piarea[t] -= 0xD6;
+            }
+
+            savedatatobinary(m_ChecksumAreaOffset, piarea.Length, piarea, m_fileName);
+        }
     }
 }
