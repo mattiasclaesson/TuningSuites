@@ -33,6 +33,8 @@
             this.wizWelcomePage = new DevExpress.XtraWizard.WelcomeWizardPage();
             this.wizSelectActionPage = new DevExpress.XtraWizard.WizardPage();
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
+            this.lblAuthor = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.lblSoftwareVersion = new DevExpress.XtraEditors.LabelControl();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.listTuningActions = new DevExpress.XtraEditors.ListBoxControl();
@@ -44,6 +46,8 @@
             this.checkIUnderstand = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.wizardCodePage = new DevExpress.XtraWizard.WizardPage();
+            this.lblAuthorText = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.theCode = new DevExpress.XtraEditors.LabelControl();
@@ -54,7 +58,6 @@
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutConverter1 = new DevExpress.XtraLayout.Converter.LayoutConverter(this.components);
-            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wizardTuning)).BeginInit();
             this.wizardTuning.SuspendLayout();
             this.wizSelectActionPage.SuspendLayout();
@@ -115,6 +118,8 @@
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerControl1.Location = new System.Drawing.Point(0, 0);
             this.splitContainerControl1.Name = "splitContainerControl1";
+            this.splitContainerControl1.Panel1.Controls.Add(this.lblAuthor);
+            this.splitContainerControl1.Panel1.Controls.Add(this.labelControl3);
             this.splitContainerControl1.Panel1.Controls.Add(this.lblSoftwareVersion);
             this.splitContainerControl1.Panel1.Controls.Add(this.labelControl1);
             this.splitContainerControl1.Panel1.Text = "Panel1";
@@ -124,6 +129,25 @@
             this.splitContainerControl1.SplitterPosition = 101;
             this.splitContainerControl1.TabIndex = 0;
             this.splitContainerControl1.Text = "splitContainerControl1";
+            // 
+            // lblAuthor
+            // 
+            this.lblAuthor.Appearance.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lblAuthor.Location = new System.Drawing.Point(4, 61);
+            this.lblAuthor.Name = "lblAuthor";
+            this.lblAuthor.Size = new System.Drawing.Size(24, 13);
+            this.lblAuthor.TabIndex = 3;
+            this.lblAuthor.Text = "FFFF";
+            // 
+            // labelControl3
+            // 
+            this.labelControl3.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.labelControl3.Appearance.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.labelControl3.Location = new System.Drawing.Point(4, 42);
+            this.labelControl3.Name = "labelControl3";
+            this.labelControl3.Size = new System.Drawing.Size(39, 13);
+            this.labelControl3.TabIndex = 2;
+            this.labelControl3.Text = "Author";
             // 
             // lblSoftwareVersion
             // 
@@ -151,6 +175,7 @@
             this.listTuningActions.Name = "listTuningActions";
             this.listTuningActions.Size = new System.Drawing.Size(393, 171);
             this.listTuningActions.TabIndex = 0;
+            this.listTuningActions.SelectedIndexChanged += new System.EventHandler(this.listTuningActions_SelectedIndexChanged);
             // 
             // wizCompletedPage
             // 
@@ -219,6 +244,7 @@
             // 
             // wizardCodePage
             // 
+            this.wizardCodePage.Controls.Add(this.lblAuthorText);
             this.wizardCodePage.Controls.Add(this.label2);
             this.wizardCodePage.Controls.Add(this.linkLabel1);
             this.wizardCodePage.Controls.Add(this.label1);
@@ -229,6 +255,26 @@
             this.wizardCodePage.Size = new System.Drawing.Size(499, 171);
             this.wizardCodePage.Text = "Enter Tuning Code";
             this.wizardCodePage.Visible = false;
+            // 
+            // lblAuthorText
+            // 
+            this.lblAuthorText.AutoSize = true;
+            this.lblAuthorText.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lblAuthorText.Location = new System.Drawing.Point(9, 139);
+            this.lblAuthorText.Name = "lblAuthorText";
+            this.lblAuthorText.Size = new System.Drawing.Size(29, 13);
+            this.lblAuthorText.TabIndex = 5;
+            this.lblAuthorText.Text = "Hint:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Location = new System.Drawing.Point(149, 123);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(158, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "and learn how to earn the code.";
             // 
             // linkLabel1
             // 
@@ -253,7 +299,7 @@
             // 
             // theCode
             // 
-            this.theCode.Location = new System.Drawing.Point(27, 156);
+            this.theCode.Location = new System.Drawing.Point(411, 155);
             this.theCode.Name = "theCode";
             this.theCode.Size = new System.Drawing.Size(63, 13);
             this.theCode.TabIndex = 1;
@@ -329,16 +375,6 @@
             this.layoutControlItem3.Text = "Enter code:";
             this.layoutControlItem3.TextSize = new System.Drawing.Size(56, 13);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(149, 123);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "and learn how to earn the code.";
-            // 
             // frmTuningWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -399,5 +435,8 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private DevExpress.XtraEditors.LabelControl lblAuthor;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
+        private System.Windows.Forms.Label lblAuthorText;
     }
 }

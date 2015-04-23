@@ -55,6 +55,7 @@ namespace T8SuitePro
                     this.theCode.Text = selAction.WizCode;
                     this.wizardCodePage.Visible = true;
                     this.wizardCodePage.AllowNext = false;
+                    this.lblAuthorText.Text = "Hint: Try with authors first. For this Tuning Package it is " + selAction.WizAuth;
                     this.lblCode.Text = "The Tuning Package \'" + this.listTuningActions.SelectedItem.ToString() + "\' requires that you enter the correct code.";
                 }
             }
@@ -137,6 +138,12 @@ namespace T8SuitePro
             // Navigate to a URL.
             System.Diagnostics.Process.Start("http://www.trionictuning.com");
 
+        }
+
+        private void listTuningActions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Form1.TuningAction selAction = (Form1.TuningAction)this.listTuningActions.SelectedItem;
+            this.lblAuthor.Text = selAction.WizAuth;
         }
     }
 }
