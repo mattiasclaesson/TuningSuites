@@ -4914,7 +4914,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         {
                             t8header.UpdateVinAndImmoCode();
                         }
-                        t8header.UpdateProgrammerName();
+                        // We don't want this code atm, it's a bit unsafe
+                        //t8header.UpdateProgrammerName();
                         UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
                     }
                 }
