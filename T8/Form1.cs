@@ -8662,15 +8662,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
             dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
             dt.Columns.Add("DESCRIPTION");
-            bool createRepositoryFile = false;
 
             if (ImportFromRepository)
             {
                 T8Header fh = new T8Header();
                 fh.init(filename);
-                string checkstring = fh.PartNumber + fh.SoftwareVersion;
-                string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(filename) + File.GetCreationTime(filename).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
-                if (!Directory.Exists(System.Windows.Forms.Application.StartupPath + "\\repository"))
+                string checkstring = fh.PartNumber + fh.SoftwareVersion.Trim();
+                string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
+                if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
                 {
                     Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
                 }
@@ -8709,7 +8708,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
                                     dt.Columns.Add("DESCRIPTION");
                                     dt.ReadXml(BioPowerXmlFile);
-                                    createRepositoryFile = false;
                                 }
                             }
                         }
@@ -8777,10 +8775,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         LogHelper.Log(E.Message);
                     }
                 }
-            }
-            if (createRepositoryFile)
-            {
-                SaveAdditionalSymbols();
             }
             SetProgress("Completed");
             return retval;
@@ -9019,7 +9013,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             T8Header fh = new T8Header();
             fh.init(m_currentfile);
-            string checkstring = fh.PartNumber + fh.SoftwareVersion;
+            string checkstring = fh.PartNumber + fh.SoftwareVersion.Trim();
             string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
             if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
             {
