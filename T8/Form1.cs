@@ -8662,9 +8662,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
             dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
             dt.Columns.Add("DESCRIPTION");
-            T8Header fh = new T8Header();
+            bool createRepositoryFile = false;
+
             if (ImportFromRepository)
             {
+                T8Header fh = new T8Header();
                 fh.init(filename);
                 string checkstring = fh.PartNumber + fh.SoftwareVersion;
                 string xmlfilename = System.Windows.Forms.Application.StartupPath + "\\repository\\" + Path.GetFileNameWithoutExtension(filename) + File.GetCreationTime(filename).ToString("yyyyMMddHHmmss") + checkstring + ".xml";
@@ -8672,10 +8674,46 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
                 }
+
                 if (File.Exists(xmlfilename))
                 {
                     dt.ReadXml(xmlfilename);
                     retval = true;
+                }
+
+                string[,] SymbolFiles = new string[,] {{"FD0M", "{0}\\FD0M_C.xml"},
+                                                   {"FD0I", "{0}\\FD0I_C.xml"},
+                                                   {"FC0N", "{0}\\FC0N_C.xml"},
+                                                   {"FC0U", "{0}\\FC0U_C.xml"},
+                                                   {"FD0F", "{0}\\FD0F_C.xml"},
+                                                   {"FF0L", "{0}\\FF0L_C.xml"},
+                                                   {"FE09", "{0}\\FE09_C.xml"},
+                                                   {"FD0G", "{0}\\FD0G_C.xml"}};
+                SetProgress("Reading symboltable... ");
+                if (dt.Rows.Count == 0)
+                {
+                    fh.init(filename);
+                    for (int i = 0; i < SymbolFiles.GetLength(0); i++)
+                    {
+                        if (fh.SoftwareVersion.Trim().StartsWith(SymbolFiles[i, 0].ToString(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            string BioPowerXmlFile = String.Format(SymbolFiles[i, 1], System.Windows.Forms.Application.StartupPath);
+                            if (File.Exists(BioPowerXmlFile))
+                            {
+                                string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                                if (binname != string.Empty)
+                                {
+                                    dt = new System.Data.DataTable(binname);
+                                    dt.Columns.Add("SYMBOLNAME");
+                                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                    dt.Columns.Add("DESCRIPTION");
+                                    dt.ReadXml(BioPowerXmlFile);
+                                    createRepositoryFile = false;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -8696,41 +8734,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
             }
 
-            bool createRepositoryFile = false;
-            string[,] SymbolFiles = new string[,] {{"FD0M", "{0}\\FD0M_C.xml"},
-                                                   {"FD0I", "{0}\\FD0I_C.xml"},
-                                                   {"FC0N", "{0}\\FC0N_C.xml"},
-                                                   {"FC0U", "{0}\\FC0U_C.xml"},
-                                                   {"FD0F", "{0}\\FD0F_C.xml"},
-                                                   {"FF0L", "{0}\\FF0L_C.xml"},
-                                                   {"FE09", "{0}\\FE09_C.xml"},
-                                                   {"FD0G", "{0}\\FD0G_C.xml"}};
-            SetProgress("Reading symboltable... ");
-            if (dt.Rows.Count == 0)
-            {
-                fh.init(filename);
-                for (int i = 0; i < SymbolFiles.GetLength(0); i++) 
-                {
-                    if (fh.SoftwareVersion.Trim().StartsWith(SymbolFiles[i, 0].ToString(), StringComparison.OrdinalIgnoreCase))
-                    {
-                        string BioPowerXmlFile = String.Format(SymbolFiles[i, 1], System.Windows.Forms.Application.StartupPath);
-                        if (File.Exists(BioPowerXmlFile))
-                        {
-                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
-                            if (binname != string.Empty)
-                            {
-                                dt = new System.Data.DataTable(binname);
-                                dt.Columns.Add("SYMBOLNAME");
-                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                                dt.Columns.Add("DESCRIPTION");
-                                dt.ReadXml(BioPowerXmlFile);
-                                createRepositoryFile = false;
-                            }
-                        }
-                    }
-                }
-            }
             SetProgress("Importing symbols... ");
             int numSym = coll2load.Count;
             int cnt=0;
@@ -8779,6 +8782,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 SaveAdditionalSymbols();
             }
+            SetProgress("Completed");
             return retval;
         }
 
