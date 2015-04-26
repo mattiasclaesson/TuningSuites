@@ -8669,7 +8669,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 fh.init(filename);
                 string checkstring = fh.PartNumber + fh.SoftwareVersion.Trim();
                 string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
-                if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
+                if (!Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
                 {
                     Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
                 }
