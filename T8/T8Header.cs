@@ -798,7 +798,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
             UpdateVin("                 ");
         }
 
-        internal void UpdateProgrammerName()
+        internal void UpdatePIarea()
         {
             if (m_fileName == "") return;
             int m_ChecksumAreaOffset = GetChecksumAreaOffset(m_fileName);
@@ -840,6 +840,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                                 piarea[i++] = Convert.ToByte(m_releaseDate[f]);
                                 break;
                             case 0x08:
+                                // Disabled
                                 //piarea[i++] = Convert.ToByte(m_SoftwareVersion[f]);
                                 i++;
                                 break;
