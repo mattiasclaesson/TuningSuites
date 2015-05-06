@@ -4916,6 +4916,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         }
                         // We don't want this code atm, it's a bit unsafe
 #if (DEBUG)
+                        t8header.UpdatePIarea();
 #endif
                         UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
                     }
