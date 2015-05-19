@@ -804,6 +804,7 @@ namespace T8SuitePro
         private bool TryToExtractPackedBinary(string filename, int sym_count, int filename_size, out SymbolCollection symbol_collection)
         {
             bool retval = true;
+            byte[] compressedSymbolTable;
             //Test 15092009
             //int RealAddressTableOffset = GetAddrTableOffset(filename) + 7; // was 17
             int RealAddressTableOffset = GetAddrTableOffsetBySymbolTable(filename) + 7; // was 17 // <GS-22032010>
@@ -817,7 +818,7 @@ namespace T8SuitePro
             SetProgressPercentage(5);
             System.Windows.Forms.Application.DoEvents();
 
-            bool compr_created = UnpackFileUsingDecode(filename, out symboltableoffset);
+            bool compr_created = extractCompressedSymbolTable(filename, out symboltableoffset, out compressedSymbolTable);
             sym_count = 0;
             SetProgress("Finding address table... ");
             SetProgressPercentage(15);
@@ -833,6 +834,7 @@ namespace T8SuitePro
             searchsequence.SetValue((byte)0x00, 7);
             searchsequence.SetValue((byte)0x20, 8);
             int AddressTableOffset = 0;//GetAddressTableOffset(searchsequence);
+            
             FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
             using (BinaryReader br = new BinaryReader(fsread))
             {
@@ -920,6 +922,7 @@ namespace T8SuitePro
                             break;
                     }
                 }
+
                 if (AddressTableOffset > 0)
                 {
                     AddressTableOffset = RealAddressTableOffset; // TEST 15092009
@@ -1016,233 +1019,17 @@ namespace T8SuitePro
                     }
                     if (compr_created)
                     {
-                        LogHelper.Log("Dumping addresstable");
-                        SetProgress("Creating symbol list... ");
-                        SetProgressPercentage(50);
+                        SetProgress("Decoding packed symbol table");
                         System.Windows.Forms.Application.DoEvents();
-
-                        DumpSymbolAddressTable(symbol_collection);
-                        LogHelper.Log("Decoding packed symbol table");
-                        // run decode.exe
-
-                        if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
-                        {
-                            File.Delete(Path.GetTempPath() + "\\COMPR.TXT");
-                        }
-                        if (File.Exists(Path.GetTempPath() + "\\COMPR"))
-                        {
-                            File.Delete(Path.GetTempPath() + "\\COMPR");
-                        }
-                        if (File.Exists(Path.GetTempPath() + "\\table.tmp"))
-                        {
-                            File.Delete(Path.GetTempPath() + "\\table.tmp");
-                        }
-                        //if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe"))
-                        //{
-                        //    File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        //}
-                        //if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
-                        //{
-                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        //}
-
-                        // <GS-18062012> support for x64
-                        //bool x64 = Detectx64Architecture();
-                        //if (x64)
-                        //{
-                        //    mRecreateAllExecutableResources();
-
-                        //    // rename T7.decode.exe to decode.exe
-                        //    if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\decode.exe"))
-                        //    {
-                        //        File.Delete(System.Windows.Forms.Application.StartupPath + "\\decode.exe");
-                        //    }
-                        //    File.Move(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", System.Windows.Forms.Application.StartupPath + "\\decode.exe");
-
-                        //    if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\decode.exe"))
-                        //    {
-                        //        if (File.Exists(Path.GetTempPath() + "\\decode.exe"))
-                        //        {
-                        //            File.Delete(Path.GetTempPath() + "\\decode.exe");
-                        //        }
-                        //        File.Copy(System.Windows.Forms.Application.StartupPath + "\\decode.exe", Path.GetTempPath() + "\\decode.exe");
-                        //    }
-                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
-                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
-
-                        //    string DosBoxPath = Path.Combine(System.Environment.GetEnvironmentVariable("ProgramFiles(x86)"), "DOSBox-0.74");
-                        //    // write a dosbox.conf first
-                        //    string confFile = Path.Combine(DosBoxPath, "t8dosb.conf");
-                        //    if (!File.Exists(confFile))
-                        //    {
-                        //        using (StreamWriter sw = new StreamWriter(confFile, false))
-                        //        {
-                        //            sw.WriteLine("[autoexec]");
-                        //            sw.WriteLine("cycles=max");
-                        //            sw.WriteLine("mount c \"" + Path.GetTempPath() + "\"");
-                        //            sw.WriteLine("c:");
-                        //            sw.WriteLine("decode.exe");
-                        //            sw.WriteLine("exit");
-                        //        }
-                        //    }
-
-                        //    string Exename = Path.Combine(DosBoxPath, "DOSBox.exe");
-                        //    ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
-                        //    startinfo.CreateNoWindow = true; // TRUE
-                        //    startinfo.WindowStyle = ProcessWindowStyle.Hidden; // hidden
-                        //    startinfo.Arguments = "-noconsole -conf t8dosb.conf";
-                        //    startinfo.WorkingDirectory = DosBoxPath;
-                        //    System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                        //    conv_proc.WaitForExit(30000);
-
-                        //    if (!conv_proc.HasExited)
-                        //    {
-                        //        conv_proc.Kill();
-                        //        retval = false;
-                        //    }
-                        //    else
-                        //    {
-                        //        // nu door compr.txt lopen
-                        //        LogHelper.Log("Adding names to symbols");
-                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                        //        {
-                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                        //        }
-                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
-                        //        {
-                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                        //        }
-                        //        if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
-                        //        {
-                        //            File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                        //        }
-                        //        if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
-                        //        {
-                        //            File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                        //        }
-                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                        //        {
-                        //            AddNamesToSymbolsFromTableTmp(symbol_collection);
-                        //        }
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    mRecreateAllExecutableResources();
-                        //    if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
-                        //    {
-                        //        if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe")) File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        //        File.Copy(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe", Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        //    }
-                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\COMPR", Path.GetTempPath() + "\\COMPR");
-                        //    File.Copy(System.Windows.Forms.Application.StartupPath + "\\table.tmp", Path.GetTempPath() + "\\table.tmp");
-                        //    string Exename = Path.Combine(Path.GetTempPath(), "T8SuitePro.decode.exe");
-
-                        //    ProcessStartInfo startinfo = new ProcessStartInfo(Exename);
-                        //    startinfo.CreateNoWindow = true;
-                        //    startinfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        //    startinfo.WorkingDirectory = Path.GetTempPath();
-                        //    System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
-                        //    conv_proc.WaitForExit(10000); // wait for 10 seconds max
-                        //    if (!conv_proc.HasExited)
-                        //    {
-                        //        conv_proc.Kill();
-                        //        retval = false;
-                        //    }
-                        //    else
-                        //    {
-                        //        // nu door compr.txt lopen
-                        //        SetProgress("Arranging symbol list... ");
-                        //        SetProgressPercentage(70);
-                        //        System.Windows.Forms.Application.DoEvents();
-
-                        //        LogHelper.Log("Adding names to symbols");
-                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                        //        {
-                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                        //        }
-                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP"))
-                        //        {
-                        //            File.Delete(System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                        //        }
-                        //        if (File.Exists(Path.GetTempPath() + "\\COMPR.TXT"))
-                        //        {
-                        //            File.Copy(Path.GetTempPath() + "\\COMPR.TXT", System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT");
-                        //        }
-                        //        if (File.Exists(Path.GetTempPath() + "\\XTABLE.TMP"))
-                        //        {
-                        //            File.Copy(Path.GetTempPath() + "\\XTABLE.TMP", System.Windows.Forms.Application.StartupPath + "\\XTABLE.TMP");
-                        //        }
-                        //        if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\COMPR.TXT"))
-                        //        {
-                        //            SetProgress("Finalizing list... ");
-                        //            SetProgressPercentage(85);
-                        //            System.Windows.Forms.Application.DoEvents();
-                        //            AddNamesToSymbolsFromTableTmp(symbol_collection);
-                        //        }
-                        //    }
-                        //}
-                        //if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe"))
-                        //{
-                        //    File.Delete(System.Windows.Forms.Application.StartupPath + "\\T8SuitePro.decode.exe");
-                        //}
-                        //if (File.Exists(Path.GetTempPath() + "\\T8SuitePro.decode.exe"))
-                        //{
-                        //    File.Delete(Path.GetTempPath() + "\\T8SuitePro.decode.exe");
-                        //}
-                        string comprFilename = System.Windows.Forms.Application.StartupPath + @".\COMPR";
-                        string symbolNamesFilename = System.Windows.Forms.Application.StartupPath + @".\COMPR.TXT";
-                        string addressTableFilename = System.Windows.Forms.Application.StartupPath + @".\table.tmp";
-                        string combinedTableFilename = System.Windows.Forms.Application.StartupPath + @".\XTABLE.TMP";
-                        // Delete any files present from previous use
-                        if (File.Exists(symbolNamesFilename))
-                            File.Delete(symbolNamesFilename);
-                        if (File.Exists(combinedTableFilename))
-                            File.Delete(combinedTableFilename);
-                        // Try to decode compressed symbol table
-                        if (File.Exists(comprFilename))
-                        {
-                            if (File.Exists(addressTableFilename))
-                            {
-                                SetProgress("Arranging symbol list... ");
-                                SetProgressPercentage(70);
-                                System.Windows.Forms.Application.DoEvents();
-                                // Read the compressed symbol table file
-                                byte[] bytes = File.ReadAllBytes(comprFilename);
-                                string[] symbols;
-                                // Decompress the symbol table
-                                TrionicSymbolDecompressor.ExpandComprStream(bytes, out symbols);
-                                // Write the symbols to a file. 
-                                File.WriteAllLines(symbolNamesFilename, symbols, Encoding.UTF8);
-                                // Open the addresses file to read from.
-                                string[] addresses = File.ReadAllLines(addressTableFilename, Encoding.UTF8);
-                                // Combine symbol names and addresses
-                                List<string> addressesAndSymbols = new List<string>();
-                                addressesAndSymbols.Add(addresses[0]);
-                                for (int i = 0; i < symbols.Length; i++)
-                                {
-                                    if (i < addresses.Length)
-                                        addressesAndSymbols.Add(addresses[i + 1]);
-                                    addressesAndSymbols.Add(symbols[i]);
-                                }
-                                File.WriteAllLines(combinedTableFilename, addressesAndSymbols.ToArray(), Encoding.UTF8);
-                            }
-                            else
-                            {
-                                LogHelper.Log("!!! Could not find table.tmp file :-(");
-                            }
-                        }
-                        else
-                        {
-                            LogHelper.Log("!!! Could not find COMPR file :-(");
-                        }
-                        if (File.Exists(combinedTableFilename))
-                        {
-                            SetProgress("Finalizing list... ");
-                            SetProgressPercentage(85);
-                            System.Windows.Forms.Application.DoEvents();
-                            AddNamesToSymbolsFromTableTmp(symbol_collection);
-                        }
+                        
+                        string[] allSymbolNames;
+                        // Decompress the symbol table
+                        TrionicSymbolDecompressor.ExpandComprStream(compressedSymbolTable, out allSymbolNames);
+                        SetProgress("Adding names to symbols");
+                        SetProgressPercentage(45);
+                        AddNamesToSymbols(symbol_collection, allSymbolNames);
+                        SetProgress("Cleaning up");
+                        SetProgressPercentage(50);
                     }
                 }
                 else
@@ -1254,131 +1041,41 @@ namespace T8SuitePro
             return retval;
         }
 
-        private void DumpToSymbolFile(string p)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="symbol_collection"></param>
+        /// <param name="allSymbolNames"></param>
+        private static void AddNamesToSymbols(SymbolCollection symbol_collection, string[] allSymbolNames)
         {
-            using (StreamWriter sw = new StreamWriter(@"C:\Documents and Settings\Guido.MOBICOACH\My Documents\Prive\SAAB\Trionic 8\Dev\SymbolAddressIssue\Addresses.txt", true))
+            for (int i = 0; i < allSymbolNames.Length-1; i++)
             {
-                sw.WriteLine(p);
-            }
-        } 
-
-        private void DumpBytesToConsole(byte[] bytes)
-        {
-            string line = "symbol bytes: ";
-            foreach (byte b in bytes)
-            {
-                line += b.ToString("X2") + " ";
-            }
-            LogHelper.Log(line);
-        }
-        private void DumpSymbolAddressTable(SymbolCollection symbol_collection)
-        {
-            // export to table.tmp
-            //4538 EB0C8P1C.56O F5DB0074
-            //05909C 68F5 04 
-
-            using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\table.tmp", false))
-            {
-
-                sw.WriteLine(symbol_collection.Count.ToString() + " " + "VAGFHGFSD" + " 00000000");
-                sw.WriteLine("");
-                sw.WriteLine("");
-                foreach (SymbolHelper sh in symbol_collection)
-                {
-                    if (sh.Length < 0x1000)
-                    {
-                        sw.WriteLine(sh.Flash_start_address.ToString("X6") + " " + sh.Length.ToString("X4") + " " + sh.Symbol_type.ToString("X2"));
-                    }
-                }
-            }
-        }
-        private void AddNamesToSymbolsFromTableTmp(SymbolCollection symbol_collection)
-        {
-            SymbolTranslator translator = new SymbolTranslator();
-            SetProgress("Loading...");
-            string symbolNamesFilename = System.Windows.Forms.Application.StartupPath + @".\COMPR.TXT";
-            string combinedTableFilename = System.Windows.Forms.Application.StartupPath + @".\XTABLE.TMP";
-
-            string[] xtablelines = File.ReadAllLines(combinedTableFilename);
-            string line = string.Empty;
-            int flashaddress = 0;
-            int length = 0;
-            char[] sep = new char[1];
-            sep.SetValue(' ', 0);
-
-            string addresses = string.Empty;
-            string symbol = string.Empty;
-            for (int i = 4; i < xtablelines.Length; i++)
-            {
-                line = xtablelines[i];
                 try
                 {
-                    if (line.Length > 2)
+                    SymbolHelper sh = symbol_collection[(i)];
+                    sh.Varname = allSymbolNames[i+1].Trim(); // Skip first in array since its "SymbolNames"
+                    LogHelper.Log(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
+                    SymbolTranslator translator = new SymbolTranslator();
+                    string help = string.Empty;
+                    XDFCategories category = XDFCategories.Undocumented;
+                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
+                    sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat);
+                    if (sh.Varname.Contains("."))
                     {
-                        if (!line.Contains(" "))
+                        try
                         {
-                            // dan is het een symbool
-                            symbol = line.Trim();
+                            sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
                         }
-                        else
+                        catch (Exception cE)
                         {
-                            addresses = line;
-                            string[] addvalues = addresses.Split(sep);
-                            if (addvalues.Length >= 3)
-                            {
-                                flashaddress = Convert.ToInt32((string)addvalues.GetValue(0), 16);
-                                length = Convert.ToInt32((string)addvalues.GetValue(1), 16);
-                                foreach (SymbolHelper sh in symbol_collection)
-                                {
-                                    if (sh.Flash_start_address == flashaddress)
-                                    {
-                                        sh.Varname = symbol;
-                                        sh.Length = length;
-                                        break;
-                                    }
-                                }
-                            }
+                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                         }
                     }
                 }
                 catch (Exception E)
                 {
                     LogHelper.Log("Failed to add symbolnames: " + E.Message);
-                    LogHelper.Log("Failed to add symbolnames line: " + line);
                 }
-            }
-            SetProgress("Combining...");
-
-            string[] comprlines = File.ReadAllLines(symbolNamesFilename);
-            line = string.Empty;
-            flashaddress = 0;
-            length = 0;
-
-            addresses = string.Empty;
-            symbol = string.Empty;
-            int idx = 0;
-
-            for (int i = 1; i < comprlines.Length; i++)
-            {
-                line = comprlines[i];
-                try
-                {
-                    symbol_collection[idx++].Varname = line;
-                }
-                catch (Exception E)
-                {
-                    LogHelper.Log("Failed to add symbolnames: " + E.Message + " line (2): " + line);
-                }
-            }
-            SetProgress("Translating...");
-
-            string help = string.Empty;
-            XDFCategories category = XDFCategories.Undocumented;
-            XDFSubCategory subcat = XDFSubCategory.Undocumented;
-            foreach (SymbolHelper sh in symbol_collection)
-            {
-                sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat);
-                sh.createAndUpdateCategory(sh.Varname);
             }
         }
 
@@ -1868,8 +1565,9 @@ namespace T8SuitePro
             return retval;
         }
 
-        public bool UnpackFileUsingDecode(string filename, out int symboltableoffset)
+        private bool extractCompressedSymbolTable(string filename, out int symboltableoffset, out byte[] bytes)
         {
+            bytes = null;
             Int64 UnpackedLength = 0;
             symboltableoffset = 0;
             int len = 0;
@@ -1929,17 +1627,9 @@ namespace T8SuitePro
                         LogHelper.Log("UnpackedLength: " + UnpackedLength.ToString("X8"));
                         fsread.Seek(val, SeekOrigin.Begin);
 
-                        FileStream fswrite = new FileStream(System.Windows.Forms.Application.StartupPath + "\\COMPR", FileMode.Create);
-                        using (BinaryWriter bw = new BinaryWriter(fswrite))
-                        {
-                            for (int bc = 0; bc < /*bytesread-10*/ symbtablength; bc++)
-                            {
-                                bw.Write(br.ReadByte());
-                            }
-                        }
-                        fswrite.Close();
-                        fswrite.Dispose();
-
+                        // fill the byte array with the compressed symbol table
+                        fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+                        bytes = br.ReadBytes(symbtablength);
                     }
                     fsread.Close();
                     fsread.Dispose();
@@ -11678,7 +11368,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (gridRealtime.DataSource != null)
                 {
                     System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
-                    //dt.WriteXml(System.Windows.Forms.Application.StartupPath + "\\RealtimeTable.xml", XmlWriteMode.WriteSchema);
                     // save the user defined symbols
                     //<GS-24062010>
                     using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\rtsymbols.txt"))
@@ -11706,7 +11395,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (gridRealtime.DataSource != null)
                 {
                     System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
-                    //dt.WriteXml(System.Windows.Forms.Application.StartupPath + "\\RealtimeTable.xml", XmlWriteMode.WriteSchema);
                     // save the user defined symbols
                     //<GS-24062010>
                     using (StreamWriter sw = new StreamWriter(filename))
