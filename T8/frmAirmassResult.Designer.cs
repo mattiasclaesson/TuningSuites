@@ -56,7 +56,7 @@ namespace T8SuitePro
             this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
             this.checkEdit5 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
-            this.checkEdit4 = new DevExpress.XtraEditors.CheckEdit();
+            this.cbOverboost = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
@@ -74,8 +74,8 @@ namespace T8SuitePro
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
+            this.cbRunningE85 = new DevExpress.XtraEditors.CheckEdit();
+            this.cbHasAutomaticGearbox = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
@@ -106,12 +106,12 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit7.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbOverboost.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbRunningE85.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbHasAutomaticGearbox.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -280,7 +280,7 @@ namespace T8SuitePro
             this.groupControl2.Controls.Add(this.labelControl15);
             this.groupControl2.Controls.Add(this.checkEdit5);
             this.groupControl2.Controls.Add(this.labelControl16);
-            this.groupControl2.Controls.Add(this.checkEdit4);
+            this.groupControl2.Controls.Add(this.cbOverboost);
             this.groupControl2.Controls.Add(this.labelControl13);
             this.groupControl2.Controls.Add(this.labelControl14);
             this.groupControl2.Controls.Add(this.labelControl11);
@@ -298,8 +298,8 @@ namespace T8SuitePro
             this.groupControl2.Controls.Add(this.labelControl1);
             this.groupControl2.Controls.Add(this.comboBoxEdit2);
             this.groupControl2.Controls.Add(this.comboBoxEdit1);
-            this.groupControl2.Controls.Add(this.checkEdit2);
-            this.groupControl2.Controls.Add(this.checkEdit1);
+            this.groupControl2.Controls.Add(this.cbRunningE85);
+            this.groupControl2.Controls.Add(this.cbHasAutomaticGearbox);
             this.groupControl2.Location = new System.Drawing.Point(12, 430);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(803, 156);
@@ -358,12 +358,12 @@ namespace T8SuitePro
             // 
             // checkEdit4
             // 
-            this.checkEdit4.Location = new System.Drawing.Point(14, 95);
-            this.checkEdit4.Name = "checkEdit4";
-            this.checkEdit4.Properties.Caption = "View in overboost";
-            this.checkEdit4.Size = new System.Drawing.Size(150, 19);
-            this.checkEdit4.TabIndex = 20;
-            this.checkEdit4.CheckedChanged += new System.EventHandler(this.checkEdit4_CheckedChanged);
+            this.cbOverboost.Location = new System.Drawing.Point(14, 95);
+            this.cbOverboost.Name = "checkEdit4";
+            this.cbOverboost.Properties.Caption = "View in overboost";
+            this.cbOverboost.Size = new System.Drawing.Size(150, 19);
+            this.cbOverboost.TabIndex = 20;
+            this.cbOverboost.CheckedChanged += new System.EventHandler(this.checkEdit4_CheckedChanged);
             // 
             // labelControl13
             // 
@@ -588,23 +588,23 @@ namespace T8SuitePro
             this.comboBoxEdit1.TabIndex = 3;
             this.comboBoxEdit1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);
             // 
-            // checkEdit2
+            // cbRunningE85
             // 
-            this.checkEdit2.Location = new System.Drawing.Point(14, 69);
-            this.checkEdit2.Name = "checkEdit2";
-            this.checkEdit2.Properties.Caption = "Car runs E85";
-            this.checkEdit2.Size = new System.Drawing.Size(150, 19);
-            this.checkEdit2.TabIndex = 1;
-            this.checkEdit2.CheckedChanged += new System.EventHandler(this.checkEdit2_CheckedChanged);
+            this.cbRunningE85.Location = new System.Drawing.Point(14, 69);
+            this.cbRunningE85.Name = "checkEdit2";
+            this.cbRunningE85.Properties.Caption = "Car runs E85";
+            this.cbRunningE85.Size = new System.Drawing.Size(150, 19);
+            this.cbRunningE85.TabIndex = 1;
+            this.cbRunningE85.CheckedChanged += new System.EventHandler(this.checkEdit2_CheckedChanged);
             // 
-            // checkEdit1
+            // cbHasAutomaticGearbox
             // 
-            this.checkEdit1.Location = new System.Drawing.Point(14, 43);
-            this.checkEdit1.Name = "checkEdit1";
-            this.checkEdit1.Properties.Caption = "Car has automatic gearbox";
-            this.checkEdit1.Size = new System.Drawing.Size(177, 19);
-            this.checkEdit1.TabIndex = 0;
-            this.checkEdit1.CheckedChanged += new System.EventHandler(this.checkEdit1_CheckedChanged);
+            this.cbHasAutomaticGearbox.Location = new System.Drawing.Point(14, 43);
+            this.cbHasAutomaticGearbox.Name = "checkEdit1";
+            this.cbHasAutomaticGearbox.Properties.Caption = "Car has automatic gearbox";
+            this.cbHasAutomaticGearbox.Size = new System.Drawing.Size(177, 19);
+            this.cbHasAutomaticGearbox.TabIndex = 0;
+            this.cbHasAutomaticGearbox.CheckedChanged += new System.EventHandler(this.checkEdit1_CheckedChanged);
             // 
             // simpleButton1
             // 
@@ -668,12 +668,12 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit7.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbOverboost.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbRunningE85.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbHasAutomaticGearbox.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -686,8 +686,8 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.GroupControl groupControl2;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
-        private DevExpress.XtraEditors.CheckEdit checkEdit2;
-        private DevExpress.XtraEditors.CheckEdit checkEdit1;
+        private DevExpress.XtraEditors.CheckEdit cbRunningE85;
+        private DevExpress.XtraEditors.CheckEdit cbHasAutomaticGearbox;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit1;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit2;
         private DevExpress.XtraEditors.LabelControl labelControl3;
@@ -705,7 +705,7 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.LabelControl labelControl12;
         private DevExpress.XtraEditors.LabelControl labelControl13;
         private DevExpress.XtraEditors.LabelControl labelControl14;
-        private DevExpress.XtraEditors.CheckEdit checkEdit4;
+        private DevExpress.XtraEditors.CheckEdit cbOverboost;
         private DevExpress.XtraEditors.LabelControl labelControl15;
         private DevExpress.XtraEditors.LabelControl labelControl16;
         private DevExpress.XtraTab.XtraTabControl xtraTabControl1;

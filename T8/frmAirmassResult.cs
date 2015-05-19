@@ -194,20 +194,20 @@ namespace T8SuitePro
             {
                 if (IsBinaryBiopower())
                 {
-                    checkEdit2.Enabled = true;
+                    cbRunningE85.Enabled = true;
                 }
                 else
                 {
-                    checkEdit2.Checked = false;
-                    checkEdit2.Enabled = false;
+                    cbRunningE85.Checked = false;
+                    cbRunningE85.Enabled = false;
                 }
                 if (IsOverboostEnabled())
                 {
-                    checkEdit4.Enabled = true;
+                    cbOverboost.Enabled = true;
                 }
                 else
                 {
-                    checkEdit4.Enabled = false;
+                    cbOverboost.Enabled = false;
                 }
                 int[] pedalrequestmap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "PedalMapCal.Trq_RequestMap"), GetSymbolLength(m_symbols, "PedalMapCal.Trq_RequestMap"));
                 limitermap = new int[pedalrequestmap.Length];
@@ -246,7 +246,7 @@ namespace T8SuitePro
                 {
                     int[] injConstant = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(m_symbols, "InjCorrCal.InjectorConst"));
                     m_injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
-                    if (checkEdit2.Checked)
+                    if (cbRunningE85.Checked)
                     {
                         fuelVEMap = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "FFFuelCal.TempEnrichFacMAP"), GetSymbolLength(m_symbols, "FFFuelCal.TempEnrichFacMAP"));
                     }
@@ -287,7 +287,7 @@ namespace T8SuitePro
                         int airmassrequestforcell = TorqueToAirmass(requestedtorque, rpm, false);
                         
                         limitType limiterType = limitType.None;
-                        int resultingAirMass = CalculateMaxAirmassforcell(/*pedalpos*/((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, checkEdit1.Checked, checkEdit2.Checked, checkEdit4.Checked, out limiterType);
+                        int resultingAirMass = CalculateMaxAirmassforcell(/*pedalpos*/((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, cbHasAutomaticGearbox.Checked, cbRunningE85.Checked, cbOverboost.Checked, out limiterType);
                         if (peakAirmass < resultingAirMass) peakAirmass = resultingAirMass;
                         resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
                         limitermap.SetValue(limiterType, (colcount * rows) + rowcount);
@@ -425,7 +425,7 @@ namespace T8SuitePro
             }
 
             // Trq_ManGear = only manual gearbox
-            if (!checkEdit1.Checked)
+            if (!cbHasAutomaticGearbox.Checked)
             {
                 // Gear values have the same meaning as in ECMStat.ManualGear
                 // Actual gear (manual gearbox).
@@ -771,7 +771,7 @@ namespace T8SuitePro
                             int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
                             float dtarget = (float)targetLambda;
                             dtarget /= 100;
-                            if (checkEdit2.Checked)
+                            if (cbRunningE85.Checked)
                             {
                                 // E85
                                 dtarget *= 9.76F;
@@ -814,7 +814,7 @@ namespace T8SuitePro
         private int AirmassToTorque(int airmass, int rpm)
         {
             double tq = Convert.ToDouble(airmass) / 3.1;
-            if (checkEdit2.Checked)
+            if (cbRunningE85.Checked)
             {
                 tq *= 1.07;
             }
@@ -916,7 +916,7 @@ namespace T8SuitePro
         {
             // start airmass limiter viewer
             // if automatic
-            if (checkEdit1.Checked && SymbolExists("BstKnkCal.MaxAirmassAu"))
+            if (cbHasAutomaticGearbox.Checked && SymbolExists("BstKnkCal.MaxAirmassAu"))
             {
                 CastStartViewerEvent("BstKnkCal.MaxAirmassAu");
             }
@@ -936,7 +936,7 @@ namespace T8SuitePro
         private void labelControl3_DoubleClick(object sender, EventArgs e)
         {
             // start engine torque limiter
-            if (checkEdit1.Checked)
+            if (cbHasAutomaticGearbox.Checked)
             {
                 CastStartViewerEvent("TrqLimCal.Trq_MaxEngineAutTab1");
                 CastStartViewerEvent("TrqLimCal.Trq_MaxEngineAutTab2");
@@ -1081,7 +1081,7 @@ namespace T8SuitePro
                 int[] xaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.m_AirXSP"), GetSymbolLength(m_symbols, "TrqMastCal.m_AirXSP"));
                 int[] yaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TrqMastCal.n_EngineYSP"), GetSymbolLength(m_symbols, "TrqMastCal.n_EngineYSP"));
                 tq = GetInterpolatedTableValue(nominaltorque, xaxis, yaxis, rpm, airmass);
-                if (checkEdit2.Checked)
+                if (cbRunningE85.Checked)
                 {
                     tq *= 1.07;
                 }
@@ -1089,7 +1089,7 @@ namespace T8SuitePro
             }
             else
             {
-                if (checkEdit2.Checked)
+                if (cbRunningE85.Checked)
                 {
                     tq *= 1.07;
                 }
@@ -1147,7 +1147,7 @@ namespace T8SuitePro
             }
             else
             {
-                if (checkEdit2.Checked)
+                if (cbRunningE85.Checked)
                 {
                     tq *= 1.07;
                 }
@@ -1316,7 +1316,7 @@ namespace T8SuitePro
             {
                 checkEdit12.Checked = false;
             }
-            if (retval > 50 && checkEdit2.Checked) retval -= 50; // correction for E85 fuel, 50 degrees off!
+            if (retval > 50 && cbRunningE85.Checked) retval -= 50; // correction for E85 fuel, 50 degrees off!
             return retval;
         }
 
@@ -1355,7 +1355,7 @@ namespace T8SuitePro
                 airmassperminute /= 1000; // from mg/c to g/c
 
                 float m_requiredFuelForLambda = airmassperminute / 14.7F;
-                if (checkEdit2.Checked)
+                if (cbRunningE85.Checked)
                 {
                     // running E85, different target lambda
                     m_requiredFuelForLambda = airmassperminute / 9.76F;
