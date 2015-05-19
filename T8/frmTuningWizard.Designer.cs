@@ -228,7 +228,7 @@
             this.checkIUnderstand.Name = "checkIUnderstand";
             this.checkIUnderstand.Properties.Appearance.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.checkIUnderstand.Properties.Appearance.Options.UseForeColor = true;
-            this.checkIUnderstand.Properties.Caption = "I fully understand the consequeses.";
+            this.checkIUnderstand.Properties.Caption = "I fully understand the consequenses.";
             this.checkIUnderstand.Size = new System.Drawing.Size(202, 19);
             this.checkIUnderstand.TabIndex = 1;
             this.checkIUnderstand.CheckedChanged += new System.EventHandler(this.checkIUnderstand_CheckedChanged);
