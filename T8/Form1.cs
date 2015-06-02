@@ -656,7 +656,7 @@ namespace T8SuitePro
                         TryToExtractPackedBinary(filename, sym_count, filename_size, out symbol_collection);
                     }
                     // try to load additional symboltranslations that the user entered
-                    symbolsLoaded = TryToLoadAdditionalSymbols(filename, true, symbol_collection);
+                    symbolsLoaded = TryToLoadAdditionalBinSymbols(filename, symbol_collection);
 
                 }
             }
@@ -6506,9 +6506,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 File.Copy(m_currentfile, sfd.FileName, true);
                 if (MessageBox.Show("Do you want to open the newly saved file?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    m_currentfile = sfd.FileName;//Application.StartupPath + "\\55559437  81f.bin";
+                    m_currentfile = sfd.FileName;
                     CloseProject();
-                    m_currentfile = sfd.FileName;//Application.StartupPath + "\\55559437  81f.bin";
+                    m_currentfile = sfd.FileName;
                     TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
 
 
@@ -8345,92 +8345,16 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             return retval;
         }
 
-        private bool TryToLoadAdditionalSymbols(string filename, bool ImportFromRepository, SymbolCollection coll2load)
+        private void ImportSymbols(System.Data.DataTable dt, SymbolCollection coll2load)
         {
-            bool retval = false;
             SymbolTranslator st = new SymbolTranslator();
-            System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(filename));
-            dt.Columns.Add("SYMBOLNAME");
-            dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-            dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-            dt.Columns.Add("DESCRIPTION");
-
-            if (ImportFromRepository)
-            {
-                T8Header fh = new T8Header();
-                fh.init(filename);
-                string checkstring = fh.PartNumber + fh.SoftwareVersion.Trim();
-                string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
-                if (!Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
-                {
-                    Directory.CreateDirectory(System.Windows.Forms.Application.StartupPath + "\\repository");
-                }
-
-                if (File.Exists(xmlfilename))
-                {
-                    dt.ReadXml(xmlfilename);
-                    retval = true;
-                }
-
-                string[,] SymbolFiles = new string[,] {{"FD0M", "{0}\\FD0M_C.xml"},
-                                                   {"FD0I", "{0}\\FD0I_C.xml"},
-                                                   {"FC0N", "{0}\\FC0N_C.xml"},
-                                                   {"FC0U", "{0}\\FC0U_C.xml"},
-                                                   {"FD0F", "{0}\\FD0F_C.xml"},
-                                                   {"FF0L", "{0}\\FF0L_C.xml"},
-                                                   {"FE09", "{0}\\FE09_C.xml"},
-                                                   {"FD0G", "{0}\\FD0G_C.xml"}};
-                SetProgress("Reading symboltable... ");
-                if (dt.Rows.Count == 0)
-                {
-                    fh.init(filename);
-                    for (int i = 0; i < SymbolFiles.GetLength(0); i++)
-                    {
-                        if (fh.SoftwareVersion.Trim().StartsWith(SymbolFiles[i, 0].ToString(), StringComparison.OrdinalIgnoreCase))
-                        {
-                            string BioPowerXmlFile = String.Format(SymbolFiles[i, 1], System.Windows.Forms.Application.StartupPath);
-                            if (File.Exists(BioPowerXmlFile))
-                            {
-                                string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
-                                if (binname != string.Empty)
-                                {
-                                    dt = new System.Data.DataTable(binname);
-                                    dt.Columns.Add("SYMBOLNAME");
-                                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                                    dt.Columns.Add("DESCRIPTION");
-                                    dt.ReadXml(BioPowerXmlFile);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                string binname = GetFileDescriptionFromFile(filename);
-                if (binname != string.Empty)
-                {
-                    dt = new System.Data.DataTable(binname);
-                    dt.Columns.Add("SYMBOLNAME");
-                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DESCRIPTION");
-                    if (File.Exists(filename))
-                    {
-                        dt.ReadXml(filename);
-                        retval = true;
-                    }
-                }
-            }
-
             SetProgress("Importing symbols... ");
             int numSym = coll2load.Count;
-            int cnt=0;
+            int cnt = 0;
             foreach (SymbolHelper sh in coll2load)
             {
                 cnt = cnt + 1;
-                SetProgressPercentage((int)(((float)cnt / (float)numSym)*100));
+                SetProgressPercentage((int)(((float)cnt / (float)numSym) * 100));
                 foreach (DataRow dr in dt.Rows)
                 {
                     try
@@ -8469,7 +8393,54 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
             }
             SetProgress("Completed");
-            return retval;
+        }
+
+        private bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection coll2load)
+        {
+            if (File.Exists(filename))
+            {
+                string binname = GetFileDescriptionFromFile(filename);
+                if (binname != string.Empty)
+                {
+                    System.Data.DataTable dt = new System.Data.DataTable(binname);
+                    dt.Columns.Add("SYMBOLNAME");
+                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                    dt.Columns.Add("DESCRIPTION");
+                    dt.ReadXml(filename);
+                    ImportSymbols(dt, coll2load);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool TryToLoadAdditionalBinSymbols(string filename, SymbolCollection coll2load)
+        {
+            // Look for a complete xml file first
+            string[,] SymbolFiles = new string[,] {{"FD0M", "{0}\\FD0M_C.xml"},
+                                            {"FD0I", "{0}\\FD0I_C.xml"},
+                                            {"FC0N", "{0}\\FC0N_C.xml"},
+                                            {"FC0U", "{0}\\FC0U_C.xml"},
+                                            {"FD0F", "{0}\\FD0F_C.xml"},
+                                            {"FF0L", "{0}\\FF0L_C.xml"},
+                                            {"FE09", "{0}\\FE09_C.xml"},
+                                            {"FD0G", "{0}\\FD0G_C.xml"}};
+            SetProgress("Reading symboltable... ");
+            T8Header fh = new T8Header();
+            fh.init(filename);
+            for (int i = 0; i < SymbolFiles.GetLength(0); i++)
+            {
+                if (fh.SoftwareVersion.Trim().StartsWith(SymbolFiles[i, 0].ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    string completeXmlFile = String.Format(SymbolFiles[i, 1], System.Windows.Forms.Application.StartupPath);
+                    return TryToLoadAdditionalXMLSymbols(completeXmlFile, coll2load);
+                }
+            }
+
+            // Secondly load the .xml file with same path and filename as the .bin file. 
+            string xmlfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".xml");
+            return TryToLoadAdditionalXMLSymbols(xmlfile, coll2load);
         }
 
         private bool SymbolExists(string symbolname)
@@ -8703,21 +8674,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
             dt.Columns.Add("DESCRIPTION");
 
-            T8Header fh = new T8Header();
-            fh.init(m_currentfile);
-            string checkstring = fh.PartNumber + fh.SoftwareVersion.Trim();
-            string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
-            if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
+            string xmlfilename = Path.Combine(Path.GetDirectoryName(m_currentfile), Path.GetFileNameWithoutExtension(m_currentfile) + ".xml");
+            if (File.Exists(xmlfilename))
             {
-                if (File.Exists(xmlfilename))
-                {
-                    File.Delete(xmlfilename);
-                }
+                File.Delete(xmlfilename);
             }
-            else
-            {
-                Directory.CreateDirectory(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath));
-            }
+
             foreach (SymbolHelper sh in m_symbols)
             {
                 if (sh.Userdescription != "")
@@ -15060,7 +15022,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                TryToLoadAdditionalSymbols(ofd.FileName, false, m_symbols);
+                TryToLoadAdditionalXMLSymbols(ofd.FileName, m_symbols);
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
