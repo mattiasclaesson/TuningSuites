@@ -899,7 +899,9 @@
     <Content Include="FD0M_C.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FE09_C.xml" />
+    <Content Include="FE09_C.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="FF0L_C.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
