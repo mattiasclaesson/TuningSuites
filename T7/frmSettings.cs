@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using CommonSuite;
 using TrionicCANLib;
+using System.IO.Ports;
 
 namespace T7
 {
@@ -11,6 +12,15 @@ namespace T7
         public frmSettings()
         {
             InitializeComponent();
+            string[] portNames = SerialPort.GetPortNames();
+            foreach (string port in portNames)
+            {
+                if (port.StartsWith("COM"))
+                {
+                    cbWidebandComPort.Properties.Items.Add(port);
+                }
+            }
+            cbWidebandComPort.SelectedIndex = 0;
         }
 
         private void groupControl1_Paint(object sender, PaintEventArgs e)
@@ -446,11 +456,11 @@ namespace T7
         {
             get
             {
-                return checkEdit26.Checked;
+                return ceWidebandTrionic.Checked;
             }
             set
             {
-                checkEdit26.Checked = value;
+                ceWidebandTrionic.Checked = value;
             }
         }
 
@@ -470,11 +480,11 @@ namespace T7
         {
             get
             {
-                return cbDisableConnectionCheck.Checked;
+                return ceDisableConnectionCheck.Checked;
             }
             set
             {
-                cbDisableConnectionCheck.Checked = value;
+                ceDisableConnectionCheck.Checked = value;
             }
         }
 
@@ -626,13 +636,13 @@ namespace T7
 
         private void checkEdit26_CheckedChanged(object sender, EventArgs e)
         {
-            comboBoxEdit5.Enabled = checkEdit26.Checked;
-        }
+            comboBoxEdit5.Enabled = ceWidebandTrionic.Checked;
+            btnWidebandConfiguration.Enabled = ceWidebandTrionic.Checked;
 
-        private void comboBoxEdit5_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxEdit5.SelectedIndex == 0) simpleButton3.Enabled = true;
-            else simpleButton3.Enabled = false;
+            if (ceWidebandTrionic.Checked)
+            {
+                ceWidebandComPort.Checked = false;
+            }
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
@@ -655,8 +665,8 @@ namespace T7
 
         private void frmSettings_Shown(object sender, EventArgs e)
         {
-            if (comboBoxEdit5.SelectedIndex == 0) simpleButton3.Enabled = true;
-            else simpleButton3.Enabled = false;
+            if (comboBoxEdit5.SelectedIndex == 0) btnWidebandConfiguration.Enabled = true;
+            else btnWidebandConfiguration.Enabled = false;
 
         }
 
@@ -938,6 +948,52 @@ namespace T7
                 m_autoLogStopSign = (int)autologsettings.TriggerStopSign;
             }
             DialogResult = DialogResult.None;
+        }
+
+        private void checkEdit33_CheckedChanged(object sender, EventArgs e)
+        {
+            cbWidebandDevice.Enabled = ceWidebandComPort.Checked;
+            cbWidebandComPort.Enabled = ceWidebandComPort.Checked;
+            if (ceWidebandComPort.Checked)
+            {
+                ceWidebandTrionic.Checked = false;
+            }
+        }
+
+        public bool UseDigitalWidebandLambda
+        {
+            get
+            {
+                return ceWidebandComPort.Checked;
+            }
+            set
+            {
+                ceWidebandComPort.Checked = value;
+            }
+        }
+
+        public string WidebandComPort
+        {
+            get
+            {
+                return cbWidebandComPort.SelectedItem != null ? cbWidebandComPort.SelectedItem.ToString() : String.Empty; 
+            }
+            set
+            {
+                cbWidebandComPort.SelectedItem = value;
+            }
+        }
+
+        public string WidebandDevice
+        {
+            get
+            {
+                return cbWidebandDevice.SelectedItem.ToString();
+            }
+            set
+            {
+                cbWidebandDevice.SelectedItem = value;
+            }
         }
     }
 }

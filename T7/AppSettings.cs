@@ -43,6 +43,18 @@ namespace T7
             }
         }
 
+        private string _WbPort = "";
+
+        public string WbPort
+        {
+            get { return _WbPort; }
+            set
+            {
+                _WbPort = value;
+                SaveRegistrySetting("WbPort", _WbPort);
+            }
+        }
+
         private string _LastXAxisFromMatrix = string.Empty;
 
         public string LastXAxisFromMatrix
@@ -1083,6 +1095,18 @@ namespace T7
             }
         }
 
+        private bool m_UseDigitalWidebandLambda = false;
+
+        public bool UseDigitalWidebandLambda
+        {
+            get { return m_UseDigitalWidebandLambda; }
+            set
+            {
+                m_UseDigitalWidebandLambda = value;
+                SaveRegistrySetting("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
+            }
+        }
+
         private bool m_ResetRealtimeSymbolOnTabPageSwitch = true;
 
         public bool ResetRealtimeSymbolOnTabPageSwitch
@@ -1612,7 +1636,17 @@ namespace T7
             get { return m_adminmode; }
         }
 
+        private string m_WidebandDevice = "";
 
+        public string WidebandDevice
+        {
+            get { return m_WidebandDevice; }
+            set
+            {
+                m_WidebandDevice = value;
+                SaveRegistrySetting("WidebandDevice", m_WidebandDevice);
+            }
+        }
 
         private void SaveRegistrySetting(string key, string value)
         {
@@ -1784,6 +1818,7 @@ namespace T7
                 saveSettings.SetValue("UseAdditionalCanbusFrames", m_UseAdditionalCanbusFrames);
                 saveSettings.SetValue("ResetRealtimeSymbolOnTabPageSwitch", m_ResetRealtimeSymbolOnTabPageSwitch);
                 saveSettings.SetValue("UseWidebandLambda", m_UseWidebandLambda);
+                saveSettings.SetValue("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
                 saveSettings.SetValue("WideBandSymbol", m_WideBandSymbol);
                 saveSettings.SetValue("AutoCreateAFRMaps", m_AutoCreateAFRMaps);
                 saveSettings.SetValue("UseNewMapViewer", m_UseNewMapViewer);
@@ -1797,6 +1832,8 @@ namespace T7
                 string fontString = tc.ConvertToString(m_RealtimeFont);
                 SaveRegistrySetting("RealtimeFont", fontString);
 
+                saveSettings.SetValue("WbPort", _WbPort);
+                saveSettings.SetValue("WidebandDevice", m_WidebandDevice);
             }
         }
 
@@ -2224,6 +2261,10 @@ namespace T7
                             {
                                 m_UseWidebandLambda = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
+                            else if (a == "UseDigitalWidebandLambda")
+                            {
+                                m_UseDigitalWidebandLambda = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
                             else if (a == "WideBandSymbol")
                             {
                                 m_WideBandSymbol = Settings.GetValue(a).ToString();
@@ -2371,6 +2412,14 @@ namespace T7
                             else if (a == "LastZAxisFromMatrix")
                             {
                                 _LastZAxisFromMatrix = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "WbPort")
+                            {
+                                _WbPort = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "WidebandDevice")
+                            {
+                                m_WidebandDevice = Settings.GetValue(a).ToString();
                             }
                         }
                         catch (Exception E)

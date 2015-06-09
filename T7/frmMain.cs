@@ -102,6 +102,7 @@ using DevExpress.Skins;
 using PSTaskDialog;
 using CommonSuite;
 using TrionicCANLib;
+using WidebandSupport;
 
 namespace T7
 {
@@ -195,6 +196,9 @@ namespace T7
         public DelegateUpdateStatus m_DelegateUpdateStatus;
         public DelegateProgressStatus m_DelegateProgressStatus;
         public DelegateCanFrame m_DelegateCanFrame;
+
+        private WidebandFactory wbFactory = null;
+        private IWidebandReader wbReader = null;
 
         public frmMain(string[] args)
         {
@@ -965,6 +969,9 @@ namespace T7
             set.AutoLogStopValue = m_appSettings.AutoLogStopValue;
             set.AutoLogTriggerStartSymbol = m_appSettings.AutoLogTriggerStartSymbol;
             set.AutoLogTriggerStopSymbol = m_appSettings.AutoLogTriggerStopSymbol;
+            set.UseDigitalWidebandLambda = m_appSettings.UseDigitalWidebandLambda;
+            set.WidebandDevice = m_appSettings.WidebandDevice;
+            set.WidebandComPort = m_appSettings.WbPort;
 
             if (set.ShowDialog() == DialogResult.OK)
             {
@@ -1030,6 +1037,9 @@ namespace T7
                 m_appSettings.AutoLogStopValue = set.AutoLogStopValue;
                 m_appSettings.AutoLogTriggerStartSymbol = set.AutoLogTriggerStartSymbol;
                 m_appSettings.AutoLogTriggerStopSymbol = set.AutoLogTriggerStopSymbol;
+                m_appSettings.UseWidebandLambda = set.UseWidebandLambda;
+                m_appSettings.WidebandDevice = set.WidebandDevice;
+                m_appSettings.WbPort = set.WidebandComPort;
 
 
                 if (m_appSettings.MeasureAFRInLambda)
@@ -12107,6 +12117,16 @@ If boost regulation reports errors you can increase the difference between boost
                 tmrRealtime.Enabled = false;
                 m_enableRealtimeTimer = false;
                 trionic7.ResumeAlivePolling();
+
+                if (m_appSettings.UseDigitalWidebandLambda)
+                {
+                    if (wbReader != null)
+                    {
+                        wbReader.Stop();
+                    }
+                    wbFactory = null;
+                    wbReader = null;
+                }
             }
             else
             {
@@ -12151,6 +12171,13 @@ If boost regulation reports errors you can increase the difference between boost
                 {
                     dockRealtime.Dock = DockingStyle.Left;
                     dockRealtime.Width = width;
+                }
+
+                if(m_appSettings.UseDigitalWidebandLambda)
+                {
+                    wbFactory = new WidebandFactory(m_appSettings.WidebandDevice, m_appSettings.WbPort, false);
+                    wbReader = wbFactory.CreateInstance();
+                    wbReader.Start();
                 }
 
                 // set default skin
@@ -12488,6 +12515,7 @@ If boost regulation reports errors you can increase the difference between boost
                     Thread.Sleep(0);//<GS-11022010>
 
                 }
+
                 // <GS-29072010> if the combiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
                 if (m_appSettings.CANBusAdapterType == CANBusAdapter.COMBI)
@@ -12533,6 +12561,33 @@ If boost regulation reports errors you can increase the difference between boost
                         string channelName = m_appSettings.Thermochannelname;
                         AddToRealtimeTable(dt, channelName, "Thermo channel", 0, temperature, 0, 1, 0, 0, 1023, 0, 0, 0, 1);
                     }
+                }
+
+                // read lamdba from wideband on serial port
+                float lambda = (float)wbReader.LatestReading;
+                float afr = lambda * 14.7F;
+                //Console.WriteLine("{0:o},{1:F2}", DateTime.Now, lambda);
+                if (m_appSettings.UseDigitalWidebandLambda)
+                {
+                    digitalDisplayControl6.DigitText = lambda.ToString("F1");
+                    if (AfrViewMode == AFRViewType.AFRMode)
+                    {
+                        linearGauge2.Value = afr;
+                    }
+                    else
+                    {
+                        // lambda mode
+                        linearGauge2.Value = lambda;
+                    }
+                    if (m_appSettings.MeasureAFRInLambda)
+                    {
+                        LogWidebandAFR((float)lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                    }
+                    else
+                    {
+                        LogWidebandAFR((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                    }
+                    ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
               
                 //LogHelper.Log("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
@@ -13098,9 +13153,8 @@ dt.Columns.Add("SymbolName");
                     //_currentEngineStatus.CurrentAFR = value;
                     break;
                 case "Lambda.LambdaInt": // AFR through narrowband?
-                    if (!m_appSettings.UseWidebandLambda)
+                    if (!m_appSettings.UseWidebandLambda && !m_appSettings.UseDigitalWidebandLambda)
                     {
-                        float valText = value * 14.7F;
                         digitalDisplayControl6.DigitText = value.ToString("F1");
                         if (AfrViewMode == AFRViewType.AFRMode)
                         {

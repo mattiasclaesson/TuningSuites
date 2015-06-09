@@ -165,6 +165,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\TrionicCANLib.dll</HintPath>
     </Reference>
+    <Reference Include="WidebandSupport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\WidebandSupport.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AFRMap.cs" />
@@ -721,7 +725,6 @@
     <Compile Include="TransactionCollection.cs" />
     <Compile Include="TransactionEntry.cs" />
     <Compile Include="Trionic7File.cs" />
-    <Compile Include="TrionicDecompressor.cs" />
     <Compile Include="TrionicProjectLog.cs" />
     <Compile Include="TrionicSymbolDecompressor.cs" />
     <Compile Include="TrionicTransactionLog.cs" />
