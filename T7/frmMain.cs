@@ -12564,11 +12564,11 @@ If boost regulation reports errors you can increase the difference between boost
                 }
 
                 // read lamdba from wideband on serial port
-                float lambda = (float)wbReader.LatestReading;
-                float afr = lambda * 14.7F;
-                //Console.WriteLine("{0:o},{1:F2}", DateTime.Now, lambda);
                 if (m_appSettings.UseDigitalWidebandLambda)
                 {
+                    float lambda = (float)wbReader.LatestReading;
+                    float afr = lambda * 14.7F;
+                    //Console.WriteLine("{0:o},{1:F2}", DateTime.Now, lambda);
                     digitalDisplayControl6.DigitText = lambda.ToString("F1");
                     if (AfrViewMode == AFRViewType.AFRMode)
                     {
@@ -12582,10 +12582,12 @@ If boost regulation reports errors you can increase the difference between boost
                     if (m_appSettings.MeasureAFRInLambda)
                     {
                         LogWidebandAFR((float)lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, lambda, 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
                     }
                     else
                     {
                         LogWidebandAFR((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, afr, 0, 1, 0, 10, 20, 0, 0, 0, 1);
                     }
                     ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
@@ -15448,10 +15450,10 @@ dt.Columns.Add("SymbolName");
                     labelControl4.Enabled = false;
                 }
                 if (SymbolExists("BFuelProt.CurrentFuelCon")) AddToRealtimeTable(dt, "BFuelProt.CurrentFuelCon", "Fuel consumption", GetSymbolNumber(m_symbols, "BFuelProt.CurrentFuelCon"), 0, 0, 0.1, 0, 0, 50, GetSymbolNumber(m_symbols, "BFuelProt.CurrentFuelCon"), (uint)GetSymbolAddressSRAM(m_symbols, "BFuelProt.CurrentFuelCon"), GetSymbolLength(m_symbols, "BFuelProt.CurrentFuelCon"), 2);
+                
                 // only if use wideband selected
                 if (m_appSettings.UseWidebandLambda)
                 {
-
                     if (SymbolExists(m_appSettings.WideBandSymbol))
                     {
                         double corr = 0.1;
