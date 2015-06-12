@@ -1037,7 +1037,7 @@ namespace T7
                 m_appSettings.AutoLogStopValue = set.AutoLogStopValue;
                 m_appSettings.AutoLogTriggerStartSymbol = set.AutoLogTriggerStartSymbol;
                 m_appSettings.AutoLogTriggerStopSymbol = set.AutoLogTriggerStopSymbol;
-                m_appSettings.UseWidebandLambda = set.UseWidebandLambda;
+                m_appSettings.UseDigitalWidebandLambda = set.UseDigitalWidebandLambda;
                 m_appSettings.WidebandDevice = set.WidebandDevice;
                 m_appSettings.WbPort = set.WidebandComPort;
 
@@ -12563,20 +12563,18 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                 }
 
-                // read lamdba from wideband on serial port
+                // read afr from wideband on serial port
                 if (m_appSettings.UseDigitalWidebandLambda)
                 {
-                    float lambda = (float)wbReader.LatestReading;
-                    float afr = lambda * 14.7F;
-                    //Console.WriteLine("{0:o},{1:F2}", DateTime.Now, lambda);
-                    digitalDisplayControl6.DigitText = lambda.ToString("F1");
+                    float afr = (float)wbReader.LatestReading;
+                    float lambda = afr / 14.7F;
+                    digitalDisplayControl6.DigitText = afr.ToString("F1");
                     if (AfrViewMode == AFRViewType.AFRMode)
                     {
                         linearGauge2.Value = afr;
                     }
                     else
                     {
-                        // lambda mode
                         linearGauge2.Value = lambda;
                     }
                     if (m_appSettings.MeasureAFRInLambda)
