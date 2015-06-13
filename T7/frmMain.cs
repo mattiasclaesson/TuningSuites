@@ -12175,9 +12175,18 @@ If boost regulation reports errors you can increase the difference between boost
 
                 if(m_appSettings.UseDigitalWidebandLambda)
                 {
-                    wbFactory = new WidebandFactory(m_appSettings.WidebandDevice, m_appSettings.WbPort, false);
-                    wbReader = wbFactory.CreateInstance();
-                    wbReader.Start();
+                    try
+                    {
+                        wbFactory = new WidebandFactory(m_appSettings.WidebandDevice, m_appSettings.WbPort, false);
+                        wbReader = wbFactory.CreateInstance();
+                        wbReader.Start();
+                    }
+                    catch (Exception ex) 
+                    {
+                        wbFactory = null;
+                        wbReader = null;
+                        MessageBox.Show(ex.Message, "Wideband error", MessageBoxButtons.OK);
+                    }
                 }
 
                 // set default skin
@@ -12564,7 +12573,7 @@ If boost regulation reports errors you can increase the difference between boost
                 }
 
                 // read afr from wideband on serial port
-                if (m_appSettings.UseDigitalWidebandLambda)
+                if (m_appSettings.UseDigitalWidebandLambda && wbReader != null)
                 {
                     float afr = (float)wbReader.LatestReading;
                     float lambda = afr / 14.7F;
