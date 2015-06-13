@@ -124,6 +124,11 @@ namespace T7
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.groupControl3 = new DevExpress.XtraEditors.GroupControl();
+            this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
+            this.cbWidebandComPort = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
+            this.cbWidebandDevice = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.ceWidebandComPort = new DevExpress.XtraEditors.CheckEdit();
             this.ceDisableConnectionCheck = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit32 = new DevExpress.XtraEditors.CheckEdit();
             this.btnWidebandConfiguration = new DevExpress.XtraEditors.SimpleButton();
@@ -143,11 +148,6 @@ namespace T7
             this.checkEdit18 = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton4 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton5 = new DevExpress.XtraEditors.SimpleButton();
-            this.ceWidebandComPort = new DevExpress.XtraEditors.CheckEdit();
-            this.cbWidebandDevice = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
-            this.cbWidebandComPort = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit4.Properties)).BeginInit();
@@ -182,6 +182,9 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).BeginInit();
             this.groupControl3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceDisableConnectionCheck.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit32.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit5.Properties)).BeginInit();
@@ -194,9 +197,6 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -702,6 +702,60 @@ namespace T7
             this.groupControl3.TabIndex = 4;
             this.groupControl3.Text = "Realtime settings";
             // 
+            // labelControl7
+            // 
+            this.labelControl7.Location = new System.Drawing.Point(347, 169);
+            this.labelControl7.Name = "labelControl7";
+            this.labelControl7.Size = new System.Drawing.Size(93, 13);
+            this.labelControl7.TabIndex = 35;
+            this.labelControl7.Text = "Wideband com port";
+            // 
+            // cbWidebandComPort
+            // 
+            this.cbWidebandComPort.Enabled = false;
+            this.cbWidebandComPort.Location = new System.Drawing.Point(473, 166);
+            this.cbWidebandComPort.Name = "cbWidebandComPort";
+            this.cbWidebandComPort.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbWidebandComPort.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbWidebandComPort.Size = new System.Drawing.Size(216, 20);
+            this.cbWidebandComPort.TabIndex = 34;
+            // 
+            // labelControl6
+            // 
+            this.labelControl6.Location = new System.Drawing.Point(7, 169);
+            this.labelControl6.Name = "labelControl6";
+            this.labelControl6.Size = new System.Drawing.Size(82, 13);
+            this.labelControl6.TabIndex = 33;
+            this.labelControl6.Text = "Wideband device";
+            // 
+            // cbWidebandDevice
+            // 
+            this.cbWidebandDevice.EditValue = "LC1";
+            this.cbWidebandDevice.Enabled = false;
+            this.cbWidebandDevice.Location = new System.Drawing.Point(116, 166);
+            this.cbWidebandDevice.Name = "cbWidebandDevice";
+            this.cbWidebandDevice.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbWidebandDevice.Properties.Items.AddRange(new object[] {
+            "PLX",
+            "LM1",
+            "LC1",
+            "LM2",
+            "ZT2",
+            "AEM"});
+            this.cbWidebandDevice.Size = new System.Drawing.Size(203, 20);
+            this.cbWidebandDevice.TabIndex = 32;
+            // 
+            // ceWidebandComPort
+            // 
+            this.ceWidebandComPort.Location = new System.Drawing.Point(471, 109);
+            this.ceWidebandComPort.Name = "ceWidebandComPort";
+            this.ceWidebandComPort.Properties.Caption = "Use wideband O2 on com port";
+            this.ceWidebandComPort.Size = new System.Drawing.Size(174, 19);
+            this.ceWidebandComPort.TabIndex = 31;
+            this.ceWidebandComPort.CheckedChanged += new System.EventHandler(this.checkEdit33_CheckedChanged);
+            // 
             // ceDisableConnectionCheck
             // 
             this.ceDisableConnectionCheck.Location = new System.Drawing.Point(242, 109);
@@ -905,61 +959,6 @@ namespace T7
             this.simpleButton5.Text = "Autotune settings";
             this.simpleButton5.Click += new System.EventHandler(this.simpleButton5_Click);
             // 
-            // ceWidebandComPort
-            // 
-            this.ceWidebandComPort.Location = new System.Drawing.Point(471, 109);
-            this.ceWidebandComPort.Name = "ceWidebandComPort";
-            this.ceWidebandComPort.Properties.Caption = "Use wideband O2 on com port";
-            this.ceWidebandComPort.Size = new System.Drawing.Size(174, 19);
-            this.ceWidebandComPort.TabIndex = 31;
-            this.ceWidebandComPort.CheckedChanged += new System.EventHandler(this.checkEdit33_CheckedChanged);
-            // 
-            // cbWidebandDevice
-            // 
-            this.cbWidebandDevice.EditValue = "LC1";
-            this.cbWidebandDevice.Enabled = false;
-            this.cbWidebandDevice.Location = new System.Drawing.Point(116, 166);
-            this.cbWidebandDevice.Name = "cbWidebandDevice";
-            this.cbWidebandDevice.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbWidebandDevice.Properties.Items.AddRange(new object[] {
-            "PLX",
-            "LM1",
-            "LC1",
-            "LM2",
-            "ZT2",
-            "AEM",
-            "NOOP"});
-            this.cbWidebandDevice.Size = new System.Drawing.Size(203, 20);
-            this.cbWidebandDevice.TabIndex = 32;
-            // 
-            // labelControl6
-            // 
-            this.labelControl6.Location = new System.Drawing.Point(7, 169);
-            this.labelControl6.Name = "labelControl6";
-            this.labelControl6.Size = new System.Drawing.Size(82, 13);
-            this.labelControl6.TabIndex = 33;
-            this.labelControl6.Text = "Wideband device";
-            // 
-            // cbWidebandComPort
-            // 
-            this.cbWidebandComPort.Enabled = false;
-            this.cbWidebandComPort.Location = new System.Drawing.Point(473, 166);
-            this.cbWidebandComPort.Name = "cbWidebandComPort";
-            this.cbWidebandComPort.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbWidebandComPort.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cbWidebandComPort.Size = new System.Drawing.Size(216, 20);
-            this.cbWidebandComPort.TabIndex = 34;
-            // 
-            // labelControl7
-            // 
-            this.labelControl7.Location = new System.Drawing.Point(347, 169);
-            this.labelControl7.Name = "labelControl7";
-            this.labelControl7.Size = new System.Drawing.Size(93, 13);
-            this.labelControl7.TabIndex = 35;
-            this.labelControl7.Text = "Wideband com port";
-            // 
             // frmSettings
             // 
             this.AcceptButton = this.simpleButton1;
@@ -1020,6 +1019,9 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).EndInit();
             this.groupControl3.ResumeLayout(false);
             this.groupControl3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceDisableConnectionCheck.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit32.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit5.Properties)).EndInit();
@@ -1032,9 +1034,6 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
