@@ -13750,7 +13750,7 @@ dt.Columns.Add("SymbolName");
                             }
                         }
                         //<GS-23052011> change to engine temp > 0 in stead of > 70
-                        if (/*_currentEngineStatus.CurrentEngineTemp >= 0 &&*/ m_appSettings.UseWidebandLambda)
+                        if (/*_currentEngineStatus.CurrentEngineTemp >= 0 &&*/ m_appSettings.UseWidebandLambda || m_appSettings.UseDigitalWidebandLambda)
                         {
                             // autotune enabled
                             if (btnAutoTune.Text != "Wait...") // if we are waiting... don't enable because of engine temperature
