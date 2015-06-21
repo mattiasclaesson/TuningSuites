@@ -13430,7 +13430,10 @@ dt.Columns.Add("SymbolName");
             {
                 logline += "IMPORTANTLINE=0|";
             }
-            using (StreamWriter sw = new StreamWriter(Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.t7l", true))
+
+            string outputfile = Path.GetDirectoryName(m_currentfile);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.t7l");
+            using (StreamWriter sw = new StreamWriter(outputfile, true))
             {
                 sw.WriteLine(logline);
             }
@@ -13721,6 +13724,26 @@ dt.Columns.Add("SymbolName");
                     }
                 }
             }
+
+            if (foundvalue == string.Empty)
+            {
+                using (RegistryKey Settings = TempKey.OpenSubKey("SOFTWARE\\Classes\\d32.File\\shell\\open\\command"))
+                {
+                    if (Settings != null)
+                    {
+                        string[] vals = Settings.GetValueNames();
+                        try
+                        {
+                            foundvalue = Settings.GetValue(vals[0]).ToString();
+                        }
+                        catch (Exception E)
+                        {
+                            LogHelper.Log(E.Message);
+                        }
+                    }
+                }
+            }
+
             return foundvalue;
         }
 
