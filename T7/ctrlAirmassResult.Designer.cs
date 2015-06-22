@@ -58,12 +58,12 @@ namespace T7
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
-            this.checkEdit7 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit6 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit5 = new DevExpress.XtraEditors.CheckEdit();
+            this.useTrionicCalculationForTorque = new DevExpress.XtraEditors.CheckEdit();
+            this.displayTorqueInLBFT = new DevExpress.XtraEditors.CheckEdit();
+            this.displayPowerInkW = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
-            this.checkEdit4 = new DevExpress.XtraEditors.CheckEdit();
+            this.isOverboostActive = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
@@ -81,9 +81,9 @@ namespace T7
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.checkEdit3 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
+            this.isCarConvertible = new DevExpress.XtraEditors.CheckEdit();
+            this.isFuelE85 = new DevExpress.XtraEditors.CheckEdit();
+            this.isCarAutomatic = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
@@ -112,16 +112,16 @@ namespace T7
             this.tabCompressormap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit7.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isCarConvertible.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isCarAutomatic.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControl1
@@ -355,12 +355,12 @@ namespace T7
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupControl2.Controls.Add(this.labelControl17);
             this.groupControl2.Controls.Add(this.labelControl18);
-            this.groupControl2.Controls.Add(this.checkEdit7);
-            this.groupControl2.Controls.Add(this.checkEdit6);
-            this.groupControl2.Controls.Add(this.checkEdit5);
+            this.groupControl2.Controls.Add(this.useTrionicCalculationForTorque);
+            this.groupControl2.Controls.Add(this.displayTorqueInLBFT);
+            this.groupControl2.Controls.Add(this.displayPowerInkW);
             this.groupControl2.Controls.Add(this.labelControl15);
             this.groupControl2.Controls.Add(this.labelControl16);
-            this.groupControl2.Controls.Add(this.checkEdit4);
+            this.groupControl2.Controls.Add(this.isOverboostActive);
             this.groupControl2.Controls.Add(this.labelControl13);
             this.groupControl2.Controls.Add(this.labelControl14);
             this.groupControl2.Controls.Add(this.labelControl11);
@@ -378,9 +378,9 @@ namespace T7
             this.groupControl2.Controls.Add(this.labelControl1);
             this.groupControl2.Controls.Add(this.comboBoxEdit2);
             this.groupControl2.Controls.Add(this.comboBoxEdit1);
-            this.groupControl2.Controls.Add(this.checkEdit3);
-            this.groupControl2.Controls.Add(this.checkEdit2);
-            this.groupControl2.Controls.Add(this.checkEdit1);
+            this.groupControl2.Controls.Add(this.isCarConvertible);
+            this.groupControl2.Controls.Add(this.isFuelE85);
+            this.groupControl2.Controls.Add(this.isCarAutomatic);
             this.groupControl2.Location = new System.Drawing.Point(8, 390);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(799, 156);
@@ -409,32 +409,32 @@ namespace T7
             this.labelControl18.TabIndex = 27;
             this.labelControl18.Text = "E85Auto engine torque limiter";
             // 
-            // checkEdit7
+            // useTrionicCalculationForTorque
             // 
-            this.checkEdit7.Location = new System.Drawing.Point(455, 76);
-            this.checkEdit7.Name = "checkEdit7";
-            this.checkEdit7.Properties.Caption = "Use trionic calculation for torque";
-            this.checkEdit7.Size = new System.Drawing.Size(184, 18);
-            this.checkEdit7.TabIndex = 26;
-            this.checkEdit7.CheckedChanged += new System.EventHandler(this.checkEdit7_CheckedChanged);
+            this.useTrionicCalculationForTorque.Location = new System.Drawing.Point(455, 76);
+            this.useTrionicCalculationForTorque.Name = "useTrionicCalculationForTorque";
+            this.useTrionicCalculationForTorque.Properties.Caption = "Use trionic calculation for torque";
+            this.useTrionicCalculationForTorque.Size = new System.Drawing.Size(184, 18);
+            this.useTrionicCalculationForTorque.TabIndex = 26;
+            this.useTrionicCalculationForTorque.CheckedChanged += new System.EventHandler(this.useTrionicCalculationForTorque_CheckedChanged);
             // 
-            // checkEdit6
+            // displayTorqueInLBFT
             // 
-            this.checkEdit6.Location = new System.Drawing.Point(363, 129);
-            this.checkEdit6.Name = "checkEdit6";
-            this.checkEdit6.Properties.Caption = "torque in lbft";
-            this.checkEdit6.Size = new System.Drawing.Size(86, 18);
-            this.checkEdit6.TabIndex = 25;
-            this.checkEdit6.CheckedChanged += new System.EventHandler(this.checkEdit6_CheckedChanged);
+            this.displayTorqueInLBFT.Location = new System.Drawing.Point(363, 129);
+            this.displayTorqueInLBFT.Name = "displayTorqueInLBFT";
+            this.displayTorqueInLBFT.Properties.Caption = "torque in lbft";
+            this.displayTorqueInLBFT.Size = new System.Drawing.Size(86, 18);
+            this.displayTorqueInLBFT.TabIndex = 25;
+            this.displayTorqueInLBFT.CheckedChanged += new System.EventHandler(this.displayTorqueInLBFT_CheckedChanged);
             // 
-            // checkEdit5
+            // displayPowerInkW
             // 
-            this.checkEdit5.Location = new System.Drawing.Point(252, 129);
-            this.checkEdit5.Name = "checkEdit5";
-            this.checkEdit5.Properties.Caption = "power in kW";
-            this.checkEdit5.Size = new System.Drawing.Size(86, 18);
-            this.checkEdit5.TabIndex = 24;
-            this.checkEdit5.CheckedChanged += new System.EventHandler(this.checkEdit5_CheckedChanged);
+            this.displayPowerInkW.Location = new System.Drawing.Point(252, 129);
+            this.displayPowerInkW.Name = "displayPowerInkW";
+            this.displayPowerInkW.Properties.Caption = "power in kW";
+            this.displayPowerInkW.Size = new System.Drawing.Size(86, 18);
+            this.displayPowerInkW.TabIndex = 24;
+            this.displayPowerInkW.CheckedChanged += new System.EventHandler(this.displayPowerInkW_CheckedChanged);
             // 
             // labelControl15
             // 
@@ -463,14 +463,14 @@ namespace T7
             this.labelControl16.Text = "Overboost limiter";
             this.labelControl16.DoubleClick += new System.EventHandler(this.labelControl16_DoubleClick);
             // 
-            // checkEdit4
+            // isOverboostActive
             // 
-            this.checkEdit4.Location = new System.Drawing.Point(14, 120);
-            this.checkEdit4.Name = "checkEdit4";
-            this.checkEdit4.Properties.Caption = "View in overboost";
-            this.checkEdit4.Size = new System.Drawing.Size(150, 18);
-            this.checkEdit4.TabIndex = 20;
-            this.checkEdit4.CheckedChanged += new System.EventHandler(this.checkEdit4_CheckedChanged);
+            this.isOverboostActive.Location = new System.Drawing.Point(14, 120);
+            this.isOverboostActive.Name = "isOverboostActive";
+            this.isOverboostActive.Properties.Caption = "View in overboost";
+            this.isOverboostActive.Size = new System.Drawing.Size(150, 18);
+            this.isOverboostActive.TabIndex = 20;
+            this.isOverboostActive.CheckedChanged += new System.EventHandler(this.isOverboostActive_CheckedChanged);
             // 
             // labelControl13
             // 
@@ -714,32 +714,32 @@ namespace T7
             this.comboBoxEdit1.TabIndex = 3;
             this.comboBoxEdit1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);
             // 
-            // checkEdit3
+            // isCarConvertible
             // 
-            this.checkEdit3.Location = new System.Drawing.Point(14, 95);
-            this.checkEdit3.Name = "checkEdit3";
-            this.checkEdit3.Properties.Caption = "Car is a convertible";
-            this.checkEdit3.Size = new System.Drawing.Size(150, 18);
-            this.checkEdit3.TabIndex = 2;
-            this.checkEdit3.CheckedChanged += new System.EventHandler(this.checkEdit3_CheckedChanged);
+            this.isCarConvertible.Location = new System.Drawing.Point(14, 95);
+            this.isCarConvertible.Name = "checkEdit3";
+            this.isCarConvertible.Properties.Caption = "Car is a convertible";
+            this.isCarConvertible.Size = new System.Drawing.Size(150, 18);
+            this.isCarConvertible.TabIndex = 2;
+            this.isCarConvertible.CheckedChanged += new System.EventHandler(this.isCarConvertible_CheckedChanged);
             // 
-            // checkEdit2
+            // isFuelE85
             // 
-            this.checkEdit2.Location = new System.Drawing.Point(14, 69);
-            this.checkEdit2.Name = "checkEdit2";
-            this.checkEdit2.Properties.Caption = "Car runs E85";
-            this.checkEdit2.Size = new System.Drawing.Size(150, 18);
-            this.checkEdit2.TabIndex = 1;
-            this.checkEdit2.CheckedChanged += new System.EventHandler(this.checkEdit2_CheckedChanged);
+            this.isFuelE85.Location = new System.Drawing.Point(14, 69);
+            this.isFuelE85.Name = "checkEdit2";
+            this.isFuelE85.Properties.Caption = "Car runs E85";
+            this.isFuelE85.Size = new System.Drawing.Size(150, 18);
+            this.isFuelE85.TabIndex = 1;
+            this.isFuelE85.CheckedChanged += new System.EventHandler(this.checkEdit2_CheckedChanged);
             // 
             // checkEdit1
             // 
-            this.checkEdit1.Location = new System.Drawing.Point(14, 43);
-            this.checkEdit1.Name = "checkEdit1";
-            this.checkEdit1.Properties.Caption = "Car has automatic gearbox";
-            this.checkEdit1.Size = new System.Drawing.Size(177, 18);
-            this.checkEdit1.TabIndex = 0;
-            this.checkEdit1.CheckedChanged += new System.EventHandler(this.checkEdit1_CheckedChanged);
+            this.isCarAutomatic.Location = new System.Drawing.Point(14, 43);
+            this.isCarAutomatic.Name = "checkEdit1";
+            this.isCarAutomatic.Properties.Caption = "Car has automatic gearbox";
+            this.isCarAutomatic.Size = new System.Drawing.Size(177, 18);
+            this.isCarAutomatic.TabIndex = 0;
+            this.isCarAutomatic.CheckedChanged += new System.EventHandler(this.isCarAutomatic_CheckedChanged);
             // 
             // simpleButton3
             // 
@@ -808,16 +808,16 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
             this.groupControl2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit7.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isCarConvertible.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isCarAutomatic.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -838,12 +838,12 @@ namespace T7
         private DevExpress.XtraTab.XtraTabPage tabCompressormap;
         private ctrlCompressorMap ctrlCompressorMap1;
         private DevExpress.XtraEditors.GroupControl groupControl2;
-        private DevExpress.XtraEditors.CheckEdit checkEdit7;
-        private DevExpress.XtraEditors.CheckEdit checkEdit6;
-        private DevExpress.XtraEditors.CheckEdit checkEdit5;
+        private DevExpress.XtraEditors.CheckEdit useTrionicCalculationForTorque;
+        private DevExpress.XtraEditors.CheckEdit displayTorqueInLBFT;
+        private DevExpress.XtraEditors.CheckEdit displayPowerInkW;
         private DevExpress.XtraEditors.LabelControl labelControl15;
         private DevExpress.XtraEditors.LabelControl labelControl16;
-        private DevExpress.XtraEditors.CheckEdit checkEdit4;
+        private DevExpress.XtraEditors.CheckEdit isOverboostActive;
         private DevExpress.XtraEditors.LabelControl labelControl13;
         private DevExpress.XtraEditors.LabelControl labelControl14;
         private DevExpress.XtraEditors.LabelControl labelControl11;
@@ -861,9 +861,9 @@ namespace T7
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit2;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit1;
-        private DevExpress.XtraEditors.CheckEdit checkEdit3;
-        private DevExpress.XtraEditors.CheckEdit checkEdit2;
-        private DevExpress.XtraEditors.CheckEdit checkEdit1;
+        private DevExpress.XtraEditors.CheckEdit isCarConvertible;
+        private DevExpress.XtraEditors.CheckEdit isFuelE85;
+        private DevExpress.XtraEditors.CheckEdit isCarAutomatic;
         private DevExpress.XtraEditors.SimpleButton simpleButton3;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
