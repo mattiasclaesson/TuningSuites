@@ -6617,6 +6617,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             SetFilterMode();
             LoadMyMaps();
+            DynamicTuningMenu();
         }
 
         private bool m_fileiss19 = false;
@@ -6734,6 +6735,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 barButtonItem67.Caption = "VE map";
                 barButtonItem69.Caption = "Startup VE map";
             }
+
+            DynamicTuningMenu();
 
             System.Windows.Forms.Application.DoEvents();
         }
@@ -10042,6 +10045,19 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
             }
             return DateTime.Now;
+        }
+
+        private bool IsSymbolInBinary(string symbolname)
+        {
+            foreach (SymbolHelper sh in m_symbols)
+            {
+                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                {
+                    return true;
+
+                }
+            }
+            return false;
         }
 
         private void gridViewSymbols_KeyDown(object sender, KeyEventArgs e)
@@ -19319,6 +19335,58 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void barIdcGenerate_ItemClick(object sender, ItemClickEventArgs e)
         {
             IdaProIdcFile.create(m_currentfile, m_symbols);
+        }
+
+        private void DynamicTuningMenu()
+        {
+            //
+            // Show Tuning menu shortcuts depening on which file that was loaded.
+            //
+            if (m_currentfile != string.Empty)
+            {
+                if (File.Exists(m_currentfile))
+                {
+                    T7FileHeader t7header = new T7FileHeader();
+                    t7header.init(m_currentfile, false);
+                    string swVersion = t7header.getSoftwareVersion();
+                    // B308E
+                    if (swVersion.Substring(8, 3) == ".CB")
+                    {
+                      
+                    }
+                    
+                    if (IsSymbolInBinary("BoostCal.RegMap"))
+                    {
+                        ribbonPageGroup22.Visible = true;
+                    }
+                    else
+                    {
+                        ribbonPageGroup22.Visible = false;
+                    }
+
+                    if (IsBinaryBiopower())
+                    {
+                        barButtonItem95.Visibility = BarItemVisibility.Always;
+                        barButtonItem37.Visibility = BarItemVisibility.Always;
+                        barButtonItem65.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem95.Visibility = BarItemVisibility.Never;
+                        barButtonItem37.Visibility = BarItemVisibility.Never;
+                        barButtonItem65.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("TorqueCal.M_CabGearLim"))
+                    {
+                        barButtonItem54.Visibility =  BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem54.Visibility =  BarItemVisibility.Never;
+                    }
+                }
+            }
         }
     }
 }
