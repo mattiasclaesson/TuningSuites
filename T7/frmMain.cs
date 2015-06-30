@@ -19366,9 +19366,16 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
                     if (IsBinaryBiopower())
                     {
-                        barButtonItem95.Visibility = BarItemVisibility.Always;
                         barButtonItem37.Visibility = BarItemVisibility.Always;
                         barButtonItem65.Visibility = BarItemVisibility.Always;
+                        if (IsSymbolInBinary("TorqueCal.M_EngMaxE85TabAut"))
+                        {
+                            barButtonItem95.Visibility = BarItemVisibility.Always;
+                        }
+                        else
+                        {
+                            barButtonItem95.Visibility = BarItemVisibility.Never;
+                        }
                     }
                     else
                     {
