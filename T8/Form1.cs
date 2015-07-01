@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 ECUIDCal.ApplicationFileName
 
 FA5B_C_FMEP_46_FIE_82d
@@ -94,6 +94,7 @@ using T7;
 using CommonSuite;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
+using WidebandSupport;
 
 namespace T8SuitePro
 {
@@ -158,6 +159,8 @@ namespace T8SuitePro
         public DelegateStartReleaseNotePanel m_DelegateStartReleaseNotePanel;
         private frmProgress frmProgressLogWorks;
 
+        private WidebandFactory wbFactory = null;
+        private IWidebandReader wbReader = null;
 
         public Form1(string[] args)
         {
@@ -336,13 +339,7 @@ namespace T8SuitePro
                     {
                         if (symbolname == "DisplProt.AD_Scanner")
                         {
-                            // first convert the value to AFR
-                            // value to volt first
-                            //value = value / 204.6F;
-                            //LogHelper.Log("1: " + value.ToString());
                             value = (float)ConvertToWidebandAFR(value);
-                            //if (m_appSettings.DebugMode) value = 13; //TODO: <GS-25012011> REMOVE AFTER TESTING
-                            //LogHelper.Log("2: " + value.ToString());
                         }
 
                         float valTextLambda = value / 14.7F;
@@ -360,18 +357,18 @@ namespace T8SuitePro
                         }
                         if (m_appSettings.MeasureAFRInLambda)
                         {
-                            //LogWidebandAFR(value / 14.7F, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                            //FIXME? LogWidebandAFR(value / 14.7F, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                         }
                         else
                         {
-                            //LogWidebandAFR(value, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                            //FIXME? LogWidebandAFR(value, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                         }
-                        //ProcessAutoTuning(value, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        //FIXME? ProcessAutoTuning(value, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                     }
                     //_currentEngineStatus.CurrentAFR = value;
                     break;
                 case "Lambda.LambdaInt": // AFR through narrowband?
-                    if (!m_appSettings.UseWidebandLambda)
+                    if (!m_appSettings.UseWidebandLambda && !m_appSettings.UseDigitalWidebandLambda)
                     {
                         float valText = value * 14.7F;
                         digitalDisplayControl6.DigitText = value.ToString("F1");
@@ -4145,8 +4142,8 @@ namespace T8SuitePro
 3.	Pointer = @ 0x20140 and is a 4 byte pointer
 4.	Use MD5 to make 16 bytes digest from any string
 5.	name checksum pointer CHPTR
-6.	checksum area 1 ranges from 20000h to CHPTR – 20000h- 1
-7.	Create an MD5 hash from this string (20000h – (CHPTR – 20000h – 1))
+6.	checksum area 1 ranges from 20000h to CHPTR â€“ 20000h- 1
+7.	Create an MD5 hash from this string (20000h â€“ (CHPTR â€“ 20000h â€“ 1))
     a.	MD5Init(Context)
     b.	MD5Update(Context, buffer, size)
     c.	MD5Final(Context, Md5Seed)
@@ -4242,7 +4239,7 @@ namespace T8SuitePro
             uint partial_address = 0;
             uint x = 0;
             /*
-Get 0x100 byte buffer from CHPTR – CHPTR + 0xFF
+Get 0x100 byte buffer from CHPTR â€“ CHPTR + 0xFF
 Because level 1 is in that area level1 must be correct first
 Prepare coded_buffer (0x100 buffer from chptr) with loop: coded_buffer(x) = (buffer (x) + 0xD6) xor 0x21 
 (add 0xd6 to every byte of buffer, then xor it by 0x21)
@@ -5497,9 +5494,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
             set.ShowTablesUpsideDown = m_appSettings.ShowTablesUpsideDown;
             set.UseNewMapViewer = m_appSettings.UseNewMapViewer;
             set.UseRedAndWhiteMaps = m_appSettings.ShowRedWhite;
-
             set.RequestProjectNotes = m_appSettings.RequestProjectNotes;
             set.ProjectFolder = m_appSettings.ProjectFolder;
+            set.UseDigitalWidebandLambda = m_appSettings.UseDigitalWidebandLambda;
+            set.WidebandDevice = m_appSettings.WidebandDevice;
+            set.WidebandComPort = m_appSettings.WbPort;
 
             if (set.ShowDialog() == DialogResult.OK)
             {
@@ -5533,6 +5532,35 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.ShowTablesUpsideDown = set.ShowTablesUpsideDown;
                 m_appSettings.ShowMapPreviewPopup = set.ShowMapPreviewPopup;
                 m_appSettings.SynchronizeMapviewers = set.SynchronizeMapviewers;
+
+                m_appSettings.UseDigitalWidebandLambda = set.UseDigitalWidebandLambda;
+                m_appSettings.WidebandDevice = set.WidebandDevice;
+                m_appSettings.WbPort = set.WidebandComPort;
+
+                if (m_appSettings.MeasureAFRInLambda)
+                {
+                    linearGauge2.MaxValue = 1.5F;
+                    linearGauge2.MinValue = 0.5F;
+                    linearGauge2.GaugeText = "Î» ";
+                    labelControl11.Text = "Î»";
+                    linearGauge2.NumberOfDecimals = 2;
+                    linearGauge2.NumberOfDivisions = 10;
+                    AfrViewMode = AFRViewType.LambdaMode;
+                    //btnAFRFeedbackMap.Caption = "Show lambda feedback map"; FIXME
+                    //btnClearAFRFeedback.Caption = "Clear lambda feedback map";
+                }
+                else
+                {
+                    linearGauge2.MaxValue = 20;
+                    linearGauge2.MinValue = 10;
+                    linearGauge2.GaugeText = "AFR ";
+                    labelControl11.Text = "AFR";
+                    linearGauge2.NumberOfDecimals = 1;
+                    AfrViewMode = AFRViewType.AFRMode;
+                    //btnAFRFeedbackMap.Caption = "Show AFR feedback map"; FIXME
+                    //btnClearAFRFeedback.Caption = "Clear AFR feedback map";
+                }
+
                 //UpdateSettingButtons();
                 if (!m_appSettings.FancyDocking)
                 {
@@ -6665,7 +6693,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
                 PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
                 PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Transfer maps to different binary wizard", "This wizard assists you in transferring map contents from the current file to another binary.", "Make sure engine types and such are equal for both binaries!", "Happy driving!!!\nDilemma © 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after transferring data.", "", "Yes, let me select the target binary|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
+                PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Transfer maps to different binary wizard", "This wizard assists you in transferring map contents from the current file to another binary.", "Make sure engine types and such are equal for both binaries!", "Happy driving!!!\nDilemma Â© 2008", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after transferring data.", "", "Yes, let me select the target binary|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
                 switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
                 {
                     case 0:
@@ -7081,7 +7109,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
                     PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
                     PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                    PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me up™ wizard", "This wizard will tune your binary.", "Several maps will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma © 2009", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me up!|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
+                    PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me upâ„¢ wizard", "This wizard will tune your binary.", "Several maps will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma Â© 2009", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me up!|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
                     switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
                     {
                         case 0:
@@ -7470,7 +7498,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             SetProgress("Tuning TrqLimCal.Trq_MaxEngineAutTab1...");
 
-            // step 3 – Increasing engine torque limiters. Up the engine limiters so that the limiter 
+            // step 3 â€“ Increasing engine torque limiters. Up the engine limiters so that the limiter 
             // is higher than the maximum torque in the request maps. 
             // (TorqueCal.M_EngMaxTab, TorqueCal.M_ManGearLim, TorqueCal.M_CabGearLim, TorqueCal.M_5GearLimTab)
             /********** TorqueCal.M_EngMaxAutTab ***********/
@@ -7562,11 +7590,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 AddToResumeTable("Tuned torque limiter for manual transmission gears (TrqLimCal.Trq_ManGear)");
             }
 
-            // step 4 – Adapt fuel delivery.
+            // step 4 â€“ Adapt fuel delivery.
             // step 4a) You should make sure the fuel supply is good in all ranges by recalibrating BFuelCal.Map. Altering the maximum allowed airmass will also require more fuel. Check this with a wideband O2 sensor.
             // step 4b) If you change injectors you should change the injector constant InjCorrCal.InjectorConst and the battery voltage correction table InjCorrCal.BattCorrTab accordingly.
 
-            //Step 5 – Increase fuel cur level
+            //Step 5 â€“ Increase fuel cur level
             // Increase the fuelcut limit to above the airmass desired. E.g. if you target 1350 mg/c the fuelcut limit should be higher e.g. 1450 or 1500. FCutCal.m_AirInletLimit.
 
             /********** FCutCal.m_AirInletLimit ***********/
@@ -7902,7 +7930,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             /*
             progress.SetProgress("Tuning TorqueCal.M_EngMaxAutTab...");
 
-            // step 3 – Increasing engine torque limiters. Up the engine limiters so that the limiter 
+            // step 3 â€“ Increasing engine torque limiters. Up the engine limiters so that the limiter 
             // is higher than the maximum torque in the request maps. 
             // (TorqueCal.M_EngMaxTab, TorqueCal.M_ManGearLim, TorqueCal.M_CabGearLim, TorqueCal.M_5GearLimTab)
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxAutTab") > 0)
@@ -8073,11 +8101,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 AddToResumeTable("Tuned torque limiter for manual transmission in 5th gear (TorqueCal.M_5GearLimTab)");
             }
             */
-            // step 4 – Adapt fuel delivery.
+            // step 4 â€“ Adapt fuel delivery.
             // step 4a) You should make sure the fuel supply is good in all ranges by recalibrating BFuelCal.Map. Altering the maximum allowed airmass will also require more fuel. Check this with a wideband O2 sensor.
             // step 4b) If you change injectors you should change the injector constant InjCorrCal.InjectorConst and the battery voltage correction table InjCorrCal.BattCorrTab accordingly.
 
-            //Step 5 – Increase fuel cur level
+            //Step 5 â€“ Increase fuel cur level
             // Increase the fuelcut limit to above the airmass desired. E.g. if you target 1350 mg/c the fuelcut limit should be higher e.g. 1450 or 1500. FCutCal.m_AirInletLimit.
 
             /********** FCutCal.m_AirInletLimit ***********/
@@ -10552,7 +10580,19 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 m_enableRealtimeTimer = false;
                 barConnectedECUName.Caption = string.Empty;
                 if (t8can.isOpen())
+                {
                     t8can.Cleanup();
+                }
+
+                if (m_appSettings.UseDigitalWidebandLambda)
+                {
+                    if (wbReader != null)
+                    {
+                        wbReader.Stop();
+                    }
+                    wbFactory = null;
+                    wbReader = null;
+                }
             }
             else
             {
@@ -10598,6 +10638,23 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                     dockRealtime.Dock = DockingStyle.Left;
                     dockRealtime.Width = width;
+
+                    if (m_appSettings.UseDigitalWidebandLambda)
+                    {
+                        try
+                        {
+                            wbFactory = new WidebandFactory(m_appSettings.WidebandDevice, m_appSettings.WbPort, false);
+                            wbReader = wbFactory.CreateInstance();
+                            wbReader.Start();
+                        }
+                        catch (Exception ex)
+                        {
+                            wbFactory = null;
+                            wbReader = null;
+                            MessageBox.Show(ex.Message, "Wideband error", MessageBoxButtons.OK);
+                        }
+                    }
+
                     // set default skin
                     SwitchRealtimePanelMode(m_appSettings.Panelmode);
                     m_connectedToECU = true;
@@ -12062,9 +12119,24 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         t8can.StallKeepAlive = true;
                         GetSRAMVarsFromTable();
-                        Debug.WriteLine("Getting data pack: "+DateTime.Now.Ticks);
-                        // t8can.StallKeepAlive = false;
-                        // keep alive every time? ... ?
+
+                        //<GS-23052011> change to engine temp > 0 in stead of > 70
+                        if (/*_currentEngineStatus.CurrentEngineTemp >= 0 &&*/ m_appSettings.UseWidebandLambda || m_appSettings.UseDigitalWidebandLambda)
+                        {
+                            // autotune enabled
+                            if (btnAutoTune.Text != "Wait...") // if we are waiting... don't enable because of engine temperature
+                            {
+                                btnAutoTune.Enabled = true;
+                            }
+                        }
+                        /*else if (m_appSettings.DebugMode)
+                        {
+                            btnAutoTune.Enabled = true;
+                        }*/
+                        else
+                        {
+                            btnAutoTune.Enabled = false;
+                        }
                     }
                     else
                     {
@@ -12329,11 +12401,37 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                 }
 
+                // read afr from wideband on serial port
+                if (m_appSettings.UseDigitalWidebandLambda && wbReader != null)
+                {
+                    float afr = (float)wbReader.LatestReading;
+                    float lambda = afr / 14.7F;
+                    digitalDisplayControl6.DigitText = afr.ToString("F1");
+                    if (AfrViewMode == AFRViewType.AFRMode)
+                    {
+                        linearGauge2.Value = afr;
+                    }
+                    else
+                    {
+                        linearGauge2.Value = lambda;
+                    }
+                    if (m_appSettings.MeasureAFRInLambda)
+                    {
+                        //FIXME LogWidebandAFR((float)lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, lambda, 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
+                    }
+                    else
+                    {
+                        //FIXME LogWidebandAFR((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, afr, 0, 1, 0, 10, 20, 0, 0, 0, 1);
+                    }
+                    //FIXME ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                }
+
                 //LogHelper.Log("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
-                
                 LogRealTimeInformation(dt);
-                
-                //UpdateOpenViewers();
+                //UpdateOpenViewers(); FIXME
+
                 //<GS-06012011> maybe move the fps counter timer here!
                 _sw.Stop();
                 // update fps indicator

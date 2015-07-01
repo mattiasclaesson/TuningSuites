@@ -114,13 +114,18 @@ namespace T8SuitePro
             this.buttonEdit1 = new DevExpress.XtraEditors.ButtonEdit();
             this.checkEdit31 = new DevExpress.XtraEditors.CheckEdit();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.ceWidebandComPort = new DevExpress.XtraEditors.CheckEdit();
+            this.cbWidebandComPort = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
+            this.cbWidebandDevice = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.btnNotifications = new DevExpress.XtraEditors.SimpleButton();
             this.checkEdit32 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit23 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit19 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit18 = new DevExpress.XtraEditors.CheckEdit();
-            this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
+            this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
@@ -152,6 +157,9 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit31.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit32.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).BeginInit();
@@ -201,7 +209,7 @@ namespace T8SuitePro
             toolTipTitleItem1.Text = "Use red and white maps";
             toolTipItem1.LeftIndent = 6;
             toolTipItem1.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
-                "o display low values and red for higher values.";
+    "o display low values and red for higher values.";
             superToolTip1.Items.Add(toolTipTitleItem1);
             superToolTip1.Items.Add(toolTipItem1);
             this.checkEdit2.SuperTip = superToolTip1;
@@ -262,7 +270,7 @@ namespace T8SuitePro
             toolTipTitleItem4.Text = "Fancy docking";
             toolTipItem4.LeftIndent = 6;
             toolTipItem4.Text = "Lets you decide whether docking (dragging windows) will be shown in a fancy manne" +
-                "r or not.";
+    "r or not.";
             superToolTip4.Items.Add(toolTipTitleItem4);
             superToolTip4.Items.Add(toolTipItem4);
             this.checkEdit16.SuperTip = superToolTip4;
@@ -299,8 +307,8 @@ namespace T8SuitePro
             toolTipTitleItem5.Text = "Always re-create repository items";
             toolTipItem5.LeftIndent = 6;
             toolTipItem5.Text = "When checked, T8Suite will always re-create the repository items. This will slow " +
-                "down overall performance, but will ensure that an actual version is used all the" +
-                " time.";
+    "down overall performance, but will ensure that an actual version is used all the" +
+    " time.";
             superToolTip5.Items.Add(toolTipTitleItem5);
             superToolTip5.Items.Add(toolTipItem5);
             this.checkEdit13.SuperTip = superToolTip5;
@@ -316,7 +324,7 @@ namespace T8SuitePro
             toolTipTitleItem6.Text = "Synchronize mapviewers";
             toolTipItem6.LeftIndent = 6;
             toolTipItem6.Text = "When checked, all the mapviewers will react to changes made in one of the viewers" +
-                ". E.g. changing viewtype";
+    ". E.g. changing viewtype";
             superToolTip6.Items.Add(toolTipTitleItem6);
             superToolTip6.Items.Add(toolTipItem6);
             this.checkEdit15.SuperTip = superToolTip6;
@@ -354,7 +362,7 @@ namespace T8SuitePro
             toolTipTitleItem7.Text = "Auto load last file on startup";
             toolTipItem7.LeftIndent = 6;
             toolTipItem7.Text = "Lets you decide whether or not the last used file should be automatically loaded " +
-                "when the program starts up.";
+    "when the program starts up.";
             superToolTip7.Items.Add(toolTipTitleItem7);
             superToolTip7.Items.Add(toolTipItem7);
             this.checkEdit14.SuperTip = superToolTip7;
@@ -369,7 +377,7 @@ namespace T8SuitePro
             toolTipTitleItem8.Text = "New panels are floating";
             toolTipItem8.LeftIndent = 6;
             toolTipItem8.Text = "When checked makes new viewer float inside the application window in stead of doc" +
-                "king them to the right side of the screen.";
+    "king them to the right side of the screen.";
             superToolTip8.Items.Add(toolTipTitleItem8);
             superToolTip8.Items.Add(toolTipItem8);
             this.checkEdit12.SuperTip = superToolTip8;
@@ -398,7 +406,7 @@ namespace T8SuitePro
             toolTipTitleItem10.Text = "Auto dock maps with same name";
             toolTipItem10.LeftIndent = 6;
             toolTipItem10.Text = "When checked T8Suite will dock newly started mapviewers to eachother whenever the" +
-                "y display the same symbol.";
+    "y display the same symbol.";
             superToolTip10.Items.Add(toolTipTitleItem10);
             superToolTip10.Items.Add(toolTipItem10);
             this.checkEdit10.SuperTip = superToolTip10;
@@ -413,7 +421,7 @@ namespace T8SuitePro
             toolTipTitleItem11.Text = "Auto dock maps from same file";
             toolTipItem11.LeftIndent = 6;
             toolTipItem11.Text = "When checked T8Suite will dock newly started mapviewers to eachother whenever the" +
-                "y are from the same binary file.";
+    "y are from the same binary file.";
             superToolTip11.Items.Add(toolTipTitleItem11);
             superToolTip11.Items.Add(toolTipItem11);
             this.checkEdit9.SuperTip = superToolTip11;
@@ -428,7 +436,7 @@ namespace T8SuitePro
             toolTipTitleItem12.Text = "Don\'t display colors in mapviewer";
             toolTipItem12.LeftIndent = 6;
             toolTipItem12.Text = "To improve performance you can check this item and coloring of the mapviewer cell" +
-                "s will be disabled.";
+    "s will be disabled.";
             superToolTip12.Items.Add(toolTipTitleItem12);
             superToolTip12.Items.Add(toolTipItem12);
             this.checkEdit8.SuperTip = superToolTip12;
@@ -456,7 +464,7 @@ namespace T8SuitePro
             toolTipTitleItem14.Text = "Hide symbol window";
             toolTipItem14.LeftIndent = 6;
             toolTipItem14.Text = "To save display space you can hide the symbollist and select the symbols you want" +
-                " to view from the dropdownl list in the system menu.";
+    " to view from the dropdownl list in the system menu.";
             superToolTip14.Items.Add(toolTipTitleItem14);
             superToolTip14.Items.Add(toolTipItem14);
             this.checkEdit6.SuperTip = superToolTip14;
@@ -471,7 +479,7 @@ namespace T8SuitePro
             toolTipTitleItem15.Text = "Show graphs in mapviewer";
             toolTipItem15.LeftIndent = 6;
             toolTipItem15.Text = "When checked the graphical representation of the selected map will also be displa" +
-                "yed. This consumes more system memory en cpu time.";
+    "yed. This consumes more system memory en cpu time.";
             superToolTip15.Items.Add(toolTipTitleItem15);
             superToolTip15.Items.Add(toolTipItem15);
             this.checkEdit5.SuperTip = superToolTip15;
@@ -486,7 +494,7 @@ namespace T8SuitePro
             toolTipTitleItem16.Text = "View tables in hexadecimal values";
             toolTipItem16.LeftIndent = 6;
             toolTipItem16.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
-                "maps will  be displayed in easy mode when they are opened.";
+    "maps will  be displayed in easy mode when they are opened.";
             superToolTip16.Items.Add(toolTipTitleItem16);
             superToolTip16.Items.Add(toolTipItem16);
             this.checkEdit4.SuperTip = superToolTip16;
@@ -501,7 +509,7 @@ namespace T8SuitePro
             toolTipTitleItem17.Text = "Auto map detection active";
             toolTipItem17.LeftIndent = 6;
             toolTipItem17.Text = "When checked, T8Suite will try to add names to symbols in binaries without symbol" +
-                "tables. This is a guesstimate routine.";
+    "tables. This is a guesstimate routine.";
             superToolTip17.Items.Add(toolTipTitleItem17);
             superToolTip17.Items.Add(toolTipItem17);
             this.checkEdit21.SuperTip = superToolTip17;
@@ -523,7 +531,7 @@ namespace T8SuitePro
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(697, 462);
+            this.simpleButton1.Location = new System.Drawing.Point(697, 489);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 2;
@@ -533,7 +541,7 @@ namespace T8SuitePro
             // simpleButton2
             // 
             this.simpleButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.simpleButton2.Location = new System.Drawing.Point(616, 462);
+            this.simpleButton2.Location = new System.Drawing.Point(607, 489);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 3;
@@ -545,7 +553,7 @@ namespace T8SuitePro
             this.groupControl3.Controls.Add(this.labelControl4);
             this.groupControl3.Controls.Add(this.buttonEdit1);
             this.groupControl3.Controls.Add(this.checkEdit31);
-            this.groupControl3.Location = new System.Drawing.Point(10, 383);
+            this.groupControl3.Location = new System.Drawing.Point(10, 410);
             this.groupControl3.Name = "groupControl3";
             this.groupControl3.Size = new System.Drawing.Size(762, 73);
             this.groupControl3.TabIndex = 4;
@@ -579,23 +587,84 @@ namespace T8SuitePro
             // 
             // groupControl2
             // 
+            this.groupControl2.Controls.Add(this.ceWidebandComPort);
+            this.groupControl2.Controls.Add(this.cbWidebandComPort);
+            this.groupControl2.Controls.Add(this.labelControl6);
+            this.groupControl2.Controls.Add(this.cbWidebandDevice);
+            this.groupControl2.Controls.Add(this.labelControl3);
             this.groupControl2.Controls.Add(this.btnNotifications);
             this.groupControl2.Controls.Add(this.checkEdit32);
             this.groupControl2.Controls.Add(this.checkEdit23);
             this.groupControl2.Controls.Add(this.checkEdit19);
             this.groupControl2.Controls.Add(this.checkEdit18);
-            this.groupControl2.Controls.Add(this.btnAdapterConfiguration);
             this.groupControl2.Controls.Add(this.labelControl5);
+            this.groupControl2.Controls.Add(this.btnAdapterConfiguration);
             this.groupControl2.Controls.Add(this.comboBoxEdit3);
             this.groupControl2.Location = new System.Drawing.Point(10, 254);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(762, 123);
+            this.groupControl2.Size = new System.Drawing.Size(762, 150);
             this.groupControl2.TabIndex = 1;
             this.groupControl2.Text = "Realtime settings";
             // 
+            // ceWidebandComPort
+            // 
+            this.ceWidebandComPort.Location = new System.Drawing.Point(461, 58);
+            this.ceWidebandComPort.Name = "ceWidebandComPort";
+            this.ceWidebandComPort.Properties.Caption = "Use wideband O2 on com port";
+            this.ceWidebandComPort.Size = new System.Drawing.Size(205, 19);
+            this.ceWidebandComPort.TabIndex = 39;
+            this.ceWidebandComPort.CheckedChanged += new System.EventHandler(this.ceWidebandComPort_CheckedChanged);
+            // 
+            // cbWidebandComPort
+            // 
+            this.cbWidebandComPort.EditValue = "";
+            this.cbWidebandComPort.Enabled = false;
+            this.cbWidebandComPort.Location = new System.Drawing.Point(462, 115);
+            this.cbWidebandComPort.Name = "cbWidebandComPort";
+            this.cbWidebandComPort.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbWidebandComPort.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbWidebandComPort.Size = new System.Drawing.Size(203, 20);
+            this.cbWidebandComPort.TabIndex = 38;
+            // 
+            // labelControl6
+            // 
+            this.labelControl6.Location = new System.Drawing.Point(352, 118);
+            this.labelControl6.Name = "labelControl6";
+            this.labelControl6.Size = new System.Drawing.Size(93, 13);
+            this.labelControl6.TabIndex = 37;
+            this.labelControl6.Text = "Wideband com port";
+            // 
+            // cbWidebandDevice
+            // 
+            this.cbWidebandDevice.EditValue = "LC1";
+            this.cbWidebandDevice.Enabled = false;
+            this.cbWidebandDevice.Location = new System.Drawing.Point(121, 115);
+            this.cbWidebandDevice.Name = "cbWidebandDevice";
+            this.cbWidebandDevice.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbWidebandDevice.Properties.Items.AddRange(new object[] {
+            "PLX",
+            "LM1",
+            "LC1",
+            "LM2",
+            "ZT2",
+            "AEM"});
+            this.cbWidebandDevice.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbWidebandDevice.Size = new System.Drawing.Size(203, 20);
+            this.cbWidebandDevice.TabIndex = 36;
+            // 
+            // labelControl3
+            // 
+            this.labelControl3.Location = new System.Drawing.Point(12, 118);
+            this.labelControl3.Name = "labelControl3";
+            this.labelControl3.Size = new System.Drawing.Size(82, 13);
+            this.labelControl3.TabIndex = 35;
+            this.labelControl3.Text = "Wideband device";
+            // 
             // btnNotifications
             // 
-            this.btnNotifications.Location = new System.Drawing.Point(462, 28);
+            this.btnNotifications.Location = new System.Drawing.Point(462, 86);
             this.btnNotifications.Name = "btnNotifications";
             this.btnNotifications.Size = new System.Drawing.Size(100, 23);
             this.btnNotifications.TabIndex = 34;
@@ -605,7 +674,7 @@ namespace T8SuitePro
             // checkEdit32
             // 
             this.checkEdit32.EditValue = true;
-            this.checkEdit32.Location = new System.Drawing.Point(250, 89);
+            this.checkEdit32.Location = new System.Drawing.Point(10, 58);
             this.checkEdit32.Name = "checkEdit32";
             this.checkEdit32.Properties.Caption = "Reset realtime symbol on tabpage switch";
             this.checkEdit32.Size = new System.Drawing.Size(227, 19);
@@ -614,15 +683,15 @@ namespace T8SuitePro
             // checkEdit23
             // 
             this.checkEdit23.EditValue = true;
-            this.checkEdit23.Location = new System.Drawing.Point(250, 64);
+            this.checkEdit23.Location = new System.Drawing.Point(250, 58);
             this.checkEdit23.Name = "checkEdit23";
             this.checkEdit23.Properties.Caption = "Only P-bus connection";
-            this.checkEdit23.Size = new System.Drawing.Size(212, 19);
+            this.checkEdit23.Size = new System.Drawing.Size(162, 19);
             this.checkEdit23.TabIndex = 32;
             // 
             // checkEdit19
             // 
-            this.checkEdit19.Location = new System.Drawing.Point(10, 89);
+            this.checkEdit19.Location = new System.Drawing.Point(250, 33);
             this.checkEdit19.Name = "checkEdit19";
             this.checkEdit19.Properties.Caption = "Interpolate timescale for LogWorks";
             this.checkEdit19.Size = new System.Drawing.Size(205, 19);
@@ -631,41 +700,41 @@ namespace T8SuitePro
             // checkEdit18
             // 
             this.checkEdit18.Enabled = false;
-            this.checkEdit18.Location = new System.Drawing.Point(10, 64);
+            this.checkEdit18.Location = new System.Drawing.Point(10, 33);
             this.checkEdit18.Name = "checkEdit18";
             this.checkEdit18.Properties.Caption = "Auto generate LogWorks file after session";
             this.checkEdit18.Size = new System.Drawing.Size(232, 19);
             this.checkEdit18.TabIndex = 30;
             // 
+            // labelControl5
+            // 
+            this.labelControl5.Location = new System.Drawing.Point(12, 92);
+            this.labelControl5.Name = "labelControl5";
+            this.labelControl5.Size = new System.Drawing.Size(84, 13);
+            this.labelControl5.TabIndex = 27;
+            this.labelControl5.Text = "CANBus interface";
+            // 
             // btnAdapterConfiguration
             // 
             this.btnAdapterConfiguration.Enabled = false;
-            this.btnAdapterConfiguration.Location = new System.Drawing.Point(352, 28);
+            this.btnAdapterConfiguration.Location = new System.Drawing.Point(352, 86);
             this.btnAdapterConfiguration.Name = "btnAdapterConfiguration";
             this.btnAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
             this.btnAdapterConfiguration.TabIndex = 28;
             this.btnAdapterConfiguration.Text = "Configuration";
             this.btnAdapterConfiguration.Click += new System.EventHandler(this.btnAdapterConfiguration_Click);
             // 
-            // labelControl5
-            // 
-            this.labelControl5.Location = new System.Drawing.Point(12, 34);
-            this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(84, 13);
-            this.labelControl5.TabIndex = 27;
-            this.labelControl5.Text = "CANBus interface";
-            // 
             // comboBoxEdit3
             // 
-            this.comboBoxEdit3.EditValue = "Lawicel CANUSB (www.lawicel.com)";
-            this.comboBoxEdit3.Location = new System.Drawing.Point(121, 31);
+            this.comboBoxEdit3.EditValue = "Lawicel CANUSB";
+            this.comboBoxEdit3.Location = new System.Drawing.Point(121, 89);
             this.comboBoxEdit3.Name = "comboBoxEdit3";
             this.comboBoxEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit3.Properties.Items.AddRange(new object[] {
-            "Lawicel CANUSB (www.lawicel.com)",
-            "CombiAdapter (www.ecuproject.com)",
-            "ELM327 (version 1.2 and higher)",
+            "Lawicel CANUSB",
+            "CombiAdapter",
+            "ELM327 v1.3 or higher",
             "Just4Trionic"});
             this.comboBoxEdit3.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.comboBoxEdit3.Size = new System.Drawing.Size(203, 20);
@@ -678,7 +747,7 @@ namespace T8SuitePro
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
-            this.ClientSize = new System.Drawing.Size(784, 492);
+            this.ClientSize = new System.Drawing.Size(784, 524);
             this.ControlBox = false;
             this.Controls.Add(this.groupControl3);
             this.Controls.Add(this.simpleButton2);
@@ -725,6 +794,9 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
             this.groupControl2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit32.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).EndInit();
@@ -776,5 +848,10 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.SimpleButton btnNotifications;
         private DevExpress.XtraEditors.CheckEdit checkEdit30;
         private DevExpress.XtraEditors.CheckEdit checkEdit2;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
+        private DevExpress.XtraEditors.ComboBoxEdit cbWidebandDevice;
+        private DevExpress.XtraEditors.CheckEdit ceWidebandComPort;
+        private DevExpress.XtraEditors.ComboBoxEdit cbWidebandComPort;
+        private DevExpress.XtraEditors.LabelControl labelControl6;
     }
 }

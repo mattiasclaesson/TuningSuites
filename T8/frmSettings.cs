@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using CommonSuite;
+using System.IO.Ports;
 
 namespace T8SuitePro
 {
@@ -15,6 +16,15 @@ namespace T8SuitePro
         public frmSettings()
         {
             InitializeComponent();
+            string[] portNames = SerialPort.GetPortNames();
+            foreach (string port in portNames)
+            {
+                if (port.StartsWith("COM"))
+                {
+                    cbWidebandComPort.Properties.Items.Add(port);
+                }
+            }
+            cbWidebandComPort.SelectedIndex = 0;
         }
 
         private void groupControl1_Paint(object sender, PaintEventArgs e)
@@ -482,6 +492,48 @@ namespace T8SuitePro
             {
                 DialogResult = DialogResult.None;
             }
+        }
+
+        public bool UseDigitalWidebandLambda
+        {
+            get
+            {
+                return ceWidebandComPort.Checked;
+            }
+            set
+            {
+                ceWidebandComPort.Checked = value;
+            }
+        }
+
+        public string WidebandComPort
+        {
+            get
+            {
+                return cbWidebandComPort.SelectedItem != null ? cbWidebandComPort.SelectedItem.ToString() : String.Empty;
+            }
+            set
+            {
+                cbWidebandComPort.SelectedItem = value;
+            }
+        }
+
+        public string WidebandDevice
+        {
+            get
+            {
+                return cbWidebandDevice.SelectedItem.ToString();
+            }
+            set
+            {
+                cbWidebandDevice.SelectedItem = value;
+            }
+        }
+
+        private void ceWidebandComPort_CheckedChanged(object sender, EventArgs e)
+        {
+            cbWidebandDevice.Enabled = ceWidebandComPort.Checked;
+            cbWidebandComPort.Enabled = ceWidebandComPort.Checked;
         }
     }
 }

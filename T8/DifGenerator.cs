@@ -708,6 +708,7 @@ namespace T8SuitePro
                     break;
 
                 case "DisplProt.LambdaScanner": // AFR through wideband?
+                case "Wideband":
                     retval = "22";
                     break;
                 case "Lambda.LambdaInt": // AFR through narrowband?
@@ -891,6 +892,7 @@ namespace T8SuitePro
                     break;
 
                 case "DisplProt.LambdaScanner": // AFR through wideband?
+                case "Wideband":
                     retval = "7";
                     break;
                 case "Lambda.LambdaInt": // AFR through narrowband?
@@ -1072,6 +1074,7 @@ namespace T8SuitePro
                     break;
 
                 case "DisplProt.LambdaScanner": // AFR through wideband?
+                case "Wideband":
                     retval = "WBLambda";
                     break;
                 case "Lambda.LambdaInt": // AFR through narrowband?

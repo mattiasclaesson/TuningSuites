@@ -180,6 +180,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\TrionicCANLib.dll</HintPath>
     </Reference>
+    <Reference Include="WidebandSupport">
+      <HintPath>..\Libs\WidebandSupport.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />

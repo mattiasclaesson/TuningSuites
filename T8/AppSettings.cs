@@ -41,6 +41,18 @@ namespace T8SuitePro
             }
         }
 
+        private string _WbPort = "";
+
+        public string WbPort
+        {
+            get { return _WbPort; }
+            set
+            {
+                _WbPort = value;
+                SaveRegistrySetting("WbPort", _WbPort);
+            }
+        }
+
         private string _LastXAxisFromMatrix = string.Empty;
 
         public string LastXAxisFromMatrix
@@ -114,7 +126,7 @@ namespace T8SuitePro
             }
         }
 
-        private bool m_MeasureAFRInLambda = true;
+        private bool m_MeasureAFRInLambda = false;
 
         public bool MeasureAFRInLambda
         {
@@ -182,6 +194,18 @@ namespace T8SuitePro
             {
                 m_UseWidebandLambda = value;
                 SaveRegistrySetting("UseWidebandLambda", m_UseWidebandLambda);
+            }
+        }
+
+        private bool m_UseDigitalWidebandLambda = false;
+
+        public bool UseDigitalWidebandLambda
+        {
+            get { return m_UseDigitalWidebandLambda; }
+            set
+            {
+                m_UseDigitalWidebandLambda = value;
+                SaveRegistrySetting("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
             }
         }
 
@@ -1018,7 +1042,17 @@ namespace T8SuitePro
             get { return m_debugmode; }
         }
 
+        private string m_WidebandDevice = "";
 
+        public string WidebandDevice
+        {
+            get { return m_WidebandDevice; }
+            set
+            {
+                m_WidebandDevice = value;
+                SaveRegistrySetting("WidebandDevice", m_WidebandDevice);
+            }
+        }
 
         private void SaveRegistrySetting(string key, string value)
         {
@@ -1105,6 +1139,7 @@ namespace T8SuitePro
                 saveSettings.SetValue("OnlyPBus", m_OnlyPBus);
                 saveSettings.SetValue("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
                 saveSettings.SetValue("ResetRealtimeSymbolOnTabPageSwitch", m_ResetRealtimeSymbolOnTabPageSwitch);
+                saveSettings.SetValue("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
                 saveSettings.SetValue("CANBusAdapterType", (int)m_CANBusAdapterType);
                 saveSettings.SetValue("adc1channelname", _adc1channelname);
                 saveSettings.SetValue("adc2channelname", _adc2channelname);
@@ -1160,6 +1195,8 @@ namespace T8SuitePro
                 saveSettings.SetValue("notification1value", _notification1value.ToString());
                 saveSettings.SetValue("notification2value", _notification2value.ToString());
                 saveSettings.SetValue("notification3value", _notification3value.ToString());
+                saveSettings.SetValue("WbPort", _WbPort);
+                saveSettings.SetValue("WidebandDevice", m_WidebandDevice);
             }
         }
 
@@ -1514,10 +1551,13 @@ namespace T8SuitePro
                             {
                                 m_InterpolateLogWorksTimescale = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
-                           
                             else if (a == "ResetRealtimeSymbolOnTabPageSwitch")
                             {
                                 m_ResetRealtimeSymbolOnTabPageSwitch = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "UseDigitalWidebandLambda")
+                            {
+                                m_UseDigitalWidebandLambda = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "UseNewMapViewer")
                             {
@@ -1750,6 +1790,14 @@ namespace T8SuitePro
                             else if (a == "notification3value")
                             {
                                 _notification3value = ConvertToDouble(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "WbPort")
+                            {
+                                _WbPort = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "WidebandDevice")
+                            {
+                                m_WidebandDevice = Settings.GetValue(a).ToString();
                             }
                         }
                         catch (Exception E)
