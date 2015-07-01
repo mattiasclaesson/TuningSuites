@@ -10701,6 +10701,26 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                 }
             }
+
+            if (foundvalue == string.Empty)
+            {
+                using (RegistryKey Settings = TempKey.OpenSubKey("SOFTWARE\\Classes\\d32.File\\shell\\open\\command"))
+                {
+                    if (Settings != null)
+                    {
+                        string[] vals = Settings.GetValueNames();
+                        try
+                        {
+                            foundvalue = Settings.GetValue(vals[0]).ToString();
+                        }
+                        catch (Exception E)
+                        {
+                            LogHelper.Log(E.Message);
+                        }
+                    }
+                }
+            }
+
             return foundvalue;
         }
 
@@ -12556,15 +12576,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (m_currentfile == "") return;
             DateTime datet = DateTime.Now;
             string logline = datet.ToString("dd/MM/yyyy HH:mm:ss") + "." + datet.Millisecond.ToString("D3") + "|";
-            //            string logline = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "|";
             foreach (DataRow dr in dt.Rows)
             {
                 try
                 {
-                    //if (Convert.ToInt32(dr["Symbolnumber"]) > 0)
-                    //{
                     logline += dr["SymbolName"].ToString() + "=" + Convert.ToDouble(dr["Value"]).ToString() + "|";
-                    //}
                 }
                 catch (Exception E)
                 {
@@ -12580,9 +12596,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 logline += "IMPORTANTLINE=0|";
             }
-            if (!Directory.Exists(Path.GetDirectoryName(m_currentfile) + "\\Logs")) Directory.CreateDirectory(Path.GetDirectoryName(m_currentfile) + "\\Logs");
 
-            using (StreamWriter sw = new StreamWriter(Path.GetDirectoryName(m_currentfile) + "\\Logs\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.t8l", true))
+            string outputfile = Path.GetDirectoryName(m_currentfile);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.t8l");
+            using (StreamWriter sw = new StreamWriter(outputfile, true))
             {
                 sw.WriteLine(logline);
             }
