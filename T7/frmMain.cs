@@ -12171,23 +12171,13 @@ If boost regulation reports errors you can increase the difference between boost
                 {
                         tmrRealtime.Enabled = m_enableRealtimeTimer;
                 }
-                // <GS-24062010> always show realtime panel, to make it available for configuration even if not online
                 dockRealtime.Visibility = DockVisibility.Visible;
                 int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
                 int height = dockManager1.Form.ClientSize.Height;
                 if (width > 660) width = 660;
 
-                /*if (width > 660 && Height > 580)
-                {
-                    dockRealtime.MakeFloat();
-                    // maximize
-                    dockRealtime.FloatSize = new Size(660, 580);
-                }
-                else*/
-                {
-                    dockRealtime.Dock = DockingStyle.Left;
-                    dockRealtime.Width = width;
-                }
+                dockRealtime.Dock = DockingStyle.Left;
+                dockRealtime.Width = width;
 
                 if(m_appSettings.UseDigitalWidebandLambda)
                 {
