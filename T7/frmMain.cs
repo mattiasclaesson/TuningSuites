@@ -755,9 +755,16 @@ namespace T7
                                 int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
                                 if (addressInFile > 0)
                                 {
-                                    savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                    // add successful
-                                    dt.Rows.Add(sh_Import.Varname, "Success");
+                                    if (_softwareIsOpen && sh_Import.Varname == "MapChkCal.ST_Enable")
+                                    {
+                                        dt.Rows.Add(sh_Import.Varname, "Skipped");
+                                    }
+                                    else
+                                    {
+                                        savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
+                                        // add successful
+                                        dt.Rows.Add(sh_Import.Varname, "Success");
+                                    }
                                 }
                                 else
                                 {
@@ -3105,14 +3112,14 @@ namespace T7
             return false;
         }
 
-        private bool CanTransfer(SymbolHelper sh)
+        private bool ShouldTransferSymbol(SymbolHelper sh)
         {
             // FOR TESTING ONLY
             //return true;
 
             bool retval = false;
             if (sh.Varname.Contains(".") || sh.Userdescription.Contains(".")) retval = true;
-            //cfsh.Varname != "overrun_obj" && cfsh.Varname != "REPCalType" && cfsh.Varname != "SystemCalType" && cfsh.Varname != "nEngCalType") // hinted by jse!
+            if (sh.Varname == "MapChkCal.ST_Enable" || sh.Userdescription == "MapChkCal.ST_Enable") retval = false;
             return retval;
         }
 
@@ -3129,7 +3136,7 @@ namespace T7
                 SymbolCollection _onlyFlashSymbols = new SymbolCollection();
                 foreach (SymbolHelper shcopy in m_symbols)
                 {
-                    if (shcopy.Flash_start_address > 0 && GetSymbolAddress(m_symbols, shcopy.Varname) < 524288 && shcopy.Length > 0 && CanTransfer(shcopy))
+                    if (shcopy.Flash_start_address > 0 && GetSymbolAddress(m_symbols, shcopy.Varname) < 524288 && shcopy.Length > 0 && ShouldTransferSymbol(shcopy))
                     {
                         _onlyFlashSymbols.Symbols.Add(shcopy);
                     }
@@ -3183,7 +3190,7 @@ namespace T7
                         {
                             foreach (SymbolHelper cfsh in m_symbols)
                             {
-                                if (CanTransfer(cfsh))
+                                if (ShouldTransferSymbol(cfsh))
                                 {
                                     if (cfsh.Varname == sh.Varname || cfsh.Userdescription == sh.Varname || sh.Userdescription == cfsh.Varname || (cfsh.Userdescription == sh.Userdescription && sh.Userdescription != ""))
                                     {
@@ -18187,11 +18194,13 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                         int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
                                         if (addressInFile > 0)
                                         {
-                                            //savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                            progress.SetProgress("Uploading: " + sh_Import.Varname);
-                                            WriteMapToSRAM(sh_Import.Varname, dataToInsert, false);
-                                            System.Windows.Forms.Application.DoEvents();
-                                            Thread.Sleep(1);
+                                            if (sh_Import.Varname != "MapChkCal.ST_Enable")
+                                            {
+                                                progress.SetProgress("Uploading: " + sh_Import.Varname);
+                                                WriteMapToSRAM(sh_Import.Varname, dataToInsert, false);
+                                                System.Windows.Forms.Application.DoEvents();
+                                                Thread.Sleep(1);
+                                            }
                                         }
                                     }
                                     catch (Exception E)
