@@ -4,13 +4,10 @@
 //-----------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.Runtime.InteropServices;
-//using System.Diagnostics;
 using System.Linq;
 using System.IO.Ports;
-using Microsoft.Win32;
+using T5CANLib.WMI;
 
 namespace T5CANLib.CAN
 {
@@ -19,20 +16,19 @@ namespace T5CANLib.CAN
 /**
     Wrapper for Just4Trionic (see http://www.mbed.org/Just4pLeisure/notebook/just4trionic).
 */
-public class Just4TrionicDevice : ICANDevice
+
+    public class Just4TrionicDevice : ICANDevice, IDisposable
 {
 
     bool m_deviceIsOpen = false;
-    SerialPort m_serialPort = new SerialPort();
+    readonly SerialPort m_serialPort = new SerialPort();
     private Thread m_readThread;
-    Object m_synchObject = new Object();
+    readonly Object m_synchObject = new Object();
     bool m_endThread = false;
 
     private const char ESC = '\x1B';
-
-    private int m_forcedBaudrate = 115200;
+    private const int m_forcedBaudrate = 115200;
     //private int m_forcedBaudrate = 921600;
-
 
     // internal state
     //private Thread read_thread;                     ///< reader thread
@@ -40,15 +36,6 @@ public class Just4TrionicDevice : ICANDevice
     //private Object term_mutex = new Object();       ///< mutex for termination flag
 
     //-------------------------------------------------------------------------
-    /**
-        Default constructor.
-    */
-    public Just4TrionicDevice()
-    {
-        // create reader thread
-        //this.read_thread = new Thread(this.read_messages);
-        //Debug.Assert(read_thread != null);
-    }
 
     //-------------------------------------------------------------------------
     /**
@@ -63,13 +50,30 @@ public class Just4TrionicDevice : ICANDevice
         close();
     }
 
+    //-------------------------------------------------------------------------
+    /**
+        Releases the object.
+    */
+    public override void Delete()
+    {
+        // empty
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+        Disposes of the object.
+    */
+    public void Dispose()
+    {
+        m_serialPort.Dispose();
+    }
+
     override public void EnableLogging(string path2log)
     {
     }
 
     override public void DisableLogging()
     {
-     
     }
 
     public override float GetADCValue(uint channel)
@@ -87,10 +91,7 @@ public class Just4TrionicDevice : ICANDevice
         return 1;
     }
 
-    public override void Delete()
-    {
-        
-    }
+
     public override void setPortNumber(string portnumber)
     {
         //nothing to do
@@ -114,8 +115,7 @@ public class Just4TrionicDevice : ICANDevice
     public override OpenResult open()
     {
         //Automatically find port with Just4Trionic
-        //string port = MineRegistryForJust4TrionicPortName("SYSTEM\\CurrentControlSet\\Enum\\USB\\VID_0D28&PID_0204&MI_01");
-        string port = MineRegistryForJust4TrionicPortName("SYSTEM\\CurrentControlSet\\Enum\\USB");
+        string port = UseWMIForCOMPortByFriendlyName("mbed Serial Port");
 
         m_serialPort.BaudRate = m_forcedBaudrate;
         m_serialPort.Handshake = Handshake.None;
@@ -149,7 +149,7 @@ public class Just4TrionicDevice : ICANDevice
             
             m_serialPort.Write("s2\r");         // Set Just4trionic CAN speed to 615,000 bits (T5-SFI)
             Thread.Sleep(10);
-            this.Flush();                       // Flush 'junk' in serial port buffers
+            Flush();                            // Flush 'junk' in serial port buffers
 
             try
             {
@@ -167,7 +167,7 @@ public class Just4TrionicDevice : ICANDevice
                     m_readThread.Start();
                 m_serialPort.Write("f5\r");         // Set Just4trionic filter to allow only Trionic 5 messages
                 Thread.Sleep(10);
-                this.Flush();                       // Flush 'junk' in serial port buffers
+                Flush();                            // Flush 'junk' in serial port buffers
                 return OpenResult.OK;
             }
             catch (Exception)
@@ -176,42 +176,24 @@ public class Just4TrionicDevice : ICANDevice
             }
 
             //CastInformationEvent("Oh dear :-( Just4Trionic cannot connect to a CAN bus.");
-            this.close();
+            close();
             return OpenResult.OpenError;
         }
         //CastInformationEvent("Oh dear :-( Just4Trionic doesn't seem to be connected to your computer.");
-        this.close();
+        close();
         return OpenResult.OpenError;
     }
 
-    /// <summary>
-    /// Recursively enumerates registry subkeys starting with strStartKey looking for 
-    /// "Device Parameters" subkey. If key is present, friendly port name is extracted.
-    /// </summary>
-    /// <param name="strStartKey">the start key from which to begin the enumeration</param>
-    private string MineRegistryForJust4TrionicPortName(string strStartKey)
+    private static string UseWMIForCOMPortByFriendlyName(string strFriendlyName)
     {
-        //            string strStartKey = "SYSTEM\\CurrentControlSet\\Enum";
-        string[] oPortNamesToMatch = System.IO.Ports.SerialPort.GetPortNames();
-        Microsoft.Win32.RegistryKey oCurrentKey = Registry.LocalMachine.OpenSubKey(strStartKey);
-        string[] oSubKeyNames = oCurrentKey.GetSubKeyNames();
-
-        object oFriendlyName = Registry.GetValue("HKEY_LOCAL_MACHINE\\" + strStartKey, "FriendlyName", null);
-        string strFriendlyName = (oFriendlyName != null) ? oFriendlyName.ToString() : "N/A";
-
-        if (strFriendlyName.StartsWith("mbed Serial Port"))
+        foreach (COMPortInfo comPort in COMPortInfo.GetCOMPortsInfo())
         {
-            object oPortNameValue = Registry.GetValue("HKEY_LOCAL_MACHINE\\" + strStartKey + "\\Device Parameters", "PortName", null);
-            return oPortNamesToMatch.Contains(oPortNameValue.ToString()) ? oPortNameValue.ToString() : null;
-        }
-        else
-        {
-            foreach (string strSubKey in oSubKeyNames)
-                if (MineRegistryForJust4TrionicPortName(strStartKey + "\\" + strSubKey) != null)
-                    return MineRegistryForJust4TrionicPortName(strStartKey + "\\" + strSubKey);
+            if (comPort.Description.StartsWith(strFriendlyName))
+                return comPort.Name;
         }
         return null;
     }
+
 
     private void Flush()
     //public override void Flush()
@@ -222,9 +204,6 @@ public class Just4TrionicDevice : ICANDevice
             m_serialPort.DiscardOutBuffer();
         }
     }
-
-    
-    
     
     //-------------------------------------------------------------------------
     /**
@@ -291,47 +270,6 @@ public class Just4TrionicDevice : ICANDevice
         Thread.Sleep(1);
 
         return true; // remove after implementation
-    }
-
-
-
-    //-------------------------------------------------------------------------
-    /**
-        Waits for any message to be received.
-      
-        @param      timeout     timeout
-        @param      msg         message
-      
-        @return                 message ID if received, 0 otherwise 
-    */
-    private uint wait_message(uint timeout, out CANMessage msg)
-    {
-        msg = new CANMessage();
-        //Debug.Assert(msg != null);
-
-        //int wait_cnt = 0;
-        //uint id;
-        //byte length;
-        //ulong data;
-        //while (wait_cnt < timeout)
-        //{
-        //    if (MctAdapter_ReceiveMessage(out id, out length, out data))
-        //    {
-        //        // message received
-        //        msg.setID(id);
-        //        msg.setLength(length);
-        //        msg.setData(data);
-                
-        //        return id;
-        //    }
-
-        //    // wait a bit
-        //    Thread.Sleep(1);
-        //    ++wait_cnt;
-        //}
-
-        //// nothing was received
-        return 0;
     }
 
     //-------------------------------------------------------------------------

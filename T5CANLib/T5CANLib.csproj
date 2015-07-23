@@ -88,6 +88,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +111,8 @@
     <Compile Include="srec2bin.cs" />
     <Compile Include="T5CAN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WMI\COMPortInfo.cs" />
+    <Compile Include="WMI\ProcessConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
