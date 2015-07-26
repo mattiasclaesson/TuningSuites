@@ -9417,6 +9417,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         // Do nothing
                     }
+                    else if (line.StartsWith("msg="))
+                    {
+                        // Do nothing
+                    }
                     else if (line.StartsWith("binaction="))
                     {
                         string inS = line.Replace("binaction=", "");
@@ -15629,6 +15633,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             public string[] WizBlacklist;
             public string WizCode;
             public string WizAuth;
+            public string WizMsg;
 
             public TuningAction() 
             {
@@ -15743,7 +15748,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         }
         public class FileTuningAction : TuningAction
         {
-            public FileTuningAction(string name, string filename, BinaryType type, string [] whitelist, string [] blacklist, string code, string author)
+            public FileTuningAction(string name, string filename, BinaryType type, string [] whitelist, string [] blacklist, string code, string author, string msg)
             {
                 WizName = name;
                 WizIdOrFilename = filename;
@@ -15753,6 +15758,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 WizBlacklist = blacklist;
                 WizCode = code;
                 WizAuth = author;
+                WizMsg = msg;
             }
 
             public override int performTuningAction(Form1 p, string software, out List<string> out_mod_symbols)
@@ -15898,6 +15904,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         string sPacktype = string.Empty;
                         string signature = string.Empty;
                         string code = string.Empty;
+                        string msg = string.Empty;
                         string author = string.Empty;
                         string[] whitelist = new string[] { };
                         string[] blacklist = new string [] {};
@@ -15955,6 +15962,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 line = Regex.Replace(line, @"\s+", "");
                                 code = line.Replace("code=", "");
                             }
+                            else if (line.StartsWith("msg="))
+                            {
+                                //line = Regex.Replace(line, @"\s+", "");
+                                msg = line.Replace("msg=", "");
+                            }
                             else if (line.StartsWith("author="))
                             {
                                 //line = Regex.Replace(line, @"\s+", "");
@@ -15965,7 +15977,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         // Calculate MD5 of content and verify it against signature
                         if (Crypto.VerifyRSASignature(Crypto.CalculateMD5Hash(file_for_md5), signature))
                         {
-                            FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype, whitelist, blacklist, code, author);
+                            FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype, whitelist, blacklist, code, author, msg);
                             installedTunings.Add(tp);
                         }
                     }

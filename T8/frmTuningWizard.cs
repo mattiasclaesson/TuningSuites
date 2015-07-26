@@ -89,6 +89,12 @@ namespace T8SuitePro
                         foreach (string impM in outList)
                             this.listModifiedMaps.Items.Add(impM);
                     }
+
+                    // Show the message of the tuning pack if present
+                    if (selAction.WizMsg != string.Empty)
+                    {
+                        MessageBox.Show(selAction.WizMsg, "Tuning Wizard Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
