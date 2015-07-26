@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
@@ -19,6 +20,7 @@ namespace T8SuitePro
         private double m_maxopacity = 0.85;
         private Size m_size = new Size(300, 300);
         private FormGrowMode m_growmode = FormGrowMode.LeftTopToRightBottom;
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         public FormGrowMode Growmode
         {
@@ -56,7 +58,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -91,7 +93,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -117,7 +119,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 

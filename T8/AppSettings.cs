@@ -9,6 +9,7 @@ using System.Data.Odbc;
 using System.IO;
 using System.Windows.Forms;
 using CommonSuite;
+using NLog;
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 
@@ -16,6 +17,7 @@ namespace T8SuitePro
 {
     public class AppSettings
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private int _Baudrate = 38400;
 
@@ -26,18 +28,6 @@ namespace T8SuitePro
             {
                 _Baudrate = value;
                 SaveRegistrySetting("Baudrate", _Baudrate);
-            }
-        }
-
-        private string _ELM327Port = "Autodetect";
-
-        public string ELM327Port
-        {
-            get { return _ELM327Port; }
-            set
-            {
-                _ELM327Port = value;
-                SaveRegistrySetting("ELM327Port", _ELM327Port);
             }
         }
 
@@ -563,18 +553,6 @@ namespace T8SuitePro
             }
         }
 
-        private CANBusAdapter m_CANBusAdapterType = CANBusAdapter.Lawicel;
-
-        public CANBusAdapter CANBusAdapterType
-        {
-            get { return m_CANBusAdapterType; }
-            set
-            {
-                m_CANBusAdapterType = value;
-                SaveRegistrySetting("CANBusAdapterType", (int)m_CANBusAdapterType);
-            }
-        }
-
         private bool m_InterpolateLogWorksTimescale = false;
 
         public bool InterpolateLogWorksTimescale
@@ -1054,6 +1032,30 @@ namespace T8SuitePro
             }
         }
 
+        private string m_AdapterType = "";
+
+        public string AdapterType
+        {
+            get { return m_AdapterType; }
+            set
+            {
+                m_AdapterType = value;
+                SaveRegistrySetting("AdapterType", m_AdapterType);
+            }
+        }
+
+        private string m_Adapter = "";
+
+        public string Adapter
+        {
+            get { return m_Adapter; }
+            set
+            {
+                m_Adapter = value;
+                SaveRegistrySetting("Adapter", m_Adapter);
+            }
+        }
+
         private void SaveRegistrySetting(string key, string value)
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
@@ -1140,7 +1142,6 @@ namespace T8SuitePro
                 saveSettings.SetValue("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
                 saveSettings.SetValue("ResetRealtimeSymbolOnTabPageSwitch", m_ResetRealtimeSymbolOnTabPageSwitch);
                 saveSettings.SetValue("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
-                saveSettings.SetValue("CANBusAdapterType", (int)m_CANBusAdapterType);
                 saveSettings.SetValue("adc1channelname", _adc1channelname);
                 saveSettings.SetValue("adc2channelname", _adc2channelname);
                 saveSettings.SetValue("adc3channelname", _adc3channelname);
@@ -1173,10 +1174,7 @@ namespace T8SuitePro
                 saveSettings.SetValue("useadc5", _useadc5);
                 saveSettings.SetValue("usethermo", _usethermo);
                 saveSettings.SetValue("thermochannelname", _thermochannelname);
-
-                saveSettings.SetValue("ELM327Port", _ELM327Port);
                 saveSettings.SetValue("Baudrate", _Baudrate);
-
                 saveSettings.SetValue("LastXAxisFromMatrix", _LastXAxisFromMatrix);
                 saveSettings.SetValue("LastYAxisFromMatrix", _LastYAxisFromMatrix);
                 saveSettings.SetValue("LastZAxisFromMatrix", _LastZAxisFromMatrix);
@@ -1197,6 +1195,8 @@ namespace T8SuitePro
                 saveSettings.SetValue("notification3value", _notification3value.ToString());
                 saveSettings.SetValue("WbPort", _WbPort);
                 saveSettings.SetValue("WidebandDevice", m_WidebandDevice);
+                saveSettings.SetValue("AdapterType", m_AdapterType);
+                saveSettings.SetValue("Adapter", m_Adapter);
             }
         }
 
@@ -1376,7 +1376,6 @@ namespace T8SuitePro
                 SaveRegistrySetting("notification3sound", _notification3sound);
             }
         }
-
 
         public AppSettings()
         {
@@ -1563,9 +1562,13 @@ namespace T8SuitePro
                             {
                                 m_UseNewMapViewer = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
-                            else if (a == "CANBusAdapterType")
+                            else if (a == "Adapter")
                             {
-                                m_CANBusAdapterType = (CANBusAdapter)Convert.ToInt32(Settings.GetValue(a).ToString());
+                                m_Adapter = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "AdapterType")
+                            {
+                                m_AdapterType = Settings.GetValue(a).ToString();
                             }
                             else if (a == "thermochannelname")
                             {
@@ -1711,10 +1714,6 @@ namespace T8SuitePro
                             {
                                 m_WidebandHighAFR = ConvertToDouble(Settings.GetValue(a).ToString());
                             }
-                            else if (a == "ELM327Port")
-                            {
-                                _ELM327Port = Settings.GetValue(a).ToString();
-                            }
                             else if (a == "Baudrate")
                             {
                                 _Baudrate = Convert.ToInt32(Settings.GetValue(a).ToString());
@@ -1802,7 +1801,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("error retrieving registry settings: " + E.Message);
+                            logger.Debug("error retrieving registry settings: " + E.Message);
                         }
 
                     }

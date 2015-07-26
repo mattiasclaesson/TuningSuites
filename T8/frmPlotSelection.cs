@@ -8,11 +8,13 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Microsoft.Win32;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public partial class frmPlotSelection : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private DateTime _startdate;
 
         public DateTime Startdate
@@ -81,7 +83,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -111,7 +113,7 @@ namespace T8SuitePro
             {
                 DataTable dt = (DataTable)gridControl1.DataSource;
                 dt.Rows.Add(varname, GetColorFromRegistry(varname).ToArgb());
-                //LogHelper.Log(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
+                //logger.Debug(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
                 //dt.Rows.Add(varname, Color.Red.ToArgb());
             }
             else
@@ -122,7 +124,7 @@ namespace T8SuitePro
                 
                 dt.Columns.Add("COLOR", Type.GetType("System.Int32"));
                 dt.Rows.Add(varname, GetColorFromRegistry(varname).ToArgb());
-                //LogHelper.Log(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
+                //logger.Debug(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
                 gridControl1.DataSource = dt;
             }
             UpdateColors();
@@ -215,7 +217,7 @@ namespace T8SuitePro
             LogFilters filterhelper = new LogFilters();
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
-            LogHelper.Log("filters: " + filters.Count);
+            logger.Debug("filters: " + filters.Count);
             frmfilters.SetFilters(filters);
             if (gridControl1.DataSource != null)
             {

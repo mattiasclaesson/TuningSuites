@@ -12,6 +12,7 @@ using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.XtraBars.Docking;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
@@ -98,6 +99,7 @@ namespace T8SuitePro
         private bool m_prohibit_viewchange = false;
         private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         byte[] open_loop;
 
@@ -770,7 +772,7 @@ namespace T8SuitePro
                                     }
                                     catch (Exception E)
                                     {
-                                        LogHelper.Log("Failed to convert to ascii: " + E.Message);
+                                        logger.Debug("Failed to convert to ascii: " + E.Message);
                                         objarr.SetValue(Convert.ToChar(0x20), j);
                                     }
                                 }
@@ -1223,7 +1225,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("value: " + (int)trackBarControl1.Value + " "+ E.Message);
+                logger.Debug("value: " + (int)trackBarControl1.Value + " "+ E.Message);
             }
 
             int numberofrows = data.Length / m_TableWidth;
@@ -1411,7 +1413,7 @@ namespace T8SuitePro
                                         e.DisplayText = dispvalue.ToString("F1") + "\u00b0";
                                         /*if (dispvalue < 0)
                                         {
-                                            LogHelper.Log("Negative value:  " + cellvalue.ToString());
+                                            logger.Debug("Negative value:  " + cellvalue.ToString());
 
                                         }*/
                                     }
@@ -1475,7 +1477,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
 
                         }
@@ -1492,7 +1494,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
         private int GetOpenLoopValue(int index)
@@ -1582,7 +1584,7 @@ namespace T8SuitePro
                                         }
                                         /*if (cellvalue < 0)
                                         {
-                                            LogHelper.Log("value < 0");
+                                            logger.Debug("value < 0");
                                         }*/
                                         bstr1 = cellvalue.ToString("X8").Substring(4, 2);
                                         bstr2 = cellvalue.ToString("X8").Substring(6, 2);
@@ -1663,7 +1665,7 @@ namespace T8SuitePro
                                             }
                                             catch (Exception cE)
                                             {
-                                                LogHelper.Log(cE.Message);
+                                                logger.Debug(cE.Message);
                                             }
 
                                         }
@@ -1680,7 +1682,7 @@ namespace T8SuitePro
                                             }
                                             catch (Exception sE)
                                             {
-                                                LogHelper.Log(sE.Message);
+                                                logger.Debug(sE.Message);
                                             }
                                         }
                                     }
@@ -1723,7 +1725,7 @@ namespace T8SuitePro
             }
             else
             {
-                LogHelper.Log("onAxisLock not registered");
+                logger.Debug("onAxisLock not registered");
             }
         }
 
@@ -1736,7 +1738,7 @@ namespace T8SuitePro
             }
             else
             {
-                LogHelper.Log("onSelectionChanged not registered!");
+                logger.Debug("onSelectionChanged not registered!");
             }
 
         }
@@ -1752,7 +1754,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -1785,7 +1787,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -1803,7 +1805,7 @@ namespace T8SuitePro
             }
             else
             {
-                LogHelper.Log("onSymbolSave not registered!");
+                logger.Debug("onSymbolSave not registered!");
             }
 
         }
@@ -1820,7 +1822,7 @@ namespace T8SuitePro
             }
             else
             {
-                LogHelper.Log("onSplitterMoved not registered!");
+                logger.Debug("onSplitterMoved not registered!");
             }
 
         }
@@ -2184,7 +2186,7 @@ namespace T8SuitePro
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }
@@ -2217,7 +2219,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -2299,7 +2301,7 @@ namespace T8SuitePro
            /* object[] objs = chartControl1.HitTest(e.X, e.Y);
             foreach (object o in objs)
             {
-                LogHelper.Log("Double clicked: " + o.ToString());
+                logger.Debug("Double clicked: " + o.ToString());
             }*/
         }
 
@@ -2483,13 +2485,13 @@ namespace T8SuitePro
                     double deltavalue = delta_y * (yaxissize / yaxissizepxls);
                     //deltavalue -= correction_offset;
                     //deltavalue *= 1 / correction_factor;
-                    //LogHelper.Log("Delta: " + deltavalue.ToString());
+                    //logger.Debug("Delta: " + deltavalue.ToString());
                     if (_sp_dragging != null)
                     {
                         double curval = Convert.ToDouble(_sp_dragging.Values.GetValue(0));
                         double newvalue = /*(int)Math.Round*/(curval - deltavalue);
                         // if (newvalue < 0) newvalue = 0;
-                        //LogHelper.Log("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
+                        //logger.Debug("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
                         _sp_dragging.Values.SetValue(newvalue, 0);
                         DataTable dt = (DataTable)chartControl1.DataSource;
                         foreach (DataRow dr in dt.Rows)
@@ -2499,7 +2501,7 @@ namespace T8SuitePro
                                 dr[1] = newvalue;
                                 // zet ook de betreffende waarde in de tabel!
                                 SetDataValueInMap(_sp_dragging.Argument, newvalue);
-                                //LogHelper.Log("Written: " + _sp_dragging.Argument + " : " + newvalue);
+                                //logger.Debug("Written: " + _sp_dragging.Argument + " : " + newvalue);
                                 //sp.Values.SetValue(curval - 1, 0);
                                 //chartControl1.Invalidate();
                             }
@@ -2864,7 +2866,7 @@ namespace T8SuitePro
                     if (Clipboard.ContainsText())
                     {
                         string serialized = Clipboard.GetText();
-                        //   LogHelper.Log(serialized);
+                        //   logger.Debug(serialized);
                         int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                         ViewType vtclip = (ViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
@@ -2917,7 +2919,7 @@ namespace T8SuitePro
                                     }
                                     catch (Exception E)
                                     {
-                                        LogHelper.Log(E.Message);
+                                        logger.Debug(E.Message);
                                     }
                                 }
                             }
@@ -2927,7 +2929,7 @@ namespace T8SuitePro
                 }
                 catch (Exception pasteE)
                 {
-                    LogHelper.Log(pasteE.Message);
+                    logger.Debug(pasteE.Message);
                 }
             }
         }
@@ -2939,7 +2941,7 @@ namespace T8SuitePro
                 string serialized = Clipboard.GetText();
                 try
                 {
-                    //   LogHelper.Log(serialized);
+                    //   logger.Debug(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                     ViewType vtclip = (ViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
@@ -2988,7 +2990,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception E)
                                 {
-                                    LogHelper.Log(E.Message);
+                                    logger.Debug(E.Message);
                                 }
                             }
                         }
@@ -2997,7 +2999,7 @@ namespace T8SuitePro
                 }
                 catch (Exception pasteE)
                 {
-                    LogHelper.Log(pasteE.Message);
+                    logger.Debug(pasteE.Message);
                 }
             }
         }
@@ -3104,7 +3106,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             break;
@@ -3183,7 +3185,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
 
                             }
@@ -3273,7 +3275,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             break;
@@ -3347,7 +3349,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             break;
@@ -3358,7 +3360,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3591,7 +3593,7 @@ namespace T8SuitePro
             if (m_split_dragging)
             {
                 m_split_dragging = false;
-                LogHelper.Log("Splitter moved: " + splitContainer1.Panel1.Height.ToString() + ":" + splitContainer1.Panel2.Height.ToString() + splitContainer1.Panel1Collapsed.ToString() + ":" + splitContainer1.Panel2Collapsed.ToString());
+                logger.Debug("Splitter moved: " + splitContainer1.Panel1.Height.ToString() + ":" + splitContainer1.Panel2.Height.ToString() + splitContainer1.Panel1Collapsed.ToString() + ":" + splitContainer1.Panel2Collapsed.ToString());
                 CastSplitterMovedEvent();
             }
         }
@@ -3622,7 +3624,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3639,7 +3641,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("SetSurfaceGraphViewEx:" + E.Message);
+                logger.Debug("SetSurfaceGraphViewEx:" + E.Message);
             }
 
         }
@@ -3654,7 +3656,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -3724,7 +3726,7 @@ namespace T8SuitePro
                         {
                             if (gridView1.ActiveEditor.EditValue.ToString() != gridView1.ActiveEditor.OldEditValue.ToString())
                             {
-                                LogHelper.Log(gridView1.ActiveEditor.IsModified.ToString());
+                                logger.Debug(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
 /*                                if(value < 0)
@@ -3788,7 +3790,7 @@ namespace T8SuitePro
                         {
                             if (gridView1.ActiveEditor.EditValue.ToString() != gridView1.ActiveEditor.OldEditValue.ToString())
                             {
-                                LogHelper.Log(gridView1.ActiveEditor.IsModified.ToString());
+                                logger.Debug(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
                             }
@@ -3855,7 +3857,7 @@ namespace T8SuitePro
             if (m_viewtype == ViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
-                LogHelper.Log("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
+                logger.Debug("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
             }
         }
 
@@ -3865,7 +3867,7 @@ namespace T8SuitePro
 
         private void gridView1_HiddenEditor(object sender, EventArgs e)
         {
-            LogHelper.Log("Hidden editor with value: " + gridView1.GetFocusedRowCellDisplayText(gridView1.FocusedColumn));
+            logger.Debug("Hidden editor with value: " + gridView1.GetFocusedRowCellDisplayText(gridView1.FocusedColumn));
         }
 
         private void MapViewer_VisibleChanged(object sender, EventArgs e)
@@ -3916,7 +3918,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
           //  gridView1.EndUpdate();*/
 
@@ -3962,7 +3964,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             //  gridView1.EndUpdate();
         }
@@ -4191,7 +4193,7 @@ namespace T8SuitePro
                             {
                                 valy2 = Convert.ToDouble(gridView1.GetRowCellValue(tely + min_row, gridView1.Columns[telx + min_column]));
                             }
-                            //LogHelper.Log("valx1 = " + valx1.ToString() + " valx2 = " + valx2.ToString() + " valy1 = " + valy1.ToString() + " valy2 = " + valy2.ToString());
+                            //logger.Debug("valx1 = " + valx1.ToString() + " valx2 = " + valx2.ToString() + " valy1 = " + valy1.ToString() + " valy2 = " + valy2.ToString());
                             // x as 
                             double valuex = (valx2 + valx1) / 2;
                             double valuey = (valy2 + valy1) / 2;
@@ -4243,7 +4245,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             timer5.Enabled = true;
 
@@ -4295,7 +4297,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to select cell: " + E.Message);
+                        logger.Debug("Failed to select cell: " + E.Message);
                     }
 
                 }

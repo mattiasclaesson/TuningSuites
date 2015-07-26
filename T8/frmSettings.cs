@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using CommonSuite;
 using System.IO.Ports;
+using TrionicCANLib.API;
+using DevExpress.XtraEditors.Controls;
 
 namespace T8SuitePro
 {
@@ -397,16 +399,17 @@ namespace T8SuitePro
             }
         }
 
-        public CANBusAdapter CANBusAdapterType
+        public string AdapterType
         {
             get
             {
-                if (comboBoxEdit3.SelectedIndex == -1) comboBoxEdit3.SelectedIndex = (int)CANBusAdapter.Lawicel;
-                return (CANBusAdapter)comboBoxEdit3.SelectedIndex;
+                if (cbxAdapterType.SelectedIndex == -1) 
+                    cbxAdapterType.SelectedIndex = 1;
+                return cbxAdapterType.SelectedItem.ToString();
             }
             set
             {
-                comboBoxEdit3.SelectedIndex = (int)value;
+                cbxAdapterType.SelectedItem = value;
             }
         }
 
@@ -434,13 +437,13 @@ namespace T8SuitePro
 
         private void btnAdapterConfiguration_Click(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter)
+            if (cbxAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI)
             {
                 // open the config screen for additional configuration of the adapter
                 // which ADC channels mean what
                 // use ADC 1-5 & assign symbolname, max & min value
                 // use thermo & assign symbolname, max & min value
-                frmMultiAdapterConfig multiconfig = new frmMultiAdapterConfig();
+                frmCombiAdapterConfig multiconfig = new frmCombiAdapterConfig();
                 multiconfig.AppSettings = m_appSettings;
                 if (multiconfig.ShowDialog() == DialogResult.OK)
                 {
@@ -448,14 +451,13 @@ namespace T8SuitePro
                     // nothing really.. all is saved in appsettings already ... 
                 }
             }
-            else if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
+            else if (cbxAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                cbxAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
-                frmComportSelection comportSel = new frmComportSelection();
-                comportSel.PortName = m_appSettings.ELM327Port;
+                frmComportSettings comportSel = new frmComportSettings();
                 comportSel.Baudrate = m_appSettings.Baudrate;
                 if (comportSel.ShowDialog() == DialogResult.OK)
                 {
-                    m_appSettings.ELM327Port = comportSel.PortName;
                     m_appSettings.Baudrate = comportSel.Baudrate;
                 }
                 DialogResult = DialogResult.None;
@@ -464,14 +466,39 @@ namespace T8SuitePro
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.MultiAdapter || 
-                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327)
+            if (cbxAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI || 
+                cbxAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                cbxAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 btnAdapterConfiguration.Enabled = true;
             }
             else
             {
                 btnAdapterConfiguration.Enabled = false;
+            }
+
+            if (cbxAdapterType.SelectedIndex != -1)
+            {
+                string[] adapters = ITrionic.GetAdapterNames((CANBusAdapter)cbxAdapterType.SelectedIndex);
+                ComboBoxItemCollection collection = cbAdapter.Properties.Items;
+                collection.BeginUpdate();
+                collection.Clear();
+                foreach (string adapter in adapters)
+                {
+                    collection.Add(adapter);
+                }
+                collection.EndUpdate();
+
+                if (adapters.Length > 0)
+                {
+                    cbAdapter.SelectedIndex = 0;
+                    cbAdapter.Enabled = true;
+                }
+                else
+                {
+                    cbAdapter.SelectedIndex = -1;
+                    cbAdapter.Enabled = false;
+                }
             }
         }
 

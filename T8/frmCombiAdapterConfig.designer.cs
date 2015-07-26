@@ -1,6 +1,6 @@
 namespace T8SuitePro
 {
-    partial class frmMultiAdapterConfig
+    partial class frmCombiAdapterConfig
     {
         /// <summary>
         /// Required designer variable.

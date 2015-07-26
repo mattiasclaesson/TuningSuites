@@ -7,11 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.Globalization;
+using NLog;
 
 namespace CommonSuite
 {
     public partial class ctrlReleaseNotes : DevExpress.XtraEditors.XtraUserControl
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private DateTime m_LatestReleaseDate = DateTime.MinValue;
         public ctrlReleaseNotes()
         {
@@ -30,7 +33,7 @@ namespace CommonSuite
         {
             CultureInfo culture = new CultureInfo(cultureName);
 
-            //LogHelper.Log();
+            //logger.Debug();
 
             // Convert each string in the dateStrings array.
             DateTime dateTimeValue = DateTime.MinValue;
@@ -45,12 +48,12 @@ namespace CommonSuite
 
                 // Display the DateTime object in a fixed format 
                 // if Convert succeeded.
-                LogHelper.Log(String.Format("{0:yyyy-MMM-dd}", dateTimeValue));
+                logger.Debug(String.Format("{0:yyyy-MMM-dd}", dateTimeValue));
             }
             catch (Exception ex)
             {
                 // Display the exception type if Parse failed.
-                LogHelper.Log(String.Format("{0}", GetExceptionType(ex)));
+                logger.Debug(String.Format("{0}", GetExceptionType(ex)));
             }
             return dateTimeValue;
 
@@ -75,7 +78,7 @@ namespace CommonSuite
 
 
                         m_LatestReleaseDate = StringToDateTime("en-US", ds.Tables[1].Rows[0]["pubDate"].ToString());
-                        LogHelper.Log("Release date: " + m_LatestReleaseDate.ToString());
+                        logger.Debug("Release date: " + m_LatestReleaseDate.ToString());
                     }
                     ds.Tables[2].Columns.Add("Date", System.Type.GetType("System.DateTime"));
                     foreach (DataRow dr in ds.Tables[2].Rows)
@@ -86,7 +89,7 @@ namespace CommonSuite
                         }
                         catch (Exception convE)
                         {
-                            LogHelper.Log("Failed to convert datetime: " + convE.Message);
+                            logger.Debug("Failed to convert datetime: " + convE.Message);
                         }
                     }
 
@@ -97,7 +100,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }

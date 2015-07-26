@@ -77,7 +77,7 @@
     <Reference Include="Accessibility" />
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.2.0.14173, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Be.Windows.Forms.HexBox.dll</HintPath>
+      <HintPath>..\Libs\Be.Windows.Forms.HexBox.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.BonusSkins.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=95fc6c5621878f0a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -156,10 +156,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="Microsoft.Office.Tools.Excel.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Office.Tools.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -167,6 +163,9 @@
     <Reference Include="Nevron.Chart.WinForm, Version=9.5.11.12, Culture=neutral, PublicKeyToken=c9bd8998e981e4ee, processorArchitecture=MSIL" />
     <Reference Include="Nevron.Presentation, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6656c5d1103e75cc, processorArchitecture=MSIL" />
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
+    <Reference Include="NLog">
+      <HintPath>..\Libs\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -177,9 +176,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrionicCANLib, Version=0.0.0.7, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="TrionicCANLib, Version=0.0.22.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\TrionicCANLib.dll</HintPath>
+      <HintPath>..\Libs\TrionicCANLib.dll</HintPath>
     </Reference>
     <Reference Include="WidebandSupport">
       <HintPath>..\Libs\WidebandSupport.dll</HintPath>
@@ -300,11 +299,11 @@
     <Compile Include="frmChecksum.Designer.cs">
       <DependentUpon>frmChecksum.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmComportSelection.cs">
+    <Compile Include="frmComportSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmComportSelection.Designer.cs">
-      <DependentUpon>frmComportSelection.cs</DependentUpon>
+    <Compile Include="frmComportSettings.Designer.cs">
+      <DependentUpon>frmComportSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="frmDecodeVIN.cs">
       <SubType>Form</SubType>
@@ -390,11 +389,11 @@
     <Compile Include="frmMatrixSelection.designer.cs">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMultiAdapterConfig.cs">
+    <Compile Include="frmCombiAdapterConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMultiAdapterConfig.designer.cs">
-      <DependentUpon>frmMultiAdapterConfig.cs</DependentUpon>
+    <Compile Include="frmCombiAdapterConfig.designer.cs">
+      <DependentUpon>frmCombiAdapterConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="frmNotifications.cs">
       <SubType>Form</SubType>
@@ -540,7 +539,6 @@
     <Compile Include="LogFilter.cs" />
     <Compile Include="LogFilterCollection.cs" />
     <Compile Include="LogFilters.cs" />
-    <Compile Include="LogHelper.cs" />
     <Compile Include="MapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -658,6 +656,9 @@
     <None Include="ASM-Mode.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -741,8 +742,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmChecksum.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmComportSelection.resx">
-      <DependentUpon>frmComportSelection.cs</DependentUpon>
+    <EmbeddedResource Include="frmComportSettings.resx">
+      <DependentUpon>frmComportSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDecodeVIN.resx">
@@ -797,8 +798,8 @@
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMultiAdapterConfig.resx">
-      <DependentUpon>frmMultiAdapterConfig.cs</DependentUpon>
+    <EmbeddedResource Include="frmCombiAdapterConfig.resx">
+      <DependentUpon>frmCombiAdapterConfig.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmNotifications.resx">
@@ -911,8 +912,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="knock.wav" />
-    <None Include="Resources\log4net.config.xml">
-    </None>
     <Content Include="..\Utils\T8Pub.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -956,6 +955,9 @@
       <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>
       <Name>RealtimeGraph</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

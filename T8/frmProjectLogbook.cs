@@ -7,11 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
+using NLog;
 
 namespace CommonSuite
 {
     public partial class frmProjectLogbook : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public frmProjectLogbook()
         {
             InitializeComponent();
@@ -52,7 +55,7 @@ namespace CommonSuite
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Couldn't load logbook entry: " + E.Message);
+                            logger.Debug("Couldn't load logbook entry: " + E.Message);
                         }
                     }
                 }

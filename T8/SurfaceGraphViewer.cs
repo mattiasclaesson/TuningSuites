@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using Plot3D;
 using System.Runtime.InteropServices;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
@@ -16,6 +17,7 @@ namespace T8SuitePro
     {
         [DllImport("user32.dll", EntryPoint = "CreateIconIndirect")]
         private static extern IntPtr CreateIconIndirect(IntPtr iconInfo);
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private struct IconInfo
         {
@@ -254,7 +256,7 @@ namespace T8SuitePro
                     int valtot = 0;
                     valtot = Convert.ToInt32((byte)m_map_content.GetValue(byteoffset++)) * 256;
                     valtot += Convert.ToInt32((byte)m_map_content.GetValue(byteoffset++));
-                    //LogHelper.Log("Value: :"+ valtot.ToString("X4"));
+                    //logger.Debug("Value: :"+ valtot.ToString("X4"));
                     if (valtot > 0xF000)
                     {
                         valtot ^= 0xFFFF;
@@ -415,7 +417,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -485,7 +487,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -543,7 +545,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -796,7 +798,7 @@ namespace T8SuitePro
                 double val = 0;
                 if (sr.GetMousePoint(e.X, e.Y, out tableposition, out val))
                 {
-                    //LogHelper.Log("Position = " + e.X.ToString() + ":" + e.Y.ToString() + " tablepos = " + tableposition.X.ToString() + ":" + tableposition.Y.ToString() + " value = " + val.ToString());
+                    //logger.Debug("Position = " + e.X.ToString() + ":" + e.Y.ToString() + " tablepos = " + tableposition.X.ToString() + ":" + tableposition.Y.ToString() + " value = " + val.ToString());
                     m_lastMouseHoverPoint = new PointF((float)e.X, (float)e.Y);
                     toolTipController1.ShowHint("Mouse hit : " + m_lastMouseHoverPoint.X.ToString() + ":" + m_lastMouseHoverPoint.Y.ToString(), PointToClient(e.Location));
                 }*/

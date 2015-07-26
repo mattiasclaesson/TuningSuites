@@ -59,15 +59,5 @@ namespace T8SuitePro.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] log4net_config {
-            get {
-                object obj = ResourceManager.GetObject("log4net_config", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

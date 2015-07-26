@@ -7,11 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public partial class frmEditTuningPackage : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public frmEditTuningPackage()
         {
             InitializeComponent();
@@ -53,7 +56,7 @@ namespace T8SuitePro
                 if (o is SymbolHelper)
                 {
                     SymbolHelper sh = (SymbolHelper)o;
-                    LogHelper.Log("Dropped: " + sh.Varname);
+                    logger.Debug("Dropped: " + sh.Varname);
                     AddSymbolToTuningPackage(sh);
                 }
             }

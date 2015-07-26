@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     class T8Header
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private FlashBlockCollection fbc = new FlashBlockCollection();
 
         public FlashBlockCollection FlashBlocks
@@ -197,7 +200,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -208,9 +211,9 @@ namespace T8SuitePro
             int m_ChecksumAreaOffset = GetChecksumAreaOffset(filename);
             int m_EndOfPIArea = GetEmptySpaceStartFrom(filename, m_ChecksumAreaOffset);
 
-            //LogHelper.Log("Area: " + m_ChecksumAreaOffset.ToString("X8") + " - " + m_EndOfPIArea.ToString("X8"));
+            //logger.Debug("Area: " + m_ChecksumAreaOffset.ToString("X8") + " - " + m_EndOfPIArea.ToString("X8"));
             byte[] piarea = readdatafromfile(filename, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
-            //LogHelper.Log("Size: " + piarea.Length.ToString());
+            //logger.Debug("Size: " + piarea.Length.ToString());
             for (int t = 0; t < piarea.Length; t++)
             {
                 piarea[t] += 0xD6;
@@ -247,7 +250,7 @@ namespace T8SuitePro
                 catch (Exception)
                 {
                 }
-                LogHelper.Log("Len: " + len.ToString("X2") + " Type = " + type.ToString("X2") + "   " + data);
+                logger.Debug("Len: " + len.ToString("X2") + " Type = " + type.ToString("X2") + "   " + data);
                 /*
 Len: 10 Type = 0D   58 C3 25 2D 92 B3 2D 82 95 E5 E4 23 15 E3 A4 55  // layer 1 checksum
 Len: 09 Type = 92   GMPT 0100		//Hardware ID
@@ -748,7 +751,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                     // get the type of block?
                     if (lowtypes[i] == 0xFF && lowaddress[i] != 0 && lowaddress[i] != 0xFFFF)
                     {
-                        LogHelper.Log("Updating for immocode: " + lowaddress[i].ToString("X8"));
+                        logger.Debug("Updating for immocode: " + lowaddress[i].ToString("X8"));
                         for (pc = 0; pc < 16; pc++)
                         {
                             immoBytes[pc] = Convert.ToByte(m_ImmobilizerID[pc]);
@@ -761,7 +764,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                     // get the type of block?
                     if (hightypes[i] == 0xFF && highaddress[i] != 0 && highaddress[i] != 0xFFFF)
                     {
-                        LogHelper.Log("Updating for immocode: " + highaddress[i].ToString("X8"));
+                        logger.Debug("Updating for immocode: " + highaddress[i].ToString("X8"));
                         for (pc = 0; pc < 16; pc++)
                         {
                             immoBytes[pc] = Convert.ToByte(m_ImmobilizerID[pc]);

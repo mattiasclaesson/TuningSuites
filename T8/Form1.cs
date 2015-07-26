@@ -95,6 +95,9 @@ using CommonSuite;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
 using WidebandSupport;
+using TrionicCANLib;
+using TrionicCANLib.API;
+using NLog;
 
 namespace T8SuitePro
 {
@@ -105,14 +108,6 @@ namespace T8SuitePro
     {
         Day,
         Night
-    }
-
-    public enum CANBusAdapter : int
-    {
-        Lawicel,
-        MultiAdapter,
-        ELM327,
-        Just4Trionic
     }
 
     public enum MonitorType : int
@@ -129,13 +124,22 @@ namespace T8SuitePro
 
     public partial class Form1 : Form
     {
+        public string[] adapternames = new string[]
+        {
+            "Lawicel CANUSB",
+            "CombiAdapter",
+            "ELM327 v1.3 or higher",
+            "Just4Trionic",
+            "Kvaser"
+        };
+
         private string m_CurrentWorkingProject = string.Empty;
         private TrionicProjectLog m_ProjectLog = new TrionicProjectLog();
         public DelegateUpdateRealTimeValue m_DelegateUpdateRealTimeValue;
         private bool m_WriteLogMarker = false;
         private string m_currentsramfile = string.Empty;
 
-        private TrionicCANLib.Trionic8 t8can = new TrionicCANLib.Trionic8();
+        private Trionic8 t8can = new Trionic8();
         System.Data.DataTable m_realtimeAddresses;
         private Stopwatch _sw = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
@@ -158,9 +162,9 @@ namespace T8SuitePro
         private string m_commandLineFile = string.Empty;
         public DelegateStartReleaseNotePanel m_DelegateStartReleaseNotePanel;
         private frmProgress frmProgressLogWorks;
-
         private WidebandFactory wbFactory = null;
         private IWidebandReader wbReader = null;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public Form1(string[] args)
         {
@@ -182,7 +186,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             try
             {
@@ -194,7 +198,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             if (args.Length > 0)
             {
@@ -215,38 +219,38 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
             try
             {
                 sndplayer = new System.Media.SoundPlayer();
-                t8can.onReadProgress += new TrionicCANLib.ITrionic.ReadProgress(t8can_onReadProgress);
-                t8can.onWriteProgress += new TrionicCANLib.ITrionic.WriteProgress(t8can_onWriteProgress);
-                t8can.onCanInfo += new TrionicCANLib.ITrionic.CanInfo(t8can_onCanInfo);
+                t8can.onReadProgress += new ITrionic.ReadProgress(t8can_onReadProgress);
+                t8can.onWriteProgress += new ITrionic.WriteProgress(t8can_onWriteProgress);
+                t8can.onCanInfo += new ITrionic.CanInfo(t8can_onCanInfo);
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
 
             splash.Close();
         }
 
-        void t8can_onWriteProgress(object sender, TrionicCANLib.ITrionic.WriteProgressEventArgs e)
+        void t8can_onWriteProgress(object sender, ITrionic.WriteProgressEventArgs e)
         {
             SetProgress(String.Format("Sending {0} %", e.Percentage));
             SetProgressPercentage(e.Percentage);
         }
 
 
-        void t8can_onCanInfo(object sender, TrionicCANLib.ITrionic.CanInfoEventArgs e)
+        void t8can_onCanInfo(object sender, ITrionic.CanInfoEventArgs e)
         {
             SetProgress(e.Info);
         }
 
-        void t8can_onReadProgress(object sender, TrionicCANLib.ITrionic.ReadProgressEventArgs e)
+        void t8can_onReadProgress(object sender, ITrionic.ReadProgressEventArgs e)
         {
             SetProgress(String.Format("Downloading {0} %", e.Percentage));
             SetProgressPercentage(e.Percentage);
@@ -412,15 +416,15 @@ namespace T8SuitePro
             // ranges 0 - 255 will be default for 0-5 volt
             double retval = 0;
             double voltage = ((value) / 1023) * (m_appSettings.WidebandHighVoltage / 1000 - m_appSettings.WidebandLowVoltage / 1000);
-            //LogHelper.Log("Wideband voltage: " + voltage.ToString());
+            //logger.Debug("Wideband voltage: " + voltage.ToString());
             // now convert to AFR using user settings
             if (voltage < m_appSettings.WidebandLowVoltage / 1000) voltage = m_appSettings.WidebandLowVoltage / 1000;
             if (voltage > m_appSettings.WidebandHighVoltage / 1000) voltage = m_appSettings.WidebandHighVoltage / 1000;
-            //LogHelper.Log("Wideband voltage (after clipping): " + voltage.ToString());
+            //logger.Debug("Wideband voltage (after clipping): " + voltage.ToString());
             double steepness = ((m_appSettings.WidebandHighAFR / 1000) - (m_appSettings.WidebandLowAFR / 1000)) / ((m_appSettings.WidebandHighVoltage / 1000) - (m_appSettings.WidebandLowVoltage / 1000));
-            //LogHelper.Log("Steepness: " + steepness.ToString());
+            //logger.Debug("Steepness: " + steepness.ToString());
             retval = (m_appSettings.WidebandLowAFR / 1000) + (steepness * (voltage - (m_appSettings.WidebandLowVoltage / 1000)));
-            //LogHelper.Log("retval: " + retval.ToString());
+            //logger.Debug("retval: " + retval.ToString());
             return retval;
 
         }
@@ -452,7 +456,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -531,7 +535,7 @@ namespace T8SuitePro
             }
             catch (Exception E1)
             {
-                LogHelper.Log(E1.Message);
+                logger.Debug(E1.Message);
             }
         }
 
@@ -543,7 +547,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -566,7 +570,7 @@ namespace T8SuitePro
             fs.Close();
             if (b1 == 0x10 && b2 == 0x00 && b3 == 0x00 && b4 == 0x0C)
             {
-                LogHelper.Log("Flipping file");
+                logger.Debug("Flipping file");
                 string filenamenew = filename + ".tmp";
                 FileStream fromfile = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 FileStream tofile = new FileStream(filenamenew, FileMode.CreateNew);
@@ -659,7 +663,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("TryOpenFile failed: " + filename + " err: " + E.Message);
+                logger.Debug("TryOpenFile failed: " + filename + " err: " + E.Message);
             }
             int cnt = 0;
             SetProgress("Updating symbol category... ");
@@ -680,7 +684,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
             //_hideRealtime = false;
@@ -739,7 +743,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -764,36 +768,36 @@ namespace T8SuitePro
         private int GetAddrTableOffset(string filename)
         {
             int addrtaboffset = GetStartOfAddressTableOffset(filename);
-            LogHelper.Log("addrtaboffset: " + addrtaboffset.ToString("X8"));
+            logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
             //int NqNqNqOffset = GetNqNqNqStringFromOffset(addrtaboffset - 0x100, filename);
             int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
-            LogHelper.Log("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
+            logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
 
             int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-            LogHelper.Log("symbtaboffset: " + symbtaboffset.ToString("X8"));
+            logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
             //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
             //                    symbtaboffset = NqNqNqOffset;
             int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
             int retval = NqNqNqOffset + 21;
-            LogHelper.Log("symbtablength: " + symbtablength.ToString("X8"));
+            logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
         }
 
         private int GetAddrTableOffsetBySymbolTable(string filename)
         {
             int addrtaboffset = GetEndOfSymbolTable(filename);
-            LogHelper.Log("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
+            logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
             //int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
             int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
-            LogHelper.Log("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
+            logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
 
             int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-            LogHelper.Log("symbtaboffset: " + symbtaboffset.ToString("X8"));
+            logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
             //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
             //                    symbtaboffset = NqNqNqOffset;
             int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
             int retval = NqNqNqOffset + 21;
-            LogHelper.Log("symbtablength: " + symbtablength.ToString("X8"));
+            logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
         }
 
@@ -807,7 +811,7 @@ namespace T8SuitePro
             int RealAddressTableOffset = GetAddrTableOffsetBySymbolTable(filename) + 7; // was 17 // <GS-22032010>
 
             //Test 15092009
-            LogHelper.Log("Real symboltable offset: " + RealAddressTableOffset.ToString("X8"));
+            logger.Debug("Real symboltable offset: " + RealAddressTableOffset.ToString("X8"));
 
             int symboltableoffset = 0;
             symbol_collection = new SymbolCollection();
@@ -948,7 +952,7 @@ namespace T8SuitePro
                                 {
                                     endoftable = true;
                                     //MessageBox.Show("EOT: " + fsread.Position.ToString("X6"));
-                                    LogHelper.Log("EOT: " + fsread.Position.ToString("X6"));
+                                    logger.Debug("EOT: " + fsread.Position.ToString("X6"));
                                 }
                                 else
                                 {
@@ -960,11 +964,11 @@ namespace T8SuitePro
 
                                     /* if (bytes[1] == 0x7A && bytes[2] == 0xEE)
                                      {
-                                         LogHelper.Log("suspicious");
+                                         logger.Debug("suspicious");
 
                                          if (internal_address == 0x7AEE)
                                          {
-                                             LogHelper.Log("break: " + fsread.Position.ToString("X8"));
+                                             logger.Debug("break: " + fsread.Position.ToString("X8"));
                                          }
                                      }*/
                                     symbollength = Convert.ToInt32(bytes.GetValue(3)) * 256;
@@ -1009,7 +1013,7 @@ namespace T8SuitePro
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                             retval = false;
                         }
 
@@ -1051,7 +1055,7 @@ namespace T8SuitePro
                 {
                     SymbolHelper sh = symbol_collection[(i)];
                     sh.Varname = allSymbolNames[i+1].Trim(); // Skip first in array since its "SymbolNames"
-                    LogHelper.Log(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
+                    logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
                     SymbolTranslator translator = new SymbolTranslator();
                     string help = string.Empty;
                     XDFCategories category = XDFCategories.Undocumented;
@@ -1065,13 +1069,13 @@ namespace T8SuitePro
                         }
                         catch (Exception cE)
                         {
-                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
+                            logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                         }
                     }
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log("Failed to add symbolnames: " + E.Message);
+                    logger.Debug("Failed to add symbolnames: " + E.Message);
                 }
             }
         }
@@ -1168,7 +1172,7 @@ namespace T8SuitePro
                         case 8:
                             /*if (fsread.Position > 0x5f900)
                             {
-                                LogHelper.Log("Hola");
+                                logger.Debug("Hola");
                             }
                             */
                             if (adrb == (byte)searchsequence.GetValue(8))
@@ -1371,7 +1375,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
+                        logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
                     fs.Close();
                 }
@@ -1437,7 +1441,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
+                        logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
                     fs.Close();
                 }
@@ -1497,7 +1501,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
+                        logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
                     fs.Close();
                 }
@@ -1526,7 +1530,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve address from: " + offset.ToString("X6"));
+                        logger.Debug("Failed to retrieve address from: " + offset.ToString("X6"));
                     }
                     fs.Close();
                 }
@@ -1554,7 +1558,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve length from: " + offset.ToString("X6"));
+                        logger.Debug("Failed to retrieve length from: " + offset.ToString("X6"));
                     }
                     fs.Close();
                 }
@@ -1583,24 +1587,24 @@ namespace T8SuitePro
                      }*/
                     // FAILSAFE for some files that seem to have protection!
                     /*int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                    LogHelper.Log("addrtaboffset: " + addrtaboffset.ToString("X8"));
+                    logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
                     //int NqNqNqOffset = GetNqNqNqStringFromOffset(addrtaboffset - 0x100, filename);
                     int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
-                    LogHelper.Log("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));*/
+                    logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));*/
 
                     //<GS-22032010>
                     int addrtaboffset = GetEndOfSymbolTable(filename);
-                    LogHelper.Log("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
+                    logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
                     int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
-                    LogHelper.Log("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
+                    logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
                     //<GS-22032010>
 
                     int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-                    LogHelper.Log("symbtaboffset: " + symbtaboffset.ToString("X8"));
+                    logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
                     //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
                     //                    symbtaboffset = NqNqNqOffset;
                     int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
-                    LogHelper.Log("symbtablength: " + symbtablength.ToString("X8"));
+                    logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
                     if (symbtablength < 0x1000) return false; // NO SYMBOLTABLE IN FILE
                     //symbtaboffset -= 2;
                     if (symbtaboffset > 0 && symbtaboffset < 0xF0000)
@@ -1621,7 +1625,7 @@ namespace T8SuitePro
                         UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256;
                         UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256;
                         UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
-                        LogHelper.Log("UnpackedLength: " + UnpackedLength.ToString("X8"));
+                        logger.Debug("UnpackedLength: " + UnpackedLength.ToString("X8"));
                         fsread.Seek(val, SeekOrigin.Begin);
 
                         // fill the byte array with the compressed symbol table
@@ -1636,7 +1640,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("Error 1: " + E.Message);
+                logger.Debug("Error 1: " + E.Message);
             }
             return false;
         }
@@ -1686,7 +1690,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Error 2: " + E.Message);
+                        logger.Debug("Error 2: " + E.Message);
                         retval = 0;
                     }
                     fs.Flush();
@@ -1997,7 +2001,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             if (returnvalue == 0) returnvalue = 1;
             if (symbolname == "KnkSoundRedCal.fi_OffsMa") returnvalue = 0.1;
@@ -2101,7 +2105,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -2507,7 +2511,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                     if (!pnlfound)
                     {
@@ -2867,7 +2871,7 @@ namespace T8SuitePro
                         }
                         catch (Exception newdockE)
                         {
-                            LogHelper.Log(newdockE.Message);
+                            logger.Debug(newdockE.Message);
                         }
                         dockManager1.EndUpdate();
                     }
@@ -3130,7 +3134,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             LoadLayoutFiles();
             InitSkins();
@@ -3514,14 +3518,14 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                     dockManager1.EndUpdate();
                 }
             }
             catch (Exception startnewcompareE)
             {
-                LogHelper.Log(startnewcompareE.Message);
+                logger.Debug(startnewcompareE.Message);
             }
 
         }
@@ -3620,7 +3624,7 @@ namespace T8SuitePro
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    LogHelper.Log("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    logger.Debug("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
                             }
@@ -3706,7 +3710,7 @@ namespace T8SuitePro
                 catch (Exception E)
                 {
 
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -3714,7 +3718,7 @@ namespace T8SuitePro
 
         void tabdet_onSymbolSelect(object sender, CompareResults.SelectSymbolEventArgs e)
         {
-            LogHelper.Log(e.SymbolName);
+            logger.Debug(e.SymbolName);
             if (!e.ShowDiffMap)
             {
                 StartTableViewer(e.SymbolName);
@@ -3799,10 +3803,10 @@ namespace T8SuitePro
 
                         SymbolCollection compare_symbols = new SymbolCollection();
                         FileInfo fi = new FileInfo(filename);
-                        LogHelper.Log("Opening compare file");
+                        logger.Debug("Opening compare file");
                         TryToOpenFile(filename, out compare_symbols, (int)fi.Length);
                         System.Windows.Forms.Application.DoEvents();
-                        LogHelper.Log("Start compare");
+                        logger.Debug("Start compare");
                         SetProgress("Start comparing symbols in files");
                         SetProgressPercentage(0);
                         System.Windows.Forms.Application.DoEvents();
@@ -3856,7 +3860,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception E)
                                 {
-                                    LogHelper.Log(E.Message);
+                                    logger.Debug(E.Message);
                                 }
 
                                 string compareName = sh_compare.SmartVarname;
@@ -3897,7 +3901,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception E)
                                 {
-                                    LogHelper.Log(E.Message);
+                                    logger.Debug(E.Message);
                                 }
                                 bool _foundSymbol = false;
                                 varnamecomp = shtest.SmartVarname;
@@ -3934,7 +3938,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception E)
                                 {
-                                    LogHelper.Log(E.Message);
+                                    logger.Debug(E.Message);
                                 }
                                 bool _foundSymbol = false;
                                 varnamecomp = shtest.SmartVarname;
@@ -3967,7 +3971,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                     dockManager1.EndUpdate();
                 }
@@ -4108,7 +4112,7 @@ namespace T8SuitePro
                 }
             }
             fsread.Close();
-            //  LogHelper.Log("Checksum 2 byte from " + start.ToString("X6") + " to " + end.ToString("X6") + " = " + retval.ToString("X4"));
+            //  logger.Debug("Checksum 2 byte from " + start.ToString("X6") + " to " + end.ToString("X6") + " = " + retval.ToString("X4"));
             return retval;
         }
 
@@ -4130,7 +4134,7 @@ namespace T8SuitePro
                 }
             }
             fsread.Close();
-            // LogHelper.Log("Checksum 4 byte from " + start.ToString("X6") + " to " + end.ToString("X6") + " = " + retval.ToString("X8"));
+            // logger.Debug("Checksum 4 byte from " + start.ToString("X6") + " to " + end.ToString("X6") + " = " + retval.ToString("X8"));
             return retval;
         }
 
@@ -4157,7 +4161,7 @@ namespace T8SuitePro
             int len = OffsetLayer1 - 0x20000;//- 1;
             md5.Initialize();
             int end = 0x20000 + len;
-            LogHelper.Log("Calculating from 0x20000 upto " + end.ToString("X8"));
+            logger.Debug("Calculating from 0x20000 upto " + end.ToString("X8"));
 
             byte[] data = readdatafromfile(filename, 0x20000, len);
             byte[] hash = md5.ComputeHash(data);
@@ -4166,7 +4170,7 @@ namespace T8SuitePro
                             byte bcalc = b;
                             Console.Write(" " + b.ToString("X2"));
                         }
-                        LogHelper.Log("");*/
+                        logger.Debug("");*/
             byte[] finalhash = new byte[hash.Length];
 
             for (int i = 0; i < hash.Length; i++)
@@ -4256,7 +4260,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 coded_buffer[i] = b;
                 //Console.Write(b.ToString("X2") + " ");
             }
-            //LogHelper.Log("");
+            //logger.Debug("");
             byte[] complete_file = readdatafromfile(filename, 0, m_currentfile_size);
             int index = 0;
             bool chk_found = false;
@@ -4408,7 +4412,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             barChecksumInfo.Caption = "Checksum: validating...";
             System.Windows.Forms.Application.DoEvents();
 
-            //LogHelper.Log("Checksum area offset: " + m_ChecksumAreaOffset.ToString("X8"));
+            //logger.Debug("Checksum area offset: " + m_ChecksumAreaOffset.ToString("X8"));
             byte[] hash = CalculateLayer1ChecksumMD5(filename, m_ChecksumAreaOffset, forceSilent);
             // compare hash to bytes after checksumareaoffset
             byte[] layer1checksuminfile = readdatafromfile(filename, m_ChecksumAreaOffset + 2, 16);
@@ -4820,7 +4824,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E2)
             {
-                LogHelper.Log(E2.Message);
+                logger.Debug(E2.Message);
             }
         }
 
@@ -4840,7 +4844,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E2)
             {
-                LogHelper.Log(E2.Message);
+                logger.Debug(E2.Message);
             }
         }
 
@@ -4856,7 +4860,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -4887,11 +4891,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void SetToolstripTheme()
         {
-            //LogHelper.Log("Rendermode was: " + ToolStripManager.RenderMode.ToString());
-            //LogHelper.Log("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
-            //LogHelper.Log("Skinname: " + appSettings.SkinName);
-            //LogHelper.Log("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
-            //LogHelper.Log("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
+            //logger.Debug("Rendermode was: " + ToolStripManager.RenderMode.ToString());
+            //logger.Debug("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
+            //logger.Debug("Skinname: " + appSettings.SkinName);
+            //logger.Debug("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
+            //logger.Debug("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
             try
             {
                 Skin currentSkin = CommonSkins.GetSkin(defaultLookAndFeel1.LookAndFeel);
@@ -4975,7 +4979,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             SetToolstripTheme();
         }
@@ -5011,7 +5015,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             if (t8can.isOpen()) t8can.Cleanup();
             Environment.Exit(0);
@@ -5063,7 +5067,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         if (row >= 0)
                         {
                             SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                            LogHelper.Log("Symbol dragging: " + sh.Varname);
+                            logger.Debug("Symbol dragging: " + sh.Varname);
                             sh.Currentdata = readdatafromfile(m_currentfile, (int)sh.Flash_start_address, sh.Length);
                             gridControlSymbols.DoDragDrop(sh, DragDropEffects.All);
 
@@ -5085,7 +5089,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log("Failed to run hitinfo on gridControlSymbols: " + E.Message);
+                    logger.Debug("Failed to run hitinfo on gridControlSymbols: " + E.Message);
                 }
             }
         }
@@ -5119,7 +5123,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
                                 // tot hier
                                 m_currentMapname = sh.Varname;
-                                LogHelper.Log("Hover above: " + sh.Varname);
+                                logger.Debug("Hover above: " + sh.Varname);
                                 if (m_mapHelper != null)
                                 {
                                     m_mapHelper.SuspendLayout();
@@ -5162,7 +5166,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Failed to reset mapHelper: " + E.Message);
+                            logger.Debug("Failed to reset mapHelper: " + E.Message);
                         }
                     }
                 }
@@ -5186,7 +5190,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     }
                     catch (Exception mE)
                     {
-                        LogHelper.Log("Failed to reset mapHelper (2): " + mE.Message);
+                        logger.Debug("Failed to reset mapHelper (2): " + mE.Message);
                     }
                 }
                 //if (hi.Column.Name == gcVehID.Name)
@@ -5198,7 +5202,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             //AddLogItem("Start (3): ");
 
@@ -5272,7 +5276,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     m_mapHelper.mapViewer1.SetSurfaceGraphZoom(0.15);
                     //m_mapHelper.mapViewer1.SetSurfaceGraphView(10, 10, 10, 10, 10, 0.2);
                     m_mapHelper.mapViewer1.Update();
-                    LogHelper.Log("Showing: " + m_mapHelper.mapViewer1.Map_name);
+                    logger.Debug("Showing: " + m_mapHelper.mapViewer1.Map_name);
                     m_mapHelper.SetSize(new Size(tablewidth * 60, rows * 15));
                     m_mapHelper.ShowPosition();
                 }
@@ -5465,7 +5469,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             m_appSettings = new AppSettings();
             set.AppSettings = m_appSettings;
             set.Symbols = GetRealtimeNotificationSymbols();
-            set.CANBusAdapterType = m_appSettings.CANBusAdapterType;
+            set.AdapterType = m_appSettings.AdapterType;
 
             set.InterpolateLogWorksTimescale = m_appSettings.InterpolateLogWorksTimescale;
             //set.AutoGenerateLogWorksFile = m_appSettings.AutoGenerateLogWorks;
@@ -5517,7 +5521,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.AutoDockSameSymbol = set.AutoDockSameSymbol;
                 m_appSettings.ShowViewerInWindows = set.ShowMapViewersInWindows;
                 m_appSettings.NewPanelsFloating = set.NewPanelsFloating;
-                m_appSettings.CANBusAdapterType = set.CANBusAdapterType;
+                m_appSettings.AdapterType = set.AdapterType;
                 m_appSettings.OnlyPBus = set.OnlyPBus;
                 m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
                 m_appSettings.UseNewMapViewer = set.UseNewMapViewer;
@@ -5712,7 +5716,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log("ImportExcelSymbol: " + E.Message);
+                    logger.Debug("ImportExcelSymbol: " + E.Message);
                 }
 
             }
@@ -5833,7 +5837,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception ex)
             {
-                LogHelper.Log(ex.Message);
+                logger.Debug(ex.Message);
                 return null;
             }
             finally { }
@@ -5955,7 +5959,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
 
 
@@ -5998,7 +6002,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to export to excel: " + E.Message);
+                logger.Debug("Failed to export to excel: " + E.Message);
             }
 
         }
@@ -6091,7 +6095,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -6298,7 +6302,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                         dockManager1.EndUpdate();
 
@@ -6358,7 +6362,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             if (IsChristmasTime())
             {
@@ -6392,7 +6396,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -6803,7 +6807,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     // set to max
                     //int maxtorqueforcell = PowerToTorque(peakHP, rpm, false);
                     //int maxairmassforcell = TorqueToAirmass(maxtorqueforcell, E85);
-                    //LogHelper.Log("Setting " + valueincell.ToString() + " to " + maxairmassforcell.ToString() + " at " + rpm.ToString() + " rpm");
+                    //logger.Debug("Setting " + valueincell.ToString() + " to " + maxairmassforcell.ToString() + " at " + rpm.ToString() + " rpm");
                     //valueincell *= 10; // T8 has 10 factor
                     valueincell = valueincell;
                     //}
@@ -7139,7 +7143,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             /*byte[] torquenominalx = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngXSP"), GetSymbolLength(m_symbols, "TorqueCal.M_EngXSP"));
             retval = Convert.ToInt32(torquenominalx.GetValue(torquenominalx.Length - 2)) * 256;
             retval += Convert.ToInt32(torquenominalx.GetValue(torquenominalx.Length - 1));
-            LogHelper.Log("Max torque from table = " + retval.ToString());*/
+            logger.Debug("Max torque from table = " + retval.ToString());*/
             return retval;
         }
 
@@ -7645,7 +7649,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             retval = Convert.ToInt32(torquenominalx.GetValue(torquenominalx.Length - 2)) * 256;
             retval += Convert.ToInt32(torquenominalx.GetValue(torquenominalx.Length - 1));
             retval /= 10;
-            LogHelper.Log("Max torque from table = " + retval.ToString());
+            logger.Debug("Max torque from table = " + retval.ToString());
             return retval;
         }*/
 
@@ -8282,7 +8286,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -8319,7 +8323,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 sfd.Filter = "Binary files|*.bin";
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    LogHelper.Log("Flipping file");
+                    logger.Debug("Flipping file");
                     string filenamenew = sfd.FileName;
                     FileStream fromfile = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
                     FileStream tofile = new FileStream(filenamenew, FileMode.CreateNew);
@@ -8368,7 +8372,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -8416,7 +8420,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
             }
@@ -8687,7 +8691,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (cnt++ > 15)
                 {
                     endFound = true;
-                    LogHelper.Log("More than 10 lines!");
+                    logger.Debug("More than 10 lines!");
                 }
             }
             return retval;
@@ -8787,7 +8791,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if (entirefile[i] == 'M' && entirefile[i + 1] == 'F' && entirefile[i + 2] == 'S' && entirefile[i + 3] == '*')
                     {
                         // get 0x100 bytes to start with
-                        LogHelper.Log("Block at " + i.ToString("X8"));
+                        logger.Debug("Block at " + i.ToString("X8"));
                         byte[] btodump = new byte[0x1000];
                         for (int j = 0; j < 0x1000; j++)
                         {
@@ -8844,7 +8848,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             string[] files = Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\Binaries\\Ori", "*.bin");
             foreach (string file in files)
             {
-                LogHelper.Log("Handling: " + Path.GetFileName(file));
+                logger.Debug("Handling: " + Path.GetFileName(file));
                 m_currentfile = file;
                 TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
                 // now get the details
@@ -8874,7 +8878,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     else
                     {
-                        LogHelper.Log("File already existed: " + newFilename);
+                        logger.Debug("File already existed: " + newFilename);
                     }
                     /*frminfo.ProgrammerName = t8header.ProgrammerName;
                     frminfo.ProgrammingDevice = t8header.ProgrammerDevice;
@@ -8891,7 +8895,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     frminfo.NumberOfFlashBlocks = t8header.NumberOfFlashBlocks.ToString();*/
                 }
             }
-            LogHelper.Log("All done");
+            logger.Debug("All done");
         }
 
         private void AddToPartnumberConverterFile(string partnumber, VINEngineType vINEngineType, VINCarModel vINCarModel, string swversion)
@@ -9805,7 +9809,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             {
                                 // add failure
                                 dt.Rows.Add(sh_Import.Varname, sh_Import.Length.ToString(), "");
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -9825,7 +9829,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (edit.WriteData)
                 {
                     // save the package again with altered settings probably.
-                    //LogHelper.Log("We should write the tuning package here!");
+                    //logger.Debug("We should write the tuning package here!");
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Trionic 8 packages|*.t8p";
                     if (sfd.ShowDialog() == DialogResult.OK)
@@ -10544,7 +10548,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void gridViewSymbols_DragObjectStart(object sender, DevExpress.XtraGrid.Views.Base.DragObjectStartEventArgs e)
         {
-            LogHelper.Log("Start dragging: " + e.DragObject.ToString());
+            logger.Debug("Start dragging: " + e.DragObject.ToString());
             _isMouseDown = true;
         }
 
@@ -10597,9 +10601,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             else
             {
                 SetCanAdapter();
-                #if (DEBUG)
-                t8can.EnableLog = true;
-                #endif
                 if (!t8can.isOpen())
                 {
                     t8can.openDevice(true);
@@ -10616,13 +10617,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         m_realtimeAddresses.Columns.Add("VarName");
 
                         m_swversion = t8can.GetSoftwareVersion();
-                        //LogHelper.Log("Version: " + m_swversion);
-                        LogHelper.Log("***");
+                        //logger.Debug("Version: " + m_swversion);
+                        logger.Debug("***");
                         for (int i = 0; i < m_swversion.Length; i++)
                         {
                             Console.Write(Convert.ToByte(m_swversion[i]).ToString("X2") + " ");
                         }
-                        LogHelper.Log("***");
+                        logger.Debug("***");
                         barConnectedECUName.Caption = m_swversion;
 
                         // fill realtime table
@@ -10692,23 +10693,32 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void SetCanAdapter()
         {
             t8can.OnlyPBus = m_appSettings.OnlyPBus;
-            if (m_appSettings.CANBusAdapterType == CANBusAdapter.Lawicel)
+            if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.LAWICEL])
             {
-                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.LAWICEL);
+                t8can.setCANDevice(CANBusAdapter.LAWICEL);
             }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
+            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
             {
-                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.COMBI);
+                t8can.setCANDevice(CANBusAdapter.COMBI);
             }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.ELM327)
+            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.ELM327])
             {
-                t8can.ForcedComport = m_appSettings.ELM327Port;
                 t8can.ForcedBaudrate = m_appSettings.Baudrate;
-                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.ELM327);
+                t8can.setCANDevice(CANBusAdapter.ELM327);
             }
-            else if (m_appSettings.CANBusAdapterType == CANBusAdapter.Just4Trionic)
+            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.JUST4TRIONIC])
             {
-                t8can.setCANDevice(TrionicCANLib.CANBusAdapter.JUST4TRIONIC);
+                t8can.ForcedBaudrate = m_appSettings.Baudrate;
+                t8can.setCANDevice(CANBusAdapter.JUST4TRIONIC);
+            }
+            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.KVASER])
+            {
+                t8can.setCANDevice(CANBusAdapter.KVASER);
+            }
+            
+            if (m_appSettings.Adapter != string.Empty)
+            {
+                t8can.SetSelectedAdapter(m_appSettings.Adapter);
             }
         }
 
@@ -10731,7 +10741,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -10752,7 +10762,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -10772,7 +10782,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -10864,7 +10874,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                             catch (Exception pE)
                             {
-                                LogHelper.Log(pE.Message);
+                                logger.Debug(pE.Message);
                             }
                         }
                     }
@@ -10892,7 +10902,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     catch (Exception expE1)
                     {
-                        LogHelper.Log(expE1.Message);
+                        logger.Debug(expE1.Message);
                     }
                     frmProgressLogWorks.Close();
                 }
@@ -10943,7 +10953,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception expE2)
                         {
-                            LogHelper.Log(expE2.Message);
+                            logger.Debug(expE2.Message);
                         }
                         frmProgressLogWorks.Close();
                     }
@@ -10953,7 +10963,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -10970,8 +10980,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         logworksstring = logworksstring.Substring(0, idx);
                         //string parameterstring = "\"" + Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.dif" + "\"";
-                        //                        LogHelper.Log(logworksstring);
-                        //LogHelper.Log(parameterstring);
+                        //                        logger.Debug(logworksstring);
+                        //logger.Debug(parameterstring);
 
                         System.Diagnostics.Process.Start(logworksstring, "\"" + filename + "\"");
                     }
@@ -10979,7 +10989,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -11020,7 +11030,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -11212,7 +11222,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void SetTabControlView(DevExpress.XtraTab.XtraTabControl tabcontrol, PanelMode panelMode, Color nightColor, Color labelColor)
         {
-            //LogHelper.Log("Switching tab control!");
+            //logger.Debug("Switching tab control!");
             if (panelMode == PanelMode.Day)
             {
                 tabcontrol.LookAndFeel.UseDefaultLookAndFeel = true;
@@ -11284,7 +11294,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             foreach (DevExpress.XtraTab.XtraTabPage page in tabcontrol.TabPages)
             {
-                //LogHelper.Log("Switching tab page: " + page.Name);
+                //logger.Debug("Switching tab page: " + page.Name);
                 SetTabPageView(page, panelMode, nightColor);
             }
 
@@ -11423,7 +11433,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to write realtime datatable: " + E.Message);
+                logger.Debug("Failed to write realtime datatable: " + E.Message);
             }
         }
 
@@ -11450,7 +11460,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to write realtime datatable: " + E.Message);
+                logger.Debug("Failed to write realtime datatable: " + E.Message);
             }
         }
 
@@ -11482,7 +11492,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 retval = Convert.ToInt32(dr["SymbolNumber"]);
                                 if (number != retval)
                                 {
-                                    //LogHelper.Log("Fetched (" + symbolname + ") number from realtime list: " + retval.ToString());
+                                    //logger.Debug("Fetched (" + symbolname + ") number from realtime list: " + retval.ToString());
                                 }
                                 break;
                             }
@@ -11536,7 +11546,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to add symbol to realtime list: " + E.Message);
+                logger.Debug("Failed to add symbol to realtime list: " + E.Message);
             }
         }
 
@@ -11592,7 +11602,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to load realtime symbol table: " + E.Message);
+                logger.Debug("Failed to load realtime symbol table: " + E.Message);
             }
         }
 
@@ -11642,7 +11652,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to load realtime symbol table: " + E.Message);
+                logger.Debug("Failed to load realtime symbol table: " + E.Message);
             }
         }
 
@@ -11750,7 +11760,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         /*if (dr["SYMBOLNAME"].ToString() == "Rpm")
                         {
-                            LogHelper.Log("break");
+                            logger.Debug("break");
                         }*/
 
 
@@ -11775,7 +11785,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
 
@@ -11968,7 +11978,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                             catch (Exception peakE)
                             {
-                                LogHelper.Log("Failed to set peak: " + peakE.Message);
+                                logger.Debug("Failed to set peak: " + peakE.Message);
                             }
                         }
                         else
@@ -12077,7 +12087,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -12140,13 +12150,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     else
                     {
-                        LogHelper.Log("Not reading from SRAM because we're doing something else");
+                        logger.Debug("Not reading from SRAM because we're doing something else");
                     }
                 }
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to run realtime timer code: " + E.Message);
+                logger.Debug("Failed to run realtime timer code: " + E.Message);
             }
             tmrRealtime.Enabled = m_enableRealtimeTimer;
         }
@@ -12154,14 +12164,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         //TODO: Adjust for Trionic 8
         private void GetSRAMVarsFromTable()
         {
-            //LogHelper.Log("GetSRAMVarsFromTable started");
+            //logger.Debug("GetSRAMVarsFromTable started");
             if (gridRealtime.DataSource != null)
             {
                 _sw.Reset();
                 _sw.Start();
                 System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
                 dt.BeginLoadData();
-                //LogHelper.Log("Fetch the datatable: " + dt.Rows.Count.ToString() + " rows");
+                //logger.Debug("Fetch the datatable: " + dt.Rows.Count.ToString() + " rows");
                 foreach (DataRow dr in dt.Rows)
                 {
                     //Debug.WriteLine("loop: "+_sw.ElapsedMilliseconds);
@@ -12185,12 +12195,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         else
                         {
-                            LogHelper.Log("Delay value was null for : " + dr["SymbolName"].ToString());
+                            logger.Debug("Delay value was null for : " + dr["SymbolName"].ToString());
                         }
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to reload: " + E.Message);
+                        logger.Debug("Failed to reload: " + E.Message);
                     }
                     //int symbolnumber = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
                     string symbolName = dr["SymbolName"].ToString();
@@ -12211,7 +12221,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         break;
                     }
 
-                    //LogHelper.Log("Start reading " + symbolName + " at address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8"));
+                    //logger.Debug("Start reading " + symbolName + " at address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8"));
                     //if (symbolnumber > 0)
                     {
                         byte[] buffer = new byte[1];
@@ -12224,7 +12234,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         else
                         {
-                            LogHelper.Log("Symbol: " + symbolName + " has address 0");
+                            logger.Debug("Symbol: " + symbolName + " has address 0");
                         }
 
                         /* string dbg = string.Empty;
@@ -12232,7 +12242,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                          {
                              dbg += buffer[i].ToString("X2") + " ";
                          }
-                         LogHelper.Log(symbolName + " = " + dbg + "buflen: " + buffer.Length.ToString() + " " + _success.ToString());
+                         logger.Debug(symbolName + " = " + dbg + "buflen: " + buffer.Length.ToString() + " " + _success.ToString());
                          */
                         if (_success)
                         {
@@ -12240,7 +12250,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                             if (buffer.Length == 1)
                             {
-                                //LogHelper.Log("Buffer received: " + buffer[0].ToString("X2"));
+                                //logger.Debug("Buffer received: " + buffer[0].ToString("X2"));
                                 value = Convert.ToInt32(buffer.GetValue(0));
                             }
                             else if (buffer.Length == 2)
@@ -12332,7 +12342,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                             catch (Exception peakE)
                             {
-                                LogHelper.Log("Failed to set peak: " + peakE.Message);
+                                logger.Debug("Failed to set peak: " + peakE.Message);
                             }
                             // update realtime info
                             UpdateRealtimeInformation(symbolName, (float)value);
@@ -12342,21 +12352,21 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                         else
                         {
-                            LogHelper.Log("Failed to read SRAM, symbol: " + symbolName);
+                            logger.Debug("Failed to read SRAM, symbol: " + symbolName);
                             System.Windows.Forms.Application.DoEvents();
                         }
                     }
                     Thread.Sleep(0);//<GS-11022010>
 
                 }
-                // <GS-29072010> if the multiadapter is in use 
+                // <GS-29072010> if the combiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
-                if (m_appSettings.CANBusAdapterType == CANBusAdapter.MultiAdapter)
+                if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
                 {
                     if (m_appSettings.Useadc1)
                     {
@@ -12428,7 +12438,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     //FIXME ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
 
-                //LogHelper.Log("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                //logger.Debug("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
                 LogRealTimeInformation(dt);
                 //UpdateOpenViewers(); FIXME
 
@@ -12479,7 +12489,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         min_difference = diff;
                         // this is our index
                         return_index = t / 2;
-                        // LogHelper.Log("Difference was: " + diff.ToString() + " at index " + return_index.ToString());
+                        // logger.Debug("Difference was: " + diff.ToString() + " at index " + return_index.ToString());
 
                     }
                 }
@@ -12601,7 +12611,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -12682,7 +12692,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log("Failed to log to file: " + E.Message);
+                    logger.Debug("Failed to log to file: " + E.Message);
                 }
             }
             if (m_WriteLogMarker)
@@ -12713,7 +12723,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
 
@@ -12793,7 +12803,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
             }
@@ -12846,15 +12856,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // convert to AFR value using wideband lambda sensor settings
             // ranges 0 - 255 will be default for 0-5 volt
             double voltage = value; // <GS-14042011> Combiadapter seems to generate voltage in stead of 0-255 values ((value) / 255) * (m_HighVoltage / 1000 - m_LowVoltage / 1000);
-            //LogHelper.Log("Wideband voltage: " + voltage.ToString());
+            //logger.Debug("Wideband voltage: " + voltage.ToString());
             // now convert to AFR using user settings
             if (voltage < m_LowVoltage / 1000) voltage = m_LowVoltage / 1000;
             if (voltage > m_HighVoltage / 1000) voltage = m_HighVoltage / 1000;
-            //LogHelper.Log("Wideband voltage (after clipping): " + voltage.ToString());
+            //logger.Debug("Wideband voltage (after clipping): " + voltage.ToString());
             double steepness = ((m_HighValue / 1000) - (m_LowValue / 1000)) / ((m_HighVoltage / 1000) - (m_LowVoltage / 1000));
-            //LogHelper.Log("Steepness: " + steepness.ToString());
+            //logger.Debug("Steepness: " + steepness.ToString());
             retval = (m_LowValue / 1000) + (steepness * (voltage - (m_LowVoltage / 1000)));
-            //LogHelper.Log("retval: " + retval.ToString());
+            //logger.Debug("retval: " + retval.ToString());
             return retval;
 
         }
@@ -13513,7 +13523,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 catch (Exception newdockE)
                 {
-                    LogHelper.Log(newdockE.Message);
+                    logger.Debug(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -13591,12 +13601,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // we need security access for this
 
 
-            LogHelper.Log("reading from address: " + sh.Start_address.ToString("X8") + " len: " + sh.Length.ToString());
+            logger.Debug("reading from address: " + sh.Start_address.ToString("X8") + " len: " + sh.Length.ToString());
             byte[] mapvalues = new byte[sh.Length];
             if (sh.Length < blockSize)
             {
                 mapvalues = t8can.readMemory((int)sh.Start_address, sh.Length, out success);
-                LogHelper.Log("ReadMapFromSRAM: " + success.ToString());
+                logger.Debug("ReadMapFromSRAM: " + success.ToString());
             }
             else
             {
@@ -13610,7 +13620,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     int length2read = blockSize;
                     byte[] blockBytes = t8can.readMemory(address2read, length2read, out success);
                     Thread.Sleep(1);
-                    LogHelper.Log("ReadMapFromSRAM: " + success.ToString());
+                    logger.Debug("ReadMapFromSRAM: " + success.ToString());
                     // copy bytes to complete buffer
                     for (int j = 0; j < length2read; j++)
                     {
@@ -13641,7 +13651,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         int symbolindex = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, e.Mapname), e.Mapname);
                         if (symbolindex >= 0)
                         {
-                            //LogHelper.Log("Reading " + symbolindex.ToString() + " " + e.Mapname);
+                            //logger.Debug("Reading " + symbolindex.ToString() + " " + e.Mapname);
                             System.Windows.Forms.Application.DoEvents();
                             foreach (SymbolHelper shs in m_symbols)
                             {
@@ -13739,7 +13749,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     }
                                     catch (Exception E)
                                     {
-                                        LogHelper.Log("Refresh viewer with SRAM data error: " + E.Message);
+                                        logger.Debug("Refresh viewer with SRAM data error: " + E.Message);
                                     }
                                     break;
                                 }
@@ -13755,7 +13765,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to read MAP from SRAM: " + E.Message);
+                logger.Debug("Failed to read MAP from SRAM: " + E.Message);
             }
             m_prohibitReading = false;
         }
@@ -13785,7 +13795,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Failed to write to SRAM: " + E.Message);
+                            logger.Debug("Failed to write to SRAM: " + E.Message);
                         }
                     }
                 }
@@ -13796,7 +13806,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to write map to SRAM: " + E.Message);
+                logger.Debug("Failed to write map to SRAM: " + E.Message);
             }
             m_prohibitReading = false;
         }
@@ -14118,7 +14128,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception newdockE)
                         {
-                            LogHelper.Log(newdockE.Message);
+                            logger.Debug(newdockE.Message);
                         }
                         dockManager1.EndUpdate();
                     }
@@ -14227,7 +14237,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception myMapsE)
             {
-                LogHelper.Log("Failed to create myMaps menu: " + myMapsE.Message);
+                logger.Debug("Failed to create myMaps menu: " + myMapsE.Message);
             }
         }
 
@@ -14286,8 +14296,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                 int addrtaboffset = GetAddrTableOffsetBySymbolTable(m_currentfile) + 7;
                 int addrtaboffset_newfile = GetAddrTableOffsetBySymbolTable(ofd.FileName) + 7;
-                LogHelper.Log("Addresstable offset 1: " + addrtaboffset.ToString());
-                LogHelper.Log("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
+                logger.Debug("Addresstable offset 1: " + addrtaboffset.ToString());
+                logger.Debug("Addresstable offset 2: " + addrtaboffset_newfile.ToString());
                 bool _allow = false;
                 if (addrtaboffset == addrtaboffset_newfile) _allow = true;
                 if (!_allow)
@@ -14338,7 +14348,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     }
                                     catch (Exception E)
                                     {
-                                        LogHelper.Log(E.Message);
+                                        logger.Debug(E.Message);
                                     }
 
                                 }
@@ -14488,7 +14498,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
                                 catch (Exception pE)
                                 {
-                                    LogHelper.Log(pE.Message);
+                                    logger.Debug(pE.Message);
                                 }
                             }
                         }
@@ -14496,7 +14506,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 frmMatrixSelection sel = new frmMatrixSelection();
                 sel.SetSymbolList(sc);
@@ -14579,7 +14589,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
                                 catch (Exception pE)
                                 {
-                                    LogHelper.Log(pE.Message);
+                                    logger.Debug(pE.Message);
                                 }
                             }
                         }
@@ -14606,14 +14616,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                         double xvalue = xmin;
                         if (i > 0) xvalue = xmin + i * ((xmax - xmin) / (15));
-                        //LogHelper.Log("Adding: " + xvalue.ToString());
+                        //logger.Debug("Adding: " + xvalue.ToString());
                         try
                         {
                             dtresult.Columns.Add(xvalue.ToString(), Type.GetType("System.Double"));
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Failed to add column: " + E.Message);
+                            logger.Debug("Failed to add column: " + E.Message);
                         }
                         x_values.SetValue(xvalue, i); //    test: andersom?
                     }
@@ -14632,7 +14642,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Failed to add empty row: " + E.Message);
+                            logger.Debug("Failed to add empty row: " + E.Message);
                         }
                     }
                     // table filled
@@ -14688,7 +14698,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 }
                                 catch (Exception pE)
                                 {
-                                    LogHelper.Log(pE.Message);
+                                    logger.Debug(pE.Message);
                                 }
                                 // add point to the datatable
                                 AddPointToDataTable(dtresult, _lastX, _lastY, _lastZ, xmin, xmax, ymin, ymax, zmin, zmax, type);
@@ -14767,7 +14777,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             yindex = 15 - yindex; // flip the table
 
 
-            //LogHelper.Log("x = " + x.ToString() + " y = " + y.ToString() + " xindex = " + xindex.ToString() + " yindex = " + yindex.ToString());
+            //logger.Debug("x = " + x.ToString() + " y = " + y.ToString() + " xindex = " + xindex.ToString() + " yindex = " + yindex.ToString());
             // get the counter from avgTable
             if (type == 0)
             {
@@ -14825,12 +14835,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, varname), varname);
                         sh.Symbol_number = symbolnumber;
 
-                        LogHelper.Log("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + varname);
+                        logger.Debug("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + varname);
                         if (symbolnumber >= 0)
                         {
                             //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh);
-                            LogHelper.Log("read " + result.Length.ToString() + " bytes from SRAM!");
+                            logger.Debug("read " + result.Length.ToString() + " bytes from SRAM!");
                             StartTableViewer(varname);
                             try
                             {
@@ -14899,7 +14909,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log("Refresh viewer with SRAM data error: " + E.Message);
+                                logger.Debug("Refresh viewer with SRAM data error: " + E.Message);
                             }
                             break;
                         }
@@ -14968,7 +14978,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         catch (GZipException ex)
                         {
                             File.Delete(Path.GetFileNameWithoutExtension(gbfFileName));
-                            LogHelper.Log("Selected gbf file is probably not gziped:" + ex.Message);
+                            logger.Debug("Selected gbf file is probably not gziped:" + ex.Message);
                         }
 
                         // Start updating FLASH from address 0x020000 
@@ -15212,13 +15222,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     catch (Exception lineE)
                     {
-                        LogHelper.Log("Failed to import a symbol from CSV file " + line + ": " + lineE.Message);
+                        logger.Debug("Failed to import a symbol from CSV file " + line + ": " + lineE.Message);
                     }
                 }
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to import additional CSV symbols: " + E.Message);
+                logger.Debug("Failed to import additional CSV symbols: " + E.Message);
             }
         }
 
@@ -15274,7 +15284,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         catch (Exception lineE)
                         {
-                            LogHelper.Log("Failed to import a symbol from AS2 file " + line + ": " + lineE.Message);
+                            logger.Debug("Failed to import a symbol from AS2 file " + line + ": " + lineE.Message);
                         }
 
                     }
@@ -15282,7 +15292,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to import additional AS2 symbols: " + E.Message);
+                logger.Debug("Failed to import additional AS2 symbols: " + E.Message);
             }
         }
 
@@ -15335,7 +15345,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             if (line.StartsWith("*FFFuelCal.KnkEnrichmentMAP"))
                             {
-                                LogHelper.Log("hold on");
+                                logger.Debug("hold on");
                             }
                             readType = true;
                             xaxislineCount = -1;
@@ -15355,7 +15365,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 //  if (st.TranslateSymbolToHelpText(symbolName, out ht, out cat, out subcat) == string.Empty)
                                 {
                                     DumpSymbolToSourceFile(symbolName, xaxisSymbol, yaxisSymbol, description, divisor, type);
-                                    //LogHelper.Log(symbolName + Environment.NewLine + xaxisSymbol + Environment.NewLine + yaxisSymbol + Environment.NewLine + description);
+                                    //logger.Debug(symbolName + Environment.NewLine + xaxisSymbol + Environment.NewLine + yaxisSymbol + Environment.NewLine + description);
                                 }
                             }
                             divisor = 1;
@@ -15441,7 +15451,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to import additional AS2 symbols: " + E.Message);
+                logger.Debug("Failed to import additional AS2 symbols: " + E.Message);
             }
 
             /*StreamReader sr = new StreamReader(@"C:\t7test\T7_EE0C.as2");
@@ -15459,7 +15469,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (sh.Description == "" || sh.Description == sh.Varname)
                 {
                     // try to find the description in the T7 info file
-                    //LogHelper.Log("Find info for " + sh.Varname);
+                    //logger.Debug("Find info for " + sh.Varname);
                     for (int i = 0; i < lines.Length; i++)
                     {
 
@@ -15496,12 +15506,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                                 if (description.Length > 3)
                                 {
-                                    LogHelper.Log("Found info for " + sh.Varname + ": " + description);
+                                    logger.Debug("Found info for " + sh.Varname + ": " + description);
                                     AddToSourceFile(sh.Varname, description, "", "");
                                 }
                                 else
                                 {
-                                    //LogHelper.Log("No info found for: " + sh.Varname);
+                                    //logger.Debug("No info found for: " + sh.Varname);
                                 }
                             }
                         }

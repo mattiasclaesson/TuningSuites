@@ -8,11 +8,13 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public partial class frmBinCompare : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private SymbolCollection m_symbols = new SymbolCollection();
 
         public SymbolCollection Symbols
@@ -138,7 +140,7 @@ namespace T8SuitePro
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             fsi1.Close();

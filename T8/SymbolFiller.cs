@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     class SymbolFiller
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public bool CheckAndFillCollection(SymbolCollection sc)
         {
             bool retval = false;
@@ -405,7 +408,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                 bool limitersFound = false;
                 foreach (SymbolHelper sh in sc)
                 {
-                    //if (state > 0) LogHelper.Log("State = " + state.ToString() + " symcount: " + symCounter.ToString());
+                    //if (state > 0) logger.Debug("State = " + state.ToString() + " symcount: " + symCounter.ToString());
                     switch (state)
                     {
                         case 0:
@@ -461,7 +464,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                 }
                 if (symIndex > 0)
                 {
-                    LogHelper.Log("(I) Found index: " + symIndex.ToString());
+                    logger.Debug("(I) Found index: " + symIndex.ToString());
                     limitersFound = true;
                     // - 11 = TrqLimCal.Trq_ManGear
                     SetMapNameByIndex(sc, symIndex - 11, 16, "TrqLimCal.Trq_ManGear");
@@ -485,7 +488,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                     symCounter = 0;
                     foreach (SymbolHelper sh in sc)
                     {
-                        //if (state > 0) LogHelper.Log("State = " + state.ToString() + " symcount: " + symCounter.ToString());
+                        //if (state > 0) logger.Debug("State = " + state.ToString() + " symcount: " + symCounter.ToString());
                         switch (state)
                         {
                             case 0:
@@ -537,7 +540,7 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                 }
                 if (symIndex > 0)
                 {
-                    LogHelper.Log("(II) Found index: " + symIndex.ToString());
+                    logger.Debug("(II) Found index: " + symIndex.ToString());
                     limitersFound = true;
                     // - 9 = TrqLimCal.Trq_ManGear
                     SetMapNameByIndex(sc, symIndex - 9, 16, "TrqLimCal.Trq_ManGear");

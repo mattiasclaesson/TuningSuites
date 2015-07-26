@@ -6,11 +6,14 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using NLog;
 
 namespace CommonSuite
 {
     public partial class frmLogFilters : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public frmLogFilters()
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace CommonSuite
 
         public void SetFilters(LogFilterCollection filters)
         {
-            if (filters == null) LogHelper.Log("setting filters as null");
+            if (filters == null) logger.Debug("setting filters as null");
             gridControl1.DataSource = filters;
             gridView1.BestFitColumns();
         }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
-
+using NLog;
 
 
 namespace CommonSuite
@@ -16,6 +16,7 @@ namespace CommonSuite
         private bool m_blockauto_updates;
         private string m_tagName = "";
         private string m_msi;
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         public bool Blockauto_updates
         {
@@ -376,7 +377,7 @@ namespace CommonSuite
                 if (m_updateavailable)
                 {
 
-                    //LogHelper.Log("An update is available: " + maxversion.ToString());
+                    //logger.Debug("An update is available: " + maxversion.ToString());
                     PumpString("A newer version is available: " + maxversion.ToString(), m_updateavailable, m_version_toohigh, maxversion, Apppath + "\\Notes.xml");
                     m_NewVersion = maxversion;
 

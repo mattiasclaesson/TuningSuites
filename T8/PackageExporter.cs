@@ -5,11 +5,14 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     class PackageExporter
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private byte[] readdatafromfile(string filename, int address, int length)
         {
             byte[] retval = new byte[length];
@@ -31,7 +34,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }

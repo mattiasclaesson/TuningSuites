@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public class LogFilters
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public void SaveFiltersToRegistry(LogFilterCollection filters)
         {
             foreach (LogFilter filter in filters)
@@ -38,7 +41,7 @@ namespace T8SuitePro
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -46,7 +49,7 @@ namespace T8SuitePro
             }
             catch (Exception E2)
             {
-                LogHelper.Log(E2.Message);
+                logger.Debug(E2.Message);
             }
             return filters;
         }
@@ -89,7 +92,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
             }

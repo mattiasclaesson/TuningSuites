@@ -7,11 +7,14 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Data;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public class TrionicFile
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public enum VectorType : int
         {
             Reset_initial_stack_pointer,
@@ -239,7 +242,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -290,7 +293,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                         retval = 0;
                     }
                     fs.Flush();
@@ -430,7 +433,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -538,7 +541,7 @@ namespace T8SuitePro
                         case 8:
                             /*if (fsread.Position > 0x5f900)
                             {
-                                LogHelper.Log("Hola");
+                                logger.Debug("Hola");
                             }
                             */
                             if (adrb == (byte)searchsequence.GetValue(8))
@@ -583,7 +586,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve address from: " + offset.ToString("X6") + ": " + E.Message);
+                        logger.Debug("Failed to retrieve address from: " + offset.ToString("X6") + ": " + E.Message);
                     }
                     fs.Close();
                 }
@@ -611,7 +614,7 @@ namespace T8SuitePro
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to retrieve length from: " + offset.ToString("X6") + ": " + E.Message);
+                        logger.Debug("Failed to retrieve length from: " + offset.ToString("X6") + ": " + E.Message);
                     }
                     fs.Close();
                 }
@@ -766,7 +769,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }

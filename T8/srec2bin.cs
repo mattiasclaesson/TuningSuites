@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     class srec2bin
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         public bool ConvertSrecToBin(string filename, out string newfilename)
         {
@@ -40,7 +42,7 @@ namespace T8SuitePro
                                 }
                             }
 
-                           // LogHelper.Log("S2: " + bytecount.ToString());
+                           // logger.Debug("S2: " + bytecount.ToString());
                         }
                         else if (readline.StartsWith("S2") && readline.Length > 43)
                         {
@@ -55,7 +57,7 @@ namespace T8SuitePro
                                      bytecount++;
                                  }
                              }
-                           // LogHelper.Log("S2: " + bytecount.ToString());
+                           // logger.Debug("S2: " + bytecount.ToString());
                         }
                         else if (readline.StartsWith("S1") && readline.Length > 41 && readline.Length <= 44)
                         {
@@ -70,12 +72,12 @@ namespace T8SuitePro
                                      bytecount++;
                                  }
                              }
-                            //LogHelper.Log("S1: " + bytecount.ToString());
+                            //logger.Debug("S1: " + bytecount.ToString());
                         }
 
                     }
                 }
-                LogHelper.Log("Bytes written: " + bytecount.ToString());
+                logger.Debug("Bytes written: " + bytecount.ToString());
                 binwrite.Close();
                 fswrite.Close();
                 newfilename = outputfile;
@@ -83,7 +85,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }
@@ -178,7 +180,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }
@@ -265,7 +267,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }

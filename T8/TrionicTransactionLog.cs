@@ -29,12 +29,15 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using NLog;
 
 namespace CommonSuite
 {
     public class TrionicTransactionLog
     {
         private string m_fileName = string.Empty;
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private TransactionCollection _transCollection = new TransactionCollection();
 
         public TransactionCollection TransCollection
@@ -432,7 +435,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
             File.Delete(m_fileName);

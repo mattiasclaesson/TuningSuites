@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public class Disassembler
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public enum ProgressType : int
         {
             DisassemblingVectors,
@@ -1576,11 +1579,11 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
                         /*if (trgdata == 0xFFF2)
                         {
-                            LogHelper.Log("break!");
+                            logger.Debug("break!");
                         }*/
 
                         str = "JSR\t" + dest;
-                        //LogHelper.Log(dest);
+                        //logger.Debug(dest);
                         ilen++;
                     }
                     else if (dstreg == 7 && dstmod == 3)
@@ -1590,7 +1593,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                         endsub = true; // jump to somewhere else
                         AddLabel(destaddr);
                         isjump = true;
-                        //LogHelper.Log("JUMP SEEND: " + destaddr.ToString("X8"));
+                        //logger.Debug("JUMP SEEND: " + destaddr.ToString("X8"));
                         str = "JMP\t" + dest;
                         ilen++;
                     }
@@ -2211,15 +2214,15 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to handle vector: " + E.Message);
+                        logger.Debug("Failed to handle vector: " + E.Message);
                     }
                 }
             }
 
-            LogHelper.Log("Found " + _labels.Count.ToString() + " in pass one");
+            logger.Debug("Found " + _labels.Count.ToString() + " in pass one");
             foreach (MNemonicHelper label in _labels)
             {
-                if (label.Address == adresses[1]) LogHelper.Log("Found start pointer!");
+                if (label.Address == adresses[1]) logger.Debug("Found start pointer!");
             }
             return _labels;
         }
@@ -2295,19 +2298,19 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to handle vector: " + E.Message);
+                        logger.Debug("Failed to handle vector: " + E.Message);
                     }
                 }
             }
 
             CastProgressEvent("Translating vector labels", 0, ProgressType.TranslatingVectors);
-            //LogHelper.Log("Translating vector labels");
+            //logger.Debug("Translating vector labels");
 
             int lblcount = 0;
             string[] names = TrionicFile.GetVectorNames();
             foreach (MNemonicHelper label in labels)
             {
-                //LogHelper.Log("label: " + label.Address.ToString("X8") + " " + label.Mnemonic);
+                //logger.Debug("label: " + label.Address.ToString("X8") + " " + label.Mnemonic);
                 int percentage = (lblcount++ * 100) / labels.Count;
                 CastProgressEvent("Translating vector labels", percentage, ProgressType.TranslatingVectors);
                 for (i = 0; i < vectors.Length; i++)
@@ -2319,7 +2322,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 }
             }
             /*
-            LogHelper.Log("Translating known functions");
+            logger.Debug("Translating known functions");
             CastProgressEvent("Translating known functions", 0, ProgressType.TranslatingLabels);
             lblcount = 0;
             foreach (MNemonicHelper label in labels)
@@ -2380,7 +2383,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 }
             }*/
             CastProgressEvent("Adding labels", 0, ProgressType.AddingLabels);
-            //LogHelper.Log("Adding labels");
+            //logger.Debug("Adding labels");
             lblcount = 0;
             foreach (MNemonicHelper label in labels)
             {
@@ -2391,7 +2394,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 mnemonics.Add(label);
             }
 
-            //LogHelper.Log("Sorting data");
+            //logger.Debug("Sorting data");
             CastProgressEvent("Sorting mnemonics", 0, ProgressType.SortingData);
             mnemonics.SortColumn = "Address";
             mnemonics.SortingOrder = GenericComparer.SortOrder.Ascending;
@@ -2492,7 +2495,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
         private void DisassembleFunction(long addr, SymbolCollection symbols, FileStream fs, BinaryReader br, long offset)
         {
             CastProgressEvent("Disassembling function: " + addr.ToString("X8"), func_count++, ProgressType.DisassemblingFunctions);
-            //LogHelper.Log("DisassembleFunction: " + addr.ToString("X8"));
+            //logger.Debug("DisassembleFunction: " + addr.ToString("X8"));
             MNemonicCollection functionList = new MNemonicCollection();
 
             MNemonicHelper label = new MNemonicHelper();
@@ -2502,7 +2505,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             label.Address = addr;
             if (AddressInMnemonicList(addr))
             {
-                //LogHelper.Log("Already disassembled: " + addr.ToString("X8"));
+                //logger.Debug("Already disassembled: " + addr.ToString("X8"));
                 return ;
             }
             labels.Add(label);
@@ -2531,10 +2534,10 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 uint adr = (uint)(((addr + offaddr) & 0xffff));
                 /*if (ch1 == 0x58 && ch2 == 0x8F)
                 {
-                    LogHelper.Log("break!");
+                    logger.Debug("break!");
                 }*/
                 uint t = disasm(out str, addr, ch1, ch2, offaddr, br, out endsub, out issub, out isjump);
-                //LogHelper.Log(str);
+                //logger.Debug(str);
                 if (str != "")
                 {
                     MNemonicHelper mnhelper = new MNemonicHelper();
@@ -2577,7 +2580,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 {
                     /*if (trgdata == 0)
                     {
-                        LogHelper.Log("break!");
+                        logger.Debug("break!");
                     }*/
                     
                     // alleen als die nog niet geweest is
@@ -2588,9 +2591,9 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                             if (trgdata < 0x00100000) // 0x00F00000 == T7
                             {
                                 long position = fs.Position;
-                                //LogHelper.Log("recursive: " + trgdata.ToString("X8") + " curr address: " + addr.ToString("X8")); 
+                                //logger.Debug("recursive: " + trgdata.ToString("X8") + " curr address: " + addr.ToString("X8")); 
                                 DisassembleFunction(trgdata, symbols, fs, br, offset);
-                                //LogHelper.Log("After recursion: " + addr.ToString("X8"));
+                                //logger.Debug("After recursion: " + addr.ToString("X8"));
                                 fs.Position = position; // reset to previous position
                             }
                         }
@@ -2601,7 +2604,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 }
             }
 
-            //LogHelper.Log("Done with function: " + mnemonics.Count.ToString());
+            //logger.Debug("Done with function: " + mnemonics.Count.ToString());
         }
     
 		private bool AddressInLabelList(long address)
@@ -2624,7 +2627,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
 		private void LoadLabels(long addr, FileStream fs, BinaryReader br, long offset)
         {
-            //LogHelper.Log("Load labels from addr: " + addr.ToString("X8"));
+            //logger.Debug("Load labels from addr: " + addr.ToString("X8"));
             MNemonicHelper label = new MNemonicHelper();
             MNemonicCollection functionList = new MNemonicCollection();
             label.Mnemonic = "Function_" + addr.ToString("X8") + ":";
@@ -2635,7 +2638,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 return;
             }
             _labels.Add(label);
-            //LogHelper.Log("Added label: " + label.Mnemonic + " " + label.Address.ToString("X8"));
+            //logger.Debug("Added label: " + label.Mnemonic + " " + label.Address.ToString("X8"));
 
             long offaddr = 0;
             if (addr == 0) return;
@@ -2857,7 +2860,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                     addr++;
                 }
             }

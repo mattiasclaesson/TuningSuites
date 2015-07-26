@@ -10,6 +10,7 @@ using T8SuitePro;
 using System.IO;
 using DevExpress.XtraCharts;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
@@ -40,6 +41,7 @@ namespace T8SuitePro
         int[] EGTMap;
         int[] fuelVExaxis;
         int[] fuelVEyaxis;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
 
         public string Currentfile
@@ -99,7 +101,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -120,7 +122,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -264,7 +266,7 @@ namespace T8SuitePro
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
 
                 for (int a = 0; a < nominaltorque.Length; a++)
@@ -320,7 +322,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to calculate for file : " + m_currentfile);
+                logger.Debug("Failed to calculate for file : " + m_currentfile);
             }
 
         }
@@ -331,7 +333,7 @@ namespace T8SuitePro
             int retval = requestairmass;
             limiterType = limitType.None;
 
-            LogHelper.Log("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
+            logger.Debug("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
             
             // first check against torquelimiters
             limitType TrqLimiterType = limitType.None;
@@ -408,7 +410,7 @@ namespace T8SuitePro
             int torquelimit1 = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
             if (torque > torquelimit1)
             {
-                //LogHelper.Log("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
+                //logger.Debug("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
                 torque = torquelimit1;
                 if (E85)
                 {
@@ -446,7 +448,7 @@ namespace T8SuitePro
                 {
                     torque = torquelimitManual;
                     TrqLimiter = limitType.TorqueLimiterGear;
-                    LogHelper.Log("Manual gear torque limit hit");
+                    logger.Debug("Manual gear torque limit hit");
                 }
             }
             else
@@ -461,7 +463,7 @@ namespace T8SuitePro
                 {
                     torque = torquelimitAutomatic;
                     TrqLimiter = limitType.TorqueLimiterGear;
-                    LogHelper.Log("Automatic gear torque limit hit");
+                    logger.Debug("Automatic gear torque limit hit");
                 }
             }
 
@@ -531,7 +533,7 @@ namespace T8SuitePro
             {
                 requestedairmass = airmasslimit;
                 AirmassLimiter = limitType.AirmassLimiter;
-                LogHelper.Log("Reduced airmass because of BstKnkCal.MaxAirmass/FFAirCal.m_maxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString() + " E85: " + E85.ToString());
+                logger.Debug("Reduced airmass because of BstKnkCal.MaxAirmass/FFAirCal.m_maxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString() + " E85: " + E85.ToString());
             }
 
             return requestedairmass;
@@ -638,7 +640,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to interpolate: " + E.Message);
+                logger.Debug("Failed to interpolate: " + E.Message);
             }
             return result;
 
@@ -800,7 +802,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -876,7 +878,7 @@ namespace T8SuitePro
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }
@@ -1015,7 +1017,7 @@ namespace T8SuitePro
 
         private void LoadExtraGraphFromCompareBin(DataTable dt, string filename)
         {
-            LogHelper.Log("Loading additional data for: " + filename);
+            logger.Debug("Loading additional data for: " + filename);
             string powerLabel = "Power (bhp) " + Path.GetFileNameWithoutExtension(filename);
             if (checkEdit5.Checked) powerLabel = "Power (kW) " + Path.GetFileNameWithoutExtension(filename);
             string torqueLabel = "Torque (Nm) " + Path.GetFileNameWithoutExtension(filename);
@@ -1510,7 +1512,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to interpolate: " + E.Message);
+                logger.Debug("Failed to interpolate: " + E.Message);
             }
             return result;
 
@@ -1618,7 +1620,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to interpolate: " + E.Message);
+                logger.Debug("Failed to interpolate: " + E.Message);
             }
             return result;
 

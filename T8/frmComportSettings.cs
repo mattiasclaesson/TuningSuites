@@ -10,33 +10,11 @@ using System.IO.Ports;
 
 namespace CommonSuite
 {
-    public partial class frmComportSelection : DevExpress.XtraEditors.XtraForm
+    public partial class frmComportSettings : DevExpress.XtraEditors.XtraForm
     {
-        public frmComportSelection()
+        public frmComportSettings()
         {
             InitializeComponent();
-            string[] portNames = SerialPort.GetPortNames();
-            comboBoxEdit1.Properties.Items.Add("Autodetect");
-            foreach (string port in portNames)
-            {
-                if (port.StartsWith("COM"))
-                {
-                    comboBoxEdit1.Properties.Items.Add(port);
-                }
-            }
-            comboBoxEdit1.SelectedIndex = 0;
-        }
-
-        public string PortName
-        {
-            get
-            {
-                return comboBoxEdit1.SelectedItem.ToString();
-            }
-            set
-            {
-                comboBoxEdit1.SelectedItem = value;
-            }
         }
 
         public int Baudrate

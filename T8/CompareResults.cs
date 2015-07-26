@@ -9,11 +9,14 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using CommonSuite;
+using NLog;
 
 namespace T8SuitePro
 {
     public partial class CompareResults : DevExpress.XtraEditors.XtraUserControl
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public delegate void NotifySelectSymbol(object sender, SelectSymbolEventArgs e);
         public event CompareResults.NotifySelectSymbol onSymbolSelect;
 
@@ -203,7 +206,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             ctrl.EndUpdate();
         }
