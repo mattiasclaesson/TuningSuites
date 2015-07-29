@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T5CanFlasher", "T5 CAN Flasher\T5CanFlasher.csproj", "{B30F4496-0D74-4821-A7A4-74EEF9973644}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T5CANLib", "T5CANLib\T5CANLib.csproj", "{5DB5BB8D-7EA1-456F-928F-7B047AB2EA28}"
