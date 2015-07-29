@@ -6513,8 +6513,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             InitMruSystem();
             try
             {
-                IMapViewer mv = new MapViewer();
-                mv = new MapViewerEx();
+                IMapViewer mv;
+                if (m_appSettings.UseNewMapViewer)
+                {
+                    mv = new MapViewerEx();
+                }
+                else
+                {
+                    mv = new MapViewer();
+                }
             }
             catch (Exception E)
             {
