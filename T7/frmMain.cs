@@ -1048,51 +1048,31 @@ namespace T7
                 m_appSettings.WidebandDevice = set.WidebandDevice;
                 m_appSettings.WbPort = set.WidebandComPort;
 
-
-                if (m_appSettings.MeasureAFRInLambda)
-                {
-                    linearGauge2.MaxValue = 1.5F;
-                    linearGauge2.MinValue = 0.5F;
-                    linearGauge2.GaugeText = "λ ";
-                    labelControl11.Text = "λ";
-                    linearGauge2.NumberOfDecimals = 2;
-                    linearGauge2.NumberOfDivisions = 10;
-                    AfrViewMode = AFRViewType.LambdaMode;
-                    btnAFRFeedbackMap.Caption = "Show lambda feedback map";
-                    btnClearAFRFeedback.Caption = "Clear lambda feedback map";
-                }
-                else
-                {
-                    linearGauge2.MaxValue = 20;
-                    linearGauge2.MinValue = 10;
-                    linearGauge2.GaugeText = "AFR ";
-                    labelControl11.Text = "AFR";
-                    linearGauge2.NumberOfDecimals = 1;
-                    AfrViewMode = AFRViewType.AFRMode;
-                    btnAFRFeedbackMap.Caption = "Show AFR feedback map";
-                    btnClearAFRFeedback.Caption = "Clear AFR feedback map";
-                }
-                //UpdateSettingButtons();
-                if (!m_appSettings.FancyDocking)
-                {
-                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
-                }
-                else
-                {
-                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.VS2005;
-                }
-                if (m_appSettings.HideSymbolTable)
-                {
-                    dockSymbols.Visibility = DockVisibility.AutoHide;
-                    dockSymbols.HideImmediately();
-                }
-                else
-                {
-                    dockSymbols.Visibility = DockVisibility.Visible;
-                }
-
+                SetupMeasureAFRorLambda();
+                SetupDocking();
+                SetupDisplayOptions();
             }
-            SetFilterMode();
+        }
+
+        private void SetupDocking()
+        {
+            if (!m_appSettings.FancyDocking)
+            {
+                dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
+            }
+            else
+            {
+                dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.VS2005;
+            }
+            if (m_appSettings.HideSymbolTable)
+            {
+                dockSymbols.Visibility = DockVisibility.AutoHide;
+                dockSymbols.HideImmediately();
+            }
+            else
+            {
+                dockSymbols.Visibility = DockVisibility.Visible;
+            }
         }
 
         /// <summary>
@@ -6543,16 +6523,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             splash.Close();
 
             LoadLayoutFiles();
-            
-
-            try
-            {
-                SetRealtimeListFont(m_appSettings.RealtimeFont);
-            }
-            catch (Exception fontE)
-            {
-                LogHelper.Log(fontE.Message);
-            }
 
             if (m_startFromCommandLine)
             {
@@ -6585,7 +6555,16 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     OpenProject(m_appSettings.Lastprojectname);
                 }
             }
-            
+
+            try
+            {
+                SetRealtimeListFont(m_appSettings.RealtimeFont);
+            }
+            catch (Exception fontE)
+            {
+                LogHelper.Log(fontE.Message);
+            }
+
             if (m_appSettings.ShowMenu)
             {
                 ribbonControl1.Minimized = false;
@@ -6598,6 +6577,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 readSymbolToolStripMenuItem.Enabled = true;
             }
+            SetupMeasureAFRorLambda();
+            SetupDocking();
+            SetupDisplayOptions();
+            LoadMyMaps();
+            DynamicTuningMenu();
+        }
+
+        private void SetupMeasureAFRorLambda()
+        {
             if (m_appSettings.MeasureAFRInLambda)
             {
                 AfrViewMode = AFRViewType.LambdaMode;
@@ -6622,9 +6610,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 btnAFRFeedbackMap.Caption = "Show AFR feedback map";
                 btnClearAFRFeedback.Caption = "Clear AFR feedback map";
             }
-            SetFilterMode();
-            LoadMyMaps();
-            DynamicTuningMenu();
         }
 
         private bool m_fileiss19 = false;
@@ -10617,8 +10602,21 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return _symbols;
         }
 
-        private void SetFilterMode()
+        private void SetupDisplayOptions()
         {
+            try
+            {
+                SetRealtimeListFont(m_appSettings.RealtimeFont);
+            }
+            catch (Exception fontE)
+            {
+                LogHelper.Log(fontE.Message);
+            }
+
+            if (m_appSettings.ShowMenu)
+            {
+                ribbonControl1.Minimized = false;
+            }
             if (m_appSettings.ShowAddressesInHex)
             {
                 gcSymbolsAddress.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
