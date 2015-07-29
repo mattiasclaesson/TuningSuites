@@ -9505,6 +9505,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             log.WriteLine("Updating symbol: " + sTP.GetNameTPAction());
                             savedatatobinary(sTP.addressInFile, sTP.sh_Import.Length, sTP.dataToInsert, m_currentfile, true);
                         }
+                        if (!sTP.succesful)
+                        {
+                            log.WriteLine("Updating symbol: " + sTP.GetNameTPAction() + " FAILED");
+                        }
                     }
                     else if (fTP.type == FileTuningPackType.ApplyBin)
                     {
@@ -15786,7 +15790,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (compatibelSoftware(software))
                 {
                     // Save a copy
-                    string backup_file = Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD-" + WizName + ".bin";
+                    string backup_file = Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-BACKUP-BEFORE-WIZARD-" + WizName + ".bin";
                     string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
                     Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
                     backup_file = r.Replace(backup_file, "");
