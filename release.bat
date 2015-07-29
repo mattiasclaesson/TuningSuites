@@ -13,5 +13,9 @@ xcopy SetupT7Suite\Release\T7Suite.md5 C:\users\mattias\Dropbox\public\T7Suite\%
 echo ^<?xml version="1.0" encoding="utf-8"?^>  > C:\users\mattias\Dropbox\public\T7Suite\version.xml
 echo ^<t7suitepro version="%T7.version%"/^> >> C:\users\mattias\Dropbox\public\T7Suite\version.xml
 
+echo ----------------------------------------------------
+git changes
+echo ----------------------------------------------------
+
 git tag T7suite_v%T7.version%
 git tag SetupT7suite_v%SetupT7Suite.version%
