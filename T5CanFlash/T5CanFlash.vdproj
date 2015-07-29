@@ -27,6 +27,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_121DDB1676899594B2F3368D84D526E7"
+        "OwnerKey" = "8:_F2A1721674A7CB77BC76590D4B399BEA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_121DDB1676899594B2F3368D84D526E7"
+        "OwnerKey" = "8:_A6536EB9C47948F3BC66FCBEC97EB1CB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1AA09EF3C38647069E49CF58D36F71AC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -93,6 +105,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_60558ED336BE2F8E3E180017E7B28E3E"
+        "OwnerKey" = "8:_A6536EB9C47948F3BC66FCBEC97EB1CB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_61B1411173F04840859EA1151621C03B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -143,6 +161,18 @@
         {
         "MsmKey" = "8:_8684988BEE6C4F10BB27B1304F602D77"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89096CC7993A4D8AB2930123549BA65E"
+        "OwnerKey" = "8:_F2A1721674A7CB77BC76590D4B399BEA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89096CC7993A4D8AB2930123549BA65E"
+        "OwnerKey" = "8:_A6536EB9C47948F3BC66FCBEC97EB1CB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -231,6 +261,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F2A1721674A7CB77BC76590D4B399BEA"
+        "OwnerKey" = "8:_A6536EB9C47948F3BC66FCBEC97EB1CB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F2A1721674A7CB77BC76590D4B399BEA"
+        "OwnerKey" = "8:_60558ED336BE2F8E3E180017E7B28E3E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_FAFDFF9E9457454C9C27057F3420A4DE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -245,6 +287,30 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A6536EB9C47948F3BC66FCBEC97EB1CB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_60558ED336BE2F8E3E180017E7B28E3E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F2A1721674A7CB77BC76590D4B399BEA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_89096CC7993A4D8AB2930123549BA65E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_121DDB1676899594B2F3368D84D526E7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -344,7 +410,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:3.5.21022 "
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.0,Profile=Client"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -390,6 +456,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_121DDB1676899594B2F3368D84D526E7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:FTD2XX_NET, Version=1.0.10.0, Culture=neutral, PublicKeyToken=61a8105588f51b1f, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_121DDB1676899594B2F3368D84D526E7"
+                    {
+                    "Name" = "8:FTD2XX_NET.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:FTD2XX_NET.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B5A285F5945E4146A7DD3885B75BE83D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1AA09EF3C38647069E49CF58D36F71AC"
@@ -612,6 +709,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_60558ED336BE2F8E3E180017E7B28E3E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:T5CANLib, Version=2.0.1.0, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_60558ED336BE2F8E3E180017E7B28E3E"
+                    {
+                    "Name" = "8:T5CANLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:T5CANLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B5A285F5945E4146A7DD3885B75BE83D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_61B1411173F04840859EA1151621C03B"
             {
             "SourcePath" = "8:..\\T5CANLib\\CAN\\ICANListener.cs"
@@ -790,6 +918,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_89096CC7993A4D8AB2930123549BA65E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:LibUsbDotNet, Version=2.2.8.104, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_89096CC7993A4D8AB2930123549BA65E"
+                    {
+                    "Name" = "8:LibUsbDotNet.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:LibUsbDotNet.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B5A285F5945E4146A7DD3885B75BE83D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8BD124163C824A3C9385EC96F9FB86CC"
@@ -1052,6 +1211,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F2A1721674A7CB77BC76590D4B399BEA"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:combilib-net, Version=1.0.4093.28460, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_F2A1721674A7CB77BC76590D4B399BEA"
+                    {
+                    "Name" = "8:combilib-net.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:combilib-net.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B5A285F5945E4146A7DD3885B75BE83D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FAFDFF9E9457454C9C27057F3420A4DE"
             {
             "SourcePath" = "8:..\\T5 CAN Flasher\\frmMain.Designer.cs"
@@ -1215,7 +1405,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T5CanFlash"
         "ProductCode" = "8:{C94B7716-4DD7-42DC-A975-86CF75334CB8}"
-        "PackageCode" = "8:{473894E6-6757-4818-9D19-14EC44CCB1BD}"
+        "PackageCode" = "8:{C8D0C312-1955-47FB-A2AF-0760BA33D230}"
         "UpgradeCode" = "8:{C22C7FE8-6A40-483D-86FD-7D9D001659AE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1750,7 +1940,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A6536EB9C47948F3BC66FCBEC97EB1CB"
             {
-            "SourcePath" = "8:..\\T5 CAN Flasher\\obj\\x86\\Debug\\T5CanFlasher.exe"
+            "SourcePath" = "8:..\\T5 CAN Flasher\\obj\\x86\\Release\\T5CanFlasher.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B5A285F5945E4146A7DD3885B75BE83D"
