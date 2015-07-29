@@ -1,4 +1,5 @@
-﻿using T7;
+﻿using CommonSuite;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTests
 {

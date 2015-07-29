@@ -13888,17 +13888,8 @@ dt.Columns.Add("SymbolName");
             }
             else if (ofd.ShowDialog() == DialogResult.OK)
             {
-                //                OpenAndDisplayLogFile(ofd.FileName);
-                ConvertFileToDif(ofd.FileName, false); // TEST
-
+                ConvertFileToDif(ofd.FileName, false); 
             }
-
-
-            /*            if (GenerateLogWorksFile(Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.t5l"))
-                        {
-                            StartLogWorksWithCurrentFile(Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.dif");
-                        }*/
-
         }
 
         private void ViewRealtime_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
