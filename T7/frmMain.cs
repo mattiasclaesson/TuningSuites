@@ -12468,7 +12468,14 @@ If boost regulation reports errors you can increase the difference between boost
                                 symbolName == "IgnProt.fi_Offset" ||
                                 symbolName == "Lambda.LambdaInt" ||
                                 symbolName == "MAF.m_AirInlet" ||
-                                symbolName == "AdpFuelProt.MulFuelAdapt")
+                                symbolName == "AdpFuelProt.MulFuelAdapt" ||
+                                symbolName == "ECMStat.p_Diff" ||
+                                symbolName == "BoostProt.PFac" ||
+                                symbolName == "BoostProt.IFac" ||
+                                symbolName == "BoostProt.LoadDiff" ||
+                                symbolName == "IgnKnk.fi_MeanKnock" ||
+                                symbolName == "Ign.fi_OtherOff" ||
+                                symbolName == "IgnJerkProt.fi_Offset")
                             {
                                 if (value > 32000) value = -(65536 - value); // negatief maken
                             }
@@ -13120,7 +13127,7 @@ dt.Columns.Add("SymbolName");
                     measurementCalculatedPower.Value = value;
                     _currentEngineStatus.CurrentEnginePower = value;
                     break;
-                case "ECMStat.p_Diff": // pressure diff = boost
+                //case "ECMStat.p_Diff": // pressure diff = boost
                 case "In.p_AirInlet": // pressure diff = boost
                     measurementBoost.Value = value;
                     _currentEngineStatus.CurrentBoostPressure = value;
