@@ -12393,6 +12393,7 @@ If boost regulation reports errors you can increase the difference between boost
             {
                 _sw.Reset();
                 _sw.Start();
+                DateTime datet = DateTime.Now;
                 System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
                 foreach (DataRow dr in dt.Rows)
                 {
@@ -12612,8 +12613,8 @@ If boost regulation reports errors you can increase the difference between boost
                     ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
               
-                //LogHelper.Log("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
-                LogRealTimeInformation(dt);
+                LogHelper.Log("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                LogRealTimeInformation(dt, datet);
                 UpdateOpenViewers();
                 //<GS-06012011> maybe move the fps counter timer here!
                 _sw.Stop();
@@ -13413,21 +13414,16 @@ dt.Columns.Add("SymbolName");
 
         }
 
-        private void LogRealTimeInformation(System.Data.DataTable dt)
+        private void LogRealTimeInformation(System.Data.DataTable dt, DateTime timestamp)
         {
             if (dt == null) return;
             if (m_currentfile == "") return;
-            DateTime datet = DateTime.Now;
-            string logline = datet.ToString("dd/MM/yyyy HH:mm:ss") + "." + datet.Millisecond.ToString("D3") + "|";
-            //            string logline = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "|";
+            string logline = timestamp.ToString("dd/MM/yyyy HH:mm:ss") + "." + timestamp.Millisecond.ToString("D3") + "|";
             foreach (DataRow dr in dt.Rows)
             {
                 try
                 {
-                    //if (Convert.ToInt32(dr["Symbolnumber"]) > 0)
-                    //{
-                        logline += dr["SymbolName"].ToString() + "=" + Convert.ToDouble(dr["Value"]).ToString() + "|";
-                    //}
+                    logline += dr["SymbolName"].ToString() + "=" + Convert.ToDouble(dr["Value"]).ToString() + "|";
                 }
                 catch (Exception E)
                 {
