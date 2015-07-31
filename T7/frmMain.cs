@@ -6510,6 +6510,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             ribbonControl1.Minimized = true;
             ribbonControl2.Minimized = true;
             InitSkins();
+            SetupDisplayOptions();
             InitMruSystem();
             try
             {
@@ -6563,19 +6564,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
             }
 
-            try
-            {
-                SetRealtimeListFont(m_appSettings.RealtimeFont);
-            }
-            catch (Exception fontE)
-            {
-                LogHelper.Log(fontE.Message);
-            }
-
-            if (m_appSettings.ShowMenu)
-            {
-                ribbonControl1.Minimized = false;
-            }
             if (m_appSettings.AdminMode)
             {
                 btnBrowseInternetTunes.Visibility = BarItemVisibility.Always;
@@ -6586,7 +6574,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             SetupMeasureAFRorLambda();
             SetupDocking();
-            SetupDisplayOptions();
             LoadMyMaps();
             DynamicTuningMenu();
         }
