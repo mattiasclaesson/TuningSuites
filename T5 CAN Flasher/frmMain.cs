@@ -157,7 +157,7 @@ namespace T5CanFlasher
             string line = dt.ToString("HH:mm:ss") + "." + dt.Millisecond.ToString("D3") + " - " + item;
             listBox1.Items.Add(line);
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
-            using (StreamWriter sw = new StreamWriter(Application.StartupPath + "\\commlog.txt", true))
+            using (StreamWriter sw = new StreamWriter(System.Environment.SpecialFolder.ApplicationData + "\\commlog.txt", true))
             {
                 sw.WriteLine(line);
             }
@@ -465,8 +465,8 @@ namespace T5CanFlasher
                     statusAdapter.Text = "Adapter: Not Connected";
                     manageControls(programMode.notconnected);
                 }
+                device.DisableLogging();
             }
-            device.DisableLogging();
         }
 
         private void getECUinfo()
