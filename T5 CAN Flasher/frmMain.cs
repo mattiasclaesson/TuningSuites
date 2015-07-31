@@ -21,6 +21,7 @@ namespace T5CanFlasher
         T5CANLib.CAN.ICANDevice device;
         Stopwatch stopwatch = new Stopwatch();
         ECUType ECU_type = ECUType.Unknown;
+        string commlogFilename = Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\commlog.txt";
 
         private T5CanFlasher.Properties.Settings set = new T5CanFlasher.Properties.Settings();
 
@@ -157,7 +158,7 @@ namespace T5CanFlasher
             string line = dt.ToString("HH:mm:ss") + "." + dt.Millisecond.ToString("D3") + " - " + item;
             listBox1.Items.Add(line);
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
-            using (StreamWriter sw = new StreamWriter(System.Environment.SpecialFolder.ApplicationData + "\\commlog.txt", true))
+            using (StreamWriter sw = new StreamWriter(commlogFilename, true))
             {
                 sw.WriteLine(line);
             }
