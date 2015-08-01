@@ -3138,7 +3138,7 @@ namespace T8SuitePro
             }
             LoadLayoutFiles();
             InitSkins();
-            SetFilterMode();
+            SetupDisplayOptions();
             if (m_startFromCommandLine)
             {
                 if (File.Exists(m_commandLineFile))
@@ -3182,15 +3182,14 @@ namespace T8SuitePro
                     OpenProject(m_appSettings.Lastprojectname);
                 }
             }
-            if (m_appSettings.ShowMenu)
-            {
-                ribbonControl1.Minimized = false;
-            }
+
             if (m_appSettings.DebugMode)
             {
                 ribbonDebug.Visible = true;
             }
 
+            SetupMeasureAFRorLambda();
+            SetupDocking();
             LoadMyMaps();
         }
         private void DynamicTuningMenu()
@@ -5475,7 +5474,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
             //set.AutoGenerateLogWorksFile = m_appSettings.AutoGenerateLogWorks;
             set.OnlyPBus = m_appSettings.OnlyPBus;
             set.ResetRealtimeSymbolOnTabPageSwitch = m_appSettings.ResetRealtimeSymbolOnTabPageSwitch;
-
             set.AutoSizeNewWindows = m_appSettings.AutoSizeNewWindows;
             set.AutoSizeColumnsInViewer = m_appSettings.AutoSizeColumnsInWindows;
             set.AutoUpdateChecksum = m_appSettings.AutoChecksum;
@@ -5525,64 +5523,59 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.OnlyPBus = set.OnlyPBus;
                 m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
                 m_appSettings.UseNewMapViewer = set.UseNewMapViewer;
-
                 m_appSettings.ResetRealtimeSymbolOnTabPageSwitch = set.ResetRealtimeSymbolOnTabPageSwitch;
-
                 m_appSettings.DefaultViewType = set.DefaultViewType;
                 m_appSettings.DefaultViewSize = set.DefaultViewSize;
-
                 m_appSettings.AutoLoadLastFile = set.AutoLoadLastFile;
                 m_appSettings.FancyDocking = set.FancyDocking;
                 m_appSettings.ShowTablesUpsideDown = set.ShowTablesUpsideDown;
                 m_appSettings.ShowMapPreviewPopup = set.ShowMapPreviewPopup;
                 m_appSettings.SynchronizeMapviewers = set.SynchronizeMapviewers;
-
                 m_appSettings.UseDigitalWidebandLambda = set.UseDigitalWidebandLambda;
                 m_appSettings.WidebandDevice = set.WidebandDevice;
                 m_appSettings.WbPort = set.WidebandComPort;
-
-                if (m_appSettings.MeasureAFRInLambda)
-                {
-                    linearGauge2.MaxValue = 1.5F;
-                    linearGauge2.MinValue = 0.5F;
-                    linearGauge2.GaugeText = "λ ";
-                    labelControl11.Text = "λ";
-                    linearGauge2.NumberOfDecimals = 2;
-                    linearGauge2.NumberOfDivisions = 10;
-                    AfrViewMode = AFRViewType.LambdaMode;
-                    //btnAFRFeedbackMap.Caption = "Show lambda feedback map"; FIXME
-                    //btnClearAFRFeedback.Caption = "Clear lambda feedback map";
-                }
-                else
-                {
-                    linearGauge2.MaxValue = 20;
-                    linearGauge2.MinValue = 10;
-                    linearGauge2.GaugeText = "AFR ";
-                    labelControl11.Text = "AFR";
-                    linearGauge2.NumberOfDecimals = 1;
-                    AfrViewMode = AFRViewType.AFRMode;
-                    //btnAFRFeedbackMap.Caption = "Show AFR feedback map"; FIXME
-                    //btnClearAFRFeedback.Caption = "Clear AFR feedback map";
-                }
-
-                //UpdateSettingButtons();
-                if (!m_appSettings.FancyDocking)
-                {
-                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
-                }
-                else
-                {
-                    dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.VS2005;
-                }
-
                 m_appSettings.RequestProjectNotes = set.RequestProjectNotes;
                 m_appSettings.ProjectFolder = set.ProjectFolder;
+
+                SetupMeasureAFRorLambda();
+                SetupDocking();
+                SetupDisplayOptions();
             }
-            SetFilterMode();
         }
 
-        private void SetFilterMode()
+        private void SetupMeasureAFRorLambda()
         {
+            if (m_appSettings.MeasureAFRInLambda)
+            {
+                linearGauge2.MaxValue = 1.5F;
+                linearGauge2.MinValue = 0.5F;
+                linearGauge2.GaugeText = "λ ";
+                labelControl11.Text = "λ";
+                linearGauge2.NumberOfDecimals = 2;
+                linearGauge2.NumberOfDivisions = 10;
+                AfrViewMode = AFRViewType.LambdaMode;
+                //btnAFRFeedbackMap.Caption = "Show lambda feedback map"; FIXME
+                //btnClearAFRFeedback.Caption = "Clear lambda feedback map";
+            }
+            else
+            {
+                linearGauge2.MaxValue = 20;
+                linearGauge2.MinValue = 10;
+                linearGauge2.GaugeText = "AFR ";
+                labelControl11.Text = "AFR";
+                linearGauge2.NumberOfDecimals = 1;
+                AfrViewMode = AFRViewType.AFRMode;
+                //btnAFRFeedbackMap.Caption = "Show AFR feedback map"; FIXME
+                //btnClearAFRFeedback.Caption = "Clear AFR feedback map";
+            }
+        }
+
+        private void SetupDisplayOptions()
+        {
+            if (m_appSettings.ShowMenu)
+            {
+                ribbonControl1.Minimized = false;
+            }
             if (m_appSettings.ShowAddressesInHex)
             {
                 gcSymbolsAddress.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -5607,6 +5600,27 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 gcSymbolsBitmask.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gcSymbolsBitmask.DisplayFormat.FormatString = "";
                 gcSymbolsBitmask.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
+            }
+        }
+
+        private void SetupDocking()
+        {
+            if (!m_appSettings.FancyDocking)
+            {
+                dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
+            }
+            else
+            {
+                dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.VS2005;
+            }
+            if (m_appSettings.HideSymbolTable)
+            {
+                dockSymbols.Visibility = DockVisibility.AutoHide;
+                dockSymbols.HideImmediately();
+            }
+            else
+            {
+                dockSymbols.Visibility = DockVisibility.Visible;
             }
         }
 
