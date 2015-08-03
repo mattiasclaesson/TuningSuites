@@ -23,7 +23,13 @@ namespace Owf.Controls
 		public string DigitText
 		{
 			get { return _digitText; }
-			set { _digitText = value; Invalidate(); }
+            set
+            {
+                if (_digitText != value)
+                {
+                    _digitText = value; Invalidate();
+                }
+            }
 		}
 
 		public DigitalDisplayControl()
@@ -98,9 +104,9 @@ namespace Owf.Controls
 
 			for (int i = 0; i < text.Length; i++)
 			{
-				if (Char.IsDigit(text[i]))
+                if (Char.IsDigit(text[i]) || text[i] == '-')
 					sizef.Width += 42 * _graphics.DpiX * font.SizeInPoints / 72 / 72;
-				else if (text[i] == ':' || text[i] == '.')
+                else if (text[i] == ':' || text[i] == '.' || text[i] == ',')
 					sizef.Width += 12 * _graphics.DpiX * font.SizeInPoints / 72 / 72;
 			}
 			return sizef;
@@ -116,9 +122,12 @@ namespace Owf.Controls
 				// For colon :
 				else if (text[cnt] == ':')
 					x = DrawColon(font, brush, x, y);
-				// For dot .
-				else if (text[cnt] == '.')
+				// For dot . and comma
+                else if (text[cnt] == '.' || text[cnt] == ',')
 					x = DrawDot(font, brush, x, y);
+                // For dash -
+                else if (text[cnt] == '-')
+                    x = DrawDash(font, brush, x, y);
 			}
 		}
 
@@ -151,6 +160,19 @@ namespace Owf.Controls
 			}
 			return x + 12 * _graphics.DpiX * font.SizeInPoints / 72 / 72;
 		}
+
+        private float DrawDash(Font font, Brush brush, float x, float y)
+        {
+            Point[][] dashPoints = new Point[1][];
+
+            dashPoints[0] = new Point[] { new Point(16, 39), new Point(14, 35), new Point(16, 31), new Point(32, 31), new Point(34, 35), new Point(32, 39) };
+
+            for (int cnt = 0; cnt < dashPoints.Length; cnt++)
+            {
+                FillPolygon(dashPoints[cnt], font, brush, x, y);
+            }
+            return x + 42 * _graphics.DpiX * font.SizeInPoints / 72 / 72;
+        }
 
 		private float DrawColon(Font font, Brush brush, float x, float y)
 		{
