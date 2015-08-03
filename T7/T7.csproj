@@ -145,9 +145,8 @@
     <Reference Include="Nevron.Chart.WinForm, Version=9.5.11.12, Culture=neutral, PublicKeyToken=c9bd8998e981e4ee, processorArchitecture=MSIL" />
     <Reference Include="Nevron.Presentation, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6656c5d1103e75cc, processorArchitecture=MSIL" />
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
-    <Reference Include="Owf.Controls.DigitalDisplayControl, Version=1.0.3433.14805, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Owf.Controls.DigitalDisplayControl\bin\Debug\Owf.Controls.DigitalDisplayControl.dll</HintPath>
+    <Reference Include="Owf.Controls.DigitalDisplayControl">
+      <HintPath>..\Libs\Owf.Controls.DigitalDisplayControl.dll</HintPath>
     </Reference>
     <Reference Include="ProGauges, Version=1.5.7.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
