@@ -44,7 +44,7 @@ namespace T5CanFlasher
                     comboInterface.SelectedIndex = 3;
                     break;
                 default:
-                    comboInterface.SelectedIndex = 4;
+                    comboInterface.SelectedIndex = 0;
                     break;
             }
             if (argv.Length > 0)
@@ -66,7 +66,7 @@ namespace T5CanFlasher
                             comboInterface.SelectedIndex = 3;
                             break;
                         default:
-                            comboInterface.SelectedIndex = 4;
+                            comboInterface.SelectedIndex = 0;
                             break;
                     }
                 }
@@ -117,10 +117,6 @@ namespace T5CanFlasher
                             {
                                 comboInterface.SelectedItem = Settings.GetValue(a).ToString();
                             }
-                            //else if (a == "Comport")
-                            //{
-                            //    comboBox1.SelectedItem = Settings.GetValue(a).ToString();
-                            //}
                             else if (a == "EnableLogging")
                             {
                                 cboxEnLog.Checked = Convert.ToBoolean(Settings.GetValue(a).ToString());
@@ -223,7 +219,6 @@ namespace T5CanFlasher
                 progressBar1.Value = 0;
             }
             AddToLog(e.Info);
-            //Application.DoEvents();
         }
 
         void t5can_onWriteProgress(object sender, WriteProgressEventArgs e)
@@ -245,7 +240,6 @@ namespace T5CanFlasher
             try
             {
                 SaveRegistrySetting("AdapterType", comboInterface.SelectedItem.ToString());
-                //SaveRegistrySetting("Comport", comboBox2.SelectedItem.ToString());
                 SaveRegistrySetting("EnableLogging", cboxEnLog.Checked);
             }
             catch (Exception) { }

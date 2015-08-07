@@ -59,9 +59,9 @@ namespace T5CanFlasher
             // 
             // listBox1
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(9, 9);
             this.listBox1.Name = "listBox1";
@@ -150,8 +150,7 @@ namespace T5CanFlasher
             "Lawicel CANUSB",
             "combiAdapter",
             "Mictronics DIY",
-            "Just4Trionic",
-            "!!! Select Your Interface !!!"});
+            "Just4Trionic"});
             this.comboInterface.Location = new System.Drawing.Point(470, 9);
             this.comboInterface.Name = "comboInterface";
             this.comboInterface.Size = new System.Drawing.Size(150, 21);
@@ -178,9 +177,9 @@ namespace T5CanFlasher
             this.statusFLASHSize,
             this.statusActivity,
             this.progressBar1});
-            this.statusStripFLASH.Location = new System.Drawing.Point(0, 304);
+            this.statusStripFLASH.Location = new System.Drawing.Point(0, 302);
             this.statusStripFLASH.Name = "statusStripFLASH";
-            this.statusStripFLASH.Size = new System.Drawing.Size(632, 22);
+            this.statusStripFLASH.Size = new System.Drawing.Size(632, 24);
             this.statusStripFLASH.TabIndex = 17;
             this.statusStripFLASH.Text = "statusStrip1";
             // 
@@ -188,14 +187,14 @@ namespace T5CanFlasher
             // 
             this.statusFLASH.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusFLASH.Name = "statusFLASH";
-            this.statusFLASH.Size = new System.Drawing.Size(69, 17);
+            this.statusFLASH.Size = new System.Drawing.Size(77, 19);
             this.statusFLASH.Text = "FLASH chips";
             // 
             // statusFLASHMake
             // 
             this.statusFLASHMake.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusFLASHMake.Name = "statusFLASHMake";
-            this.statusFLASHMake.Size = new System.Drawing.Size(107, 17);
+            this.statusFLASHMake.Size = new System.Drawing.Size(116, 19);
             this.statusFLASHMake.Text = "Make: Not Detected";
             this.statusFLASHMake.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -203,14 +202,14 @@ namespace T5CanFlasher
             // 
             this.statusFLASHType.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusFLASHType.Name = "statusFLASHType";
-            this.statusFLASHType.Size = new System.Drawing.Size(106, 17);
+            this.statusFLASHType.Size = new System.Drawing.Size(113, 19);
             this.statusFLASHType.Text = "Type: Not Detected";
             // 
             // statusFLASHSize
             // 
             this.statusFLASHSize.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusFLASHSize.Name = "statusFLASHSize";
-            this.statusFLASHSize.Size = new System.Drawing.Size(208, 17);
+            this.statusFLASHSize.Size = new System.Drawing.Size(183, 19);
             this.statusFLASHSize.Spring = true;
             this.statusFLASHSize.Text = "Size: Not Detected";
             this.statusFLASHSize.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -218,13 +217,13 @@ namespace T5CanFlasher
             // statusActivity
             // 
             this.statusActivity.Name = "statusActivity";
-            this.statusActivity.Size = new System.Drawing.Size(25, 17);
+            this.statusActivity.Size = new System.Drawing.Size(26, 19);
             this.statusActivity.Text = "Idle";
             // 
             // progressBar1
             // 
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 16);
+            this.progressBar1.Size = new System.Drawing.Size(100, 18);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
             // btnAbout
@@ -252,7 +251,7 @@ namespace T5CanFlasher
             // statusAdapter
             // 
             this.statusAdapter.Name = "statusAdapter";
-            this.statusAdapter.Size = new System.Drawing.Size(125, 17);
+            this.statusAdapter.Size = new System.Drawing.Size(136, 19);
             this.statusAdapter.Text = "Adapter: Not Connected";
             this.statusAdapter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -260,7 +259,7 @@ namespace T5CanFlasher
             // 
             this.statusECU.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusECU.Name = "statusECU";
-            this.statusECU.Size = new System.Drawing.Size(110, 17);
+            this.statusECU.Size = new System.Drawing.Size(120, 19);
             this.statusECU.Text = "ECU: Not Connected";
             this.statusECU.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -268,14 +267,14 @@ namespace T5CanFlasher
             // 
             this.statusSWVersion.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusSWVersion.Name = "statusSWVersion";
-            this.statusSWVersion.Size = new System.Drawing.Size(136, 17);
+            this.statusSWVersion.Size = new System.Drawing.Size(146, 19);
             this.statusSWVersion.Text = "SW Version: Not Detected";
             // 
             // statusChecksum
             // 
             this.statusChecksum.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.statusChecksum.Name = "statusChecksum";
-            this.statusChecksum.Size = new System.Drawing.Size(246, 17);
+            this.statusChecksum.Size = new System.Drawing.Size(215, 19);
             this.statusChecksum.Spring = true;
             this.statusChecksum.Text = "Checksum: Not Detected";
             this.statusChecksum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -287,9 +286,9 @@ namespace T5CanFlasher
             this.statusSWVersion,
             this.statusChecksum,
             this.statusAdapter});
-            this.statusStripECU.Location = new System.Drawing.Point(0, 282);
+            this.statusStripECU.Location = new System.Drawing.Point(0, 278);
             this.statusStripECU.Name = "statusStripECU";
-            this.statusStripECU.Size = new System.Drawing.Size(632, 22);
+            this.statusStripECU.Size = new System.Drawing.Size(632, 24);
             this.statusStripECU.SizingGrip = false;
             this.statusStripECU.TabIndex = 20;
             this.statusStripECU.Text = "statusStrip2";
