@@ -3896,6 +3896,26 @@ namespace T5Suite2
                     }
                 }
             }
+
+            if (foundvalue == string.Empty)
+            {
+                using (RegistryKey Settings = TempKey.OpenSubKey("SOFTWARE\\Classes\\d32.File\\shell\\open\\command"))
+                {
+                    if (Settings != null)
+                    {
+                        string[] vals = Settings.GetValueNames();
+                        try
+                        {
+                            foundvalue = Settings.GetValue(vals[0]).ToString();
+                        }
+                        catch (Exception E)
+                        {
+                            Console.WriteLine(E.Message);
+                        }
+                    }
+                }
+            }
+
             return foundvalue;
         }
 
