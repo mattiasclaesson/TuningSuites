@@ -9,11 +9,14 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class SRAMCompareResults : DevExpress.XtraEditors.XtraUserControl
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public delegate void NotifySRAMSelectSymbol(object sender, SelectSRAMSymbolEventArgs e);
         public event SRAMCompareResults.NotifySRAMSelectSymbol onSRAMSymbolSelect;
         //private AddressLookupCollection m_compareAddressLookupCollection = new AddressLookupCollection();
@@ -105,7 +108,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             ctrl.EndUpdate();
         }

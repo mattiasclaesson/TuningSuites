@@ -6,11 +6,14 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using NLog;
 
 namespace CommonSuite
 {
     public partial class frmMatrixSelection : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         SymbolCollection _symbols;
 
         public frmMatrixSelection()
@@ -73,7 +76,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -98,7 +101,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -113,7 +116,7 @@ namespace CommonSuite
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
     }

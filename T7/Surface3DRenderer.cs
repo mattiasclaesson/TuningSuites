@@ -7,11 +7,14 @@ using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using CommonSuite;
+using NLog;
 
 namespace Plot3D
 {
     public class Surface3DRenderer
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         double screenDistance, sf, cf, st, ct, R, A, B, C, D; //transformations coeficients
         double density = 0.5f;
         Color penColor = Color.Black;
@@ -227,7 +230,7 @@ namespace Plot3D
                       }
                       catch (Exception E)
                       {
-                          LogHelper.Log("Set m_mapdata: "  + E.Message);
+                          logger.Debug("Set m_mapdata: "  + E.Message);
                       }
                   }
               }
@@ -257,7 +260,7 @@ namespace Plot3D
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Set m_mapdata: " + E.Message);
+                            logger.Debug("Set m_mapdata: " + E.Message);
                         }
                     }
                 }
@@ -287,7 +290,7 @@ namespace Plot3D
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("Set m_mapdata: " + E.Message);
+                            logger.Debug("Set m_mapdata: " + E.Message);
                         }
                     }
                 }
@@ -303,9 +306,9 @@ namespace Plot3D
         public double GetDataFromTable(double xi, double yi)
         {
             double retval = 0;
-            //LogHelper.Log("xi A = " + xi.ToString() + " yi = "  + yi.ToString()); 
+            //logger.Debug("xi A = " + xi.ToString() + " yi = "  + yi.ToString()); 
             xi = (m_mapdata.Columns.Count-1) - xi;
-            //LogHelper.Log("xi B = " + xi.ToString());
+            //logger.Debug("xi B = " + xi.ToString());
             if (xi < m_mapdata.Columns.Count && yi < m_mapdata.Rows.Count)
             {
                 try
@@ -322,21 +325,21 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             else
             {
-                LogHelper.Log("xi C = " + xi.ToString() + " yi C = " + yi.ToString());
+                logger.Debug("xi C = " + xi.ToString() + " yi C = " + yi.ToString());
             }
             return retval;
         }
         public double GetDataFromOriginalTable(double xi, double yi)
         {
             double retval = 0;
-            //LogHelper.Log("xi A = " + xi.ToString() + " yi = "  + yi.ToString()); 
+            //logger.Debug("xi A = " + xi.ToString() + " yi = "  + yi.ToString()); 
             xi = (m_maporiginaldata.Columns.Count - 1) - xi;
-            //LogHelper.Log("xi B = " + xi.ToString());
+            //logger.Debug("xi B = " + xi.ToString());
             if (xi < m_maporiginaldata.Columns.Count && yi < m_maporiginaldata.Rows.Count)
             {
                 try
@@ -353,12 +356,12 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             else
             {
-                //LogHelper.Log("xi C = " + xi.ToString() + " yi C = " + yi.ToString());
+                //logger.Debug("xi C = " + xi.ToString() + " yi C = " + yi.ToString());
             }
             return retval;
         }
@@ -366,9 +369,9 @@ namespace Plot3D
         public double GetDataFromCompareTable(double xi, double yi)
         {
             double retval = 0;
-            //LogHelper.Log("xi A = " + xi.ToString() + " yi = "  + yi.ToString()); 
+            //logger.Debug("xi A = " + xi.ToString() + " yi = "  + yi.ToString()); 
             xi = (m_mapcomparedata.Columns.Count - 1) - xi;
-            //LogHelper.Log("xi B = " + xi.ToString());
+            //logger.Debug("xi B = " + xi.ToString());
             if (xi < m_mapcomparedata.Columns.Count && yi < m_mapcomparedata.Rows.Count)
             {
                 try
@@ -385,12 +388,12 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             else
             {
-                //LogHelper.Log("xi C = " + xi.ToString() + " yi C = " + yi.ToString());
+                //logger.Debug("xi C = " + xi.ToString() + " yi C = " + yi.ToString());
             }
             return retval;
         }
@@ -467,7 +470,7 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 PointF p = Project(mesh.GetLength(0)+1, 0, z);
                 graphics.DrawString(zvalue, new Font(FontFamily.GenericSansSerif, 6), Brushes.Black, p);
@@ -487,7 +490,7 @@ namespace Plot3D
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
              
@@ -507,7 +510,7 @@ namespace Plot3D
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
                 string yaxis = t.ToString();
@@ -537,7 +540,7 @@ namespace Plot3D
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
                 string xaxis = t.ToString();
@@ -732,7 +735,7 @@ namespace Plot3D
                                 //brushes[brushnumber].Color.A = 
                                 //int red = GetDrawingColor(z2);
                                 
-                                //LogHelper.Log(z1.ToString() + " = red: " + red.ToString());
+                                //logger.Debug(z1.ToString() + " = red: " + red.ToString());
                                 //graphics.FillPolygon(brushes[brushnumber], polygon);
                                 if (!Double.IsNaN(z1))
                                 {
@@ -759,7 +762,7 @@ namespace Plot3D
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                         else
@@ -838,12 +841,12 @@ namespace Plot3D
                     try
                     {
                         p = Project((double)colcount, (double)rowcount, Convert.ToDouble(o));
-                       // LogHelper.Log(rowcount.ToString() + " / " + colcount.ToString() + " = " + Convert.ToDouble(o).ToString() + " x = " + p.X.ToString() + " y = " + p.Y.ToString());
+                       // logger.Debug(rowcount.ToString() + " / " + colcount.ToString() + " = " + Convert.ToDouble(o).ToString() + " x = " + p.X.ToString() + " y = " + p.Y.ToString());
                         int xdiff = (int)Math.Abs(x - p.X);
                         int ydiff = (int)Math.Abs(y - p.Y);
                         if (xdiff < 5 && ydiff < 5)
                         {
-                            //LogHelper.Log(rowcount.ToString() + " / " + colcount.ToString() + " = " + Convert.ToDouble(o).ToString() + " x = " + p.X.ToString() + " y = " + p.Y.ToString());
+                            //logger.Debug(rowcount.ToString() + " / " + colcount.ToString() + " = " + Convert.ToDouble(o).ToString() + " x = " + p.X.ToString() + " y = " + p.Y.ToString());
                             tableposition = new PointF((float)rowcount, (float)colcount);
                             val = Convert.ToDouble(o) * (1/m_correction_percentage);
                             return true;
@@ -851,7 +854,7 @@ namespace Plot3D
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("GetMousePoint: :" + E.Message);
+                        logger.Debug("GetMousePoint: :" + E.Message);
                     }
                     colcount++;
                 }
@@ -876,7 +879,7 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 PointF p = Project(0, 0, z);
                 graphics.DrawString(zvalue, new Font(FontFamily.GenericSansSerif, 6), Brushes.Black, p);
@@ -891,7 +894,7 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
                 PointF p = Project(0, y, -1);
                 graphics.DrawString(yvalue, new Font(FontFamily.GenericSansSerif, 6), Brushes.Black, p);
@@ -913,7 +916,7 @@ namespace Plot3D
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }

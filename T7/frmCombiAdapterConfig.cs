@@ -10,7 +10,7 @@ using CommonSuite;
 
 namespace T7
 {
-    public partial class frmMultiAdapterConfig : DevExpress.XtraEditors.XtraForm
+    public partial class frmCombiAdapterConfig : DevExpress.XtraEditors.XtraForm
     {
         private AppSettings m_appSettings;
 
@@ -35,7 +35,7 @@ namespace T7
             }
         }
 
-        public frmMultiAdapterConfig()
+        public frmCombiAdapterConfig()
         {
             InitializeComponent();
         }

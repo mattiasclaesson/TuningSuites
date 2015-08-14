@@ -134,10 +134,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\LibUsbDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" />
     <Reference Include="Microsoft.Office.Tools.Excel.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Office.Tools.v9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -145,6 +141,9 @@
     <Reference Include="Nevron.Chart.WinForm, Version=9.5.11.12, Culture=neutral, PublicKeyToken=c9bd8998e981e4ee, processorArchitecture=MSIL" />
     <Reference Include="Nevron.Presentation, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6656c5d1103e75cc, processorArchitecture=MSIL" />
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
+    <Reference Include="NLog">
+      <HintPath>..\Libs\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Owf.Controls.DigitalDisplayControl">
       <HintPath>..\Libs\Owf.Controls.DigitalDisplayControl.dll</HintPath>
     </Reference>
@@ -266,11 +265,11 @@
     <Compile Include="frmChangeNote.designer.cs">
       <DependentUpon>frmChangeNote.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmComportSelection.cs">
+    <Compile Include="frmComportSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmComportSelection.designer.cs">
-      <DependentUpon>frmComportSelection.cs</DependentUpon>
+    <Compile Include="frmComportSettings.designer.cs">
+      <DependentUpon>frmComportSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="frmDefineMyMaps.cs">
       <SubType>Form</SubType>
@@ -338,11 +337,11 @@
     <Compile Include="frmMatrixSelection.designer.cs">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMultiAdapterConfig.cs">
+    <Compile Include="frmCombiAdapterConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMultiAdapterConfig.Designer.cs">
-      <DependentUpon>frmMultiAdapterConfig.cs</DependentUpon>
+    <Compile Include="frmCombiAdapterConfig.Designer.cs">
+      <DependentUpon>frmCombiAdapterConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="frmNotifications.cs">
       <SubType>Form</SubType>
@@ -597,13 +596,9 @@
     <Compile Include="InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LegacyFunctions.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="LogFilter.cs" />
     <Compile Include="LogFilterCollection.cs" />
     <Compile Include="LogFilters.cs" />
-    <Compile Include="LogHelper.cs" />
     <Compile Include="MapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -680,6 +675,9 @@
     </Compile>
     <None Include="app.config" />
     <None Include="ASM-Mode.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -793,8 +791,8 @@
       <DependentUpon>frmChangeNote.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmComportSelection.resx">
-      <DependentUpon>frmComportSelection.cs</DependentUpon>
+    <EmbeddedResource Include="frmComportSettings.resx">
+      <DependentUpon>frmComportSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.nl.resx">
@@ -845,8 +843,8 @@
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMultiAdapterConfig.resx">
-      <DependentUpon>frmMultiAdapterConfig.cs</DependentUpon>
+    <EmbeddedResource Include="frmCombiAdapterConfig.resx">
+      <DependentUpon>frmCombiAdapterConfig.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmNotifications.resx">
@@ -1047,6 +1045,9 @@
     <EmbeddedResource Include="Compressormaps\td04h-19t-raw.gif" />
     <EmbeddedResource Include="Compressormaps\td06h-20g-cfm.gif" />
     <EmbeddedResource Include="Compressormaps\GT17.jpg" />
+    <Content Include="canlib32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="EU0AF01C.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

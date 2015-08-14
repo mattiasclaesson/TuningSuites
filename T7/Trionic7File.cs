@@ -5,11 +5,14 @@ using System.Linq;
 using System.IO;
 using System.Data;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public class Trionic7File
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public enum VectorType : int
         {
             Reset_initial_stack_pointer,
@@ -205,7 +208,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -259,7 +262,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                                 retval = 0;
                             }
                         }
@@ -382,7 +385,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(String.Format("Failed to clear read-only flag: {0}", E.Message));
+                logger.Debug(String.Format("Failed to clear read-only flag: {0}", E.Message));
             }
             symbol_collection = new SymbolCollection();
             try
@@ -429,7 +432,7 @@ namespace T7
                                                             }
                                                             catch (Exception cE)
                                                             {
-                                                                LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
+                                                                logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                                                             }
                                                         }
                                                         sh.Internal_address = (int)fsread.Position - symbolname.Length - 1;
@@ -509,7 +512,7 @@ namespace T7
                                                                     {
                                                                         /*if (sh.Varname == "BFuelCal.Map")
                                                                         {
-                                                                            LogHelper.Log("Break for fuel map: " + internal_address.ToString("X6"));
+                                                                            logger.Debug("Break for fuel map: " + internal_address.ToString("X6"));
 
                                                                         }*/
                                                                         if (sramaddress > 0 && sh.Flash_start_address == 0)
@@ -531,7 +534,7 @@ namespace T7
                                                         }
                                                         catch (Exception E)
                                                         {
-                                                            LogHelper.Log(E.Message);
+                                                            logger.Debug(E.Message);
                                                         }
                                                     }
                                                 }
@@ -539,7 +542,7 @@ namespace T7
                                                 {
                                                     if (!tryToDecodePackedBinary(filename, out symbol_collection, languageID))
                                                     {
-                                                        LogHelper.Log("Failed to extract packed binary!"); //<GS-23022010>
+                                                        logger.Debug("Failed to extract packed binary!"); //<GS-23022010>
                                                     }
                                                 }
                                             }
@@ -549,7 +552,7 @@ namespace T7
                                 else
                                 {
                                     Application.DoEvents();
-                                    LogHelper.Log("Couldn't find symboltable, file is probably packed!");//<GS-23022010>
+                                    logger.Debug("Couldn't find symboltable, file is probably packed!");//<GS-23022010>
                                 }
                             }
                             else
@@ -563,13 +566,13 @@ namespace T7
                 }
                 catch (Exception eBin)
                 {
-                    LogHelper.Log("Failed to open binfile: " + eBin.Message);
+                    logger.Debug("Failed to open binfile: " + eBin.Message);
                 }
                 CastProgressEvent("Decoding done", 55);
             }
             catch (Exception E)
             {
-                LogHelper.Log(String.Format("TryOpenFile filed: {0} err: {1}", filename, E.Message));
+                logger.Debug(String.Format("TryOpenFile filed: {0} err: {1}", filename, E.Message));
 
             }
             return symbol_collection;
@@ -604,7 +607,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -639,7 +642,7 @@ namespace T7
                     if (Path.GetFileName(xmlfile).StartsWith(Path.GetFileNameWithoutExtension(filename)))
                     {
                         dt.ReadXml(xmlfile);
-                        LogHelper.Log(String.Format("Read: {0} symbols from {1}", dt.Rows.Count, xmlfile));
+                        logger.Debug(String.Format("Read: {0} symbols from {1}", dt.Rows.Count, xmlfile));
                         break;
                     }
                 }
@@ -702,11 +705,11 @@ namespace T7
                                     try
                                     {
                                         sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                                        //LogHelper.Log(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
+                                        //logger.Debug(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
                                     }
                                     catch (Exception cE)
                                     {
-                                        LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
+                                        logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
                                     }
                                 }
                             }
@@ -715,7 +718,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             if (createRepositoryFile)
@@ -868,7 +871,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(String.Format("Failed to retrieve address from: {0:X6}: {1}", offset, E.Message));
+                                logger.Debug(String.Format("Failed to retrieve address from: {0:X6}: {1}", offset, E.Message));
                             }
                         }
                     }
@@ -904,7 +907,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(String.Format("Failed to retrieve length from: {0:X6}: {1}", offset, E.Message));
+                                logger.Debug(String.Format("Failed to retrieve length from: {0:X6}: {1}", offset, E.Message));
                             }
                         }
                     }
@@ -964,7 +967,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }
@@ -982,14 +985,14 @@ namespace T7
             int addressTableOffset;
             byte[] compressedSymbolTable;
             bool compr_created = extractCompressedSymbolTable(filename, out addressTableOffset, out compressedSymbolTable);
-            LogHelper.Log(String.Format("Compr_created: ", compr_created));
+            logger.Debug(String.Format("Compr_created: ", compr_created));
             CastProgressEvent("Searching address lookup table", 30);
 
             symbol_collection = new SymbolCollection();
             if (addressTableOffset != -1)
             {
                 symbol_collection = new SymbolCollection();
-                LogHelper.Log(String.Format("SOT: {0:X6}", addressTableOffset));
+                logger.Debug(String.Format("SOT: {0:X6}", addressTableOffset));
                 using (FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 {
                     using (BinaryReader br = new BinaryReader(fsread))
@@ -1030,7 +1033,7 @@ namespace T7
                                         internal_address = symbol_collection[symbol_collection.Count - 1].Start_address + symbol_collection[symbol_collection.Count - 1].Length;
                                         if (symbollength == 0x240 && (internal_address % 2) > 0)
                                             internal_address++;
-                                        LogHelper.Log(String.Format("Corrected symbol with address: {0:X8} and len {1:X4}", internal_address, symbollength));
+                                        logger.Debug(String.Format("Corrected symbol with address: {0:X8} and len {1:X4}", internal_address, symbollength));
                                     }
                                     SymbolHelper sh = new SymbolHelper()
                                     {
@@ -1051,13 +1054,13 @@ namespace T7
                                 else
                                 {
                                     //MessageBox.Show("EOT: " + fsread.Position.ToString("X6"));
-                                    LogHelper.Log(String.Format("EOT: {0:X6}", fsread.Position));
+                                    logger.Debug(String.Format("EOT: {0:X6}", fsread.Position));
                                     endoftable = true;
                                 }
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                                 retval = false;
                             }
                         }
@@ -1065,11 +1068,11 @@ namespace T7
                 }
                 if (compr_created)
                 {
-                    //LogHelper.Log("Decoding packed symbol table");
+                    //logger.Debug("Decoding packed symbol table");
                     CastProgressEvent("Decoding packed symbol table", 40);
                     string[] allSymbolNames;
                     TrionicSymbolDecompressor.ExpandComprStream(compressedSymbolTable, out allSymbolNames);
-                    //LogHelper.Log("Adding names to symbols");
+                    //logger.Debug("Adding names to symbols");
                     CastProgressEvent("Adding names to symbols", 45);
                     AddNamesToSymbols(symbol_collection, allSymbolNames, languageID);
                     CastProgressEvent("Cleaning up", 50);
@@ -1077,7 +1080,7 @@ namespace T7
             }
             else
             {
-                LogHelper.Log("Could not find address table!"); //<GS-23022010>
+                logger.Debug("Could not find address table!"); //<GS-23022010>
                 retval = false;
             }
             return retval;
@@ -1097,7 +1100,7 @@ namespace T7
                 {
                     SymbolHelper sh = symbol_collection[(i)];
                     sh.Varname = allSymbolNames[i].Trim();
-                    //LogHelper.Log(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, symbol));
+                    //logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, symbol));
                     SymbolTranslator translator = new SymbolTranslator();
                     string help = string.Empty;
                     XDFCategories category = XDFCategories.Undocumented;
@@ -1112,13 +1115,13 @@ namespace T7
                         }
                         catch (Exception cE)
                         {
-                            LogHelper.Log(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
+                            logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
                         }
                     }
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log("Failed to add symbolnames: " + E.Message);
+                    logger.Debug("Failed to add symbolnames: " + E.Message);
                 }
             }
         }

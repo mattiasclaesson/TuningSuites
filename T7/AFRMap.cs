@@ -4,11 +4,14 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public class AFRMap
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public delegate void FuelmapCellChanged(object sender, FuelmapChangedEventArgs e);
         public event AFRMap.FuelmapCellChanged onFuelmapCellChanged;
         public delegate void CellLocked(object sender, EventArgs e);
@@ -47,7 +50,7 @@ namespace T7
         public void InitializeMaps(int size, string filename)
         {
             m_filename = filename;
-            LogHelper.Log("Init AFR map: " + size.ToString() + " " + filename);
+            logger.Debug("Init AFR map: " + size.ToString() + " " + filename);
             foldername = Path.Combine(Path.GetDirectoryName(filename), "AFRMaps");
             if (!Directory.Exists(foldername))
             {
@@ -98,7 +101,7 @@ namespace T7
                 catch (Exception E)
                 {
                     //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             else
@@ -132,7 +135,7 @@ namespace T7
                     {
                         int mapvalue = (int)airXSP.GetValue(maptel);
                         int rpmvalue = (int)rpmYSP.GetValue(rpmtel);
-                        LogHelper.Log("Calculating afr target for " + rpmvalue.ToString() + " " + mapvalue.ToString());
+                        logger.Debug("Calculating afr target for " + rpmvalue.ToString() + " " + mapvalue.ToString());
 
                         float afrtarget = 14.7F;
                         // now, decrease as mapvalue increases
@@ -144,7 +147,7 @@ namespace T7
                             if (rpmvalue > 4000) rpmvalue = 4000 - rpmvalue % 4000;
                             if (rpmvalue < 0) rpmvalue = 0;
                             afrtarget += Math.Abs((4000 - (float)rpmvalue) / 4000);
-                            LogHelper.Log("Calculated afr target for " + rpmvalue.ToString() + " " + mapvalue.ToString() + " = " + afrtarget.ToString());
+                            logger.Debug("Calculated afr target for " + rpmvalue.ToString() + " " + mapvalue.ToString() + " = " + afrtarget.ToString());
                         }
                         map.SetValue(afrtarget, rpmtel * columns + maptel);
                     }
@@ -199,7 +202,7 @@ namespace T7
                     {
                         //      MessageBox.Show("Failed to load target AFR map: " + E.Message);
                         // something went wrong, try to reinitialize the map
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
 
                     }
                 }
@@ -291,7 +294,7 @@ namespace T7
             }
             catch (Exception stargetE)
             {
-                LogHelper.Log(stargetE.Message);
+                logger.Debug(stargetE.Message);
             }
         }
 
@@ -305,7 +308,7 @@ namespace T7
         public void ClearMaps(int columns, int rows, string filename)
         {
             int size = columns * rows;
-            LogHelper.Log("Clear AFR map: " + size.ToString() + " " + filename);
+            logger.Debug("Clear AFR map: " + size.ToString() + " " + filename);
             m_FeedbackMap = new float[size];
             m_FeedbackMap.Initialize();
             m_FeedbackCounterMap = new int[size];
@@ -316,7 +319,7 @@ namespace T7
 
         public void SaveMap(string filename, int columns, int rows)
         {
-            LogHelper.Log("Save AFR map: " + filename);
+            logger.Debug("Save AFR map: " + filename);
             if (!Directory.Exists(foldername))
             {
                 Directory.CreateDirectory(foldername);
@@ -333,7 +336,7 @@ namespace T7
         public void LoadMap(string filename, int size)
         {
             // check if the map exists
-            LogHelper.Log("Load AFR map: " + size.ToString() + " " + filename);
+            logger.Debug("Load AFR map: " + size.ToString() + " " + filename);
             string foldername = Path.Combine(Path.GetDirectoryName(filename), "AFRMaps");
             if (!Directory.Exists(foldername))
             {
@@ -666,22 +669,22 @@ namespace T7
             //TODO: uses fixed axis from BFuelCal.Map (BFuelCal.AirXSP)
             int return_index = -1;
             double min_difference = 10000000;
-            //LogHelper.Log("looking up: " + value.ToString());
+            //logger.Debug("looking up: " + value.ToString());
             for (int t = 0; t < airXSP.Length; t++)
             {
                 int b = (int)airXSP.GetValue(t);
-                //LogHelper.Log("checking against: " + b.ToString());
+                //logger.Debug("checking against: " + b.ToString());
                 double diff = Math.Abs((double)b - value);
                 if (min_difference > diff)
                 {
-                    //LogHelper.Log("diff: " + diff.ToString());
+                    //logger.Debug("diff: " + diff.ToString());
                     min_difference = diff;
                     // this is our index
                     return_index = t;
-                    //LogHelper.Log("idx: " + return_index.ToString());
+                    //logger.Debug("idx: " + return_index.ToString());
                 }
             }
-            //LogHelper.Log("Index found = " + return_index.ToString());
+            //logger.Debug("Index found = " + return_index.ToString());
             return return_index;
         }
 
@@ -709,7 +712,7 @@ namespace T7
             //currentLoad /= 0.01;
             int rpmindex = LookUpIndexAxisRPMMap(rpm);
             int mapindex = LookUpIndexAxisMap(currentLoad);
-            //LogHelper.Log("rpm index: " + rpmindex.ToString() + " loadindex: " + mapindex.ToString());
+            //logger.Debug("rpm index: " + rpmindex.ToString() + " loadindex: " + mapindex.ToString());
             //so we now know in what cell we are
             // if the cell changed, we need to restart the stopwatch
             // if the cell is unchanged we need to check the stopwatchduration against the settings
@@ -758,7 +761,7 @@ namespace T7
                             {
                                 afr_diff_to_correct = _MaximumAdjustmentPerCyclePercentage;
                             }
-                            LogHelper.Log("Stable in cell: " + rpmindex.ToString() + " " + mapindex.ToString() + " " + _afr_diff_percentage.ToString() + " " + afr_diff_to_correct.ToString());
+                            logger.Debug("Stable in cell: " + rpmindex.ToString() + " " + mapindex.ToString() + " " + _afr_diff_percentage.ToString() + " " + afr_diff_to_correct.ToString());
                             // get the current fuel map value for the given cell
                             // get the number of changes that have been made already to this cell
                             // if the number of changes > x then don't do changes anymore and notify the user
@@ -769,7 +772,7 @@ namespace T7
                                 // we're running too lean, so we need to increase the fuelmap value by afr_diff_to_correct %
                                 // get the current fuelmap value
                                 // correct it with the percentage
-                                LogHelper.Log("running lean");
+                                logger.Debug("running lean");
                                 _fuelcorrectionvalue *= (int)(100 + afr_diff_to_correct);
                                 _fuelcorrectionvalue /= 100;
                                 if (_fuelcorrectionvalue > 254) _fuelcorrectionvalue = 254;
@@ -780,7 +783,7 @@ namespace T7
                             {
                                 // we're running too rich, so we need to decrease the fuelmap value by afr_diff_to_correct %
                                 // correct it with the percentage
-                                LogHelper.Log("running rich");
+                                logger.Debug("running rich");
                                 _fuelcorrectionvalue *= (int)(100 - afr_diff_to_correct);
                                 _fuelcorrectionvalue /= 100;
                                 // don't go under 25, seems to be some kind of boundary!
@@ -795,7 +798,7 @@ namespace T7
                                 if (_AutoUpdateFuelMap)
                                 {
                                     // if the user should be notified, do so now, ask permission to alter the fuel map
-                                    LogHelper.Log("Altering rpmidx: " + rpmindex.ToString() + " mapidx: " + mapindex.ToString() + " from value: " + fuelmap[(rpmindex * 18) + mapindex].ToString() + " to value: " + _fuelcorrectionvalue.ToString());
+                                    logger.Debug("Altering rpmidx: " + rpmindex.ToString() + " mapidx: " + mapindex.ToString() + " from value: " + fuelmap[(rpmindex * 18) + mapindex].ToString() + " to value: " + _fuelcorrectionvalue.ToString());
                                     fuelmap[(rpmindex * 18) + mapindex] = (byte)_fuelcorrectionvalue;
                                     // increase counter
                                     fuelcorrectioncountermap[(rpmindex * 18) + mapindex]++;

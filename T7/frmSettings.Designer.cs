@@ -28,6 +28,9 @@ namespace T7
         /// </summary>
         private void InitializeComponent()
         {
+            DevExpress.Utils.SuperToolTip superToolTip21 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem21 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem21 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
@@ -85,9 +88,6 @@ namespace T7
             DevExpress.Utils.SuperToolTip superToolTip19 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem19 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem19 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip20 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem20 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem20 = new DevExpress.Utils.ToolTipItem();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.comboBoxEdit4 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.checkEdit30 = new DevExpress.XtraEditors.CheckEdit();
@@ -124,6 +124,8 @@ namespace T7
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.groupControl3 = new DevExpress.XtraEditors.GroupControl();
+            this.cbAdapter = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
             this.cbWidebandComPort = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
@@ -136,7 +138,7 @@ namespace T7
             this.btnNotifications = new DevExpress.XtraEditors.SimpleButton();
             this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
-            this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbAdapterType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.checkEdit28 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
@@ -182,13 +184,14 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).BeginInit();
             this.groupControl3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAdapter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceDisableConnectionCheck.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit32.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit5.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit3.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAdapterType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit28.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceWidebandTrionic.Properties)).BeginInit();
@@ -252,12 +255,12 @@ namespace T7
             this.checkEdit30.Name = "checkEdit30";
             this.checkEdit30.Properties.Caption = "Use new mapviewer";
             this.checkEdit30.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem1.Text = "Use new mapviewer";
-            toolTipItem1.LeftIndent = 6;
-            toolTipItem1.Text = "If checked, the new type of mapviewer will be used to display data.";
-            superToolTip1.Items.Add(toolTipTitleItem1);
-            superToolTip1.Items.Add(toolTipItem1);
-            this.checkEdit30.SuperTip = superToolTip1;
+            toolTipTitleItem21.Text = "Use new mapviewer";
+            toolTipItem21.LeftIndent = 6;
+            toolTipItem21.Text = "If checked, the new type of mapviewer will be used to display data.";
+            superToolTip21.Items.Add(toolTipTitleItem21);
+            superToolTip21.Items.Add(toolTipItem21);
+            this.checkEdit30.SuperTip = superToolTip21;
             this.checkEdit30.TabIndex = 21;
             // 
             // checkEdit27
@@ -267,14 +270,14 @@ namespace T7
             this.checkEdit27.Name = "checkEdit27";
             this.checkEdit27.Properties.Caption = "Write timestamp marker in binary";
             this.checkEdit27.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem2.Text = "Write timestamp marker in binary";
-            toolTipItem2.LeftIndent = 6;
-            toolTipItem2.Text = "With this option on, T7Suite will write the timestamp shown in the firmware infor" +
-                "mation screen into the binary. If you don\'t want T7Suite to do this, you can tur" +
-                "n this function off here.";
-            superToolTip2.Items.Add(toolTipTitleItem2);
-            superToolTip2.Items.Add(toolTipItem2);
-            this.checkEdit27.SuperTip = superToolTip2;
+            toolTipTitleItem1.Text = "Write timestamp marker in binary";
+            toolTipItem1.LeftIndent = 6;
+            toolTipItem1.Text = "With this option on, T7Suite will write the timestamp shown in the firmware infor" +
+    "mation screen into the binary. If you don\'t want T7Suite to do this, you can tur" +
+    "n this function off here.";
+            superToolTip1.Items.Add(toolTipTitleItem1);
+            superToolTip1.Items.Add(toolTipItem1);
+            this.checkEdit27.SuperTip = superToolTip1;
             this.checkEdit27.TabIndex = 20;
             // 
             // checkEdit17
@@ -284,12 +287,12 @@ namespace T7
             this.checkEdit17.Name = "checkEdit17";
             this.checkEdit17.Properties.Caption = "Show table upside down";
             this.checkEdit17.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem3.Text = "Show tables upside down";
-            toolTipItem3.LeftIndent = 6;
-            toolTipItem3.Text = "Allows you to display all tables upside down.";
-            superToolTip3.Items.Add(toolTipTitleItem3);
-            superToolTip3.Items.Add(toolTipItem3);
-            this.checkEdit17.SuperTip = superToolTip3;
+            toolTipTitleItem2.Text = "Show tables upside down";
+            toolTipItem2.LeftIndent = 6;
+            toolTipItem2.Text = "Allows you to display all tables upside down.";
+            superToolTip2.Items.Add(toolTipTitleItem2);
+            superToolTip2.Items.Add(toolTipItem2);
+            this.checkEdit17.SuperTip = superToolTip2;
             this.checkEdit17.TabIndex = 19;
             // 
             // checkEdit29
@@ -298,13 +301,13 @@ namespace T7
             this.checkEdit29.Name = "checkEdit29";
             this.checkEdit29.Properties.Caption = "Use T7Suite AFR maps";
             this.checkEdit29.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem4.Text = "Use T7Suite AFR maps";
-            toolTipItem4.LeftIndent = 6;
-            toolTipItem4.Text = "If you wish to use the AFR target/feedback maps in T7Suite, you need to have this" +
-                " checked.";
-            superToolTip4.Items.Add(toolTipTitleItem4);
-            superToolTip4.Items.Add(toolTipItem4);
-            this.checkEdit29.SuperTip = superToolTip4;
+            toolTipTitleItem3.Text = "Use T7Suite AFR maps";
+            toolTipItem3.LeftIndent = 6;
+            toolTipItem3.Text = "If you wish to use the AFR target/feedback maps in T7Suite, you need to have this" +
+    " checked.";
+            superToolTip3.Items.Add(toolTipTitleItem3);
+            superToolTip3.Items.Add(toolTipItem3);
+            this.checkEdit29.SuperTip = superToolTip3;
             this.checkEdit29.TabIndex = 22;
             // 
             // checkEdit16
@@ -314,13 +317,13 @@ namespace T7
             this.checkEdit16.Name = "checkEdit16";
             this.checkEdit16.Properties.Caption = "Fancy docking";
             this.checkEdit16.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem5.Text = "Fancy docking";
-            toolTipItem5.LeftIndent = 6;
-            toolTipItem5.Text = "Lets you decide whether docking (dragging windows) will be shown in a fancy manne" +
-                "r or not.";
-            superToolTip5.Items.Add(toolTipTitleItem5);
-            superToolTip5.Items.Add(toolTipItem5);
-            this.checkEdit16.SuperTip = superToolTip5;
+            toolTipTitleItem4.Text = "Fancy docking";
+            toolTipItem4.LeftIndent = 6;
+            toolTipItem4.Text = "Lets you decide whether docking (dragging windows) will be shown in a fancy manne" +
+    "r or not.";
+            superToolTip4.Items.Add(toolTipTitleItem4);
+            superToolTip4.Items.Add(toolTipItem4);
+            this.checkEdit16.SuperTip = superToolTip4;
             this.checkEdit16.TabIndex = 18;
             // 
             // labelControl2
@@ -334,7 +337,7 @@ namespace T7
             // comboBoxEdit2
             // 
             this.comboBoxEdit2.EditValue = "Normal resolution screen (1280 * 1024)";
-            this.comboBoxEdit2.Location = new System.Drawing.Point(244, 177);
+            this.comboBoxEdit2.Location = new System.Drawing.Point(148, 177);
             this.comboBoxEdit2.Name = "comboBoxEdit2";
             this.comboBoxEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -352,13 +355,13 @@ namespace T7
             this.checkEdit15.Name = "checkEdit15";
             this.checkEdit15.Properties.Caption = "Synchronize mapviewers";
             this.checkEdit15.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem6.Text = "Synchronize mapviewers";
-            toolTipItem6.LeftIndent = 6;
-            toolTipItem6.Text = "When checked, all the mapviewers will react to changes made in one of the viewers" +
-                ". E.g. changing viewtype";
-            superToolTip6.Items.Add(toolTipTitleItem6);
-            superToolTip6.Items.Add(toolTipItem6);
-            this.checkEdit15.SuperTip = superToolTip6;
+            toolTipTitleItem5.Text = "Synchronize mapviewers";
+            toolTipItem5.LeftIndent = 6;
+            toolTipItem5.Text = "When checked, all the mapviewers will react to changes made in one of the viewers" +
+    ". E.g. changing viewtype";
+            superToolTip5.Items.Add(toolTipTitleItem5);
+            superToolTip5.Items.Add(toolTipItem5);
+            this.checkEdit15.SuperTip = superToolTip5;
             this.checkEdit15.TabIndex = 15;
             // 
             // labelControl1
@@ -372,7 +375,7 @@ namespace T7
             // comboBoxEdit1
             // 
             this.comboBoxEdit1.EditValue = "Easy view";
-            this.comboBoxEdit1.Location = new System.Drawing.Point(244, 203);
+            this.comboBoxEdit1.Location = new System.Drawing.Point(148, 199);
             this.comboBoxEdit1.Name = "comboBoxEdit1";
             this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -390,13 +393,13 @@ namespace T7
             this.checkEdit14.Name = "checkEdit14";
             this.checkEdit14.Properties.Caption = "Auto load last file on startup";
             this.checkEdit14.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem7.Text = "Auto load last file on startup";
-            toolTipItem7.LeftIndent = 6;
-            toolTipItem7.Text = "Lets you decide whether or not the last used file should be automatically loaded " +
-                "when the program starts up.";
-            superToolTip7.Items.Add(toolTipTitleItem7);
-            superToolTip7.Items.Add(toolTipItem7);
-            this.checkEdit14.SuperTip = superToolTip7;
+            toolTipTitleItem6.Text = "Auto load last file on startup";
+            toolTipItem6.LeftIndent = 6;
+            toolTipItem6.Text = "Lets you decide whether or not the last used file should be automatically loaded " +
+    "when the program starts up.";
+            superToolTip6.Items.Add(toolTipTitleItem6);
+            superToolTip6.Items.Add(toolTipItem6);
+            this.checkEdit14.SuperTip = superToolTip6;
             this.checkEdit14.TabIndex = 12;
             // 
             // checkEdit13
@@ -406,14 +409,14 @@ namespace T7
             this.checkEdit13.Name = "checkEdit13";
             this.checkEdit13.Properties.Caption = "Always re-create repository items";
             this.checkEdit13.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem8.Text = "Always re-create repository items";
-            toolTipItem8.LeftIndent = 6;
-            toolTipItem8.Text = "When checked, T7Suite will always re-create the repository items. This will slow " +
-                "down overall performance, but will ensure that an actual version is used all the" +
-                " time.";
-            superToolTip8.Items.Add(toolTipTitleItem8);
-            superToolTip8.Items.Add(toolTipItem8);
-            this.checkEdit13.SuperTip = superToolTip8;
+            toolTipTitleItem7.Text = "Always re-create repository items";
+            toolTipItem7.LeftIndent = 6;
+            toolTipItem7.Text = "When checked, T7Suite will always re-create the repository items. This will slow " +
+    "down overall performance, but will ensure that an actual version is used all the" +
+    " time.";
+            superToolTip7.Items.Add(toolTipTitleItem7);
+            superToolTip7.Items.Add(toolTipItem7);
+            this.checkEdit13.SuperTip = superToolTip7;
             this.checkEdit13.TabIndex = 11;
             // 
             // checkEdit12
@@ -422,13 +425,13 @@ namespace T7
             this.checkEdit12.Name = "checkEdit12";
             this.checkEdit12.Properties.Caption = "New panels are floating";
             this.checkEdit12.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem9.Text = "New panels are floating";
-            toolTipItem9.LeftIndent = 6;
-            toolTipItem9.Text = "When checked makes new viewer float inside the application window in stead of doc" +
-                "king them to the right side of the screen.";
-            superToolTip9.Items.Add(toolTipTitleItem9);
-            superToolTip9.Items.Add(toolTipItem9);
-            this.checkEdit12.SuperTip = superToolTip9;
+            toolTipTitleItem8.Text = "New panels are floating";
+            toolTipItem8.LeftIndent = 6;
+            toolTipItem8.Text = "When checked makes new viewer float inside the application window in stead of doc" +
+    "king them to the right side of the screen.";
+            superToolTip8.Items.Add(toolTipTitleItem8);
+            superToolTip8.Items.Add(toolTipItem8);
+            this.checkEdit12.SuperTip = superToolTip8;
             this.checkEdit12.TabIndex = 10;
             // 
             // checkEdit11
@@ -438,12 +441,12 @@ namespace T7
             this.checkEdit11.Name = "checkEdit11";
             this.checkEdit11.Properties.Caption = "Show mapviewers in seperate windows";
             this.checkEdit11.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem10.Text = "Show mapviewers in seperate windows";
-            toolTipItem10.LeftIndent = 6;
-            toolTipItem10.Text = "When checked shows mapviewers in seperate windows in stead of docked panels.";
-            superToolTip10.Items.Add(toolTipTitleItem10);
-            superToolTip10.Items.Add(toolTipItem10);
-            this.checkEdit11.SuperTip = superToolTip10;
+            toolTipTitleItem9.Text = "Show mapviewers in seperate windows";
+            toolTipItem9.LeftIndent = 6;
+            toolTipItem9.Text = "When checked shows mapviewers in seperate windows in stead of docked panels.";
+            superToolTip9.Items.Add(toolTipTitleItem9);
+            superToolTip9.Items.Add(toolTipItem9);
+            this.checkEdit11.SuperTip = superToolTip9;
             this.checkEdit11.TabIndex = 9;
             // 
             // checkEdit10
@@ -452,13 +455,13 @@ namespace T7
             this.checkEdit10.Name = "checkEdit10";
             this.checkEdit10.Properties.Caption = "Auto dock maps with same name";
             this.checkEdit10.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem11.Text = "Auto dock maps with same name";
-            toolTipItem11.LeftIndent = 6;
-            toolTipItem11.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
-                "y display the same symbol.";
-            superToolTip11.Items.Add(toolTipTitleItem11);
-            superToolTip11.Items.Add(toolTipItem11);
-            this.checkEdit10.SuperTip = superToolTip11;
+            toolTipTitleItem10.Text = "Auto dock maps with same name";
+            toolTipItem10.LeftIndent = 6;
+            toolTipItem10.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
+    "y display the same symbol.";
+            superToolTip10.Items.Add(toolTipTitleItem10);
+            superToolTip10.Items.Add(toolTipItem10);
+            this.checkEdit10.SuperTip = superToolTip10;
             this.checkEdit10.TabIndex = 8;
             // 
             // checkEdit9
@@ -467,13 +470,13 @@ namespace T7
             this.checkEdit9.Name = "checkEdit9";
             this.checkEdit9.Properties.Caption = "Auto dock maps from same file";
             this.checkEdit9.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem12.Text = "Auto dock maps from same file";
-            toolTipItem12.LeftIndent = 6;
-            toolTipItem12.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
-                "y are from the same binary file.";
-            superToolTip12.Items.Add(toolTipTitleItem12);
-            superToolTip12.Items.Add(toolTipItem12);
-            this.checkEdit9.SuperTip = superToolTip12;
+            toolTipTitleItem11.Text = "Auto dock maps from same file";
+            toolTipItem11.LeftIndent = 6;
+            toolTipItem11.Text = "When checked T7Suite will dock newly started mapviewers to eachother whenever the" +
+    "y are from the same binary file.";
+            superToolTip11.Items.Add(toolTipTitleItem11);
+            superToolTip11.Items.Add(toolTipItem11);
+            this.checkEdit9.SuperTip = superToolTip11;
             this.checkEdit9.TabIndex = 7;
             // 
             // checkEdit8
@@ -482,13 +485,13 @@ namespace T7
             this.checkEdit8.Name = "checkEdit8";
             this.checkEdit8.Properties.Caption = "Don\'t display colors in mapviewer";
             this.checkEdit8.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem13.Text = "Don\'t display colors in mapviewer";
-            toolTipItem13.LeftIndent = 6;
-            toolTipItem13.Text = "To improve performance you can check this item and coloring of the mapviewer cell" +
-                "s will be disabled.";
-            superToolTip13.Items.Add(toolTipTitleItem13);
-            superToolTip13.Items.Add(toolTipItem13);
-            this.checkEdit8.SuperTip = superToolTip13;
+            toolTipTitleItem12.Text = "Don\'t display colors in mapviewer";
+            toolTipItem12.LeftIndent = 6;
+            toolTipItem12.Text = "To improve performance you can check this item and coloring of the mapviewer cell" +
+    "s will be disabled.";
+            superToolTip12.Items.Add(toolTipTitleItem12);
+            superToolTip12.Items.Add(toolTipItem12);
+            this.checkEdit8.SuperTip = superToolTip12;
             this.checkEdit8.TabIndex = 6;
             // 
             // checkEdit7
@@ -497,11 +500,11 @@ namespace T7
             this.checkEdit7.Name = "checkEdit7";
             this.checkEdit7.Properties.Caption = "Auto size columns in mapviewer";
             this.checkEdit7.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem14.Text = "Auto size columns in mapviewer";
-            toolTipItem14.LeftIndent = 6;
-            superToolTip14.Items.Add(toolTipTitleItem14);
-            superToolTip14.Items.Add(toolTipItem14);
-            this.checkEdit7.SuperTip = superToolTip14;
+            toolTipTitleItem13.Text = "Auto size columns in mapviewer";
+            toolTipItem13.LeftIndent = 6;
+            superToolTip13.Items.Add(toolTipTitleItem13);
+            superToolTip13.Items.Add(toolTipItem13);
+            this.checkEdit7.SuperTip = superToolTip13;
             this.checkEdit7.TabIndex = 5;
             // 
             // checkEdit6
@@ -510,13 +513,13 @@ namespace T7
             this.checkEdit6.Name = "checkEdit6";
             this.checkEdit6.Properties.Caption = "Hide symbol window";
             this.checkEdit6.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem15.Text = "Hide symbol window";
-            toolTipItem15.LeftIndent = 6;
-            toolTipItem15.Text = "To save display space you can hide the symbollist and select the symbols you want" +
-                " to view from the dropdownl list in the system menu.";
-            superToolTip15.Items.Add(toolTipTitleItem15);
-            superToolTip15.Items.Add(toolTipItem15);
-            this.checkEdit6.SuperTip = superToolTip15;
+            toolTipTitleItem14.Text = "Hide symbol window";
+            toolTipItem14.LeftIndent = 6;
+            toolTipItem14.Text = "To save display space you can hide the symbollist and select the symbols you want" +
+    " to view from the dropdownl list in the system menu.";
+            superToolTip14.Items.Add(toolTipTitleItem14);
+            superToolTip14.Items.Add(toolTipItem14);
+            this.checkEdit6.SuperTip = superToolTip14;
             this.checkEdit6.TabIndex = 4;
             // 
             // checkEdit5
@@ -525,13 +528,13 @@ namespace T7
             this.checkEdit5.Name = "checkEdit5";
             this.checkEdit5.Properties.Caption = "Show graphs in mapviewer";
             this.checkEdit5.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem16.Text = "Show graphs in mapviewer";
-            toolTipItem16.LeftIndent = 6;
-            toolTipItem16.Text = "When checked the graphical representation of the selected map will also be displa" +
-                "yed. This consumes more system memory en cpu time.";
-            superToolTip16.Items.Add(toolTipTitleItem16);
-            superToolTip16.Items.Add(toolTipItem16);
-            this.checkEdit5.SuperTip = superToolTip16;
+            toolTipTitleItem15.Text = "Show graphs in mapviewer";
+            toolTipItem15.LeftIndent = 6;
+            toolTipItem15.Text = "When checked the graphical representation of the selected map will also be displa" +
+    "yed. This consumes more system memory en cpu time.";
+            superToolTip15.Items.Add(toolTipTitleItem15);
+            superToolTip15.Items.Add(toolTipItem15);
+            this.checkEdit5.SuperTip = superToolTip15;
             this.checkEdit5.TabIndex = 3;
             // 
             // checkEdit4
@@ -540,13 +543,13 @@ namespace T7
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.Caption = "View tables in hexadecimal values";
             this.checkEdit4.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem17.Text = "View tables in hexadecimal values";
-            toolTipItem17.LeftIndent = 6;
-            toolTipItem17.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
-                "maps will  be displayed in easy mode when they are opened.";
-            superToolTip17.Items.Add(toolTipTitleItem17);
-            superToolTip17.Items.Add(toolTipItem17);
-            this.checkEdit4.SuperTip = superToolTip17;
+            toolTipTitleItem16.Text = "View tables in hexadecimal values";
+            toolTipItem16.LeftIndent = 6;
+            toolTipItem16.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
+    "maps will  be displayed in easy mode when they are opened.";
+            superToolTip16.Items.Add(toolTipTitleItem16);
+            superToolTip16.Items.Add(toolTipItem16);
+            this.checkEdit4.SuperTip = superToolTip16;
             this.checkEdit4.TabIndex = 2;
             // 
             // checkEdit2
@@ -555,13 +558,13 @@ namespace T7
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.Caption = "Use red and white maps";
             this.checkEdit2.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem18.Text = "Use red and white maps";
-            toolTipItem18.LeftIndent = 6;
-            toolTipItem18.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
-                "o display low values and red for higher values.";
-            superToolTip18.Items.Add(toolTipTitleItem18);
-            superToolTip18.Items.Add(toolTipItem18);
-            this.checkEdit2.SuperTip = superToolTip18;
+            toolTipTitleItem17.Text = "Use red and white maps";
+            toolTipItem17.LeftIndent = 6;
+            toolTipItem17.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
+    "o display low values and red for higher values.";
+            superToolTip17.Items.Add(toolTipTitleItem17);
+            superToolTip17.Items.Add(toolTipItem17);
+            this.checkEdit2.SuperTip = superToolTip17;
             this.checkEdit2.TabIndex = 1;
             // 
             // checkEdit1
@@ -570,12 +573,12 @@ namespace T7
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Auto size new mapwindows";
             this.checkEdit1.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem19.Text = "Auto size new mapwindows";
-            toolTipItem19.LeftIndent = 6;
-            toolTipItem19.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
-            superToolTip19.Items.Add(toolTipTitleItem19);
-            superToolTip19.Items.Add(toolTipItem19);
-            this.checkEdit1.SuperTip = superToolTip19;
+            toolTipTitleItem18.Text = "Auto size new mapwindows";
+            toolTipItem18.LeftIndent = 6;
+            toolTipItem18.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
+            superToolTip18.Items.Add(toolTipTitleItem18);
+            superToolTip18.Items.Add(toolTipItem18);
+            this.checkEdit1.SuperTip = superToolTip18;
             this.checkEdit1.TabIndex = 0;
             // 
             // groupControl2
@@ -674,6 +677,8 @@ namespace T7
             // 
             // groupControl3
             // 
+            this.groupControl3.Controls.Add(this.cbAdapter);
+            this.groupControl3.Controls.Add(this.labelControl8);
             this.groupControl3.Controls.Add(this.labelControl7);
             this.groupControl3.Controls.Add(this.cbWidebandComPort);
             this.groupControl3.Controls.Add(this.labelControl6);
@@ -686,7 +691,7 @@ namespace T7
             this.groupControl3.Controls.Add(this.btnNotifications);
             this.groupControl3.Controls.Add(this.btnAdapterConfiguration);
             this.groupControl3.Controls.Add(this.labelControl5);
-            this.groupControl3.Controls.Add(this.comboBoxEdit3);
+            this.groupControl3.Controls.Add(this.cbAdapterType);
             this.groupControl3.Controls.Add(this.checkEdit28);
             this.groupControl3.Controls.Add(this.labelControl3);
             this.groupControl3.Controls.Add(this.spinEdit1);
@@ -702,9 +707,34 @@ namespace T7
             this.groupControl3.TabIndex = 4;
             this.groupControl3.Text = "Realtime settings";
             // 
+            // cbAdapter
+            // 
+            this.cbAdapter.Enabled = false;
+            this.cbAdapter.Location = new System.Drawing.Point(343, 140);
+            this.cbAdapter.Name = "cbAdapter";
+            this.cbAdapter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbAdapter.Properties.Items.AddRange(new object[] {
+            "Lawicel CANUSB",
+            "CombiAdapter",
+            "ELM327 v1.3 or higher",
+            "Just4Trionic",
+            "Kvaser"});
+            this.cbAdapter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbAdapter.Size = new System.Drawing.Size(111, 20);
+            this.cbAdapter.TabIndex = 37;
+            // 
+            // labelControl8
+            // 
+            this.labelControl8.Location = new System.Drawing.Point(244, 143);
+            this.labelControl8.Name = "labelControl8";
+            this.labelControl8.Size = new System.Drawing.Size(39, 13);
+            this.labelControl8.TabIndex = 36;
+            this.labelControl8.Text = "Adapter";
+            // 
             // labelControl7
             // 
-            this.labelControl7.Location = new System.Drawing.Point(347, 169);
+            this.labelControl7.Location = new System.Drawing.Point(244, 173);
             this.labelControl7.Name = "labelControl7";
             this.labelControl7.Size = new System.Drawing.Size(93, 13);
             this.labelControl7.TabIndex = 35;
@@ -713,12 +743,12 @@ namespace T7
             // cbWidebandComPort
             // 
             this.cbWidebandComPort.Enabled = false;
-            this.cbWidebandComPort.Location = new System.Drawing.Point(473, 166);
+            this.cbWidebandComPort.Location = new System.Drawing.Point(343, 166);
             this.cbWidebandComPort.Name = "cbWidebandComPort";
             this.cbWidebandComPort.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cbWidebandComPort.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cbWidebandComPort.Size = new System.Drawing.Size(216, 20);
+            this.cbWidebandComPort.Size = new System.Drawing.Size(111, 20);
             this.cbWidebandComPort.TabIndex = 34;
             // 
             // labelControl6
@@ -744,7 +774,7 @@ namespace T7
             "LM2",
             "ZT2",
             "AEM"});
-            this.cbWidebandDevice.Size = new System.Drawing.Size(203, 20);
+            this.cbWidebandDevice.Size = new System.Drawing.Size(121, 20);
             this.cbWidebandDevice.TabIndex = 32;
             // 
             // ceWidebandComPort
@@ -798,7 +828,7 @@ namespace T7
             // 
             // btnNotifications
             // 
-            this.btnNotifications.Location = new System.Drawing.Point(473, 137);
+            this.btnNotifications.Location = new System.Drawing.Point(583, 137);
             this.btnNotifications.Name = "btnNotifications";
             this.btnNotifications.Size = new System.Drawing.Size(100, 23);
             this.btnNotifications.TabIndex = 26;
@@ -808,7 +838,7 @@ namespace T7
             // btnAdapterConfiguration
             // 
             this.btnAdapterConfiguration.Enabled = false;
-            this.btnAdapterConfiguration.Location = new System.Drawing.Point(347, 137);
+            this.btnAdapterConfiguration.Location = new System.Drawing.Point(473, 137);
             this.btnAdapterConfiguration.Name = "btnAdapterConfiguration";
             this.btnAdapterConfiguration.Size = new System.Drawing.Size(100, 23);
             this.btnAdapterConfiguration.TabIndex = 25;
@@ -819,25 +849,26 @@ namespace T7
             // 
             this.labelControl5.Location = new System.Drawing.Point(7, 143);
             this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(84, 13);
+            this.labelControl5.Size = new System.Drawing.Size(104, 13);
             this.labelControl5.TabIndex = 24;
-            this.labelControl5.Text = "CANBus interface";
+            this.labelControl5.Text = "CANBus adapter type";
             // 
-            // comboBoxEdit3
+            // cbAdapterType
             // 
-            this.comboBoxEdit3.EditValue = "Lawicel CANUSB";
-            this.comboBoxEdit3.Location = new System.Drawing.Point(116, 140);
-            this.comboBoxEdit3.Name = "comboBoxEdit3";
-            this.comboBoxEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.cbAdapterType.EditValue = "";
+            this.cbAdapterType.Location = new System.Drawing.Point(116, 140);
+            this.cbAdapterType.Name = "cbAdapterType";
+            this.cbAdapterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.comboBoxEdit3.Properties.Items.AddRange(new object[] {
+            this.cbAdapterType.Properties.Items.AddRange(new object[] {
             "Lawicel CANUSB",
             "CombiAdapter",
             "ELM327 v1.3 or higher",
-            "Just4Trionic"});
-            this.comboBoxEdit3.Size = new System.Drawing.Size(203, 20);
-            this.comboBoxEdit3.TabIndex = 23;
-            this.comboBoxEdit3.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
+            "Just4Trionic",
+            "Kvaser"});
+            this.cbAdapterType.Size = new System.Drawing.Size(121, 20);
+            this.cbAdapterType.TabIndex = 23;
+            this.cbAdapterType.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
             // 
             // checkEdit28
             // 
@@ -845,13 +876,13 @@ namespace T7
             this.checkEdit28.Name = "checkEdit28";
             this.checkEdit28.Properties.Caption = "Measure AFR in lambda";
             this.checkEdit28.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem20.Text = "Measure AFR in lambda";
-            toolTipItem20.LeftIndent = 6;
-            toolTipItem20.Text = "If you prefer AFR measurements in lambda values in stead of AFR values, enable th" +
-                "is.";
-            superToolTip20.Items.Add(toolTipTitleItem20);
-            superToolTip20.Items.Add(toolTipItem20);
-            this.checkEdit28.SuperTip = superToolTip20;
+            toolTipTitleItem19.Text = "Measure AFR in lambda";
+            toolTipItem19.LeftIndent = 6;
+            toolTipItem19.Text = "If you prefer AFR measurements in lambda values in stead of AFR values, enable th" +
+    "is.";
+            superToolTip19.Items.Add(toolTipTitleItem19);
+            superToolTip19.Items.Add(toolTipItem19);
+            this.checkEdit28.SuperTip = superToolTip19;
             this.checkEdit28.TabIndex = 21;
             // 
             // labelControl3
@@ -1019,13 +1050,14 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).EndInit();
             this.groupControl3.ResumeLayout(false);
             this.groupControl3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAdapter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbWidebandComPort.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbWidebandDevice.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceWidebandComPort.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceDisableConnectionCheck.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit32.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit5.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit3.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAdapterType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit28.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceWidebandTrionic.Properties)).EndInit();
@@ -1085,7 +1117,7 @@ namespace T7
         private DevExpress.XtraEditors.LabelControl labelControl4;
         private DevExpress.XtraEditors.ButtonEdit buttonEdit1;
         private DevExpress.XtraEditors.LabelControl labelControl5;
-        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit3;
+        private DevExpress.XtraEditors.ComboBoxEdit cbAdapterType;
         private DevExpress.XtraEditors.SimpleButton btnAdapterConfiguration;
         private DevExpress.XtraEditors.SimpleButton btnNotifications;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit4;
@@ -1100,5 +1132,7 @@ namespace T7
         private DevExpress.XtraEditors.ComboBoxEdit cbWidebandDevice;
         private DevExpress.XtraEditors.LabelControl labelControl7;
         private DevExpress.XtraEditors.ComboBoxEdit cbWidebandComPort;
+        private DevExpress.XtraEditors.ComboBoxEdit cbAdapter;
+        private DevExpress.XtraEditors.LabelControl labelControl8;
     }
 }

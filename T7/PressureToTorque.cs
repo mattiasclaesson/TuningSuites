@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
@@ -20,7 +21,7 @@ namespace T7
 
     public class PressureToTorque
     {
-
+        private Logger logger = LogManager.GetCurrentClassLogger();
         /*
 0.2 bar = 197,5 Nm
 0.4 bar = 247,5 Nm
@@ -206,7 +207,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
 

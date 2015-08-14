@@ -6,11 +6,14 @@ using T7;
 using System.IO;
 using System.Windows.Forms;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     class PackageExporter
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private byte[] readdatafromfile(string filename, int address, int length)
         {
             byte[] retval = new byte[length];
@@ -32,7 +35,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return retval;
         }

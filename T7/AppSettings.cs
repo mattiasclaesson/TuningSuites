@@ -10,7 +10,7 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 using CommonSuite;
-using TrionicCANLib;
+using NLog;
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 
@@ -18,6 +18,7 @@ namespace T7
 {
     public class AppSettings
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private int _Baudrate = 38400;
 
@@ -925,19 +926,6 @@ namespace T7
             }
         }
 
-
-        private CANBusAdapter m_CANBusAdapterType = CANBusAdapter.LAWICEL;
-
-        public CANBusAdapter CANBusAdapterType
-        {
-            get { return m_CANBusAdapterType; }
-            set
-            {
-                m_CANBusAdapterType = value;
-                SaveRegistrySetting("CANBusAdapterType", (int)m_CANBusAdapterType);
-            }
-        }
-
         private bool m_RequestProjectNotes = false;
 
         public bool RequestProjectNotes
@@ -1648,6 +1636,30 @@ namespace T7
             }
         }
 
+        private string m_AdapterType = "";
+
+        public string AdapterType
+        {
+            get { return m_AdapterType; }
+            set
+            {
+                m_AdapterType = value;
+                SaveRegistrySetting("AdapterType", m_AdapterType);
+            }
+        }
+
+        private string m_Adapter = "";
+
+        public string Adapter
+        {
+            get { return m_Adapter; }
+            set
+            {
+                m_Adapter = value;
+                SaveRegistrySetting("Adapter", m_Adapter);
+            }
+        }
+
         private void SaveRegistrySetting(string key, string value)
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
@@ -1781,7 +1793,6 @@ namespace T7
                 saveSettings.SetValue("LastProjectname", m_lastprojectname);
                 saveSettings.SetValue("WriteECUBatchfile", m_write_ecubatchfile);
                 saveSettings.SetValue("LastOpenedType", m_LastOpenedType);
-                saveSettings.SetValue("CANBusAdapterType", (int)m_CANBusAdapterType);
                 saveSettings.SetValue("ReadECUBatchfile", m_read_ecubatchfile);
                 saveSettings.SetValue("ShowRedWhite", m_ShowRedWhite);
                 saveSettings.SetValue("TargetECUReadFile", m_TargetECUReadFile);
@@ -1834,6 +1845,8 @@ namespace T7
 
                 saveSettings.SetValue("WbPort", _WbPort);
                 saveSettings.SetValue("WidebandDevice", m_WidebandDevice);
+                saveSettings.SetValue("AdapterType", m_AdapterType);
+                saveSettings.SetValue("Adapter", m_Adapter);
             }
         }
 
@@ -1886,10 +1899,6 @@ namespace T7
                             else if (a == "LastOpenedType")
                             {
                                 m_LastOpenedType = Convert.ToInt32(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "CANBusAdapterType")
-                            {
-                                m_CANBusAdapterType = (CANBusAdapter)Convert.ToInt32(Settings.GetValue(a).ToString());
                             }
                             else if (a == "PanelMode")
                             {
@@ -2286,7 +2295,7 @@ namespace T7
                                 //m_RealtimeFont = new Font(Settings.GetValue(a).ToString(), 10F);
                                 TypeConverter tc = TypeDescriptor.GetConverter(typeof(Font));
                                 //string fontString = tc.ConvertToString(font);
-                                //LogHelper.Log("Font as string: {0}", fontString);
+                                //logger.Debug("Font as string: {0}", fontString);
 
                                 m_RealtimeFont = (Font)tc.ConvertFromString(Settings.GetValue(a).ToString());
 
@@ -2421,10 +2430,18 @@ namespace T7
                             {
                                 m_WidebandDevice = Settings.GetValue(a).ToString();
                             }
+                            else if (a == "Adapter")
+                            {
+                                m_Adapter = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "AdapterType")
+                            {
+                                m_AdapterType = Settings.GetValue(a).ToString();
+                            }
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log("error retrieving registry settings: " + E.Message);
+                            logger.Debug("error retrieving registry settings: " + E.Message);
                         }
 
                     }

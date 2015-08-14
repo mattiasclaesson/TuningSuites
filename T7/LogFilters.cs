@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public class LogFilters
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public void SaveFiltersToRegistry(LogFilterCollection filters)
         {
             foreach (LogFilter filter in filters)
@@ -38,7 +41,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -46,7 +49,7 @@ namespace T7
             }
             catch (Exception E2)
             {
-                LogHelper.Log(E2.Message);
+                logger.Debug(E2.Message);
             }
             return filters;
         }
@@ -92,7 +95,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
             }

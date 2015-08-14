@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using CommonSuite;
 using TrionicCANLib;
 using System.IO.Ports;
+using TrionicCANLib.API;
+using DevExpress.XtraEditors.Controls;
 
 namespace T7
 {
@@ -44,18 +46,18 @@ namespace T7
         {
             get
             {
-                if (comboBoxEdit3.SelectedIndex == -1) comboBoxEdit3.SelectedIndex = 0;
-                return (CANBusAdapter)comboBoxEdit3.SelectedIndex;
+                if (cbAdapterType.SelectedIndex == -1) cbAdapterType.SelectedIndex = 0;
+                return (CANBusAdapter)cbAdapterType.SelectedIndex;
             }
             set
             {
                 try
                 {
-                    comboBoxEdit3.SelectedIndex = (int)value;
+                    cbAdapterType.SelectedIndex = (int)value;
                 }
                 catch (Exception)
                 {
-                    comboBoxEdit3.SelectedIndex = 0;
+                    cbAdapterType.SelectedIndex = 0;
                 }
             }
         }
@@ -560,15 +562,39 @@ namespace T7
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.COMBI || 
-                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327 ||
-                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
+            if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI || 
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 btnAdapterConfiguration.Enabled = true;
             }
             else
             {
                 btnAdapterConfiguration.Enabled = false;
+            }
+
+            if (cbAdapterType.SelectedIndex != -1)
+            {
+                string[] adapters = ITrionic.GetAdapterNames((CANBusAdapter)cbAdapterType.SelectedIndex);
+                ComboBoxItemCollection collection = cbAdapter.Properties.Items;
+                collection.BeginUpdate();
+                collection.Clear();
+                foreach (string adapter in adapters)
+                {
+                    collection.Add(adapter);
+                }
+                collection.EndUpdate();
+
+                if (adapters.Length > 0)
+                {
+                    cbAdapter.SelectedIndex = 0;
+                    cbAdapter.Enabled = true;
+                }
+                else
+                {
+                    cbAdapter.SelectedIndex = -1;
+                    cbAdapter.Enabled = false;
+                }
             }
         }
 
@@ -582,30 +608,28 @@ namespace T7
 
         private void btnAdapterConfiguration_Click(object sender, EventArgs e)
         {
-            if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.COMBI)
+            if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI)
             {
                 // open the config screen for additional configuration of the adapter
                 // which ADC channels mean what
                 // use ADC 1-5 & assign symbolname, max & min value
                 // use thermo & assign symbolname, max & min value
-                frmMultiAdapterConfig multiconfig = new frmMultiAdapterConfig();
-                multiconfig.AppSettings = m_appSettings;
-                if (multiconfig.ShowDialog() == DialogResult.OK)
+                frmCombiAdapterConfig combiconfig = new frmCombiAdapterConfig();
+                combiconfig.AppSettings = m_appSettings;
+                if (combiconfig.ShowDialog() == DialogResult.OK)
                 {
                     DialogResult = DialogResult.None;
                     // nothing really.. all is saved in appsettings already ... 
                 }
             }
-            else if (comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.ELM327 ||
-                comboBoxEdit3.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
+            else if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
-                frmComportSelection comportSel = new frmComportSelection();
-                comportSel.PortName = m_appSettings.ELM327Port;
+                frmComportSettings comportSel = new frmComportSettings();
                 comportSel.Baudrate = m_appSettings.Baudrate;
                 comportSel.ELM327KLine = m_appSettings.ELM327Kline;
                 if (comportSel.ShowDialog() == DialogResult.OK)
                 {
-                    m_appSettings.ELM327Port = comportSel.PortName;
                     m_appSettings.Baudrate = comportSel.Baudrate;
                     m_appSettings.ELM327Kline = comportSel.ELM327KLine;
                 }
@@ -993,6 +1017,32 @@ namespace T7
             set
             {
                 cbWidebandDevice.SelectedItem = value;
+            }
+        }
+
+        public string AdapterType
+        {
+            get
+            {
+                if (cbAdapterType.SelectedIndex == -1)
+                    cbAdapterType.SelectedIndex = 1;
+                return cbAdapterType.SelectedItem.ToString();
+            }
+            set
+            {
+                cbAdapterType.SelectedItem = value;
+            }
+        }
+
+        public string Adapter
+        {
+            get
+            {
+                return cbAdapter.SelectedItem != null ? cbAdapter.SelectedItem.ToString() : string.Empty;
+            }
+            set
+            {
+                cbAdapter.SelectedItem = value;
             }
         }
     }

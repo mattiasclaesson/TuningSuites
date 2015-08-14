@@ -7,11 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class frmEditTuningPackage : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private string _tuningPackageFilename = string.Empty;
 
         public string TuningPackageFilename
@@ -61,7 +64,7 @@ namespace T7
                 if (o is SymbolHelper)
                 {
                     SymbolHelper sh = (SymbolHelper)o;
-                    LogHelper.Log("Dropped: " + sh.Varname);
+                    logger.Debug("Dropped: " + sh.Varname);
                     AddSymbolToTuningPackage(sh);
                 }
             }

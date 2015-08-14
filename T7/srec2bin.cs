@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     class srec2bin
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         public bool ConvertSrecToBin(string filename, out string newfilename)
         {
@@ -62,7 +64,7 @@ namespace T7
 
                     }
                 }
-                LogHelper.Log("Bytes written: " + bytecount.ToString());
+                logger.Debug("Bytes written: " + bytecount.ToString());
                 binwrite.Close();
                 fswrite.Close();
                 newfilename = outputfile;
@@ -70,7 +72,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }
@@ -165,7 +167,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }
@@ -252,7 +254,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return false;
         }

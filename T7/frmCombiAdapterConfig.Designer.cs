@@ -1,6 +1,6 @@
 namespace T7
 {
-    partial class frmMultiAdapterConfig
+    partial class frmCombiAdapterConfig
     {
         /// <summary>
         /// Required designer variable.
@@ -115,9 +115,9 @@ namespace T7
             // 
             // groupControl1
             // 
-            this.groupControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupControl1.Controls.Add(this.labelControl1);
             this.groupControl1.Controls.Add(this.textEdit1);
             this.groupControl1.Controls.Add(this.buttonEdit5);
@@ -135,7 +135,7 @@ namespace T7
             this.groupControl1.Name = "groupControl1";
             this.groupControl1.Size = new System.Drawing.Size(624, 206);
             this.groupControl1.TabIndex = 6;
-            this.groupControl1.Text = "MultiAdapter options...";
+            this.groupControl1.Text = "CombiAdapter options...";
             // 
             // labelControl1
             // 
@@ -218,7 +218,7 @@ namespace T7
             this.simpleButton1.Text = "Ok";
             this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
             // 
-            // frmMultiAdapterConfig
+            // frmCombiAdapterConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -226,7 +226,7 @@ namespace T7
             this.ControlBox = false;
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.groupControl1);
-            this.Name = "frmMultiAdapterConfig";
+            this.Name = "frmCombiAdapterConfig";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Configuration for combiadapter...";
             ((System.ComponentModel.ISupportInitialize)(this.chkUseADC1.Properties)).EndInit();

@@ -10,6 +10,7 @@ using Nevron.Chart;
 using Nevron.Chart.WinForm;
 using Nevron.GraphicsCore;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
@@ -17,6 +18,8 @@ namespace T7
 
     public partial class frmMatrixResult : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private NChartControl nChartControl1 = null;
         public frmMatrixResult()
         {
@@ -92,7 +95,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             return retval;
@@ -125,7 +128,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to convert to integer value: " + value.ToString());
+                        logger.Debug("Failed to convert to integer value: " + value.ToString());
                     }
                     byte b1 = 0;
                     byte b2 = 0;
@@ -136,7 +139,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to convert to byte value + " + ivalue.ToString());
+                        logger.Debug("Failed to convert to byte value + " + ivalue.ToString());
                     }
                     
                     m_map_content[idx++] = b1;
@@ -194,7 +197,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to convert to integer value: " + value.ToString());
+                        logger.Debug("Failed to convert to integer value: " + value.ToString());
                     }
                     byte b1 = 0;
                     byte b2 = 0;
@@ -205,7 +208,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to convert to byte value + " + ivalue.ToString());
+                        logger.Debug("Failed to convert to byte value + " + ivalue.ToString());
                     }
 
                     m_map_content[idx++] = b1;
@@ -279,7 +282,7 @@ namespace T7
                         }
                         catch (Exception cE)
                         {
-                            LogHelper.Log(cE.Message);
+                            logger.Debug(cE.Message);
                         }
                     }
                     scaleConfiguratorX.Labels.Add(yvalue);
@@ -305,7 +308,7 @@ namespace T7
                         }
                         catch (Exception cE)
                         {
-                            LogHelper.Log(cE.Message);
+                            logger.Debug(cE.Message);
                         }
                     }
                     scaleConfiguratorY.Labels.Add(xvalue);
@@ -359,7 +362,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to refresh mesh chart: " + E.Message);
+                logger.Debug("Failed to refresh mesh chart: " + E.Message);
             }
         }
 
@@ -539,7 +542,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }
@@ -562,13 +565,13 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
         private void frmMatrixResult_Resize(object sender, EventArgs e)
         {
-            LogHelper.Log(this.Height.ToString() + " " + this.Width.ToString());
+            logger.Debug(this.Height.ToString() + " " + this.Width.ToString());
         }
 
         private void xtraTabControl1_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)

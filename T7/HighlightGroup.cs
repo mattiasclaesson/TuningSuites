@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor;
+using NLog;
 
 namespace CommonSuite
 {
     public class HighlightGroup : IDisposable
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         List<TextMarker> _markers = new List<TextMarker>();
         TextEditorControl _editor;
         IDocument _document;
@@ -30,7 +33,7 @@ namespace CommonSuite
 
         public void Dispose()
         {
-            LogHelper.Log("Disposed!");
+            logger.Debug("Disposed!");
             ClearMarkers();
             GC.SuppressFinalize(this);
         }

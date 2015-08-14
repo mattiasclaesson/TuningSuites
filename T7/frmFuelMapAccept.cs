@@ -5,11 +5,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraGrid.Views.Base;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class frmFuelMapAccept : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public delegate void UpdateFuelMap(object sender, UpdateFuelMapEventArgs e);
         public event frmFuelMapAccept.UpdateFuelMap onUpdateFuelMap;
 
@@ -134,7 +137,7 @@ namespace T7
             {
                 if (value != 0)
                 {
-                    //LogHelper.Log("Writing x: " + x.ToString() + " y: " + y.ToString() + " percentage: " + value.ToString());
+                    //logger.Debug("Writing x: " + x.ToString() + " y: " + y.ToString() + " percentage: " + value.ToString());
                     onUpdateFuelMap(this, new UpdateFuelMapEventArgs(x, y, value, doSync));
                 }
             }
@@ -161,7 +164,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
                 

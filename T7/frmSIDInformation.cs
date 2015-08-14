@@ -6,11 +6,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class frmSIDInformation : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private int m_ApplicationLanguage = 44;
 
         public int ApplicationLanguage
@@ -212,7 +215,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
 
@@ -225,7 +228,7 @@ namespace T7
             /*if (repositoryItemLookUpEdit1 is LookUpEdit)
             {
                 LookUpEdit lue = (LookUpEdit)repositoryItemLookUpEdit1;
-                LogHelper.Log("Changed to: " + lue.EditValue.ToString());
+                logger.Debug("Changed to: " + lue.EditValue.ToString());
             }*/
         }
 
@@ -256,7 +259,7 @@ namespace T7
                 e.Valid = false;
                 return;
             }*/
-            //LogHelper.Log(sender.ToString());
+            //logger.Debug(sender.ToString());
             if (gridView1.FocusedColumn.Name == gcSIDSymbol.Name)
             {
                 /*
@@ -472,7 +475,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -531,7 +534,7 @@ namespace T7
                                     }
                                     else
                                     {
-                                        //LogHelper.Log("Ori address = 0 " + sh.Symbol + " " + sh.T7Symbol);
+                                        //logger.Debug("Ori address = 0 " + sh.Symbol + " " + sh.T7Symbol);
                                     }
                                     if (sh.T7Symbol == string.Empty)
                                     {
@@ -561,7 +564,7 @@ namespace T7
                                 }
                                 catch (Exception E)
                                 {
-                                    LogHelper.Log(E.Message);
+                                    logger.Debug(E.Message);
                                 }
 
                             }
@@ -573,7 +576,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 

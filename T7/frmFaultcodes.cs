@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class frmFaultcodes : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public delegate void onClearDTC(object sender, ClearDTCEventArgs e);
         public event frmFaultcodes.onClearDTC onClearCurrentDTC;
 
@@ -2951,7 +2954,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
 
 

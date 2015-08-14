@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
@@ -14,6 +15,8 @@ namespace T7
     /// </summary>
     class T7FileHeader
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         string m_chassisID = "";
         string m_immobilizerID = "";
         int m_romChecksumType = 0;
@@ -220,7 +223,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             return true;
         }
@@ -530,7 +533,7 @@ namespace T7
             writeFieldIncludingDetails(fs, fhf);
             //fs.Position = writePos;
             fs.Close();
-            LogHelper.Log("New header created");
+            logger.Debug("New header created");
 
         }
 
@@ -546,7 +549,7 @@ namespace T7
                 fs.WriteByte((byte)0xFF);
             }
             fs.Close();
-            LogHelper.Log("Footer cleared");
+            logger.Debug("Footer cleared");
         }
 
 
@@ -673,7 +676,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log("Failed to read header field: " + E.Message);
+                    logger.Debug("Failed to read header field: " + E.Message);
                 }
 
             }

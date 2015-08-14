@@ -15,6 +15,7 @@ using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.XtraBars.Docking;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
@@ -22,6 +23,8 @@ namespace T7
 
     public partial class MapViewerEx : /*DevExpress.XtraEditors.XtraUserControl */IMapViewer
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private bool m_issixteenbit = false;
         private int m_TableWidth = 8;
         private bool m_datasourceMutated = false;
@@ -407,11 +410,11 @@ namespace T7
                 }
 
                 nChartControl1.Refresh();
-                LogHelper.Log("Chartcontrol refreshed");
+                logger.Debug("Chartcontrol refreshed");
             }
             catch (Exception E)
             {
-                LogHelper.Log("Failed to refresh mesh chart: " + E.Message);
+                logger.Debug("Failed to refresh mesh chart: " + E.Message);
             }
         }
 
@@ -489,7 +492,7 @@ namespace T7
                                 }
                                 surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                             }
-                            //LogHelper.Log(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
+                            //logger.Debug(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
                         }
                         else
                         {
@@ -507,13 +510,13 @@ namespace T7
                                 }
                                 surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                             }
-                            //LogHelper.Log(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
+                            //logger.Debug(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
 
                         }
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to fill data for original map: " + E.Message);
+                        logger.Debug("Failed to fill data for original map: " + E.Message);
                     }
                 }
             }
@@ -550,7 +553,7 @@ namespace T7
                             }
                             surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                         }
-                        //LogHelper.Log(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
+                        //logger.Debug(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
 
                     }
                     else
@@ -1020,7 +1023,7 @@ namespace T7
                                     }
                                     catch (Exception E)
                                     {
-                                        LogHelper.Log("Failed to convert to ascii: " + E.Message);
+                                        logger.Debug("Failed to convert to ascii: " + E.Message);
                                         objarr.SetValue(Convert.ToChar(0x20), j);
                                     }
                                 }
@@ -1365,7 +1368,7 @@ namespace T7
                 title.TextStyle.FillStyle = new NColorFillStyle(Color.FromArgb(68, 90, 108));
 
                 // setup chart
-                LogHelper.Log("Number of charts: " + nChartControl1.Charts.Count.ToString());
+                logger.Debug("Number of charts: " + nChartControl1.Charts.Count.ToString());
 
 
 
@@ -1706,7 +1709,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log("value: " + (int)trackBarControl1.Value + " " + E.Message);
+                logger.Debug("value: " + (int)trackBarControl1.Value + " " + E.Message);
             }
 
             int numberofrows = data.Length / m_TableWidth;
@@ -1810,11 +1813,11 @@ namespace T7
                     }
                     catch (Exception cE)
                     {
-                        LogHelper.Log(cE.Message);
+                        logger.Debug(cE.Message);
                     }
                 }
                 scaleConfiguratorX.Labels.Add(yvalue);
-                LogHelper.Log("Added axis label: " + yvalue);
+                logger.Debug("Added axis label: " + yvalue);
 
             }*/
             line.ClearDataPoints();
@@ -1823,7 +1826,7 @@ namespace T7
                 //<GS-09032010> fill second 2d chart here
                 //series.Values.Add(dr["Y"]);
                 line.AddDataPoint(new NDataPoint(Convert.ToDouble(dr["X"]), Convert.ToDouble(dr["Y"])));
-                //LogHelper.Log("Added value: " + dr["Y"].ToString());
+                //logger.Debug("Added value: " + dr["Y"].ToString());
             }
             nChartControl2.Refresh();
 
@@ -1963,7 +1966,7 @@ namespace T7
                                         e.DisplayText = dispvalue.ToString("F1") + "\u00b0";
                                         /*if (dispvalue < 0)
                                         {
-                                            LogHelper.Log("Negative value:  " + cellvalue.ToString());
+                                            logger.Debug("Negative value:  " + cellvalue.ToString());
 
                                         }*/
                                     }
@@ -2026,7 +2029,7 @@ namespace T7
                             }
                             catch (Exception E)
                             {
-                                LogHelper.Log(E.Message);
+                                logger.Debug(E.Message);
                             }
 
                         }
@@ -2043,7 +2046,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -2135,7 +2138,7 @@ namespace T7
                                         }
                                         /*if (cellvalue < 0)
                                         {
-                                            LogHelper.Log("value < 0");
+                                            logger.Debug("value < 0");
                                         }*/
                                         bstr1 = cellvalue.ToString("X8").Substring(4, 2);
                                         bstr2 = cellvalue.ToString("X8").Substring(6, 2);
@@ -2216,7 +2219,7 @@ namespace T7
                                             }
                                             catch (Exception cE)
                                             {
-                                                LogHelper.Log(cE.Message);
+                                                logger.Debug(cE.Message);
                                             }
 
                                         }
@@ -2233,7 +2236,7 @@ namespace T7
                                             }
                                             catch (Exception sE)
                                             {
-                                                LogHelper.Log(sE.Message);
+                                                logger.Debug(sE.Message);
                                             }
                                         }
                                     }
@@ -2276,7 +2279,7 @@ namespace T7
             }
             else
             {
-                LogHelper.Log("onAxisLock not registered");
+                logger.Debug("onAxisLock not registered");
             }
         }
 
@@ -2289,7 +2292,7 @@ namespace T7
             }
             else
             {
-                LogHelper.Log("onSelectionChanged not registered!");
+                logger.Debug("onSelectionChanged not registered!");
             }
 
         }
@@ -2305,7 +2308,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -2338,7 +2341,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -2356,7 +2359,7 @@ namespace T7
             }
             else
             {
-                LogHelper.Log("onSymbolSave not registered!");
+                logger.Debug("onSymbolSave not registered!");
             }
 
         }
@@ -2373,7 +2376,7 @@ namespace T7
             }
             else
             {
-                LogHelper.Log("onSplitterMoved not registered!");
+                logger.Debug("onSplitterMoved not registered!");
             }
 
         }
@@ -2739,7 +2742,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    LogHelper.Log(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }
@@ -2772,7 +2775,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -2854,7 +2857,7 @@ namespace T7
            /* object[] objs = chartControl1.HitTest(e.X, e.Y);
             foreach (object o in objs)
             {
-                LogHelper.Log("Double clicked: " + o.ToString());
+                logger.Debug("Double clicked: " + o.ToString());
             }*/
         }
 
@@ -2965,7 +2968,7 @@ namespace T7
                 //surfaceGraphViewer1.Map_content = GetDataFromGridView(false);
                 //surfaceGraphViewer1.IsUpsideDown = false;
                 //surfaceGraphViewer1.NormalizeData();
-                LogHelper.Log("RefreshMeshGraph on tabindex changed");
+                logger.Debug("RefreshMeshGraph on tabindex changed");
 
                 RefreshMeshGraph();
             }
@@ -3041,13 +3044,13 @@ namespace T7
                     double deltavalue = delta_y * (yaxissize / yaxissizepxls);
                     //deltavalue -= correction_offset;
                     //deltavalue *= 1 / correction_factor;
-                    //LogHelper.Log("Delta: " + deltavalue.ToString());
+                    //logger.Debug("Delta: " + deltavalue.ToString());
                     if (_sp_dragging != null)
                     {
                         double curval = Convert.ToDouble(_sp_dragging.Values.GetValue(0));
                         double newvalue = (curval - deltavalue);
                         // if (newvalue < 0) newvalue = 0;
-                        //LogHelper.Log("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
+                        //logger.Debug("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
                         _sp_dragging.Values.SetValue(newvalue, 0);
                         DataTable dt = (DataTable)chartControl1.DataSource;
                         foreach (DataRow dr in dt.Rows)
@@ -3057,7 +3060,7 @@ namespace T7
                                 dr[1] = newvalue;
                                 // zet ook de betreffende waarde in de tabel!
                                 SetDataValueInMap(_sp_dragging.Argument, newvalue);
-                                //LogHelper.Log("Written: " + _sp_dragging.Argument + " : " + newvalue);
+                                //logger.Debug("Written: " + _sp_dragging.Argument + " : " + newvalue);
                                 //sp.Values.SetValue(curval - 1, 0);
                                 //chartControl1.Invalidate();
                             }
@@ -3395,7 +3398,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3437,7 +3440,7 @@ namespace T7
                     if (Clipboard.ContainsText())
                     {
                         string serialized = Clipboard.GetText();
-                        //   LogHelper.Log(serialized);
+                        //   logger.Debug(serialized);
                         int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                         ViewType vtclip = (ViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
@@ -3490,7 +3493,7 @@ namespace T7
                                     }
                                     catch (Exception E)
                                     {
-                                        LogHelper.Log(E.Message);
+                                        logger.Debug(E.Message);
                                     }
                                 }
                             }
@@ -3500,7 +3503,7 @@ namespace T7
                 }
                 catch (Exception pasteE)
                 {
-                    LogHelper.Log(pasteE.Message);
+                    logger.Debug(pasteE.Message);
                 }
             }
         }
@@ -3512,7 +3515,7 @@ namespace T7
                 string serialized = Clipboard.GetText();
                 try
                 {
-                    //   LogHelper.Log(serialized);
+                    //   logger.Debug(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                     ViewType vtclip = (ViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
@@ -3561,7 +3564,7 @@ namespace T7
                                 }
                                 catch (Exception E)
                                 {
-                                    LogHelper.Log(E.Message);
+                                    logger.Debug(E.Message);
                                 }
                             }
                         }
@@ -3570,7 +3573,7 @@ namespace T7
                 }
                 catch (Exception pasteE)
                 {
-                    LogHelper.Log(pasteE.Message);
+                    logger.Debug(pasteE.Message);
                 }
             }
         }
@@ -3677,7 +3680,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             break;
@@ -3756,7 +3759,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
 
                             }
@@ -3846,7 +3849,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             break;
@@ -3920,7 +3923,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                             }
                             break;
@@ -3931,7 +3934,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -4164,7 +4167,7 @@ namespace T7
             if (m_split_dragging)
             {
                 m_split_dragging = false;
-                LogHelper.Log("Splitter moved: " + splitContainer1.Panel1.Height.ToString() + ":" + splitContainer1.Panel2.Height.ToString() + splitContainer1.Panel1Collapsed.ToString() + ":" + splitContainer1.Panel2Collapsed.ToString());
+                logger.Debug("Splitter moved: " + splitContainer1.Panel1.Height.ToString() + ":" + splitContainer1.Panel2.Height.ToString() + splitContainer1.Panel1Collapsed.ToString() + ":" + splitContainer1.Panel2Collapsed.ToString());
                 CastSplitterMovedEvent();
             }
         }
@@ -4195,7 +4198,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -4209,7 +4212,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -4227,7 +4230,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log("SetSurfaceGraphViewEx:" + E.Message);
+                logger.Debug("SetSurfaceGraphViewEx:" + E.Message);
             }
 
         }
@@ -4297,7 +4300,7 @@ namespace T7
                         {
                             if (gridView1.ActiveEditor.EditValue.ToString() != gridView1.ActiveEditor.OldEditValue.ToString())
                             {
-                                LogHelper.Log(gridView1.ActiveEditor.IsModified.ToString());
+                                logger.Debug(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
 /*                                if(value < 0)
@@ -4361,7 +4364,7 @@ namespace T7
                         {
                             if (gridView1.ActiveEditor.EditValue.ToString() != gridView1.ActiveEditor.OldEditValue.ToString())
                             {
-                                LogHelper.Log(gridView1.ActiveEditor.IsModified.ToString());
+                                logger.Debug(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
                             }
@@ -4428,7 +4431,7 @@ namespace T7
             if (m_viewtype == ViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
-                LogHelper.Log("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
+                logger.Debug("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
             }
         }
 
@@ -4438,7 +4441,7 @@ namespace T7
 
         private void gridView1_HiddenEditor(object sender, EventArgs e)
         {
-            LogHelper.Log("Hidden editor with value: " + gridView1.GetFocusedRowCellDisplayText(gridView1.FocusedColumn));
+            logger.Debug("Hidden editor with value: " + gridView1.GetFocusedRowCellDisplayText(gridView1.FocusedColumn));
         }
 
         private void MapViewer_VisibleChanged(object sender, EventArgs e)
@@ -4489,7 +4492,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
           //  gridView1.EndUpdate();*/
 
@@ -4535,7 +4538,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             //  gridView1.EndUpdate();
         }
@@ -4709,7 +4712,7 @@ namespace T7
                             {
                                 valy2 = Convert.ToDouble(gridView1.GetRowCellValue(tely + min_row, gridView1.Columns[telx + min_column]));
                             }
-                            //LogHelper.Log("valx1 = " + valx1.ToString() + " valx2 = " + valx2.ToString() + " valy1 = " + valy1.ToString() + " valy2 = " + valy2.ToString());
+                            //logger.Debug("valx1 = " + valx1.ToString() + " valx2 = " + valx2.ToString() + " valy1 = " + valy1.ToString() + " valy2 = " + valy2.ToString());
                             // x as 
                             double valuex = (valx2 + valx1) / 2;
                             double valuey = (valy2 + valy1) / 2;
@@ -4754,7 +4757,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             timer5.Enabled = true;
 
@@ -4806,7 +4809,7 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        LogHelper.Log("Failed to select cell: " + E.Message);
+                        logger.Debug("Failed to select cell: " + E.Message);
                     }
 
                 }

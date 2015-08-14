@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     internal class T7EspEdit
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         // Fields
         private readonly long m_fileLength = 0x80000L;
         private string m_fileName;
@@ -51,7 +54,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             finally
             {
@@ -96,7 +99,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             finally
             {

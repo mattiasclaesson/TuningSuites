@@ -8,11 +8,14 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Microsoft.Win32;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class frmTransferSelectionSymbolsSelection : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private SymbolCollection m_symbols;
 
         public SymbolCollection Symbols
@@ -60,7 +63,7 @@ namespace T7
                         }
                         catch (Exception E)
                         {
-                            LogHelper.Log(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -75,7 +78,7 @@ namespace T7
                 if (sh.Varname == symbol)
                 {
                     sh.Selected = true;
-                    //LogHelper.Log("Symbol: " + symbol + " was selected");
+                    //logger.Debug("Symbol: " + symbol + " was selected");
                 }
             }
         }
@@ -133,7 +136,7 @@ namespace T7
                     SymbolHelper sh = (SymbolHelper)map;
                     /*if (sh.Selected)
                     {
-                        LogHelper.Log("Checking: " + sh.Varname + " " + sh.Selected.ToString());
+                        logger.Debug("Checking: " + sh.Varname + " " + sh.Selected.ToString());
                     }*/
                     if (sh.Varname == varname)
                     {

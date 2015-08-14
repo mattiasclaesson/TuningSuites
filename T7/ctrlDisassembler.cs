@@ -10,12 +10,13 @@ using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor;
 using System.IO;
 using CommonSuite;
-
+using NLog;
 
 namespace T7
 {
     public partial class ctrlDisassembler : DevExpress.XtraEditors.XtraUserControl
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private Trionic7File _trionicFile;
 
@@ -76,7 +77,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
             
             
@@ -501,7 +502,7 @@ namespace T7
         private void hexViewer1_onSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // in that case, move the selection in the ASM file as well
-            LogHelper.Log("Selection in hexviewer: " + e.Offset.ToString("X8"));
+            logger.Debug("Selection in hexviewer: " + e.Offset.ToString("X8"));
             int offset = 0;// _trionicFile.Filelength;
             //if (offset == 0x20000) offset = 0x60000;
 
@@ -553,9 +554,9 @@ namespace T7
             {
                 Disassembler disasm = new Disassembler();
                 disasm.onProgress += new Disassembler.Progress(disasm_onProgress);
-                LogHelper.Log("Starting disassembly");
+                logger.Debug("Starting disassembly");
 				disasm.DisassembleFile(_trionicFile, _trionicFile.FileName, outputfile, _trionicFile.Symbol_collection);
-                LogHelper.Log("Done disassembling: " + disasm.Mnemonics.Count.ToString());
+                logger.Debug("Done disassembling: " + disasm.Mnemonics.Count.ToString());
                 using (StreamWriter sw = new StreamWriter(outputfile))
                 {
                     foreach (MNemonicHelper helper in disasm.Mnemonics)

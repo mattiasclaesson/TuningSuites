@@ -8,11 +8,14 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     public partial class frmBinCompare : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         private string _currentfilename = string.Empty;
         private string _comparefilename = string.Empty;
 
@@ -147,7 +150,7 @@ namespace T7
                                 }
                                 catch (Exception cE)
                                 {
-                                    LogHelper.Log(cE.Message);
+                                    logger.Debug(cE.Message);
                                 }
                                 bytecount++;
                             }

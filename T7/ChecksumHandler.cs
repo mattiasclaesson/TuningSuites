@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
+using NLog;
 
 namespace T7
 {
     class ChecksumHandler
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         class csum_area_t
         {
             public long addr;
@@ -44,7 +47,7 @@ namespace T7
                 checksumArea = checksumArea - m_sramOffset;
             }
             int positionInFile = findFWChecksum(fs, checksumArea).checksumAddress;
-            LogHelper.Log("positionInfile: " + positionInFile.ToString("X8"));
+            logger.Debug("positionInfile: " + positionInFile.ToString("X8"));
             if (positionInFile > 0x80000)
             {
                 positionInFile = positionInFile - m_sramOffset;
@@ -55,7 +58,7 @@ namespace T7
             returnValue += Convert.ToInt32(fs.ReadByte()) << 16;
             returnValue += Convert.ToInt32(fs.ReadByte()) << 8;
             returnValue += Convert.ToInt32(fs.ReadByte());
-            LogHelper.Log("Checksum GS: " + returnValue.ToString("X8"));
+            logger.Debug("Checksum GS: " + returnValue.ToString("X8"));
 
             //returnValue = findFWChecksum(fs, checksumArea).checksumValue;
 
@@ -85,7 +88,7 @@ namespace T7
                     positionInFile = positionInFile - m_sramOffset;
                 }
                 fs.Position = positionInFile;
-                //LogHelper.Log("New position in file: " + positionInFile.ToString("X8"));
+                //logger.Debug("New position in file: " + positionInFile.ToString("X8"));
                 byte aByte;
                 if (fs.Position < 0x80000)
                 {
@@ -100,7 +103,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                LogHelper.Log(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -203,7 +206,7 @@ namespace T7
 
         private CheckSum findFWChecksum(FileStream a_fileStream, int areaStart)
         {
-            LogHelper.Log("findFWChecksum with areaStart: " + areaStart.ToString("X8"));
+            logger.Debug("findFWChecksum with areaStart: " + areaStart.ToString("X8"));
              byte[] data = new byte[4];
              byte areaNumber = 0;
              int baseAddr = 0;
