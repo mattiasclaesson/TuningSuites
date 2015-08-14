@@ -12648,12 +12648,12 @@ If boost regulation reports errors you can increase the difference between boost
                     if (m_appSettings.MeasureAFRInLambda)
                     {
                         LogWidebandAFR((float)lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, lambda, 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, Math.Round(lambda, 2), 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
                     }
                     else
                     {
                         LogWidebandAFR((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, afr, 0, 1, 0, 10, 20, 0, 0, 0, 1);
+                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, Math.Round(afr, 2), 0, 1, 0, 10, 20, 0, 0, 0, 1);
                     }
                     ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
