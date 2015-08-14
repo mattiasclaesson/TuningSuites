@@ -399,20 +399,6 @@ namespace T8SuitePro
             }
         }
 
-        public string AdapterType
-        {
-            get
-            {
-                if (cbxAdapterType.SelectedIndex == -1) 
-                    cbxAdapterType.SelectedIndex = 1;
-                return cbxAdapterType.SelectedItem.ToString();
-            }
-            set
-            {
-                cbxAdapterType.SelectedItem = value;
-            }
-        }
-
         public bool OnlyPBus
         {
             get
@@ -437,22 +423,22 @@ namespace T8SuitePro
 
         private void btnAdapterConfiguration_Click(object sender, EventArgs e)
         {
-            if (cbxAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI)
+            if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI)
             {
                 // open the config screen for additional configuration of the adapter
                 // which ADC channels mean what
                 // use ADC 1-5 & assign symbolname, max & min value
                 // use thermo & assign symbolname, max & min value
-                frmCombiAdapterConfig multiconfig = new frmCombiAdapterConfig();
-                multiconfig.AppSettings = m_appSettings;
-                if (multiconfig.ShowDialog() == DialogResult.OK)
+                frmCombiAdapterConfig combiconfig = new frmCombiAdapterConfig();
+                combiconfig.AppSettings = m_appSettings;
+                if (combiconfig.ShowDialog() == DialogResult.OK)
                 {
                     DialogResult = DialogResult.None;
                     // nothing really.. all is saved in appsettings already ... 
                 }
             }
-            else if (cbxAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
-                cbxAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
+            else if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 frmComportSettings comportSel = new frmComportSettings();
                 comportSel.Baudrate = m_appSettings.Baudrate;
@@ -466,9 +452,9 @@ namespace T8SuitePro
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbxAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI || 
-                cbxAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
-                cbxAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
+            if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI || 
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 btnAdapterConfiguration.Enabled = true;
             }
@@ -477,9 +463,9 @@ namespace T8SuitePro
                 btnAdapterConfiguration.Enabled = false;
             }
 
-            if (cbxAdapterType.SelectedIndex != -1)
+            if (cbAdapterType.SelectedIndex != -1)
             {
-                string[] adapters = ITrionic.GetAdapterNames((CANBusAdapter)cbxAdapterType.SelectedIndex);
+                string[] adapters = ITrionic.GetAdapterNames((CANBusAdapter)cbAdapterType.SelectedIndex);
                 ComboBoxItemCollection collection = cbAdapter.Properties.Items;
                 collection.BeginUpdate();
                 collection.Clear();
@@ -561,6 +547,32 @@ namespace T8SuitePro
         {
             cbWidebandDevice.Enabled = ceWidebandComPort.Checked;
             cbWidebandComPort.Enabled = ceWidebandComPort.Checked;
+        }
+
+        public string AdapterType
+        {
+            get
+            {
+                if (cbAdapterType.SelectedIndex == -1)
+                    cbAdapterType.SelectedIndex = 1;
+                return cbAdapterType.SelectedItem.ToString();
+            }
+            set
+            {
+                cbAdapterType.SelectedItem = value;
+            }
+        }
+
+        public string Adapter
+        {
+            get
+            {
+                return cbAdapter.SelectedItem != null ? cbAdapter.SelectedItem.ToString() : string.Empty;
+            }
+            set
+            {
+                cbAdapter.SelectedItem = value;
+            }
         }
     }
 }

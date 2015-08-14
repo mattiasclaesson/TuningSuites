@@ -128,7 +128,7 @@ namespace T8SuitePro
             this.checkEdit18 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
-            this.cbxAdapterType = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbAdapterType = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
@@ -167,7 +167,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbxAdapterType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAdapterType.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -604,7 +604,7 @@ namespace T8SuitePro
             this.groupControl2.Controls.Add(this.checkEdit18);
             this.groupControl2.Controls.Add(this.labelControl5);
             this.groupControl2.Controls.Add(this.btnAdapterConfiguration);
-            this.groupControl2.Controls.Add(this.cbxAdapterType);
+            this.groupControl2.Controls.Add(this.cbAdapterType);
             this.groupControl2.Location = new System.Drawing.Point(10, 254);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(762, 150);
@@ -749,22 +749,22 @@ namespace T8SuitePro
             this.btnAdapterConfiguration.Text = "Configuration";
             this.btnAdapterConfiguration.Click += new System.EventHandler(this.btnAdapterConfiguration_Click);
             // 
-            // cbxAdapterType
+            // cbAdapterType
             // 
-            this.cbxAdapterType.Location = new System.Drawing.Point(121, 89);
-            this.cbxAdapterType.Name = "cbxAdapterType";
-            this.cbxAdapterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.cbAdapterType.Location = new System.Drawing.Point(121, 89);
+            this.cbAdapterType.Name = "cbxAdapterType";
+            this.cbAdapterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbxAdapterType.Properties.Items.AddRange(new object[] {
+            this.cbAdapterType.Properties.Items.AddRange(new object[] {
             "Lawicel CANUSB",
             "CombiAdapter",
             "ELM327 v1.3 or higher",
             "Just4Trionic",
             "Kvaser"});
-            this.cbxAdapterType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cbxAdapterType.Size = new System.Drawing.Size(121, 20);
-            this.cbxAdapterType.TabIndex = 26;
-            this.cbxAdapterType.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
+            this.cbAdapterType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbAdapterType.Size = new System.Drawing.Size(121, 20);
+            this.cbAdapterType.TabIndex = 26;
+            this.cbAdapterType.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);
             // 
             // frmSettings
             // 
@@ -827,7 +827,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit23.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit19.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit18.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbxAdapterType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAdapterType.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -870,7 +870,7 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.CheckEdit checkEdit18;
         private DevExpress.XtraEditors.SimpleButton btnAdapterConfiguration;
         private DevExpress.XtraEditors.LabelControl labelControl5;
-        private DevExpress.XtraEditors.ComboBoxEdit cbxAdapterType;
+        private DevExpress.XtraEditors.ComboBoxEdit cbAdapterType;
         private DevExpress.XtraEditors.SimpleButton btnNotifications;
         private DevExpress.XtraEditors.CheckEdit checkEdit30;
         private DevExpress.XtraEditors.CheckEdit checkEdit2;

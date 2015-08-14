@@ -5468,8 +5468,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
             m_appSettings = new AppSettings();
             set.AppSettings = m_appSettings;
             set.Symbols = GetRealtimeNotificationSymbols();
-            set.AdapterType = m_appSettings.AdapterType;
-
             set.InterpolateLogWorksTimescale = m_appSettings.InterpolateLogWorksTimescale;
             //set.AutoGenerateLogWorksFile = m_appSettings.AutoGenerateLogWorks;
             set.OnlyPBus = m_appSettings.OnlyPBus;
@@ -5501,6 +5499,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
             set.UseDigitalWidebandLambda = m_appSettings.UseDigitalWidebandLambda;
             set.WidebandDevice = m_appSettings.WidebandDevice;
             set.WidebandComPort = m_appSettings.WbPort;
+            set.AdapterType = m_appSettings.AdapterType;
+            set.Adapter = m_appSettings.Adapter;
 
             if (set.ShowDialog() == DialogResult.OK)
             {
@@ -5519,7 +5519,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.AutoDockSameSymbol = set.AutoDockSameSymbol;
                 m_appSettings.ShowViewerInWindows = set.ShowMapViewersInWindows;
                 m_appSettings.NewPanelsFloating = set.NewPanelsFloating;
-                m_appSettings.AdapterType = set.AdapterType;
                 m_appSettings.OnlyPBus = set.OnlyPBus;
                 m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
                 m_appSettings.UseNewMapViewer = set.UseNewMapViewer;
@@ -5531,11 +5530,13 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.ShowTablesUpsideDown = set.ShowTablesUpsideDown;
                 m_appSettings.ShowMapPreviewPopup = set.ShowMapPreviewPopup;
                 m_appSettings.SynchronizeMapviewers = set.SynchronizeMapviewers;
+                m_appSettings.RequestProjectNotes = set.RequestProjectNotes;
+                m_appSettings.ProjectFolder = set.ProjectFolder;
                 m_appSettings.UseDigitalWidebandLambda = set.UseDigitalWidebandLambda;
                 m_appSettings.WidebandDevice = set.WidebandDevice;
                 m_appSettings.WbPort = set.WidebandComPort;
-                m_appSettings.RequestProjectNotes = set.RequestProjectNotes;
-                m_appSettings.ProjectFolder = set.ProjectFolder;
+                m_appSettings.AdapterType = set.AdapterType;
+                m_appSettings.Adapter = set.Adapter;
 
                 SetupMeasureAFRorLambda();
                 SetupDocking();
