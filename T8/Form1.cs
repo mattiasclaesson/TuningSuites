@@ -4606,7 +4606,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         }
                         // We don't want this code atm, it's a bit unsafe
 #if (DEBUG)
-                        t8header.UpdatePIarea();
+                        //t8header.UpdatePIarea();
 #endif
                         UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
                     }
@@ -15858,28 +15858,31 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 int name_len = 0;
                 int date_pos = 0;
                 int date_len = 0;
+                int t = 0;
 
                 byte[] piarea = p.readdatafromfile(p.m_currentfile, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
-                for (int t = 0; t < piarea.Length; t++)
+                do
                 {
                     // Name (0x1D) e.g. "Staffan Mossberg"
-                    if ((byte)((byte)(piarea[t] + 0xD6) ^ 0x21) == 0x1D)
+                    int len = (byte)((byte)(piarea[t] + 0xD6) ^ 0x21);
+                    if ((byte)((byte)(piarea[t + 1] + 0xD6) ^ 0x21) == 0x1D)
                     {
-                        name_pos = t + 1;
-                        name_len = (byte)((byte)(piarea[t - 1] + 0xD6) ^ 0x21);
+                        name_pos = t + 2;
+                        name_len = len;
                         if (date_pos != 0)
                             break;
                     }
                     // Release date (0x0A), e.g. "2004-08-12 14:13:34"
-                    if ((byte)((byte)(piarea[t] + 0xD6) ^ 0x21) == 0x0A)
+                    if ((byte)((byte)(piarea[t + 1] + 0xD6) ^ 0x21) == 0x0A)
                     {
-                        date_pos = t + 1;
-                        date_len = (byte)((byte)(piarea[t - 1] + 0xD6) ^ 0x21);
+                        date_pos = t + 2;
+                        date_len = len;
                         if (name_pos != 0)
                             break;
                     }
+                    t += len + 2;
 
-                }
+                } while (t < piarea.Length - 1);
 
                 if ((name_pos != 0) && (name_len != 0) && (name_len >= new_ascii.Length))
                 {
