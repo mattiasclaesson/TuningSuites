@@ -12450,13 +12450,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     if (m_appSettings.MeasureAFRInLambda)
                     {
-                        //FIXME LogWidebandAFR((float)lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, lambda, 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
+                        //FIXME LogWidebandAFR(lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, Math.Round(lambda,2), 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
                     }
                     else
                     {
-                        //FIXME LogWidebandAFR((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, afr, 0, 1, 0, 10, 20, 0, 0, 0, 1);
+                        //FIXME LogWidebandAFR(afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, Math.Round(afr,2), 0, 1, 0, 10, 20, 0, 0, 0, 1);
                     }
                     //FIXME ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
