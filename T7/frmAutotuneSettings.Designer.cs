@@ -29,6 +29,8 @@ namespace T7
         private void InitializeComponent()
         {
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
+            this.cbSelectedFuelmap = new System.Windows.Forms.ComboBox();
+            this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.checkEdit6 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit5 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit4 = new DevExpress.XtraEditors.CheckEdit();
@@ -85,6 +87,8 @@ namespace T7
             // 
             // groupControl1
             // 
+            this.groupControl1.Controls.Add(this.cbSelectedFuelmap);
+            this.groupControl1.Controls.Add(this.labelControl19);
             this.groupControl1.Controls.Add(this.checkEdit6);
             this.groupControl1.Controls.Add(this.checkEdit5);
             this.groupControl1.Controls.Add(this.checkEdit4);
@@ -120,9 +124,30 @@ namespace T7
             this.groupControl1.Controls.Add(this.spinEdit1);
             this.groupControl1.Location = new System.Drawing.Point(9, 11);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(406, 430);
+            this.groupControl1.Size = new System.Drawing.Size(406, 460);
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "Autotune settings";
+            // 
+            // cbSelectedFuelmap
+            // 
+            this.cbSelectedFuelmap.FormattingEnabled = true;
+            this.cbSelectedFuelmap.Items.AddRange(new object[] {
+            "BFuelCal.Map",
+            "BFuelCal.E85Map",
+            "BFuelCal.StartMap"});
+            this.cbSelectedFuelmap.Location = new System.Drawing.Point(201, 423);
+            this.cbSelectedFuelmap.Name = "cbSelectedFuelmap";
+            this.cbSelectedFuelmap.Size = new System.Drawing.Size(123, 21);
+            this.cbSelectedFuelmap.TabIndex = 34;
+            this.cbSelectedFuelmap.Text = "BFuelCal.Map";
+            // 
+            // labelControl19
+            // 
+            this.labelControl19.Location = new System.Drawing.Point(21, 426);
+            this.labelControl19.Name = "labelControl19";
+            this.labelControl19.Size = new System.Drawing.Size(84, 13);
+            this.labelControl19.TabIndex = 33;
+            this.labelControl19.Text = "Selected Fuelmap";
             // 
             // checkEdit6
             // 
@@ -130,7 +155,7 @@ namespace T7
             this.checkEdit6.Location = new System.Drawing.Point(19, 401);
             this.checkEdit6.Name = "checkEdit6";
             this.checkEdit6.Properties.Caption = "Allow idle map autotune";
-            this.checkEdit6.Size = new System.Drawing.Size(250, 18);
+            this.checkEdit6.Size = new System.Drawing.Size(250, 19);
             this.checkEdit6.TabIndex = 32;
             // 
             // checkEdit5
@@ -139,7 +164,7 @@ namespace T7
             this.checkEdit5.Location = new System.Drawing.Point(19, 377);
             this.checkEdit5.Name = "checkEdit5";
             this.checkEdit5.Properties.Caption = "Play \'ping\' sound when cell processed";
-            this.checkEdit5.Size = new System.Drawing.Size(250, 18);
+            this.checkEdit5.Size = new System.Drawing.Size(250, 19);
             this.checkEdit5.TabIndex = 31;
             // 
             // checkEdit4
@@ -148,7 +173,7 @@ namespace T7
             this.checkEdit4.Location = new System.Drawing.Point(19, 353);
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.Caption = "Disable closed loop on starting autotune";
-            this.checkEdit4.Size = new System.Drawing.Size(250, 18);
+            this.checkEdit4.Size = new System.Drawing.Size(250, 19);
             this.checkEdit4.TabIndex = 30;
             // 
             // labelControl17
@@ -448,7 +473,7 @@ namespace T7
             this.checkEdit3.Location = new System.Drawing.Point(19, 276);
             this.checkEdit3.Name = "checkEdit3";
             this.checkEdit3.Properties.Caption = "Auto update fuel map";
-            this.checkEdit3.Size = new System.Drawing.Size(250, 18);
+            this.checkEdit3.Size = new System.Drawing.Size(250, 19);
             this.checkEdit3.TabIndex = 8;
             // 
             // checkEdit2
@@ -458,7 +483,7 @@ namespace T7
             this.checkEdit2.Location = new System.Drawing.Point(19, 252);
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.Caption = "Discard closed throttle measurements";
-            this.checkEdit2.Size = new System.Drawing.Size(250, 18);
+            this.checkEdit2.Size = new System.Drawing.Size(250, 19);
             this.checkEdit2.TabIndex = 7;
             // 
             // labelControl3
@@ -512,7 +537,7 @@ namespace T7
             this.checkEdit1.Location = new System.Drawing.Point(19, 201);
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Discard AFR measurements with fuelcut";
-            this.checkEdit1.Size = new System.Drawing.Size(250, 18);
+            this.checkEdit1.Size = new System.Drawing.Size(250, 19);
             this.checkEdit1.TabIndex = 3;
             // 
             // labelControl2
@@ -559,7 +584,7 @@ namespace T7
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(340, 447);
+            this.simpleButton1.Location = new System.Drawing.Point(339, 477);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 1;
@@ -568,7 +593,7 @@ namespace T7
             // 
             // simpleButton2
             // 
-            this.simpleButton2.Location = new System.Drawing.Point(259, 447);
+            this.simpleButton2.Location = new System.Drawing.Point(258, 477);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 2;
@@ -579,7 +604,7 @@ namespace T7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 482);
+            this.ClientSize = new System.Drawing.Size(426, 512);
             this.ControlBox = false;
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.simpleButton1);
@@ -649,5 +674,7 @@ namespace T7
         private DevExpress.XtraEditors.CheckEdit checkEdit4;
         private DevExpress.XtraEditors.CheckEdit checkEdit5;
         private DevExpress.XtraEditors.CheckEdit checkEdit6;
+        private System.Windows.Forms.ComboBox cbSelectedFuelmap;
+        private DevExpress.XtraEditors.LabelControl labelControl19;
     }
 }

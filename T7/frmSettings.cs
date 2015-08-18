@@ -856,6 +856,20 @@ namespace T7
             }
         }
 
+        private string m_AutotuneFuelmap = "BFuelCal.Map";
+
+        public string AutoTuneFuelMap
+        {
+            get
+            {
+                return m_AutotuneFuelmap;
+            }
+            set
+            {
+                m_AutotuneFuelmap = value;
+            }
+        }
+
         private void simpleButton5_Click(object sender, EventArgs e)
         {
             // show autotune settings screen
@@ -875,6 +889,7 @@ namespace T7
             autotunesettings.MaximumAdjustmentPerCyclePercentage = m_MaximumAdjustmentPerCyclePercentage;
             autotunesettings.MaximumAFRDeviance = m_MaximumAFRDeviance;
             autotunesettings.MinimumAFRMeasurements = m_MinimumAFRMeasurements;
+            autotunesettings.SelectedFuelmap = m_AutotuneFuelmap;
             if (autotunesettings.ShowDialog() == DialogResult.OK)
             {
                 m_AcceptableTargetErrorPercentage = autotunesettings.AcceptableTargetErrorPercentage;
@@ -892,7 +907,7 @@ namespace T7
                 m_MinimumAFRMeasurements = autotunesettings.MinimumAFRMeasurements;
                 m_allowIdleAutoTune = autotunesettings.AllowIdleAutoTune;
                 m_PlayCellProcessedSound = autotunesettings.PlayCellProcessedSound;
-
+                m_AutotuneFuelmap = autotunesettings.SelectedFuelmap;
             }
             DialogResult = DialogResult.None;
         }

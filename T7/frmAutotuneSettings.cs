@@ -210,5 +210,16 @@ namespace T7
             }
         }
 
+        public string SelectedFuelmap
+        {
+            get
+            {
+                return cbSelectedFuelmap.SelectedItem.ToString();
+            }
+            set
+            {
+                cbSelectedFuelmap.SelectedItem = value;
+            }
+        }
     }
 }

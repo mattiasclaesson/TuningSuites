@@ -980,6 +980,8 @@ namespace T7
             set.MaximumAdjustmentPerCyclePercentage = m_appSettings.MaximumAdjustmentPerCyclePercentage;
             set.MaximumAFRDeviance = m_appSettings.MaximumAFRDeviance;
             set.MinimumAFRMeasurements = m_appSettings.MinimumAFRMeasurements;
+            set.AutoTuneFuelMap = m_appSettings.AutoTuneFuelMap;
+
             set.AutoLoggingEnabled = m_appSettings.AutoLoggingEnabled;
             set.AutoLogStartSign = m_appSettings.AutoLogStartSign;
             set.AutoLogStartValue = m_appSettings.AutoLogStartValue;
@@ -987,6 +989,7 @@ namespace T7
             set.AutoLogStopValue = m_appSettings.AutoLogStopValue;
             set.AutoLogTriggerStartSymbol = m_appSettings.AutoLogTriggerStartSymbol;
             set.AutoLogTriggerStopSymbol = m_appSettings.AutoLogTriggerStopSymbol;
+            
             set.UseDigitalWidebandLambda = m_appSettings.UseDigitalWidebandLambda;
             set.WidebandDevice = m_appSettings.WidebandDevice;
             set.WidebandComPort = m_appSettings.WbPort;
@@ -1049,6 +1052,8 @@ namespace T7
                 m_appSettings.MaximumAdjustmentPerCyclePercentage = set.MaximumAdjustmentPerCyclePercentage;
                 m_appSettings.MaximumAFRDeviance = set.MaximumAFRDeviance;
                 m_appSettings.MinimumAFRMeasurements = set.MinimumAFRMeasurements;
+                m_appSettings.AutoTuneFuelMap = set.AutoTuneFuelMap;
+
                 m_appSettings.AutoLoggingEnabled = set.AutoLoggingEnabled;
                 m_appSettings.AutoLogStartSign = set.AutoLogStartSign;
                 m_appSettings.AutoLogStartValue = set.AutoLogStartValue;
@@ -1056,6 +1061,7 @@ namespace T7
                 m_appSettings.AutoLogStopValue = set.AutoLogStopValue;
                 m_appSettings.AutoLogTriggerStartSymbol = set.AutoLogTriggerStartSymbol;
                 m_appSettings.AutoLogTriggerStopSymbol = set.AutoLogTriggerStopSymbol;
+
                 m_appSettings.UseDigitalWidebandLambda = set.UseDigitalWidebandLambda;
                 m_appSettings.WidebandDevice = set.WidebandDevice;
                 m_appSettings.WbPort = set.WidebandComPort;
@@ -12170,7 +12176,12 @@ If boost regulation reports errors you can increase the difference between boost
             }
         }
 
-        private void barButtonItem43_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnToggleRealtimePanel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ToggleRealtimePanel();
+        }
+
+        private void ToggleRealtimePanel()
         {
             if (dockRealtime.Visibility == DockVisibility.Visible)
             {
@@ -12268,7 +12279,6 @@ If boost regulation reports errors you can increase the difference between boost
                 }
             }
         }
-
 
         private bool PerformanceModePresent()
         {
@@ -18674,8 +18684,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             // write to LambdaCal.ST_Enable
             // first make a backup of the value
-            int symbolnumber = GetSymbolNumber(m_symbols, "LambdaCal.ST_Enable");
             string symbolName = "LambdaCal.ST_Enable";
+            int symbolnumber = GetSymbolNumber(m_symbols, symbolName);
             UInt32 sramaddress = (uint)GetSymbolAddressSRAM(m_symbols, symbolName);
             int length = GetSymbolLength(m_symbols, symbolName);
             bool _success = false;
@@ -18691,6 +18701,64 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 else // re-enable
                 {
                     buffer[0] = _lambdacalSTEnableBackup;
+                    WriteMapToSRAM(symbolName, buffer, false);
+                }
+            }
+            return _success;
+        }
+
+        byte _e85calSTEnableBackup = 0;
+
+        private bool SetE85Cal(bool enable)
+        {
+            // write to E85Cal.ST_Enable
+            // first make a backup of the value
+            string symbolName = "E85Cal.ST_Enable";
+            int symbolnumber = GetSymbolNumber(m_symbols, symbolName);
+            UInt32 sramaddress = (uint)GetSymbolAddressSRAM(m_symbols, symbolName);
+            int length = GetSymbolLength(m_symbols, symbolName);
+            bool _success = false;
+            byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, symbolName, sramaddress, length, out _success);
+            if (_success)
+            {
+                if (!enable)
+                {
+                    _e85calSTEnableBackup = buffer[0];
+                    buffer[0] = 0;
+                    WriteMapToSRAM(symbolName, buffer, false);
+                }
+                else // re-enable
+                {
+                    buffer[0] = _e85calSTEnableBackup;
+                    WriteMapToSRAM(symbolName, buffer, false);
+                }
+            }
+            return _success;
+        }
+
+        byte _FCutCalSTEnableBackup = 0;
+
+        private bool SetFCutCal(bool enable)
+        {
+            // write to FCutCal.ST_Enable
+            // first make a backup of the value
+            string symbolName = "FCutCal.ST_Enable";
+            int symbolnumber = GetSymbolNumber(m_symbols, symbolName);
+            UInt32 sramaddress = (uint)GetSymbolAddressSRAM(m_symbols, symbolName);
+            int length = GetSymbolLength(m_symbols, symbolName);
+            bool _success = false;
+            byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, symbolName, sramaddress, length, out _success);
+            if (_success)
+            {
+                if (!enable)
+                {
+                    _FCutCalSTEnableBackup = buffer[0];
+                    buffer[0] = 0;
+                    WriteMapToSRAM(symbolName, buffer, false);
+                }
+                else // re-enable
+                {
+                    buffer[0] = _FCutCalSTEnableBackup;
                     WriteMapToSRAM(symbolName, buffer, false);
                 }
             }
@@ -18723,8 +18791,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             return retval;
         }
 
-        //btnAutoTune_Click
-        private void simpleButton2_Click(object sender, EventArgs e)
+        private void btnAutoTune_Click(object sender, EventArgs e)
         {
             //<GS-31012011> disable it immediately to prevent the user from multi-clicking the button and hence getting the system confused
 
@@ -18748,7 +18815,15 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 if (m_appSettings.DisableClosedLoopOnStartAutotune)
                 {
                     SetLambdaControl(true);
+                    //SetE85Cal(true);
+                    //SetFCutCal(true);
                 }
+
+                SetStatusText("Autotune stopped.");
+                btnAutoTune.ForeColor = Color.Empty;
+                btnAutoTune.Text = "AutoTune";
+                _autoTuning = false;
+                ToggleRealtimePanel();
 
                 if (m_appSettings.AutoUpdateFuelMap)
                 {
@@ -18757,14 +18832,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     if (MessageBox.Show("Keep adjusted fuel map?", "Question", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         // save the original map back to the ECU
-                        WriteMapToSRAM("BFuelCal.Map", m_AFRMap.GetOriginalFuelmap(), true);
+                        WriteMapToSRAM(m_appSettings.AutoTuneFuelMap, m_AFRMap.GetOriginalFuelmap(), true);
                     }
                     else
                     {
                         // save the altered map into the binary
                         foreach (SymbolHelper sh in m_symbols)
                         {
-                            if (sh.Varname == "BFuelCal.Map")
+                            if (sh.Varname == m_appSettings.AutoTuneFuelMap || sh.Userdescription == m_appSettings.AutoTuneFuelMap)
                             {
                                 //<GS-28012011>
                                 if (IsSoftwareOpen())
@@ -18808,7 +18883,11 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             dt.Rows.Add(arr);
                         }
                         frmFuelMapAccept acceptMap = new frmFuelMapAccept();
+                        acceptMap.Text = "Select percent mutations to accept for map " + m_appSettings.AutoTuneFuelMap;
                         acceptMap.onUpdateFuelMap += new frmFuelMapAccept.UpdateFuelMap(acceptMap_onUpdateFuelMap);
+                        acceptMap.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, m_appSettings.AutoTuneFuelMap);
+                        acceptMap.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, m_appSettings.AutoTuneFuelMap);
+                        acceptMap.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                         acceptMap.SetDataTable(dt);
                         acceptMap.ShowDialog();
                         System.Windows.Forms.Application.DoEvents();
@@ -18818,10 +18897,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         logger.Debug("Failed to stop autotune: " + E.Message);
                     }
                 }
-                SetStatusText("Autotune stopped.");
-                btnAutoTune.ForeColor = Color.Empty;
-                btnAutoTune.Text = "AutoTune";
-                _autoTuning = false;
             }
             else
             {
@@ -18831,7 +18906,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     SetStatusText("Starting autotune...");
                     int _width = 18;
                     int _height = 16;
-                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out _width, out _height);
+                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, m_appSettings.AutoTuneFuelMap, out _width, out _height);
                     if (m_AFRMap == null)
                     {
                         m_AFRMap = new AFRMap();
@@ -18849,6 +18924,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     {
                         // LambdaCal.ST_Enable?
                         SetLambdaControl(false);
+                        //SetE85Cal(false);
+                        //SetFCutCal(false);
                     }
                     // what's next?
                     // TODO: read the current fuel map into memory
@@ -18857,7 +18934,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     bool _initOk = false;
                     foreach (SymbolHelper sh in m_symbols)
                     {
-                        if (sh.Varname == "BFuelCal.Map" || sh.Userdescription == "BFuelCal.Map")
+                        if (sh.Varname == m_appSettings.AutoTuneFuelMap || sh.Userdescription == m_appSettings.AutoTuneFuelMap)
                         {
                             fuelmap = ReadMapFromSRAM(sh, true);
                             //TODO: Fill AFRMaps with this?
@@ -18886,6 +18963,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         if (m_appSettings.DisableClosedLoopOnStartAutotune)
                         {
                             SetLambdaControl(true);
+                            //SetE85Cal(true);
+                            //SetFCutCal(true);
                         }
                     }
                 }
@@ -18924,14 +19003,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 data2Write[0] = newFuelMapByte;
 
                 logger.Debug("Writing fuelmap");
-                uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)(y * 18) + (uint)e.X; ;
+                uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, m_appSettings.AutoTuneFuelMap) + (uint)(y * 18) + (uint)e.X; ;
                 byte[] dataToSend = new byte[1];
                 //dataToSend[0] = e.Cellvalue;
                 if (!trionic7.WriteMapToSRAM(addresstowrite, data2Write))
                 {
                     logger.Debug("Failed to write data to the ECU");
                 }
-                int fuelMapAddressFlash = (int)GetSymbolAddress(m_symbols, "BFuelCal.Map");
+                int fuelMapAddressFlash = (int)GetSymbolAddress(m_symbols, m_appSettings.AutoTuneFuelMap);
                 fuelMapAddressFlash += (y * 18) + e.X;
                 savedatatobinary(fuelMapAddressFlash, 1, data2Write, m_currentfile, false);
                 UpdateChecksum(m_currentfile);
@@ -18948,7 +19027,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     if (_autoTuning)
                     {
                         logger.Debug("Writing fuelmap");
-                        uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, "BFuelCal.Map") + (uint)e.Mapindex;
+                        uint addresstowrite = (uint)GetSymbolAddressSRAM(m_symbols, m_appSettings.AutoTuneFuelMap) + (uint)e.Mapindex;
                         byte[] dataToSend = new byte[1];
                         dataToSend[0] = e.Cellvalue;
                         if (!trionic7.WriteMapToSRAM(addresstowrite, dataToSend))
@@ -19009,7 +19088,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 {
                     Directory.CreateDirectory(foldername);
                 }
-                GetTableMatrixWitdhByName(m_currentfile, m_symbols, "BFuelCal.Map", out cols, out rows);
+                GetTableMatrixWitdhByName(m_currentfile, m_symbols, m_appSettings.AutoTuneFuelMap, out cols, out rows);
                 m_AFRMap.SaveMap(m_currentfile, cols, rows);
                 ShowAfrMAP("TargetAFR", Path.Combine(foldername, Path.GetFileNameWithoutExtension(m_currentfile) + "-targetafr.afr"));
             }

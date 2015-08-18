@@ -391,6 +391,20 @@ namespace T7
             }
         }
 
+        private string m_AutoTuneFuelMap = "";
+        public string AutoTuneFuelMap
+        {
+            get { return m_AutoTuneFuelMap; }
+            set
+            {
+                if (m_AutoTuneFuelMap != value)
+                {
+                    m_AutoTuneFuelMap = value;
+                    SaveRegistrySetting("AutoTuneFuelMap", m_AutoTuneFuelMap);
+                }
+            }
+        }
+
         #endregion
 
         private bool _notification1Active = false;
@@ -2329,6 +2343,10 @@ namespace T7
                             else if (a == "AutoUpdateFuelMap")
                             {
                                 m_AutoUpdateFuelMap = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "AutoTuneFuelMap")
+                            {
+                                m_AutoTuneFuelMap = Settings.GetValue(a).ToString();
                             }
                             else if (a == "CellStableTime_ms")
                             {

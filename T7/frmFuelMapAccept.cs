@@ -19,6 +19,31 @@ namespace T7
         public delegate void SyncDates(object sender, EventArgs e);
         public event frmFuelMapAccept.SyncDates onSyncDates;
 
+        private int[] x_axisvalues;
+
+        public int[] X_axisvalues
+        {
+            get { return x_axisvalues; }
+            set { x_axisvalues = value; }
+        }
+        private int[] y_axisvalues;
+
+        public int[] Y_axisvalues
+        {
+            get { return y_axisvalues; }
+            set { y_axisvalues = value; }
+        }
+
+        public bool AutoSizeColumns
+        {
+            set
+            {
+                gridView1.OptionsView.ColumnAutoWidth = value;
+            }
+        }
+
+        private int m_textheight = 12;
+
         public class UpdateFuelMapEventArgs : System.EventArgs
         {
             private int _x;
@@ -181,6 +206,32 @@ namespace T7
         public void SetDataTable(DataTable dt)
         {
             gridControl1.DataSource = dt;
+
+            if (!gridView1.OptionsView.ColumnAutoWidth)
+            {
+                for (int c = 0; c < gridView1.Columns.Count; c++)
+                {
+                    gridView1.Columns[c].Width = 40;
+                }
+            }
+
+            // set y axis size
+            int indicatorwidth = -1;
+            for (int i = 0; i < y_axisvalues.Length; i++)
+            {
+                string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
+                Graphics g = gridControl1.CreateGraphics();
+                SizeF size = g.MeasureString(yval, this.Font);
+                if (size.Width > indicatorwidth) indicatorwidth = (int)size.Width;
+                m_textheight = (int)size.Height;
+                g.Dispose();
+
+            }
+            if (indicatorwidth > 0)
+            {
+                gridView1.IndicatorWidth = indicatorwidth + 6; // keep margin
+            }
+
             ResizeGridControls();
         }
 
@@ -190,7 +241,7 @@ namespace T7
         }
 
         
-            // check font settings depeding on size of the control (font should increase when size increases for better readability)
+        // check font settings depeding on size of the control (font should increase when size increases for better readability)
         private void ResizeGridControls()
         {
             // check font settings depeding on size of the control (font should increase when size increases for better readability)
@@ -198,5 +249,59 @@ namespace T7
             gridView1.Appearance.Row.Font = new Font("Tahoma", gridView1.RowHeight / 3, FontStyle.Bold);
         }
 
+        private void gridView1_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
+        {
+            if (e.RowHandle >= 0)
+            {
+                try
+                {
+                    if (y_axisvalues.Length > 0)
+                    {
+                        if (y_axisvalues.Length > e.RowHandle)
+                        {
+                            string yvalue = y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle).ToString();
+                            Rectangle r = new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
+                            e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
+                            System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
+                            e.Graphics.FillRectangle(gb, e.Bounds);
+                            e.Graphics.DrawString(yvalue, this.Font, Brushes.MidnightBlue, new PointF(e.Bounds.X + 4, e.Bounds.Y + 1 + (e.Bounds.Height - m_textheight) / 2));
+                            e.Handled = true;
+                        }
+                    }
+                }
+                catch (Exception E)
+                {
+                    logger.Debug(E.Message);
+                }
+            }
+        }
+
+        private void gridView1_CustomDrawColumnHeader(object sender, DevExpress.XtraGrid.Views.Grid.ColumnHeaderCustomDrawEventArgs e)
+        {
+            try
+            {
+                if (x_axisvalues.Length > 0)
+                {
+                    if (e.Column != null)
+                    {
+                        if (x_axisvalues.Length > e.Column.VisibleIndex)
+                        {
+                            string xvalue = x_axisvalues.GetValue(e.Column.VisibleIndex).ToString();
+                            Rectangle r = new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
+                            e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
+                            System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
+                            e.Graphics.FillRectangle(gb, e.Bounds);
+                            //e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, r);
+                            e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, new PointF(e.Bounds.X + 3, e.Bounds.Y + 1 + (e.Bounds.Height - m_textheight) / 2));
+                            e.Handled = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E.Message);
+            }
+        }
     }
 }
