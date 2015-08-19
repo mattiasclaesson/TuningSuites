@@ -177,6 +177,7 @@ namespace T7
         private string m_currentsramfile = string.Empty;
         private AFRViewType AfrViewMode = AFRViewType.AFRMode;
         private Stopwatch _sw = new Stopwatch();
+        private Stopwatch _sw2 = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
         frmSplash splash;
         private bool m_connectedToECU = false;
@@ -10916,7 +10917,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             data = new byte[1];
             data[0] = (byte)0xFF;
             _success = false;
-            //logger.Debug("Getting symbolnumber: " + symbolnumber.ToString());
+            logger.Debug("Getting symbolnumber: " + symbolnumber.ToString() + " symbolname: " + symbolname);
             if (m_connectedToECU)
             {
                 // test 
@@ -10929,8 +10930,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
                 else if (length == 1)
                 {
+                    //_sw2.Reset();
+                    //_sw2.Start();
                     int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);
-                    //logger.Debug("Get single byte : " + sram.ToString());
+                    //logger.Debug("          Get single byte : " + sram.ToString());
                     SymbolHelper sh = new SymbolHelper();
                     sh.Length = 1;
                     sh.Start_address = sram;
@@ -10938,11 +10941,17 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     data = trionic7.ReadMapFromSRAMVarLength(sh);
                     m_prohibitReading = false;
                     _success = true;
+                    //logger.Debug("          Get single byte Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
+                    //_sw2.Stop();
                 }
                 else
                 {
-                    //logger.Debug("Get symbolnumber (2): " + symbolnumber.ToString());
+                    //_sw2.Reset();
+                    //_sw2.Start();
+                    //logger.Debug("          Get symbolnumber (2): " + symbolnumber.ToString());
                     data = trionic7.ReadSymbolNumber(symbolnumber, out _success);
+                    //logger.Debug("          Get symbolnumber (2) Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
+                    //_sw2.Stop();
                 }
             }
 
@@ -12447,7 +12456,11 @@ If boost regulation reports errors you can increase the difference between boost
                 {
                     
                     double value = 0;
-                    if (m_prohibitReading) return;
+                    if (m_prohibitReading)
+                    {
+                        logger.Debug("prohibitreading");
+                        return;
+                    }
                     try
                     {
                         if (dr["Delay"] != DBNull.Value)
@@ -12668,7 +12681,7 @@ If boost regulation reports errors you can increase the difference between boost
                     ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
                 }
               
-                logger.Debug("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                logger.Debug("All updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
                 LogRealTimeInformation(dt, datet);
                 UpdateOpenViewers();
                 //<GS-06012011> maybe move the fps counter timer here!
