@@ -1,7 +1,7 @@
 @echo off
-set T7.version=0.0.33.0
-set SetupT7Suite.version=0.0.33
-set TrionicCANLib.version=0.0.20.0
+set T7.version=0.1.1.0
+set SetupT7Suite.version=0.1.1
+set TrionicCANLib.version=0.1.12.0
 set AquaGauge.version=1.5.7.0
 set ICSharpCode.TextEditor.version=3.0.0.3437
 set LBIndustrialCtrls.version=1.5.7.0
@@ -15,7 +15,7 @@ set SuiteLauncher.version=2.0.1.0
 set SaabOpenTech.version=0.40
 set Be.Windows.Forms.HexBox.version=1.2.0.14173
 set canusbdrv_net.version=2.0.0.1
-set combilib-net.version=1.0.5423.35713
+set combilib-net.version=1.0.5571.38176
 set FTD2XX_NET.version=1.0.10.0
 set LibUsbDotNet.version=2.2.8.104
 set PSTaskDialog.version=1.0.0.0
