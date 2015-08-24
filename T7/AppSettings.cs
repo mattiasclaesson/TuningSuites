@@ -1650,7 +1650,7 @@ namespace T7
             }
         }
 
-        private string m_AdapterType = "";
+        private string m_AdapterType = "Lawicel CANUSB";
 
         public string AdapterType
         {
