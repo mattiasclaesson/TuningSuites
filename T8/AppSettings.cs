@@ -1032,7 +1032,7 @@ namespace T8SuitePro
             }
         }
 
-        private string m_AdapterType = "";
+        private string m_AdapterType = "Lawicel CANUSB";
 
         public string AdapterType
         {
