@@ -10930,10 +10930,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
                 else if (length == 1)
                 {
-                    //_sw2.Reset();
-                    //_sw2.Start();
+                    _sw2.Reset();
+                    _sw2.Start();
                     int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);
-                    //logger.Debug("          Get single byte : " + sram.ToString());
+                    logger.Debug("          Get single byte : " + sram.ToString());
                     SymbolHelper sh = new SymbolHelper();
                     sh.Length = 1;
                     sh.Start_address = sram;
@@ -10941,17 +10941,17 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     data = trionic7.ReadMapFromSRAMVarLength(sh);
                     m_prohibitReading = false;
                     _success = true;
-                    //logger.Debug("          Get single byte Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
-                    //_sw2.Stop();
+                    logger.Debug("          Get single byte Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
+                    _sw2.Stop();
                 }
                 else
                 {
-                    //_sw2.Reset();
-                    //_sw2.Start();
-                    //logger.Debug("          Get symbolnumber (2): " + symbolnumber.ToString());
+                    _sw2.Reset();
+                    _sw2.Start();
+                    logger.Debug("          Get symbolnumber (2): " + symbolnumber.ToString());
                     data = trionic7.ReadSymbolNumber(symbolnumber, out _success);
-                    //logger.Debug("          Get symbolnumber (2) Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
-                    //_sw2.Stop();
+                    logger.Debug("          Get symbolnumber (2) Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
+                    _sw2.Stop();
                 }
             }
 
