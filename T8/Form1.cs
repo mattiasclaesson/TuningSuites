@@ -12239,7 +12239,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         symbolName == "MisfCyl11" ||
                         symbolName == "MisfCyl12" ||
                         symbolName == "MisfCyl13" ||
-                        symbolName == "MisfCyl14")
+                        symbolName == "MisfCyl14" ||
+                        symbolName == m_appSettings.Adc1channelname ||
+                        symbolName == m_appSettings.Adc2channelname ||
+                        symbolName == m_appSettings.Adc3channelname ||
+                        symbolName == m_appSettings.Adc4channelname ||
+                        symbolName == m_appSettings.Adc5channelname ||
+                        symbolName == m_appSettings.Thermochannelname ||
+                        symbolName == "Wideband")
                     {
                         break;
                     }
@@ -12380,12 +12387,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                         else
                         {
-                            logger.Debug("Failed to read SRAM, symbol: " + symbolName);
+                            logger.Debug("Failed to read SRAM, symbol: " + symbolName + " address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8") + " length: " + Convert.ToInt32(dr["Length"]));
                             System.Windows.Forms.Application.DoEvents();
                         }
                     }
                     Thread.Sleep(0);//<GS-11022010>
-
                 }
                 // <GS-29072010> if the combiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
