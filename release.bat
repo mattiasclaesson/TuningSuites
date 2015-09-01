@@ -9,6 +9,7 @@ mkdir C:\users\mattias\Dropbox\public\T8Suite\%T8.version%
 xcopy SetupT8SuitePro\version.bat C:\users\mattias\Dropbox\public\T8Suite\%T8.version%\
 xcopy SetupT8SuitePro\Release\T8Suite.msi C:\users\mattias\Dropbox\public\T8Suite\%T8.version%\
 xcopy SetupT8SuitePro\Release\T8Suite.md5 C:\users\mattias\Dropbox\public\T8Suite\%T8.version%\
+xcopy SetupT8SuitePro\Release\setup.exe C:\users\mattias\Dropbox\public\T8Suite\%T8.version%\
 
 echo ^<?xml version="1.0" encoding="utf-8"?^>  > C:\users\mattias\Dropbox\public\T8Suite\version.xml
 echo ^<t8suitepro version="%T8.version%"/^> >> C:\users\mattias\Dropbox\public\T8Suite\version.xml
