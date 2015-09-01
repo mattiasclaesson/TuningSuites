@@ -12300,7 +12300,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 symbolName == "ECMStat.P_Engine" ||
                                 symbolName == "IgnMastProt.fi_Offset" ||
                                 symbolName == "Lambda.LambdaInt" ||
-                                symbolName == "MAF.m_AirInlet")
+                                symbolName == "MAF.m_AirInlet" ||
+                                symbolName == "AdpFuelProt.MulFuelAdapt" ||
+                                symbolName == "ECMStat.p_Diff" ||
+                                symbolName == "BoostProt.PFac" ||
+                                symbolName == "BoostProt.IFac" ||
+                                symbolName == "BoostProt.LoadDiff" ||
+                                symbolName == "IgnKnk.fi_MeanKnock" ||
+                                symbolName == "Ign.fi_OtherOff" ||
+                                symbolName == "IgnJerkProt.fi_Offset")
                             {
                                 if (value > 32000) value = -(65536 - value); // negatief maken
                             }
