@@ -1674,6 +1674,18 @@ namespace T7
             }
         }
 
+        private int _WifiPort = 35000;
+
+        public int WifiPort
+        {
+            get { return _WifiPort; }
+            set
+            {
+                _WifiPort = value;
+                SaveRegistrySetting("WifiPort", _WifiPort);
+            }
+        }
+
         private void SaveRegistrySetting(string key, string value)
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
@@ -1741,6 +1753,8 @@ namespace T7
 
                 saveSettings.SetValue("ELM327Port", _ELM327Port);
                 saveSettings.SetValue("Baudrate", _Baudrate);
+
+                saveSettings.SetValue("WifiPort", _WifiPort);
 
                 saveSettings.SetValue("LastXAxisFromMatrix", _LastXAxisFromMatrix);
                 saveSettings.SetValue("LastYAxisFromMatrix", _LastYAxisFromMatrix);
@@ -2455,6 +2469,10 @@ namespace T7
                             else if (a == "AdapterType")
                             {
                                 m_AdapterType = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "WifiPort")
+                            {
+                                _WifiPort = Convert.ToInt32(Settings.GetValue(a).ToString());
                             }
                         }
                         catch (Exception E)

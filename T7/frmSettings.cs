@@ -564,7 +564,8 @@ namespace T7
         {
             if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI || 
                 cbAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
-                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC ||
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.MXWIFI)
             {
                 btnAdapterConfiguration.Enabled = true;
             }
@@ -632,6 +633,16 @@ namespace T7
                 {
                     m_appSettings.Baudrate = comportSel.Baudrate;
                     m_appSettings.ELM327Kline = comportSel.ELM327KLine;
+                }
+                DialogResult = DialogResult.None;
+            }
+            else if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.MXWIFI)
+            {
+                frmWifiSettings comportSel = new frmWifiSettings();
+                comportSel.Port = m_appSettings.WifiPort;
+                if (comportSel.ShowDialog() == DialogResult.OK)
+                {
+                    m_appSettings.WifiPort = comportSel.Port;
                 }
                 DialogResult = DialogResult.None;
             }

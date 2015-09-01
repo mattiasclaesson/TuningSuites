@@ -144,15 +144,6 @@ namespace T7
 
     public partial class frmMain : Form
     {
-        public string[] adapternames = new string[]
-        {
-            "Lawicel CANUSB",
-            "CombiAdapter",
-            "ELM327 v1.3 or higher",
-            "Just4Trionic",
-            "Kvaser"
-        };
-
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private string m_filename = string.Empty;
@@ -10094,27 +10085,32 @@ TorqueCal.M_IgnInflTroqMap 8*/
             trionic7.DisableCanConnectionCheck = m_appSettings.DisableCanCheck;
             trionic7.ELM327Kline = m_appSettings.ELM327Kline;
             
-            if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.LAWICEL])
+            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
             {
                 trionic7.setCANDevice(CANBusAdapter.LAWICEL);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
             {
                 trionic7.setCANDevice(CANBusAdapter.COMBI);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.ELM327])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
             {
                 trionic7.ForcedBaudrate = m_appSettings.Baudrate;
                 trionic7.setCANDevice(CANBusAdapter.ELM327);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.JUST4TRIONIC])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.JUST4TRIONIC))
             {
                 trionic7.ForcedBaudrate = m_appSettings.Baudrate;
                 trionic7.setCANDevice(CANBusAdapter.JUST4TRIONIC);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.KVASER])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.KVASER))
             {
                 trionic7.setCANDevice(CANBusAdapter.KVASER);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.MXWIFI))
+            {
+                trionic7.ForcedBaudrate = m_appSettings.WifiPort;
+                trionic7.setCANDevice(CANBusAdapter.MXWIFI);
             }
 
             if (m_appSettings.Adapter != string.Empty)
@@ -10384,11 +10380,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
                 {
                     adapter = 1;
                 }
-                else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.ELM327])
+                else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
                 {
                     adapter = 2;
                 }
@@ -10611,11 +10607,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
             TerminateOnlineProcesses();
             
             int adapter = 0;
-            if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
             {
                 adapter = 1;
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.ELM327])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
             {
                 adapter = 2;
             }
@@ -12609,7 +12605,7 @@ If boost regulation reports errors you can increase the difference between boost
 
                 // <GS-29072010> if the combiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
-                if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
                 {
                     if (m_appSettings.Useadc1)
                     {
@@ -14931,11 +14927,11 @@ dt.Columns.Add("SymbolName");
                 TerminateOnlineProcesses();
 
                 int adapter = 0;
-                if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
                 {
                     adapter = 1;
                 }
-                else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.ELM327])
+                else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
                 {
                     adapter = 2;
                 }
