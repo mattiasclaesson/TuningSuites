@@ -124,15 +124,6 @@ namespace T8SuitePro
 
     public partial class Form1 : Form
     {
-        public string[] adapternames = new string[]
-        {
-            "Lawicel CANUSB",
-            "CombiAdapter",
-            "ELM327 v1.3 or higher",
-            "Just4Trionic",
-            "Kvaser"
-        };
-
         private string m_CurrentWorkingProject = string.Empty;
         private TrionicProjectLog m_ProjectLog = new TrionicProjectLog();
         public DelegateUpdateRealTimeValue m_DelegateUpdateRealTimeValue;
@@ -10716,27 +10707,32 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void SetCanAdapter()
         {
             t8can.OnlyPBus = m_appSettings.OnlyPBus;
-            if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.LAWICEL])
+            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
             {
                 t8can.setCANDevice(CANBusAdapter.LAWICEL);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
             {
                 t8can.setCANDevice(CANBusAdapter.COMBI);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.ELM327])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
             {
                 t8can.ForcedBaudrate = m_appSettings.Baudrate;
                 t8can.setCANDevice(CANBusAdapter.ELM327);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.JUST4TRIONIC])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.JUST4TRIONIC))
             {
                 t8can.ForcedBaudrate = m_appSettings.Baudrate;
                 t8can.setCANDevice(CANBusAdapter.JUST4TRIONIC);
             }
-            else if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.KVASER])
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.KVASER))
             {
                 t8can.setCANDevice(CANBusAdapter.KVASER);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.MXWIFI))
+            {
+                t8can.ForcedBaudrate = m_appSettings.WifiPort;
+                t8can.setCANDevice(CANBusAdapter.MXWIFI);
             }
             
             if (m_appSettings.Adapter != string.Empty)
@@ -12403,7 +12399,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 // <GS-29072010> if the combiadapter is in use 
                 // and the user configured to use ADCs or thermoinput, get the values
-                if (m_appSettings.AdapterType == adapternames[(int)CANBusAdapter.COMBI])
+                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
                 {
                     if (m_appSettings.Useadc1)
                     {

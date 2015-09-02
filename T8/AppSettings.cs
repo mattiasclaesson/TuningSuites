@@ -1056,6 +1056,18 @@ namespace T8SuitePro
             }
         }
 
+        private int _WifiPort = 35000;
+
+        public int WifiPort
+        {
+            get { return _WifiPort; }
+            set
+            {
+                _WifiPort = value;
+                SaveRegistrySetting("WifiPort", _WifiPort);
+            }
+        }
+
         private void SaveRegistrySetting(string key, string value)
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
@@ -1175,6 +1187,9 @@ namespace T8SuitePro
                 saveSettings.SetValue("usethermo", _usethermo);
                 saveSettings.SetValue("thermochannelname", _thermochannelname);
                 saveSettings.SetValue("Baudrate", _Baudrate);
+
+                saveSettings.SetValue("WifiPort", _WifiPort);
+
                 saveSettings.SetValue("LastXAxisFromMatrix", _LastXAxisFromMatrix);
                 saveSettings.SetValue("LastYAxisFromMatrix", _LastYAxisFromMatrix);
                 saveSettings.SetValue("LastZAxisFromMatrix", _LastZAxisFromMatrix);
@@ -1797,6 +1812,10 @@ namespace T8SuitePro
                             else if (a == "WidebandDevice")
                             {
                                 m_WidebandDevice = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "WifiPort")
+                            {
+                                _WifiPort = Convert.ToInt32(Settings.GetValue(a).ToString());
                             }
                         }
                         catch (Exception E)
