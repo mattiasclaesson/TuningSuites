@@ -6,15 +6,15 @@ pushd SetupT7Suite\Release\
 "C:\Program Files\7-Zip\7z.exe" a -tzip T7Suite.zip T7Suite.* setup.exe
 popd
 
-mkdir C:\users\mattias\Dropbox\public\T7Suite\%T7.version%
-xcopy SetupT7Suite\version.bat C:\users\mattias\Dropbox\public\T7Suite\%T7.version%\
-xcopy SetupT7Suite\Release\T7Suite.msi C:\users\mattias\Dropbox\public\T7Suite\%T7.version%\
-xcopy SetupT7Suite\Release\T7Suite.md5 C:\users\mattias\Dropbox\public\T7Suite\%T7.version%\
-xcopy SetupT7Suite\Release\T7Suite.zip C:\users\mattias\Dropbox\public\T7Suite\%T7.version%\
-xcopy SetupT7Suite\Release\setup.exe C:\users\mattias\Dropbox\public\T7Suite\%T7.version%\
+mkdir C:\Users\mattias\Delivery\T7Suite\%T7.version%
+xcopy SetupT7Suite\version.bat C:\Users\mattias\Delivery\T7Suite\%T7.version%\
+xcopy SetupT7Suite\Release\T7Suite.msi C:\Users\mattias\Delivery\T7Suite\%T7.version%\
+xcopy SetupT7Suite\Release\T7Suite.md5 C:\Users\mattias\Delivery\T7Suite\%T7.version%\
+xcopy SetupT7Suite\Release\T7Suite.zip C:\Users\mattias\Delivery\T7Suite\%T7.version%\
+xcopy SetupT7Suite\Release\setup.exe C:\Users\mattias\Delivery\T7Suite\%T7.version%\
 
-echo ^<?xml version="1.0" encoding="utf-8"?^>  > C:\users\mattias\Dropbox\public\T7Suite\version.xml
-echo ^<t7suitepro version="%T7.version%"/^> >> C:\users\mattias\Dropbox\public\T7Suite\version.xml
+echo ^<?xml version="1.0" encoding="utf-8"?^>  > C:\Users\mattias\Delivery\T7Suite\version.xml
+echo ^<t7suitepro version="%T7.version%"/^> >> C:\Users\mattias\Delivery\T7Suite\version.xml
 
 echo ----------------------------------------------------
 git changes
