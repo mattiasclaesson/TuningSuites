@@ -3981,7 +3981,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.14.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.15.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_11BEBBA9ACFC4D1C624772843006DE77"
@@ -7200,7 +7200,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5721.37182, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5723.39401, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_7A71DF8BEF93214D3D51519800A44D0E"
@@ -10844,15 +10844,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{A85EA6EF-3EAF-4649-92AC-0C66A1D1AAEB}"
-        "PackageCode" = "8:{C42DD778-A79A-4988-8401-1EF732ECB8D9}"
+        "ProductCode" = "8:{2EA6AE99-EC7F-430F-9471-1676AF557756}"
+        "PackageCode" = "8:{370FDD42-AEAD-42A5-B728-C22163821A64}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.3"
+        "ProductVersion" = "8:0.1.4"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"
