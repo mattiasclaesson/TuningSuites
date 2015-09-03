@@ -9698,7 +9698,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             return num_replacements;
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void exportFixedTuningPackageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SymbolCollection scToExport = new SymbolCollection();
             SaveFileDialog sfd = new SaveFileDialog();
@@ -9734,6 +9734,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 AddToSymbolCollection(scToExport, "TrqMastCal.m_AirTorqMap");
                 AddToSymbolCollection(scToExport, "TMCCal.Trq_MaxEngineTab");
                 AddToSymbolCollection(scToExport, "TMCCal.Trq_MaxEngineLowTab");
+                AddToSymbolCollection(scToExport, "InjCorrCal.BattCorrSP");
+                AddToSymbolCollection(scToExport, "InjCorrCal.BattCorrTab");
+                AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
                 PackageExporter pe = new PackageExporter();
                 pe.ExportPackage(scToExport, m_currentfile, sfd.FileName);
             }
