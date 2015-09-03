@@ -16664,6 +16664,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "BFuelCal.E85Map");
                 AddToSymbolCollection(scToExport, "BFuelCal.AirXSP");
                 AddToSymbolCollection(scToExport, "BFuelCal.RpmYSP");
+                AddToSymbolCollection(scToExport, "InjCorrCal.BattCorrSP");
+                AddToSymbolCollection(scToExport, "InjCorrCal.BattCorrTab");
                 AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
                 AddToSymbolCollection(scToExport, "IgnNormCal.Map");
                 AddToSymbolCollection(scToExport, "IgnE85Cal.fi_AbsMap");
