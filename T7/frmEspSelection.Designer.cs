@@ -37,21 +37,21 @@ namespace T7
             // 
             // comboBoxEdit1
             // 
-            this.comboBoxEdit1.Location = new System.Drawing.Point(142, 22);
+            this.comboBoxEdit1.Location = new System.Drawing.Point(118, 22);
             this.comboBoxEdit1.Name = "comboBoxEdit1";
             this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit1.Properties.Items.AddRange(new object[] {
-            "15 inch TCS/ESP (B205E)",
-            "15/16 inch TCS/ESP (B235E Engine)",
-            "16 inch ESP (B235L Engine)",
-            "16+ inch ESP Aero (Aero 02 ->)"});
-            this.comboBoxEdit1.Size = new System.Drawing.Size(216, 20);
+            "15 inch brakes TCS/ESP B205",
+            "15/16 inch brakes TCS/ESP B235E MY07 -> and B235R MY00-01 ",
+            "16 inch brakes ESP B235L",
+            "16+ inch brakes ESP B235R MY02 ->"});
+            this.comboBoxEdit1.Size = new System.Drawing.Size(314, 20);
             this.comboBoxEdit1.TabIndex = 0;
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(283, 59);
+            this.simpleButton1.Location = new System.Drawing.Point(357, 63);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 1;
@@ -61,7 +61,7 @@ namespace T7
             // simpleButton2
             // 
             this.simpleButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.simpleButton2.Location = new System.Drawing.Point(202, 59);
+            this.simpleButton2.Location = new System.Drawing.Point(276, 63);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 2;
@@ -81,7 +81,7 @@ namespace T7
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
-            this.ClientSize = new System.Drawing.Size(376, 98);
+            this.ClientSize = new System.Drawing.Size(444, 98);
             this.ControlBox = false;
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.simpleButton2);
