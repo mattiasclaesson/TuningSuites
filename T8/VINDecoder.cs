@@ -204,7 +204,7 @@ namespace CommonSuite
                     return VINTurboModel.MitsubishiTD04HL_15T_5;
                 case VINEngineType.B207E:
                 case VINEngineType.B207L:
-                    if (makeYear > 2006)
+                    if (makeYear > 2005)
                         return VINTurboModel.MitsubishiTD04L_11TK;
                     else
                         return VINTurboModel.GarrettGT2052;
