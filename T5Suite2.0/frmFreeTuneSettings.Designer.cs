@@ -311,8 +311,8 @@ namespace T5Suite2
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit3.Properties.Items.AddRange(new object[] {
             "Stock",
-            "MHI TD0415T",
-            "MHI TD0419T",
+            "MHI TD04HL-15T",
+            "MHI TD04HL-19T",
             "Garrett GT28BB",
             "Garrett GT28RS",
             "Garrett GT3071R",
