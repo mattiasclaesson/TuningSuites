@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:element name="dtscodes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="dtscode">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="code"/>
+              <xs:element name="description"/>
+              <xs:element name="tips"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

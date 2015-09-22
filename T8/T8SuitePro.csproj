@@ -235,6 +235,7 @@
     </Compile>
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
+    <Compile Include="DTSCode.cs" />
     <Compile Include="EngineStatus.cs" />
     <Compile Include="FindAndReplaceForm.cs">
       <SubType>Form</SubType>
@@ -336,6 +337,12 @@
     </Compile>
     <Compile Include="frmEditTuningPackage.designer.cs">
       <DependentUpon>frmEditTuningPackage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmFaultcodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmFaultcodes.Designer.cs">
+      <DependentUpon>frmFaultcodes.cs</DependentUpon>
     </Compile>
     <Compile Include="frmFileToExportSelection.cs">
       <SubType>Form</SubType>
@@ -606,6 +613,9 @@
       <DependentUpon>frmBinCompare.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmFaultcodes.resx">
+      <DependentUpon>frmFaultcodes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmFirmwareInformation.resx">
       <DependentUpon>frmFirmwareInformation.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -649,6 +659,7 @@
       <DependentUpon>MapViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -668,6 +679,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="canlib32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DTSCodes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="NLog.config">
@@ -710,6 +724,10 @@
       <DependentUpon>TuningReport.cs</DependentUpon>
     </Compile>
     <Compile Include="VINDecoder.cs" />
+    <Content Include="DTSCodes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AsmViewer.resx">
@@ -896,7 +914,6 @@
       <DependentUpon>Measurement.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="TuningReport.resx">
       <DependentUpon>TuningReport.cs</DependentUpon>
       <SubType>Designer</SubType>

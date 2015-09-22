@@ -1,0 +1,110 @@
+﻿using System;
+//using System.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+//using System.Xml.Schema;
+
+namespace T8SuitePro
+{
+    class DTSCode
+    {
+        private string mCode;
+        private string mDescription;
+        private string mTips;
+
+        public string Code
+        {
+            get
+            {
+                return this.mCode;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return this.mDescription;
+            }
+        }
+
+
+        public DTSCode()
+        {
+ 
+        }
+
+        public DTSCode(XmlNode aDTSCode)
+        {
+            XmlNode code = aDTSCode.SelectNodes("code")[0];
+            mCode = code.InnerText.Trim();
+            XmlNode desc = aDTSCode.SelectNodes("description")[0];
+            mDescription = desc.InnerText.Trim();
+            XmlNode tips = aDTSCode.SelectNodes("tips")[0];
+            mTips = tips.InnerText.Trim();    
+        }
+
+        public bool IsComplete()
+        {
+            return !string.IsNullOrWhiteSpace(mCode) && !string.IsNullOrWhiteSpace(mDescription);
+        }
+
+        public string GenericOrEnhanced()
+        {
+            // no translation done, give generic indication
+            //0 = Generic (this is the digit zero -- not the letter "O") 
+            //1 = Enhanced (manufacturer specific)                        
+            return (mCode[1] == '0') ? "Generic" : "Enhanced";
+        }
+        
+        public string CodeType()
+        {
+            string retval = string.Empty;
+            switch (mCode[2])
+            {
+                /*
+                1 = Emission Management (Fuel or Air) 
+                2 = Injector Circuit (Fuel or Air) 
+                3 = Ignition or Misfire 
+                4 = Emission Control 
+                5 = Vehicle Speed & Idle Control 
+                6 = Computer & Output Circuit 
+                7 = Transmission 
+                8 = Transmission 
+                9 = SAE Reserved 
+                0 = SAE Reserved
+                */
+                case '1':
+                    retval = "Emission Management (Fuel or Air)";
+                    break;
+                case '2':
+                    retval = "Injector Circuit (Fuel or Air)";
+                    break;
+                case '3':
+                    retval = "Ignition or Misfire";
+                    break;
+                case '4':
+                    retval = "Emission Control";
+                    break;
+                case '5':
+                    retval = "Vehicle Speed / Idle Control";
+                    break;
+                case '6':
+                    retval = "Computer / Output Circuit";
+                    break;
+                case '7':
+                case '8':
+                    retval = "Transmission";
+                    break;
+                case '0':
+                case '9':
+                    retval = "SAE Reserved";
+                    break;
+            }
+            return retval;
+        } 
+
+    }
+}

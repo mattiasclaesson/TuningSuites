@@ -1,0 +1,4717 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<dtscodes>
+  
+  <dtscode>
+    <code>P0030</code>
+    <description>Ox front sensor preheater control circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0031</code>
+    <description>Ox front sensor preheater control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0032</code>
+    <description>Ox front sensor preheater control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0033</code>
+    <description>Turbo charger bypass valve control circuit performance problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0034</code>
+    <description>Turbo charger bypass valve control circuit low input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0035</code>
+    <description>Turbo charger bypass valve control circuit high input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0036</code>
+    <description>Ox rear sensor preheater control circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0037</code>
+    <description>Ox rear sensor preheater control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0038</code>
+    <description>Ox rear sensor preheater control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0100</code>
+    <description>Mass or Volume Air flow Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0101</code>
+    <description>Mass or Volume Air flow Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0102</code>
+    <description>Mass or Volume Air Flow Circuit low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0103</code>
+    <description>Mass or Volume Air flow Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0104</code>
+    <description>Mass or Volume Air flow Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0105</code>
+    <description>Manifold Absolute Pressure/Barometric Pressure Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0106</code>
+    <description>Manifold Absolute Pressure/Barometric Pressure Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0107</code>
+    <description>Manifold Absolute Pressure/Barometric Pressure Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0108</code>
+    <description>Manifold Absolute Pressure/Barometric Pressure Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0109</code>
+    <description>Manifold Absolute Pressure/Barometric Pressure Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0110</code>
+    <description>Intake Air Temperature Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0111</code>
+    <description>Intake Air Temperature Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0112</code>
+    <description>Intake Air Temperature Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0113</code>
+    <description>Intake Air Temperature Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0114</code>
+    <description>Intake Air Temperature Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0115</code>
+    <description>Engine Coolant Temperature Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0116</code>
+    <description>Engine Coolant Temperature Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0117</code>
+    <description>Engine Coolant Temperature Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0118</code>
+    <description>Engine Coolant Temperature Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0119</code>
+    <description>Engine Coolant Temperature Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0120</code>
+    <description>Throttle Pedal Position Sensor/Switch A Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0121</code>
+    <description>Throttle/Pedal Position Sensor/Switch A Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0122</code>
+    <description>Throttle/Pedal Position Sensor/Switch A Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0123</code>
+    <description>Throttle/Pedal Position Sensor/Switch A Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0124</code>
+    <description>Throttle/Pedal Position Sensor/Switch A Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0125</code>
+    <description>Insufficient Coolant Temperature for Closed Loop Fuel Control / Time to closed loop too long</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0126</code>
+    <description>Insufficient Coolant Temperature for Stable Operation</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0130</code>
+    <description>Ox Sensor Circuit Malfunction (Bank 1 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0131</code>
+    <description>Ox Sensor Circuit Low Voltage (Bank 1 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0132</code>
+    <description>Ox Sensor Circuit High Voltage (Bank 1 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0133</code>
+    <description>Ox Sensor Circuit Slow Response (Bank 1 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0134</code>
+    <description>Ox Sensor Circuit No Activity Detected (Bank 1 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0135</code>
+    <description>Ox Sensor Heater Circuit Malfunction (Bank 1 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0136</code>
+    <description>Ox Sensor Circuit Malfunction (Bank 1 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0137</code>
+    <description>Ox Sensor Circuit Low Voltage (Bank 1 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0138</code>
+    <description>Ox Sensor Circuit High Voltage (Bank 1 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0139</code>
+    <description>Ox Sensor Circuit Slow Response (Bank 1 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0140</code>
+    <description>Ox Sensor Circuit No Activity Detected (Bank 1 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0141</code>
+    <description>Ox Sensor Heater Circuit Malfunction (Bank 1 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0142</code>
+    <description>Ox Sensor Circuit Malfunction (Bank 1 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0143</code>
+    <description>Ox Sensor Circuit Low Voltage (Bank 1 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0144</code>
+    <description>Ox Sensor Circuit High Voltage (Bank 1 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0145</code>
+    <description>Ox Sensor Circuit Slow Response (Bank 1 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0146</code>
+    <description>Ox Sensor Circuit No Activity Detected (Bank 1 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0147</code>
+    <description>Ox Sensor Heater Circuit Malfunction (Bank 1 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0150</code>
+    <description>Ox Sensor Circuit Malfunction (Bank 2 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0151</code>
+    <description>Ox Sensor Circuit Low Voltage (Bank 2 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0152</code>
+    <description>Ox Sensor Circuit High Voltage (Bank 2 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0153</code>
+    <description>Ox Sensor Circuit Slow Response (Bank 2 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0154</code>
+    <description>Ox Sensor Circuit No Activity Detected (Bank 2 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0155</code>
+    <description>Ox Sensor Heater Circuit Malfunction (Bank 2 Sensor 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0156</code>
+    <description>Ox Sensor Circuit Malfunction (Bank 2 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0157</code>
+    <description>Ox Sensor Circuit Low Voltage (Bank 2 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0158</code>
+    <description>Ox Sensor Circuit High Voltage (Bank 2 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0159</code>
+    <description>Ox Sensor Circuit Slow Response (Bank 2 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0160</code>
+    <description>Ox Sensor Circuit No Activity Detected (Bank 2 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0161</code>
+    <description>Ox Sensor Heater Circuit Malfunction (Bank 2 Sensor 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0162</code>
+    <description>Ox Sensor Circuit Malfunction (Bank 2 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0163</code>
+    <description>Ox Sensor Circuit Low Voltage (Bank 2 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0164</code>
+    <description>Ox Sensor Circuit High Voltage (Bank 2 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0165</code>
+    <description>Ox Sensor Circuit Slow Response (Bank 2 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0166</code>
+    <description>Ox Sensor Circuit No Activity Detected (Bank 2 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0167</code>
+    <description>Ox Sensor Heater Circuit Malfunction (Bank 2 Sensor 3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0170</code>
+    <description>Fuel Trim Malfunction (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2187</code>
+    <description>System Too Lean on idle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2188</code>
+    <description>System Too Rich on idle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2195</code>
+    <description>Short term fuel trim too lean</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2196</code>
+    <description>Short term fuel trim too rich</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0171</code>
+    <description>System Too Lean (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0172</code>
+    <description>System Too Rich (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0173</code>
+    <description>Fuel Trim Malfunction (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0174</code>
+    <description>System Too Lean (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0175</code>
+    <description>System Too Rich (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0176</code>
+    <description>Fuel Composition Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0177</code>
+    <description>Fuel Composition Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0178</code>
+    <description>Fuel Composition Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0179</code>
+    <description>Fuel Composition Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0180</code>
+    <description>Fuel Temperature Sensor A Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0181</code>
+    <description>Fuel Temperature Sensor A Circuit Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0182</code>
+    <description>Fuel Temperature Sensor A Circuit low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0183</code>
+    <description>Fuel Temperature Sensor A Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0184</code>
+    <description>Fuel Temperature Sensor A Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0185</code>
+    <description>Fuel Temperature Sensor B Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0186</code>
+    <description>Fuel Temperature Sensor B Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0187</code>
+    <description>Fuel Temperature Sensor U Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0188</code>
+    <description>Fuel Temperature Sensor B Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0189</code>
+    <description>Fuel Temperature Sensor B Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0190</code>
+    <description>Fuel Rail Pressure Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0191</code>
+    <description>Fuel Rail Pressure Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0192</code>
+    <description>Fuel Rail Pressure Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0193</code>
+    <description>Fuel Rail Pressure Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0194</code>
+    <description>Fuel Rail Pressure Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0195</code>
+    <description>Engine Oil Temperature Sensor Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0196</code>
+    <description>Engine Oil Temperature Sensor Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0197</code>
+    <description>Engine Oil Temperature Sensor Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0198</code>
+    <description>Engine Oil Temperature Sensor High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0199</code>
+    <description>Engine Oil Temperature Sensor Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0200</code>
+    <description>Injector Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0201</code>
+    <description>Injector Circuit Malfunction - Cylinder 1</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0202</code>
+    <description>Injector Circuit Malfunction - Cylinder 2</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0203</code>
+    <description>Injector Circuit Malfunction - Cylinder 3</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0204</code>
+    <description>Injector Circuit Malfunction - Cylinder 4</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0205</code>
+    <description>Injector Circuit Malfunction - Cylinder 5</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0206</code>
+    <description>Injector Circuit Malfunction - Cylinder 6</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0207</code>
+    <description>Injector Circuit Malfunction - Cylinder 7</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0208</code>
+    <description>Injector Circuit Malfunction - Cylinder 8</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0209</code>
+    <description>Injector Circuit Malfunction - Cylinder 9</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0210</code>
+    <description>Injector Circuit Malfunction - Cylinder 10</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0211</code>
+    <description>Injector Circuit Malfunction - Cylinder 11</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0212</code>
+    <description>Injector Circuit Malfunction - Cylinder 12</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0213</code>
+    <description>Cold Start Injector 1 Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0214</code>
+    <description>Cold Start Injector 2 Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0215</code>
+    <description>Engine Shutoff Solenoid Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0216</code>
+    <description>Injection Timing Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0217</code>
+    <description>Engine Overtemp Condition</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0218</code>
+    <description>Transmission Over Temperature Condition</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0219</code>
+    <description>Engine Over Speed Condition</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0220</code>
+    <description>Throttle/Pedal Position Sensor/Switch B Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0221</code>
+    <description>Throttle/Pedal Position Sensor/Switch B Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0222</code>
+    <description>Throttle/Pedal Position Sensor/Switch B Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0223</code>
+    <description>Throttle/Pedal Position Sensor/Switch B Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0224</code>
+    <description>Throttle/Pedal Position Sensor/Switch B Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0225</code>
+    <description>Throttle/Pedal Position Sensor/Switch C Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0226</code>
+    <description>Throttle/Pedal Position Sensor/Switch C Circuit Range/Performance Problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0227</code>
+    <description>Throttle/Pedal Position Sensor/Switch C Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0228</code>
+    <description>Throttle/Pedal Position Sensor/Switch C Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0229</code>
+    <description>Throttle/Pedal Position Sensor/Switch C Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0230</code>
+    <description>Fuel Pump Primary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0231</code>
+    <description>Fuel Pump Secondary Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0232</code>
+    <description>Fuel Pump Secondary Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0233</code>
+    <description>Fuel Pump Secondary Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0234</code>
+    <description>Turbocharger Overboost Condition</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0235</code>
+    <description>Turbocharger Boost Sensor A Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0236</code>
+    <description>Turbocharger Boost Sensor A Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0237</code>
+    <description>Turbocharger Boost Sensor A Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0238</code>
+    <description>Turbocharger Boost Sensor A Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0239</code>
+    <description>Turbocharger Boost Sensor B Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0240</code>
+    <description>Turbocharger Boost Sensor B Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0241</code>
+    <description>Turbocharger Boost Sensor B Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0242</code>
+    <description>Turbocharger Boost Sensor B Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0243</code>
+    <description>Turbocharger Wastegate Solenoid A Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0244</code>
+    <description>Turbocharger Wastegate Solenoid A Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0245</code>
+    <description>Turbocharger Wastegate Solenoid A low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0246</code>
+    <description>Turbocharger Wastegate Solenoid A High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0247</code>
+    <description>Turbocharger Wastegate Solenoid B Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0248</code>
+    <description>Turbocharger Wastegate Solenoid B Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0249</code>
+    <description>Turbocharger Wastegate Solenoid B Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0250</code>
+    <description>Turbocharger Wastegate Solenoid B High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0251</code>
+    <description>Injection Pump Fuel Metering Control A Malfunction (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0252</code>
+    <description>Injection Pump Fuel Metering Control A Range/Performance (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0253</code>
+    <description>Injection Pump Fuel Metering Control A Low (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0254</code>
+    <description>Injection Pump Fuel Metering Control A High (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0255</code>
+    <description>Injection Pump Fuel Metering Control A Intermittent (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0256</code>
+    <description>Injection Pump Fuel Metering Control B Malfunction (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0257</code>
+    <description>Injection Pump Fuel Metering Control B Range/Performance (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0258</code>
+    <description>Injection Pump Fuel Metering Control B Low (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0259</code>
+    <description>Injection lump Fuel Metering Control B High (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0260</code>
+    <description>Injection Pump Fuel Metering Control B Intermittent (Cam/Rotor/Injector)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0261</code>
+    <description>Cylinder 1 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0262</code>
+    <description>Cylinder 1 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0263</code>
+    <description>Cylinder 1 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0264</code>
+    <description>Cylinder 2 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0265</code>
+    <description>Cylinder 2 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0266</code>
+    <description>Cylinder 2 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0267</code>
+    <description>Cylinder 3 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0268</code>
+    <description>Cylinder 3 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0269</code>
+    <description>Cylinder 3 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0270</code>
+    <description>Cylinder 4 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0271</code>
+    <description>Cylinder 4 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0272</code>
+    <description>Cylinder 4 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0273</code>
+    <description>Cylinder 5 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0274</code>
+    <description>Cylinder 5 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0275</code>
+    <description>Cylinder 5 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0276</code>
+    <description>Cylinder 6 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0277</code>
+    <description>Cylinder 6 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0278</code>
+    <description>Cylinder 6 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0279</code>
+    <description>Cylinder 7 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0280</code>
+    <description>Cylinder 7 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0281</code>
+    <description>Cylinder 7 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0282</code>
+    <description>Cylinder 8 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0283</code>
+    <description>Cylinder 8 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0284</code>
+    <description>Cylinder 8 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0285</code>
+    <description>Cylinder 9 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0286</code>
+    <description>Cylinder 9 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0287</code>
+    <description>Cylinder 9 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0288</code>
+    <description>Cylinder 10 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0289</code>
+    <description>Cylinder 10 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0290</code>
+    <description>Cylinder 10 Contribution/balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0291</code>
+    <description>Cylinder 11 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0292</code>
+    <description>Cylinder 11 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0293</code>
+    <description>Cylinder 11 Contribution/balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0294</code>
+    <description>Cylinder 12 Injector Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0295</code>
+    <description>Cylinder 12 Injector Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0296</code>
+    <description>Cylinder 12 Contribution/Balance Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0298</code>
+    <description>Engine Oil Over Temperature</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0300</code>
+    <description>Random/Multiple Cylinder Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0301</code>
+    <description>Cylinder 1 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0302</code>
+    <description>Cylinder 2 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0303</code>
+    <description>Cylinder 3 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0304</code>
+    <description>Cylinder 4 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0305</code>
+    <description>Cylinder 5 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0306</code>
+    <description>Cylinder 6 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0307</code>
+    <description>Cylinder 7 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0308</code>
+    <description>Cylinder 8 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0309</code>
+    <description>Cylinder 9 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0310</code>
+    <description>Cylinder 10 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0311</code>
+    <description>Cylinder 11 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0312</code>
+    <description>Cylinder 12 Misfire Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0313</code>
+    <description>Misfire Detected with Low Fuel</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0314</code>
+    <description>Single Cylinder Misfire (Cylinder not Specified)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0320</code>
+    <description>Ignition/Distributor Engine Speed Input Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0321</code>
+    <description>Ignition/Distributor Engine Speed Input Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0322</code>
+    <description>Ignition/Distributor Engine Speed Input Circuit No Signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0323</code>
+    <description>Ignition/Distributor Engine Speed Input Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0325</code>
+    <description>Knock Sensor 1 Circuit Malfunction (Bank 1 or Single Sensor) / Knock circuit no activity</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0326</code>
+    <description>Knock Sensor 1 Circuit Range/Performance (Bank 1 or Single Sensor)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0327</code>
+    <description>Knock Sensor 1 Circuit low Input (Bank 1 or Single Sensor)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0328</code>
+    <description>Knock Sensor 1 Circuit High Input (Bank 1 or Single Sensor)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0329</code>
+    <description>Knock Sensor 1 Circuit Input Intermittent (Bank 1 or Single Sensor)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0330</code>
+    <description>Knock Sensor 2 Circuit Malfunction (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0331</code>
+    <description>Knock Sensor 2 Circuit Range/Performance (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0332</code>
+    <description>Knock Sensor 2 Circuit Low Input (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0333</code>
+    <description>Knock Sensor 2 Circuit High Input (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0334</code>
+    <description>Knock Sensor 2 Circuit Input Intermittent (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0335</code>
+    <description>Crankshaft Position Sensor A Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0336</code>
+    <description>Crankshaft Position Sensor A Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0337</code>
+    <description>Crankshaft Position Sensor A Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0338</code>
+    <description>Crankshaft Position Sensor A Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0339</code>
+    <description>Crankshaft Position Sensor A Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0340</code>
+    <description>Camshaft Position Sensor Circuit Malfunction / synchronize error high voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1340</code>
+    <description>Camshaft Position Sensor Circuit Malfunction / synchronize error low voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1341</code>
+    <description>Combustion detection low cylinder 1</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1342</code>
+    <description>Combustion detection low cylinder 2</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1343</code>
+    <description>Combustion detection low cylinder 3</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1344</code>
+    <description>Combustion detection low cylinder 4</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1312</code>
+    <description>Combustion detection high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1315</code>
+    <description>Ion detect module</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2300</code>
+    <description>Ignition coil trigger 1 circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2301</code>
+    <description>Ignition coil trigger 1 circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2303</code>
+    <description>Ignition coil trigger 2 circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2304</code>
+    <description>Ignition coil trigger 2 circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2306</code>
+    <description>Ignition coil trigger 3 circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2307</code>
+    <description>Ignition coil trigger 3 circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2309</code>
+    <description>Ignition coil trigger 4 circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2310</code>
+    <description>Ignition coil trigger 4 circuit high</description>
+    <tips></tips>
+  </dtscode>
+
+  <dtscode>
+    <code>P0341</code>
+    <description>Camshaft Position Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0342</code>
+    <description>Camshaft Position Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0343</code>
+    <description>Camshaft Position Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0344</code>
+    <description>Camshaft Position Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0350</code>
+    <description>Ignition Coil Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0351</code>
+    <description>Ignition Coil A Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0352</code>
+    <description>Ignition Coil B Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0353</code>
+    <description>Ignition Coil C Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0354</code>
+    <description>Ignition Coil D Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0355</code>
+    <description>Ignition Coil E Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0356</code>
+    <description>Ignition Coil F Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0357</code>
+    <description>Ignition Coil G Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0358</code>
+    <description>Ignition Coil H Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0359</code>
+    <description>Ignition Coil I Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0360</code>
+    <description>Ignition Coil J Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0361</code>
+    <description>Ignition Coil K Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0362</code>
+    <description>Ignition Coil L Primary/Secondary Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0370</code>
+    <description>Timing Reference High Resolution Signal A Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0371</code>
+    <description>Timing Reference High Resolution Signal A Too Many Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0372</code>
+    <description>Timing Reference High Resolution Signal A Too Few Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0373</code>
+    <description>Timing Reference High Resolution Signal A Intermittent/Erratic Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0374</code>
+    <description>Timing Reference High Resolution Signal A No Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0375</code>
+    <description>Timing Reference High Resolution Signal B Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0376</code>
+    <description>Timing Reference High Resolution Signal B Too Many Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0377</code>
+    <description>Timing Reference High Resolution Signal B Too Few Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0378</code>
+    <description>Timing Reference High Resolution Signal B Intermittent/Erratic Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0379</code>
+    <description>Timing Reference High Resolution Signal B No Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0380</code>
+    <description>Glow Plug/Heater Circuit A Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0381</code>
+    <description>Glow Plug/Heater Indicator Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0382</code>
+    <description>Glow Plug/Heater Circuit B Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0385</code>
+    <description>Crankshaft Position Sensor B Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0386</code>
+    <description>Crankshaft Position Sensor B Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0387</code>
+    <description>Crankshaft Position Sensor B Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0388</code>
+    <description>Crankshaft Position Sensor B Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0389</code>
+    <description>Crankshaft Position Sensor B Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0400</code>
+    <description>Exhaust Gas Recirculation Flow Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0401</code>
+    <description>Exhaust Gas Recirculation Flow Insufficient Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0402</code>
+    <description>Exhaust Gas Recirculation Flow Excessive Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0403</code>
+    <description>Exhaust Gas Recirculation Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0404</code>
+    <description>Exhaust Gas Recirculation Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0405</code>
+    <description>Exhaust Gas Recirculation Sensor A Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0406</code>
+    <description>Exhaust Gas Recirculation Sensor A Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0407</code>
+    <description>Exhaust Gas Recirculation Sensor B Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0408</code>
+    <description>Exhaust Gas Recirculation Sensor B Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0410</code>
+    <description>Secondary Air Injection System Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0411</code>
+    <description>Secondary Air Injection System Incorrect Flow Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0412</code>
+    <description>Secondary Air Injection System Switching Valve A Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0413</code>
+    <description>Secondary Air Injection System Switching Valve A Circuit Open</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0414</code>
+    <description>Secondary Air Injection System Switching Valve A Circuit Shorted</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0415</code>
+    <description>Secondary Air Injection System Switching Valve B Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0416</code>
+    <description>Secondary Air Injection System Switching Valve B Circuit Open</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0417</code>
+    <description>Secondary Air Injection System Switching Valve B Circuit Shorted</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0418</code>
+    <description>Secondary Air Injection System Relay A circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0419</code>
+    <description>Secondary Air Injection System Relay B” Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0420</code>
+    <description>Catalyst System Efficiency Below Threshold (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0421</code>
+    <description>Warm Up Catalyst Efficiency Below Threshold (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0422</code>
+    <description>Main Catalyst Efficiency Below Threshold (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0423</code>
+    <description>Heated Catalyst Efficiency Below Threshold (Bank l)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0424</code>
+    <description>Heated Catalyst Temperature Below Threshold (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0430</code>
+    <description>Catalyst System Efficiency Below Threshold (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0431</code>
+    <description>Warm Up Catalyst Efficiency Below Threshold (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0432</code>
+    <description>Main Catalyst Efficiency Below Threshold (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0433</code>
+    <description>Heated Catalyst Efficiency Below Threshold (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0434</code>
+    <description>Heated Catalyst Temperature Below Threshold (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0440</code>
+    <description>Evaporative Emission Control System Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0441</code>
+    <description>Evaporative Emission Control System Incorrect Purge flow</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0442</code>
+    <description>Evaporative Emission Control System leak Detected (small leak)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1442</code>
+    <description>Evaporative Emission Control System leak Detected (small leak, fuel)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0443</code>
+    <description>Evaporative Emission Control System Purge Control Valve circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0444</code>
+    <description>Evaporative Emission Control System Purge Control Valve Circuit Open</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0445</code>
+    <description>Evaporative Emission Control System Purge Control Valve Circuit Shorted</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0446</code>
+    <description>Evaporative Emission Control System Vent Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0447</code>
+    <description>Evaporative Emission Control System Vent Control Circuit Open</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0448</code>
+    <description>Evaporative Emission Control System Vent Control Circuit Shorted</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0449</code>
+    <description>Evaporative Emission Control System Vent Valve/Solenoid Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0450</code>
+    <description>Evaporative Emission Control System Pressure Sensor Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0451</code>
+    <description>Evaporative Emission Control System Pressure Sensor Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0452</code>
+    <description>Evaporative Emission Control System Pressure Sensor Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0453</code>
+    <description>Evaporative Emission Control System Pressure Sensor High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0454</code>
+    <description>Evaporative Emission Control System Pressure Sensor Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0455</code>
+    <description>Evaporative Emission Control System Tank Detected (gross leak)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1455</code>
+    <description>Evaporative Emission Control System Tank Detected (gross leak, fuel)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0456</code>
+    <description>Evaporative Emission Control System Tank Detected (very small leak)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1456</code>
+    <description>Evaporative Emission Control System Tank Detected (very small leak, fuel)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0460</code>
+    <description>Fuel Level Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0461</code>
+    <description>Fuel Level Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0462</code>
+    <description>Fuel Level Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0463</code>
+    <description>Fuel Level Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0464</code>
+    <description>Fuel Level Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0465</code>
+    <description>Purge Flow Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0466</code>
+    <description>Purge Flow Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0467</code>
+    <description>Purge Flow Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0468</code>
+    <description>Purge Flow Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0469</code>
+    <description>Purge Flow Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0470</code>
+    <description>Exhaust Pressure Sensor Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0471</code>
+    <description>Exhaust Pressure Sensor Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0472</code>
+    <description>Exhaust Pressure Sensor Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0473</code>
+    <description>Exhaust Pressure Sensor High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0474</code>
+    <description>Exhaust Pressure Sensor Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0475</code>
+    <description>Exhaust Pressure Control Valve Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0476</code>
+    <description>Exhaust Pressure Control Valve Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0477</code>
+    <description>Exhaust Pressure Control Valve Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0478</code>
+    <description>Exhaust Pressure Control Valve High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0479</code>
+    <description>Exhaust Pressure Control Valve Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0480</code>
+    <description>Cooling Fan 1 Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0481</code>
+    <description>Cooling Fan 2 Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0482</code>
+    <description>Cooling Fan 3 Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0483</code>
+    <description>Cooling Fan Rationality Check Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0484</code>
+    <description>Cooling Fan Circuit Over Current</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0485</code>
+    <description>Cooling Fan Power/Ground Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0486</code>
+    <description>Exhaust Gas Recirculation Sensor B Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0487</code>
+    <description>Exhaust Gas Recirculation Throttle Position Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0488</code>
+    <description>Exhaust Gas Recirculation Throttle Position Control Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0491</code>
+    <description>Secondary Air Injection System (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0492</code>
+    <description>Secondary Air Injection System (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0498</code>
+    <description>CMD purge diagnostics low limit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0499</code>
+    <description>CMD purge diagnostics high limit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0500</code>
+    <description>Vehicle Speed Sensor Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0501</code>
+    <description>Vehicle Speed Sensor Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0502</code>
+    <description>Vehicle Speed Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0503</code>
+    <description>Vehicle Speed Sensor Intermittent/Erratic/High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0505</code>
+    <description>Idle Control System Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0506</code>
+    <description>Idle Control System RPM lower Than Expected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0507</code>
+    <description>Idle Control System RPM higher Than Expected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0510</code>
+    <description>Closed Throttle Position Switch Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0520</code>
+    <description>Engine Oil Pressure Sensor/Switch Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0521</code>
+    <description>Engine Oil Pressure Sensor/Switch Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0522</code>
+    <description>Engine Oil Pressure Sensor/Switch Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0523</code>
+    <description>Engine Oil Pressure Sensor/Switch High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0530</code>
+    <description>A/C Refrigerant Pressure Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0531</code>
+    <description>A/C Refrigerant Pressure Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0532</code>
+    <description>A/C Refrigerant Pressure Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0533</code>
+    <description>A/C Refrigerant pressure Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0534</code>
+    <description>Air Conditioner Refrigerant Charge Loss</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0545</code>
+    <description>Exhaust gas temperature sensor circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0546</code>
+    <description>Exhaust gas temperature sensor circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0544</code>
+    <description>Exhaust gas temperature sensor circuit performance problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0550</code>
+    <description>Power Steering Pressure Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0551</code>
+    <description>Power Steering Pressure Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0552</code>
+    <description>Power Steering Pressure Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0553</code>
+    <description>Power Steering Pressure Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0554</code>
+    <description>Power Steering Pressure sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0560</code>
+    <description>System Voltage Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0561</code>
+    <description>System Voltage Unstable</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0562</code>
+    <description>System Voltage Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0563</code>
+    <description>System Voltage High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0565</code>
+    <description>Cruise Control On Signal Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0566</code>
+    <description>Cruise Control Off Signal Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0567</code>
+    <description>Cruise Control Resume Signal Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0568</code>
+    <description>Cruise Control Set Signal Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0569</code>
+    <description>Cruise Control Coast Signal Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0570</code>
+    <description>Cruise Control Accel Signal Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0571</code>
+    <description>Cruise Control/Brake Switch A Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0572</code>
+    <description>Cruise Control/Brake Switch A Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0573</code>
+    <description>Cruise Control/Brake Switch A Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0574</code>
+    <description>Cruise Control System - Vehicle Speed Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0575</code>
+    <description>Cruise Control Input Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0576</code>
+    <description>Cruise Control Input Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0577</code>
+    <description>Cruise Control Input Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0578</code>
+    <description>through P0580 Reserved for Cruise Control Codes</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0600</code>
+    <description>Serial Communication Link Malfunction (high speed CAN bus performance problem)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0601</code>
+    <description>Internal Control Module Memory Check Sum Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0602</code>
+    <description>Control Module Programming Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0603</code>
+    <description>Internal Control Module Keep Alive Memory (KAM) Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0604</code>
+    <description>Internal Control Module Random Access Memory (RAM) Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0605</code>
+    <description>Internal Control Module Read Only Memory (ROM) Error </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0606</code>
+    <description>ECM/PCM Processor Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0607</code>
+    <description>CPU Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1606</code>
+    <description>Main CPU fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0608</code>
+    <description>Control Module VSS Output A Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0609</code>
+    <description>Control Module VSS Output B Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0610</code>
+    <description>Control Module VSS Output B Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0615</code>
+    <description>Starter Relay Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0616</code>
+    <description>Starter Relay Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0617</code>
+    <description>Starter Relay Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0618</code>
+    <description>Alternative Fuel Control Module KAM Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0619</code>
+    <description>Alternative Fuel Control Module RAM/ROM Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0620</code>
+    <description>Generator Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0621</code>
+    <description>Generator Lamp L Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0622</code>
+    <description>Generator Field F Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0623</code>
+    <description>Generator Lamp Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0624</code>
+    <description>Fuel Cap Lamp Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0625</code>
+    <description>Generator field F terminal control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0626</code>
+    <description>Generator field F terminal control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2500</code>
+    <description>Generator field L terminal control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2501</code>
+    <description>Generator field L terminal control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0628</code>
+    <description>Fuel pump relay circuit low input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0629</code>
+    <description>Fuel pump relay circuit high input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0630</code>
+    <description>VIN Not Programmed or Mismatch - ECM/PCM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0631</code>
+    <description>VIN Not Programmed or Mismatch - TCM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0632</code>
+    <description>Wheel circumference  not programmed</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0633</code>
+    <description>Immo not programmed</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1609</code>
+    <description>CIM transmitted response was distorted</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1619</code>
+    <description>Security access not armed</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0635</code>
+    <description>Power Steering Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0636</code>
+    <description>Power Steering Control Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0637</code>
+    <description>Power Steering Control Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0638</code>
+    <description>Throttle Actuator Control Range/Performance (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0639</code>
+    <description>Throttle Actuator Control Range/Performance (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0640</code>
+    <description>Intake Air Heater Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0641</code>
+    <description>Reference voltage 1 out of range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0651</code>
+    <description>Reference voltage 2 out of range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0645</code>
+    <description>A/C Clutch Relay Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0646</code>
+    <description>A/C Clutch Relay Control Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0647</code>
+    <description>A/C Clutch Relay Control Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0648</code>
+    <description>Immobilizer Lamp Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0649</code>
+    <description>Speed Control Lamp Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0650</code>
+    <description>Malfunction Indicator Lamp (MIL) Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0654</code>
+    <description>Engine RPM Output Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0655</code>
+    <description>Engine Hot Lamp Output Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0656</code>
+    <description>Fuel Level Output Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0660</code>
+    <description>Intake Manifold Tuning Valve Control Circuit (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0661</code>
+    <description>Intake Manifold Tuning Valve Control Circuit Low (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0662</code>
+    <description>Intake Manifold Tuning Valve Control Circuit High (Bank 1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0663</code>
+    <description>Intake Manifold Tuning Valve Control Circuit (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0664</code>
+    <description>Intake Manifold Tuning Valve Control Circuit Low (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0665</code>
+    <description>Intake Manifold Tuning Valve Control Circuit High (Bank 2)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0686</code>
+    <description>Powertrain relay low performance problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0687</code>
+    <description>Powertrain relay high performance problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0685</code>
+    <description>Powertrain relay signal performance problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0691</code>
+    <description>Cooling fan 1 control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0692</code>
+    <description>Cooling fan 1 control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0693</code>
+    <description>Cooling fan 2 control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0694</code>
+    <description>Cooling fan 2 control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0695</code>
+    <description>Cooling fan 3 control circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0696</code>
+    <description>Cooling fan 3 control circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0700</code>
+    <description>Transmission Control System Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0701</code>
+    <description>Transmission Control System Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0702</code>
+    <description>Transmission Control System Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0703</code>
+    <description>Torque Converter/Brake Switch B Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0704</code>
+    <description>Clutch Switch Input Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0705</code>
+    <description>Transmission Range Sensor Circuit Malfunction (PRNDL Input)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0706</code>
+    <description>Transmission Range Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0707</code>
+    <description>Transmission Range Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0708</code>
+    <description>Transmission Range Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0709</code>
+    <description>Transmission Range Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0710</code>
+    <description>Transmission Fluid Temperature Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0711</code>
+    <description>Transmission Fluid Temperature Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0712</code>
+    <description>Transmission Fluid Temperature Sensor Circuit Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0713</code>
+    <description>Transmission Fluid Temperature Sensor Circuit High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0714</code>
+    <description>Transmission Fluid Temperature Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0715</code>
+    <description>Input/Turbine Speed Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0716</code>
+    <description>Input/Turbine Speed Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0717</code>
+    <description>Input/Turbine Speed Sensor Circuit No Signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0718</code>
+    <description>Input/Turbine Speed Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0719</code>
+    <description>Torque Converter/Brake Switch B Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0720</code>
+    <description>Output Speed Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0721</code>
+    <description>Output Speed Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0722</code>
+    <description>Output Speed Sensor Circuit No Signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0723</code>
+    <description>Output Speed Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0724</code>
+    <description>Torque Converter/Brake Switch B Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0725</code>
+    <description>Engine Speed Input Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0726</code>
+    <description>Engine Speed Input Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0727</code>
+    <description>Engine Speed Input Circuit No Signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0728</code>
+    <description>Engine Speed Input Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0730</code>
+    <description>Incorrect Gear Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0731</code>
+    <description>Gear 1 Incorrect Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0732</code>
+    <description>Gear 2 Incorrect Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0733</code>
+    <description>Gear 3 Incorrect Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0734</code>
+    <description>Gear 4 Incorrect Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0735</code>
+    <description>Gear 5 Incorrect Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0736</code>
+    <description>Reverse Incorrect Ratio</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0740</code>
+    <description>Torque Converter Clutch Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0741</code>
+    <description>Torque Converter Clutch Circuit Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0742</code>
+    <description>Torque Converter Clutch Circuit Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0743</code>
+    <description>Torque Converter Clutch Circuit Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0744</code>
+    <description>Torque Converter Clutch Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0745</code>
+    <description>Pressure Control Solenoid Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0746</code>
+    <description>Pressure Control Solenoid Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0747</code>
+    <description>Pressure Control Solenoid Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0748</code>
+    <description>Pressure Control Solenoid Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0749</code>
+    <description>Pressure Control Solenoid Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0750</code>
+    <description>Shift Solenoid A Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0751</code>
+    <description>Shift Solenoid A Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0752</code>
+    <description>Shift Solenoid A Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0753</code>
+    <description>Shift Solenoid A Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0754</code>
+    <description>Shift Solenoid A Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0755</code>
+    <description>Shift Solenoid B Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0756</code>
+    <description>Shift Solenoid B Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0757</code>
+    <description>Shift Solenoid B Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0758</code>
+    <description>Shift Solenoid B Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0759</code>
+    <description>Shift Solenoid B Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0760</code>
+    <description>Shift Solenoid C Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0761</code>
+    <description>Shift Solenoid C Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0762</code>
+    <description>Shift Solenoid C Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0763</code>
+    <description>Shift Solenoid C Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0764</code>
+    <description>Shift Solenoid C Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0765</code>
+    <description>Shift Solenoid D Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0766</code>
+    <description>Shift Solenoid D Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0767</code>
+    <description>Shift Solenoid D Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0768</code>
+    <description>Shift Solenoid D Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0769</code>
+    <description>Shift Solenoid D Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0770</code>
+    <description>Shift Solenoid E Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0771</code>
+    <description>Shift Solenoid E Performance or Stuck Off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0772</code>
+    <description>Shift Solenoid E Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0773</code>
+    <description>Shift Solenoid E Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0774</code>
+    <description>Shift Solenoid E Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0775</code>
+    <description>Pressure Control Solenoid B</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0776</code>
+    <description>Pressure Control Solenoid B Performance or Stuck off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0777</code>
+    <description>Pressure Control Solenoid B Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0778</code>
+    <description>Pressure Control Solenoid B Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0779</code>
+    <description>Pressure Control Solenoid B Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0780</code>
+    <description>Shift Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0781</code>
+    <description>1-2 Shift Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0782</code>
+    <description>2-3 Shift Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0783</code>
+    <description>3-4 Shift Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0784</code>
+    <description>4-5 Shift Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0785</code>
+    <description>Shift/Timing Solenoid Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0786</code>
+    <description>Shift/Timing Solenoid Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0787</code>
+    <description>Shift/Timing Solenoid low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0788</code>
+    <description>Shift/Timing Solenoid High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0789</code>
+    <description>Shift/Timing Solenoid Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0790</code>
+    <description>Normal/Performance Switch Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0791</code>
+    <description>Intermediate Shaft Speed Sensor Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0792</code>
+    <description>Intermediate Shaft Speed Sensor Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0793</code>
+    <description>Intermediate Shaft Speed Sensor Circuit No signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0794</code>
+    <description>Intermediate Shaft Speed Sensor Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0795</code>
+    <description>Pressure Control Solenoid C</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0796</code>
+    <description>Pressure Control Solenoid C Performance or Stuck off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0797</code>
+    <description>Pressure Control Solenoid C Stuck On</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0798</code>
+    <description>Pressure Control Solenoid C Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0799</code>
+    <description>Pressure Control Solenoid C Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0801</code>
+    <description>Reverse Inhibit Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0803</code>
+    <description>1-4 Upshift (Skip Shift) Solenoid Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0804</code>
+    <description>1-4 Upshift (Skip Shift) Lamp Control Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0805</code>
+    <description>Clutch Position Sensor Circuit Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0806</code>
+    <description>Clutch Position Sensor Circuit Range/Performance Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0807</code>
+    <description>Clutch Position Sensor Circuit Low Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0808</code>
+    <description>Clutch Position Sensor Circuit High Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0809</code>
+    <description>Clutch Position Sensor Circuit Intermittent Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0810</code>
+    <description>Clutch Position Control Error</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0811</code>
+    <description>Excessive Clutch Slippage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0812</code>
+    <description>Reverse Input Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0813</code>
+    <description>Reverse Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0814</code>
+    <description>Transmission Range Display Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0815</code>
+    <description>Upshift Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0816</code>
+    <description>Downshift Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0817</code>
+    <description>Starter Disable Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0818</code>
+    <description>Driveline Disconnect Switch Input Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0820</code>
+    <description>Gear Lever X - Y Position Sensor Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0821</code>
+    <description>Gear Lever X Position Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0822</code>
+    <description>Gear Lever Y Position Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0823</code>
+    <description>Gear Lever X Position Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0824</code>
+    <description>Gear Lever Y Position Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0825</code>
+    <description>Gear Lever Push - Pull Switch (Shift Anticipate)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0830</code>
+    <description>Clutch Pedal Switch A Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0831</code>
+    <description>Clutch Pedal Switch A Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0832</code>
+    <description>Clutch Pedal Switch A Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0833</code>
+    <description>Clutch Pedal Switch B Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0834</code>
+    <description>Clutch Pedal Switch B Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0835</code>
+    <description>Clutch Pedal Switch B Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0836</code>
+    <description>Four Wheel Drive (4WD) Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0837</code>
+    <description>Four Wheel Drive (4WD) Switch Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0838</code>
+    <description>Four Wheel Drive (4WD) Switch Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0839</code>
+    <description>Four Wheel Drive (4WD) Switch Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0840</code>
+    <description>Transmission Fluid Pressure Sensor/Switch A Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0841</code>
+    <description>Transmission Fluid Pressure Sensor/Switch A Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0842</code>
+    <description>Transmission Fluid Pressure Sensor/Switch A Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0843</code>
+    <description>Transmission Fluid Pressure Sensor/Switch A Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0844</code>
+    <description>Transmission Fluid Pressure Sensor/Switch A Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0845</code>
+    <description>Transmission Fluid Pressure Sensor/Switch B Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0846</code>
+    <description>Transmission Fluid Pressure Sensor/Switch B Circuit Range/Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0847</code>
+    <description>Transmission Fluid Pressure Sensor/Switch B Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0848</code>
+    <description>Transmission Fluid Pressure Sensor/Switch B Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P0849</code>
+    <description>Transmission Fluid Pressure Sensor/Switch B Circuit Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1000 </code>
+    <description>OBD II Test Incomplete </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1001</code>
+    <description>KOER Not Able To Complete, KOER Aborted </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1100</code>
+    <description>MAF Intermittant</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1101</code>
+    <description>MAF Out Of Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1106</code>
+    <description>Manifold Absolute Pressure (MAP) sensor circuit intermittent high voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1107</code>
+    <description>Manifold Absolute Pressure (MAP) sensor circuit intermittent low voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1108</code>
+    <description>BARO to MAP signal circuit comparison too high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1111</code>
+    <description>Intake Air Temperature (IAT) sensor intermittent high voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1112</code>
+    <description>Intake Air Temperature (IAT) sensor intermittent low voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1114</code>
+    <description>Engine Coolant Temperature (ECT) sensor circuit intermittent low voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1115</code>
+    <description>Engine Coolant Temperature (ECT) sensor circuit intermittent high voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1116</code>
+    <description>ECT Sensor Out Of Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1117</code>
+    <description>ECT Intermittent</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1120</code>
+    <description>TPS Out Of Range Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1121</code>
+    <description>Throttle Position (TP) Sensor Inconsistent With MAF Sensor High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1122</code>
+    <description>Throttle Position (TP) Sensor Inconsistent With MAF Sensor Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1124</code>
+    <description>TPS Out Of Self Test Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1125</code>
+    <description>TPS Intermittant</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1127</code>
+    <description>Exhaust Not Warm Enough, Downstream Sensor Not Tested </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1128</code>
+    <description>MAP Lower Than Expected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1129</code>
+    <description>MAP Higher Than Expected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1130</code>
+    <description>Lack Of HO2S-11, Fuel Trim At Limit </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1131</code>
+    <description>HO2S 11 Indicates Lean</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1132</code>
+    <description>HO2S 11 Indicates Rich</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1133</code>
+    <description>Heated Oxygen Sensor (HO2S) insufficient switching bank 1 sensor 1 (Rear Bank)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1134</code>
+    <description>Heated Oxygen Sensor (HO2S) transition time ratio bank 1 sensor 1 (Rear Bank)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1137</code>
+    <description>Lack Of HO2S-12 Switch Indicates Lean </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1138</code>
+    <description>Lack Of HO2S-12 Switch Indicates Rich </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1150</code>
+    <description>Lack Of HO2S-21 Switch Fuel Trim At Limit </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1151</code>
+    <description>Lack Of HO2S-21 Switch Indicates Lean </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1152</code>
+    <description>Lack Of HO2S-21 Switch Indicates Rich </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1153</code>
+    <description>Heated Oxygen Sensor (HO2S) insufficient switching bank 2 sensor 1 (Front Bank)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1154</code>
+    <description>Heated Oxygen Sensor (HO2S) transition time ratio bank 2 sensor 1 (Front Bank)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1157</code>
+    <description>Lack Of HO2S-22 Switch Indicates Lean </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1158</code>
+    <description>Lack Of HO2S-22 Switch Indicates Rich </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1168</code>
+    <description>FRP Sensor In Range But Low </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1169</code>
+    <description>FRP Sensor In Range But High </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1180</code>
+    <description>Fuel Delivery System Low </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1181</code>
+    <description>Fuel Delivery System High </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1183</code>
+    <description>EOT Sensor Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1184</code>
+    <description>EOT Sensor Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1189</code>
+    <description>Engine Oil Pressure Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1192</code>
+    <description>Inlet Air Temp. Circuit Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1193</code>
+    <description>Inlet Air Temp. Circuit High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1195</code>
+    <description>1/1 O2 Sensor Slow During Catalyst Monitor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1196</code>
+    <description>2/1 O2 Sensor Slow During Catalyst Monitor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1197</code>
+    <description>1/2 O2 Sensor Slow During Catalyst Monitor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1198</code>
+    <description>Radiator Temperature Sensor Volts Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1199</code>
+    <description>Radiator Temperature Sensor Volts Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1229</code>
+    <description>Supercharger Intercooler Pump Not Working </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1230</code>
+    <description></description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1231</code>
+    <description>Throttle body sensor failed</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1232</code>
+    <description>Low Speed Fuel Pump Primary Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1233</code>
+    <description>Fuel System Disabled Or Offline </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1234</code>
+    <description>Fuel System Disabled Or Offline </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1235</code>
+    <description>Fuel Pump Control Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1236</code>
+    <description>Fuel Pump Control Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1237</code>
+    <description>Fuel Pump Secondary Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1238</code>
+    <description>Fuel Pump Secondary Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1244</code>
+    <description>Generator Load Low </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1245</code>
+    <description>Generator Load Input High </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1246</code>
+    <description>Generator Load Input Failed </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1258</code>
+    <description>Engine Metal Over Temperature Protection</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1259</code>
+    <description>VTEC System Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1260</code>
+    <description>Fuel Pump Speed Relay Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1269</code>
+    <description>Injector 3 Correction Circuit. Short to B+/open </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1270</code>
+    <description>Vehicle Speed Limiter Reached</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1281</code>
+    <description>Engine Is Cold Too Long</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1282</code>
+    <description>Fuel Pump Relay Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1285</code>
+    <description>Cylinder Head Over Temperature Sensed </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1288</code>
+    <description>Intake Manifold Short Runner Solenoid Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1290</code>
+    <description>CHT Sensor Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1289</code>
+    <description>CHT Sensor High Input </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1291</code>
+    <description>No Temp Rise Seen From Fuel Heaters</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1292</code>
+    <description>CNG Pressure Sensor Voltage Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1293</code>
+    <description>CNG Pressure Sensor Voltage Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1294</code>
+    <description>Target Idle Not Reached</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1295</code>
+    <description>No 5 Volts To TP Sensor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1296</code>
+    <description>No 5 Volts To MAP Sensor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1297</code>
+    <description>Low Voltage ELD Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1298</code>
+    <description>High Voltage In ELD Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1299</code>
+    <description>Vacuum Leak Found (IAC Fully Seated)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1300</code>
+    <description>Random Misfire</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1309</code>
+    <description>Misfire Monitor Disabled </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1320</code>
+    <description>Ignition Control (IC) Module 4x Reference Circuit Intermittent No Pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1323</code>
+    <description>Ignition Control (IC) Module 24x Reference Circuit low frequency</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1336</code>
+    <description>Crankshaft Position System Variation Not Learned</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1337</code>
+    <description>Crankshaft Speed Fluctuation Sensor No Signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1350</code>
+    <description>Ignition Control System</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1351</code>
+    <description>Ignition Coil Control Circuit High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1352</code>
+    <description>Ignition Bypass Circuit High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1359</code>
+    <description>Crankshaft Position/TDC/Cylinder Position Sensor Connector Disconnection</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1361</code>
+    <description>Ignition Control (IC) Circuit Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1362</code>
+    <description>Ignition Bypass Circuit Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1366</code>
+    <description>Intermittent Interruption In TDC2 Sensor Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1367</code>
+    <description>No Signal In TDC2 Sensor Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1370</code>
+    <description>Ignition Control (IC) Module 4x Reference too many pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1371</code>
+    <description>Ignition Control (IC) Module 4x Reference too few pulses</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1374</code>
+    <description>CKP High to Low Resolution Frequency Correlation</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1375</code>
+    <description>Ignition Control (IC) Module 24x Reference High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1376</code>
+    <description>Ignition Ground Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1377</code>
+    <description>Ignition Control (IC) Module Cam Pulse to 4x Reference Pulse Comparison</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1380</code>
+    <description>Variable Cam Timing Solenoid A Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1381</code>
+    <description>Misfire Detected-No EBTCM/PCM Serial Data</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1382</code>
+    <description>Cylinder Position Sensor No Signal</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1383</code>
+    <description>Variable Cam Timing Over-retarded (Bank 1) </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1388</code>
+    <description>Auto Shutdown Relay Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1389</code>
+    <description>No ASD Relay Output Voltage At PCM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1390</code>
+    <description>Octane Adjust Out Of Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1391</code>
+    <description>Intermittent Loss of CMP or CKP</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1398</code>
+    <description>Mis-Fire Adapter Numerator at Limit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1399</code>
+    <description>Wait To Start Lamp Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1400</code>
+    <description>DPFE Sensor Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1401</code>
+    <description>DPFE Sensor High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1403</code>
+    <description>No 5 Volts To EGR Sensor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1404</code>
+    <description>Exhaust Gas Recirculation (EGR) Valve Pintle Stuck Open</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1405</code>
+    <description>DPFE Upstream Hose Off Or Plugged </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1406</code>
+    <description>DPFE Downstream Hose Off Or Plugged </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1407</code>
+    <description>EGR No Flow Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1408</code>
+    <description>EGR Out Of Self Test Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1409</code>
+    <description>EGR Vacuum Regulator Solenoid Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1411</code>
+    <description>Secondary Air Injection System Downstream Flow </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1413</code>
+    <description>Secondary Air Injection System Monitor Circuit Low </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1414</code>
+    <description>Secondary Air Injection System Monitor Circuit High </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1432</code>
+    <description>THTRC Circuit Failure </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1441</code>
+    <description>Evaporative System Flow During Non-Purge</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1443</code>
+    <description>Small Or No Purge Flow Condition </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1444</code>
+    <description>Purge Flow Sensor Low Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1445</code>
+    <description>Purge Flow Sensor High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1450</code>
+    <description>Unable To Bleed Up Fuel Tank Vacuum </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1451</code>
+    <description>EVAP Control System Canister Vent Solenoid Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1452</code>
+    <description>EVAP Control System Canister Vent Solenoid sensor offset low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1492</code>
+    <description>EVAP Control System Canister Vent Solenoid sensor offset low (fuel)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1453</code>
+    <description>EVAP Control System Canister Vent Solenoid sensor offset high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1493</code>
+    <description>EVAP Control System Canister Vent Solenoid sensor offset high (fuel)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1457</code>
+    <description>Leak Detected In EVAP Control Sys.(EVAP Canister Sys.)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1460</code>
+    <description>WOT A/C Cutoff Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1461</code>
+    <description>ACP Sensor High Voltage </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1462</code>
+    <description>ACP Sensor Low Voltage </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1463</code>
+    <description>ACP Sensor Insufficent Pressure Change </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1464</code>
+    <description>A/C Demand Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1469</code>
+    <description>Low A/C Cycling Period </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1474</code>
+    <description>HCF Primary Circuit Failure </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1476</code>
+    <description>Too Little Secondary Air</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1477</code>
+    <description>Too Much Secondary Air</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1478</code>
+    <description>Battery Temp Sensor Volts Out of Limit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1479</code>
+    <description>HFC Primary Circuit Failure </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1480</code>
+    <description>PCV Solenoid Valve</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1482</code>
+    <description>Catalyst Temperature Sensor Circuit Shorted Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1483</code>
+    <description>Engine Cooling System Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1484</code>
+    <description>Catalytic Converter overheat Detected</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1485</code>
+    <description>Air Injection Solenoid Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1486</code>
+    <description>Evap Leak Monitor Pinched Hose</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1487</code>
+    <description>Hi Speed Rad Fan CTRL Relay Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1488</code>
+    <description>Auxiliary 5 Volt Supply Output Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1489</code>
+    <description>High Speed Fan CTRL Relay Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1490</code>
+    <description>Low Speed Fan CTRL Relay Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1491</code>
+    <description>Rad Fan Control Relay Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <!-->dtscode>
+    <code>P1492</code>
+    <description>Ambient/Batt Temp Sen Volts Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1493</code>
+    <description>Ambient/Batt Temp Sen Volts Too Low</description>
+    <tips></tips>
+  </dtscode-->
+  <dtscode>
+    <code>P1494</code>
+    <description>Leak Detection Pump Switch or Mechanical Fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1495</code>
+    <description>Leak Detection Pump Solenoid Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1496</code>
+    <description>5 Volt Supply Output Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1498</code>
+    <description>High speed Rad Fan Ground CTRL Rly Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1500</code>
+    <description>Vehicle Speed Sensor (VSS) Intermittant </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1501</code>
+    <description>Vehicle Speed Sensor (VSS) Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1502</code>
+    <description>Vehicle Speed Sensor (VSS) Intermittant </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1505</code>
+    <description>Idle Air Control At Adaptive Clip</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1506</code>
+    <description>Idle Air Control System Overspeed Error </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1507</code>
+    <description>Idle Air Control System Underspeed Error </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1508</code>
+    <description>Idle Air Control (IAC) System - Low RPM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1516</code>
+    <description>Inlet Manifold Runner Control Input Error (Bank 1) </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1517</code>
+    <description>Inlet Manifold Runner Control Input Error (Bank 2) </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1518</code>
+    <description>Inlet Manifold Runner Control Stuck Open </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1519</code>
+    <description>Inlet Manifold Runner Control Stuck Closed </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1520</code>
+    <description>Intake Manifold Runner Control (IMRC) circuit malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1524</code>
+    <description>Throttle Position (TP) Sensor Learned Closed Throttle Angle Degrees Out-Of-Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1527</code>
+    <description>Trans Range / Pressure Switch Comparison</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1546</code>
+    <description>Air Conditioning (A/C) Clutch Relay Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1549</code>
+    <description>Intake Manifold Control Circuit Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1550</code>
+    <description>PSP Sensor Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1554</code>
+    <description>Cruise Engaged Circuit High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1560</code>
+    <description>Cruise Control System-Transaxle Not in Drive</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1564</code>
+    <description>Cruise Control System-Vehicle Acceleration too high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1566</code>
+    <description>Cruise Control System-Engine RPM Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1567</code>
+    <description>Cruise Control- ABCS Active</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1570</code>
+    <description>Cruise Control System - Traction Control Active</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1571</code>
+    <description>Traction Control System PWM Circuit No Frequency</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1572</code>
+    <description>Brake Pedal Switch Circuit </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1574</code>
+    <description>EBTCM System- Stop Lamp Switch Circuit High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1575</code>
+    <description>Extended Travel Brake Switch Circuit High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1579</code>
+    <description>Park/Neutral to Drive/Reverse At high Throttle Angle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1585</code>
+    <description>Cruise Control Inhibit Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1594</code>
+    <description>Charging System Voltage Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1595</code>
+    <description>Speed Control Solenoid Circuits</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1596</code>
+    <description>Speed Control Switch always High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1597</code>
+    <description>Speed Control Switch always Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1598</code>
+    <description>A/C Pressure Sensor Volts Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1599</code>
+    <description>A/C Pressure Sensor Volts Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1602</code>
+    <description>Loss of EBTCM Serial Data</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1603</code>
+    <description>Loss of SDM Serial Data</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1604</code>
+    <description>Loss of IPC Serial Data</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1605</code>
+    <description>Loss of HVACC Serial Data</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1607</code>
+    <description>Malfunction In PCM Internal Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1610</code>
+    <description>Immo switched off</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1611</code>
+    <description>Incorrect security code input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1613</code>
+    <description>CIM response not received</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1614</code>
+    <description>CIM transmitted response incorrect</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1615</code>
+    <description>CIM failed powertrain identification</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1616</code>
+    <description>CIM failed environment identification</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1617</code>
+    <description>Engine Oil Level Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1621</code>
+    <description>PCM Memory Performance</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1626</code>
+    <description>Theft Deterrent System - Fuel Enable Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1630</code>
+    <description>Theft Deterrent - PCM in Learn Mode</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1631</code>
+    <description>Theft Deterrent - Password Incorrect</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1632</code>
+    <description>Theft Deterrent - Fuel Disabled</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1633</code>
+    <description>Ignition Supplement Power Circuit Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1634</code>
+    <description>Ignition 1 Power Circuit Low Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1635</code>
+    <description>5 Volt Reference Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1639</code>
+    <description>5 Volt Reference 2 Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1640</code>
+    <description>Driver 1 - Input High Voltage</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1641</code>
+    <description>Malfunction Indicator Lamp (MIL) Control Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1642</code>
+    <description>Vehicle Speed Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1644</code>
+    <description>Delivered Torque Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1645</code>
+    <description>EVAP Solenoid Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1646</code>
+    <description>EVAP Vent Valve Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1650</code>
+    <description>Power Steering Pressure Switch Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1651</code>
+    <description>Power Steering Pressure Switch Input Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1652</code>
+    <description>Lift/Dive Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1654</code>
+    <description>Cruise Disable Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1656</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1660</code>
+    <description>Cooling Fan Control Circuits</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1676</code>
+    <description>FPTDR Signal Failure</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1678</code>
+    <description>FPTDR Signal Line Failure</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1680</code>
+    <description>Clutch Released Switch Circuit/ECU ADC fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1681</code>
+    <description>No I/P Cluster CCD/J1850 Messages Received / Sensor switch fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1682</code>
+    <description>Charging System Voltage Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1683</code>
+    <description>Speed Control Power Relay or S/C 12V Driver Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1685</code>
+    <description>Skim Invalid Key</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1686</code>
+    <description>No SKIM Bus Message Received</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1687</code>
+    <description>A/T FI Signal B High Input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1689</code>
+    <description>Traction Control Delivered Torque Output Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1693</code>
+    <description>DTC Detected In Companion Mode</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1694</code>
+    <description>Fault In Companion Mode</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1695</code>
+    <description>No CCD/J185O Message From BCM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1696</code>
+    <description>PCM Failure EEPROM Write Denied</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1697</code>
+    <description>PCM Failure SRI Mile Not Stored</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1698</code>
+    <description>No Bus Message From TCM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1701</code>
+    <description>Transmission Solenoid Malfunction</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1703</code>
+    <description>Brake On/Off Switch Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1705</code>
+    <description>Transmisson Range Sensor Out Of Range  </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1706</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1709</code>
+    <description>Park/Neutral Position Switch Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1710</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1711</code>
+    <description>Transmission Fluid Temperature Sensor</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1713</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1719</code>
+    <description>Skip Shift Solenoid Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1729</code>
+    <description>4x4 Low Switch Malfunction </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1738</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1739</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1740</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1746</code>
+    <description>EPC Solenoid Failed Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1747</code>
+    <description>EPC Solenoid Short Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1749</code>
+    <description>EPC Solenoid Open Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1751</code>
+    <description>Shift Solenoid #1 (SS1)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1753</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1754</code>
+    <description>Coast Clutch Solenoid</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1756</code>
+    <description>GOV Press Not Equal To Target @ 15-20 PSI</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1757</code>
+    <description>GOV Press Not Equal To Target @ 15-20 PSI</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1758</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1761</code>
+    <description>Shift Solenoid #3 (SS3)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1762</code>
+    <description>Gov Press Sen Offset Volts Too Low or high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1763</code>
+    <description>Governor Pressure Sensor Volts Too High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1764</code>
+    <description>Governor Pressure Sensor Volts Too Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1765</code>
+    <description>Trans 12 Volt Supply Relay CTRL Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1768</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1773</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1778</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1780</code>
+    <description>Transmission Control Switch Out Of Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1781</code>
+    <description>4x4 Switch Out Of Range </description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1783</code>
+    <description>Transmission Over Temperature Condition</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1786</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1790</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1791</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1792</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1794</code>
+    <description>Automatic Transaxle</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1810</code>
+    <description>TFP Valve Position Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1811</code>
+    <description>Maximum Adapt and Long Shift</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1819</code>
+    <description>Internal Mode Switch - No Start/Wrong Range</description>
+    <tips></tips>
+  </dtscode>
+  /*<dtscode>
+    <code>P1820</code>
+    <description>Internal Mode Switch Circuit A Low</description>
+    <tips></tips>
+  </dtscode>*/
+  <dtscode>
+    <code>P1822</code>
+    <description>Internal Mode Switch Circuit B High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1823</code>
+    <description>Internal Mode Switch Circuit P Low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1825</code>
+    <description>Internal Mode Switch - Invalid Range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1826</code>
+    <description>Internal Mode Switch Circuit C High</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1860</code>
+    <description>TCC PWM Solenoid Circuit Electrical</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1887</code>
+    <description>TCC Release Switch Circuit</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1899</code>
+    <description>Park/Neutral Position Switch Stuck In Park or In Gear</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2227</code>
+    <description>Barometric pressure circuit performance problem</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2228</code>
+    <description>Barometric pressure circuit low input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2229</code>
+    <description>Barometric pressure circuit high input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2257</code>
+    <description>SAI relay circuit low</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2258</code>
+    <description>SAI relay circuit high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2535</code>
+    <description>Run crank signal high</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2537</code>
+    <description>Accessory switch circuit low input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1625</code>
+    <description>Lost communication with ABS control module</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1624</code>
+    <description>Lost communication with CIM (Column Integration Module)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1623</code>
+    <description>Lost communication with TCM (Transmission Control Module)</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2135</code>
+    <description>Throttle position sensor correlation fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2176</code>
+    <description>Throttle minimum learning fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1523</code>
+    <description>Throttle default position fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2121</code>
+    <description>Pedal position sensor 1 circuit out of range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2122</code>
+    <description>Pedal position sensor 1 circuit low input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2123</code>
+    <description>Pedal position sensor 1 circuit high input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2126</code>
+    <description>Pedal position sensor 2 circuit out of range</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2127</code>
+    <description>Pedal position sensor 2 circuit low input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2128</code>
+    <description>Pedal position sensor 2 circuit high input</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P2138</code>
+    <description>Pedal position sensor correlation fault</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1743</code>
+    <description>TCM lockup</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1704</code>
+    <description>TCM neutral control</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1804</code>
+    <description>TCM CAN bus counter overrun</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1805</code>
+    <description>TCM lost communication with ECM</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1895</code>
+    <description>TCM unreliable torque figures</description>
+    <tips></tips>
+  </dtscode>
+  <dtscode>
+    <code>P1820</code>
+    <description>TCM unreliable accelerator position</description>
+    <tips></tips>
+  </dtscode>
+
+</dtscodes>
