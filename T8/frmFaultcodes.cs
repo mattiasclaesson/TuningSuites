@@ -17,7 +17,8 @@ namespace T8SuitePro
         public delegate void onClearDTC(object sender, ClearDTCEventArgs e);
         public event frmFaultcodes.onClearDTC onClearCurrentDTC;
 
-
+        public delegate void frmClose(object sender, EventArgs e);
+        public event frmFaultcodes.frmClose onCloseFrm;
 
         public frmFaultcodes()
         {
@@ -27,6 +28,11 @@ namespace T8SuitePro
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
+            if (onCloseFrm != null)
+            {
+                onCloseFrm(this, e);
+            } 
+            
             this.Close();
         }
 
