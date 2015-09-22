@@ -16029,5 +16029,127 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
             }
         }
+
+        private void btnReadFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //DEBUG
+            //frmFaultcodes frmfaults_TEST = new frmFaultcodes();
+            //frmfaults_TEST.addFault("P2126");
+            //frmfaults_TEST.Show();
+
+            if (m_connectedToECU)
+            {
+                // 16 25 16 22 00 00 00 00 00 00 00 00 
+                frmFaultcodes frmfaults = new frmFaultcodes();
+                frmfaults.onClearCurrentDTC += new frmFaultcodes.onClearDTC(frmfaults_onClearCurrentDTC);
+                m_prohibitReading = true;
+                //string faultCodes = string.Empty;
+                int symbolnumber = GetSymbolNumber(m_symbols, "obdFaults");
+                if (symbolnumber == 0)
+                {
+                    // not connected to ECU
+                    frmInfoBox info = new frmInfoBox("Cannot find symbolnumber for symbol obdFaults, ECU binary must be loaded");
+                }
+                SymbolHelper sh = new SymbolHelper();
+                sh.Varname = "obdFaults";
+                sh.Symbol_number = symbolnumber;
+                sh.Start_address = GetSymbolAddressSRAM(m_symbols, "obdFaults");
+                sh.Length = GetSymbolLength(m_symbols, "obdFaults");
+                byte[] buffer = ReadMapFromSRAM(sh);
+                if (buffer.Length > 0)
+                {
+                    for (int t = 0; t < buffer.Length; t += 2)
+                    {
+                        if (buffer[t] == 0x00 && buffer[t + 1] == 0x00)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            //faultCodes += "P" + buffer[t].ToString("X2") + buffer[t + 1].ToString("X2") + Environment.NewLine;
+                            frmfaults.addFault("P" + buffer[t].ToString("X2") + buffer[t + 1].ToString("X2"));
+                        }
+                    }
+                }
+                frmfaults.Show();
+                m_prohibitReading = false;
+            }
+            else
+            {
+                // not connected to ECU
+                frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to read faultcodes");
+            }
+        }
+
+        void frmfaults_onClearCurrentDTC(object sender, frmFaultcodes.ClearDTCEventArgs e)
+        {
+            // clear the currently selected DTC code from the ECU
+            if (e.DTCCode.StartsWith("P"))
+            {
+                m_prohibitReading = true;
+                try
+                {
+                    int DTCCode = Convert.ToInt32(e.DTCCode.Substring(1, e.DTCCode.Length - 1), 16);
+                    if (m_connectedToECU)
+                    {
+                        //TODO ClearDTCCodes() must be added to the api
+                        //t8can.ClearDTCCodes(DTCCode);
+                    }
+                    if (sender is frmFaultcodes)
+                    {
+                        frmFaultcodes frmfaults = (frmFaultcodes)sender;
+                        //bool _success = false;
+                        frmfaults.ClearCodes();
+                        int symbolnumber = GetSymbolNumber(m_symbols, "obdFaults");
+                        if (symbolnumber == 0)
+                        {
+                            // not connected to ECU
+                            frmInfoBox info = new frmInfoBox("Cannot find symbolnumber for symbol obdFaults, ECU binary must be loaded");
+                        }
+                        //byte[] buffer = t8can.readMemory(Convert.ToInt32(dr["SRAMAddress"]), Convert.ToInt32(dr["Length"]), out _success);
+                        SymbolHelper sh = new SymbolHelper( );
+                        sh.Varname = "obdFaults";
+                        sh.Symbol_number = symbolnumber;
+                        sh.Start_address = GetSymbolAddressSRAM(m_symbols, "obdFaults");
+                         sh.Length = GetSymbolLength(m_symbols, "obdFaults");
+                        byte[] buffer = ReadMapFromSRAM(sh);
+                        //byte[] buffer = ReadSymbolFromSRAM((uint)symbolnumber, "obdFaults", (uint)GetSymbolAddressSRAM(m_symbols, "obdFaults"), GetSymbolLength(m_symbols, "obdFaults"), out _success);
+                        if (buffer.Length > 0)
+                        {
+                            for (int t = 0; t < buffer.Length; t += 2)
+                            {
+                                if (buffer[t] == 0x00 && buffer[t + 1] == 0x00)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    //faultCodes += "P" + buffer[t].ToString("X2") + buffer[t + 1].ToString("X2") + Environment.NewLine;
+                                    frmfaults.addFault("P" + buffer[t].ToString("X2") + buffer[t + 1].ToString("X2"));
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception E)
+                {
+                    logger.Debug(E.Message);
+                }
+                m_prohibitReading = false;
+            }
+        }
+
+        private void btnClearDTCs_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_connectedToECU)
+            {
+                m_prohibitReading = true;
+                t8can.ReadDTC();
+                //TODO ClearDTCCodes() must be added to the api
+                //t8can.ClearDTCCodes();
+                m_prohibitReading = false;
+            }
+        }
+
     }
 }
