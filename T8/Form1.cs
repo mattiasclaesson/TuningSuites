@@ -16035,7 +16035,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // Connect at accesslevel01, need to close connection if already open
             if (m_connectedToECU)
             {
-               t8can.Cleanup();
+                t8can.Cleanup();
                 m_connectedToECU = false;
             }
             SetCanAdapter();
