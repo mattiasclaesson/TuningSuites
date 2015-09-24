@@ -12,7 +12,7 @@ namespace T8SuitePro
     public partial class frmFaultcodes : DevExpress.XtraEditors.XtraForm
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-        private Dictionary<string, DTSCode> mDTSCodesDict;
+        private Dictionary<string, DTCDescription> mDTCDescriptionDict;
 
         public delegate void onClearDTC(object sender, ClearDTCEventArgs e);
         public event frmFaultcodes.onClearDTC onClearCurrentDTC;
@@ -23,7 +23,7 @@ namespace T8SuitePro
         public frmFaultcodes()
         {
             InitializeComponent();
-            LoadDTSCodes();
+            LoadDTCDescriptions();
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -66,32 +66,32 @@ namespace T8SuitePro
             }
             if (!_found)
             {
-                if (mDTSCodesDict.ContainsKey(faultcode))
+                if (mDTCDescriptionDict.ContainsKey(faultcode))
                 {
-                    DTSCode code = mDTSCodesDict[faultcode];
-                    dt.Rows.Add(faultcode, code.Description);
+                    DTCDescription dtc = mDTCDescriptionDict[faultcode];
+                    dt.Rows.Add(faultcode, dtc.Description);
                 } else {
-                    logger.Debug("Warning: DTSCode not found (" + faultcode + ")");
+                    logger.Debug("Warning: dtc not found (" + faultcode + ")");
                 }
             }
                
         }
 
         // Load known dts codes from XML file
-        private void LoadDTSCodes()
+        private void LoadDTCDescriptions()
         {
             // Create the XmlSchemaSet class.
             XmlSchemaSet sc = new XmlSchemaSet();
 
             // Add the schema to the collection.
-            sc.Add("", "DTSCodes.xsd");
+            sc.Add("", "DTCDescription.xsd");
 
             XmlReaderSettings reader_settings = new XmlReaderSettings();
             reader_settings.ValidationType = ValidationType.Schema;
             reader_settings.Schemas = sc;
-            reader_settings.ValidationEventHandler += new ValidationEventHandler(DTSCodesValidationEventHandler);
-                        
-            XmlReader reader = XmlReader.Create("DTSCodes.xml", reader_settings);
+            reader_settings.ValidationEventHandler += new ValidationEventHandler(DTCDescriptionsValidationEventHandler);
+
+            XmlReader reader = XmlReader.Create("DTCDescription.xml", reader_settings);
                         
             XmlDocument doc = new XmlDocument();
             try
@@ -99,15 +99,15 @@ namespace T8SuitePro
                 // parsing the xml, warnings/errors are generated in this step
                 doc.Load(reader);
 
-                XmlNode dtscodes = doc.DocumentElement;
+                XmlNode dtcdescriptions = doc.DocumentElement;
 
-                mDTSCodesDict = new Dictionary<string, DTSCode>();
-                foreach (XmlNode dtscode_node in dtscodes.SelectNodes("dtscode"))
+                mDTCDescriptionDict = new Dictionary<string, DTCDescription>();
+                foreach (XmlNode dtcdescription_node in dtcdescriptions.SelectNodes("dtcdescription"))
                 {
-                    DTSCode code = new DTSCode(dtscode_node);
-                    if (code.IsComplete() && !mDTSCodesDict.ContainsKey(code.Code))
+                    DTCDescription dtc = new DTCDescription(dtcdescription_node);
+                    if (dtc.IsComplete() && !mDTCDescriptionDict.ContainsKey(dtc.Code))
                     {
-                        mDTSCodesDict.Add(code.Code, code);
+                        mDTCDescriptionDict.Add(dtc.Code, dtc);
                     }
                 }
             }
@@ -119,7 +119,7 @@ namespace T8SuitePro
   
         }
 
-        private void DTSCodesValidationEventHandler(object sender, ValidationEventArgs e)
+        private void DTCDescriptionsValidationEventHandler(object sender, ValidationEventArgs e)
         {
             if (e.Severity == XmlSeverityType.Warning)
             {

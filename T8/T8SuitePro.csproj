@@ -235,7 +235,7 @@
     </Compile>
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
-    <Compile Include="DTSCode.cs" />
+    <Compile Include="DTCDescription.cs" />
     <Compile Include="EngineStatus.cs" />
     <Compile Include="FindAndReplaceForm.cs">
       <SubType>Form</SubType>
@@ -681,8 +681,9 @@
     <Content Include="canlib32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DTSCodes.xml">
+    <Content Include="DTCDescription.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -724,7 +725,7 @@
       <DependentUpon>TuningReport.cs</DependentUpon>
     </Compile>
     <Compile Include="VINDecoder.cs" />
-    <Content Include="DTSCodes.xsd">
+    <Content Include="DTCDescription.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
