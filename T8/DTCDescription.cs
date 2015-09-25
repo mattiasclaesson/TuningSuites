@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace T8SuitePro
 {
-    class DTSCode
+    class DTCDescription
     {
         private string mCode;
         private string mDescription;
@@ -31,18 +31,18 @@ namespace T8SuitePro
         }
 
 
-        public DTSCode()
+        public DTCDescription()
         {
  
         }
 
-        public DTSCode(XmlNode aDTSCode)
+        public DTCDescription(XmlNode aDTCDescription)
         {
-            XmlNode code = aDTSCode.SelectNodes("code")[0];
+            XmlNode code = aDTCDescription.SelectNodes("code")[0];
             mCode = code.InnerText.Trim();
-            XmlNode desc = aDTSCode.SelectNodes("description")[0];
+            XmlNode desc = aDTCDescription.SelectNodes("description")[0];
             mDescription = desc.InnerText.Trim();
-            XmlNode tips = aDTSCode.SelectNodes("tips")[0];
+            XmlNode tips = aDTCDescription.SelectNodes("tips")[0];
             mTips = tips.InnerText.Trim();    
         }
 
