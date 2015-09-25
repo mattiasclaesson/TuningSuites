@@ -91,30 +91,40 @@ namespace T8SuitePro
             reader_settings.Schemas = sc;
             reader_settings.ValidationEventHandler += new ValidationEventHandler(DTCDescriptionsValidationEventHandler);
 
-            XmlReader reader = XmlReader.Create("DTCDescription.xml", reader_settings);
-                        
-            XmlDocument doc = new XmlDocument();
-            try
+            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            string[] dtc_files = Directory.GetFiles(path+"\\", "DTC_*.xml");
+
+            mDTCDescriptionDict = new Dictionary<string, DTCDescription>();
+            foreach (string file in dtc_files)
             {
-                // parsing the xml, warnings/errors are generated in this step
-                doc.Load(reader);
-
-                XmlNode dtcdescriptions = doc.DocumentElement;
-
-                mDTCDescriptionDict = new Dictionary<string, DTCDescription>();
-                foreach (XmlNode dtcdescription_node in dtcdescriptions.SelectNodes("dtcdescription"))
+                XmlReader reader = XmlReader.Create(file, reader_settings);
+                XmlDocument doc = new XmlDocument();
+                string error_message;
+                try
                 {
-                    DTCDescription dtc = new DTCDescription(dtcdescription_node);
-                    if (dtc.IsComplete() && !mDTCDescriptionDict.ContainsKey(dtc.Code))
+                    // parsing the xml, warnings/errors are generated in this step
+                    doc.Load(reader);
+                    XmlNode dtcdescriptions = doc.DocumentElement;
+                    foreach (XmlNode dtcdescription_node in dtcdescriptions.SelectNodes("dtcdescription"))
                     {
-                        mDTCDescriptionDict.Add(dtc.Code, dtc);
+                        DTCDescription dtc = new DTCDescription(dtcdescription_node);
+                        if (dtc.IsComplete() && !mDTCDescriptionDict.ContainsKey(dtc.Code))
+                        {
+                            mDTCDescriptionDict.Add(dtc.Code, dtc);
+                        }
+                        else
+                        {
+                            error_message = dtc.Description + " <-> " + mDTCDescriptionDict[dtc.Code].Description;
+                            logger.Debug("Warning: double code: " + dtc.Code + " >> " + error_message);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // TODO: Second time the parsing error is logged
-                logger.Debug(ex.Message);
+                catch (Exception ex)
+                {
+                    // TODO: Second time the parsing error is logged
+                    logger.Debug(ex.Message);
+                }
+
             }
   
         }

@@ -16032,7 +16032,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnReadFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // Connect at accesslevel01, need to close connection if already open
+             // Connect at accesslevel01, need to close connection if already open
             if (m_connectedToECU)
             {
                 t8can.Cleanup();

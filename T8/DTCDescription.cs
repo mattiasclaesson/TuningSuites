@@ -13,21 +13,26 @@ namespace T8SuitePro
         private string mCode;
         private string mDescription;
         private string mTips;
+        private List<string> mReasonList = null;
 
         public string Code
         {
-            get
-            {
-                return this.mCode;
-            }
+            get { return this.mCode;}
         }
 
         public string Description
         {
-            get
-            {
-                return this.mDescription;
-            }
+            get { return this.mDescription;}
+        }
+
+        public string Tips
+        {
+            get { return this.mTips; }
+        }
+
+        public List<string> ReasonList 
+        {
+            get { return this.mReasonList; }
         }
 
 
@@ -43,7 +48,13 @@ namespace T8SuitePro
             XmlNode desc = aDTCDescription.SelectNodes("description")[0];
             mDescription = desc.InnerText.Trim();
             XmlNode tips = aDTCDescription.SelectNodes("tips")[0];
-            mTips = tips.InnerText.Trim();    
+            mTips = (tips != null) ? tips.InnerText.Trim() : string.Empty;
+            XmlNodeList reason_list = aDTCDescription.SelectNodes("reason");
+            mReasonList = new List<string>();
+            foreach (XmlNode reason in reason_list)
+            {
+                mReasonList.Add(reason.InnerText.Trim());
+            }
         }
 
         public bool IsComplete()
