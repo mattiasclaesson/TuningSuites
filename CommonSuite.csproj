@@ -59,9 +59,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrionicCANLib">
-      <HintPath>Libs\TrionicCANLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellHelper.cs" />
@@ -118,12 +115,6 @@
     <Compile Include="Forms\frmDecodeVIN.Designer.cs">
       <DependentUpon>frmDecodeVIN.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmEditRealtimeSymbol.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmEditRealtimeSymbol.Designer.cs">
-      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmImportResults.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,18 +127,6 @@
     <Compile Include="Forms\frmInfoBox.Designer.cs">
       <DependentUpon>frmInfoBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmLogFilters.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmLogFilters.Designer.cs">
-      <DependentUpon>frmLogFilters.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmMatrixSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmMatrixSelection.Designer.cs">
-      <DependentUpon>frmMatrixSelection.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmProjectLogbook.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,18 +138,6 @@
     </Compile>
     <Compile Include="Forms\frmProjectTransactionPurge.Designer.cs">
       <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmSymbolSelect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmSymbolSelect.Designer.cs">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmSymbolSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmSymbolSelection.designer.cs">
-      <DependentUpon>frmSymbolSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmTransactionLog.cs">
       <SubType>Form</SubType>
@@ -216,7 +183,6 @@
     <Compile Include="msiupdater.cs" />
     <Compile Include="ProfColorTable.cs" />
     <Compile Include="SortableCollectionBase.cs" />
-    <Compile Include="SymbolCollection.cs" />
     <Compile Include="TransactionCollection.cs" />
     <Compile Include="TransactionEntry.cs" />
     <Compile Include="TrionicProjectLog.cs" />
@@ -289,10 +255,6 @@
       <DependentUpon>frmDecodeVIN.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmEditRealtimeSymbol.resx">
-      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmImportResults.resx">
       <DependentUpon>frmImportResults.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -301,28 +263,12 @@
       <DependentUpon>frmInfoBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmLogFilters.resx">
-      <DependentUpon>frmLogFilters.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmMatrixSelection.resx">
-      <DependentUpon>frmMatrixSelection.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProjectLogbook.resx">
       <DependentUpon>frmProjectLogbook.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProjectTransactionPurge.resx">
       <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSymbolSelect.resx">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSymbolSelection.resx">
-      <DependentUpon>frmSymbolSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmTransactionLog.resx">
