@@ -32,12 +32,13 @@ namespace CommonSuite
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbELM327KLine = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(283, 38);
+            this.simpleButton1.Location = new System.Drawing.Point(283, 62);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 1;
@@ -47,7 +48,7 @@ namespace CommonSuite
             // simpleButton2
             // 
             this.simpleButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.simpleButton2.Location = new System.Drawing.Point(202, 38);
+            this.simpleButton2.Location = new System.Drawing.Point(202, 62);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 2;
@@ -79,13 +80,24 @@ namespace CommonSuite
             this.comboBoxEdit2.Size = new System.Drawing.Size(216, 20);
             this.comboBoxEdit2.TabIndex = 4;
             // 
+            // cbELM327KLine
+            // 
+            this.cbELM327KLine.AutoSize = true;
+            this.cbELM327KLine.Location = new System.Drawing.Point(142, 38);
+            this.cbELM327KLine.Name = "cbELM327KLine";
+            this.cbELM327KLine.Size = new System.Drawing.Size(95, 17);
+            this.cbELM327KLine.TabIndex = 6;
+            this.cbELM327KLine.Text = "ELM327 K-Line";
+            this.cbELM327KLine.UseVisualStyleBackColor = true;
+            // 
             // frmComportSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
-            this.ClientSize = new System.Drawing.Size(376, 72);
+            this.ClientSize = new System.Drawing.Size(376, 93);
             this.ControlBox = false;
+            this.Controls.Add(this.cbELM327KLine);
             this.Controls.Add(this.labelControl2);
             this.Controls.Add(this.comboBoxEdit2);
             this.Controls.Add(this.simpleButton2);
@@ -106,5 +118,6 @@ namespace CommonSuite
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit2;
+        private System.Windows.Forms.CheckBox cbELM327KLine;
     }
 }
