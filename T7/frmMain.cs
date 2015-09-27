@@ -18014,14 +18014,16 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Empty;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.Empty;
                 ViewRealtime.OptionsView.ShowColumnHeaders = true;
-                ViewRealtime.OptionsView.ShowHorzLines = true;
-                ViewRealtime.OptionsView.ShowVertLines = true;
+                //ViewRealtime.OptionsView.ShowHorzLines = true;
+                ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.True;
+                //ViewRealtime.OptionsView.ShowVertLines = true;
+                ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.True;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
 
         }
 
-        private void SetColorForMeasurement(Measurement measurement, Color backColor, Color foreColor, Color labelColor)
+        private void SetColorForMeasurement(ctrlMeasurement measurement, Color backColor, Color foreColor, Color labelColor)
         {
             measurement.LookAndFeel.SkinName = "";
             measurement.SetDigitColor = foreColor;

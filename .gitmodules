@@ -1,0 +1,3 @@
+[submodule "CommonSuite"]
+	path = CommonSuite
+	url = https://github.com/Meindert66/CommonSuite
