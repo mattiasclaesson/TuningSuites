@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CommonSuite</RootNamespace>
+    <AssemblyName>CommonSuite</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Be.Windows.Forms.HexBox">
+      <HintPath>Libs\Be.Windows.Forms.HexBox.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v11.2.Core, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Libs\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>Libs\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Owf.Controls.DigitalDisplayControl">
+      <HintPath>Libs\Owf.Controls.DigitalDisplayControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TrionicCANLib">
+      <HintPath>Libs\TrionicCANLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CellHelper.cs" />
+    <Compile Include="CellHelperCollection.cs" />
+    <Compile Include="DTCDescription.cs" />
+    <Compile Include="Forms\frmChangeNote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmChangeNote.Designer.cs">
+      <DependentUpon>frmChangeNote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmComportSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmComportSettings.Designer.cs">
+      <DependentUpon>frmComportSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFaultcodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFaultcodes.Designer.cs">
+      <DependentUpon>frmFaultcodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFileToExportSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFileToExportSelection.Designer.cs">
+      <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFind.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFindCancel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFindAndReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFindAndReplace.Designer.cs">
+      <DependentUpon>frmFindAndReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmGoTo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmADCInputConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmADCInputConfig.Designer.cs">
+      <DependentUpon>frmADCInputConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDecodeVIN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDecodeVIN.Designer.cs">
+      <DependentUpon>frmDecodeVIN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmEditRealtimeSymbol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmEditRealtimeSymbol.Designer.cs">
+      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmImportResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmImportResults.Designer.cs">
+      <DependentUpon>frmImportResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmInfoBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmInfoBox.Designer.cs">
+      <DependentUpon>frmInfoBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLogFilters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLogFilters.Designer.cs">
+      <DependentUpon>frmLogFilters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMatrixSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMatrixSelection.Designer.cs">
+      <DependentUpon>frmMatrixSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmProjectLogbook.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProjectLogbook.Designer.cs">
+      <DependentUpon>frmProjectLogbook.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmProjectTransactionPurge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProjectTransactionPurge.Designer.cs">
+      <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSymbolSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSymbolSelect.Designer.cs">
+      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSymbolSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSymbolSelection.designer.cs">
+      <DependentUpon>frmSymbolSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmTransactionLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmTransactionLog.Designer.cs">
+      <DependentUpon>frmTransactionLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmVectorlist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmVectorlist.Designer.cs">
+      <DependentUpon>frmVectorlist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmWifiSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmWifiSettings.designer.cs">
+      <DependentUpon>frmWifiSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmRebuildFileParameters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmRebuildFileParameters.Designer.cs">
+      <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSearchMaps.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSearchMaps.Designer.cs">
+      <DependentUpon>frmSearchMaps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmTuneBinary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmTuneBinary.Designer.cs">
+      <DependentUpon>frmTuneBinary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HighlightGroup.cs" />
+    <Compile Include="LogFilter.cs" />
+    <Compile Include="LogFilterCollection.cs" />
+    <Compile Include="MNemonicCollection.cs" />
+    <Compile Include="MNemonicHelper.cs" />
+    <Compile Include="msiupdater.cs" />
+    <Compile Include="ProfColorTable.cs" />
+    <Compile Include="SortableCollectionBase.cs" />
+    <Compile Include="SymbolCollection.cs" />
+    <Compile Include="TransactionCollection.cs" />
+    <Compile Include="TransactionEntry.cs" />
+    <Compile Include="TrionicProjectLog.cs" />
+    <Compile Include="TrionicTransactionLog.cs" />
+    <Compile Include="Reports\TuningReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\TuningReport.Designer.cs">
+      <DependentUpon>TuningReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ctrlCompareResultSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ctrlCompareResultSelector.designer.cs">
+      <DependentUpon>ctrlCompareResultSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\ctrlReleaseNotes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ctrlReleaseNotes.Designer.cs">
+      <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EngineStatus.cs" />
+    <Compile Include="UserControls\ctrlMeasurement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ctrlMeasurement.Designer.cs">
+      <DependentUpon>ctrlMeasurement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VINDecoder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\frmChangeNote.resx">
+      <DependentUpon>frmChangeNote.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmComportSettings.resx">
+      <DependentUpon>frmComportSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFaultcodes.resx">
+      <DependentUpon>frmFaultcodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFileToExportSelection.resx">
+      <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFind.resx">
+      <DependentUpon>frmFind.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFindCancel.resx">
+      <DependentUpon>frmFindCancel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFindAndReplace.resx">
+      <DependentUpon>frmFindAndReplace.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmGoTo.resx">
+      <DependentUpon>frmGoTo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmADCInputConfig.resx">
+      <DependentUpon>frmADCInputConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDecodeVIN.resx">
+      <DependentUpon>frmDecodeVIN.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmEditRealtimeSymbol.resx">
+      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmImportResults.resx">
+      <DependentUpon>frmImportResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmInfoBox.resx">
+      <DependentUpon>frmInfoBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLogFilters.resx">
+      <DependentUpon>frmLogFilters.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMatrixSelection.resx">
+      <DependentUpon>frmMatrixSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProjectLogbook.resx">
+      <DependentUpon>frmProjectLogbook.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProjectTransactionPurge.resx">
+      <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSymbolSelect.resx">
+      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSymbolSelection.resx">
+      <DependentUpon>frmSymbolSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmTransactionLog.resx">
+      <DependentUpon>frmTransactionLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmVectorlist.resx">
+      <DependentUpon>frmVectorlist.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmWifiSettings.resx">
+      <DependentUpon>frmWifiSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmRebuildFileParameters.resx">
+      <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSearchMaps.resx">
+      <DependentUpon>frmSearchMaps.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmTuneBinary.resx">
+      <DependentUpon>frmTuneBinary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TuningReport.resx">
+      <DependentUpon>TuningReport.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ctrlCompareResultSelector.resx">
+      <DependentUpon>ctrlCompareResultSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ctrlReleaseNotes.resx">
+      <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ctrlMeasurement.resx">
+      <DependentUpon>ctrlMeasurement.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Libs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\T8SuitePro\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
+      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DTCDescription.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
