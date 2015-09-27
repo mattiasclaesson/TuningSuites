@@ -6,7 +6,7 @@ using NLog;
 
 namespace T8SuitePro
 {
-    class srec2bin
+    public class srec2bin
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
 

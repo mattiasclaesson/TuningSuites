@@ -50,6 +50,10 @@
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonSuite\CommonSuite.csproj">
+      <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
+      <Name>CommonSuite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\T8\T8SuitePro.csproj">
       <Project>{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}</Project>
       <Name>T8SuitePro</Name>

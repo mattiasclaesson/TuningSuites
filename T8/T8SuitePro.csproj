@@ -201,8 +201,7 @@
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="BitStream.cs" />
-    <Compile Include="CellHelper.cs" />
-    <Compile Include="CellHelperCollection.cs" />
+    <Compile Include="Classes\DataT8.cs" />
     <Compile Include="ColorHsl.cs" />
     <Compile Include="ColorHsv.cs" />
     <Compile Include="ColorRgb.cs" />
@@ -213,12 +212,6 @@
     <Compile Include="CompareResults.designer.cs">
       <DependentUpon>CompareResults.cs</DependentUpon>
     </Compile>
-    <Compile Include="CompareResultSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CompareResultSelector.designer.cs">
-      <DependentUpon>CompareResultSelector.cs</DependentUpon>
-    </Compile>
     <Compile Include="crc64.cs" />
     <Compile Include="Crypto.cs" />
     <Compile Include="ctrlDisassembler.cs">
@@ -227,21 +220,28 @@
     <Compile Include="ctrlDisassembler.designer.cs">
       <DependentUpon>ctrlDisassembler.cs</DependentUpon>
     </Compile>
-    <Compile Include="ctrlReleaseNotes.cs">
+    <Compile Include="DataControllers\BaseDatacontroller.cs" />
+    <Compile Include="DataControllers\DTCRunTime.cs" />
+    <Compile Include="frmTransferSelectionSymbolsSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTransferSelectionSymbolsSelection.Designer.cs">
+      <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="srec2bin.cs" />
+    <Compile Include="UserControls\GridWithButtons.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ctrlReleaseNotes.designer.cs">
-      <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
+    <Compile Include="UserControls\GridWithButtons.Designer.cs">
+      <DependentUpon>GridWithButtons.cs</DependentUpon>
     </Compile>
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
-    <Compile Include="DTCDescription.cs" />
-    <Compile Include="EngineStatus.cs" />
-    <Compile Include="FindAndReplaceForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="UserControls\DTCUserControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FindAndReplaceForm.designer.cs">
-      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    <Compile Include="UserControls\DTCUserControl.Designer.cs">
+      <DependentUpon>DTCUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="FlashBlock.cs" />
     <Compile Include="FlashBlockCollection.cs" />
@@ -251,26 +251,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFind.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormFindCancel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormGoTo.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmAbout.designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmADCInputConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmADCInputConfig.designer.cs">
-      <DependentUpon>frmADCInputConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="frmAirmassResult.cs">
       <SubType>Form</SubType>
@@ -290,29 +275,11 @@
     <Compile Include="frmBitmaskViewer.Designer.cs">
       <DependentUpon>frmBitmaskViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmChangeNote.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmChangeNote.designer.cs">
-      <DependentUpon>frmChangeNote.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmChecksum.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmChecksum.Designer.cs">
       <DependentUpon>frmChecksum.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmComportSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmComportSettings.Designer.cs">
-      <DependentUpon>frmComportSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmDecodeVIN.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmDecodeVIN.designer.cs">
-      <DependentUpon>frmDecodeVIN.cs</DependentUpon>
     </Compile>
     <Compile Include="frmDefineMyMaps.cs">
       <SubType>Form</SubType>
@@ -326,29 +293,11 @@
     <Compile Include="frmECUInformation.Designer.cs">
       <DependentUpon>frmECUInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmEditRealtimeSymbol.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmEditRealtimeSymbol.designer.cs">
-      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmEditTuningPackage.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmEditTuningPackage.designer.cs">
       <DependentUpon>frmEditTuningPackage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmFaultcodes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmFaultcodes.Designer.cs">
-      <DependentUpon>frmFaultcodes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmFileToExportSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmFileToExportSelection.designer.cs">
-      <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="frmFirmwareInformation.cs">
       <SubType>Form</SubType>
@@ -362,24 +311,6 @@
     <Compile Include="frmFlashBlockBrowser.Designer.cs">
       <DependentUpon>frmFlashBlockBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmImportResults.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmImportResults.designer.cs">
-      <DependentUpon>frmImportResults.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmInfoBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmInfoBox.designer.cs">
-      <DependentUpon>frmInfoBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmLogFilters.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLogFilters.designer.cs">
-      <DependentUpon>frmLogFilters.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmMapHelper.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,12 +322,6 @@
     </Compile>
     <Compile Include="frmMatrixResult.designer.cs">
       <DependentUpon>frmMatrixResult.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmMatrixSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMatrixSelection.designer.cs">
-      <DependentUpon>frmMatrixSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="frmCombiAdapterConfig.cs">
       <SubType>Form</SubType>
@@ -434,12 +359,6 @@
     <Compile Include="frmProgress.designer.cs">
       <DependentUpon>frmProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmProjectLogbook.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmProjectLogbook.designer.cs">
-      <DependentUpon>frmProjectLogbook.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmProjectProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -451,24 +370,6 @@
     </Compile>
     <Compile Include="frmProjectSelection.designer.cs">
       <DependentUpon>frmProjectSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmProjectTransactionPurge.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmProjectTransactionPurge.designer.cs">
-      <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmRebuildFileParameters.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmRebuildFileParameters.designer.cs">
-      <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSearchMaps.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSearchMaps.designer.cs">
-      <DependentUpon>frmSearchMaps.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSettings.cs">
       <SubType>Form</SubType>
@@ -482,36 +383,6 @@
     <Compile Include="frmSplash.designer.cs">
       <DependentUpon>frmSplash.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSymbolSelect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSymbolSelect.designer.cs">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSymbolSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSymbolSelection.designer.cs">
-      <DependentUpon>frmSymbolSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmTransactionLog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTransactionLog.designer.cs">
-      <DependentUpon>frmTransactionLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmTransferSelectionSymbolsSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTransferSelectionSymbolsSelection.designer.cs">
-      <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmTuneBinary.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTuneBinary.designer.cs">
-      <DependentUpon>frmTuneBinary.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmTuningWizard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -524,18 +395,6 @@
     <Compile Include="frmUpdateAvailable.designer.cs">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmVectorlist.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmVectorlist.Designer.cs">
-      <DependentUpon>frmVectorlist.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmWifiSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmWifiSettings.designer.cs">
-      <DependentUpon>frmWifiSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="FunctionCompiler.cs" />
     <Compile Include="HexViewer.cs">
       <SubType>UserControl</SubType>
@@ -543,7 +402,6 @@
     <Compile Include="HexViewer.designer.cs">
       <DependentUpon>HexViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="HighlightGroup.cs" />
     <Compile Include="IdaProIdcFile.cs" />
     <Compile Include="IMapViewer.cs">
       <SubType>UserControl</SubType>
@@ -551,8 +409,6 @@
     <Compile Include="InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LogFilter.cs" />
-    <Compile Include="LogFilterCollection.cs" />
     <Compile Include="LogFilters.cs" />
     <Compile Include="MapViewer.cs">
       <SubType>UserControl</SubType>
@@ -566,44 +422,25 @@
     <Compile Include="MapViewerEx.designer.cs">
       <DependentUpon>MapViewerEx.cs</DependentUpon>
     </Compile>
-    <Compile Include="Measurement.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Measurement.designer.cs">
-      <DependentUpon>Measurement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MNemonicCollection.cs" />
-    <Compile Include="MNemonicHelper.cs" />
-    <Compile Include="msiupdater.cs" />
     <Compile Include="PackageExporter.cs" />
     <Compile Include="PartnumberCollection.cs" />
     <Compile Include="PartNumberConverter.cs" />
-    <Compile Include="ProfColorTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CompareResults.resx">
       <DependentUpon>CompareResults.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CompareResultSelector.resx">
-      <DependentUpon>CompareResultSelector.cs</DependentUpon>
+    <EmbeddedResource Include="frmTransferSelectionSymbolsSelection.resx">
+      <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\GridWithButtons.resx">
+      <DependentUpon>GridWithButtons.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFind.resx">
-      <DependentUpon>FormFind.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFindCancel.resx">
-      <DependentUpon>FormFindCancel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormGoTo.resx">
-      <DependentUpon>FormGoTo.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
@@ -612,9 +449,6 @@
     <EmbeddedResource Include="frmBinCompare.resx">
       <DependentUpon>frmBinCompare.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmFaultcodes.resx">
-      <DependentUpon>frmFaultcodes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFirmwareInformation.resx">
       <DependentUpon>frmFirmwareInformation.cs</DependentUpon>
@@ -628,10 +462,6 @@
       <DependentUpon>frmProgress.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSearchMaps.resx">
-      <DependentUpon>frmSearchMaps.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -640,16 +470,9 @@
       <DependentUpon>frmSplash.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSymbolSelect.resx">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmUpdateAvailable.resx">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmWifiSettings.resx">
-      <DependentUpon>frmWifiSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HexViewer.resx">
       <DependentUpon>HexViewer.cs</DependentUpon>
@@ -693,6 +516,7 @@
     </Content>
     <Content Include="DTC_SaabTRC.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -706,8 +530,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SortableCollectionBase.cs" />
-    <Compile Include="srec2bin.cs" />
     <Compile Include="Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
@@ -716,28 +538,12 @@
       <DependentUpon>SurfaceGraphViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="SymbolAxesTranslator.cs" />
-    <Compile Include="SymbolCollection.cs" />
     <Compile Include="SymbolDictionary.cs" />
     <Compile Include="SymbolFiller.cs" />
     <Compile Include="SymbolTranslator.cs" />
     <Compile Include="T8Header.cs" />
-    <Compile Include="TransactionCollection.cs" />
-    <Compile Include="TransactionEntry.cs" />
     <Compile Include="TrionicFile.cs" />
-    <Compile Include="TrionicProjectLog.cs" />
     <Compile Include="TrionicSymbolDecompressor.cs" />
-    <Compile Include="TrionicTransactionLog.cs" />
-    <Compile Include="TuningReport.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TuningReport.designer.cs">
-      <DependentUpon>TuningReport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VINDecoder.cs" />
-    <Content Include="DTCDescription.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AsmViewer.resx">
@@ -756,18 +562,6 @@
       <DependentUpon>ctrlDisassembler.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ctrlReleaseNotes.resx">
-      <DependentUpon>ctrlReleaseNotes.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FindAndReplaceForm.resx">
-      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmADCInputConfig.resx">
-      <DependentUpon>frmADCInputConfig.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmAirmassResult.resx">
       <DependentUpon>frmAirmassResult.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -776,21 +570,9 @@
       <DependentUpon>frmBitmaskViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmChangeNote.resx">
-      <DependentUpon>frmChangeNote.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmChecksum.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmChecksum.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmComportSettings.resx">
-      <DependentUpon>frmComportSettings.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmDecodeVIN.resx">
-      <DependentUpon>frmDecodeVIN.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.nl.resx">
       <DependentUpon>frmDefineMyMaps.cs</DependentUpon>
@@ -804,40 +586,16 @@
       <DependentUpon>frmECUInformation.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmEditRealtimeSymbol.resx">
-      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmEditTuningPackage.resx">
       <DependentUpon>frmEditTuningPackage.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmFileToExportSelection.resx">
-      <DependentUpon>frmFileToExportSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFlashBlockBrowser.resx">
       <DependentUpon>frmFlashBlockBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmImportResults.resx">
-      <DependentUpon>frmImportResults.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmInfoBox.resx">
-      <DependentUpon>frmInfoBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmLogFilters.resx">
-      <DependentUpon>frmLogFilters.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixResult.resx">
       <DependentUpon>frmMatrixResult.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmMatrixSelection.resx">
-      <DependentUpon>frmMatrixSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmCombiAdapterConfig.resx">
@@ -868,10 +626,6 @@
       <DependentUpon>frmPlotSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmProjectLogbook.resx">
-      <DependentUpon>frmProjectLogbook.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmProjectProperties.resx">
       <DependentUpon>frmProjectProperties.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -880,36 +634,8 @@
       <DependentUpon>frmProjectSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmProjectTransactionPurge.resx">
-      <DependentUpon>frmProjectTransactionPurge.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmRebuildFileParameters.resx">
-      <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSymbolSelection.resx">
-      <DependentUpon>frmSymbolSelection.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmTransactionLog.resx">
-      <DependentUpon>frmTransactionLog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmTransferSelectionSymbolsSelection.resx">
-      <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmTuneBinary.resx">
-      <DependentUpon>frmTuneBinary.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmTuningWizard.resx">
       <DependentUpon>frmTuningWizard.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmVectorlist.resx">
-      <DependentUpon>frmVectorlist.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="IMapViewer.resx">
@@ -918,14 +644,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MapViewerEx.resx">
       <DependentUpon>MapViewerEx.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Measurement.resx">
-      <DependentUpon>Measurement.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TuningReport.resx">
-      <DependentUpon>TuningReport.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="FC0N_C.xml">
@@ -976,6 +694,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonSuite\CommonSuite.csproj">
+      <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
+      <Name>CommonSuite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
       <Name>ICSharpCode.TextEditor</Name>
