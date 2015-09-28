@@ -18021,7 +18021,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         }
 
-        private void SetColorForMeasurement(Measurement measurement, Color backColor, Color foreColor, Color labelColor)
+        private void SetColorForMeasurement(ctrlMeasurement measurement, Color backColor, Color foreColor, Color labelColor)
         {
             measurement.LookAndFeel.SkinName = "";
             measurement.SetDigitColor = foreColor;

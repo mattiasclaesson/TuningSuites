@@ -36,9 +36,9 @@ namespace T7
             get { return _fileName; }
             set { _fileName = value; }
         }
-        FormFind _formFind = new FormFind();
-        FormFindCancel _formFindCancel;
-        FormGoTo _formGoto = new FormGoTo();
+        frmFind _formFind = new frmFind();
+        frmFindCancel _formFindCancel;
+        frmGoTo _formGoto = new frmGoTo();
         byte[] _findBuffer = new byte[0];
         SymbolCollection m_symbolcollection= new SymbolCollection();
 
@@ -316,7 +316,7 @@ namespace T7
             }
 
             // show cancel dialog
-            _formFindCancel = new FormFindCancel();
+            _formFindCancel = new frmFindCancel();
             _formFindCancel.SetHexBox(hexBox1);
             _formFindCancel.Closed += new EventHandler(FormFindCancel_Closed);
             _formFindCancel.Show();
