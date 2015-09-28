@@ -264,7 +264,7 @@ namespace T8SuitePro
                 DoEditAction(ActiveEditor, new ICSharpCode.TextEditor.Actions.Delete());
         }
 
-        FindAndReplaceForm _findForm = new FindAndReplaceForm();
+        frmFindAndReplace _findForm = new frmFindAndReplace();
 
         private void toolStripButton6_Click(object sender, EventArgs e)
         {

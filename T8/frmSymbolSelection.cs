@@ -49,12 +49,12 @@ namespace CommonSuite
             this.Close();
         }
 
-        internal void SelectAllSymbols()
+        public void SelectAllSymbols()
         {
             gridView1.SelectAll();
         }
 
-        internal SymbolCollection GetSelectedSymbolCollection()
+        public SymbolCollection GetSelectedSymbolCollection()
         {
             // build a new collection based on the selected rows
             SymbolCollection scSelected = new SymbolCollection();

@@ -64,7 +64,7 @@ namespace CommonSuite
             DialogResult = DialogResult.Cancel;
             Close();
         }
-        internal void SetXSelection(string xaxis)
+        public void SetXSelection(string xaxis)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace CommonSuite
             return false;
         }
 
-        internal void SetYSelection(string yaxis)
+        public void SetYSelection(string yaxis)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace CommonSuite
             }
         }
 
-        internal void SetZSelection(string zaxis)
+        public void SetZSelection(string zaxis)
         {
             try
             {

@@ -91,13 +91,13 @@ using System.Threading;
 using RealtimeGraph;
 using DevExpress.Skins;
 using T7;
-using CommonSuite;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
 using WidebandSupport;
 using TrionicCANLib;
 using TrionicCANLib.API;
 using NLog;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -11391,15 +11391,17 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Empty;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.Empty;
                 ViewRealtime.OptionsView.ShowColumnHeaders = true;
-                ViewRealtime.OptionsView.ShowHorzLines = true;
-                ViewRealtime.OptionsView.ShowVertLines = true;
+                //ViewRealtime.OptionsView.ShowHorzLines = true;
+                ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.True;
+                //ViewRealtime.OptionsView.ShowVertLines = true;
+                ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.True;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
 
         }
 
 
-        private void SetColorForMeasurement(Measurement measurement, Color backColor, Color foreColor, Color labelColor)
+        private void SetColorForMeasurement(ctrlMeasurement measurement, Color backColor, Color foreColor, Color labelColor)
         {
             measurement.LookAndFeel.SkinName = "";
             measurement.SetDigitColor = foreColor;
@@ -16032,7 +16034,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnReadFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // Connect at accesslevel01, need to close connection if already open
+             // Connect at accesslevel01, need to close connection if already open
             if (m_connectedToECU)
             {
                 t8can.Cleanup();
