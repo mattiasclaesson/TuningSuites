@@ -18826,8 +18826,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 if (m_appSettings.DisableClosedLoopOnStartAutotune)
                 {
                     SetLambdaControl(true);
-                    //SetE85Cal(true);
-                    //SetFCutCal(true);
+                    SetE85Cal(true);
+                    SetFCutCal(true);
                 }
 
                 SetStatusText("Autotune stopped.");
@@ -18935,8 +18935,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     {
                         // LambdaCal.ST_Enable?
                         SetLambdaControl(false);
-                        //SetE85Cal(false);
-                        //SetFCutCal(false);
+                        SetE85Cal(false);
+                        SetFCutCal(false);
                     }
                     // what's next?
                     // TODO: read the current fuel map into memory
@@ -18974,8 +18974,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         if (m_appSettings.DisableClosedLoopOnStartAutotune)
                         {
                             SetLambdaControl(true);
-                            //SetE85Cal(true);
-                            //SetFCutCal(true);
+                            SetE85Cal(true);
+                            SetFCutCal(true);
                         }
                     }
                 }
