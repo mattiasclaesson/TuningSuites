@@ -183,6 +183,10 @@
     <Compile Include="VINDecoderTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonSuite\CommonSuite.csproj">
+      <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
+      <Name>CommonSuite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\T7.csproj">
       <Project>{3FD286B8-0E90-44EF-861E-490D16A8ABD2}</Project>
       <Name>T7</Name>
