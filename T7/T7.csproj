@@ -179,7 +179,9 @@
     <Compile Include="AFRMeasurement.cs" />
     <Compile Include="AFRMeasurementCollection.cs" />
     <Compile Include="AppSettings.cs" />
-    <Compile Include="AsmViewer.cs" />
+    <Compile Include="AsmViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="AsmViewer.designer.cs">
       <DependentUpon>AsmViewer.cs</DependentUpon>
     </Compile>
@@ -191,10 +193,10 @@
     </Compile>
     <Compile Include="BitStream.cs" />
     <Compile Include="ChecksumHandler.cs" />
-    <Compile Include="ColorHsl.cs" />
-    <Compile Include="ColorHsv.cs" />
-    <Compile Include="ColorRgb.cs" />
-    <Compile Include="ColorSchema.cs" />
+    <Compile Include="Plot3D\ColorHsl.cs" />
+    <Compile Include="Plot3D\ColorHsv.cs" />
+    <Compile Include="Plot3D\ColorRgb.cs" />
+    <Compile Include="Plot3D\ColorSchema.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -243,7 +245,9 @@
     <Compile Include="frmEast.Designer.cs">
       <DependentUpon>frmEast.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmEditRealtimeSymbol.cs" />
+    <Compile Include="frmEditRealtimeSymbol.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmEditRealtimeSymbol.designer.cs">
       <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
     </Compile>
@@ -289,7 +293,9 @@
     <Compile Include="frmCombiAdapterConfig.Designer.cs">
       <DependentUpon>frmCombiAdapterConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMatrixSelection.cs" />
+    <Compile Include="frmMatrixSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMatrixSelection.designer.cs">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
     </Compile>
@@ -342,12 +348,6 @@
     </Compile>
     <Compile Include="frmChecksumIncorrect.designer.cs">
       <DependentUpon>frmChecksumIncorrect.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmFaultcodes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmFaultcodes.Designer.cs">
-      <DependentUpon>frmFaultcodes.cs</DependentUpon>
     </Compile>
     <Compile Include="frmFirmwareInformation.cs">
       <SubType>Form</SubType>
@@ -415,11 +415,15 @@
     <Compile Include="frmSRAMSymbolHexView.Designer.cs">
       <DependentUpon>frmSRAMSymbolHexView.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSymbolSelect.cs" />
+    <Compile Include="frmSymbolSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmSymbolSelect.designer.cs">
       <DependentUpon>frmSymbolSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSymbolSelection.cs" />
+    <Compile Include="frmSymbolSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmSymbolSelection.designer.cs">
       <DependentUpon>frmSymbolSelection.cs</DependentUpon>
     </Compile>
@@ -455,7 +459,7 @@
     </Compile>
     <Compile Include="FuelMap.cs" />
     <Compile Include="FuelMapInformation.cs" />
-    <Compile Include="FunctionCompiler.cs" />
+    <Compile Include="Plot3D\FunctionCompiler.cs" />
     <Compile Include="HexViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -584,7 +588,7 @@
       <DependentUpon>SRAMCompareResults.cs</DependentUpon>
     </Compile>
     <Compile Include="srec2bin.cs" />
-    <Compile Include="Surface3DRenderer.cs" />
+    <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -702,10 +706,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmChecksumIncorrect.resx">
       <DependentUpon>frmChecksumIncorrect.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmFaultcodes.resx">
-      <DependentUpon>frmFaultcodes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartNumberList.nl.resx">
