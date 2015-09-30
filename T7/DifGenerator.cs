@@ -705,6 +705,10 @@ namespace T7
             string retval = "1000";
             switch (symbolname)
             {
+                case "ActualIn.U_Battery": // 
+                    retval = "16";
+                    break;
+
                 case "DisplProt.LambdaScanner": // AFR through wideband?
                 case "Wideband":
                     retval = "22";
@@ -715,10 +719,14 @@ namespace T7
                 case "In.n_Engine":
                 case "RPM":
                 case "ActualIn.n_Engine":
+                case "Rpm":
                     retval = "7000";
                     break;
                 case "TORQUE":
                 case "Out.M_Engine":
+                case "Out.M_EngTrqAct":
+                case "FFTrqProt.Trq_MaxEngine":
+                case "FFTrqProt.Trq_MaxEngineBefComp":
                     retval = "600";
                     break;
                 case "POWER":
@@ -736,6 +744,7 @@ namespace T7
                 case "Reg_kon_apc":
                 case "Out.PWM_BoostCntrl":
                 case "Out.X_AccPedal":
+                case "Out.X_AccPos":
                     retval = "100";
                     break;
                 case "REGKONMAT":
@@ -755,6 +764,7 @@ namespace T7
                     retval = "120";
                     break;
                 case "IgnProt.fi_Offset":
+                case "IgnMastProt.fi_Offset":
                     retval = "30";
                     break;
                 case "Kyl_temp":
@@ -788,9 +798,6 @@ namespace T7
                     break;
                 case "Knock_map_lim":
                     retval = "120";
-                    break;
-                case "Rpm":
-                    retval = "7000";
                     break;
                 case "Regl_tryck":
                     retval = "2.0";
@@ -831,6 +838,7 @@ namespace T7
                     break;
                 case "m_Request":
                 case "MAF.m_AirInlet":
+                case "AirMassMast.m_Request":
                     retval = "2000";
                     break;
                 default:
@@ -881,6 +889,10 @@ namespace T7
             string retval = "0";
             switch (symbolname)
             {
+                case "ActualIn.U_Battery": // 
+                    retval = "6";
+                    break;
+
                 case "DisplProt.LambdaScanner": // AFR through wideband?
                 case "Wideband":
                     retval = "7";
@@ -892,6 +904,7 @@ namespace T7
                 case "In.n_Engine":
                 case "RPM":
                 case "ActualIn.n_Engine":
+                case "Rpm":
                     retval = "0";
                     break;
                 case "TORQUE":
@@ -908,6 +921,7 @@ namespace T7
                 case "Reg_kon_apc":
                 case "Out.PWM_BoostCntrl":
                 case "Out.X_AccPedal":
+                case "Out.X_AccPos":
                     retval = "0";
                     break;
                 case "IGNADV":
@@ -960,9 +974,6 @@ namespace T7
                 case "Knock_map_lim":
                     retval = "0";
                     break;
-                case "Rpm":
-                    retval = "0";
-                    break;
                 case "Regl_tryck":
                     retval = "-1";
                     break;
@@ -998,6 +1009,7 @@ namespace T7
                     retval = "0";
                     break;
                 case "IgnProt.fi_Offset":
+                case "IgnMastProt.fi_Offset":
                     retval = "-20";
                     break;
                 case "U_lambda_cat":
@@ -1005,10 +1017,14 @@ namespace T7
                     break;
                 case "m_Request":
                 case "MAF.m_AirInlet":
+                case "AirMassMast.m_Request":
                     retval = "0";
                     break;
                 case "Out.M_Engine":
                 case "ECMStat.P_Engine":
+                case "Out.M_EngTrqAct":
+                case "FFTrqProt.Trq_MaxEngine":
+                case "FFTrqProt.Trq_MaxEngineBefComp":
                     retval = "-50";
                     break;
                 default:
@@ -1055,6 +1071,10 @@ namespace T7
             string retval = symbolname;
             switch (symbolname)
             {
+                case "ActualIn.U_Battery": // 
+                    retval = "Volt";
+                    break;
+
                 case "DisplProt.LambdaScanner": // AFR through wideband?
                 case "Wideband":
                     retval = "WBLambda";
@@ -1066,10 +1086,14 @@ namespace T7
                 case "In.n_Engine":
                 case "RPM":
                 case "ActualIn.n_Engine":
+                case "Rpm":
                     retval = "rpm";
                     break;
                 case "TORQUE":
                 case "Out.M_Engine":
+                case "Out.M_EngTrqAct":
+                case "FFTrqProt.Trq_MaxEngine":
+                case "FFTrqProt.Trq_MaxEngineBefComp":
                     retval = "Nm";
                     break;
                 case "POWER":
@@ -1087,6 +1111,7 @@ namespace T7
                 case "Reg_kon_apc":
                 case "Out.PWM_BoostCntrl":
                 case "Out.X_AccPedal":
+                case "Out.X_AccPos":
                     retval = "%";
                     break;
                 case "IMPORTANTLINE":
@@ -1094,6 +1119,7 @@ namespace T7
                     break;
                 case "IGNADV":
                 case "IgnProt.fi_Offset":
+                case "IgnMastProt.fi_Offset":
                     retval = "degrees";
                     break;
                 case "REGKONMAT":
@@ -1141,9 +1167,6 @@ namespace T7
                 case "Knock_map_lim":
                     retval = "Knock limit";
                     break;
-                case "Rpm":
-                    retval = "rpm";
-                    break;
                 case "Regl_tryck":
                     retval = "bar";
                     break;
@@ -1177,6 +1200,7 @@ namespace T7
                     break;
                 case "m_Request":
                 case "MAF.m_AirInlet":
+                case "AirMassMast.m_Request":
                     retval = "mg/c";
                     break;
                 default:

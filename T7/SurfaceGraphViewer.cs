@@ -15,10 +15,9 @@ namespace T7
 {
     public partial class SurfaceGraphViewer : DevExpress.XtraEditors.XtraUserControl
     {
-        private Logger logger = LogManager.GetCurrentClassLogger();
-
         [DllImport("user32.dll", EntryPoint = "CreateIconIndirect")]
         private static extern IntPtr CreateIconIndirect(IntPtr iconInfo);
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private struct IconInfo
         {

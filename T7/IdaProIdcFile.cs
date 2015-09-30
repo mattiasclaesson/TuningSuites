@@ -100,11 +100,7 @@ namespace T7
 
                 foreach (SymbolHelper sh in symbols)
                 {
-                    string name = sh.Varname;
-                    if (sh.Userdescription != "" && sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                    {
-                        name = sh.Userdescription;
-                    }
+                    string name = sh.SmartVarname;
                     if (sh.Flash_start_address > 0x80000)
                     {
                         sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", name.Replace(" ", "_"), sh.Start_address.ToString("X"), sh.Length.ToString("X")));
