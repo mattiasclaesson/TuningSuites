@@ -202,10 +202,6 @@
     </Compile>
     <Compile Include="BitStream.cs" />
     <Compile Include="Classes\DataT8.cs" />
-    <Compile Include="ColorHsl.cs" />
-    <Compile Include="ColorHsv.cs" />
-    <Compile Include="ColorRgb.cs" />
-    <Compile Include="ColorSchema.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -258,6 +254,12 @@
     <Compile Include="frmTransferSelectionSymbolsSelection.Designer.cs">
       <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Plot3D\ColorHsl.cs" />
+    <Compile Include="Plot3D\ColorHsv.cs" />
+    <Compile Include="Plot3D\ColorRgb.cs" />
+    <Compile Include="Plot3D\ColorSchema.cs" />
+    <Compile Include="Plot3D\FunctionCompiler.cs" />
+    <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="srec2bin.cs" />
     <Compile Include="SymbolCollection.cs" />
     <Compile Include="UserControls\GridWithButtons.cs">
@@ -426,7 +428,6 @@
     <Compile Include="frmUpdateAvailable.designer.cs">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
     </Compile>
-    <Compile Include="FunctionCompiler.cs" />
     <Compile Include="HexViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -578,7 +579,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -742,7 +742,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CommonSuite\CommonSuite.csproj">
+    <ProjectReference Include="..\CommonSuite\CommonSuite.csproj">
       <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
       <Name>CommonSuite</Name>
     </ProjectReference>
