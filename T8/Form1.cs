@@ -90,7 +90,6 @@ using DevExpress.XtraBars.Docking;
 using System.Threading;
 using RealtimeGraph;
 using DevExpress.Skins;
-using T7;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
 using WidebandSupport;
