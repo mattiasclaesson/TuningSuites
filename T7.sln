@@ -29,7 +29,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Suite", "SetupT7Suit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSTaskDialog", "PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj", "{0253E98B-6374-48AA-8740-89BC2939FF77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonSuite", "..\CommonSuite\CommonSuite.csproj", "{61FE31C4-B244-4C13-BAF6-F66857F0B88E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonSuite", "CommonSuite\CommonSuite.csproj", "{61FE31C4-B244-4C13-BAF6-F66857F0B88E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
