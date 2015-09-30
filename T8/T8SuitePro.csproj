@@ -202,10 +202,10 @@
     </Compile>
     <Compile Include="BitStream.cs" />
     <Compile Include="Classes\DataT8.cs" />
-    <Compile Include="ColorHsl.cs" />
-    <Compile Include="ColorHsv.cs" />
-    <Compile Include="ColorRgb.cs" />
-    <Compile Include="ColorSchema.cs" />
+    <Compile Include="Plot3D\ColorHsl.cs" />
+    <Compile Include="Plot3D\ColorHsv.cs" />
+    <Compile Include="Plot3D\ColorRgb.cs" />
+    <Compile Include="Plot3D\ColorSchema.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -426,7 +426,7 @@
     <Compile Include="frmUpdateAvailable.designer.cs">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
     </Compile>
-    <Compile Include="FunctionCompiler.cs" />
+    <Compile Include="Plot3D\FunctionCompiler.cs" />
     <Compile Include="HexViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -486,6 +486,7 @@
       <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="UserControls\GridWithButtons.resx">
       <DependentUpon>GridWithButtons.cs</DependentUpon>
     </EmbeddedResource>
@@ -533,7 +534,6 @@
       <DependentUpon>MapViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -578,7 +578,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Surface3DRenderer.cs" />
+    <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
