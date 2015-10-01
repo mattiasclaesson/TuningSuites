@@ -92,6 +92,8 @@ namespace CommonSuite
 
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             string[] dtc_files = Directory.GetFiles(path+"\\", "DTC_*.xml");
+            // sort file list on alfabetic order
+            Array.Sort(dtc_files);
 
             mDTCDescriptionDict = new Dictionary<string, DTCDescription>();
             foreach (string file in dtc_files)

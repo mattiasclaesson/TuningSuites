@@ -42,7 +42,9 @@ namespace CommonSuite
         public DTCDescription(XmlNode aDTCDescription)
         {
             XmlNode code = aDTCDescription.SelectNodes("code")[0];
-            mCode = code.InnerText.Trim();
+            String str_code = code.InnerText.Trim();
+            bool wis_code = (str_code.Length == 7);
+            mCode = wis_code ? str_code.Substring(0, 5) : str_code;
             XmlNode desc = aDTCDescription.SelectNodes("description")[0];
             mDescription = desc.InnerText.Trim();
             XmlNode tips = aDTCDescription.SelectNodes("tips")[0];
