@@ -15,7 +15,6 @@ namespace T7
     public partial class frmPlotSelection : DevExpress.XtraEditors.XtraForm
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-
         private DateTime _startdate;
 
         public DateTime Startdate

@@ -191,7 +191,6 @@
     <Compile Include="AxisBrowser.designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="BitStream.cs" />
     <Compile Include="ChecksumHandler.cs" />
     <Compile Include="Plot3D\ColorHsl.cs" />
     <Compile Include="Plot3D\ColorHsv.cs" />
@@ -607,7 +606,6 @@
     <Compile Include="T7SidEdit.cs" />
     <Compile Include="T7SymbolIntel.cs" />
     <Compile Include="Trionic7File.cs" />
-    <Compile Include="TrionicSymbolDecompressor.cs" />
     <Compile Include="XtraForm1.cs">
       <SubType>Form</SubType>
     </Compile>
