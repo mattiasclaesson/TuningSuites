@@ -11,7 +11,8 @@ namespace T8SuitePro
     {
         protected internal static void create(string filename, SymbolCollection symbols)
         {
-            string outputfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + "-autogen.idc");
+            string outputfile = Path.GetDirectoryName(filename);
+            outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(filename) + "-autogen.idc");
             using (StreamWriter sw = new StreamWriter(outputfile))
             {
                 sw.WriteLine("//                                           ");

@@ -200,8 +200,11 @@
     <Compile Include="AxisBrowser.Designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="BitStream.cs" />
     <Compile Include="Classes\DataT8.cs" />
+    <Compile Include="Plot3D\ColorHsl.cs" />
+    <Compile Include="Plot3D\ColorHsv.cs" />
+    <Compile Include="Plot3D\ColorRgb.cs" />
+    <Compile Include="Plot3D\ColorSchema.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -428,6 +431,7 @@
     <Compile Include="frmUpdateAvailable.designer.cs">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Plot3D\FunctionCompiler.cs" />
     <Compile Include="HexViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -534,7 +538,6 @@
       <DependentUpon>MapViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -579,6 +582,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -591,7 +595,6 @@
     <Compile Include="SymbolTranslator.cs" />
     <Compile Include="T8Header.cs" />
     <Compile Include="TrionicFile.cs" />
-    <Compile Include="TrionicSymbolDecompressor.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AsmViewer.resx">
@@ -600,10 +603,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AxisBrowser.resx">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BitStream.resx">
-      <DependentUpon>BitStream.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ctrlDisassembler.resx">

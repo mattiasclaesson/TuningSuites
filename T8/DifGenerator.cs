@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using CommonSuite;
 using NLog;
@@ -1032,7 +1031,7 @@ namespace T8SuitePro
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
                         double temp1 = m_appSettings.Adc1lowvalue / 1000;
-                        retval = temp1.ToString().Replace(",",".");
+                        retval = temp1.ToString().Replace(",", ".");
                     }
                     else if (symbolname == m_appSettings.Adc2channelname)
                     {

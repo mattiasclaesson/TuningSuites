@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 
-
 namespace CommonSuite
 {
     public class SymbolCollection : SortableCollectionBase, ICustomTypeDescriptor

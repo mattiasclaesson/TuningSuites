@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmProgress : DevExpress.XtraEditors.XtraForm
     {
