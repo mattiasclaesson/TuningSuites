@@ -201,10 +201,6 @@
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\DataT8.cs" />
-    <Compile Include="Plot3D\ColorHsl.cs" />
-    <Compile Include="Plot3D\ColorHsv.cs" />
-    <Compile Include="Plot3D\ColorRgb.cs" />
-    <Compile Include="Plot3D\ColorSchema.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -264,7 +260,9 @@
     <Compile Include="Plot3D\FunctionCompiler.cs" />
     <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="srec2bin.cs" />
-    <Compile Include="SymbolCollection.cs" />
+    <Compile Include="SymbolCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UserControls\GridWithButtons.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -431,7 +429,6 @@
     <Compile Include="frmUpdateAvailable.designer.cs">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Plot3D\FunctionCompiler.cs" />
     <Compile Include="HexViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -582,7 +579,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
