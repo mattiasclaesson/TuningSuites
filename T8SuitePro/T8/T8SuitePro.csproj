@@ -737,7 +737,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonSuite\CommonSuite.csproj">
+    <ProjectReference Include="..\..\CommonSuite\CommonSuite.csproj">
       <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
       <Name>CommonSuite</Name>
     </ProjectReference>
