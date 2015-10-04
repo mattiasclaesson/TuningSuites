@@ -89,6 +89,7 @@ namespace CommonSuite
             this.cbELM327KLine.TabIndex = 6;
             this.cbELM327KLine.Text = "ELM327 K-Line";
             this.cbELM327KLine.UseVisualStyleBackColor = true;
+            this.cbELM327KLine.Visible = false;
             // 
             // frmComportSettings
             // 
