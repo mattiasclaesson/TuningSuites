@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "T5SuiteII", "T5SuiteII\T5SuiteII.vdproj", "{7CC4398C-8B62-4508-B892-99FE47D68486}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AquaGauge", "AquaGauge\AquaGauge.csproj", "{0E5542E0-FC5D-4F67-950D-9F28C5D1225A}"
