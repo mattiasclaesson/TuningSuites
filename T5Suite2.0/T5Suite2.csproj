@@ -561,7 +561,6 @@
       <DependentUpon>frmVectorlist.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -621,6 +620,9 @@
     <Content Include="089555-antique-glowing-copper-orb-icon-signs-fan.ico" />
     <Content Include="test.ico" />
     <Content Include="test3.ico" />
+    <Content Include="usb_bdm.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
