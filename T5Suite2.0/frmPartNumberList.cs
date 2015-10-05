@@ -21,6 +21,7 @@ namespace T5Suite2
             get { return m_selectedpartnumber; }
             set { m_selectedpartnumber = value; }
         }
+        Trionic5File trionic5file = new Trionic5File();
 
         public frmPartNumberList()
         {
@@ -58,6 +59,8 @@ namespace T5Suite2
                     string tuner = "";
                     string stage = "";
                     string additionalinfo = "";
+                    string softwareid = "";
+
                     if (binfilename.Contains("-"))
                     {
                         char[] sep = new char[1];
@@ -68,6 +71,13 @@ namespace T5Suite2
                             // assume partnumber
                             partnumber = (string)binfilename;
                             partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                        }
+                        if (values.Length == 2)
+                        {
+                            // assume partnumber-softwareid
+                            partnumber = (string)values.GetValue(0);
+                            softwareid = (string)values.GetValue(1);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);                   
                         }
                         else if (values.Length == 3)
                         {
@@ -111,6 +121,12 @@ namespace T5Suite2
                     {
                         // assume partnumber
                         partnumber = (string)binfilename;
+                        ///////////////// temporary conversion code
+                        softwareid = (string)trionic5file.GetSoftwareVersion(binfile);
+                        string outputfile = Path.GetDirectoryName(binfile);
+                        outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(binfile) + "-" + softwareid + ".BIN");
+                        File.Move(binfile, outputfile);
+                        ///////////////// end temporary conversion code
                         partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
                     }
                    // backgroundWorker1.ReportProgress(0);
