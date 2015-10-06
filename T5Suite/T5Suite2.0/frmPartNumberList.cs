@@ -13,7 +13,7 @@ namespace T5Suite2
 {
     public partial class frmPartNumberList : DevExpress.XtraEditors.XtraForm
     {
-        
+
         private string m_selectedpartnumber = "";
         private DataTable partnumbers = new DataTable();
         public string Selectedpartnumber
@@ -34,6 +34,7 @@ namespace T5Suite2
             partnumbers.Columns.Add("STAGE");
             partnumbers.Columns.Add("INFO");
             partnumbers.Columns.Add("SPEED");
+            partnumbers.Columns.Add("SOFTWAREVERSION");
             //partnumbers.Columns.Add("TYPE");
             //backgroundWorker1.RunWorkerAsync();
         }
@@ -42,7 +43,7 @@ namespace T5Suite2
         {
             if (Directory.Exists(Application.StartupPath + "\\Binaries"))
             {
-                
+
                 string[] binfiles = Directory.GetFiles(Application.StartupPath + "\\Binaries", "*.BIN");
                 foreach (string binfile in binfiles)
                 {
@@ -70,21 +71,21 @@ namespace T5Suite2
                         {
                             // assume partnumber
                             partnumber = (string)binfilename;
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         if (values.Length == 2)
                         {
                             // assume partnumber-softwareid
                             partnumber = (string)values.GetValue(0);
                             softwareid = (string)values.GetValue(1);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);                   
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length == 3)
                         {
                             cartype = (string)values.GetValue(0);
                             enginetype = (string)values.GetValue(1);
                             partnumber = (string)values.GetValue(2);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length == 4)
                         {
@@ -92,7 +93,7 @@ namespace T5Suite2
                             enginetype = (string)values.GetValue(1);
                             partnumber = (string)values.GetValue(2);
                             tuner = (string)values.GetValue(3);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length == 5)
                         {
@@ -101,7 +102,7 @@ namespace T5Suite2
                             partnumber = (string)values.GetValue(2);
                             tuner = (string)values.GetValue(3);
                             stage = (string)values.GetValue(4);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length > 5)
                         {
@@ -114,7 +115,7 @@ namespace T5Suite2
                             {
                                 additionalinfo += (string)values.GetValue(tel) + " ";
                             }
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                     }
                     else
@@ -127,13 +128,13 @@ namespace T5Suite2
                         outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(binfile) + "-" + softwareid + ".BIN");
                         File.Move(binfile, outputfile);
                         ///////////////// end temporary conversion code
-                        partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                        partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                     }
-                   // backgroundWorker1.ReportProgress(0);
+                    // backgroundWorker1.ReportProgress(0);
                     Application.DoEvents();
                 }
             }
-            
+
         }
 
         private void frmPartNumberList_Load(object sender, EventArgs e)
@@ -174,7 +175,7 @@ namespace T5Suite2
         private void gridView1_DoubleClick(object sender, EventArgs e)
         {
             int[] rows = gridView1.GetSelectedRows();
-            if(rows.Length > 0)
+            if (rows.Length > 0)
             {
                 m_selectedpartnumber = (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "Partnumber");
                 if (m_selectedpartnumber != null)
@@ -215,7 +216,8 @@ namespace T5Suite2
             }
             return retval;
         }
-        private int CheckInAvailableLibrary(string partnumber)
+
+        private int CheckPartnumberAvailableInLibrary(string partnumber)
         {
             int retval = 0;
             foreach (DataRow dr in partnumbers.Rows)
@@ -223,6 +225,27 @@ namespace T5Suite2
                 if (dr["PARTNUMBER"] != DBNull.Value)
                 {
                     if (dr["PARTNUMBER"].ToString() == partnumber)
+                    {
+                        retval = 1;
+                        if (dr["SPEED"].ToString() == "20")
+                        {
+                            retval = 2;
+                        }
+                        break;
+                    }
+                }
+            }
+            return retval;
+        }
+
+        private int CheckSoftwareVersionAvailableInLibrary(string software)
+        {
+            int retval = 0;
+            foreach (DataRow dr in partnumbers.Rows)
+            {
+                if (dr["SOFTWAREVERSION"] != DBNull.Value)
+                {
+                    if (dr["SOFTWAREVERSION"].ToString() == software)
                     {
                         retval = 1;
                         if (dr["SPEED"].ToString() == "20")
@@ -244,7 +267,7 @@ namespace T5Suite2
                 {
                     if (e.CellValue != DBNull.Value)
                     {
-                        int type = CheckInAvailableLibrary(e.CellValue.ToString());
+                        int type = CheckPartnumberAvailableInLibrary(e.CellValue.ToString());
                         if (type == 1)
                         {
                             e.Graphics.FillRectangle(Brushes.YellowGreen, e.Bounds);
@@ -287,7 +310,7 @@ namespace T5Suite2
                 byte data;
                 int i;
                 i = 0;
-                while (a_fileStream.Position < fi.Length -1)
+                while (a_fileStream.Position < fi.Length - 1)
                 {
                     data = (byte)a_fileStream.ReadByte();
                     if (data == sequence[i])
@@ -310,7 +333,7 @@ namespace T5Suite2
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            
+
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
