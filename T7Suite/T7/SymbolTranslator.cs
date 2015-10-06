@@ -160,6 +160,16 @@ namespace T7
                         //category = XDFCategories.BFuelCal;
                         //subcategory = XDFSubCategory.Undocumented;
                         break;
+                    case "BFuelCal2.StartMap":
+                        description = helptext = "Kaart voor vermenigvuldigings brandstof factor afhankelijk van de belasting en toerental van de motor. Deze kaart wordt gebruikt wanneer de motor start temp is binnen de limieten en de lambda closed loop controle nog niet begonnen. Gebruikt om de verrijking van hoge belasting wanneer de motor koud is, ter vermindering van zwarte rook. Resolutie is 0,01 (1%). ";
+                        //category = XDFCategories.BFuelCal;
+                        //subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.Map":
+                        description = helptext = "Kaart voor vermenigvuldigings brandstof factor afhankelijk van de belasting en toerental van de motor. Deze kaart wordt gebruikt als compensatie voor volymetric efficiëntie en lambda verrijking op hogere lasten. Resolutie is 0,01 (1%). ";
+                        //category = XDFCategories.BFuelCal;
+                        //subcategory = XDFSubCategory.Undocumented;
+                        break;
                     case "BoostCal.RegMap":
                         description = helptext = "Main constante matrix. Resolutie is 0,1%. ";
                         //category = XDFCategories.BoostCal;
@@ -25181,6 +25191,51 @@ namespace T7
                         subcategory = XDFSubCategory.Undocumented;
                         break;
                     case "BFuelCal.rampFac":
+                        description = helptext = "Every combustion the weight between the StartMap and ordinary Map is changed a number of percent decided by the rampFac. The weighting stops when the weight is 100% to the ordinary map.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.crankFuelDelay":
+                        description = helptext = "Delay to keep crankfuel after engine started is set.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.AirXSP":
+                        description = helptext = "Airmass support points for fuel map. Resolution is 1 mg/c.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.RpmYSP":
+                        description = helptext = "Engine speed support points for fuel map. Resolution is 1 rpm.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.Map":
+                        description = helptext = "Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.StartMap":
+                        description = helptext = "Map for multiplicative fuel factor depending on load and engine speed. This map is used when engine start temp is within limits and the lambda closed loop control has not yet started. Used to reduce enrichment on high loads when the engine is cold, to reduce black smoke. Resolution is 0.01 (1%).";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.StartMapActive":
+                        description = helptext = "Activate the startmap to reduce black smoke.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.T_EngStartLowLim":
+                        description = helptext = "Engine start temp above this limit will activate the StartMap to reduce black smoke.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.T_EngStartHighLim":
+                        description = helptext = "Engine start temp below this limit will activate the StartMap to reduce black smoke.";
+                        category = XDFCategories.Undocumented;
+                        subcategory = XDFSubCategory.Undocumented;
+                        break;
+                    case "BFuelCal2.rampFac":
                         description = helptext = "Every combustion the weight between the StartMap and ordinary Map is changed a number of percent decided by the rampFac. The weighting stops when the weight is 100% to the ordinary map.";
                         category = XDFCategories.Undocumented;
                         subcategory = XDFSubCategory.Undocumented;

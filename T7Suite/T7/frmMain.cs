@@ -7210,6 +7210,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             else if (symbolname == "BFuelCal.Map") columns = 18;
             else if (symbolname == "BFuelCal.StartMap") columns = 18;
             else if (symbolname == "BFuelCal.E85Map") columns = 18;
+            else if (symbolname == "BFuelCal2.Map") columns = 18;
+            else if (symbolname == "BFuelCal2.StartMap") columns = 18;
             //else if (symbolname == "TorqueCal.M_IgnInflTorqMap") columns = 18;
             else if (symbolname == "TCompCal.EnrFacMap") columns = 8;
             else if (symbolname == "TCompCal.EnrFacE85Map") columns = 8;
@@ -7401,6 +7403,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
             else if (symbolname == "BFuelCal.Map") retval = false;
             else if (symbolname == "BFuelCal.StartMap") retval = false;
             else if (symbolname == "BFuelCal.E85Map") retval = false;
+            else if (symbolname == "BFuelCal2.Map") retval = false;
+            else if (symbolname == "BFuelCal2.StartMap") retval = false;
             else if (symbolname == "TorqueCal.M_IgnInflTorqMap") retval = false;
             else if (symbolname == "TCompCal.EnrFacMap") retval = false;
             else if (symbolname == "TCompCal.EnrFacAutMap") retval = false;
@@ -19481,7 +19485,13 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     // B308E
                     if (swVersion.Substring(8, 3) == ".CB")
                     {
-                      
+                        barButtonItem2.Visibility = BarItemVisibility.Always;
+                        barButtonItem3.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem2.Visibility = BarItemVisibility.Never;
+                        barButtonItem3.Visibility = BarItemVisibility.Never;
                     }
                     
                     if (IsSymbolInBinary("BoostCal.RegMap"))
@@ -19523,6 +19533,16 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                 }
             }
+        }
+
+        private void barButtonItem2_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("BFuelCal2.Map");
+        }
+
+        private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("BFuelCal2.StartMap");
         }
     }
 }
