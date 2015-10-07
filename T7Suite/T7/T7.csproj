@@ -844,7 +844,7 @@
       <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
       <Name>CommonSuite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AquaGauge\AquaGauge.csproj">
+    <ProjectReference Include="..\..\AquaGauge\AquaGauge.csproj">
       <Project>{0E5542E0-FC5D-4F67-950D-9F28C5D1225A}</Project>
       <Name>AquaGauge</Name>
     </ProjectReference>
@@ -860,7 +860,7 @@
       <Project>{B4218BC9-9736-42B9-BC99-7903FDBEBA28}</Project>
       <Name>LBIndustrialCtrls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProCharts\ProCharts.csproj">
+    <ProjectReference Include="..\..\ProCharts\ProCharts.csproj">
       <Project>{0BB66EC6-FA22-4431-9046-DFC15628ACC6}</Project>
       <Name>ProCharts</Name>
     </ProjectReference>
@@ -868,7 +868,7 @@
       <Project>{A53A3F2C-5553-405D-BAF0-DE5C779D3E7B}</Project>
       <Name>ProGauges</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj">
+    <ProjectReference Include="..\..\PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj">
       <Project>{0253E98B-6374-48AA-8740-89BC2939FF77}</Project>
       <Name>PSTaskDialog</Name>
     </ProjectReference>

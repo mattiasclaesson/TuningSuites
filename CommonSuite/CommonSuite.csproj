@@ -318,7 +318,7 @@
     <Folder Include="Libs\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\T8SuitePro\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
+    <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
       <Name>ICSharpCode.TextEditor</Name>
     </ProjectReference>
