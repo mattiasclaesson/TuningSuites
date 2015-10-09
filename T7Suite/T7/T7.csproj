@@ -848,7 +848,7 @@
       <Project>{0E5542E0-FC5D-4F67-950D-9F28C5D1225A}</Project>
       <Name>AquaGauge</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
+    <ProjectReference Include="..\..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
       <Name>ICSharpCode.TextEditor</Name>
     </ProjectReference>
