@@ -1,0 +1,5957 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly>
+  <name>canlibCLSNET</name>
+</assembly>
+<members>
+<member name = "T:canlibCLSNET.Canlib">
+</member>
+<member name="M:canlibCLSNET.Canlib.canInitializeLibrary">
+  <summary>
+  <para>
+  </para><para>
+   This function must be called before any other functions is used.  It will
+   initialize the driver.
+  </para><para>
+   You may call <see cref="canInitializeLibrary()"/> more than once. The actual
+   initialization will take place only once.
+  </para><para>
+   Any errors encountered during library initialization will be "silent" and an
+   appropriate <see cref="canERR_xxx"/> error code will be returned later on when
+   <see cref="canOpenChannel()"/> (or any other API call that requires initialization) is
+   called.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    This call replaces the <see cref="canLocateHardware()"/> API call and serves the
+   same purpose.
+  </para><para>
+  </para>
+  </remarks>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canClose(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Closes the channel associated with the handle. If no other threads
+   are using the CAN circuit, it is taken off bus. The handle can not be
+   used for further references to the channel, so any variable containing
+   it should be zeroed.
+  </para><para>
+   <see cref="canClose()"/> will almost always return <see cref="canOK"/>; the specified handle is closed
+   on an best-effort basis.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canOpenChannel()"/>, <seealso cref="canBusOn()"/>, <seealso cref="canBusOff()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canBusOn(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Takes the specified channel on-bus.
+  </para><para>
+   If you are using multiple handles to the same physical channel, for example
+   if you are writing a threaded application, you must call <see cref="canBusOn()"/> once for
+   each handle. The same applies to <see cref="canBusOff()"/> - the physical channel will not
+   go off bus until the last handle to the channel goes off bus.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canBusOff()"/>, <seealso cref="canResetBus()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canBusOff(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Takes the specified channel off-bus.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canBusOn()"/>, <seealso cref="canResetBus()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetBusParams(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets the bus timing parameters for the specified CAN controller.
+  </para><para>
+   The library provides default values for <c>tseg1,</c> <c>tseg2,</c> <c>sjw</c> and  <c>noSamp</c> when <c>freq</c> is specified to one of the
+   pre-defined constants, <see cref="canBITRATE_xxx"/>.
+  </para><para>
+   If <c>freq</c> is any other value, no default values are supplied by the
+   library.
+  </para><para>
+   If you are using multiple handles to the same physical channel, for example
+   if you are writing a threaded application, you must call <see cref="canBusOff()"/> once
+   for each handle. The same applies to <see cref="canBusOn()"/> - the physical channel will
+   not go off bus until the last handle to the channel goes off bus.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Use <see cref="canSetBusParamsC200()"/> to set the bus timing parameters in the
+   ubiquitous 82c200 bit-timing register format.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN controller.
+  </para>
+  </param>
+  <param><para>
+   Bit rate (measured in bits per second); or one of the
+   predefined constants <see cref="canBITRATE_xxx"/>, which are described below.
+  </para>
+  </param>
+  <param><para>
+   Time segment 1, that is, the number of quanta from (but not
+   including) the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   Time segment 2, that is, the number of quanta from the sampling
+   point to the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   The Synchronization Jump Width; can be 1,2,3, or 4.
+  </para>
+  </param>
+  <param><para>
+   The number of sampling points; can be 1 or 3.
+  </para>
+  </param>
+  <param><para>
+   Unsupported and ignored.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <see cref="page_user_guide_init_bit_rate"/>, <see cref="page_code_snippets_examples"/>
+    <seealso cref="canSetBusParamsC200()"/>, <seealso cref="canGetBusParams()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetBusParams(System.Int32,System.Int64@,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function retrieves the current bus parameters for the specified
+   channel.
+  </para><para>
+   The anatomy of a CAN bit is discussed in detail at Kvaser's
+   web site at <a href="http://www.kvaser.com">www.kvaser.com</a>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN controller.
+  </para>
+  </param>
+  <param><para>
+   Bit rate (bits per second).
+  </para>
+  </param>
+  <param><para>
+   Time segment 1, that is, the number of quanta from (but not
+   including) the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   Time segment 2, that is, the number of quanta from the sampling
+   point to the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   The Synchronization Jump Width; can be 1,2,3, or 4.
+  </para>
+  </param>
+  <param><para>
+   The number of sampling points; can be 1 or 3.
+  </para>
+  </param>
+  <param><para>
+   Unsupported, always read as zero.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+          <seealso cref="canSetBusParams()"/>, <seealso cref="canSetBusParamsC200()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetBusOutputControl(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets the driver type for a CAN controller. This corresponds
+   loosely to the bus output control register in the CAN controller, hence the
+   name of this function. CANLIB does not allow for direct manipulation of the
+   bus output control register; instead, symbolic constants are used to select
+   the desired driver type.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Not all CAN driver types are supported on all cards.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   Can driver type, <see cref="canDRIVER_xxx)"/>
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canGetBusOutputControl()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetBusOutputControl(System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function retrieves the current CAN controller driver type.
+   This corresponds loosely to the bus output control register in the
+   CAN controller, hence the name of this function. CANLIB does not
+   allow for direct manipulation of the bus output control register;
+   instead, symbolic constants are used to select the desired driver
+   type.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Don't confuse the CAN controller driver type with the bus driver
+   type. The CAN controller is not connected directly to the CAN bus;
+   instead, it is connected to a bus transceiver circuit which interfaces
+   directly to the bus. The "CAN controller driver type" we are talking
+   about here refers to the mode which the CAN controller uses to drive
+   the bus transceiver circuit.
+  </para><para>
+  </para><para>
+    Silent Mode is not supported by all CAN controllers.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   A pointer to an unsigned int which receives the
+   current driver type. The driver type can be either
+   <see cref="canDRIVER_NORMAL"/> or <see cref="canDRIVER_SILENT"/>.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canSetBusOutputControl()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canAccept(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine sets the message acceptance filters on a CAN channel.
+  </para><para>
+   On some boards the acceptance filtering is done by the CAN hardware; on
+   other boards (typically those with an embedded CPU,) the acceptance
+   filtering is done by software. <see cref="canAccept()"/> behaves in the same way for all
+   boards, however.
+  </para><para>
+   <see cref="canSetAcceptanceFilter()"/> and <see cref="canAccept()"/> both serve the same purpose but the
+   former can set the code and mask in just one call.
+  </para><para>
+   If you want to remove a filter, call <see cref="canAccept()"/> with the mask set to 0.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    You can set the extended code and mask only on CAN boards that support
+   extended identifiers.
+  </para><para>
+  </para><para>
+    Not all CAN boards support different masks for standard and extended
+   CAN identifiers.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The mask or code to set.
+  </para>
+  </param>
+  <param><para>
+   Any of <see cref="canFILTER_SET_CODE_STD"/>,
+   <see cref="canFILTER_SET_MASK_STD"/>,
+   <see cref="canFILTER_SET_CODE_EXT"/> or
+   <see cref="canFILTER_SET_MASK_EXT"/>
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+        <see cref="page_user_guide_send_recv_filters"/>,
+   <see cref="page_code_snippets_examples"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadStatus(System.Int32,System.Int64@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Returns the status for the specified circuit. flags points to a longword
+   which receives a combination of the <see cref="canSTAT_xxx"/> flags.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    <see cref="canReadStatus()"/> returns the latest known status of the specified
+   circuit. If a status change happens precisely when <see cref="canReadStatus()"/> is
+   called, it may not be reflected in the returned result.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a <c>DWORD</c> which receives the status flags;
+   this is a combination of any of the <see cref="canSTAT_xxx"/>.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadErrorCounters(System.Int32,System.Int32@,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reads the error counters of the CAN controller.
+  </para><para>
+   <see cref="canReadErrorCounters()"/> returns the latest known values of the error counters
+   in the specified circuit. If the error counters change values precisely when
+   <see cref="canReadErrorCounters()"/> is called, it may not be reflected in the returned
+   result.
+  </para><para>
+   It is allowed to pass <c>NULL</c> as the value of the <c>txErr,</c> <c>rxErr,</c> and  <c>ovErr</c> parameters.
+  </para><para>
+   Use <see cref="canIoCtl()"/> to clear the counters.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Not all CAN controllers provide access to the error counters;
+   in this case, an educated guess is returned.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <c>DWORD</c> which receives the transmit error
+   counter.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <c>DWORD</c> which receives the receive error
+   counter.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <c>DWORD</c> which receives the number of
+   overrun errors.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canIoCtl()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canWrite(System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sends a CAN message. The call returns immediately after queuing
+   the message to the driver.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The message has been queued for transmission when this calls return.
+   It has not necessarily been sent.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The identifier of the CAN message to send.
+  </para>
+  </param>
+  <param><para>
+   A pointer to the message data, or <c>NULL.</c>
+  </para>
+  </param>
+  <param><para>
+   The length of the message. Can be at most 8.
+  </para>
+  </param>
+  <param><para>
+   A combination of message flags, <see cref="canMSG_xxx"/>.
+   Use this parameter to send extended (29-bit) frames
+   and/or remote frames. Use <see cref="canMSG_EXT"/> and/or
+   <see cref="canMSG_RTR"/> for this purpose.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+          <seealso cref="canWriteSync()"/>, <seealso cref="canWriteWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canWriteSync(System.Int32,System.Int64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Waits until all CAN messages for the specified handle are sent, or the
+   timeout period expires.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The timeout in milliseconds. 0xFFFFFFFF gives an
+   infinite timeout.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if the queue emptied before the timeout period came to
+   its end.
+  </para><para>
+    <see cref="canERR_TIMEOUT"/> (negative) not all messages were transmitted when
+   the timeout occurred.
+  </para><para>
+    <see cref="canERR_PARAM"/> (negative) This could be caused by an erroneous
+   parameter, or if you have turned TXACKs off (by using <see cref="canIoCtl())"/>
+   because if you do you can't use this call. The driver simply doesn't
+   know when all the messages are sent!
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canWrite()"/>, <seealso cref="canWriteWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canRead(System.Int32,System.Int32@,System.Byte[],System.Int32@,System.Int32@,System.Int64@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reads a message from the receive buffer. If no message is available, the
+   function returns immediately with return code <see cref="canERR_NOMSG"/>.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+   It is allowed to pass <c>NULL</c> as the value of <c>id,</c> <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the CAN identifier.
+   This buffer will only get the identifier. To determine
+   whether this identifier was standard (11-bit) or extended
+   was an error frame, examine the contents of the flag
+   argument.
+  </para>
+  </param>
+  <param><para>
+   Pointer to the buffer which receives the message data.
+   This buffer must be large enough (i.e. 8 bytes.) Only the
+   message data is copied; the rest of the buffer is left
+   as-is.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message length.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message flags,
+   which is a combination of the <see cref="canMSG_xxx"/> and
+   <see cref="canMSGERR_xxx"/> values.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message time stamp.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if a message was read.
+  </para><para>
+    <see cref="canERR_NOMSG"/> (negative) if there was no message available.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+             <see cref="page_user_guide_time_accuracy_and_resolution"/>
+    <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>,
+   <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadWait(System.Int32,System.Int32@,System.Byte[],System.Int32@,System.Int32@,System.Int64@,System.Int64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reads a message from the receive buffer. If no message is available, the
+   function waits until a message arrives or a timeout occurs.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+   It is allowed to pass <c>NULL</c> as the value of <c>id,</c> <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the CAN identifier.
+   This buffer will only get the identifier. To determine
+   whether this identifier was standard (11-bit) or extended
+   was an error frame, examine the contents of the flag
+   argument.
+  </para>
+  </param>
+  <param><para>
+   Pointer to the buffer which receives the message data.
+   This buffer must be large enough (i.e. 8 bytes.).
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message length.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message flags,
+   which is a combination of the <see cref="canMSG_xxx"/> and
+   <see cref="canMSGERR_xxx"/> values.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message time stamp.
+  </para>
+  </param>
+  <param><para>
+   If no message is immediately available, this parameter
+   gives the number of milliseconds to wait for a message
+   before returning. 0xFFFFFFFF gives an infinite timeout.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if a message was read.
+  </para><para>
+    <see cref="canERR_NOMSG"/> (negative) if there was no message available.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canRead()"/>, <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>,
+   <see cref="canReadSyncSpecific()"/>, <see cref="canReadSync()"/>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canReadSpecific(System.Int32,System.Int32,System.Byte[],System.Int32@,System.Int32@,System.Int64@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reads a message with a specified identifier from the receive buffer. Any
+   preceding message not matching the specified identifier will be kept
+   in the receive buffer. If no message with the specified identifier is
+   available, the function returns immediately with an error code.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+   It is allowed to pass <c>NULL</c> as the value of <c>id,</c> <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Use <see cref="canReadSpecific"/> only if you for some reason must keep the unread
+   messages in the queue. If this is not the case, consider using
+   <see cref="canReadSpecificSkip()"/> or <see cref="canRead()"/> for better performance.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   The desired CAN identifier.
+  </para>
+  </param>
+  <param><para>
+   Pointer to the buffer which receives the message data.
+   This buffer must be large enough (i.e. 8 bytes.).
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message length.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message flags,
+   which is a combination of the <see cref="canMSG_xxx"/> and
+   <see cref="canMSGERR_xxx"/> values.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message time stamp.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if a message was read.
+  </para><para>
+    <see cref="canERR_NOMSG"/> (negative) if a matching message was not found.
+   There might be other messages in the queue, though.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+                 <seealso cref="canRead()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>, <seealso cref="canReadSyncSpecific()"/>,
+   <see cref="canReadWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadSync(System.Int32,System.Int64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Waits until the receive buffer contains at least one message or a timeout
+   occurs.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   The timeout in milliseconds. 0xFFFFFFFF gives an
+   infinite timeout.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if the queue contains the desired message.
+  </para><para>
+    <see cref="canERR_TIMEOUT"/> (negative) if a timeout occurs before a message
+   arrived.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if the call fails.
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canRead()"/>,  <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>,
+   <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadSyncSpecific(System.Int32,System.Int32,System.Int64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Waits until the receive queue contains a message with the specified id, or a
+   timeout occurs..
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   The desired message identifier.
+  </para>
+  </param>
+  <param><para>
+   The timeout in milliseconds. 0xFFFFFFFF gives an
+   infinite timeout.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if the queue contains the desired message.
+  </para><para>
+    <see cref="canERR_TIMEOUT"/> (negative) if a timeout occurs before the specified
+   message arrived.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if the call fails.
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canRead()"/>, <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>,
+   <see cref="canReadSync()"/>, <see cref="canReadWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadSpecificSkip(System.Int32,System.Int32,System.Byte[],System.Int32@,System.Int32@,System.Int64@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reads a message with a specified identifier from the receive buffer. Any
+   preceding message not matching the specified identifier will be removed
+   in the receive buffer. If no message with the specified identifier is
+   available, the function returns immediately with an error code.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+   It is allowed to pass <c>NULL</c> as the value of <c>id,</c> <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   The desired CAN identifier.
+  </para>
+  </param>
+  <param><para>
+   Pointer to the buffer which receives the message data.
+   This buffer must be large enough (i.e. 8 bytes.).
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message length.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message flags,
+   which is a combination of the <see cref="canMSG_xxx"/> and
+   <see cref="canMSGERR_xxx"/> values.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer which receives the message time stamp.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if a matching message was found.
+  </para><para>
+    <see cref="canERR_NOMSG"/> if there was no matching message available. All other
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+             <seealso cref="canRead()"/>, <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSync()"/>,
+   <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetNotify(System.Int32,System.IntPtr,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function associates a window handle with the CAN circuit. A
+   <c>WM__CANLIB</c> message is sent to that window when certain events
+  </para><para>
+   When an event take place, a <c>WM__CANLIB</c> message will be sent to the window
+   whose handle is aHWnd. This <c>WM__CANLIB</c> message will have:
+  </para><para>
+  <list type="bullets">
+    <item><description><c>WPARAM</c> handle to the circuit where the event occurred    </description></item>
+    <item><description><c>HIWORD(LPARAM)</c> 0    </description></item>
+    <item><description><c>LOWORD(LPARAM)</c> <see cref="canEVENT_xxx"/></description></item>
+    </list>   In the routine that handles <c>WM__CANLIB,</c> you can call the CANLIB API
+   functions (for example, <see cref="canRead())"/> using the handle found in <c>wParam.</c>
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   Handle of the window which will receive the
+   notification messages.
+  </para>
+  </param>
+  <param><para>
+   The events specified with <see cref="canNOTIFY_xxx"/>, for
+   which callback should be called.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+   \n In the routine that handles <c>WM__CANLIB,</c> you must call <see cref="canRead()"/> repeatedly
+   until it returns <see cref="canERR_NOMSG"/>, regardless of the <c>LPARAM</c> value. This will
+   flush the driver's internal event queues. If you fail to do this, no more
+   events will be reported.
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canTranslateBaud(System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function translates the <see cref="canBITRATE_xxx"/> constants to their corresponding
+   bus parameter values. At return, this <c>freq</c> contains the actual bit rate
+   before the sampling point. <c>TSeg2</c> is the number of quanta after the
+   sampling point.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A pointer to a <c>DWORD</c> which contains the <see cref="canBITRATE_xxx"/>
+   constant to translate
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer which receives the Time segment 1,
+   that is, the number of quanta from (but not including)
+   the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer which receives the Time segment 2,
+   that is, the number of quanta from the sampling point to
+   the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer which receives the Synchronization
+   Jump Width; can be 1,2,3, or 4.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer which receives the number of
+   sampling points; can be 1 or 3.
+  </para>
+  </param>
+  <param><para>
+   Unsupported, always read as zero.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canSetBusParams()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetErrorText(canlibCLSNET.Canlib.canStatus,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function translates an error code (<see cref="canERR_xxx)"/>
+   to a human-readable, English text.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The error code.
+  </para>
+  </param>
+  <param><para>
+   The buffer which is to receive the text, which is a
+   zero-terminated string (provided the buffer is large enough.)
+  </para>
+  </param>
+  <param><para>
+   The length of the input buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canGetVersion">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   
+   This API call returns the version of the CANLIB API DLL (canlib32.dll).  The
+   most significant byte is the major version number and the least significant
+   byte is the minor version number.
+  </para><para>
+   The actual version of the different driver files can be obtained by studying
+   the version resources in each of the files.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The version number of the canlib32.dll file is not related to the
+   product version of CANLIB you are using. CANLIB consists of several
+   driver and DLL files. To obtain the product version, use
+   <see cref="canGetVersionEx()"/>.
+  </para><para>
+  </para>
+  </remarks>
+  <returns><para>
+    version number of canlib32.dll
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canGetVersionEx()"/>, <seealso cref="canProbeVersion()"/>
+   
+</member>
+<member name="M:canlibCLSNET.Canlib.canIoCtl(System.Int32,System.Int32,System.Object@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This API call performs several different functions; these are described
+   below. The functions are handle-specific unless otherwise noted; this means
+   that they affect only the handle you pass to <see cref="canIoCtl()"/>, whereas other open
+   handles will remain unaffected.  The contents of <c>buf</c> after the call is
+   dependent on the function code you specified.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   A <see cref="canIOCTL_xxx"/> function code
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer containing function-dependent data;
+  </para>
+  </param>
+  <param><para>
+   The length of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canIoCtl(System.Int32,System.Int32,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This API call performs several different functions; these are described
+   below. The functions are handle-specific unless otherwise noted; this means
+   that they affect only the handle you pass to <see cref="canIoCtl()"/>, whereas other open
+   handles will remain unaffected.  The contents of <c>buf</c> after the call is
+   dependent on the function code you specified.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   A <see cref="canIOCTL_xxx"/> function code
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer containing function-dependent data;
+  </para>
+  </param>
+  <param><para>
+   The length of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canIoCtl(System.Int32,System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This API call performs several different functions; these are described
+   below. The functions are handle-specific unless otherwise noted; this means
+   that they affect only the handle you pass to <see cref="canIoCtl()"/>, whereas other open
+   handles will remain unaffected.  The contents of <c>buf</c> after the call is
+   dependent on the function code you specified.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   A <see cref="canIOCTL_xxx"/> function code
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer containing function-dependent data;
+  </para>
+  </param>
+  <param><para>
+   The length of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canIoCtl(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This API call performs several different functions; these are described
+   below. The functions are handle-specific unless otherwise noted; this means
+   that they affect only the handle you pass to <see cref="canIoCtl()"/>, whereas other open
+   handles will remain unaffected.  The contents of <c>buf</c> after the call is
+   dependent on the function code you specified.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   A <see cref="canIOCTL_xxx"/> function code
+  </para>
+  </param>
+  <param><para>
+   Pointer to a buffer containing function-dependent data;
+  </para>
+  </param>
+  <param><para>
+   The length of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canReadTimer(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reads the current time from the clock used to timestamp the
+   messages for the indicated circuit.
+  </para><para>
+   This API may return <see cref="canERR_INVHANDLE"/> and/or <see cref="canERR_NOTINITIALIZED!"/>
+   This happens if <c>hnd</c> is invalid, or if the library was not initialized.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    <see cref="kvReadTimer()"/> should be used instead since it separates the returned
+   time from the error code.
+  </para><para>
+  </para><para>
+    The clock used to timestamp the messages may not be available for
+   direct reading on all platforms. In such cases, the PC's clock is used
+   to return an approximation of the current time. Note that clock drift might
+   occur in this case.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    The current time, with the prevailing time resolution (milliseconds
+   by default).
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvReadTimer()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canOpenChannel(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Opens a CAN channel (circuit) and returns a handle which is used
+   in subsequent calls to CANLIB.
+  </para><para>
+  </para><para>
+   Channel numbering is dependent on the installed hardware. The first channel
+   always has number 0.
+  </para><para>
+   For example,
+  </para><para>
+  <list type="bullets">
+    <item><description>If you have a single LAPcan, the channels are numbered 0 and 1.    </description></item>
+    <item><description>If you have a USBcan Professional, the channels are numbered 0-1   according to the labels on the cables.
+    </description></item>
+    <item><description>The virtual channels come after all physical channels.</description></item>
+    </list>   If you are using multiple threads, note that the returned handle is usable
+   only in the context of the thread that created it. That is, you must call
+   <see cref="canOpenChannel()"/> in each of the threads in your application that uses the
+   CAN bus. You can open the same channel from multiple threads, but you must
+   call <see cref="canOpenChannel()"/> once per thread.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The handle returned may be zero which is perfectly valid.
+  </para><para>
+  </para><para>
+    This call replaces the <see cref="canOpen()"/> API call and serves the same purpose.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   The number of the channel. Channel numbering is hardware
+   dependent.
+  </para>
+  </param>
+  <param><para>
+   A combination of <see cref="canOPEN_xxx"/> flags
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    Returns a handle to the opened circuit, or <see cref="canERR_xxx"/>
+  </para><para>
+  </para>
+  </returns>
+          <seealso cref="canGetNumberOfChannels()"/>, <seealso cref="canGetChannelData()"/>, <seealso cref="canIoCtl()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetNumberOfChannels(System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function returns the number of available CAN channels in the
+   computer. The virtual channels are included in this number.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A pointer to a <c>DWORD</c> which will receive the current
+   number of channels.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+          <seealso cref="canGetChannelData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetChannelData(System.Int32,System.Int32,System.Object@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function can be used to retrieve certain pieces of information about a channel.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    You must pass a channel number and not a channel handle.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   The number of the channel you are interested in. Channel
+   numbers are integers in the interval beginning at 0
+   <see cref="canGetNumberOfChannels()"/> minus 1.
+  </para>
+  </param>
+  <param><para>
+   This parameter specifies what data to obtain for the
+   specified channel. The value is one of the constants
+   <see cref="canCHANNELDATA_xxx"/>.
+  </para>
+  </param>
+  <param><para>
+   The address of a buffer which is to receive the data.
+  </para>
+  </param>
+  <param><para>
+   The size of the buffer to which the buffer parameter
+   points.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canGetNumberOfChannels()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canWaitForEvent(System.Int32,System.UInt64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Waits for an event (of any kind) to happen at the specified CAN circuit, or
+   a timeout to occur. An event in this context means for example the arrival
+   of a CAN message or a CAN bus status change, but it can also be an event
+   internal to the driver.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The number of milliseconds to wait before the call
+   returns, if no event occurs. 0xFFFFFFFF gives an
+   infinite timeout.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if an event happened during the specified time
+   period.
+  </para><para>
+    <see cref="canERR_TIMEOUT"/> (negative) if nothing happened during the specified
+   time period.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure.
+  </para><para>
+  </para>
+  </returns>
+        <see cref="page_user_guide_send_recv_asynch_not"/>
+    <seealso cref="canRead()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetBusParamsC200(System.Int32,System.Byte,System.Byte)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets the bus timing parameters using the same
+   convention as the 82c200 CAN controller (which is the same as many
+   other CAN controllers, for example, the 82527.)
+  </para><para>
+   To calculate the bit timing parameters, you can use the bit timing
+   calculator that is included with CANLIB SDK. Look in the BIN directory.
+  </para><para>
+   82c200 Bit Timing
+  </para><para>
+  <list type="bullets">
+    <item><description><c>btr0</c> [b7..b6]: SJW - 1    </description></item>
+    <item><description><c>btr0</c> [b5..b0]: Prescaler -1    </description></item>
+    <item><description><c>btr1</c> [b7]: <c>1:</c> 3 samples, <c>0:</c> 1 samples    </description></item>
+    <item><description><c>btr1</c> [b6..b4]: tseg2 - 1    </description></item>
+    <item><description><c>btr1</c> [b3..b0]: tseg1 - 2</description></item>
+    </list>  </para>
+  </summary>
+  <remarks><para>
+    CANLIB will always behave as if the clock frequency is 16 MHz. It does
+   not matter if the device has a different physical clock, since this will be
+   compensated for by the driver.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The desired bit timing, formatted as the contents of the
+   BTR0 register in the 82c200.
+  </para>
+  </param>
+  <param><para>
+   The desired bit timing, formatted as the contents of the
+   BTR1 register in the 82c200.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para><para>
+  </para>
+  </returns>
+          <seealso cref="canSetBusParams()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetDriverMode(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets the current CAN bus driver mode. This is
+   typically a mode like sleep, wakeup, standby, fast mode, etc. The
+   different modes are almost always hardware dependent and requires
+   special DRVcan cables. As an example, the DRVcan S implements J2411
+   compliant single-wire CAN and supports four line modes, namely
+   Normal, Sleep, Fast and Wakeup.
+  </para><para>
+   Standard ISO 11898 CAN do not support any of these bus driver modes.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The bus driver mode is typically used to control things like one- or
+   two-wire mode, sleep mode, and so on. It requires special support in the CAN
+   driver circuit.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   An int which defines the line mode,
+   <see cref="canTRANSCEIVER_LINEMODE_xxx"/>.
+  </para>
+  </param>
+  <param><para>
+   An int which defines the resnet mode. Set this parameter to
+   <see cref="canTRANSCEIVER_RESNET_NA"/> unless you have good reasons to set it
+   to something else.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canGetDriverMode()"/>
+   
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetDriverMode(System.Int32,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function retrieves the current CAN bus driver mode. This is typically a
+   mode like sleep, wakeup, standby, fast mode, etc. The different modes are
+   almost always hardware dependent and requires special DRVcan cables. As an
+   example, the DRVcan S implements J2411 compliant single-wire CAN and
+   supports four line modes, namely Normal, Sleep, Fast and Wakeup.
+  </para><para>
+   Standard ISO 11898 CAN do not support any of these bus driver modes.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The bus driver mode is typically used to control things like one- or
+   two-wire mode, sleep mode, and so on. It requires special support in the CAN
+   driver circuit.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   A pointer to an int which receives the current line
+   mode (<see cref="canTRANSCEIVER_LINEMODE_xxx)"/>.
+  </para>
+  </param>
+  <param><para>
+   A pointer to an int which receives the current resnet
+   mode.  This value is usually
+   <see cref="canTRANSCEIVER_RESNET_NA"/> except for special DRVcan
+   cables.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canSetDriverMode()"/>
+   
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetVersionEx(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function returns various version numbers from the driver routines.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   Specifies which version number to retrieve. See
+   <see cref="canVERSION_CANLIB32_xxx"/>
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    The return value is desired version number.
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canParamGetCount">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function returns the number of entries in the table of named
+   channels.
+  </para><para>
+  </para>
+  </summary>
+  <returns><para>
+    The number of channels (zero or positive)
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canParamCommitChanges">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function writes the current set of named parameters to the
+   Registry. Previous entries are erased.
+  </para><para>
+   The named parameters are stored in the
+   <c>HKEY_LOCAL_MACHINE\\SOFTWARE\\KVASER</c> <c>AB\\CANLIB32\\PredefinedBitrates</c>
+   key in the Registry.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    You must have Administrator's rights to write to the Registry.
+  </para><para>
+  </para>
+  </remarks>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canParamDeleteEntry(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function deletes the entry in the table of named parameter settings
+   with the given index. The entries below (i.e. with higher indices) the
+   deleted entry are moved up one step in the table.
+  </para><para>
+   The named parameters are stored in the
+   <c>HKEY_LOCAL_MACHINE\\SOFTWARE\\KVASER</c> <c>AB\\CANLIB32\\PredefinedBitrates</c>
+   key in the Registry.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The index of the entry to delete.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCreateNewEntry()"/>, <seealso cref="canParamCommitChanges()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamCreateNewEntry">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function creates a new entry in the table of named parameter
+   settings.
+  </para><para>
+   The named parameters are stored in the
+   <c>HKEY_LOCAL_MACHINE\\SOFTWARE\\KVASER</c> <c>AB\\CANLIB32\\PredefinedBitrates</c>
+   key in the Registry.
+  </para><para>
+  </para>
+  </summary>
+  <returns><para>
+    The index of the created entry (zero or positive) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>, <seealso cref="canParamDeleteEntry()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamSwapEntries(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function swaps two entries in the list of named
+   parameters.
+  </para><para>
+   The named parameters are stored in the
+   <c>HKEY_LOCAL_MACHINE\\SOFTWARE\\KVASER</c> <c>AB\\CANLIB32\\PredefinedBitrates</c>
+   key in the Registry.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The first of the two entries that are to be swapped in the
+   named parameters list.
+  </para>
+  </param>
+  <param><para>
+   The second of the two entries that are to be swapped in the
+   named parameters list.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamGetName(System.Int32,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function returns the name of a given entry in the list of
+   named parameters.
+  </para><para>
+   The named parameters are stored in the
+   <c>HKEY_LOCAL_MACHINE\\SOFTWARE\\KVASER</c> <c>AB\\CANLIB32\\PredefinedBitrates</c>
+   key in the Registry.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The index of the entry in the named parameters list, whose
+   name is to be returned.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer that is to receive a
+   <c>NULL</c> terminated string which contains the name. The
+   buffer is allocated and deallocated by the user.
+  </para>
+  </param>
+  <param><para>
+   The length of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamSetName()"/>, <seealso cref="canParamCommitChanges()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamGetChannelNumber(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function returns the channel number of the entry with the
+   given index in the table of named parameter settings.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The index of the entry in the table of named parameter
+   settings.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    The channel number of the entry in question (zero or positive)
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>, <seealso cref="canParamGetChannelNumber()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamGetBusParams(System.Int32,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function retrieves the bus parameters associated with the
+   entry with the given index in the table of named parameter
+   settings.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The index of the entry in the table of named parameter
+   settings.
+  </para>
+  </param>
+  <param><para>
+   Bit rate (bits per second).
+  </para>
+  </param>
+  <param><para>
+   Time segment 1, that is, the number of quanta from (but
+   not including) the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   Time segment 2, that is, the number of quanta from the
+   sampling point to the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   The Synchronization Jump Width; can be 1,2,3, or 4.
+  </para>
+  </param>
+  <param><para>
+   The number of sampling points; can be 1 or 3.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>, <seealso cref="canParamSetBusParams()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamSetName(System.Int32,System.String)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets or changes the name of a named parameter.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The index of the named parameter whose name is to be
+   changed or set.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <c>NULL</c> terminated string that contains the
+   new name. If the string is longer than the maximum
+   allowed name length, it is truncated.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>, <seealso cref="canParamGetName()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamSetChannelNumber(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets the channel number for a specified entry in the list of
+   named parameters. Channels are numbered from 0 and up.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   The index of the entry in the named parameter list whose
+   channel number is to be set.
+  </para>
+  </param>
+  <param><para>
+   The channel number.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>, <seealso cref="canParamGetChannelNumber()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamSetBusParams(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets or changes the bus parameters for a given entry in the
+   list of named parameters.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The bus parameters are not checked for validity.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   The index of the entry in the named parameter list whose
+   parameters are to be set or changed.
+  </para>
+  </param>
+  <param><para>
+   Bit rate (measured in bits per second); or one of the
+   predefined constants <see cref="canBITRATE_xxx"/>.
+  </para>
+  </param>
+  <param><para>
+   Time segment 1, that is, the number of quanta from (but not
+   including) the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   Time segment 2, that is, the number of quanta from the
+   sampling point to the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   The Synchronization Jump Width; can be 1,2,3, or 4.
+  </para>
+  </param>
+  <param><para>
+   The number of sampling points; can be 1 or 3.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>, <seealso cref="canParamGetBusParams()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canParamFindByName(System.String)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function returns the index of the parameter setting with the
+   given name.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A pointer to a string containing the name of the setting.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    The index of the setting (zero or positive) if success.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canParamCommitChanges()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufFreeAll(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Deallocates all object buffers on the specified handle. The
+   buffers cannot be referenced after this operation.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canObjBufFree()"/>, <seealso cref="canObjBufAllocate()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufAllocate(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Allocates an object buffer associated with a handle to a CAN
+   circuit.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The type of the buffer. Must be one of <see cref="canOBJBUF_TYPE_xxx"/>
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    A buffer index (zero or positive) if success.
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canObjBufFree()"/>, <seealso cref="canObjBufFreeAll()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufFree(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Deallocates the object buffer with the specified index. The buffer
+   can not be referenced after this operation.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The object buffer to deallocate.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canObjBufFreeAll()"/>, <seealso cref="canObjBufAllocate()"/>,
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufWrite(System.Int32,System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Defines the contents of a specific object buffer.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The index of the object buffer whose contents is to be
+   defined.
+  </para>
+  </param>
+  <param><para>
+   The CAN identifier of the message.
+  </para>
+  </param>
+  <param><para>
+   Points to the contents of the message.
+  </para>
+  </param>
+  <param><para>
+   The length of the message. Must be at least 0 and at most 8
+   bytes.
+  </para>
+  </param>
+  <param><para>
+   Message flags; a combination of the <see cref="canMSG_xxx"/> flags.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canObjBufSetFilter(System.Int32,System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Defines a message reception filter on the specified object buffer.
+   Messages not matching the filter are discarded.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    For an auto response buffer, set the code and mask that together define
+   the identifier(s) that trigger(s) the automatic response.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The index of the object buffer on which the filter is to be
+   set.
+  </para>
+  </param>
+  <param><para>
+   The acceptance code in the filter.
+  </para>
+  </param>
+  <param><para>
+   The acceptance mask in the filter.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+        <see cref="page_user_guide_send_recv_obj_buf"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufSetFlags(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Sets object buffer flags on a specified object buffer.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The buffer on which the flags are to be set.
+  </para>
+  </param>
+  <param><para>
+   Specifies a combination of zero or more of the
+   <see cref="canOBJBUF_AUTO_RESPONSE_xxx"/> flag values
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canObjBufSetPeriod(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="canObjBufSetPeriod"/> function sets the transmission period for an auto
+   transmission object buffer.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The index of a CAN object buffer.
+  </para>
+  </param>
+  <param><para>
+   The transmission interval, in microseconds.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canObjBufSetMsgCount(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="canObjBufSetMsgCount"/> function sets the message count for an auto
+   transmit object buffer.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The index of a CAN object buffer.
+  </para>
+  </param>
+  <param><para>
+   The message count.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canObjBufEnable(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Enables the object buffer with the specified index.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The index of the object buffer to enable.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canObjBufDisable()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufDisable(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Disables the object buffer with the specified index.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The index of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="canObjBufEnable()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canObjBufSendBurst(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The canObjBufSendBurst function sends a burst of CAN messages. You have to
+   set up an object buffer first with the message to send. The messages will be
+   sent as fast as possible from the hardware.
+  </para><para>
+   This function is inteneded for certain diagnostic applications.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The index of a CAN object buffer.
+  </para>
+  </param>
+  <param><para>
+   The number of messages to send.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.canProbeVersion(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function checks whether a specific version of CANLIB is installed on
+   the system.
+  </para><para>
+   The default behaviour of <see cref="canProbeVersion"/> is to accept
+  </para><para>
+  <list type="bullets">
+    <item><description>the version specified by <c>major</c> and <c>minor,</c> and    </description></item>
+    <item><description>any later version, and    </description></item>
+    <item><description>all beta versions.</description></item>
+    </list>   You get the default behaviour by setting <c>flags</c> to 0. Use any
+   combination of the <see cref="canVERSION_xxx"/> flags to modify the behaviour.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Different handles might have different driver versions installed. This
+   should not normally be the case but it might happen anyway. You should check
+   the version for each handle you open, e.g. directly after calling
+   <see cref="canOpenChannel()"/>.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   The major version number of the version to test for.
+  </para>
+  </param>
+  <param><para>
+   The minor version number of the version to test for.
+  </para>
+  </param>
+  <param><para>
+   Reserved, must be zero.
+  </para>
+  </param>
+  <param><para>
+   Any combination of the <see cref="canVERSION_xxx"/> flags, or 0.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    TRUE if the specified version of CANLIB is installed on the system.
+  </para><para>
+  </para>
+  </returns>
+              <seealso cref="canGetVersion()"/>, <seealso cref="canGetVersionEx()"/>, <seealso cref="canGetChannelData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canResetBus(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function tries to reset a CAN bus controller by taking the channel off
+   bus and then on bus again (if it was on bus before the call to <see cref="canResetBus()"/>.)
+  </para><para>
+   This function will affect the hardware (and cause a real reset of the CAN
+   chip) only if <c>hnd</c> is the only handle open on the channel. If there
+   are other open handles, this operation will not affect the hardware.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canBusOn()"/>, <seealso cref="canBusOff()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canWriteWait(System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32,System.Int64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sends a CAN message. It returns when the message is sent, or
+   the timeout expires.
+  </para><para>
+   This is a convenience function that combines <see cref="canWrite()"/> and <see cref="canWriteSync()"/>.
+  </para><para>
+   If you are using the same channel via multiple handles, note that the
+   default behaviour is that the different handles will "hear" each other just as
+   if each handle referred to a channel of its own. If you open, say, channel 0
+   from thread A and thread B and then send a message from thread A, it will be
+   This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The identifier of the CAN message to send.
+  </para>
+  </param>
+  <param><para>
+   A pointer to the message data, or <c>NULL.</c>
+  </para>
+  </param>
+  <param><para>
+   The length of the message. Can be at most 8.
+  </para>
+  </param>
+  <param><para>
+   A combination of message flags, <see cref="canMSG_xxx"/>.
+   Use this parameter to send extended (29-bit) frames
+   and/or remote frames. Use <see cref="canMSG_EXT"/> and/or
+   <see cref="canMSG_RTR"/> for this purpose.
+  </para>
+  </param>
+  <param><para>
+   The timeout, in milliseconds. 0xFFFFFFFF gives an
+   infinite timeout.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canUnloadLibrary">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Use this function if you are loading CANLIB32.DLL dynamically (that is,
+   using the Win32 API <c>LoadLibrary)</c> and need to unload it using the Win32
+   API <c>FreeLibrary.</c> <see cref="canUnloadLibrary()"/> will free allocated memory, unload
+   the DLLs canlib32.dll has loaded and de-initialize data structures. You must
+   call <see cref="canInitializeLibrary()"/> again to use the API functions in canlib32.dll.
+  </para><para>
+  </para>
+  </summary>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canInitializeLibrary()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetAcceptanceFilter(System.Int32,System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine sets the message acceptance filters on a CAN channel.
+  </para><para>
+   Format of <c>code</c> and <c>mask:</c>
+  </para><para>
+  <list type="bullets">
+    <item><description>A binary 1 in a mask means "the corresponding bit in the code is   relevant"
+    </description></item>
+    <item><description>A binary 0 in a mask means "the corresponding bit in the code is not   relevant"
+    </description></item>
+    <item><description>A relevant binary 1 in a code means "the corresponding bit in the   identifier must be 1"
+    </description></item>
+    <item><description>A relevant binary 1 in a code means "the corresponding bit in the   identifier must be 1"
+</description></item>
+    </list>   In other words, the message is accepted if ((code XOR id) AND mask) == 0.
+  </para><para>
+   <c>extended</c> should be set to:
+  </para><para>
+  <list type="bullets">
+    <item><description><c>0</c> (FALSE): if the code and mask shall apply to 11-bit CAN identifiers.    </description></item>
+    <item><description><c>1</c> (TRUE): if the code and mask shall apply to 29-bit CAN identifiers.</description></item>
+    </list>   If you want to remove a filter, call <see cref="canSetAcceptanceFilter()"/> with the mask
+   set to <c>0.</c>
+  </para><para>
+   On some boards the acceptance filtering is done by the CAN hardware; on
+   other boards (typically those with an embedded CPU,) the acceptance
+   filtering is done by software.  <see cref="canSetAcceptanceFilter()"/> behaves in the same
+   way for all boards, however.
+  </para><para>
+   <see cref="canSetAcceptanceFilter()"/> and <see cref="canAccept()"/> both serve the same purpose but the
+   former can set the code and mask in just one call.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    You can set the extended code and mask only on CAN boards that support
+   extended identifiers.
+  </para><para>
+  </para><para>
+    Not all CAN boards support different masks for standard and
+   extended CAN identifiers.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN circuit.
+  </para>
+  </param>
+  <param><para>
+   The acceptance code to set.
+  </para>
+  </param>
+  <param><para>
+   The acceptance mask to set.
+  </para>
+  </param>
+  <param><para>
+   Select 29-bit CAN identifiers.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+        <see cref="page_user_guide_misc_code_and_mask"/>
+     <seealso cref="canAccept()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canFlushReceiveQueue(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function removes all received messages from the handle's receive queue.
+   Other handles open to the same channel are not affcted by this
+   operation. That is, only the messages belonging to the handle you are
+   passing to <see cref="canFlushReceiveQueue"/> are discarded.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    This call has the same effect as calling <see cref="canIoCtl()"/> with a function
+   code of <see cref="canIOCTL_FLUSH_RX_BUFFER"/>.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canFlushTransmitQueue()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canFlushTransmitQueue(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function removes all messages pending transmission from the
+   transmit queue of the circuit.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    If there are other handles open to the same circuit, they are also
+   flushed.
+  </para><para>
+  </para><para>
+    This call has the same effect as calling <see cref="canIoCtl()"/> with a function
+   code of <see cref="canIOCTL_FLUSH_TX_BUFFER"/>.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A handle to an open circuit.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canFlushReceiveQueue()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvGetApplicationMapping(System.Int32,System.String,System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The <see cref="kvGetApplicationMapping"/> function is presently not implemented.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+     </para>
+  </param>
+  <param><para>
+     </para>
+  </param>
+  <param><para>
+     </para>
+  </param>
+  <param><para>
+     </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvBeep(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvBeep"/> function emits a sound of a specific frequency and duration from
+   the loudspeaker on the device.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    This function requires that a loudspeaker be present on the hardware.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The frequency (in Hertz) of the sound.
+  </para>
+  </param>
+  <param><para>
+   The duration of the sound, in milliseconds.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvSelfTest(System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvSelfTest"/> function runs a built-in self test in the device. Note that
+   not all devices supports built-in self tests.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open hnd to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit unsigned integer where the
+   resuls of the self test will be placed.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFlashLeds(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFlashLeds"/> function will turn the LEDs on the device on or off.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+     </para>
+  </param>
+  <param><para>
+   One of the <see cref="kvLED_ACTION_xxx"/> constants, defining
+   which LED to turn on or off.
+  </para>
+  </param>
+  <param><para>
+   Specifies the time, in milliseconds, during which the
+   action is to be carried out. When the timeout expires,
+   the LED(s) will return to its ordinary function.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canRequestChipStatus(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The canRequestChipStatus function requests that the hardware report the chip
+   status (bus on/error passive status etc.) to the driver. The chip status can
+   later be retrieved using the <see cref="canReadStatus()"/> function.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The <see cref="canRequestChipStatus()"/> function is asynchronous, that is, it
+   completes before the answer is returned from the hardware.  The time between
+   a call to <see cref="canRequestChipStatus()"/> and the point in time where the chip status
+   is actually available via a call to <see cref="canReadStatus()"/> is not
+   defined. <see cref="canReadStatus()"/> always returns the latest data reported by the
+   hardware.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canReadStatus()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canRequestBusStatistics(System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="canRequestBusStatistics"/> function requests bus statistics from the
+   hardware. The bus statistics figures can be retrieved later by a call to the
+   <see cref="canGetBusStatistics"/> function.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The time between a call to <see cref="canRequestBusStatistics()"/> and the point in
+   time where the bus statistics is actually available via a call to
+   <see cref="canGetBusStatistics()"/> is not defined. Typically, you would call
+   <see cref="canRequestBusStatistics()"/> from your application periodically (for example,
+   once per second) to request the data from the driver and then call
+   <see cref="canGetBusStatistics()"/> with the same rate to obtain the latest reported data.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canGetBusStatistics()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetBusStatistics(System.Int32,canlibCLSNET.Canlib.canBusStatistics@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="canGetBusStatistics()"/> function retrieves the latest bus statistics
+   figures reported by the driver.  You request the bus statistics from the
+   driver by calling the <see cref="canRequestBusStatistics()"/> function.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <see cref="canBusStatistics"/> struct that will receive
+   the bus statistics figures.
+  </para>
+  </param>
+  <param><para>
+   The size, in bytes, of the stat buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canRequestBusStatistics()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canSetBitrate(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="canSetBitrate()"/> function sets the bit rate of the specified CAN
+   channel. The SJW is left unchanged.  The sampling point is recalculated and
+   kept as close as possible to the value before the call.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The new bit rate, in bits/second.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canSetBusParamsC200()"/>, <seealso cref="canSetBusParams()"/>, <seealso cref="canGetBusParams()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvAnnounceIdentity(System.Int32,System.Object)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvAnnounceIdentity"/> function is used by certain OEM applications.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to the data to be sent to the driver.
+  </para>
+  </param>
+  <param><para>
+   The size, in bytes, of the buffer that buf points to.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetHandleData(System.Int32,System.Int32,System.Object@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    This function is not implemented.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+     </para>
+  </param>
+  <param><para>
+     </para>
+  </param>
+  <param><para>
+     </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canGetChannelData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvTimeDomainCreate(System.Object@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine creates an empty time domain.
+  </para><para>
+   The variable is set by this function and then used in later calls to
+   other functions using a <see cref="kvTimeDomain"/>.
+  </para><para>
+   Time domains created by <see cref="kvTimeDomainCreate()"/> can be destroyed with a
+   call to <see cref="kvTimeDomainDelete()"/>.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    A time domain is a set of channels with a common time base.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   A pointer to a caller allocated, opaque variable of type
+   <see cref="kvTimeDomain"/> that holds data to identify a particlar
+   time domain.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvTimeDomainDelete()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvTimeDomainDelete(System.Object)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This is a cleanup routine that deletes all members of a domain and then
+   deletes the domain itself.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    A time domain is a set of channels with a common time base.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An opaque variable set by <see cref="kvTimeDomainCreate()"/> that
+   identifies the domain to be deleted.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvTimeDomainCreate()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvTimeDomainResetTime(System.Object)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine resets the time on all members of a time domain.
+  </para><para>
+   After a call to this routine timestamps from all channels with MagiSync(tm)
+   running have no offset at all any longer. The same applies for channels that
+   reside on the same physical interface.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    A time domain is a set of channels with a common time base.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An opaque variable set by <see cref="kvTimeDomainCreate()"/> that
+   identifies the domain to reset the time on.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvTimeDomainCreate()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvTimeDomainGetData(System.Object,canlibCLSNET.Canlib.kvTimeDomainData)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine collects some data on a time domain.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    A time domain is a set of channels with a common time base.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An opaque variable set by <see cref="kvTimeDomainCreate()"/> that
+   identifies the domain to add a handle to.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <see cref="kvTimeDomainData"/> that is to be filled by
+   the function.
+  </para>
+  </param>
+  <param><para>
+   The size in bytes of the <see cref="kvTimeDomainData"/> struct.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvTimeDomainCreate()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvTimeDomainAddHandle(System.Object,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine adds an open channel handle to a domain.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    A time domain is a set of channels with a common time base.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An opaque variable set by <see cref="kvTimeDomainCreate()"/>
+   that identifies the domain to add a handle to.
+  </para>
+  </param>
+  <param><para>
+   A handle to an open channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvTimeDomainCreate()"/>, <seealso cref="kvTimeDomainRemoveHandle()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvTimeDomainRemoveHandle(System.Object,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This routine removes an open channel handle from a domain.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    A time domain is a set of channels with a common time base.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An opaque variable set by <see cref="kvTimeDomainCreate()"/>
+   that identifies the domain to remove a handle from.
+  </para>
+  </param>
+  <param><para>
+   A handle to an open channel.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvTimeDomainCreate()"/>, <seealso cref="kvTimeDomainAddHandle()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvSetNotifyCallback(System.Int32,canlibCLSNET.Canlib.kvCallbackDelegate,System.IntPtr,System.UInt32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvSetNotifyCallback()"/> function registers a callback function which is
+   called when certain events occur.
+  </para><para>
+   You can register at most one callback function per handle at any time.
+  </para><para>
+   To remove the callback, call <see cref="kvSetNotifyCallback()"/> with a <c>NULL</c> pointer in
+   the callback argument.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The callback function is called in the context of a high-priority
+   thread created by CANLIB. You should take precaution not to do any time
+   consuming tasks in the callback.  You must also arrange the synchronization
+   between the callback and your other threads yourself.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a callback function of type
+   <see cref="kvCallback_t"/>
+  </para>
+  </param>
+  <param><para>
+   A pointer to arbitrary user-defined context data which
+   is passed to the callback function.
+  </para>
+  </param>
+  <param><para>
+   One or more of the <see cref="canNOTIFY_xxx"/> flags.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canSetNotify()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvGetSupportedInterfaceInfo(System.Int32,System.String@,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvGetSupportedInterfaceInfo"/> function returns information about the
+   different supported hardware types in the installed version of CANLIB.
+  </para><para>
+   This function is used to enumerate all the supported hardware types in the
+   installed version of CANLIB. It does not return a complete list of all
+   supported devices, nor does it return a list of the presently installed
+   hardware. The returned data indicates which device families are supported.
+  </para><para>
+   For example, a returned set of data might be:
+  <list type="bullets">
+    <item><description><c>hwType</c> = <see cref="canHWTYPE_MEMORATOR_PRO"/>    </description></item>
+    <item><description><c>hwBusType</c> = <see cref="kvBUSTYPE_USB"/>    </description></item>
+    <item><description><c>hwName</c> = <c>"Kvaser</c> Memorator Professional"</description></item>
+    </list>   This means that
+  <list type="bullets">
+    <item><description>the presently installed version of CANLIB supports members in the Kvaser   Memorator Pro family (e.g. the HS/HS and the HS/LS),
+    </description></item>
+    <item><description>the members of the Kvaser Memorator Pro family are USB devices,    </description></item>
+    <item><description>the members of the Kvaser Memorator Pro family use the   <see cref="canHWTYPE_MEMORATOR_PRO"/> hardware type.
+</description></item>
+    </list>   The <see cref="kvGetSupportedInterfaceInfo()"/> function is intended to help
+   application designers build a bus-oriented display of the different
+   installed and/or supported Kvaser devices in the computer.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   Use this parameter to enumerate the different supported
+   hardware types. Start with index = 0, and then call
+   <see cref="kvGetSupportedInterfaceInfo"/> again() with index =
+   1,2,3,... until the function returns an error code.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer that will receive the name of the
+   hardware family, as a zero-terminated ASCII string.
+  </para>
+  </param>
+  <param><para>
+   The length of the hwName buffer.
+  </para>
+  </param>
+  <param><para>
+   Pointer to a 32-bit integer that will receive the
+   hardware type (one of the <see cref="canHWTYPE_xxx"/>
+   constants.)
+  </para>
+  </param>
+  <param><para>
+   Pointer to a 32-bit integer that will receive the bus
+   type (one of the <see cref="kvBUSTYPE_xxx"/> constants.)
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canBusOn()"/>, <seealso cref="canResetBus()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvReadTimer(System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvReadTimer"/> reads the hardware clock on the specified device and returns
+   the value.
+  </para><para>
+   When the call to <see cref="kvReadTimer()"/> returns, the time value is already
+   obsolete. The time required for the device firmware, any intermediary buses
+   defined.
+  </para><para>
+   This call should be used instead of <see cref="canReadTimer()"/> because it can return an
+   error code if it fails.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit unsigned integer that will receive
+   the time value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canReadTimer()"/>, <seealso cref="kvReadTimer64()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvReadTimer64(System.Int32,System.Int64@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvReadTimer64"/> reads the hardware clock on the specified device and
+   returns the value.
+  </para><para>
+   When the call to <see cref="kvReadTimer64()"/> returns, the time value is already
+   obsolete. The time required for the device firmware, any intermediary buses
+   defined.
+  </para><para>
+   This call should be used instead of <see cref="canReadTimer()"/> because it can return an
+   error code if it fails.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 64-bit signed integer that will receive the
+   time value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvReadTimer()"/>, <seealso cref="canReadTimer()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvReadDeviceCustomerData(System.Int32,System.Int32,System.Int32,System.Byte[],System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   Reading customer data works with Kvaser Leaf (of all
+   types), Kvaser USBcan Professional, Kvaser Memorator Professional, Kvaser Eagle and
+   Kvaser Memorator Light. To write customer data use external tools.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   Assigned by Kvaser.
+  </para>
+  </param>
+  <param><para>
+   Must be zero (reserved)
+  </para>
+  </param>
+  <param><para>
+   A pointer to a buffer of up to 8 bytes where
+   the result will be placed.
+  </para>
+  </param>
+  <param><para>
+   The size of the buffer that data points at.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptStart(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptStart()"/> function starts a loaded script.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot with the loaded script we want to start.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptLoadFile()"/>, <seealso cref="kvScriptStop()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptStop(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptStop()"/> function stops a started script.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot with the loaded and running script we want to stop.
+  </para>
+  </param>
+  <param><para>
+   Stop mode of type <see cref="kvSCRIPT_STOP_xxx"/>
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptLoadFile()"/>, <seealso cref="kvScriptStart()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptUnload(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptUnload()"/> function unloads a stopped script.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot with the loaded and stopped script we want to unload.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptLoadFile()"/>, <seealso cref="kvScriptStop()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptSendEvent(System.Int32,System.Int32,System.Int32,System.Int32,System.UInt32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptSendEvent()"/> function sends an event of a type, and an event
+   number and associated data to a script running in a specific slot.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot where the script was loaded and is running.
+  </para>
+  </param>
+  <param><para>
+   The event to send, of type <see cref="kvEVENT_xxx"/>
+  </para>
+  </param>
+  <param><para>
+   The event's number.
+  </para>
+  </param>
+  <param><para>
+   The event's data.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+     </member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarOpen(System.Int32,System.String,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarOpen()"/> opens an existing envvar and returns a handle to it.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The envvar's name; a pointer to a <c>NULL</c> terminated
+   array of chars.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit integer that will receive the
+   <see cref="kvENVVAR_TYPE_xxx"/> type.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit integer that will receive the
+   size of the envvar in bytes.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    A <see cref="kvEnvHandle"/> handle (positive) to an envvar if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarClose()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarClose(System.Int64)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarClose()"/> function closes an open envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvScriptEnvvarOpen()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarSetInt(System.Int64,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarSetInt()"/> sets the value of an <c>int</c> envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para>
+  </param>
+  <param><para>
+   The new value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarOpen()"/>, <seealso cref="kvScriptEnvvarGetInt()"/>, <seealso cref="kvScriptEnvvarSetFloat()"/>,
+   <see cref="kvScriptEnvvarSetData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarGetInt(System.Int64,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarGetInt()"/> function retrieves the value of an <c>int</c> envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para>
+  </param>
+  <param><para>
+   The current value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarOpen()"/>, <seealso cref="kvScriptEnvvarSetInt()"/>, <seealso cref="kvScriptEnvvarGetFloat()"/>,
+   <see cref="kvScriptEnvvarGetData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarSetFloat(System.Int64,System.Single)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarSetFloat()"/> sets the value of a <c>float</c> envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para>
+  </param>
+  <param><para>
+   The new value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarOpen()"/>, <seealso cref="kvScriptEnvvarGetFloat()"/>, <seealso cref="kvScriptEnvvarSetInt()"/>,
+   <see cref="kvScriptEnvvarSetData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarGetFloat(System.Int64,System.Single@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarGetFloat()"/> function retrieves the value of a <c>float</c> envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a <c>float</c> where the retrieved result should be
+   stored.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarOpen()"/>, <seealso cref="kvScriptEnvvarSetFloat()"/>, <seealso cref="kvScriptEnvvarGetInt()"/>,
+   <see cref="kvScriptEnvvarGetData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarSetData(System.Int64,System.Byte[],System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarSetData()"/> function sets a range of data bytes in an envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a data area with the new values.
+  </para>
+  </param>
+  <param><para>
+   The start index of the envvar's data range that we
+   want to update.
+  </para>
+  </param>
+  <param><para>
+   The length in bytes of the envvar's data range that
+   we want to update.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarOpen()"/>, <seealso cref="kvScriptEnvvarGetData()"/>, <seealso cref="kvScriptEnvvarSetInt()"/>,
+   <see cref="kvScriptEnvvarSetFloat()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptEnvvarGetData(System.Int64,System.Byte[]@,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptEnvvarGetData()"/> function retrieves a range of data bytes from an envvar.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to an envvar.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a data area where the retrieved data
+   range should be stored.
+  </para>
+  </param>
+  <param><para>
+   The start index of the data range.
+  </para>
+  </param>
+  <param><para>
+   The length in bytes of the data range.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptEnvvarOpen()"/>, <seealso cref="kvScriptEnvvarSetData()"/>, <seealso cref="kvScriptEnvvarGetInt()"/>,
+   <see cref="kvScriptEnvvarGetFloat()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptLoadFileOnDevice(System.Int32,System.Int32,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptLoadFileOnDevice()"/> function loads a compiled script file (.txe)
+   stored on the device (SD card) into a script slot on the device.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot where to load the script.
+  </para>
+  </param>
+  <param><para>
+   The script file name; a pointer to a <c>NULL</c> terminated
+   array of chars.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptLoadFile()"/>, <seealso cref="kvFileCopyToDevice()"/>, <seealso cref="kvScriptStart()"/>,
+   <see cref="kvScriptStop()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptLoadFile(System.Int32,System.Int32,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptLoadFile()"/> function loads a compiled script file (.txe) stored
+   on the host (PC) into a script slot on the device.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot where to load the script.
+  </para>
+  </param>
+  <param><para>
+   The script file name; a pointer to a <c>NULL</c>
+   terminated array of chars.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+         <seealso cref="kvScriptLoadFileOnDevice()"/>, <seealso cref="kvFileCopyToDevice()"/>, <seealso cref="kvScriptStart()"/>,
+   <see cref="kvScriptStop()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptRequestText(System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptRequestText()"/> Sets up a printf subscription to a
+   selected script slot.
+   Read the printf messages with <see cref="kvScriptGetText()"/>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot to subscribe to.
+  </para>
+  </param>
+  <param><para>
+   Subscription request i.e. <see cref="kvSCRIPT_REQUEST_TEXT_xxx"/>.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptGetText(System.Int32,System.Int32@,System.UInt64@,System.Int32@,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvScriptGetText()"/> Reads a printf from a subscribed script slot.
+   Set up a subscription with <see cref="kvScriptRequestText()"/>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot where the printf originated.
+  </para>
+  </param>
+  <param><para>
+   The printf timestamp.
+  </para>
+  </param>
+  <param><para>
+   Printf flags. A combination of <see cref="canSTAT_xxx"/> flags.
+  </para>
+  </param>
+  <param><para>
+   Buffer to hold the printf string.
+  </para>
+  </param>
+  <param><para>
+   Size of the buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvScriptStatus(System.Int32,System.Int32,System.UInt32@)">
+  <summary>
+  <para>
+  </para><para>
+   The <see cref="kvScriptStatus()"/> function reads the current status of a script slot.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The slot which status we want.
+  </para>
+  </param>
+  <param><para>
+   The script status, as <see cref="kvSCRIPT_STATUS_xxx"/> flag bits
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFileCopyToDevice(System.Int32,System.String,System.String)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFileCopyToDevice()"/> function copies an arbitrary file from the host to
+   the device.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The host file name; a pointer to a <c>NULL</c> terminated
+   array of chars.
+  </para>
+  </param>
+  <param><para>
+   The target device file name; a pointer to a <c>NULL</c>
+   terminated array of chars.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvFileCopyFromDevice()"/>, <seealso cref="kvFileDelete()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFileCopyFromDevice(System.Int32,System.String,System.String)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFileCopyFromDevice()"/> function copies an arbitrary file from the device
+   to the host.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The device file name; a pointer to a <c>NULL</c>
+   terminated array of chars.
+  </para>
+  </param>
+  <param><para>
+   The target host file name; a pointer to a <c>NULL</c> terminated
+   array of chars.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvFileCopyToDevice()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFileDelete(System.Int32,System.String)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFileDelete()"/> function deletes a file on the device.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Deleting system files is not recommended.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The file on the device to delete; a pointer
+   to a <c>NULL</c> terminated array of chars.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvFileCopyToDevice()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFileGetName(System.Int32,System.Int32,System.String@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFileGetName()"/> function returns the name of the file with
+   number <c>fileNo.</c>
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The number of the file.
+  </para>
+  </param>
+  <param><para>
+   A buffer that will contain the name of the
+   file. The name is a zero-terminated ASCII string.
+  </para>
+  </param>
+  <param><para>
+   The length, in bytes, of the <c>name</c> buffer.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvFileGetCount()"/>, <seealso cref="kvFileGetSystemData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFileGetCount(System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFileGetCount()"/> function returns the number of files.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit integer that will receive
+   the file count.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvFileGetName()"/>, <seealso cref="kvFileGetSystemData()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvFileGetSystemData(System.Int32,System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvFileGetSystemData()"/> function is used for reading disk parameters,
+   e.g. size, max number of (user) files, etc.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    Not yet implemented
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   The item we want information on.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit integer that will
+   receive the result.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvDeviceSetMode(System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvDeviceSetMode()"/> sets the mode.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The mode is device specific, which means that not all modes are
+   implemented in all products.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   One of the <see cref="kvDEVICE_MODE_xxx"/> constants,
+   defining which mode to use.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvDeviceGetMode()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvDeviceGetMode(System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvDeviceGetMode()"/> reads the current device's specific mode.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The mode is device specific, which means that not all modes are
+   implemented in all products.
+  </para><para>
+  </para>
+  </remarks>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit integer that will receive the
+   <see cref="kvDEVICE_MODE_xxx"/> value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvDeviceSetMode()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvPingRequest(System.Int32,System.UInt32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sends an active ping to a device. The ping time can later be
+   retrieved using <see cref="kvPingGetLatest()"/>.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   Time of request in microseconds. Used for matching answer to request.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvPingGetLatest(System.Int32,System.UInt32@,System.UInt32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This retrieves the latest ping time issued by an earlier call to <see cref="kvPingRequest()"/>
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   A handle to an open circuit.
+  </para>
+  </param>
+  <param><para>
+   Time of request in microseconds. Used for matching answer to request.
+  </para>
+  </param>
+  <param><para>
+   Latest value of ping time in milliseconds.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
+<member name="F:canlibCLSNET.Canlib.CanHandle">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canINVALID_HANDLE">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.WM__CANLIB">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_EXCLUSIVE">
+  <summary>
+  <para>
+   Don't allow sharing of this circuit between applications.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_REQUIRE_EXTENDED">
+  <summary>
+  <para>
+   This flag causes two things to happen:
+  </para><para>
+  <list type="bullets">
+    <item><description>The call will fail if the specified circuit doesn't allow extended CAN</description></item>
+    <item><description>If no frame-type flag is specified in a call to <see cref="canWrite"/>, it is assumed</description></item>
+    </list>   that extended CAN should be used.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_ACCEPT_VIRTUAL">
+  <summary>
+  <para>
+   Allow opening of virtual channels as well as physical channels.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para><para>
+  </para>
+  </summary>
+     </member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_OVERRIDE_EXCLUSIVE">
+  <summary>
+  <para>
+   Open the channel even if it is opened for exclusive
+   access already.
+  </para><para>
+    Use this flag with caution.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_REQUIRE_INIT_ACCESS">
+  <summary>
+  <para>
+   Fail the call if the channel cannot be opened with init access.
+  </para><para>
+   Init access means that the thread that owns the handle can set bit rate and
+   CAN driver mode. Init access is the default. At most one thread can have
+   init access to any given channel. If you try to set the bit rate or CAN
+   driver mode for a handle to which you don't have init access, the call will
+   silently fail (i.e. <see cref="canOK"/> is returned although the call had no effect),
+   unless you enable "access error reporting" by calling <see cref="canIoCtl()"/>. Access
+   error reporting is by default off.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para><para>
+  </para>
+  </summary>
+    <seealso cref="canOPEN_NO_INIT_ACCESS"/>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_NO_INIT_ACCESS">
+  <summary>
+  <para>
+   Don't open the handle with init access.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para><para>
+  </para>
+  </summary>
+    <seealso cref="canOPEN_REQUIRE_INIT_ACCESS"/>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_ACCEPT_LARGE_DLC">
+  <summary>
+  <para>
+   The channel will accept messages with DLC (Data Length Code) greater than
+   8. If this flag is not used, a message with DLC > 8 will always be
+   reported or transmitted as a message with DLC = 8. If the
+   <see cref="canOPEN_ACCEPT_LARGE_DLC"/> flag is used, the message will be sent and/or
+   received with the true DLC, which can be at most 15.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The length of the message is always at most 8.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFILTER_ACCEPT">
+  <summary>
+  <para>
+    CAN
+    canFILTER_xxx
+    canFILTER_xxx
+  </para><para>
+   Flags for <see cref="canAccept()"/>.
+  </para><para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFILTER_SET_CODE_STD">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFILTER_SET_MASK_STD">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFILTER_SET_CODE_EXT">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFILTER_SET_MASK_EXT">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canDRIVER_NORMAL">
+  <summary>
+  <para>
+   The "normal" driver type (push-pull). This is the default.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canDRIVER_SILENT">
+  <summary>
+  <para>
+   Sets the CAN controller in Silent Mode; that is, it doesn't send anything,
+   not even ACK bits, on the bus.  Reception works as usual.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    The values 2,3,5,6,7 are reserved values for compatibility reasons.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canDRIVER_SELFRECEPTION">
+  <summary>
+  <para>
+   Self-reception. Not implemented.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canDRIVER_OFF">
+  <summary>
+  <para>
+   The driver is turned off. Not implemented in all types of hardware.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_1M">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_500K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_250K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_125K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_100K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_62K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_50K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_83K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canBITRATE_10K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_1M">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_500K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_250K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_125K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_100K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_62K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_50K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.BAUD_83K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.CANLIBAPI">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_CAP">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the
+     capabilities of the CAN controller; this is a combination of the <see cref=""/>
+     canCHANNEL_CAP_xxx flags.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_CAP">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the
+     capabilities of the CAN transceiver; this is a combination of the
+     <see cref="canDRIVER_CAP_xxx"/> flags.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_FLAGS">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      Currently not implemented.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_TYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the hardware
+     type of the card. This value is any one of the <see cref="canHWTYPE_xxx"/>
+     constants.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_NUMBER">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the card's
+     number in the computer. Each card type is numbered separately. For
+     example, the first LAPcan card in a machine will have number 0, the second
+     LAPcan number 1, etc.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHAN_NO_ON_CARD">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which receives the channel
+     number on the card.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_SERIAL_NO">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 64-bit (8 bytes) area which receives the serial
+     number of the card. If the card doesn't have a serial number, 0 is
+     returned. The serial number is an 8-byte unsigned integer. Currently, no
+     products are using all 8 bytes; at most 4 bytes are used.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_SERIAL_NO">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 64-bit (8 bytes) area which receives the serial
+     number of the transceiver. The serial number is an 8-byte unsigned
+     integer. If the transceiver doesn't have a serial number, 0 is returned.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_FIRMWARE_REV">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 64-bit (8 bytes) area which receives the firmware
+     revision number on the card. This number consists of four 16-bit words:
+     the major revision, the minor revision, the release number and the build
+     number, listed in order from the most significant to the least
+     significant.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_HARDWARE_REV">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 64-bit (8 bytes) area which receives the hardware
+     revision number on the card. This number consists of four 16-bit words;
+     the two most significant are always 0, and the two least significant are
+     the major revision and the minor revision, listed in order from the most
+     significant to the least significant.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_UPC_NO">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 8-byte area which receives the UPC (EAN) number for
+     the card. If there is no UPC number, the buffer is filled with zeros. The
+     UPC (EAN) number is coded as a BCD string with the LSB first, so
+     e.g. 733-0130-00122-0 is coded as 0x30001220 0x00073301.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_UPC_NO">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 8-byte area which receives the UPC (EAN) number for
+     the transceiver. If there is no UPC number, the buffer is filled with
+     zeros. The UPC (EAN) number is coded as a BCD string with the LSB first,
+     so e.g. 733-0130-00122-0 is coded as 0x30001220 0x00073301.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_NAME">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an area which receives a zero-terminated string with a
+     clear-text name of the channel.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      Use of this item code is no longer recommended. The returned
+     channel name doesn't contain the exact hardware type (it just contains
+     the device family) and uses zero-based channel numbering, which is not
+     user friendly.  Instead, use e.g. <see cref="canCHANNELDATA_DEVDESCR_ASCII"/> and
+     <see cref="canCHANNELDATA_CHAN_NO_ON_CARD"/> to build your own channel name.
+  </para><para>
+     
+  </para>
+  </remarks>
+      <seealso cref="canCHANNELDATA_DEVNAME_ASCII"/>
+     
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DLL_FILE_VERSION">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an array of 4 16-bit unsigned integers which receives
+     the file version number of the second-level DLL driver file, i.e. the DLL
+     that interfaces between CANLIB32.DLL and the driver proper.
+  </para><para>
+     Contents depening on index:
+  </para><para>
+  <list type="bullets">
+    <item><description>0: 0</description></item>
+    <item><description>1: The build number</description></item>
+    <item><description>2: The minor revision number</description></item>
+    <item><description>3: The major revision number</description></item>
+    </list>  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DLL_PRODUCT_VERSION">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an array of 4 16-bit unsigned integers which receives
+     the product version number of the second-level DLL driver file, i.e. the
+     DLL that interfaces between CANLIB32.DLL and the driver proper.
+  </para><para>
+     Contents depening on index:
+  </para><para>
+  <list type="bullets">
+    <item><description>0: 0</description></item>
+    <item><description>1: 1</description></item>
+    <item><description>2: The minor revision number</description></item>
+    <item><description>3: The major revision number</description></item>
+    </list>  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DLL_FILETYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which receives a number that
+     identifies the second-level DLL driver file, i.e. the DLL that interfaces
+     between CANLIB32.DLL and the driver proper.
+  </para><para>
+     Values:
+  </para><para>
+  <list type="bullets">
+    <item><description>1: kvalapw.dll - used with CANLIB up to 2.29.</description></item>
+    <item><description>2: kvalapw2.dll - used with CANLIB from 3.0 and on.</description></item>
+    </list>  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_TYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which receives the CAN
+     transceiver type of the specified channel.  This value is one of the
+     <see cref="canTRANSCEIVER_TYPE_xxx"/>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DEVICE_PHYSICAL_POSITION">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which receives an address
+     indicating where the device is located on its underlying bus. The
+     interpretation of this number is bus-specific. If the address is unknown
+     or the bus driver does not support an address, the bus driver leaves this
+     member at its default value of 0xFFFFFFFF.
+  </para><para>
+     The following list describes the information certain bus drivers store in
+     the Address field for their child devices:
+  </para><para>
+  <list type="bullets">
+    <item><description>ISA: Does not supply an address. Defaults to 0xFFFFFFFF.</description></item>
+    <item><description>PC Card (PCMCIA): The socket number (typically 0x00 or 0x40)</description></item>
+    <item><description>PCI: The device number in the high word and the function number in the</description></item>
+    </list>     low word.
+  </para><para>
+  <list type="bullets">
+    <item><description>USB: The port number.</description></item>
+    </list>  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_UI_NUMBER">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which receives a number
+     associated with the device that can be displayed in the user
+     interface. This number is typically a user-perceived slot number, such as
+     a number printed next to the slot on the board, or some other number that
+     makes locating the physical device easier for the user. For buses with no
+     such convention, or when the UI number is unknown, 0xFFFFFFFF is returned.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TIMESYNC_ENABLED">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which is set to 0, if the
+     legacy time synchronization is not currently enabled for the specified
+     channel, and 1, if the legacy time synchronization is currently enabled
+     for the specified channel.
+  </para><para>
+     Legacy time synchronization is a mechanism that will keep the PC and CAN
+     channel clocks in sync. The synchronization is done in the driver, which
+     periodically calculates the difference between the PC clock and the CAN
+     device clock and compensates for the clock drift by recalculating the CAN
+     message time stamps. You need to enable clock synchronization in the
+     Control Panel using the Kvaser Hardware applet.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      Legacy time synchronization is implemented only on LAPcan and LAPcan
+     II. It is not related to Kvaser MagiSync(tm) which is implemented in the
+     high-end members of the Kvaser Leaf family. Kvaser MagiSync(tm) is always
+     enabled and allows for much more accurate time synchronization.
+  </para><para>
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DRIVER_FILE_VERSION">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an array of four 16-bit unsigned integers which
+     receives the file version number of the kernel-mode driver.
+  </para><para>
+     Contents depening on index:
+  </para><para>
+  <list type="bullets">
+    <item><description>0: The build number</description></item>
+    <item><description>1: 0</description></item>
+    <item><description>2: The minor revision number</description></item>
+    <item><description>3: The major revision number</description></item>
+    </list>  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DRIVER_PRODUCT_VERSION">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an array of four 16-bit unsigned integers which
+     receives the product version number of the kernel-mode driver.
+  </para><para>
+     Contents depening on index:
+  </para><para>
+  <list type="bullets">
+    <item><description>0: 0</description></item>
+    <item><description>1: 0</description></item>
+    <item><description>2: The minor revision number</description></item>
+    <item><description>3: The major revision number</description></item>
+    </list>  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_MFGNAME_UNICODE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the device manufacturer's name
+     as a zero-terminated Unicode string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_MFGNAME_ASCII">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the device manufacturer's name
+     as a zero-terminated ASCII string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DEVDESCR_UNICODE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the product name of the device
+     as a zero-terminated Unicode string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DEVDESCR_ASCII">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the product name of the device
+     as a zero-terminated ASCII string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DRIVER_NAME">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the name of the device
+     driver (e.g. "kcans") as a zero-terminated ASCII string.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      The device driver names have no special meanings and may change
+     from a release to another.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_QUALITY">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the quality of
+     the channel, where the quality is measured in percent of optimal quality.
+  </para><para>
+     For WLAN, -90 dBm and -35 dBm are considered 0% and 100%, respectively.
+  </para><para>
+     The quality is 100% for any directly connected channel (USB, PCI etc.).
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_ROUNDTRIP_TIME">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> point to a 32-bit unsigned integer that receives the roundtrip
+     time which is measured in milliseconds.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_BUS_TYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the
+     <see cref="kvBUSTYPE_GROUP_xxx"/> bus type.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DEVNAME_ASCII">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a CHAR array of at least 32 characters which receives
+     the current device name as a <c>NULL</c> terminated ASCII string.
+  </para><para>
+     If device name is not set or the device does not support this
+     functionality, an error will be returned.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TIME_SINCE_LAST_SEEN">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that contains the time in
+     milliseconds since the last communication occured.
+  </para><para>
+     For WLAN devices, this is the time since the last keep-alive message.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_OPERATIONAL_MODE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the
+     current WLAN operational mode of the remote capable device;
+     <see cref="canCHANNEL_OPMODE_xxx"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_PROFILE_NAME">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the remote profile name
+     of the device as a zero-terminated ASCII string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_HOST_NAME">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the remote host name
+     of the device as a zero-terminated ASCII string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_MAC">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a buffer which receives the mac address
+     of the device as a zero-terminated ASCII string.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNEL_IS_EXCLUSIVE">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNEL_IS_OPEN">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canHWTYPE_NONE">
+  <summary>
+  <para>
+    canHWTYPE_xxx
+    canHWTYPE_xxx
+  </para><para>
+   The following constants can be returned from <see cref="canGetChannelData()"/>, using the
+   <see cref="canCHANNELDATA_CARD_TYPE"/> item code. They identify the hardware type for
+   the channel specified in the call to <see cref="canGetChannelData()"/>.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+    They indicate a hardware type, but not necessarily a specific
+   product. For example, <see cref="canHWTYPE_LAPCAN"/> is returned both for LAPcan and
+   LAPcan II. (You can use <see cref="canGetChannelData()"/> to obtain the UPC/EAN code for
+   the device. This number uniquely identifies the product.)
+  </para><para>
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNEL_CAP_EXTENDED_CAN">
+  <summary>
+  <para>
+    canCHANNEL_CAP_xxx
+    canCHANNEL_CAP_xxx
+  </para><para>
+   Channel capabilities.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNEL_OPMODE_NONE">
+  <summary>
+  <para>
+    canCHANNEL_OPMODE_xxx
+    canCHANNEL_OPMODE_xxx
+  </para><para>
+   Current WLAN operational mode.
+  </para><para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canDRIVER_CAP_HIGHSPEED">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_PREFER_EXT">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> and <c>buflen</c> refers to this
+     functions arguments.
+  </para><para>
+     Tells CANLIB to "prefer" extended identifiers; that is, if you send a
+     message with <see cref="canWrite()"/> and don't specify <see cref="canMSG_EXT"/> nor <see cref="canMSG_STD"/>,
+     <see cref="canMSG_EXT"/> will be assumed. The contents of <c>buf</c> and <c>buflen</c> are
+     ignored. <see cref="canRead()"/> et al will set <see cref="canMSG_EXT"/> and/or <see cref="canMSG_STD"/> as usual
+     and are not affected by this call.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_PREFER_STD">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> and <c>buflen</c> refers to this
+     functions arguments.
+  </para><para>
+     Tells CANLIB to "prefer" standard identifiers; that is, if you send a
+     message with <see cref="canWrite()"/> and don't specify <see cref="canMSG_EXT"/> nor <see cref="canMSG_STD"/>,
+     <see cref="canMSG_STD"/> will be assumed. The contents of <c>buf</c> and <c>buflen</c> are
+     ignored. <see cref="canRead()"/> et al will set <see cref="canMSG_EXT"/> and/or <see cref="canMSG_STD"/> as usual
+     and are not affected by this call.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_CLEAR_ERROR_COUNTERS">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> and <c>buflen</c> refers to this
+     functions arguments.
+  </para><para>
+     Tells CANLIB to clear the CAN error counters. The contents of <c>buf</c> and  <c>buflen</c> are ignored.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      Not all CAN controllers support this operation (and if they don't,
+     nothing will happen.)
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_TIMER_SCALE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a DWORD which contains the desired time-stamp clock
+     resolution in microseconds. The default value is 1000 microseconds, i.e.
+     one millisecond.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      The accuracy of the clock isn't affected.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_TXACK">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a DWORD which contains
+  </para><para>
+  <list type="bullets">
+    <item><description>0: to turn Transmit Acknowledges off.</description></item>
+    <item><description>1: to turn Transmit Acknowledges on.</description></item>
+    <item><description>2: to turn Transmit Acknowledges off, even for the driver's internal</description></item>
+    </list>     usage. This might enhance performance but will cause some other APIs to
+     stop working (for example, the current size of the transmit queue can not
+     be read when this mode is active.)
+  </para><para>
+     The default value is 0, Transmit Acknowledge is off.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_RX_BUFFER_LEVEL">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points at a <c>DWORD</c> which receives the current RX queue level. The
+     returned value is approximative (this is because not all hardware supports
+     retrieving the queue levels. In that case a best-effort guess is
+     returned. Also note that a device with embedded CPU will report its queue
+     levels to the host computer after a short delay that depends on the bus
+     traffic intensity, and consequently the value returned by the call to
+     <see cref="canIoCtl()"/> might be a few milliseconds old.)
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_TX_BUFFER_LEVEL">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points at a <c>DWORD</c> which receives the current TX queue level. The
+     returned value is approximative (this is because not all hardware supports
+     retrieving the queue levels. In that case a best-effort guess is
+     returned. Also note that a device with embedded CPU will report its queue
+     levels to the host computer after a short delay that depends on the bus
+     traffic intensity, and consequently the value returned by the call to
+     <see cref="canIoCtl()"/> might be a few milliseconds old.)
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_FLUSH_RX_BUFFER">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> and <c>buflen</c> refers to this
+     functions arguments.
+  </para><para>
+     Discard the current contents of the RX queue. The values of <c>buf</c> and  <c>buflen</c> are ignored.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      This is the same thing as calling <see cref="canFlushReceiveQueue()"/>
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_FLUSH_TX_BUFFER">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> and <c>buflen</c> refers to this
+     functions arguments.
+  </para><para>
+     Discard the current contents of the TX queue. The values of <c>buf</c> and  <c>buflen</c> are ignored.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      This is the same thing as calling <see cref="canFlushTransmitQueue()"/>.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_TIMER_SCALE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <c>DWORD</c> which contains the desired time-stamp clock
+     resolution in microseconds. Note that the accuracy of the clock isn't
+     affected. The default value is 1000 microseconds, i.e. one millisecond.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_TXRQ">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <c>DWORD</c> which contains
+  </para><para>
+  <list type="bullets">
+    <item><description><c>0</c> to turn Transmit Requests off.</description></item>
+    <item><description><c>1</c> to turn Transmit Requests on.</description></item>
+    </list>     Default value is <c>0,</c> Transmit Requests off.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_EVENTHANDLE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points at a <c>DWORD</c> which receives a Windows Event handle which can
+     be passed to the Win32 API <c>WaitForSingleObject.</c> The event is signaled
+     when "something" (typically that a CAN message has been received or
+     transmitted) happens in the driver.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      There is no more information available as to what happened when this
+     call returns. The call may return on an "internal" event in CANLIB and your
+     application must be prepared to handle this (i.e. go to sleep again.)
+  </para><para>
+      If <see cref="canWaitForEvent()"/> returns with success status (<see cref="canOK)"/>, you must call
+     <see cref="canRead()"/> repeatedly until it returns <see cref="canERR_NOMSG"/>, before calling
+     <see cref="canWaitForEvent()"/> again. This will flush the driver's internal event queues.
+     Failure to call <see cref="canRead()"/> can cause <see cref="canWaitForEvent()"/> to get stuck in a state
+     where it always sleeps for the specified timeout and then returns with
+     <see cref="canERR_TIMEOUT"/>.
+  </para><para>
+  </para>
+  </remarks>
+      <seealso cref="canWaitForEvent()"/>
+  <remarks><para>
+      You must not set, reset, nor close this handle.  Waiting on it is
+     the only supported operation.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_BYPASS_MODE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      Not yet implemented.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_WAKEUP">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>.
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_DRIVERHANDLE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a HANDLE which receives the Windows handle related to the
+     CANLIB handle.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_MAP_RXQUEUE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>.
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_WAKEUP">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>.
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_REPORT_ACCESS_ERRORS">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a BYTE which contains
+  </para><para>
+  <list type="bullets">
+    <item><description><c>0</c> to turn access error reporting off, and</description></item>
+    <item><description><c>1</c> to turn access error reporting on.</description></item>
+    </list>     Default value is <c>0,</c> access error reporting off.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_REPORT_ACCESS_ERRORS">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a BYTE which receives the current setting of the access
+     error reporting (0 or 1.)
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_CONNECT_TO_VIRTUAL_BUS">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Connects the handle to the virtual bus number (0..31) which the <c>buf</c>
+     points to.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_DISCONNECT_FROM_VIRTUAL_BUS">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Disonnects the handle from the virtual bus number (0..31) which the <c>buf</c>
+     points to.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_USER_IOPORT">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <see cref="canUserIoPortData"/> struct that contains a port number
+     and a port value to set. This is used by special hardware only.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_USER_IOPORT">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <see cref="canUserIoPortData"/> struct that contains a port
+     number. After the call, the struct will contain the current value of the
+     I/O port. This is used by special hardware only.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_BUFFER_WRAPAROUND_MODE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>.
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_RX_QUEUE_SIZE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Use this function code to set the size of the receive buffer for a
+     specific handle. <c>buf</c> points to an unsigned integer which contains the
+     new size (number of messages) of the receive buffer.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      The receive buffer consumes system nonpaged pool memory, which is a
+     limited resource. Do not increase the receive buffer size unless you
+     have good reasons to do so.
+  </para><para>
+  </para><para>
+      You can't use this function code when the channel is on bus.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_USB_THROTTLE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>.
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_USB_THROTTLE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>.
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_BUSON_TIME_AUTO_RESET">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a DWORD. If the value is zero, the CAN clock will not be
+     reset at buson for the handle. Otherwise, the CAN clock will be reset at
+     buson.
+  </para><para>
+     Default value is <c>1,</c> the CAN clock will be reset at buson.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_TXACK">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Returns the state of the Transmit Acknowledge as a DWORD in <c>buf:</c>
+  </para><para>
+  <list type="bullets">
+    <item><description>0: Transmit Acknowledges is turned off.</description></item>
+    <item><description>1: Transmit Acknowledges is turned on.</description></item>
+    <item><description>2: Transmit Acknowledges is turned off, even for the driver's internal</description></item>
+    </list>     usage.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_LOCAL_TXECHO">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to an unsigned byte. If the value is zero, the local transmit
+     echo is turned off for the handle. Otherwise, local transmit echo is turned
+     on.
+  </para><para>
+     Local transmit echo is turned on by default on all handles.  This means
+     that if two handles are open on the same channel, and a message is
+     transmitted on the first handle, it will be received as a normal message
+     on the second handle. Use the <see cref="canIOCTL_SET_LOCAL_TXECHO"/> function code to
+     turn this function off, if it is not desired on a certain handle.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_ERROR_FRAMES_REPORTING">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to an unsigned byte. If the value is zero, the reporting of
+     error frames is turned off for the handle. Otherwise, error frame reporting
+     is turned on.
+  </para><para>
+     Default value is <c>1,</c> error frame reporting is turned on.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_CHANNEL_QUALITY">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a 32-bit unsigned integer that receives the quality of
+     the channel, where the quality is measured in percent of optimal quality.
+  </para><para>
+     For a WLAN, -90 dBm and -35 dBm are considered 0% and 100%, respectively.
+  </para><para>
+     The quality is 100% for any directly connected channel (USB, PCI etc.).
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_ROUNDTRIP_TIME">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <c>DWORD</c> that contains the roundtrip time measured in
+     milliseconds.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_BUS_TYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <c>DWORD</c> that contains the <see cref="kvBUSTYPE_GROUP_xxx"/> bus type.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_DEVNAME_ASCII">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a CHAR array of at least 32 characters which receives the
+     current device name as a <c>NULL</c> terminated ASCII string.
+  </para><para>
+     If device name is not set or the device does not support this
+     functionality, an error will be returned.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_TIME_SINCE_LAST_SEEN">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <c>DWORD</c> that contains the time in milliseconds since the last
+     communication occured.
+  </para><para>
+     For WLAN devices, this is the time since the last keep-alive message.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_TREF_LIST">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Obtain the time reference list for MagiSync devices.
+  </para><para>
+     <c>buf</c> points to an array of pairs of 64-bit ints, one of which
+     will contain the reference number and the other one the timestamp
+     in nanoseconds.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      This function is subject to change in future releases and is
+     not supported by Kvaser.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_TX_INTERVAL">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     <c>buf</c> points to a <c>DWORD</c> that contains the number of microseconds
+     the minimum CAN message transmit interval should be set to, or 0xffffffff
+     to fetch the current setting.
+     The minimum interval can not be set to more than one second.
+  </para><para>
+     When a CAN channel goes bus on, the minimum interval is set to zero.
+     I.e. CAN transmissions happen at the maximum speed the device is capable of.
+  </para><para>
+     If the device does not support this functionality, or if an invalid
+     minimum interval is requested, an error will be returned.
+  </para><para>
+  </para>
+  </summary>
+  <remarks><para>
+      The minimum CAN messages transmit interval applies to the physical CAN
+     channel. It will thus affect all messages transmitted, even those sent
+     using other CANlib handles to the same physical channel. The interval
+     is defined as the time from the successful completion of one transmit
+     to the beginning of the next one.
+  </para>
+  </remarks>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_USB_THROTTLE_SCALED">
+  <summary>
+  <para>
+     Obsolete, use <see cref="canIOCTL_SET_THROTTLE_SCALED"/> instead
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_THROTTLE_SCALED">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     This ioctl can be used to set the responsitivity of some devices.
+     <c>buf</c> points to a <c>DWORD</c> that should contain a value between 0 and 100.
+     A value of 0 means that the device should be very responsive and a value
+     of 100 means that the device generates less cpu load or requires more bandwidth.
+     Note that not all
+     devices support this. Some hardware will accept this command but neglect it.
+     This can be found out by reading the scaled throttle.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_USB_THROTTLE_SCALED">
+  <summary>
+  <para>
+     Obsolete, use <see cref="canIOCTL_GET_THROTTLE_SCALED"/> instead
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_GET_THROTTLE_SCALED">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     This ioctl can be used to set the responsitivity of some devices.
+     <c>buf</c> points to a <c>DWORD</c> that should contain a value between 0 and 100.
+     A value of 0 means that the device should be very responsive and a value
+     of 100 means that the device generates less cpu load or requires more bandwidth.
+     Note that not all
+     devices support this. Some hardware will accept this command but neglect it.
+     This can be found out by reading the scaled throttle.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canVERSION_CANLIB32_VERSION">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetVersionEx()"/> and controls which version number
+     that returned.
+  </para><para>
+     Version number of the canlib32.dll file coded as an unsigned 16-bit word
+     with the major version number in the upper byte and the minor version
+     number in the lower byte. This version number is not related to the
+     product version number of the whole CANLIB.  For example, canlib32.dll
+     belonging to CANLIB 2.27 would return 0x305.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canVERSION_CANLIB32_PRODVER">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetVersionEx()"/> and controls what type of version
+     number that is returned.
+  </para><para>
+     Product version number of canlib32.dll coded as an unsigned 16-bit word
+     with the major version number in the upper byte and the minor version
+     number in the lower byte. The product version number corresponds to the
+     version number of the whole CANLIB. For example, canlib32.dll belonging to
+     CANLIB 2.27 would return 0x21B.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canVERSION_CANLIB32_PRODVER32">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetVersionEx()"/> and controls what type of version
+     number that is returned.
+  </para><para>
+     Product version number of canlib32.dll coded as an unsigned 32-bit word
+     where the bytes contain (in order from the most significant to the least
+     significant byte) 0, major version number, minor version number, and the
+     minor version letter. (The minor version letter is the ASCII code for the
+     letter, or 0 (zero) if no letter). For example, CANLIB 3.8 would return
+     0x00030800 and CANLIB 3.8a would return 0x00030861.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canVERSION_CANLIB32_BETA">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetVersionEx()"/> and controls what type of version
+     number that is returned.
+  </para><para>
+     Returns 1 if the present version is a beta (preview) release, or 0 if it
+     is an official release.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOBJBUF_TYPE_AUTO_RESPONSE">
+  <summary>
+  <para>
+     canOBJBUF_TYPE_xxx
+     canOBJBUF_TYPE_xxx
+  </para><para>
+    Used in <see cref="canObjBufAllocate()"/>.
+  </para><para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOBJBUF_AUTO_RESPONSE_RTR_ONLY">
+  <summary>
+  <para>
+    This define is used in <see cref="canObjBufSetFlags()"/>.
+  </para><para>
+    For auto-response buffers only. When this flag is in effect, the buffer
+    will auto-respond to remote requests only.  If this flag is not in effect,
+    the buffer will auto-respond to both remote requests and ordinary data
+    frames.
+  </para><para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canVERSION_DONT_ACCEPT_LATER">
+  <summary>
+  <para>
+     This define is used in <see cref="canProbeVersion()"/>, <c>major</c> and <c>minor</c> refer to
+     this functions arguments.
+  </para><para>
+     Require that exactly the version specified by <c>major</c> and <c>minor</c> be
+     present. Earlier and later versions are not accepted. This flag does not
+     affect the acceptance of beta versions.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canVERSION_DONT_ACCEPT_BETAS">
+  <summary>
+  <para>
+     This define is used in <see cref="canProbeVersion()"/>, <c>major</c> and <c>minor</c> refer to
+     this functions arguments.
+  </para><para>
+     Return FALSE if a beta version (preview version) of CANLIB is installed,
+     regardless of its version number.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvLED_ACTION_ALL_LEDS_ON">
+  <summary>
+  <para>
+      kvLED_ACTION_xxx
+      kvLED_ACTION_xxx
+  </para><para>
+     The following constants can be used together with the <see cref="kvFlashLeds()"/> function.
+  </para><para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvBUSTYPE_NONE">
+  <summary>
+  <para>
+    kvBUSTYPE_xxx
+    kvBUSTYPE_xxx
+  </para><para>
+   Bus types, returned by <see cref="kvGetSupportedInterfaceInfo()"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvBUSTYPE_GROUP_VIRTUAL">
+  <summary>
+  <para>
+    kvBUSTYPE_GROUP_xxx
+    kvBUSTYPE_GROUP_xxx
+  </para><para>
+   Bus type group, returned when using <see cref="canCHANNELDATA_BUS_TYPE"/>
+   This is a grouping of the individual <see cref="kvBUSTYPE_xxx"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvENVVAR_TYPE_INT">
+  <summary>
+  <para>
+     This define is used in <see cref="kvScriptEnvvarOpen()"/>.
+  </para><para>
+     It defines the type of the envvar as <c>int.</c>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvENVVAR_TYPE_FLOAT">
+  <summary>
+  <para>
+     This define is used in <see cref="kvScriptEnvvarOpen()"/>.
+  </para><para>
+     It defines the type of the envvar as <c>float.</c>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvENVVAR_TYPE_STRING">
+  <summary>
+  <para>
+     This define is used in <see cref="kvScriptEnvvarOpen()"/>.
+  </para><para>
+     It defines the type of the envvar as <c>string.</c>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvEVENT_TYPE_KEY">
+  <summary>
+  <para>
+     This define is used in  <see cref="kvScriptSendEvent()"/>.
+  </para><para>
+     It defines an event of type "key pressed".
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_STOP_NORMAL">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_STOP_FORCED">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_REQUEST_TEXT_UNSUBSCRIBE">
+  <summary>
+  <para>
+   Cancel subscription of printf messages from script slots.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_REQUEST_TEXT_SUBSCRIBE">
+  <summary>
+  <para>
+   Subscribe to printf messages from script slots.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_REQUEST_TEXT_ALL_SLOTS">
+  <summary>
+  <para>
+   Select all script slots.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_STATUS_LOADED">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvSCRIPT_STATUS_RUNNING">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvDEVICE_MODE_INTERFACE">
+  <summary>
+  <para>
+     This define is used in <see cref="kvDeviceSetMode()"/> and <see cref="kvDeviceGetMode()"/>.
+  </para><para>
+     Device is running or should be running in interface mode.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvDEVICE_MODE_LOGGER">
+  <summary>
+  <para>
+     This define is used in <see cref="kvDeviceSetMode()"/> and <see cref="kvDeviceGetMode()"/>.
+  </para><para>
+     Device is running or should be running in logger mode.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canTIMER_CYCLIC">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canTIMER_EXPENSIVE">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+</members>
+</doc>

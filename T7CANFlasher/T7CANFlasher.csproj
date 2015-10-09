@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AC3A8E16-F3F5-4DAC-8EDF-E8251AF6B4C2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>T7CANFlasher</RootNamespace>
+    <AssemblyName>T7CANFlasher</AssemblyName>
+    <ApplicationIcon>T5CanFlasher.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="combilib-net">
+      <HintPath>..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\combilib-net.dll</HintPath>
+    </Reference>
+    <Reference Include="LibUsbDotNet">
+      <HintPath>..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\LibUsbDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\CANMessage.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\CANUSBDevice.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\EasySyncUSBDevice.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\EasySync_canusb.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\ICANDevice.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\ICANListener.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\Lawicel_canusb.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\CAN\LPCCANDevice_T7.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Flasher\T7Flasher.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Form1.Designer.cs">
+      <DependentUpon>..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\ELM327Device.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\IKWPDevice.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\KWPCANDevice.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\KWPCANListener.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\KWPHandler.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\KWPReply.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\KWP\KWPRequest.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Program.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Form1.resx">
+      <DependentUpon>..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\Resources.Designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\app.config" />
+    <None Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\Settings.Designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Properties\Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\Symbol.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\T7FileHeader.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\T7FileParser.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\T7Flasher.cs" />
+    <Compile Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\T7Parser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\..\..\Program Files %28x86%29\Dilemma\T7Suite\Source\T7CANFlasher\T5CanFlasher.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

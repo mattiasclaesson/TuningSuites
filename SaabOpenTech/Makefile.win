@@ -1,0 +1,36 @@
+# Project: SaabOpenTech
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = main.o info_texts.o kwp2000.o $(RES)
+LINKOBJ  = main.o info_texts.o kwp2000.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" FTD2XX.lib canusbdrv.lib  
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = SaabOpenTech.exe
+CXXFLAGS = $(CXXINCS)  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before SaabOpenTech.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o "SaabOpenTech.exe" $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+info_texts.o: info_texts.c
+	$(CC) -c info_texts.c -o info_texts.o $(CFLAGS)
+
+kwp2000.o: kwp2000.c
+	$(CC) -c kwp2000.c -o kwp2000.o $(CFLAGS)
