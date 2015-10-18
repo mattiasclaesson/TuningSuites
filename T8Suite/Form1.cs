@@ -13212,8 +13212,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 if (t8can.isOpen())
                 {
-                    m_prohibitReading = true;
-                    //byte[] snapshot = t8can.getFlashContent();                    
+                    m_prohibitReading = true;                   
                     DoWorkEventArgs args = new DoWorkEventArgs(sfd.FileName);
 
                     t8can.ReadFlash(this, args);
