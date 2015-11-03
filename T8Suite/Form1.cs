@@ -10809,6 +10809,25 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
             }
 
+            if (foundvalue == string.Empty)
+            {
+                using (RegistryKey Settings = TempKey.OpenSubKey("HKEY_CLASSES_ROOT\\Applications\\LogWorks3.exe\\shell\\open\\command"))
+                {
+                    if (Settings != null)
+                    {
+                        string[] vals = Settings.GetValueNames();
+                        try
+                        {
+                            foundvalue = Settings.GetValue(vals[0]).ToString();
+                        }
+                        catch (Exception E)
+                        {
+                            logger.Debug(E.Message);
+                        }
+                    }
+                }
+            }
+
             return foundvalue;
         }
 
