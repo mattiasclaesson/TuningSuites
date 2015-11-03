@@ -488,6 +488,7 @@
       <DependentUpon>frmTransferSelectionSymbolsSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="UserControls\GridWithButtons.resx">
       <DependentUpon>GridWithButtons.cs</DependentUpon>
     </EmbeddedResource>
