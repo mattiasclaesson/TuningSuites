@@ -200,7 +200,6 @@
     <Compile Include="AxisBrowser.Designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\DataT8.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -215,8 +214,6 @@
     <Compile Include="ctrlDisassembler.designer.cs">
       <DependentUpon>ctrlDisassembler.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataControllers\BaseDatacontroller.cs" />
-    <Compile Include="DataControllers\DTCRunTime.cs" />
     <Compile Include="frmEditRealtimeSymbol.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,20 +260,8 @@
     <Compile Include="SymbolCollection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserControls\GridWithButtons.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\GridWithButtons.Designer.cs">
-      <DependentUpon>GridWithButtons.cs</DependentUpon>
-    </Compile>
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
-    <Compile Include="UserControls\DTCUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\DTCUserControl.Designer.cs">
-      <DependentUpon>DTCUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="FlashBlock.cs" />
     <Compile Include="FlashBlockCollection.cs" />
     <Compile Include="Form1.cs">
@@ -489,9 +474,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
-    <EmbeddedResource Include="UserControls\GridWithButtons.resx">
-      <DependentUpon>GridWithButtons.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Form1.cs</DependentUpon>
