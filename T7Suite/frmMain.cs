@@ -10914,13 +10914,13 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private byte[] ReadSymbolFromSRAM(uint symbolnumber, string symbolname, uint sramaddress, int length, out bool _success)
         {
             byte[] data;
-            data = new byte[length];
+            data = new byte[1];
             data[0] = (byte)0xFF;
             _success = false;
             logger.Debug("Getting symbolnumber: " + symbolnumber.ToString() + " symbolname: " + symbolname);
             if (m_connectedToECU)
             {
-                if (sramaddress > 0)
+                if (length <= 4)
                 {
                     _sw2.Reset();
                     _sw2.Start();
@@ -10959,33 +10959,33 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     logger.Debug("          Get value Updated via sramaddress in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
                     _sw2.Stop();
                 }
-                /* •—————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————•
-                   | else if (length == 1)                                                                                         |
-                   | {                                                                                                             |
-                   |     _sw2.Reset();                                                                                             |
-                   |     _sw2.Start();                                                                                             |
-                   |     int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);                                              |
-                   |     logger.Debug("          Get single byte : " + sram.ToString());                                           |
-                   |     SymbolHelper sh = new SymbolHelper();                                                                     |
-                   |     sh.Length = 1;                                                                                            |
-                   |     sh.Start_address = sram;                                                                                  |
-                   |     m_prohibitReading = true;                                                                                 |
-                   |     data = trionic7.ReadMapFromSRAMVarLength(sh);                                                             |
-                   |     m_prohibitReading = false;                                                                                |
-                   |     _success = true;                                                                                          |
-                   |     logger.Debug("          Get single byte Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");      |
-                   |     _sw2.Stop();                                                                                              |
-                   | }                                                                                                             |
-                   | else                                                                                                          |
-                   | {                                                                                                             |
-                   |     _sw2.Reset();                                                                                             |
-                   |     _sw2.Start();                                                                                             |
-                   |     logger.Debug("          Get symbolnumber (2): " + symbolnumber.ToString());                               |
-                   |     data = trionic7.ReadSymbolNumber(symbolnumber, out _success);                                             |
-                   |     logger.Debug("          Get symbolnumber (2) Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms"); |
-                   |     _sw2.Stop();                                                                                              |
-                   | }                                                                                                             |
-                   •———————————————————————————————————————————————————————————————————————————————————————————————————————————————• */
+               else
+              {
+                    _sw2.Reset();
+                    _sw2.Start();
+                    logger.Debug("          Get symbolnumber (2): " + symbolnumber.ToString());
+                    data = trionic7.ReadSymbolNumber(symbolnumber, out _success);
+                    logger.Debug("          Get symbolnumber (2) Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
+                    _sw2.Stop();
+              }
+                /* else
+                    {                                                                                                             
+                        _sw2.Reset();                                                                                             
+                        _sw2.Start();                                                                                             
+                        int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);                                              
+                        logger.Debug("          Get single byte : " + sram.ToString());                                           
+                        SymbolHelper sh = new SymbolHelper();                                                                     
+                        sh.Length = 1;                                                                                            
+                        sh.Start_address = sram;                                                                                  
+                        m_prohibitReading = true;                                                                                 
+                        data = trionic7.ReadMapFromSRAMVarLength(sh);                                                             
+                        m_prohibitReading = false;                                                                                
+                        _success = true;                                                                                          
+                        logger.Debug("          Get single byte Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");      
+                        _sw2.Stop();                                                                                              
+                    }                                                                                                             
+                   */                                                                                                          
+                                                                                                                                 
             }
 
             return data;
@@ -12527,23 +12527,10 @@ If boost regulation reports errors you can increase the difference between boost
                     {
                         logger.Debug("Failed to reload: " + E.Message);
                     }
-                    //if (!tmrRealtime.Enabled) return; /// obviously stopped
-
-                    /*                    
-                    int ori_symbolnumber = Convert.ToInt32(dr["Symbolnumber"]);
-                    string symbol = dr["SymbolName"].ToString();
-
-                    // symbolnumber fetch from realtime table read from ECU directly
-                    int symbolnumber = GetSymbolNumberFromRealtimeList(ori_symbolnumber, symbol);
-                    //logger.Debug("Ori num: " + ori_symbolnumber.ToString() + " convnr: " + symbolnumber.ToString());
-                   
-                    */
-                    //logger.Debug("Number converted : " + symbolnumber.ToString() + " ConvNr: " + Convert.ToInt32(dr["ConvertedSymbolnumber"]).ToString());
+                    
                     if (symbolnumber > 0)
                     {
                         byte[] buffer;
-
-                        //symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, dr["SymbolName"].ToString()), dr["SymbolName"].ToString());
 
                         bool _success = false;
                         
