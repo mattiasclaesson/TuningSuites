@@ -10914,7 +10914,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private byte[] ReadSymbolFromSRAM(uint symbolnumber, string symbolname, uint sramaddress, int length, out bool _success)
         {
             byte[] data;
-            data = new byte[1];
+            data = new byte[length];
             data[0] = (byte)0xFF;
             _success = false;
             logger.Debug("Getting symbolnumber: " + symbolnumber.ToString() + " symbolname: " + symbolname);
