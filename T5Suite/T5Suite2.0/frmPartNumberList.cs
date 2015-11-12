@@ -122,11 +122,11 @@ namespace T5Suite2
                     {
                         // assume partnumber
                         partnumber = (string)binfilename;
-                        ///////////////// temporary conversion code
                         softwareid = (string)trionic5file.GetSoftwareVersion(binfile);
-                        string outputfile = Path.GetDirectoryName(binfile);
-                        outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(binfile) + "-" + softwareid + ".BIN");
-                        File.Move(binfile, outputfile);
+                        ///////////////// temporary conversion code
+                        //string outputfile = Path.GetDirectoryName(binfile);
+                        //outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(binfile) + "-" + softwareid + ".BIN");
+                        //File.Move(binfile, outputfile);
                         ///////////////// end temporary conversion code
                         partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                     }
@@ -178,6 +178,7 @@ namespace T5Suite2
             if (rows.Length > 0)
             {
                 m_selectedpartnumber = (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "Partnumber");
+                m_selectedpartnumber += "-" + (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "SoftwareVersion");
                 if (m_selectedpartnumber != null)
                 {
                     if (m_selectedpartnumber != string.Empty)
@@ -195,6 +196,7 @@ namespace T5Suite2
             if (rows.Length > 0)
             {
                 m_selectedpartnumber = (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "Partnumber");
+                m_selectedpartnumber += "-" + (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "SoftwareVersion");
             }
             this.Close();
         }

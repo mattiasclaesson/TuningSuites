@@ -998,7 +998,7 @@ namespace T5Suite2
                 {
                     barECULocked.Caption = "RAM unlocked";
                 }
-                if (CheckFileInLibrary(props.Partnumber))
+                if (CheckFileInLibrary(props.Partnumber + "-" + props.SoftwareID))
                 {
                     btnCompareToOriginalFile.Enabled = true;
                 }
