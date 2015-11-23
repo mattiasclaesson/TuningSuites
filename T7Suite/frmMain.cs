@@ -710,6 +710,40 @@ namespace T7
             }
         }
 
+        private void File_ImportAS2_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "AS2 documents|*.as2";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                TryToLoadAdditionalAS2Symbols(ofd.FileName);
+                foreach (SymbolHelper sh in m_symbols)
+                {
+                    if (sh.Userdescription != "" && sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                    {
+                        string temp = sh.Varname;
+                        sh.Varname = sh.Userdescription;
+                        sh.Userdescription = temp;
+                    }
+                }
+                gridControlSymbols.DataSource = m_symbols;
+                SetDefaultFilters();
+                gridControlSymbols.RefreshDataSource();
+                // and save the data to the repository
+                SaveAdditionalSymbols();
+                try
+                {
+                    _softwareIsOpenDetermined = false;
+                    IsSoftwareOpen();
+                }
+                catch (Exception E3)
+                {
+                    logger.Debug(E3.Message);
+                }
+            }
+        }
+
         private void File_ImportTuningPackage_ItemClick(object sender, ItemClickEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -906,6 +940,60 @@ namespace T7
                 {
                     CompareToFile((string)files.GetValue(0));
                 }
+            }
+        }
+
+        private void TryToLoadAdditionalAS2Symbols(string filename)
+        {
+            // convert to AS2 file format
+
+            try
+            {
+                SymbolTranslator st = new SymbolTranslator();
+                string[] fileContent = File.ReadAllLines(filename);
+                int symbolnumber = 0;
+                foreach (string line in fileContent)
+                {
+                    if (line.StartsWith("*"))
+                    {
+                        symbolnumber++;
+                        try
+                        {
+                            string varname = line.Substring(1);
+                            int idxSymTab = 0;
+                            foreach (SymbolHelper sh in m_symbols)
+                            {
+                                if (sh.Length > 0)
+                                {
+                                    idxSymTab++;
+                                }
+                                if (idxSymTab == symbolnumber)
+                                {
+                                    sh.Userdescription = varname;
+                                    string helptext = string.Empty;
+                                    XDFCategories cat = XDFCategories.Undocumented;
+                                    XDFSubCategory sub = XDFSubCategory.Undocumented;
+                                    sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub, m_appSettings.ApplicationLanguage);
+
+                                    if (sh.Category == "Undocumented" || sh.Category == "")
+                                    {
+                                        sh.createAndUpdateCategory(sh.Userdescription);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        catch (Exception lineE)
+                        {
+                            logger.Debug("Failed to import a symbol from AS2 file " + line + ": " + lineE.Message);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug("Failed to import additional AS2 symbols: " + E.Message);
             }
         }
 
@@ -6590,10 +6678,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
             }
 
-            if (m_appSettings.AdminMode)
-            {
-                btnBrowseInternetTunes.Visibility = BarItemVisibility.Always;
-            }
             if(m_appSettings.DebugMode)
             {
                 readSymbolToolStripMenuItem.Enabled = true;
