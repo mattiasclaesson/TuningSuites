@@ -16239,12 +16239,6 @@ If boost regulation reports errors you can increase the difference between boost
             SetPerformanceMode(2);
         }
 
-        private void btnBrowseInternetTunes_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            frmBrowseTunes browse = new frmBrowseTunes();
-            browse.ShowDialog();
-        }
-
         private void exportAsTuningPackageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // export selected maps as tuning package (name the file t7p)
