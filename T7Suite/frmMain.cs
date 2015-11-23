@@ -18883,7 +18883,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 if (m_appSettings.DisableClosedLoopOnStartAutotune)
                 {
                     SetLambdaControl(true);
-                    SetE85Cal(true);
+                    if (IsBinaryBiopower())
+                    {
+                        SetE85Cal(true);
+                    }
                     SetFCutCal(true);
                 }
 
@@ -18992,7 +18995,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     {
                         // LambdaCal.ST_Enable?
                         SetLambdaControl(false);
-                        SetE85Cal(false);
+                        if (IsBinaryBiopower())
+                        {
+                            SetE85Cal(false);
+                        }
                         SetFCutCal(false);
                     }
                     // what's next?
@@ -19031,7 +19037,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         if (m_appSettings.DisableClosedLoopOnStartAutotune)
                         {
                             SetLambdaControl(true);
-                            SetE85Cal(true);
+                            if (IsBinaryBiopower())
+                            {
+                                SetE85Cal(true);
+                            }
                             SetFCutCal(true);
                         }
                     }
