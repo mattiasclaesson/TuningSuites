@@ -62,11 +62,12 @@ namespace T7
             this.checkEdit10 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit11 = new DevExpress.XtraEditors.CheckEdit();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.checkEdit15 = new DevExpress.XtraEditors.CheckEdit();
+            this.checkEdit14 = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.groupControl3 = new DevExpress.XtraEditors.GroupControl();
             this.checkEdit13 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit12 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit14 = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).BeginInit();
@@ -92,11 +93,12 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit11.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit15.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).BeginInit();
             this.groupControl3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -184,8 +186,8 @@ namespace T7
             // 
             // dateEdit1
             // 
-            this.dateEdit1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateEdit1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateEdit1.EditValue = null;
             this.dateEdit1.Location = new System.Drawing.Point(130, 218);
             this.dateEdit1.Name = "dateEdit1";
@@ -378,7 +380,7 @@ namespace T7
             // simpleButton1
             // 
             this.simpleButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.simpleButton1.Location = new System.Drawing.Point(504, 530);
+            this.simpleButton1.Location = new System.Drawing.Point(504, 551);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 1;
@@ -404,6 +406,7 @@ namespace T7
             // 
             // groupControl2
             // 
+            this.groupControl2.Controls.Add(this.checkEdit15);
             this.groupControl2.Controls.Add(this.checkEdit14);
             this.groupControl2.Controls.Add(this.checkEdit11);
             this.groupControl2.Controls.Add(this.checkEdit8);
@@ -415,15 +418,31 @@ namespace T7
             this.groupControl2.Controls.Add(this.checkEdit2);
             this.groupControl2.Location = new System.Drawing.Point(7, 331);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(572, 115);
+            this.groupControl2.Size = new System.Drawing.Size(572, 139);
             this.groupControl2.TabIndex = 2;
             this.groupControl2.Text = "Options";
+            // 
+            // checkEdit15
+            // 
+            this.checkEdit15.Location = new System.Drawing.Point(19, 108);
+            this.checkEdit15.Name = "checkEdit15";
+            this.checkEdit15.Properties.Caption = "No TCS";
+            this.checkEdit15.Size = new System.Drawing.Size(162, 19);
+            this.checkEdit15.TabIndex = 28;
+            // 
+            // checkEdit14
+            // 
+            this.checkEdit14.Location = new System.Drawing.Point(377, 83);
+            this.checkEdit14.Name = "checkEdit14";
+            this.checkEdit14.Properties.Caption = "Disable emission limiting function";
+            this.checkEdit14.Size = new System.Drawing.Size(179, 19);
+            this.checkEdit14.TabIndex = 27;
             // 
             // simpleButton2
             // 
             this.simpleButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.simpleButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.simpleButton2.Location = new System.Drawing.Point(423, 530);
+            this.simpleButton2.Location = new System.Drawing.Point(423, 551);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 3;
@@ -434,7 +453,7 @@ namespace T7
             // 
             this.groupControl3.Controls.Add(this.checkEdit13);
             this.groupControl3.Controls.Add(this.checkEdit12);
-            this.groupControl3.Location = new System.Drawing.Point(7, 452);
+            this.groupControl3.Location = new System.Drawing.Point(7, 476);
             this.groupControl3.Name = "groupControl3";
             this.groupControl3.Size = new System.Drawing.Size(572, 69);
             this.groupControl3.TabIndex = 4;
@@ -456,20 +475,12 @@ namespace T7
             this.checkEdit12.Size = new System.Drawing.Size(162, 19);
             this.checkEdit12.TabIndex = 26;
             // 
-            // checkEdit14
-            // 
-            this.checkEdit14.Location = new System.Drawing.Point(377, 83);
-            this.checkEdit14.Name = "checkEdit14";
-            this.checkEdit14.Properties.Caption = "Disable emission limiting function";
-            this.checkEdit14.Size = new System.Drawing.Size(179, 19);
-            this.checkEdit14.TabIndex = 27;
-            // 
             // frmFirmwareInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
-            this.ClientSize = new System.Drawing.Size(591, 562);
+            this.ClientSize = new System.Drawing.Size(591, 583);
             this.Controls.Add(this.groupControl3);
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.groupControl2);
@@ -507,11 +518,12 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit11.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit15.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).EndInit();
             this.groupControl3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit13.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit14.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -557,5 +569,6 @@ namespace T7
         private DevExpress.XtraEditors.TextEdit textEdit4;
         private DevExpress.XtraEditors.LabelControl labelControl9;
         private DevExpress.XtraEditors.CheckEdit checkEdit14;
+        private DevExpress.XtraEditors.CheckEdit checkEdit15;
     }
 }

@@ -179,6 +179,18 @@ namespace T7
             }
         }
 
+        public bool EthanolSensor
+        {
+            get
+            {
+                return !checkEdit15.Checked;
+            }
+            set
+            {
+                checkEdit15.Checked = !value;
+            }
+        }
+
         public bool SecondLambdaEnabled
         {
             get
@@ -242,8 +254,20 @@ namespace T7
             }
         }
 
-
-
+        public bool EthanolSensorPresent
+        {
+            set
+            {
+                if (value == true)
+                {
+                    checkEdit15.Enabled = true;
+                }
+                else
+                {
+                    checkEdit15.Enabled = false;
+                }
+            }
+        }
 
         public bool SecondLambdaPresent
         {

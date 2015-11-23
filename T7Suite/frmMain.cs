@@ -5215,9 +5215,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         frminfo.FastThrottleReponse = false;
                         frminfo.ExtraFastThrottleReponse = false;
                     }
+
                     if (!HasBinaryCatalystLightOffParameters()) frminfo.CatalystLightoffPresent = false;
                     else frminfo.CatalystLightoffPresent = true;
                     frminfo.CatalystLightOff = HasBinaryCatalystLightOffEnabled();
+
+                    if (!IsBinaryBiopower()) frminfo.EthanolSensorPresent = false;
+                    else frminfo.EthanolSensorPresent = true;
+                    frminfo.EthanolSensor = HasBinaryEthanolSensorEnabled();
+
                     frminfo.ProgrammingDateTime = GetProgrammingDateTime();
                     if (!m_appSettings.WriteTimestampInBinary)
                     {
@@ -5329,6 +5335,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             else if (!frminfo.BioPowerEnabled && IsBioPowerEnabled())
                             {
                                 SetBioPowerEnabled(false);
+                            }
+
+                            if (frminfo.EthanolSensor && !HasBinaryEthanolSensorEnabled())
+                            {
+                                SetEthanolSensor(true);
+                            }
+                            else if (!frminfo.EthanolSensor && HasBinaryEthanolSensorEnabled())
+                            {
+                                SetEthanolSensor(false);
                             }
                         }
                         t7InfoHeader.save(m_currentfile);
@@ -9451,6 +9466,42 @@ TorqueCal.M_IgnInflTroqMap 8*/
             else
             {
                 return true;
+            }
+        }
+
+        private bool HasBinaryEthanolSensorEnabled()
+        {
+            if (CheckValueIsZero("E85Cal.ST_EthanolSensor") && CheckValueIsZero("E85Cal.ST_EthanolSensor"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private void SetEthanolSensor(bool enabled)
+        {
+            foreach (SymbolHelper sh in m_symbols)
+            {
+                if (sh.Varname == "E85Cal.ST_EthanolSensor" || sh.Userdescription == "E85Cal.ST_EthanolSensor")
+                {
+                    if (!enabled)
+                    {
+                        byte[] data = new byte[1];
+                        data.SetValue((byte)0x00, 0);
+                        savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
+                        UpdateChecksum(m_currentfile);
+                    }
+                    else
+                    {
+                        byte[] data = new byte[1];
+                        data.SetValue((byte)0x01, 0);
+                        savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
+                        UpdateChecksum(m_currentfile);
+                    }
+                }
             }
         }
 
