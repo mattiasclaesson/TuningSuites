@@ -10223,6 +10223,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             trionic7.OnlyPBus = m_appSettings.OnlyPBus;
             trionic7.DisableCanConnectionCheck = m_appSettings.DisableCanCheck;
             //trionic7.ELM327Kline = m_appSettings.ELM327Kline; Disabled too slow to be used
+            trionic7.Latency = Latency.Low;
             
             if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
             {
