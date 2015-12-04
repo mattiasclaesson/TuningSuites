@@ -13208,6 +13208,12 @@ If boost regulation reports errors you can increase the difference between boost
             rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnKnkCal.n_EngYSP", 1);
             airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnKnkCal.m_AirXSP", 1);
             UpdateDocksWithName("KnkFuelCal.EnrichmentMap", airmassindex, rpmindex);
+            //InjAnglCal.Map has
+            //X: InjAnglCal.AirXSP // airmass
+            //Y: InjAnglCal.RpmYSP // engine speed
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "InjAnglCal.RpmYSP", 1);
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "InjAnglCal.AirXSP", 1);
+            UpdateDocksWithName("InjAnglCal.Map", airmassindex, rpmindex);
         }
 
         private void UpdateIgnitionMap()
