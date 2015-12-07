@@ -24,11 +24,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.TextEditor", "I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T7UnitTests", "T7Suite\UnitTests\T7UnitTests.csproj", "{2CCA21B1-A82F-456B-A531-311E2A9318ED}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Suite", "SetupT7Suite\SetupT7Suite.vdproj", "{C218EC8E-203B-465E-B511-27884D86603A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSTaskDialog", "PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj", "{0253E98B-6374-48AA-8740-89BC2939FF77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonSuite", "CommonSuite\CommonSuite.csproj", "{61FE31C4-B244-4C13-BAF6-F66857F0B88E}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Extras", "SetupT7Extras\SetupT7Extras.vdproj", "{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Suite", "SetupT7Suite\SetupT7Suite.vdproj", "{2797CCD3-055C-4B29-81FB-F72ACF12C40A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,11 +103,6 @@ Global
 		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CCA21B1-A82F-456B-A531-311E2A9318ED}.Release|x86.ActiveCfg = Release|Any CPU
-		{C218EC8E-203B-465E-B511-27884D86603A}.Debug|Any CPU.ActiveCfg = Debug
-		{C218EC8E-203B-465E-B511-27884D86603A}.Debug|x86.ActiveCfg = Debug
-		{C218EC8E-203B-465E-B511-27884D86603A}.Release|Any CPU.ActiveCfg = Release
-		{C218EC8E-203B-465E-B511-27884D86603A}.Release|x86.ActiveCfg = Release
-		{C218EC8E-203B-465E-B511-27884D86603A}.Release|x86.Build.0 = Release
 		{0253E98B-6374-48AA-8740-89BC2939FF77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0253E98B-6374-48AA-8740-89BC2939FF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0253E98B-6374-48AA-8740-89BC2939FF77}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -122,6 +119,22 @@ Global
 		{61FE31C4-B244-4C13-BAF6-F66857F0B88E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61FE31C4-B244-4C13-BAF6-F66857F0B88E}.Release|x86.ActiveCfg = Release|Any CPU
 		{61FE31C4-B244-4C13-BAF6-F66857F0B88E}.Release|x86.Build.0 = Release|Any CPU
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Debug|Any CPU.ActiveCfg = Debug
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Debug|Any CPU.Build.0 = Debug
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Debug|x86.ActiveCfg = Debug
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Debug|x86.Build.0 = Debug
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|Any CPU.ActiveCfg = Release
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|Any CPU.Build.0 = Release
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|x86.ActiveCfg = Release
+		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|x86.Build.0 = Release
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|Any CPU.ActiveCfg = Debug
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|Any CPU.Build.0 = Debug
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|x86.ActiveCfg = Debug
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|x86.Build.0 = Debug
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|Any CPU.ActiveCfg = Release
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|Any CPU.Build.0 = Release
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|x86.ActiveCfg = Release
+		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
