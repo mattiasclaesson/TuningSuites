@@ -16090,6 +16090,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                     //TODO ClearDTCCodes() must be added to the api
                     //t8can.ClearDTCCodes(DTCCode);
+                    t8can.ClearDTCCodes(); // clear all codes
 
                     if (sender is frmFaultcodes)
                     {
