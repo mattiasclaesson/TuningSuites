@@ -673,6 +673,28 @@ namespace T7
                             }
                         }
                     }
+                    
+                }
+                if (fh.getSoftwareVersion().Trim().StartsWith("EU09F01C", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (MessageBox.Show("Do you want to load the experimental symbollist for EU09F01C files now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string BioPowerXmlFile = String.Format("{0}\\EU09F01C.xml", Application.StartupPath);
+                        if (File.Exists(BioPowerXmlFile))
+                        {
+                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            if (binname != string.Empty)
+                            {
+                                dt = new DataTable(binname);
+                                dt.Columns.Add("SYMBOLNAME");
+                                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                                dt.Columns.Add("DESCRIPTION");
+                                dt.ReadXml(BioPowerXmlFile);
+                                createRepositoryFile = true;
+                            }
+                        }
+                    }
                 }
             }
             foreach (DataRow dr in dt.Rows)
