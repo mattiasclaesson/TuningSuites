@@ -21,6 +21,10 @@ namespace CommonSuite
         private string zipFilePath;
         private string msiFilePath;
 
+        public zipmsiupdater(Version CurrentVersion) : base(CurrentVersion)
+        {
+        }
+
         public void ExecuteUpdate(string server, Version ver, string msi, string zip)
         {
             m_msi = msi;
