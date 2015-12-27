@@ -64,6 +64,7 @@
     <Compile Include="BitStream.cs" />
     <Compile Include="CellHelper.cs" />
     <Compile Include="CellHelperCollection.cs" />
+    <Compile Include="zipmsiupdater.cs" />
     <Compile Include="DTCDescription.cs" />
     <Compile Include="Forms\frmChangeNote.cs">
       <SubType>Form</SubType>

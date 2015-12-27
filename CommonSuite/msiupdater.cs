@@ -183,12 +183,12 @@ namespace CommonSuite
         }
 
 
-        private void PumpString(string text, bool updateavailable, bool version2high, Version newver, string xmlfile)
+        protected void PumpString(string text, bool updateavailable, bool version2high, Version newver, string xmlfile)
         {
             onDataPump(new MSIUpdaterEventArgs(text, updateavailable, version2high, newver, xmlfile));
         }
 
-        private void NotifyProgress(Int32 NoFiles, Int32 NoFilesDone, Int32 PercentageDone, Int32 NoBytes, Int32 NoBytesDone)
+        protected void NotifyProgress(Int32 NoFiles, Int32 NoFilesDone, Int32 PercentageDone, Int32 NoBytes, Int32 NoBytesDone)
         {
             onUpdateProgressChanged(new MSIUpdateProgressEventArgs(NoFiles, NoFilesDone, PercentageDone, NoBytes, NoBytesDone));
         }
