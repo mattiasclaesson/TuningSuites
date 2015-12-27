@@ -1,12 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{92C273C6-0073-491C-9BDC-AC8DC1A3586B}"
-	ProjectSection(SolutionItems) = preProject
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		T8.vsmdi = T8.vsmdi
-		T81.vsmdi = T81.vsmdi
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T8SuitePro", "T8Suite\T8SuitePro.csproj", "{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A53A3F2C-5553-405D-BAF0-DE5C779D3E7B} = {A53A3F2C-5553-405D-BAF0-DE5C779D3E7B}
