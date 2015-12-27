@@ -1180,12 +1180,14 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                           {
                               //sprintf(str, "MOVEM.%c\t%s,%s\0", opsize[(dstmod & 1) + 1][0], sour, dest); 
                               str = "MOVEM." + (string)opsize.GetValue((dstmod & 1) + 1) + "\t" + sour + "," + dest;
+                              str += "\t;Move Multiple Registers to memory";
                               ilen++;
                           }
                           else
                           {
                               //sprintf(str, "MOVEM.%c\t%s,%s\0", opsize[(dstmod & 1) + 1][0], dest, sour); 
                               str = "MOVEM." + (string)opsize.GetValue((dstmod & 1) + 1) + "\t" + dest + "," + sour;
+                              str += "\t;Move Multiple Registers from memory";
                               ilen++;
                           }
                       }
