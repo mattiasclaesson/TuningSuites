@@ -97,6 +97,7 @@ using TrionicCANLib;
 using TrionicCANLib.API;
 using NLog;
 using CommonSuite;
+using System.Xml;
 
 namespace T8SuitePro
 {
@@ -5436,6 +5437,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         }
 
+        private void barButtonRpmLimiter_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("MaxEngSpdCal.n_EngLimTab");
+        }
+
         private SymbolCollection GetRealtimeNotificationSymbols()
         {
             SymbolCollection _symbols = new SymbolCollection();
@@ -8216,7 +8222,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        private void showDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void barButtonShowDisassembly_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (m_currentfile != null)
             {
@@ -8297,7 +8303,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        private void showFullDisassemblyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnShowFullDisassembly_ItemClick(object sender, EventArgs e)
         {
             string outputfile = Path.GetDirectoryName(m_currentfile);
             outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(m_currentfile) + "_full.asm");
@@ -16124,5 +16130,76 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
+        private void addToMyMapsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gridViewSymbols.FocusedRowHandle >= 0)
+            {
+                SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
+                SymbolCollection scmymaps = new SymbolCollection();
+                SymbolHelper shnewmymap = new SymbolHelper();
+                shnewmymap.Varname = sh.Varname;
+                shnewmymap.Description = sh.Varname;
+                shnewmymap.Category = "Directly added";
+                scmymaps.Add(shnewmymap);
+                string filename = System.Windows.Forms.Application.StartupPath + "\\mymaps.xml";
+                if (File.Exists(filename))
+                {
+                    try
+                    {
+                        System.Xml.XmlDocument mymaps = new System.Xml.XmlDocument();
+                        mymaps.Load(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml");
+                        foreach (System.Xml.XmlNode category in mymaps.SelectNodes("categories/category"))
+                        {
+                            foreach (System.Xml.XmlNode map in category.SelectNodes("map"))
+                            {
+                                SymbolHelper shmap = new SymbolHelper();
+                                shmap.Varname = map.Attributes["symbol"].Value;
+                                shmap.Category = category.Attributes["title"].Value;
+                                shmap.Description = map.Attributes["title"].Value;
+                                scmymaps.Add(shmap);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                // now save a new file
+                if (File.Exists(filename))
+                {
+                    File.Delete(filename);
+                }
+                XmlDocument doc = new XmlDocument();// Create the XML Declaration, and append it to XML document
+                XmlDeclaration dec = doc.CreateXmlDeclaration("1.0", null, null);
+                doc.AppendChild(dec);// Create the root element
+                XmlElement root = doc.CreateElement("categories");
+                doc.AppendChild(root);
+
+                scmymaps.SortColumn = "Category";
+                scmymaps.SortingOrder = GenericComparer.SortOrder.Ascending;
+                scmymaps.Sort();
+
+                string previouscat = "";
+                XmlElement title = doc.CreateElement("category");
+                foreach (SymbolHelper shmm in scmymaps)
+                {
+                    if (shmm.Category != previouscat)
+                    {
+                        previouscat = shmm.Category;
+                        title = doc.CreateElement("category");
+                        title.SetAttribute("title", previouscat);
+                        root.AppendChild(title);
+                    }
+                    XmlElement map = doc.CreateElement("map");
+                    map.SetAttribute("symbol", shmm.Varname);
+                    map.SetAttribute("title", shmm.Description);
+                    title.AppendChild(map);
+                }
+                doc.Save(filename);
+                if (ribbonControl1.Pages[3].Text == "My Maps")
+                {
+                    ribbonControl1.Pages.RemoveAt(3);
+                }
+                LoadMyMaps();
+            }
+        }
     }
 }
