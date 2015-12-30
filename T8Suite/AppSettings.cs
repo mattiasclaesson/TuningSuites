@@ -889,7 +889,7 @@ namespace T8SuitePro
         }
         }
 
-        private bool m_AutoChecksum = true;
+        private bool m_AutoChecksum = false;
 
         public bool AutoChecksum
         {
