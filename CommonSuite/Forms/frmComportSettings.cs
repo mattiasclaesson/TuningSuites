@@ -55,18 +55,6 @@ namespace CommonSuite
             }
         }
 
-        public bool ELM327KLine
-        {
-            get
-            {
-                return cbELM327KLine.Checked;
-            }
-            set
-            {
-                cbELM327KLine.Checked = value;
-            }
-        }
-
         private void simpleButton2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
