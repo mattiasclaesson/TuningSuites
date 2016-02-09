@@ -27,12 +27,13 @@
 #define TWICE   4
 #define TRIONIC 5
 #define CDC     6   // needs more research...
+#define SPA     7
 
 /* Global constants */
-const unsigned char init_table[] = { 0x81, 0x65, 0x98, 0x61, 0x45, 0x11, 0x28 };
-const unsigned char unit_table[] = { 0x91, 0x96, 0x98, 0x9A, 0x9B, 0xA1 };
-const int reply_table[] = { 0x248, 0x24B, 0x24D, 0x24E, 0x24F, 0x258 };
-const int init_reply_table[] = { 0x228, 0x22B, 0x22D, 0x22E, 0x22F, 0x238 };
+const unsigned char init_table[] = { 0x81,  0x65,  0x98,  0x61,  0x45,  0x11,  0x28, 0x66  };
+const unsigned char unit_table[] = { 0x91,  0x96,  0x98,  0x9A,  0x9B,  0xA1,  0xFF, 0x9F  }; // fixme: CDC not correct
+const int reply_table[] =          { 0x248, 0x24B, 0x24D, 0x24E, 0x24F, 0x258, 0xFF, 0x254 };
+const int init_reply_table[] =     { 0x228, 0x22B, 0x22D, 0x22E, 0x22F, 0x238, 0xFF, 0x234 };
 
 /* Function prototypes */
 int send_msg( CANHANDLE handle, int id, const unsigned char *data );
@@ -112,6 +113,7 @@ int main(int argc, char *argv[])
                "              M = Read Trionic information\n"
                "              B = Test brake lights (0|1)\n"
                "              U = Double unlocking with remote (0|1)\n"
+               "              P = Read SPA information\n"
                /*"              A = Audio Head Unit (0=divorce,1=marry)\n"*/);
         return -1;
     }
@@ -454,6 +456,16 @@ int main(int argc, char *argv[])
                 printf("TRIONIC, len=%d, answer='%s'\n", i, buf);
             }
             else printf("TRIONIC, no response\n");
+            
+            init_connection( h, SPA );
+            i = query_info( h, SPA, buf );
+            for( k = 0; k < i; k++ ) if(buf[k] == 0 ) buf[k] = '_';
+            if( i != -1 )
+            {
+                //if( print_info( buf, spa_info_text ) == -1 )
+                printf("SPA, len=%d, answer='%s'\n", i, buf);
+            }
+            else printf("SPA, no response\n");
         }
         else if( *argv[1] == 't' || *argv[1] == 'T' )
         {
@@ -529,7 +541,6 @@ int main(int argc, char *argv[])
             i = query_data( h, TRIONIC, 0x59 , buf );
             if( i == 2 ) printf("Fuel tank pressure          %5.3f kPa\n", (float)(buf[0] << 8 | buf[1])/1000.0 );
 
-/*            
             // Retrieve Diagnostic Trouble Codes
             printf("\nDTC data\n");
             i = query_dtc( h, TRIONIC, buf );
@@ -541,7 +552,6 @@ int main(int argc, char *argv[])
                 }
                 printf("\n");
             }
-*/
         }
         else if( *argv[1] == 'b' || *argv[1] == 'B' )
         {
@@ -590,6 +600,38 @@ int main(int argc, char *argv[])
                         printf("Test brake lights announcement UNKNOWN (0x%02X)\n", buf[16] );
                     }
                 }
+            }
+        }
+        else if( *argv[1] == 'p' || *argv[1] == 'P' )
+        {
+            printf("SPA - Read values\n\n");
+            
+            // Send initializaton
+            init_connection( h, SPA);
+            
+            // Retrieve information
+            i = query_data( h, SPA, 0x01 , buf );
+            
+            // Display information
+            if( i != -1 )
+            {
+                for( k = 0; k < i; k++ )
+                {
+                    printf("0x%02X ", buf[i] );
+                }
+                printf("\n");
+            }
+
+            // Retrieve Diagnostic Trouble Codes
+            printf("\nDTC data\n");
+            i = query_dtc( h, SPA, buf );
+            if( i != -1 )
+            {
+                for( k = 0; k < i; k++ )
+                {
+                    printf("0x%02X ", buf[i] );
+                }
+                printf("\n");
             }
         }
         else if( *argv[1] == 'a' || *argv[1] == 'A' )
@@ -656,7 +698,7 @@ int init_connection( CANHANDLE handle, unsigned char unit )
     unsigned char data[8];
 
     
-    if( unit > TRIONIC ) return -1;
+    if( unit == CDC ) return -1;
     
     init[3] = init_table[unit];
     
@@ -712,7 +754,7 @@ int test_mode( CANHANDLE handle, unsigned char unit, const unsigned char *test_m
     int ret;
 
     
-    if( unit > TRIONIC || len > 4 ) return -1;
+    if( unit == CDC || len > 4 ) return -1;
     
     ret = 0;
     test[1] = unit_table[unit];
@@ -811,7 +853,7 @@ int change_setting( CANHANDLE handle, unsigned char unit, const unsigned char *s
     int ret;
 
     
-    if( unit > TRIONIC || len > 4 ) return -1;
+    if( unit == CDC || len > 4 ) return -1;
     
     ret = 0;
     msg[1] = unit_table[unit];
@@ -888,7 +930,7 @@ int change_setting2( CANHANDLE handle, unsigned char unit, const unsigned char *
     int ret;
 
     
-    if( unit > TRIONIC || len > 4 ) return -1;
+    if( unit == CDC || len > 4 ) return -1;
     
     ret = 0;
     msg[1] = unit_table[unit];
@@ -1076,7 +1118,7 @@ int change_setting3( CANHANDLE handle, unsigned char unit, const unsigned char *
     int ret;
 
     
-    if( unit > TRIONIC || len > 4 ) return -1;
+    if( unit == CDC || len > 4 ) return -1;
     
     ret = 0;
     msg[1] = unit_table[unit];
@@ -1151,7 +1193,7 @@ int query_data( CANHANDLE handle, unsigned char unit, unsigned char data_id, uns
     unsigned char ack[8]   = { 0x40, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00 };
     
 
-    if( unit > TRIONIC ) return -1;
+    if( unit == CDC ) return -1;
    
     query[1] = unit_table[unit];
     ack[1]   = unit_table[unit];
@@ -1218,7 +1260,7 @@ int query_dtc( CANHANDLE handle, unsigned char unit, unsigned char *answer)
     unsigned char ack[8]   = { 0x40, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00 };
     
 
-    if( unit > TRIONIC ) return -1;
+    if( unit == CDC ) return -1;
    
     query[1] = unit_table[unit];
     ack[1]   = unit_table[unit];
@@ -1280,7 +1322,7 @@ int query_info( CANHANDLE handle, unsigned char unit, unsigned char *answer)
     unsigned char ack[8]   = { 0x40, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00 };
     
 
-    if( unit > TRIONIC ) return -1;
+    if( unit == CDC ) return -1;
    
     query[1] = unit_table[unit];
     ack[1]   = unit_table[unit];
