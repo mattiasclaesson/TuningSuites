@@ -6,9 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using CommonSuite;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmCombiAdapterConfig : DevExpress.XtraEditors.XtraForm
     {
