@@ -121,18 +121,6 @@ namespace T7
     public delegate void DelegateProgressStatus(int percentage);
     public delegate void DelegateCanFrame(ITrionic.CanFrameEventArgs e);
 
-    public enum AFRViewType : int
-    {
-        AFRMode,
-        LambdaMode
-    }
-
-    public enum MonitorType : int
-    {
-        Default,
-        Dashboard
-    }
-
     public enum ecu_t : int
     {
         Trionic52,
@@ -150,7 +138,7 @@ namespace T7
         private string m_swversion = string.Empty;
         private frmProgress frmProgressLogWorks;
         SymbolCollection m_symbols = new SymbolCollection();
-        AppSettings m_appSettings = new AppSettings();
+        AppSettings m_appSettings = new AppSettings(new T7SuiteRegistry());
         int m_currentfile_size = 0x80000;
         string m_current_softwareversion = "";
         int m_currentSramOffsett = 0;
@@ -3070,7 +3058,7 @@ namespace T7
 
                             tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                             tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
-                            tabdet.Viewtype = ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                             tabdet.IsUpsideDown = true;//GetMapUpsideDown(tabdet.Map_name);
                             tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
                             tabdet.Dock = DockStyle.Fill;
@@ -14387,7 +14375,7 @@ If boost regulation reports errors you can increase the difference between boost
                             tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
                             if (m_appSettings.Viewinhex)
                             {
-                                tabdet.Viewtype = ViewType.Hexadecimal;
+                                tabdet.Viewtype = SuiteViewType.Hexadecimal;
                             }
                             tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                             tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
@@ -14708,7 +14696,7 @@ If boost regulation reports errors you can increase the difference between boost
                     //tabdet.IsHexMode = barViewInHex.Checked;
                     if (m_appSettings.Viewinhex)
                     {
-                        tabdet.Viewtype = ViewType.Hexadecimal;
+                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
                     }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
@@ -16330,7 +16318,7 @@ If boost regulation reports errors you can increase the difference between boost
                     tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
                     if (m_appSettings.Viewinhex)
                     {
-                        tabdet.Viewtype = ViewType.Hexadecimal;
+                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
                     }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
@@ -17216,7 +17204,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     if (m_appSettings.Viewinhex)
                     {
-                        tabdet.Viewtype = ViewType.Hexadecimal;
+                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
                     }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
@@ -17884,12 +17872,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 m_AFRMap.SaveMap(m_currentfile, cols, rows);
                 ShowAfrMAP("FeedbackCounter", Path.Combine(foldername, Path.GetFileNameWithoutExtension(m_currentfile) + "-AFRFeedbackCountermap.afr"));
             }
-        }
-
-        public enum PanelMode : int
-        {
-            Day,
-            Night
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -19739,6 +19721,174 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartAViewer("BFuelCal2.StartMap");
+        }
+
+        private void barButtonExportLogCsv_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Trionic 7 logfiles|*.t7l";
+            ofd.Title = "Open CAN bus logfile";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                ConvertFileToCSV(ofd.FileName, false);
+            }
+        }
+
+        private void ConvertFileToCSV(string filename, bool AutoExport)
+        {
+            System.Windows.Forms.Application.DoEvents();
+            DateTime startDate = DateTime.MaxValue;
+            DateTime endDate = DateTime.MinValue;
+            try
+            {
+                SymbolCollection sc = new SymbolCollection();
+                string[] alllines = File.ReadAllLines(filename);
+                //using (StreamReader sr = new StreamReader(filename))
+                {
+                    //string line = string.Empty;
+                    char[] sep = new char[1];
+                    char[] sep2 = new char[1];
+                    //int linecount = 0;
+                    sep.SetValue('|', 0);
+                    sep2.SetValue('=', 0);
+                    //while ((line = sr.ReadLine()) != null)
+
+                    foreach (string line in alllines)
+                    {
+                        string[] values = line.Split(sep);
+                        if (values.Length > 0)
+                        {
+                            try
+                            {
+                                //dd/MM/yyyy HH:mm:ss
+                                //string logline = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "|";
+
+                                string dtstring = (string)values.GetValue(0);
+                                DateTime dt = new DateTime(Convert.ToInt32(dtstring.Substring(6, 4)), Convert.ToInt32(dtstring.Substring(3, 2)), Convert.ToInt32(dtstring.Substring(0, 2)), Convert.ToInt32(dtstring.Substring(11, 2)), Convert.ToInt32(dtstring.Substring(14, 2)), Convert.ToInt32(dtstring.Substring(17, 2)));
+                                if (dt > endDate) endDate = dt;
+                                if (dt < startDate) startDate = dt;
+                                for (int t = 1; t < values.Length; t++)
+                                {
+                                    string subvalue = (string)values.GetValue(t);
+                                    string[] subvals = subvalue.Split(sep2);
+                                    if (subvals.Length == 2)
+                                    {
+                                        string varname = (string)subvals.GetValue(0);
+                                        bool sfound = false;
+                                        foreach (SymbolHelper sh in sc)
+                                        {
+                                            if (sh.Varname == varname || sh.Userdescription == varname)
+                                            {
+                                                sfound = true;
+                                            }
+                                        }
+                                        SymbolHelper nsh = new SymbolHelper();
+                                        nsh.Varname = varname;
+                                        if (!sfound) sc.Add(nsh);
+                                    }
+                                }
+                            }
+                            catch (Exception pE)
+                            {
+                                logger.Debug(pE.Message);
+                            }
+                        }
+                    }
+                }
+
+                if (AutoExport)
+                {
+                    foreach (SymbolHelper sh in sc)
+                    {
+                        sh.Color = GetColorFromRegistry(sh.Varname);
+                    }
+                    CSVGenerator csvgen = new CSVGenerator();
+                    csvgen.AppSettings = m_appSettings;
+
+                    //csvgen.LowAFR = m_appSettings.WidebandLowAFR;
+                    //csvgen.HighAFR = m_appSettings.WidebandHighAFR;
+                    //csvgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
+                    //csvgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
+                    csvgen.WidebandSymbol = m_appSettings.WideBandSymbol;
+                    //csvgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
+                    csvgen.UseWidebandInput = false;
+
+                    csvgen.onExportProgress += new CSVGenerator.ExportProgress(difgen_onExportProgress);
+                    frmProgressLogWorks = new frmProgress();
+                    frmProgressLogWorks.SetProgress("Exporting to CSV");
+                    frmProgressLogWorks.Show();
+                    System.Windows.Forms.Application.DoEvents();
+                    try
+                    {
+                        csvgen.ConvertFileToCSV(filename, sc, startDate, endDate);
+                    }
+                    catch (Exception expE1)
+                    {
+                        logger.Debug(expE1.Message);
+                    }
+                    frmProgressLogWorks.Close();
+                }
+                else
+                {
+
+                    // show selection screen
+                    frmPlotSelection plotsel = new frmPlotSelection();
+                    foreach (SymbolHelper sh in sc)
+                    {
+                        plotsel.AddItemToList(sh.Varname);
+                    }
+                    plotsel.Startdate = startDate;
+                    plotsel.Enddate = endDate;
+                    plotsel.SelectAllSymbols();
+                    if (plotsel.ShowDialog() == DialogResult.OK)
+                    {
+                        sc = plotsel.Sc;
+                        endDate = plotsel.Enddate;
+                        startDate = plotsel.Startdate;
+                        CSVGenerator csvgen = new CSVGenerator();
+                        LogFilters filterhelper = new LogFilters();
+                        csvgen.SetFilters(filterhelper.GetFiltersFromRegistry());
+                        csvgen.AppSettings = m_appSettings;
+                        //csvgen.LowAFR = m_appSettings.WidebandLowAFR;
+                        //csvgen.HighAFR = m_appSettings.WidebandHighAFR;
+                        //csvgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
+                        //csvgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
+                        csvgen.WidebandSymbol = m_appSettings.WideBandSymbol;
+                        //csvgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
+                        csvgen.UseWidebandInput = false;
+
+                        csvgen.onExportProgress += new CSVGenerator.ExportProgress(difgen_onExportProgress);
+                        frmProgressLogWorks = new frmProgress();
+                        frmProgressLogWorks.SetProgress("Exporting to CSV");
+                        frmProgressLogWorks.Show();
+                        System.Windows.Forms.Application.DoEvents();
+                        try
+                        {
+                            if (!csvgen.ConvertFileToCSV(filename, sc, startDate, endDate))
+                            {
+                                frmInfoBox info = new frmInfoBox("No data was found to export!");
+                            }
+                        }
+                        catch (Exception expE2)
+                        {
+                            logger.Debug(expE2.Message);
+                        }
+                        frmProgressLogWorks.Close();
+                    }
+                    TimeSpan ts = new TimeSpan(endDate.Ticks - startDate.Ticks);
+                    //MessageBox.Show("LogFile should be " + ts.ToString());
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E.Message);
+            }
+        }
+
+        void difgen_onExportProgress(object sender, CSVGenerator.ProgressEventArgs e)
+        {
+            frmProgressLogWorks.SetProgressPercentage(e.Percentage);
         }
     }
 }

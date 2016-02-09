@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.TextEditor", "I
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT8Suite", "SetupT8SuitePro\SetupT8SuitePro.vdproj", "{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T8Test", "T8Test\T8Test.csproj", "{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuiteTest", "SuiteTest\SuiteTest.csproj", "{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24} = {F5BA4A6C-5D17-44A1-B8FD-BF2F1DFCEC24}
 	EndProjectSection

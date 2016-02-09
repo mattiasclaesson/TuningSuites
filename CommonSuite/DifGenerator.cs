@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CommonSuite;
 using NLog;
 
-namespace T7
+namespace CommonSuite
 {
-    class DifGenerator
+    public class DifGenerator
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
 

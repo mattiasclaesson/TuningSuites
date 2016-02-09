@@ -135,11 +135,11 @@ namespace T8SuitePro
             }
         }
 
-        public ViewType DefaultViewType
+        public SuiteViewType DefaultViewType
         {
             get
             {
-                return (ViewType)comboBoxEdit1.SelectedIndex;
+                return (SuiteViewType)comboBoxEdit1.SelectedIndex;
             }
             set
             {

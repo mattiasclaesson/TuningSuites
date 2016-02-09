@@ -59,11 +59,19 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TrionicCANLib">
+      <HintPath>Libs\TrionicCANLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettings.cs" />
     <Compile Include="BitStream.cs" />
     <Compile Include="CellHelper.cs" />
     <Compile Include="CellHelperCollection.cs" />
+    <Compile Include="CSVGenerator.cs" />
+    <Compile Include="DifGenerator.cs" />
+    <Compile Include="SuiteRegistry.cs" />
+    <Compile Include="SymbolCollection.cs" />
     <Compile Include="zipmsiupdater.cs" />
     <Compile Include="DTCDescription.cs" />
     <Compile Include="Forms\frmChangeNote.cs">

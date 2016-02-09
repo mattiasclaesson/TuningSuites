@@ -69,7 +69,7 @@ namespace T8SuitePro
             set;
         }
 
-        public abstract ViewType Viewtype
+        public abstract SuiteViewType Viewtype
         {
             get;
             set;
@@ -420,16 +420,16 @@ namespace T8SuitePro
                 set { _mapname = value; }
             }
 
-            private ViewType _view;
+            private SuiteViewType _view;
 
-            public ViewType View
+            public SuiteViewType View
             {
                 get { return _view; }
                 set { _view = value; }
             }
 
 
-            public ViewTypeChangedEventArgs(ViewType view, string mapname)
+            public ViewTypeChangedEventArgs(SuiteViewType view, string mapname)
             {
                 this._view = view;
                 this._mapname = mapname;

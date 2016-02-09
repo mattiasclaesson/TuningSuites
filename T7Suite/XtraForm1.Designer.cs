@@ -1,3 +1,4 @@
+using CommonSuite;
 namespace T7
 {
     partial class XtraForm1
@@ -63,7 +64,7 @@ namespace T7
             this.mapViewer1.Size = new System.Drawing.Size(876, 664);
             this.mapViewer1.TabIndex = 0;
             this.mapViewer1.TableVisible = false;
-            this.mapViewer1.Viewtype = T7.ViewType.Hexadecimal;
+            this.mapViewer1.Viewtype = SuiteViewType.Hexadecimal;
             this.mapViewer1.X_axis_name = "";
             this.mapViewer1.X_axisvalues = null;
             this.mapViewer1.Y_axis_name = "";

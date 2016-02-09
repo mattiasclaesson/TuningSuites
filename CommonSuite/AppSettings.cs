@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-//using System.Security.Permissions;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Data;
@@ -12,10 +11,41 @@ using System.Windows.Forms;
 using CommonSuite;
 using NLog;
 
-//[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
-
-namespace T7
+namespace CommonSuite
 {
+    public enum PanelMode : int
+    {
+        Day,
+        Night
+    }
+
+    public enum MonitorType : int
+    {
+        Default,
+        Dashboard
+    }
+
+    public enum AFRViewType : int
+    {
+        AFRMode,
+        LambdaMode
+    }
+
+    public enum SuiteViewType : int
+    {
+        Hexadecimal = 0,
+        Decimal,
+        Easy,
+        ASCII
+    }
+
+    public enum ViewSize : int
+    {
+        NormalView = 0,
+        SmallView,
+        ExtraSmallView
+    }
+
     public class AppSettings
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
@@ -29,18 +59,6 @@ namespace T7
             {
                 _Baudrate = value;
                 SaveRegistrySetting("Baudrate", _Baudrate);
-            }
-        }
-
-        private string _ELM327Port = "Autodetect";
-
-        public string ELM327Port
-        {
-            get { return _ELM327Port; }
-            set
-            {
-                _ELM327Port = value;
-                SaveRegistrySetting("ELM327Port", _ELM327Port);
             }
         }
 
@@ -93,9 +111,9 @@ namespace T7
             }
         }
 
-        private T7.frmMain.PanelMode _panelmode = frmMain.PanelMode.Day;
+        private PanelMode _panelmode = PanelMode.Day;
 
-        public T7.frmMain.PanelMode Panelmode
+        public PanelMode Panelmode
         {
             get { return _panelmode; }
             set
@@ -175,19 +193,6 @@ namespace T7
                 SaveRegistrySetting("autoLogStopValue", m_autoLogStopValue.ToString());
             }
         }
-
-        private bool m_dosBoxInstalled = false;
-
-        public bool DosBoxInstalled
-        {
-            get { return m_dosBoxInstalled; }
-            set
-            {
-                m_dosBoxInstalled = value;
-                SaveRegistrySetting("dosBoxInstalled", m_dosBoxInstalled);
-            }
-        }
-
 
         private bool m_autoLoggingEnabled = false;
 
@@ -574,15 +579,96 @@ namespace T7
             }
         }
 
-        private int m_StandardFill = 0;
+        private string m_WideBandSymbol = "DisplProt.AD_Scanner";
 
-        public int StandardFill
+        public string WideBandSymbol
         {
-            get { return m_StandardFill; }
+            get { return m_WideBandSymbol; }
             set
             {
-                m_StandardFill = value;
-                SaveRegistrySetting("StandardFill", m_StandardFill);
+                m_WideBandSymbol = value;
+                SaveRegistrySetting("WideBandSymbol", m_WideBandSymbol);
+            }
+        }
+
+        private bool m_MeasureAFRInLambda = false;
+
+        public bool MeasureAFRInLambda
+        {
+            get { return m_MeasureAFRInLambda; }
+            set
+            {
+                m_MeasureAFRInLambda = value;
+                SaveRegistrySetting("MeasureAFRInLambda", m_MeasureAFRInLambda);
+            }
+        }
+
+        private double m_WidebandLowVoltage = 0;
+
+        public double WidebandLowVoltage
+        {
+            get { return m_WidebandLowVoltage; }
+            set
+            {
+                m_WidebandLowVoltage = value;
+                SaveRegistrySetting("WidebandLowVoltage", m_WidebandLowVoltage.ToString());
+            }
+        }
+        private double m_WidebandHighVoltage = 5000;
+
+        public double WidebandHighVoltage
+        {
+            get { return m_WidebandHighVoltage; }
+            set
+            {
+                m_WidebandHighVoltage = value;
+                SaveRegistrySetting("WidebandHighVoltage", m_WidebandHighVoltage.ToString());
+            }
+        }
+        private double m_WidebandLowAFR = 7390;
+
+        public double WidebandLowAFR
+        {
+            get { return m_WidebandLowAFR; }
+            set
+            {
+                m_WidebandLowAFR = value;
+                SaveRegistrySetting("WidebandLowAFR", m_WidebandLowAFR.ToString());
+            }
+        }
+        private double m_WidebandHighAFR = 22300;
+
+        public double WidebandHighAFR
+        {
+            get { return m_WidebandHighAFR; }
+            set
+            {
+                m_WidebandHighAFR = value;
+                SaveRegistrySetting("WidebandHighAFR", m_WidebandHighAFR.ToString());
+            }
+        }
+
+        private bool m_UseWidebandLambda = false;
+
+        public bool UseWidebandLambda
+        {
+            get { return m_UseWidebandLambda; }
+            set
+            {
+                m_UseWidebandLambda = value;
+                SaveRegistrySetting("UseWidebandLambda", m_UseWidebandLambda);
+            }
+        }
+
+        private bool m_UseDigitalWidebandLambda = false;
+
+        public bool UseDigitalWidebandLambda
+        {
+            get { return m_UseDigitalWidebandLambda; }
+            set
+            {
+                m_UseDigitalWidebandLambda = value;
+                SaveRegistrySetting("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
             }
         }
 
@@ -940,6 +1026,42 @@ namespace T7
             }
         }
 
+        private bool m_UseNewMapViewer = true;
+
+        public bool UseNewMapViewer
+        {
+            get { return m_UseNewMapViewer; }
+            set
+            {
+                m_UseNewMapViewer = value;
+                SaveRegistrySetting("UseNewMapViewer", m_UseNewMapViewer);
+            }
+        }
+
+        private bool m_InterpolateLogWorksTimescale = false;
+
+        public bool InterpolateLogWorksTimescale
+        {
+            get { return m_InterpolateLogWorksTimescale; }
+            set
+            {
+                m_InterpolateLogWorksTimescale = value;
+                SaveRegistrySetting("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
+            }
+        }
+
+        private bool m_ResetRealtimeSymbolOnTabPageSwitch = true;
+
+        public bool ResetRealtimeSymbolOnTabPageSwitch
+        {
+            get { return m_ResetRealtimeSymbolOnTabPageSwitch; }
+            set
+            {
+                m_ResetRealtimeSymbolOnTabPageSwitch = value;
+                SaveRegistrySetting("ResetRealtimeSymbolOnTabPageSwitch", m_ResetRealtimeSymbolOnTabPageSwitch);
+            }
+        }
+
         private bool m_RequestProjectNotes = false;
 
         public bool RequestProjectNotes
@@ -990,198 +1112,6 @@ namespace T7
             }
         }
 
-        private Font m_RealtimeFont = new Font(FontFamily.GenericSansSerif, 8F, FontStyle.Regular);
-
-        public Font RealtimeFont
-        {
-            get { return m_RealtimeFont; }
-            set
-            {
-                m_RealtimeFont = value;
-                TypeConverter tc = TypeDescriptor.GetConverter(typeof(Font));
-                string fontString = tc.ConvertToString(m_RealtimeFont);
-                SaveRegistrySetting("RealtimeFont", fontString);
-            }
-        }
-
-        private bool m_UseNewMapViewer = true;
-
-        public bool UseNewMapViewer
-        {
-            get { return m_UseNewMapViewer; }
-            set
-            {
-                m_UseNewMapViewer = value;
-                SaveRegistrySetting("UseNewMapViewer", m_UseNewMapViewer);
-            }
-        }
-
-        private bool m_AutoCreateAFRMaps = true;
-
-        public bool AutoCreateAFRMaps
-        {
-            get { return m_AutoCreateAFRMaps; }
-            set
-            {
-                m_AutoCreateAFRMaps = value;
-                SaveRegistrySetting("AutoCreateAFRMaps", m_AutoCreateAFRMaps);
-            }
-        }
-
-        private string m_WideBandSymbol = "DisplProt.AD_Scanner";
-
-        public string WideBandSymbol
-        {
-            get { return m_WideBandSymbol; }
-            set
-            {
-                m_WideBandSymbol = value;
-                SaveRegistrySetting("WideBandSymbol", m_WideBandSymbol);
-            }
-        }
-
-        private double m_WidebandLowVoltage = 0;
-
-        public double WidebandLowVoltage
-        {
-            get { return m_WidebandLowVoltage; }
-            set
-            {
-                m_WidebandLowVoltage = value;
-                SaveRegistrySetting("WidebandLowVoltage", m_WidebandLowVoltage.ToString());
-            }
-        }
-        private double m_WidebandHighVoltage = 5000;
-
-        public double WidebandHighVoltage
-        {
-            get { return m_WidebandHighVoltage; }
-            set
-            {
-                m_WidebandHighVoltage = value;
-                SaveRegistrySetting("WidebandHighVoltage", m_WidebandHighVoltage.ToString());
-            }
-        }
-        private double m_WidebandLowAFR = 7390;
-
-        public double WidebandLowAFR
-        {
-            get { return m_WidebandLowAFR; }
-            set
-            {
-                m_WidebandLowAFR = value;
-                SaveRegistrySetting("WidebandLowAFR", m_WidebandLowAFR.ToString());
-            }
-        }
-        private double m_WidebandHighAFR = 22300;
-
-        public double WidebandHighAFR
-        {
-            get { return m_WidebandHighAFR; }
-            set
-            {
-                m_WidebandHighAFR = value;
-                SaveRegistrySetting("WidebandHighAFR", m_WidebandHighAFR.ToString());
-            }
-        }
-
-        private bool m_UseWidebandLambda = false;
-
-        public bool UseWidebandLambda
-        {
-            get { return m_UseWidebandLambda; }
-            set
-            {
-                m_UseWidebandLambda = value;
-                SaveRegistrySetting("UseWidebandLambda", m_UseWidebandLambda);
-            }
-        }
-
-        private bool m_UseDigitalWidebandLambda = false;
-
-        public bool UseDigitalWidebandLambda
-        {
-            get { return m_UseDigitalWidebandLambda; }
-            set
-            {
-                m_UseDigitalWidebandLambda = value;
-                SaveRegistrySetting("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
-            }
-        }
-
-        private bool m_ResetRealtimeSymbolOnTabPageSwitch = true;
-
-        public bool ResetRealtimeSymbolOnTabPageSwitch
-        {
-            get { return m_ResetRealtimeSymbolOnTabPageSwitch; }
-            set
-            {
-                m_ResetRealtimeSymbolOnTabPageSwitch = value;
-                SaveRegistrySetting("ResetRealtimeSymbolOnTabPageSwitch", m_ResetRealtimeSymbolOnTabPageSwitch);
-            }
-        }
-
-
-        private bool m_UseAdditionalCanbusFrames = false;
-
-        public bool UseAdditionalCanbusFrames
-        {
-            get { return false; }
-            set
-            {
-                m_UseAdditionalCanbusFrames = false;
-                SaveRegistrySetting("UseAdditionalCanbusFrames", m_UseAdditionalCanbusFrames);
-            }
-        }
-
-        private bool m_AutoUpdateSRAMViewers = false;
-
-        public bool AutoUpdateSRAMViewers
-        {
-            get { return m_AutoUpdateSRAMViewers; }
-            set
-            {
-                m_AutoUpdateSRAMViewers = value;
-                SaveRegistrySetting("AutoUpdateSRAMViewers", m_AutoUpdateSRAMViewers);
-            }
-        }
-
-        private bool m_InterpolateLogWorksTimescale = false;
-
-        public bool InterpolateLogWorksTimescale
-        {
-            get { return m_InterpolateLogWorksTimescale; }
-            set
-            {
-                m_InterpolateLogWorksTimescale = value;
-                SaveRegistrySetting("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
-            }
-        }
-
-        private int m_AutoUpdateInterval = 20;
-
-        public int AutoUpdateInterval
-        {
-            get { return m_AutoUpdateInterval; }
-            set
-            {
-                m_AutoUpdateInterval = value;
-                SaveRegistrySetting("AutoUpdateInterval", m_AutoUpdateInterval.ToString());
-            }
-        }
-
-        private int m_ApplicationLanguage = 44;
-
-        public int ApplicationLanguage
-        {
-            get { return m_ApplicationLanguage; }
-            set
-            {
-                m_ApplicationLanguage = value;
-                SaveRegistrySetting("ApplicationLanguage", m_ApplicationLanguage.ToString());
-            }
-        }
-
         private string m_skinname = string.Empty;
 
         public string Skinname
@@ -1194,7 +1124,7 @@ namespace T7
             }
         }
 
-        private bool m_OnlyPBus = false;
+        private bool m_OnlyPBus = true;
 
         public bool OnlyPBus
         {
@@ -1206,55 +1136,6 @@ namespace T7
             }
         }
 
-        private bool m_DisableCanCheck = false;
-
-        public bool DisableCanCheck
-        {
-            get { return m_DisableCanCheck; }
-            set
-            {
-                m_DisableCanCheck = value;
-                SaveRegistrySetting("DisableCanCheck", m_DisableCanCheck);
-            }
-        }
-
-        private bool m_ELM327Kline = false;
-
-        public bool ELM327Kline
-        {
-            get { return m_ELM327Kline; }
-            set
-            {
-                m_ELM327Kline = value;
-                SaveRegistrySetting("ELM327Kline", m_ELM327Kline);
-            }
-        }
-
-        private bool m_EnableCanLog = false;
-
-        public bool EnableCanLog
-        {
-            get { return m_EnableCanLog; }
-            set
-            {
-                m_EnableCanLog = value;
-                SaveRegistrySetting("EnableCanLog", m_EnableCanLog);
-            }
-        }
-
-        private bool m_AutoFixFooter = false;
-
-        public bool AutoFixFooter
-        {
-            get { return m_AutoFixFooter; }
-            set
-            {
-                m_AutoFixFooter = value;
-                SaveRegistrySetting("AutoFixFooter", m_AutoFixFooter);
-            }
-        }
-
-
         private bool m_ShowMenu = false;
 
         public bool ShowMenu
@@ -1264,30 +1145,6 @@ namespace T7
             {
                 m_ShowMenu = value;
                 SaveRegistrySetting("ShowMenu", m_ShowMenu);
-            }
-        }
-
-        private bool m_WriteTimestampInBinary = true;
-
-        public bool WriteTimestampInBinary
-        {
-            get { return m_WriteTimestampInBinary; }
-            set
-            {
-                m_WriteTimestampInBinary = value;
-                SaveRegistrySetting("WriteTimestampInBinary", m_WriteTimestampInBinary);
-            }
-        }
-
-        private bool m_MeasureAFRInLambda = false;
-
-        public bool MeasureAFRInLambda
-        {
-            get { return m_MeasureAFRInLambda; }
-            set
-            {
-                m_MeasureAFRInLambda = value;
-                SaveRegistrySetting("MeasureAFRInLambda", m_MeasureAFRInLambda);
             }
         }
 
@@ -1351,21 +1208,9 @@ namespace T7
             }
         }
 
-        private bool m_AlwaysRecreateRepositoryItems = false;
+        private SuiteViewType m_DefaultViewType = SuiteViewType.Easy;
 
-        public bool AlwaysRecreateRepositoryItems
-        {
-            get { return m_AlwaysRecreateRepositoryItems; }
-            set
-            {
-                m_AlwaysRecreateRepositoryItems = value;
-                SaveRegistrySetting("AlwaysRecreateRepositoryItems", m_AlwaysRecreateRepositoryItems);
-            }
-        }
-
-        private ViewType m_DefaultViewType = ViewType.Easy;
-
-        public ViewType DefaultViewType
+        public SuiteViewType DefaultViewType
         {
             get { return m_DefaultViewType; }
             set
@@ -1406,7 +1251,7 @@ namespace T7
             get { return m_ShowViewerInWindows; }
             set
             {
-                m_ShowViewerInWindows = false; // WAS VALUE
+                m_ShowViewerInWindows = value;
                 SaveRegistrySetting("ShowViewerInWindows", m_ShowViewerInWindows);
             }
         }
@@ -1474,6 +1319,17 @@ namespace T7
             }
         }
 
+        private bool m_ShowAddressesInHex = true;
+
+        public bool ShowAddressesInHex
+        {
+            get { return m_ShowAddressesInHex; }
+            set
+            {
+                m_ShowAddressesInHex = value;
+                SaveRegistrySetting("ShowAddressesInHex", m_ShowAddressesInHex);
+            }
+        }
 
         private bool m_ShowGraphs = true;
 
@@ -1492,22 +1348,9 @@ namespace T7
         public bool HideSymbolTable
         {
             get { return m_HideSymbolTable; }
-            set
-            {
+            set {
                 m_HideSymbolTable = value;
                 SaveRegistrySetting("HideSymbolTable", m_HideSymbolTable);
-            }
-        }
-
-        private bool m_ShowAddressesInHex = true;
-
-        public bool ShowAddressesInHex
-        {
-            get { return m_ShowAddressesInHex; }
-            set
-            {
-                m_ShowAddressesInHex = value;
-                SaveRegistrySetting("ShowAddressesInHex", m_ShowAddressesInHex);
             }
         }
 
@@ -1579,7 +1422,6 @@ namespace T7
                 }
             }
         }
-
 
         private bool m_AutoExtractSymbols = true;
 
@@ -1686,12 +1528,195 @@ namespace T7
             }
         }
 
+        #region T7specific
+        private int m_StandardFill = 0;
+
+        public int StandardFill
+        {
+            get { return m_StandardFill; }
+            set
+            {
+                m_StandardFill = value;
+                SaveRegistrySetting("StandardFill", m_StandardFill);
+            }
+        }
+
+        private bool m_AlwaysRecreateRepositoryItems = false;
+
+        public bool AlwaysRecreateRepositoryItems
+        {
+            get { return m_AlwaysRecreateRepositoryItems; }
+            set
+            {
+                m_AlwaysRecreateRepositoryItems = value;
+                SaveRegistrySetting("AlwaysRecreateRepositoryItems", m_AlwaysRecreateRepositoryItems);
+            }
+        }
+
+        private bool m_WriteTimestampInBinary = true;
+
+        public bool WriteTimestampInBinary
+        {
+            get { return m_WriteTimestampInBinary; }
+            set
+            {
+                m_WriteTimestampInBinary = value;
+                SaveRegistrySetting("WriteTimestampInBinary", m_WriteTimestampInBinary);
+            }
+        }
+
+        private int m_ApplicationLanguage = 44;
+
+        public int ApplicationLanguage
+        {
+            get { return m_ApplicationLanguage; }
+            set
+            {
+                m_ApplicationLanguage = value;
+                SaveRegistrySetting("ApplicationLanguage", m_ApplicationLanguage.ToString());
+            }
+        }
+
+        private bool m_DisableCanCheck = false;
+
+        public bool DisableCanCheck
+        {
+            get { return m_DisableCanCheck; }
+            set
+            {
+                m_DisableCanCheck = value;
+                SaveRegistrySetting("DisableCanCheck", m_DisableCanCheck);
+            }
+        }
+
+        private bool m_EnableCanLog = false;
+
+        public bool EnableCanLog
+        {
+            get { return m_EnableCanLog; }
+            set
+            {
+                m_EnableCanLog = value;
+                SaveRegistrySetting("EnableCanLog", m_EnableCanLog);
+            }
+        }
+
+        private bool m_AutoFixFooter = false;
+
+        public bool AutoFixFooter
+        {
+            get { return m_AutoFixFooter; }
+            set
+            {
+                m_AutoFixFooter = value;
+                SaveRegistrySetting("AutoFixFooter", m_AutoFixFooter);
+            }
+        }
+
+        private Font m_RealtimeFont = new Font(FontFamily.GenericSansSerif, 8F, FontStyle.Regular);
+
+        public Font RealtimeFont
+        {
+            get { return m_RealtimeFont; }
+            set
+            {
+                m_RealtimeFont = value;
+                TypeConverter tc = TypeDescriptor.GetConverter(typeof(Font));
+                string fontString = tc.ConvertToString(m_RealtimeFont);
+                SaveRegistrySetting("RealtimeFont", fontString);
+            }
+        }
+
+        private bool m_AutoCreateAFRMaps = true;
+
+        public bool AutoCreateAFRMaps
+        {
+            get { return m_AutoCreateAFRMaps; }
+            set
+            {
+                m_AutoCreateAFRMaps = value;
+                SaveRegistrySetting("AutoCreateAFRMaps", m_AutoCreateAFRMaps);
+            }
+        }
+
+        private bool m_UseAdditionalCanbusFrames = false;
+
+        public bool UseAdditionalCanbusFrames
+        {
+            get { return false; }
+            set
+            {
+                m_UseAdditionalCanbusFrames = false;
+                SaveRegistrySetting("UseAdditionalCanbusFrames", m_UseAdditionalCanbusFrames);
+            }
+        }
+
+        private bool m_AutoUpdateSRAMViewers = false;
+
+        public bool AutoUpdateSRAMViewers
+        {
+            get { return m_AutoUpdateSRAMViewers; }
+            set
+            {
+                m_AutoUpdateSRAMViewers = value;
+                SaveRegistrySetting("AutoUpdateSRAMViewers", m_AutoUpdateSRAMViewers);
+            }
+        }
+
+        private int m_AutoUpdateInterval = 20;
+
+        public int AutoUpdateInterval
+        {
+            get { return m_AutoUpdateInterval; }
+            set
+            {
+                m_AutoUpdateInterval = value;
+                SaveRegistrySetting("AutoUpdateInterval", m_AutoUpdateInterval.ToString());
+            }
+        }
+        #endregion
+
+        #region T8specific
+        private bool m_MapDetectionActive = false;
+
+        public bool MapDetectionActive
+        {
+            get { return m_MapDetectionActive; }
+            set
+            {
+                m_MapDetectionActive = value;
+                SaveRegistrySetting("MapDetectionActive", m_MapDetectionActive);
+            }
+        }
+
+        private bool m_ShowMapPreviewPopup = false;
+
+        public bool ShowMapPreviewPopup
+        {
+            get { return m_ShowMapPreviewPopup; }
+            set
+            {
+                m_ShowMapPreviewPopup = value;
+                SaveRegistrySetting("ShowMapPreviewPopup", m_ShowMapPreviewPopup);
+            }
+        }
+
+        private bool m_Showpopupmap = true;
+
+        public bool Showpopupmap
+        {
+            get { return m_Showpopupmap; }
+            set { m_Showpopupmap = value; }
+        }
+
+        #endregion
+
         private void SaveRegistrySetting(string key, string value)
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T7SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1701,7 +1726,7 @@ namespace T7
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T7SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1711,7 +1736,7 @@ namespace T7
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T7SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1722,12 +1747,12 @@ namespace T7
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey("T7SuitePro"))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue("PanelMode", (int)_panelmode);
                 saveSettings.SetValue("PlayCellProcessedSound", m_PlayCellProcessedSound);
-                saveSettings.SetValue("AllowIdleAutoTune", m_AllowIdleAutoTune);
 
+                saveSettings.SetValue("AllowIdleAutoTune", m_AllowIdleAutoTune);
                 saveSettings.SetValue("AcceptableTargetErrorPercentage", m_AcceptableTargetErrorPercentage);
                 saveSettings.SetValue("AreaCorrectionPercentage", m_AreaCorrectionPercentage);
                 saveSettings.SetValue("AutoUpdateFuelMap", m_AutoUpdateFuelMap);
@@ -1751,15 +1776,13 @@ namespace T7
                 saveSettings.SetValue("autoLogTriggerStartSymbol", m_autoLogTriggerStartSymbol);
                 saveSettings.SetValue("autoLogTriggerStopSymbol", m_autoLogTriggerStopSymbol);
 
-                saveSettings.SetValue("ELM327Port", _ELM327Port);
+                saveSettings.SetValue("MeasureAFRInLambda", m_MeasureAFRInLambda);
                 saveSettings.SetValue("Baudrate", _Baudrate);
-
                 saveSettings.SetValue("WifiPort", _WifiPort);
 
                 saveSettings.SetValue("LastXAxisFromMatrix", _LastXAxisFromMatrix);
                 saveSettings.SetValue("LastYAxisFromMatrix", _LastYAxisFromMatrix);
                 saveSettings.SetValue("LastZAxisFromMatrix", _LastZAxisFromMatrix);
-
 
                 saveSettings.SetValue("notification1Active", _notification1Active);
                 saveSettings.SetValue("notification2Active", _notification2Active);
@@ -1777,7 +1800,6 @@ namespace T7
                 saveSettings.SetValue("notification2value", _notification2value.ToString());
                 saveSettings.SetValue("notification3value", _notification3value.ToString());
 
-                saveSettings.SetValue("StandardFill", m_StandardFill);
                 saveSettings.SetValue("adc1channelname", _adc1channelname);
                 saveSettings.SetValue("adc2channelname", _adc2channelname);
                 saveSettings.SetValue("adc3channelname", _adc3channelname);
@@ -1818,9 +1840,7 @@ namespace T7
                 saveSettings.SetValue("ViewInHex", m_viewinhex);
                 saveSettings.SetValue("LastFilename", m_lastfilename);
                 saveSettings.SetValue("AutoExtractSymbols", m_AutoExtractSymbols);
-                saveSettings.SetValue("LastProjectname", m_lastprojectname);
                 saveSettings.SetValue("WriteECUBatchfile", m_write_ecubatchfile);
-                saveSettings.SetValue("LastOpenedType", m_LastOpenedType);
                 saveSettings.SetValue("ReadECUBatchfile", m_read_ecubatchfile);
                 saveSettings.SetValue("ShowRedWhite", m_ShowRedWhite);
                 saveSettings.SetValue("TargetECUReadFile", m_TargetECUReadFile);
@@ -1840,18 +1860,20 @@ namespace T7
                 saveSettings.SetValue("DefaultViewSize", (int)m_DefaultViewSize);
                 saveSettings.SetValue("AutoLoadLastFile", m_AutoLoadLastFile);
                 saveSettings.SetValue("FancyDocking", m_FancyDocking);
-                saveSettings.SetValue("AlwaysRecreateRepositoryItems", m_AlwaysRecreateRepositoryItems);
+                saveSettings.SetValue("ShowMapPreviewPopup", m_ShowMapPreviewPopup);
                 saveSettings.SetValue("SynchronizeMapviewers", m_SynchronizeMapviewers);
                 saveSettings.SetValue("AllowAskForPartnumber", m_AllowAskForPartnumber);
                 saveSettings.SetValue("ShowTablesUpsideDown", m_ShowTablesUpsideDown);
-                saveSettings.SetValue("MeasureAFRInLambda", m_MeasureAFRInLambda);
                 saveSettings.SetValue("WriteTimestampInBinary", m_WriteTimestampInBinary);
                 saveSettings.SetValue("ShowMenu", m_ShowMenu);
-                saveSettings.SetValue("AutoFixFooter", m_AutoFixFooter);
-                saveSettings.SetValue("EnableCanLog", m_EnableCanLog);
+                saveSettings.SetValue("UseNewMapViewer", m_UseNewMapViewer);
+
+                saveSettings.SetValue("RequestProjectNotes", m_RequestProjectNotes);
+                saveSettings.SetValue("LastProjectname", m_lastprojectname);
+                saveSettings.SetValue("LastOpenedType", m_LastOpenedType);
+                saveSettings.SetValue("ProjectFolder", m_ProjectFolder);
                 saveSettings.SetValue("OnlyPBus", m_OnlyPBus);
                 saveSettings.SetValue("DisableCanCheck", m_DisableCanCheck);
-                saveSettings.SetValue("ELM327Kline", m_ELM327Kline);
                 saveSettings.SetValue("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
                 saveSettings.SetValue("AutoUpdateSRAMViewers", m_AutoUpdateSRAMViewers);
                 saveSettings.SetValue("UseAdditionalCanbusFrames", m_UseAdditionalCanbusFrames);
@@ -1860,12 +1882,9 @@ namespace T7
                 saveSettings.SetValue("UseDigitalWidebandLambda", m_UseDigitalWidebandLambda);
                 saveSettings.SetValue("WideBandSymbol", m_WideBandSymbol);
                 saveSettings.SetValue("AutoCreateAFRMaps", m_AutoCreateAFRMaps);
-                saveSettings.SetValue("UseNewMapViewer", m_UseNewMapViewer);
                 saveSettings.SetValue("ApplicationLanguage", m_ApplicationLanguage.ToString());
                 saveSettings.SetValue("AutoUpdateInterval", m_AutoUpdateInterval.ToString());
 
-                saveSettings.SetValue("ProjectFolder", m_ProjectFolder);
-                saveSettings.SetValue("RequestProjectNotes", m_RequestProjectNotes);
 
                 TypeConverter tc = TypeDescriptor.GetConverter(typeof(Font));
                 string fontString = tc.ConvertToString(m_RealtimeFont);
@@ -1875,6 +1894,14 @@ namespace T7
                 saveSettings.SetValue("WidebandDevice", m_WidebandDevice);
                 saveSettings.SetValue("AdapterType", m_AdapterType);
                 saveSettings.SetValue("Adapter", m_Adapter);
+
+                saveSettings.SetValue("AlwaysRecreateRepositoryItems", m_AlwaysRecreateRepositoryItems);
+                saveSettings.SetValue("AutoFixFooter", m_AutoFixFooter);
+                saveSettings.SetValue("EnableCanLog", m_EnableCanLog);
+				saveSettings.SetValue("StandardFill", m_StandardFill);
+
+                saveSettings.SetValue("MapDetectionActive", m_MapDetectionActive);
+                saveSettings.SetValue("Showpopupmap", m_Showpopupmap);
             }
         }
 
@@ -1888,14 +1915,16 @@ namespace T7
             return d;
         }
 
+        SuiteRegistry m_SuiteRegistry;
 
-        public AppSettings()
+        public AppSettings(SuiteRegistry suiteRegistry)
         {
+            m_SuiteRegistry = suiteRegistry;
             // laad alle waarden uit het register
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey Settings = ManufacturerKey.CreateSubKey("T7SuitePro"))
+            using (RegistryKey Settings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
             {
                 if (Settings != null)
                 {
@@ -1904,15 +1933,23 @@ namespace T7
                     {
                         try
                         {
-                            if (a == "ViewInHex")
+                            if (a == "MeasureAFRInLambda")
+                            {
+                                m_MeasureAFRInLambda = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "MapDetectionActive")
+                            {
+                                m_MapDetectionActive = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "ViewInHex")
                             {
                                 m_viewinhex = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
-                            if (a == "DebugMode")
+                            else if (a == "DebugMode")
                             {
                                 m_debugmode = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
-                            if (a == "AdminMode")
+                            else if (a == "AdminMode")
                             {
                                 m_adminmode = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
@@ -1930,67 +1967,7 @@ namespace T7
                             }
                             else if (a == "PanelMode")
                             {
-                                _panelmode = (frmMain.PanelMode)Convert.ToInt32(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification1Active")
-                            {
-                                _notification1Active = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification2Active")
-                            {
-                                _notification2Active = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification3Active")
-                            {
-                                _notification3Active = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification1condition")
-                            {
-                                _notification1condition = Convert.ToInt32(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification2condition")
-                            {
-                                _notification2condition = Convert.ToInt32(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification3condition")
-                            {
-                                _notification3condition = Convert.ToInt32(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification1sound")
-                            {
-                                _notification1sound = Settings.GetValue(a).ToString();
-                            }
-                            else if (a == "notification2sound")
-                            {
-                                _notification2sound = Settings.GetValue(a).ToString();
-                            }
-                            else if (a == "notification3sound")
-                            {
-                                _notification3sound = Settings.GetValue(a).ToString();
-                            }
-                            else if (a == "notification1symbol")
-                            {
-                                _notification1symbol = Settings.GetValue(a).ToString();
-                            }
-                            else if (a == "notification2symbol")
-                            {
-                                _notification2symbol = Settings.GetValue(a).ToString();
-                            }
-                            else if (a == "notification3symbol")
-                            {
-                                _notification3symbol = Settings.GetValue(a).ToString();
-                            }
-                            else if (a == "notification1value")
-                            {
-                                _notification1value = ConvertToDouble(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification2value")
-                            {
-                                _notification2value = ConvertToDouble(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "notification3value")
-                            {
-                                _notification3value = ConvertToDouble(Settings.GetValue(a).ToString());
+                                _panelmode = (PanelMode)Convert.ToInt32(Settings.GetValue(a).ToString());
                             }
                             else if (a == "StandardFill")
                             {
@@ -2124,7 +2101,6 @@ namespace T7
                             {
                                 _adc5highvoltage = ConvertToDouble(Settings.GetValue(a).ToString());
                             }
-
                             else if (a == "WidebandLowVoltage")
                             {
                                 m_WidebandLowVoltage = ConvertToDouble(Settings.GetValue(a).ToString());
@@ -2185,6 +2161,14 @@ namespace T7
                             {
                                 m_AutoSizeColumnsInWindows = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
+                            else if (a == "Skinname")
+                            {
+                                m_skinname = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "Showpopupmap")
+                            {
+                                m_Showpopupmap = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
 
                             else if (a == "ReadECUBatchfile")
                             {
@@ -2208,11 +2192,15 @@ namespace T7
                             }
                             else if (a == "ShowViewerInWindows")
                             {
-                                m_ShowViewerInWindows = false; //Convert.ToBoolean(Settings.GetValue(a).ToString());
+                                m_ShowViewerInWindows = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "NewPanelsFloating")
                             {
                                 m_NewPanelsFloating = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "ShowMapPreviewPopup")
+                            {
+                                m_ShowMapPreviewPopup = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "AlwaysRecreateRepositoryItems")
                             {
@@ -2228,7 +2216,7 @@ namespace T7
                             }
                             else if (a == "DefaultViewType")
                             {
-                                m_DefaultViewType = (ViewType)Convert.ToInt32(Settings.GetValue(a).ToString());
+                                m_DefaultViewType = (SuiteViewType)Convert.ToInt32(Settings.GetValue(a).ToString());
                             }
                             else if (a == "DefaultViewSize")
                             {
@@ -2258,6 +2246,18 @@ namespace T7
                             {
                                 m_ShowMenu = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
+                            else if (a == "RequestProjectNotes")
+                            {
+                                m_RequestProjectNotes = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "ProjectFolder")
+                            {
+                                m_ProjectFolder = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "LastProjectname")
+                            {
+                                m_lastprojectname = Settings.GetValue(a).ToString();
+                            }
                             else if (a == "AutoFixFooter")
                             {
                                 m_AutoFixFooter = Convert.ToBoolean(Settings.GetValue(a).ToString());
@@ -2273,10 +2273,6 @@ namespace T7
                             else if (a == "DisableCanCheck")
                             {
                                 m_DisableCanCheck = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "ELM327Kline")
-                            {
-                                m_ELM327Kline = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "InterpolateLogWorksTimescale")
                             {
@@ -2406,10 +2402,6 @@ namespace T7
                             {
                                 m_autoLoggingEnabled = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
-                            else if (a == "dosBoxInstalled")
-                            {
-                                m_dosBoxInstalled = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
                             else if (a == "autoLogStartSign")
                             {
                                 m_autoLogStartSign = Convert.ToInt32(Settings.GetValue(a).ToString());
@@ -2434,10 +2426,6 @@ namespace T7
                             {
                                 m_autoLogTriggerStopSymbol = Settings.GetValue(a).ToString();
                             }
-                            else if (a == "ELM327Port")
-                            {
-                                _ELM327Port = Settings.GetValue(a).ToString();
-                            }
                             else if (a == "Baudrate")
                             {
                                 _Baudrate = Convert.ToInt32(Settings.GetValue(a).ToString());
@@ -2453,6 +2441,66 @@ namespace T7
                             else if (a == "LastZAxisFromMatrix")
                             {
                                 _LastZAxisFromMatrix = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification1Active")
+                            {
+                                _notification1Active = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification2Active")
+                            {
+                                _notification2Active = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification3Active")
+                            {
+                                _notification3Active = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification1condition")
+                            {
+                                _notification1condition = Convert.ToInt32(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification2condition")
+                            {
+                                _notification2condition = Convert.ToInt32(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification3condition")
+                            {
+                                _notification3condition = Convert.ToInt32(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification1sound")
+                            {
+                                _notification1sound = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification2sound")
+                            {
+                                _notification2sound = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification3sound")
+                            {
+                                _notification3sound = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification1symbol")
+                            {
+                                _notification1symbol = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification2symbol")
+                            {
+                                _notification2symbol = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification3symbol")
+                            {
+                                _notification3symbol = Settings.GetValue(a).ToString();
+                            }
+                            else if (a == "notification1value")
+                            {
+                                _notification1value = ConvertToDouble(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification2value")
+                            {
+                                _notification2value = ConvertToDouble(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "notification3value")
+                            {
+                                _notification3value = ConvertToDouble(Settings.GetValue(a).ToString());
                             }
                             else if (a == "WbPort")
                             {

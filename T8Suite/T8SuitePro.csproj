@@ -187,7 +187,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings.cs" />
     <Compile Include="AsmViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -200,6 +199,7 @@
     <Compile Include="AxisBrowser.Designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="T8SuiteRegistry.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -257,10 +257,6 @@
     <Compile Include="Plot3D\FunctionCompiler.cs" />
     <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="srec2bin.cs" />
-    <Compile Include="SymbolCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DifGenerator.cs" />
     <Compile Include="Disassembler.cs" />
     <Compile Include="FlashBlock.cs" />
     <Compile Include="FlashBlockCollection.cs" />

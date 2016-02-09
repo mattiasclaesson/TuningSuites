@@ -26,8 +26,8 @@ namespace T8SuitePro
         private bool m_prohibitcellchange = false;
         private bool m_prohibitsplitchange = false;
         private bool m_prohibitgraphchange = false;
-        private ViewType m_viewtype = ViewType.Hexadecimal;
-        private ViewType m_previousviewtype = ViewType.Easy;
+        private SuiteViewType m_viewtype = SuiteViewType.Hexadecimal;
+        private SuiteViewType m_previousviewtype = SuiteViewType.Easy;
         private bool m_prohibit_viewchange = false;
         private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
@@ -88,7 +88,7 @@ namespace T8SuitePro
             set { m_SymbolCollection = value; }
         }
 
-        public override ViewType Viewtype
+        public override SuiteViewType Viewtype
         {
             get { return m_viewtype; }
             set
@@ -425,7 +425,7 @@ namespace T8SuitePro
                 for (int t = 0; t < dt.Columns.Count; t++)
                 {
                     double value = Convert.ToInt32(dr[t]);
-                    if (m_viewtype != ViewType.Decimal && m_viewtype != ViewType.Hexadecimal && m_viewtype != ViewType.ASCII)
+                    if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
                     {
                         value *= correction_factor;
                         if (!_isCompareViewer) value += correction_offset;
@@ -480,7 +480,7 @@ namespace T8SuitePro
                                 }
 
                                 double value = ivalue;
-                                if (m_viewtype != ViewType.Decimal && m_viewtype != ViewType.Hexadecimal && m_viewtype != ViewType.ASCII)
+                                if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
                                 {
                                     value *= correction_factor;
                                     value += correction_offset; // bij origineel wel doen
@@ -498,7 +498,7 @@ namespace T8SuitePro
                             //if (diffivalue != 0)
                             {
                                 double value = ivalue;
-                                if (m_viewtype != ViewType.Decimal && m_viewtype != ViewType.Hexadecimal && m_viewtype != ViewType.ASCII)
+                                if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
                                 {
                                     value *= correction_factor;
                                     value += correction_offset;
@@ -541,7 +541,7 @@ namespace T8SuitePro
                                 ivalue = -ivalue;
                             }
                             double value = ivalue;
-                            if (m_viewtype != ViewType.Decimal && m_viewtype != ViewType.Hexadecimal && m_viewtype != ViewType.ASCII)
+                            if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
                             {
                                 value *= correction_factor;
                                 value += correction_offset;
@@ -560,7 +560,7 @@ namespace T8SuitePro
                         //if (diffivalue != 0)
                         {
                             double value = ivalue;
-                            if (m_viewtype != ViewType.Decimal && m_viewtype != ViewType.Hexadecimal && m_viewtype != ViewType.ASCII)
+                            if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
                             {
                                 value *= correction_factor;
                                 value += correction_offset;
@@ -941,7 +941,7 @@ namespace T8SuitePro
 
             m_MaxValueInTable = 0;
             //if (m_isHexMode)
-            if (m_viewtype == ViewType.Hexadecimal)
+            if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 int lenvals = m_map_length;
                 if (issixteenbits) lenvals /= 2;
@@ -1020,11 +1020,11 @@ namespace T8SuitePro
                                 //b = (int)(correction_offset + (double)b);
                                 // TEST
                                 //if (m_isHexMode)
-                                if (m_viewtype == ViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X4"), j);
                                 }
-                                else if (m_viewtype == ViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
@@ -1109,11 +1109,11 @@ namespace T8SuitePro
                                     // TEST
 
                                     //                                    if (m_isHexMode)
-                                    if (m_viewtype == ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
                                     }
-                                    else if (m_viewtype == ViewType.ASCII)
+                                    else if (m_viewtype == SuiteViewType.ASCII)
                                     {
                                         //objarr.SetValue(b.ToString("X4"), j);
                                         // show as ascii characters
@@ -1169,11 +1169,11 @@ namespace T8SuitePro
                                 // TEST
 
                                 //if (m_isHexMode)
-                                if (m_viewtype == ViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), j);
                                 }
-                                else if (m_viewtype == ViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
@@ -1218,11 +1218,11 @@ namespace T8SuitePro
                                 // TEST
 
                                 //if (m_isHexMode)
-                                if (m_viewtype == ViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), sicnt);
                                 }
-                                else if (m_viewtype == ViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
@@ -1266,7 +1266,7 @@ namespace T8SuitePro
                 for (int i = 0; i < y_axisvalues.Length; i++)
                 {
                     string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
-                    if (m_viewtype == ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
                     }
@@ -1909,7 +1909,7 @@ namespace T8SuitePro
                         int b = 0;
                         int cellvalue = 0;
                         //if (m_isHexMode)
-                        if (m_viewtype == ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             b = Convert.ToInt32(e.CellValue.ToString(), 16);
                             cellvalue = b;
@@ -1962,14 +1962,14 @@ namespace T8SuitePro
                             SolidBrush sb = new SolidBrush(c);
                             e.Graphics.FillRectangle(sb, e.Bounds);
                         }
-                        if (m_viewtype == ViewType.Easy )
+                        if (m_viewtype == SuiteViewType.Easy)
                         {
                             float dispvalue = 0;
                             dispvalue = (float)cellvalue;
                             if (correction_offset != 0 || correction_factor != 1)
                             {
                                 dispvalue = (float)((float)cellvalue * (float)correction_factor) + (float)correction_offset;
-                                if (m_viewtype != ViewType.Hexadecimal)
+                                if (m_viewtype != SuiteViewType.Hexadecimal)
                                 //if (!m_isHexMode)
                                 {
                                     if (m_map_name.StartsWith("Ign_map_0!") || m_map_name.StartsWith("Ign_map_4!"))
@@ -2139,7 +2139,7 @@ namespace T8SuitePro
                                         string bstr1 = "0";
                                         string bstr2 = "0";
                                         //if (m_isHexMode)
-                                        if (m_viewtype == ViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             cellvalue = Convert.ToInt32(o.ToString(), 16);
                                         }
@@ -2159,7 +2159,7 @@ namespace T8SuitePro
                                     else
                                     {
                                         //if (m_isHexMode)
-                                        if (m_viewtype == ViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             //double v = Convert.ToDouble(o);
                                             int iv = Convert.ToInt32(o.ToString(), 16);//(int)Math.Floor(v);
@@ -2198,7 +2198,7 @@ namespace T8SuitePro
                                         string bstr1 = "0";
                                         string bstr2 = "0";
                                         //if (m_isHexMode)
-                                        if (m_viewtype == ViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             cellvalue = Convert.ToInt32(o.ToString(), 16);
                                         }
@@ -2218,7 +2218,7 @@ namespace T8SuitePro
                                     else
                                     {
 //                                        if (m_isHexMode)
-                                        if (m_viewtype == ViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             
                                             //double v = Convert.ToDouble(o);
@@ -2470,7 +2470,7 @@ namespace T8SuitePro
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if(m_viewtype == ViewType.Hexadecimal)
+                        if(m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value++;
@@ -2513,7 +2513,7 @@ namespace T8SuitePro
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value--;
@@ -2557,7 +2557,7 @@ namespace T8SuitePro
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value += 0x10;
@@ -2600,7 +2600,7 @@ namespace T8SuitePro
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value-=0x10;
@@ -2644,7 +2644,7 @@ namespace T8SuitePro
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
 
                             int value = 0xFFFF;
@@ -2687,7 +2687,7 @@ namespace T8SuitePro
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = 0;
                             if (m_issixteenbit)
@@ -2737,7 +2737,7 @@ namespace T8SuitePro
                                 // dan andere waarde nemen
                                 yvalue = y_axisvalues.GetValue(e.RowHandle).ToString();
                             }
-                            if (m_viewtype == ViewType.Hexadecimal)
+                            if (m_viewtype == SuiteViewType.Hexadecimal)
                             {
                                 yvalue = Convert.ToInt32(/*y_axisvalues.GetValue(e.RowHandle)*/y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle)).ToString("X4");
                             }
@@ -2769,7 +2769,7 @@ namespace T8SuitePro
                         if (x_axisvalues.Length > e.Column.VisibleIndex)
                         {
                             string xvalue = x_axisvalues.GetValue(e.Column.VisibleIndex).ToString();
-                            if (m_viewtype == ViewType.Hexadecimal)
+                            if (m_viewtype == SuiteViewType.Hexadecimal)
                             {
                                 xvalue = Convert.ToInt32(x_axisvalues.GetValue(e.Column.VisibleIndex)).ToString(m_xformatstringforhex);
                             }
@@ -3153,7 +3153,7 @@ namespace T8SuitePro
                     e.Handled = true;
 
                     //if (IsHexMode)
-                    if (m_viewtype == ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
                         value++;
@@ -3194,7 +3194,7 @@ namespace T8SuitePro
                     e.SuppressKeyPress = true;
                     e.Handled = true;
                     //if (IsHexMode)
-                    if (m_viewtype == ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
                         value--;
@@ -3389,7 +3389,7 @@ namespace T8SuitePro
                     ch.Rowhandle = gc.RowHandle;
                     ch.Columnindex = gc.Column.AbsoluteIndex;
                     object o = gridView1.GetRowCellValue(gc.RowHandle, gc.Column);
-                    if (m_viewtype == ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         ch.Value = Convert.ToInt32(o.ToString(), 16);
                     }
@@ -3453,7 +3453,7 @@ namespace T8SuitePro
                         string serialized = Clipboard.GetText();
                         //   logger.Debug(serialized);
                         int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
-                        ViewType vtclip = (ViewType)viewtypeinclipboard;
+                        SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
                         char[] sep = new char[1];
                         sep.SetValue('~', 0);
@@ -3470,17 +3470,17 @@ namespace T8SuitePro
                                 int colindex = Convert.ToInt32(vals.GetValue(0));
                                 int ivalue = 0;
                                 double dvalue = 0;
-                                if (vtclip == ViewType.Hexadecimal)
+                                if (vtclip == SuiteViewType.Hexadecimal)
                                 {
                                     ivalue = Convert.ToInt32(vals.GetValue(2).ToString());
                                     dvalue = ivalue;
                                 }
-                                else if (vtclip == ViewType.Decimal)
+                                else if (vtclip == SuiteViewType.Decimal)
                                 {
                                     ivalue = Convert.ToInt32(vals.GetValue(2));
                                     dvalue = ivalue;
                                 }
-                                else if (vtclip == ViewType.Easy )
+                                else if (vtclip == SuiteViewType.Easy )
                                 {
                                     dvalue = Convert.ToDouble(vals.GetValue(2));
                                 }
@@ -3491,7 +3491,7 @@ namespace T8SuitePro
                                 {
                                     try
                                     {
-                                        if (vtclip == ViewType.Hexadecimal)
+                                        if (vtclip == SuiteViewType.Hexadecimal)
                                         {
                                             //gridView1.SetRowCellValue(rowhandle, gridView1.Columns[colindex], ivalue.ToString("X"));
                                             gridView1.SetRowCellValue(rowhandlefrom + (rowhandle - originalrowoffset), gridView1.Columns[colindexfrom + (colindex - originalcolumnoffset)], ivalue.ToString("X"));
@@ -3528,7 +3528,7 @@ namespace T8SuitePro
                 {
                     //   logger.Debug(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
-                    ViewType vtclip = (ViewType)viewtypeinclipboard;
+                    SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
 
                     char[] sep = new char[1];
@@ -3546,17 +3546,17 @@ namespace T8SuitePro
                             //int value = Convert.ToInt32(vals.GetValue(2));
                             int ivalue = 0;
                             double dvalue = 0;
-                            if (vtclip == ViewType.Hexadecimal)
+                            if (vtclip == SuiteViewType.Hexadecimal)
                             {
                                 ivalue = Convert.ToInt32(vals.GetValue(2).ToString());
                                 dvalue = ivalue;
                             }
-                            else if (vtclip == ViewType.Decimal)
+                            else if (vtclip == SuiteViewType.Decimal)
                             {
                                 ivalue = Convert.ToInt32(vals.GetValue(2));
                                 dvalue = ivalue;
                             }
-                            else if (vtclip == ViewType.Easy)
+                            else if (vtclip == SuiteViewType.Easy)
                             {
                                 dvalue = Convert.ToDouble(vals.GetValue(2));
                             }
@@ -3564,7 +3564,7 @@ namespace T8SuitePro
                             {
                                 try
                                 {
-                                    if (vtclip == ViewType.Hexadecimal)
+                                    if (vtclip == SuiteViewType.Hexadecimal)
                                     {
                                         gridView1.SetRowCellValue(rowhandle, gridView1.Columns[colindex], ivalue.ToString("X"));
                                     }
@@ -3602,7 +3602,7 @@ namespace T8SuitePro
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
 //            m_isHexMode = !m_isHexMode;
-            if (m_viewtype != ViewType.Hexadecimal) m_viewtype = ViewType.Hexadecimal;
+            if (m_viewtype != SuiteViewType.Hexadecimal) m_viewtype = SuiteViewType.Hexadecimal;
             else m_viewtype = m_previousviewtype;
             ShowTable(m_TableWidth, m_issixteenbit);
         }
@@ -3623,7 +3623,7 @@ namespace T8SuitePro
                                 try
                                 {
                                     int value = 0;
-                                    if (m_viewtype == ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         value += (int)Math.Round(_workvalue);
@@ -3646,7 +3646,7 @@ namespace T8SuitePro
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -3662,7 +3662,7 @@ namespace T8SuitePro
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         dvalue *= correction_factor;
@@ -3701,7 +3701,7 @@ namespace T8SuitePro
                                 try
                                 {
                                     int value = 0;
-                                    if (m_viewtype == ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         value *= (int)Math.Round(_workvalue);
@@ -3724,7 +3724,7 @@ namespace T8SuitePro
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)Math.Round(_workvalue);
@@ -3741,7 +3741,7 @@ namespace T8SuitePro
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
                                     
-                                    else if (m_viewtype == ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         dvalue *= correction_factor;
@@ -3782,7 +3782,7 @@ namespace T8SuitePro
                                 try
                                 {
                                     int value = 0;
-                                    if (m_viewtype == ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         if (_workvalue != 0)
@@ -3808,7 +3808,7 @@ namespace T8SuitePro
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -3828,7 +3828,7 @@ namespace T8SuitePro
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
                                     
-                                    else if (m_viewtype == ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         dvalue *= correction_factor;
@@ -3870,7 +3870,7 @@ namespace T8SuitePro
                                 try
                                 {
                                     double value = _workvalue;
-                                    if (m_viewtype == ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         if (m_issixteenbit)
                                         {
@@ -3892,7 +3892,7 @@ namespace T8SuitePro
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         if (m_issixteenbit)
                                         {
@@ -3908,7 +3908,7 @@ namespace T8SuitePro
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
                                     
-                                    else if (m_viewtype == ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -4254,19 +4254,19 @@ namespace T8SuitePro
             {
                 case -1:
                 case 0:
-                    m_viewtype = ViewType.Hexadecimal;
+                    m_viewtype = SuiteViewType.Hexadecimal;
                     break;
                 case 1:
-                    m_viewtype = ViewType.Decimal;
+                    m_viewtype = SuiteViewType.Decimal;
                     break;
                 case 2:
-                    m_viewtype = ViewType.Easy;
+                    m_viewtype = SuiteViewType.Easy;
                     break;
                 case 3:
-                    m_viewtype = ViewType.ASCII;
+                    m_viewtype = SuiteViewType.ASCII;
                     break;
                 default:
-                    m_viewtype = ViewType.Hexadecimal;
+                    m_viewtype = SuiteViewType.Hexadecimal;
                     break;
             }
             ReShowTable();
@@ -4282,7 +4282,7 @@ namespace T8SuitePro
         {
             if (m_issixteenbit)
             {
-                if (m_viewtype == ViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     try
                     {
@@ -4305,7 +4305,7 @@ namespace T8SuitePro
                 {
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == ViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Easy)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -4348,7 +4348,7 @@ namespace T8SuitePro
             }
             else
             {
-                if (m_viewtype == ViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     try
                     {
@@ -4369,7 +4369,7 @@ namespace T8SuitePro
                 {
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == ViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Easy)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -4415,7 +4415,7 @@ namespace T8SuitePro
         private float ConvertToEasyValue(float editorvalue)
         {
             float retval = editorvalue;
-            if (m_viewtype == ViewType.Easy )
+            if (m_viewtype == SuiteViewType.Easy )
             {
                 retval = (float)((float)editorvalue * (float)correction_factor) + (float)correction_offset;
             }
@@ -4439,7 +4439,7 @@ namespace T8SuitePro
                 edit.Properties.LookUpData.DataSource = clone;
             }
             */
-            if (m_viewtype == ViewType.Easy )
+            if (m_viewtype == SuiteViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
                 logger.Debug("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
@@ -4679,7 +4679,7 @@ namespace T8SuitePro
 
         private void smoothSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (m_viewtype == ViewType.Hexadecimal)
+            if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 MessageBox.Show("Smoothing cannot be done in Hex view!");
                 return;

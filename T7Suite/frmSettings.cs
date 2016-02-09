@@ -6,6 +6,7 @@ using TrionicCANLib;
 using System.IO.Ports;
 using TrionicCANLib.API;
 using DevExpress.XtraEditors.Controls;
+using CommonSuite;
 
 namespace T7
 {
@@ -135,11 +136,11 @@ namespace T7
             }
         }
 
-        public ViewType DefaultViewType
+        public SuiteViewType DefaultViewType
         {
             get
             {
-                return (ViewType)comboBoxEdit1.SelectedIndex;
+                return (SuiteViewType)comboBoxEdit1.SelectedIndex;
             }
             set
             {
@@ -628,11 +629,9 @@ namespace T7
             {
                 frmComportSettings comportSel = new frmComportSettings();
                 comportSel.Baudrate = m_appSettings.Baudrate;
-                comportSel.ELM327KLine = m_appSettings.ELM327Kline;
                 if (comportSel.ShowDialog() == DialogResult.OK)
                 {
                     m_appSettings.Baudrate = comportSel.Baudrate;
-                    m_appSettings.ELM327Kline = comportSel.ELM327KLine;
                 }
                 DialogResult = DialogResult.None;
             }

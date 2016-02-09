@@ -1,3 +1,4 @@
+using CommonSuite;
 namespace T8SuitePro
 {
     partial class frmMapHelper
@@ -69,7 +70,7 @@ namespace T8SuitePro
             this.mapViewer1.Size = new System.Drawing.Size(292, 266);
             this.mapViewer1.TabIndex = 0;
             this.mapViewer1.TableVisible = false;
-            this.mapViewer1.Viewtype = T8SuitePro.ViewType.Easy;
+            this.mapViewer1.Viewtype = SuiteViewType.Easy;
             this.mapViewer1.X_axis_name = "";
             this.mapViewer1.X_axisvalues = null;
             this.mapViewer1.Y_axis_name = "";
