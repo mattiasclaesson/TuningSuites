@@ -13,6 +13,8 @@ namespace Plot3D
 {
     public class Surface3DRenderer
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         double screenDistance, sf, cf, st, ct, R, A, B, C, D; //transformations coeficients
         double density = 0.5f;
         Color penColor = Color.Black;
@@ -26,8 +28,6 @@ namespace Plot3D
         private bool m_isRedWhite = false;
         int m_highlighted_x_value = -1;
         int m_highlighted_y_value = -1;
-        private Logger logger = LogManager.GetCurrentClassLogger();
-
         public bool IsRedWhite
         {
             get { return m_isRedWhite; }

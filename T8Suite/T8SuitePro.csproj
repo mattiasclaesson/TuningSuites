@@ -214,18 +214,6 @@
     <Compile Include="ctrlDisassembler.designer.cs">
       <DependentUpon>ctrlDisassembler.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmEditRealtimeSymbol.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmEditRealtimeSymbol.Designer.cs">
-      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmLogFilters.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLogFilters.Designer.cs">
-      <DependentUpon>frmLogFilters.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmMatrixSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -431,14 +419,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CompareResults.resx">
       <DependentUpon>CompareResults.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmEditRealtimeSymbol.resx">
-      <DependentUpon>frmEditRealtimeSymbol.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmLogFilters.resx">
-      <DependentUpon>frmLogFilters.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixSelection.resx">
