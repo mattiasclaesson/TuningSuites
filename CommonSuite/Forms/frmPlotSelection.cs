@@ -7,10 +7,9 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Microsoft.Win32;
-using CommonSuite;
 using NLog;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmPlotSelection : DevExpress.XtraEditors.XtraForm
     {
@@ -45,6 +44,14 @@ namespace T8SuitePro
             get { return _sc; }
             set { _sc = value; }
         }
+
+        SuiteRegistry _suiteRegistry;
+
+        public SuiteRegistry SuiteRegistry
+        {
+            set { _suiteRegistry = value; }
+        }
+
         public frmPlotSelection()
         {
             InitializeComponent();
@@ -54,7 +61,7 @@ namespace T8SuitePro
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
 
             using (RegistryKey saveSettings = SuiteKey.CreateSubKey("SymbolColors"))
             {
@@ -67,7 +74,7 @@ namespace T8SuitePro
             Int32 win32color = 0;
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
 
             using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
             {
@@ -209,7 +216,7 @@ namespace T8SuitePro
         }
 
 
-        internal void SelectAllSymbols()
+        public void SelectAllSymbols()
         {
             gridView1.SelectAll();
         }
@@ -217,7 +224,7 @@ namespace T8SuitePro
         private void simpleButton3_Click(object sender, EventArgs e)
         {
             // setup the export filters
-            LogFilters filterhelper = new LogFilters();
+            LogFilters filterhelper = new LogFilters() { SuiteRegistry = _suiteRegistry };
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
             logger.Debug("filters: " + filters.Count);

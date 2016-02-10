@@ -120,7 +120,8 @@ namespace T8SuitePro
         private AFRViewType AfrViewMode = AFRViewType.AFRMode;
 
         private string m_currentfile = string.Empty;
-        AppSettings m_appSettings = new AppSettings(new T8SuiteRegistry());
+        private SuiteRegistry suiteRegistry = new T8SuiteRegistry();
+        AppSettings m_appSettings;
         public static SymbolCollection m_symbols = new SymbolCollection();
         int m_currentMapHelperRowHandle = -1;
         private frmMapHelper m_mapHelper = new frmMapHelper();
@@ -142,6 +143,8 @@ namespace T8SuitePro
 
         public Form1(string[] args)
         {
+            m_appSettings = new AppSettings() { SuiteRegistry=suiteRegistry };
+
             frmSplash splash = new frmSplash();
             splash.Show();
             System.Windows.Forms.Application.DoEvents();
@@ -5444,7 +5447,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
         private void barButtonItem18_ItemClick(object sender, ItemClickEventArgs e)
         {
             frmSettings set = new frmSettings();
-            m_appSettings = new AppSettings(new T8SuiteRegistry());
+            m_appSettings = new AppSettings() { SuiteRegistry=suiteRegistry };
             set.AppSettings = m_appSettings;
             set.Symbols = GetRealtimeNotificationSymbols();
             set.InterpolateLogWorksTimescale = m_appSettings.InterpolateLogWorksTimescale;
@@ -11178,7 +11181,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection();
+                    frmPlotSelection plotsel = new frmPlotSelection() { SuiteRegistry = suiteRegistry };
                     foreach (SymbolHelper sh in sc)
                     {
                         plotsel.AddItemToList(sh.Varname);
@@ -11192,7 +11195,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         DifGenerator difgen = new DifGenerator();
-                        LogFilters filterhelper = new LogFilters();
+                        LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
                         difgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         difgen.AppSettings = m_appSettings;
                         //difgen.LowAFR = m_appSettings.WidebandLowAFR;
@@ -14651,7 +14654,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void SetupLogFilters()
         {
             // setup the export filters
-            LogFilters filterhelper = new LogFilters();
+            LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
             frmfilters.SetFilters(filters);
@@ -15090,7 +15093,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnSetSymbolColors_ItemClick(object sender, ItemClickEventArgs e)
         {
-            frmPlotSelection plotsel = new frmPlotSelection();
+            frmPlotSelection plotsel = new frmPlotSelection() { SuiteRegistry = suiteRegistry};
             // get values from realtime panel
             // LoadRealtimeTable();
             CheckDefaultSymbolColors();
@@ -16534,7 +16537,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection();
+                    frmPlotSelection plotsel = new frmPlotSelection() { SuiteRegistry = suiteRegistry};
                     foreach (SymbolHelper sh in sc)
                     {
                         plotsel.AddItemToList(sh.Varname);
@@ -16548,7 +16551,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         CSVGenerator csvgen = new CSVGenerator();
-                        LogFilters filterhelper = new LogFilters();
+                        LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
                         csvgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         csvgen.AppSettings = m_appSettings;
                         //csvgen.LowAFR = m_appSettings.WidebandLowAFR;

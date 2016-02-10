@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
-using CommonSuite;
 using NLog;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public class LogFilters
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
+
+        SuiteRegistry _suiteRegistry;
+
+        public SuiteRegistry SuiteRegistry
+        {
+            set { _suiteRegistry = value; }
+        }
 
         public void SaveFiltersToRegistry(LogFilterCollection filters)
         {
@@ -24,7 +30,7 @@ namespace T8SuitePro
             LogFilterCollection filters = new LogFilterCollection();
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
             try
             {
                 using (RegistryKey Settings = SuiteKey.CreateSubKey("LogFilters"))
@@ -59,7 +65,7 @@ namespace T8SuitePro
         {
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
 
             if (filter.Symbol != "")
             {
@@ -82,7 +88,7 @@ namespace T8SuitePro
             {
                 RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
                 RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-                RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
+                RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
                 using (RegistryKey Settings = SuiteKey.CreateSubKey("LogFilters\\" + index))
                 {
                     try

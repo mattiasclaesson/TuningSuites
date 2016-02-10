@@ -338,12 +338,6 @@
     <Compile Include="frmPartnumberLookup.designer.cs">
       <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPlotSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPlotSelection.designer.cs">
-      <DependentUpon>frmPlotSelection.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmProgress.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -399,7 +393,6 @@
     <Compile Include="InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LogFilters.cs" />
     <Compile Include="MapViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -601,10 +594,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartnumberLookup.resx">
       <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPlotSelection.resx">
-      <DependentUpon>frmPlotSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProjectProperties.resx">

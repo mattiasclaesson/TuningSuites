@@ -1716,7 +1716,7 @@ namespace CommonSuite
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1726,7 +1726,7 @@ namespace CommonSuite
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1736,7 +1736,7 @@ namespace CommonSuite
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue(key, value);
             }
@@ -1747,7 +1747,7 @@ namespace CommonSuite
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
+            using (RegistryKey saveSettings = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath()))
             {
                 saveSettings.SetValue("PanelMode", (int)_panelmode);
                 saveSettings.SetValue("PlayCellProcessedSound", m_PlayCellProcessedSound);
@@ -1915,16 +1915,20 @@ namespace CommonSuite
             return d;
         }
 
-        SuiteRegistry m_SuiteRegistry;
+        SuiteRegistry _suiteRegistry;
 
-        public AppSettings(SuiteRegistry suiteRegistry)
+        public SuiteRegistry SuiteRegistry
         {
-            m_SuiteRegistry = suiteRegistry;
+            set { _suiteRegistry = value; }
+        }
+
+        public AppSettings()
+        {
             // laad alle waarden uit het register
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
 
-            using (RegistryKey Settings = ManufacturerKey.CreateSubKey(m_SuiteRegistry.getRegistryPath()))
+            using (RegistryKey Settings = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath()))
             {
                 if (Settings != null)
                 {
