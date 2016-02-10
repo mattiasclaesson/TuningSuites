@@ -111,6 +111,7 @@ namespace T8SuitePro
         public DelegateUpdateRealTimeValue m_DelegateUpdateRealTimeValue;
         private bool m_WriteLogMarker = false;
         private string m_currentsramfile = string.Empty;
+        private frmEditTuningPackage tunpackeditWindow = null;
 
         private Trionic8 t8can = new Trionic8();
         System.Data.DataTable m_realtimeAddresses;
@@ -9751,6 +9752,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void EditTuningPackage()
         {
+            if (tunpackeditWindow != null)
+            {
+                frmInfoBox info = new frmInfoBox("You have another tuning package edit window open, please close that first");
+                return;
+            }
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Trionic 8 packages|*.t8p";
             ofd.Multiselect = false;
@@ -9818,13 +9824,244 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                     }
                 }
-                frmEditTuningPackage edit = new frmEditTuningPackage();
-                edit.FormClosed += new FormClosedEventHandler(edit_FormClosed);
-                edit.SetDataTable(dt);
-                edit.Show();
+                tunpackeditWindow = new frmEditTuningPackage();
+                tunpackeditWindow.FormClosed += new FormClosedEventHandler(edit_FormClosed);
+                tunpackeditWindow.onMapSelected += new frmEditTuningPackage.MapSelected(edit_onMapSelected);
+                tunpackeditWindow.SetFilename(ofd.FileName);
+                tunpackeditWindow.SetDataTable(dt);
+                tunpackeditWindow.Show();
 
             }
         }
+
+        void edit_onMapSelected(object sender, frmEditTuningPackage.MapSelectedEventArgs e)
+        {
+            // user double clicked on a symbol in the edit tuning packages window...
+            // start two mapviewers
+            // ONE SHOULD BE ABLE TO EDIT THE DATA AND ALTER THE CONTENT OF THE TUNING PACKAGE
+            StartTableViewer(e.Mapname);
+            byte[] data = ConvertTuningPackageDataToByteArray(e.Data);
+            StartTableViewerFromTuningPackage(e.Mapname, data, e.Filename);
+        }
+
+        private byte[] ConvertTuningPackageDataToByteArray(string tpdata)
+        {
+            if (tpdata.EndsWith(",")) tpdata = tpdata.Substring(0, tpdata.Length - 1);
+            char[] sep = new char[1];
+            sep.SetValue(',', 0);
+            string[] hexdata = tpdata.Split(sep);
+            byte[] retval = new byte[hexdata.Length];
+            int i = 0;
+            foreach (string hs in hexdata)
+            {
+                retval.SetValue(Convert.ToByte(hs, 16), i++);
+            }
+            return retval;
+        }
+
+        private void StartTableViewerFromTuningPackage(string symbolname, byte[] data, string filename)
+        {
+            if (!File.Exists(filename)) return;
+            DockPanel dockPanel;
+            bool pnlfound = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                if (pnl.Text == "Tuning package symbol: " + symbolname + " [" + Path.GetFileName(filename) + "]")
+                {
+                    dockPanel = pnl;
+                    pnlfound = true;
+                    dockPanel.Show();
+                }
+            }
+            if (!pnlfound)
+            {
+                dockManager1.BeginUpdate();
+                try
+                {
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    dockPanel.Tag = filename;
+                    IMapViewer tabdet;//= new MapViewer();
+                    if (m_appSettings.UseNewMapViewer)
+                    {
+                        tabdet = new MapViewerEx();
+                    }
+                    else
+                    {
+                        tabdet = new MapViewer();
+                    }
+
+                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
+                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    tabdet.Filename = filename;
+                    tabdet.Viewtype = m_appSettings.DefaultViewType;
+                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                    if (m_appSettings.Viewinhex)
+                    {
+                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
+                    }
+                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
+                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
+                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                    tabdet.Map_name = symbolname;
+                    tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
+                    tabdet.Map_cat = XDFCategories.Undocumented;
+                    tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
+                    tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
+
+                    /** new 12/11/2008 **/
+                    if (!m_appSettings.NewPanelsFloating)
+                    {
+                        // dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
+                        if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
+                        {
+                            int dw = 650;
+                            if (tabdet.X_axisvalues.Length > 0)
+                            {
+                                dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                            }
+                            if (dw < 400) dw = 400;
+                            if (m_appSettings.ShowGraphs)
+                            {
+                                dockPanel.FloatSize = new Size(dw, 900);
+                            }
+                            else
+                            {
+                                dockPanel.FloatSize = new Size(dw, 500);
+                            }
+                        }
+                        else if (m_appSettings.DefaultViewSize == ViewSize.SmallView)
+                        {
+                            int dw = 550;
+                            if (tabdet.X_axisvalues.Length > 0)
+                            {
+                                dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                            }
+                            if (dw < 380) dw = 380;
+                            if (m_appSettings.ShowGraphs)
+                            {
+                                dockPanel.FloatSize = new Size(dw, 850);
+                            }
+                            else
+                            {
+                                dockPanel.FloatSize = new Size(dw, 450);
+                            }
+                        }
+                        else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
+                        {
+                            int dw = 450;
+                            if (tabdet.X_axisvalues.Length > 0)
+                            {
+                                dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 30);
+                            }
+                            if (dw < 380) dw = 380;
+                            if (m_appSettings.ShowGraphs)
+                            {
+                                dockPanel.FloatSize = new Size(dw, 700);
+                            }
+                            else
+                            {
+                                dockPanel.FloatSize = new Size(dw, 450);
+                            }
+                        }
+                    }
+                    SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
+                    string x_axis = string.Empty;
+                    string y_axis = string.Empty;
+                    string x_axis_descr = string.Empty;
+                    string y_axis_descr = string.Empty;
+                    string z_axis_descr = string.Empty;
+                    axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
+                    tabdet.X_axis_name = x_axis_descr;
+                    tabdet.Y_axis_name = y_axis_descr;
+                    tabdet.Z_axis_name = z_axis_descr;
+
+
+                    int columns = 8;
+                    int rows = 8;
+                    int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
+                    int address = (int)GetSymbolAddress(m_symbols, symbolname);
+                    //int sramaddress = sramaddress;
+
+                    // while (address > m_currentfile_size) address -= m_currentfile_size;
+                    tabdet.Map_address = address;
+                    tabdet.Map_sramaddress = (int)GetSymbolAddressSRAM(m_symbols, symbolname);
+                    tabdet.Map_length = data.Length;
+                    byte[] mapdata = data;
+                    tabdet.Map_content = mapdata;
+                    tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
+                    tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
+                    tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
+                    tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
+
+                    tabdet.IsRAMViewer = true;
+                    tabdet.OnlineMode = true;
+                    tabdet.Dock = DockStyle.Fill;
+                    //tabdet.onSymbolSave += new MapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+                    tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tuningpackage_onSymbolSave);
+                    tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
+                    //tabdet.onReadFromSRAM += new IMapViewer.ReadDataFromSRAM(tabdet_onReadFromSRAM);
+                    //tabdet.onWriteToSRAM += new IMapViewer.WriteDataToSRAM(tabdet_onWriteToSRAM);
+                    tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
+                    tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
+                    tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
+                    //dockPanel.DockAsTab(dockPanel1);
+                    dockPanel.Text = "Tuning package symbol: " + tabdet.Map_name + " [" + Path.GetFileName(filename) + "]";
+                    bool isDocked = false;
+                    if (m_appSettings.AutoDockSameSymbol)
+                    {
+                        foreach (DockPanel pnl in dockManager1.Panels)
+                        {
+                            if (pnl.Text.Contains(tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
+                            {
+                                dockPanel.DockAsTab(pnl, 0);
+                                isDocked = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isDocked)
+                    {
+                        dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                        if (m_appSettings.AutoSizeNewWindows)
+                        {
+                            if (tabdet.X_axisvalues.Length > 0)
+                            {
+                                dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
+                            }
+                        }
+                        if (dockPanel.Width < 400) dockPanel.Width = 400;
+
+                    }
+                    dockPanel.Controls.Add(tabdet);
+
+                }
+                catch (Exception newdockE)
+                {
+                    logger.Debug(newdockE.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+        }
+
+        void tuningpackage_onSymbolSave(object sender, IMapViewer.SaveSymbolEventArgs e)
+        {
+            // mapviewer requested to save data into a tuning package
+            // how on earth are we going to refresh the data in the tuning package edit window?
+            if (tunpackeditWindow != null)
+            {
+                // refresh the data in the window to reflect the changes made in the mapviewer
+                if (e.Filename == tunpackeditWindow.TuningPackageFilename)
+                {
+                    string symbolData = string.Empty;
+                    foreach (byte b in e.SymbolDate)
+                    {
+                        symbolData += b.ToString("X2") + ",";
+                    }
+                    tunpackeditWindow.SetDataForSymbol(e.SymbolName, symbolData);
+                }
+            }
+        }
+
         void edit_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (sender is frmEditTuningPackage)
@@ -9844,6 +10081,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             SymbolHelper sh = new SymbolHelper();
                             sh.Varname = dr["Map"].ToString();
+                            sh.Currentdata = ConvertTuningPackageDataToByteArray(dr["Data"].ToString());
                             sh.Flash_start_address = GetSymbolAddress(m_symbols, sh.Varname);
                             sh.Userdescription = GetUserDescription(m_symbols, sh.Varname);
                             sh.Length = GetSymbolLength(m_symbols, sh.Varname);
@@ -9855,7 +10093,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                 }
             }
+            tunpackeditWindow = null;
         }
+
         private string GetUserDescription(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)

@@ -1,4 +1,4 @@
-namespace T8SuitePro
+namespace CommonSuite
 {
     partial class frmEditTuningPackage
     {
@@ -75,6 +75,7 @@ namespace T8SuitePro
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsView.ShowGroupPanel = false;
             this.gridView1.OptionsView.ShowIndicator = false;
+            this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
             // 
             // simpleButton1
             // 

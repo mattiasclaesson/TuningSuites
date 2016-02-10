@@ -6,10 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using CommonSuite;
 using NLog;
 
-namespace T7
+namespace CommonSuite
 {
     public partial class frmEditTuningPackage : DevExpress.XtraEditors.XtraForm
     {
@@ -44,7 +43,7 @@ namespace T7
             if (e.Data is System.Windows.Forms.DataObject)
             {
 
-                object o = e.Data.GetData("T7.SymbolHelper");
+                object o = e.Data.GetData("CommonSuite.SymbolHelper");
                 if (o is SymbolHelper)
                 {
                     e.Effect = DragDropEffects.Copy;
@@ -60,7 +59,7 @@ namespace T7
             if (e.Data is System.Windows.Forms.DataObject)
             {
 
-                object o = e.Data.GetData("T7.SymbolHelper");
+                object o = e.Data.GetData("CommonSuite.SymbolHelper");
                 if (o is SymbolHelper)
                 {
                     SymbolHelper sh = (SymbolHelper)o;
@@ -251,12 +250,12 @@ namespace T7
             }
         }
 
-        internal void SetFilename(string filename)
+        public void SetFilename(string filename)
         {
             _tuningPackageFilename = filename;
         }
 
-        internal void SetDataForSymbol(string symbolName, string symbolData)
+        public void SetDataForSymbol(string symbolName, string symbolData)
         {
             if (gridControl1.DataSource != null)
             {
