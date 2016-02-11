@@ -143,7 +143,7 @@ namespace T8SuitePro
 
         public Form1(string[] args)
         {
-            m_appSettings = new AppSettings() { SuiteRegistry=suiteRegistry };
+            m_appSettings = new AppSettings(suiteRegistry);
 
             frmSplash splash = new frmSplash();
             splash.Show();
@@ -5447,7 +5447,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
         private void barButtonItem18_ItemClick(object sender, ItemClickEventArgs e)
         {
             frmSettings set = new frmSettings();
-            m_appSettings = new AppSettings() { SuiteRegistry=suiteRegistry };
+            m_appSettings = new AppSettings(suiteRegistry);
             set.AppSettings = m_appSettings;
             set.Symbols = GetRealtimeNotificationSymbols();
             set.InterpolateLogWorksTimescale = m_appSettings.InterpolateLogWorksTimescale;
@@ -11181,7 +11181,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection() { SuiteRegistry = suiteRegistry };
+                    frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
                     {
                         plotsel.AddItemToList(sh.Varname);
@@ -15093,7 +15093,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnSetSymbolColors_ItemClick(object sender, ItemClickEventArgs e)
         {
-            frmPlotSelection plotsel = new frmPlotSelection() { SuiteRegistry = suiteRegistry};
+            frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
             // get values from realtime panel
             // LoadRealtimeTable();
             CheckDefaultSymbolColors();
@@ -16537,7 +16537,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection() { SuiteRegistry = suiteRegistry};
+                    frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
                     {
                         plotsel.AddItemToList(sh.Varname);

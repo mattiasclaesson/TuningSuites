@@ -47,14 +47,10 @@ namespace CommonSuite
 
         SuiteRegistry _suiteRegistry;
 
-        public SuiteRegistry SuiteRegistry
-        {
-            set { _suiteRegistry = value; }
-        }
-
-        public frmPlotSelection()
+        public frmPlotSelection(SuiteRegistry suiteRegistry)
         {
             InitializeComponent();
+            _suiteRegistry = suiteRegistry;
         }
 
         private void SaveRegistrySetting(string key, int value)

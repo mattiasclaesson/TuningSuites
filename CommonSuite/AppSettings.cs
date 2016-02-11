@@ -1917,13 +1917,9 @@ namespace CommonSuite
 
         SuiteRegistry _suiteRegistry;
 
-        public SuiteRegistry SuiteRegistry
+        public AppSettings(SuiteRegistry suiteRegistry)
         {
-            set { _suiteRegistry = value; }
-        }
-
-        public AppSettings()
-        {
+            _suiteRegistry = suiteRegistry;
             // laad alle waarden uit het register
             RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
             RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");

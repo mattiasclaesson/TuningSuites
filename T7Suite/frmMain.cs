@@ -196,7 +196,7 @@ namespace T7
 
         public frmMain(string[] args)
         {
-            m_appSettings = new AppSettings() { SuiteRegistry = suiteRegistry };
+            m_appSettings = new AppSettings(suiteRegistry);
 
             Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
             //System.Threading.Thread.CurrentThread.CurrentUICulture
@@ -13790,7 +13790,7 @@ If boost regulation reports errors you can increase the difference between boost
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection();
+                    frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
                     {
                         plotsel.AddItemToList(sh.Varname);
@@ -15902,7 +15902,7 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void btnSetSymbolColors_ItemClick(object sender, ItemClickEventArgs e)
         {
-            frmPlotSelection plotsel = new frmPlotSelection();
+            frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
             // get values from realtime panel
             // LoadRealtimeTable();
             CheckDefaultSymbolColors();
@@ -19836,7 +19836,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection();
+                    frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
                     {
                         plotsel.AddItemToList(sh.Varname);
