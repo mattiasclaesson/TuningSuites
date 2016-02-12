@@ -11281,10 +11281,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private Int32 GetValueFromRegistry(string symbolname)
         {
-            RegistryKey TempKey = null;
             Int32 win32color = 0;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-            using (RegistryKey Settings = TempKey.CreateSubKey("T8SuitePro\\SymbolColors"))
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
+
+            using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
             {
                 if (Settings != null)
                 {
@@ -11311,10 +11313,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void SaveRegistryColor(string key, int value)
         {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
+            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
+            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T8SuitePro");
 
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T8SuitePro\\SymbolColors"))
+            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("SymbolColors"))
             {
                 saveSettings.SetValue(key, value.ToString(), RegistryValueKind.String);
             }
