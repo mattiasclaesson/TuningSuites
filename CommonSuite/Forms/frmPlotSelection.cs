@@ -220,7 +220,7 @@ namespace CommonSuite
         private void simpleButton3_Click(object sender, EventArgs e)
         {
             // setup the export filters
-            LogFilters filterhelper = new LogFilters() { SuiteRegistry = _suiteRegistry };
+            LogFilters filterhelper = new LogFilters(_suiteRegistry);
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
             logger.Debug("filters: " + filters.Count);

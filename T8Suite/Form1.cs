@@ -11195,7 +11195,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         DifGenerator difgen = new DifGenerator();
-                        LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
+                        LogFilters filterhelper = new LogFilters(suiteRegistry);
                         difgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         difgen.AppSettings = m_appSettings;
                         //difgen.LowAFR = m_appSettings.WidebandLowAFR;
@@ -14657,7 +14657,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void SetupLogFilters()
         {
             // setup the export filters
-            LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
+            LogFilters filterhelper = new LogFilters(suiteRegistry);
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
             frmfilters.SetFilters(filters);
@@ -16554,7 +16554,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         CSVGenerator csvgen = new CSVGenerator();
-                        LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
+                        LogFilters filterhelper = new LogFilters(suiteRegistry);
                         csvgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         csvgen.AppSettings = m_appSettings;
                         //csvgen.LowAFR = m_appSettings.WidebandLowAFR;

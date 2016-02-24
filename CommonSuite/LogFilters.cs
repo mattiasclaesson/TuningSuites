@@ -12,9 +12,9 @@ namespace CommonSuite
 
         SuiteRegistry _suiteRegistry;
 
-        public SuiteRegistry SuiteRegistry
+        public LogFilters(SuiteRegistry suiteRegistry)
         {
-            set { _suiteRegistry = value; }
+            _suiteRegistry = suiteRegistry;
         }
 
         public void SaveFiltersToRegistry(LogFilterCollection filters)

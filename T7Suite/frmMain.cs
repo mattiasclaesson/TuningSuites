@@ -13804,7 +13804,7 @@ If boost regulation reports errors you can increase the difference between boost
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         DifGenerator difgen = new DifGenerator();
-                        LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
+                        LogFilters filterhelper = new LogFilters(suiteRegistry);
                         difgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         difgen.AppSettings = m_appSettings;
                         //difgen.LowAFR = m_appSettings.WidebandLowAFR;
@@ -18559,7 +18559,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void SetupLogFilters()
         {
             // setup the export filters
-            LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
+            LogFilters filterhelper = new LogFilters(suiteRegistry);
             frmLogFilters frmfilters = new frmLogFilters();
             LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
             frmfilters.SetFilters(filters);
@@ -19850,7 +19850,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         CSVGenerator csvgen = new CSVGenerator();
-                        LogFilters filterhelper = new LogFilters() { SuiteRegistry = suiteRegistry };
+                        LogFilters filterhelper = new LogFilters(suiteRegistry);
                         csvgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         csvgen.AppSettings = m_appSettings;
                         //csvgen.LowAFR = m_appSettings.WidebandLowAFR;
