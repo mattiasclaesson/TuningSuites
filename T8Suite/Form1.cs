@@ -15280,7 +15280,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                         address += gbfbytes.Length;
                         // Add a 'Programming Station' string to the footer
-                        const string programmingStationString = "forum.ecuproject.com";
+                        const string programmingStationString = "T8SuitePro";
                         newFile[address++] = encodeFooterData((byte)programmingStationString.Length);
                         newFile[address++] = encodeFooterData(0x10);    // programmingStationStringIdentifier
                         for (int i = 0; i < programmingStationString.Length; i++)
