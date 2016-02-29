@@ -149,7 +149,6 @@ int main(int argc, char *argv[])
     }
     printf("OK\n");
     
-
     if( wait_for_msg( h, 0, 1000, data ) != 0 )
     {
         printf("Message received from bus, everything seems OK.\n\n");
@@ -165,7 +164,6 @@ int main(int argc, char *argv[])
         printf("\nCAN channel closed.\n");
         return -1;
     }
-
 
     if( argc > 1 ) 
     {
@@ -542,15 +540,27 @@ int main(int argc, char *argv[])
             if( i == 2 ) printf("Fuel tank pressure          %5.3f kPa\n", (float)(buf[0] << 8 | buf[1])/1000.0 );
 
             // Retrieve Diagnostic Trouble Codes
-            printf("\nDTC data\n");
+            printf("\nTrionic - DTC data\n");
             i = query_dtc( h, TRIONIC, buf );
-            if( i != -1 )
+            if( i != -1 && debug)
             {
                 for( k = 0; k < i; k++ )
                 {
-                    printf("0x%02X ", buf[i] );
+                    printf("0x%02X ", buf[k] );
                 }
                 printf("\n");
+            }
+            
+            if(i == 3 && buf[0] == 0x00)
+            {
+                 printf("No DTC's\n");
+            }
+            else
+            {
+                for( k = 0; k < i; k = k + 3 )
+                {
+                     printf("DTC: P%02X%02X Status:%02X\n", buf[k], buf[k+1], buf[k+2]);
+                }
             }
         }
         else if( *argv[1] == 'b' || *argv[1] == 'B' )
@@ -617,21 +627,40 @@ int main(int argc, char *argv[])
             {
                 for( k = 0; k < i; k++ )
                 {
-                    printf("0x%02X ", buf[i] );
+                    printf("0x%02X ", buf[k] );
                 }
                 printf("\n");
             }
 
             // Retrieve Diagnostic Trouble Codes
-            printf("\nDTC data\n");
+            printf("\nSPA - DTC data\n");
             i = query_dtc( h, SPA, buf );
-            if( i != -1 )
+            if( i != -1 && debug)
             {
                 for( k = 0; k < i; k++ )
                 {
-                    printf("0x%02X ", buf[i] );
+                    printf("0x%02X ", buf[k] );
                 }
                 printf("\n");
+            }
+            // 0xA9 0x35 0x26
+            // 0xA9 0x05 0x66  
+            // 0xA9 0x05 0x28 
+            // 0xA9 0x25 0x66
+            // 0xA9 0x15 0x26
+            // replace 0xA9 with 0x29 for SPA. add 2 to second byte. Third byte is status.
+            if(i == 3 && buf[0] == 0x00)
+            {
+                 printf("No DTC's\n");
+            }
+            else
+            {
+                for( k = 0; k < i; k++ )
+                {
+                     k++;
+                     printf("DTC: B29%02X Status: %02X\n", buf[k]+2, buf[k+1]);
+                     k++;
+                }
             }
         }
         else if( *argv[1] == 'a' || *argv[1] == 'A' )
@@ -654,6 +683,7 @@ int main(int argc, char *argv[])
                     printf("Audio Head Unit status UNKNOWN (0x%02X)\n", buf[9] );
                 }
             }
+    
     
             if( argc > 2 )
             {
@@ -1297,6 +1327,7 @@ int query_dtc( CANHANDLE handle, unsigned char unit, unsigned char *answer)
                     if( length == 0 ) i = 6;
                 }
             }
+            
             // Send acknowledgement
             ack[3] = data[0] & 0xBF;
             send_msg( handle, 0x266, ack );
@@ -1455,7 +1486,13 @@ int send_msg( CANHANDLE handle, int id, const unsigned char *data )
     msg.data[5] = data[5];
     msg.data[6] = data[6];
     msg.data[7] = data[7];
-    
+    if( debug ) 
+    {
+        printf("tx: %03X,%d,%02X,%02X,%02X,%02X,%02X,%02X,%02X,%02X\n", msg.id, msg.len,
+                                                              msg.data[0], msg.data[1], msg.data[2],
+                                                              msg.data[3], msg.data[4], msg.data[5], 
+                                                              msg.data[6], msg.data[7]);
+    }
     return canusb_Write( handle, &msg );
 }
 
@@ -1479,6 +1516,14 @@ int wait_for_msg( CANHANDLE handle, int id, int timeout, unsigned char *data )
             ret = canusb_Read( handle, &msg );
             if( ret == ERROR_CANUSB_OK )
             {
+                if( debug ) 
+                {
+                    printf("rx: %03X,%d,%02X,%02X,%02X,%02X,%02X,%02X,%02X,%02X\n", msg.id, msg.len,
+                                                                          msg.data[0], msg.data[1], msg.data[2],
+                                                                          msg.data[3], msg.data[4], msg.data[5], 
+                                                                          msg.data[6], msg.data[7]);
+                }
+    
                 if( msg.id == id || id == 0 )
                 {
                     not_received = 0;

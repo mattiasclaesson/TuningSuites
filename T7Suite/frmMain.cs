@@ -19311,7 +19311,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
             if (showWindow)
             {
-                frmInfoBox info = new frmInfoBox("Please note that you will have to be connected to the cars I-bus for this to work!");
+                frmInfoBox info = new frmInfoBox("Lawicel only: Please note that you will have to be connected to the cars I-bus for this to work!");
             }
             System.Windows.Forms.Application.DoEvents();
             string Exename = Path.Combine(System.Windows.Forms.Application.StartupPath, "SaabOpenTech.exe");
@@ -19412,6 +19412,11 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         private void btnReadEngineData_ItemClick(object sender, ItemClickEventArgs e)
         {
             SpawnSaabOpenTech("M", false);
+        }
+
+        private void btnGetParkAssistanceInfo_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SpawnSaabOpenTech("P", false);
         }
 
         private void ViewRealtime_KeyDown(object sender, KeyEventArgs e)
