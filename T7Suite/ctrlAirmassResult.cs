@@ -428,7 +428,7 @@ namespace T7
 
             retval = CheckAgainstTurboSpeedLimiter(symbols, filename, rpm, retval, ref AirmassLimiterType);
 
-            // finally check agains fuelcut limiter???
+            // finally check agains fuelcut limiter
             retval = CheckAgainstFuelcutLimiter(symbols, filename, retval, ref AirmassLimiterType);
             if (retval < TorqueLimitedAirmass)
             {
@@ -466,7 +466,7 @@ namespace T7
             //only if torquelimiters are enabled
             if (HasBinaryTorqueLimiterEnabled(symbols, filename))
             {
-                torque = AirmassToTorque(requestedairmass, rpm, useTrionicCalculationForTorque.Checked);
+                torque = AirmassToTorque(symbols, filename, requestedairmass, rpm, useTrionicCalculationForTorque.Checked);
                 
                 // check against TorqueCal.M_EngMaxTab, TorqueCal.M_ManGearLim and TorqueCal.M_5GearLimTab
                 int[] enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxTab"));
@@ -924,9 +924,9 @@ namespace T7
             return Convert.ToInt32(power);
         }
 
-        private int AirmassToTorqueLbft(int airmass, int rpm, bool TrionicStyle)
+        private int AirmassToTorqueLbft(SymbolCollection symbols, string filename, int airmass, int rpm, bool TrionicStyle)
         {
-            double tq = AirmassToTorque(airmass, rpm, TrionicStyle);
+            double tq = AirmassToTorque(symbols,filename, airmass, rpm, TrionicStyle);
             tq /= 1.3558;
             return Convert.ToInt32(tq);
         }
@@ -958,7 +958,7 @@ namespace T7
 
         }
 
-        private int AirmassToTorque(int airmass, int rpm, bool TrionicStyle)
+        private int AirmassToTorque(SymbolCollection symbols, string filename, int airmass, int rpm, bool TrionicStyle)
         {
             double tq = Convert.ToDouble(airmass) / 3.1;
             if (TrionicStyle)
@@ -967,15 +967,15 @@ namespace T7
                 // axis are 
                 // x = TorqueCal.m_AirXSP (airmass)
                 // y = TorqueCal.n_EngYSP (rpm)
-                int[] nominaltorque = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(m_symbols, "TorqueCal.M_NominalMap"));
+                int[] nominaltorque = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(symbols, "TorqueCal.M_NominalMap"));
                 for (int a = 0; a < nominaltorque.Length; a++)
                 {
                     int val = (int)nominaltorque.GetValue(a);
                     if (val > 32000) val = -(65536 - val);
                     nominaltorque.SetValue(val, a);
                 }
-                int[] xaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(m_symbols, "TorqueCal.m_AirXSP"));
-                int[] yaxis = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(m_symbols, "TorqueCal.n_EngYSP"));
+                int[] xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(symbols, "TorqueCal.m_AirXSP"));
+                int[] yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
                 tq = GetInterpolatedTableValue(nominaltorque, xaxis, yaxis, rpm, airmass);
             }
             else
@@ -1014,7 +1014,7 @@ namespace T7
 
 
 
-        private void LoadExtraGraphFromCompareBin(DataTable dt, string filename)
+        private void LoadExtraGraphFromCompareBin(DataTable dt, string filename, SymbolCollection symbols)
         {
             logger.Debug("Loading additional data for: " + filename);
             string powerLabel = "Power (bhp) " + MaximizeFileLength(Path.GetFileNameWithoutExtension(filename));
@@ -1041,10 +1041,24 @@ namespace T7
                 double o = Convert.ToDouble(dt.Rows[0].ItemArray.GetValue(i));
                 // convert to hp
                 int rpm = Convert.ToInt32(x_axisvalues.GetValue(i));
-                int torque = AirmassToTorque(Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-                int horsepower = TorqueToPower(torque, rpm);
-                if (displayPowerInkW.Checked) horsepower = TorqueToPowerkW(torque, rpm);
-                if (displayTorqueInLBFT.Checked) torque = AirmassToTorqueLbft(Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+                int torque;
+                if (displayTorqueInLBFT.Checked)
+                {
+                    torque = AirmassToTorqueLbft(symbols, filename, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+                }
+                else
+                {
+                    torque = AirmassToTorque(symbols, filename, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+                }
+                int horsepower;
+                if (displayPowerInkW.Checked)
+                {
+                    horsepower = TorqueToPowerkW(torque, rpm);
+                }
+                else
+                {
+                    horsepower = TorqueToPower(torque, rpm);
+                }
 
                 double[] dvals = new double[1];
                 dvals.SetValue(Convert.ToDouble(horsepower), 0);
@@ -1125,13 +1139,27 @@ namespace T7
                     double o = Convert.ToDouble(dt.Rows[0].ItemArray.GetValue(i));
                     // convert to hp
                     int rpm = Convert.ToInt32(x_axisvalues.GetValue(i));
-                    int torque = AirmassToTorque(Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-                    int horsepower = TorqueToPower(torque, rpm);
+                    int torque;
+                    if (displayTorqueInLBFT.Checked)
+                    {
+                        torque = AirmassToTorqueLbft(m_symbols, m_currentfile, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+                    }
+                    else
+                    {
+                        torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+                    }
+                    int horsepower;
+                    if (displayPowerInkW.Checked)
+                    {
+                        horsepower = TorqueToPowerkW(torque, rpm);
+                    }
+                    else
+                    {
+                        horsepower = TorqueToPower(torque, rpm);
+                    }
                     int injDC = CalculateInjectorDC(Convert.ToInt32(o), rpm);
                     int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm);
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
-                    if (displayPowerInkW.Checked) horsepower = TorqueToPowerkW(torque, rpm);
-                    if (displayTorqueInLBFT.Checked) torque = AirmassToTorqueLbft(Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
 
                     double[] dvals = new double[1];
                     dvals.SetValue(Convert.ToDouble(horsepower), 0);
@@ -1167,7 +1195,7 @@ namespace T7
             if (m_current_comparefilename != string.Empty)
             {
                 DataTable dt2 = CalculateDataTable(m_current_comparefilename, Compare_symbol_collection);
-                LoadExtraGraphFromCompareBin(dt2, m_current_comparefilename);
+                LoadExtraGraphFromCompareBin(dt2, m_current_comparefilename, Compare_symbol_collection);
             }
             // load the graph with the current details from the airmass result viewer
             /*
@@ -1387,7 +1415,7 @@ namespace T7
                 {
                     // get the current value from the request map
                     int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
-                    //logger.Debug("Current request = " + airmassrequestforcell.ToString() + " mg/c");
+                    logger.Debug("Current request = " + airmassrequestforcell.ToString() + " mg/c");
                     limitType limiterType = limitType.None;
                     int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, out limiterType);
                     resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
@@ -1813,12 +1841,12 @@ namespace T7
                             int torque;
                             if (displayTorqueInLBFT.Checked)
                             {
-                                torque = AirmassToTorqueLbft(Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
+                                torque = AirmassToTorqueLbft(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                                 e.DisplayText = torque.ToString();
                             }
                             else
                             {
-                                torque = AirmassToTorque(Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
+                                torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                             }
                             e.DisplayText = torque.ToString();
                         }
@@ -1826,7 +1854,7 @@ namespace T7
                         {
                             //convert airmass to horsepower
                             int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
-                            int torque = AirmassToTorque(Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
+                            int torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                             int horsepower = TorqueToPower(torque, rpm);
                             if (displayPowerInkW.Checked)
                             {

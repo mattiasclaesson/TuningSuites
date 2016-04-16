@@ -392,7 +392,7 @@ namespace T7
             this.labelControl17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl17.Appearance.BackColor = System.Drawing.Color.White;
             this.labelControl17.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl17.Location = new System.Drawing.Point(775, 22);
+            this.labelControl17.Location = new System.Drawing.Point(642, 106);
             this.labelControl17.Name = "labelControl17";
             this.labelControl17.Size = new System.Drawing.Size(15, 13);
             this.labelControl17.TabIndex = 28;
@@ -403,7 +403,7 @@ namespace T7
             this.labelControl18.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl18.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl18.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl18.Location = new System.Drawing.Point(627, 22);
+            this.labelControl18.Location = new System.Drawing.Point(494, 106);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(142, 13);
             this.labelControl18.TabIndex = 27;
@@ -411,7 +411,7 @@ namespace T7
             // 
             // useTrionicCalculationForTorque
             // 
-            this.useTrionicCalculationForTorque.Location = new System.Drawing.Point(455, 76);
+            this.useTrionicCalculationForTorque.Location = new System.Drawing.Point(14, 124);
             this.useTrionicCalculationForTorque.Name = "useTrionicCalculationForTorque";
             this.useTrionicCalculationForTorque.Properties.Caption = "Use trionic calculation for torque";
             this.useTrionicCalculationForTorque.Size = new System.Drawing.Size(184, 19);
@@ -441,7 +441,7 @@ namespace T7
             this.labelControl15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl15.Appearance.BackColor = System.Drawing.Color.CornflowerBlue;
             this.labelControl15.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl15.Location = new System.Drawing.Point(775, 136);
+            this.labelControl15.Location = new System.Drawing.Point(773, 107);
             this.labelControl15.Name = "labelControl15";
             this.labelControl15.Size = new System.Drawing.Size(15, 13);
             this.labelControl15.TabIndex = 22;
@@ -452,7 +452,7 @@ namespace T7
             this.labelControl16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl16.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl16.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl16.Location = new System.Drawing.Point(687, 137);
+            this.labelControl16.Location = new System.Drawing.Point(685, 108);
             this.labelControl16.Name = "labelControl16";
             this.labelControl16.Size = new System.Drawing.Size(82, 13);
             this.labelControl16.TabIndex = 21;
@@ -461,7 +461,7 @@ namespace T7
             // 
             // isOverboostActive
             // 
-            this.isOverboostActive.Location = new System.Drawing.Point(14, 120);
+            this.isOverboostActive.Location = new System.Drawing.Point(14, 99);
             this.isOverboostActive.Name = "isOverboostActive";
             this.isOverboostActive.Properties.Caption = "View in overboost";
             this.isOverboostActive.Size = new System.Drawing.Size(150, 19);
@@ -473,7 +473,7 @@ namespace T7
             this.labelControl13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl13.Appearance.BackColor = System.Drawing.Color.DarkGray;
             this.labelControl13.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl13.Location = new System.Drawing.Point(775, 117);
+            this.labelControl13.Location = new System.Drawing.Point(773, 88);
             this.labelControl13.Name = "labelControl13";
             this.labelControl13.Size = new System.Drawing.Size(15, 13);
             this.labelControl13.TabIndex = 19;
@@ -484,7 +484,7 @@ namespace T7
             this.labelControl14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl14.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl14.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl14.Location = new System.Drawing.Point(703, 118);
+            this.labelControl14.Location = new System.Drawing.Point(701, 89);
             this.labelControl14.Name = "labelControl14";
             this.labelControl14.Size = new System.Drawing.Size(66, 13);
             this.labelControl14.TabIndex = 18;
@@ -496,7 +496,7 @@ namespace T7
             this.labelControl11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl11.Appearance.BackColor = System.Drawing.Color.SaddleBrown;
             this.labelControl11.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl11.Location = new System.Drawing.Point(775, 98);
+            this.labelControl11.Location = new System.Drawing.Point(773, 69);
             this.labelControl11.Name = "labelControl11";
             this.labelControl11.Size = new System.Drawing.Size(15, 13);
             this.labelControl11.TabIndex = 17;
@@ -507,7 +507,7 @@ namespace T7
             this.labelControl12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl12.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl12.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl12.Location = new System.Drawing.Point(680, 99);
+            this.labelControl12.Location = new System.Drawing.Point(678, 70);
             this.labelControl12.Name = "labelControl12";
             this.labelControl12.Size = new System.Drawing.Size(89, 13);
             this.labelControl12.TabIndex = 16;
@@ -562,7 +562,7 @@ namespace T7
             this.labelControl7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl7.Appearance.BackColor = System.Drawing.Color.Black;
             this.labelControl7.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl7.Location = new System.Drawing.Point(775, 22);
+            this.labelControl7.Location = new System.Drawing.Point(642, 49);
             this.labelControl7.Name = "labelControl7";
             this.labelControl7.Size = new System.Drawing.Size(15, 13);
             this.labelControl7.TabIndex = 12;
@@ -573,7 +573,7 @@ namespace T7
             this.labelControl8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl8.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl8.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl8.Location = new System.Drawing.Point(681, 23);
+            this.labelControl8.Location = new System.Drawing.Point(548, 50);
             this.labelControl8.Name = "labelControl8";
             this.labelControl8.Size = new System.Drawing.Size(88, 13);
             this.labelControl8.TabIndex = 11;
@@ -585,7 +585,7 @@ namespace T7
             this.labelControl4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl4.Appearance.BackColor = System.Drawing.Color.Yellow;
             this.labelControl4.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl4.Location = new System.Drawing.Point(775, 79);
+            this.labelControl4.Location = new System.Drawing.Point(773, 50);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(15, 13);
             this.labelControl4.TabIndex = 10;
@@ -596,7 +596,7 @@ namespace T7
             this.labelControl5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl5.Appearance.BackColor = System.Drawing.Color.Purple;
             this.labelControl5.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl5.Location = new System.Drawing.Point(775, 60);
+            this.labelControl5.Location = new System.Drawing.Point(642, 87);
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(15, 13);
             this.labelControl5.TabIndex = 9;
@@ -607,7 +607,7 @@ namespace T7
             this.labelControl6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl6.Appearance.BackColor = System.Drawing.Color.Blue;
             this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.labelControl6.Location = new System.Drawing.Point(775, 41);
+            this.labelControl6.Location = new System.Drawing.Point(642, 68);
             this.labelControl6.Name = "labelControl6";
             this.labelControl6.Size = new System.Drawing.Size(15, 13);
             this.labelControl6.TabIndex = 8;
@@ -618,7 +618,7 @@ namespace T7
             this.labelControl3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl3.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl3.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl3.Location = new System.Drawing.Point(671, 80);
+            this.labelControl3.Location = new System.Drawing.Point(669, 51);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(98, 13);
             this.labelControl3.TabIndex = 7;
@@ -630,7 +630,7 @@ namespace T7
             this.labelControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl2.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl2.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl2.Location = new System.Drawing.Point(650, 60);
+            this.labelControl2.Location = new System.Drawing.Point(517, 87);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(119, 13);
             this.labelControl2.TabIndex = 6;
@@ -642,7 +642,7 @@ namespace T7
             this.labelControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl1.Appearance.ForeColor = System.Drawing.Color.Black;
             this.labelControl1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl1.Location = new System.Drawing.Point(701, 42);
+            this.labelControl1.Location = new System.Drawing.Point(568, 69);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Size = new System.Drawing.Size(68, 13);
             this.labelControl1.TabIndex = 5;
@@ -688,7 +688,7 @@ namespace T7
             // 
             // isCarConvertible
             // 
-            this.isCarConvertible.Location = new System.Drawing.Point(14, 95);
+            this.isCarConvertible.Location = new System.Drawing.Point(14, 74);
             this.isCarConvertible.Name = "isCarConvertible";
             this.isCarConvertible.Properties.Caption = "Car is a convertible";
             this.isCarConvertible.Size = new System.Drawing.Size(150, 19);
@@ -697,7 +697,7 @@ namespace T7
             // 
             // isFuelE85
             // 
-            this.isFuelE85.Location = new System.Drawing.Point(14, 69);
+            this.isFuelE85.Location = new System.Drawing.Point(14, 49);
             this.isFuelE85.Name = "isFuelE85";
             this.isFuelE85.Properties.Caption = "Car runs E85";
             this.isFuelE85.Size = new System.Drawing.Size(150, 19);
@@ -706,7 +706,7 @@ namespace T7
             // 
             // isCarAutomatic
             // 
-            this.isCarAutomatic.Location = new System.Drawing.Point(14, 43);
+            this.isCarAutomatic.Location = new System.Drawing.Point(14, 24);
             this.isCarAutomatic.Name = "isCarAutomatic";
             this.isCarAutomatic.Properties.Caption = "Car has automatic gearbox";
             this.isCarAutomatic.Size = new System.Drawing.Size(177, 19);
