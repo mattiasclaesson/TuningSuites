@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommonSuite;
 using NLog;
 
-namespace T7
+namespace CommonSuite
 {
     public enum TurboType : int
     {

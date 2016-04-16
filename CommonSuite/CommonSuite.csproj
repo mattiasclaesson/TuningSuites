@@ -101,6 +101,7 @@
       <DependentUpon>frmPlotSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="LogFilters.cs" />
+    <Compile Include="PressureToTorque.cs" />
     <Compile Include="SuiteRegistry.cs" />
     <Compile Include="SymbolCollection.cs" />
     <Compile Include="zipmsiupdater.cs" />

@@ -4593,20 +4593,6 @@ namespace T7
                 }
                 dockManager1.EndUpdate();
             }
-            /*
-            if (CheckAllTablesAvailable())
-            {
-                // build a table that shows the maximum allowed airmass depending on the current limiters
-                // table show be the same size as the pedalrequest map
-                frmAirmassResult airmassresult = new frmAirmassResult();
-                airmassresult.onStartTableViewer += new frmAirmassResult.StartTableViewer(airmassresult_onStartTableViewer);
-                airmassresult.Currentfile = m_currentfile;   
-                airmassresult.Symbols = m_symbols;
-                airmassresult.CurrentSramOffsett = m_currentSramOffsett;
-                airmassresult.Currentfile_size = m_currentfile_size;
-                airmassresult.Calculate(m_currentfile, m_symbols);
-                airmassresult.Show(); // not dialog?
-            }*/
         }
 
         void airmassResult_onClose(object sender, EventArgs e)

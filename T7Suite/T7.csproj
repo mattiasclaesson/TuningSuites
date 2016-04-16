@@ -299,12 +299,6 @@
     <Compile Include="frmAbout.designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmAirmassResult.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmAirmassResult.Designer.cs">
-      <DependentUpon>frmAirmassResult.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmBinCompare.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -458,7 +452,6 @@
     <Compile Include="PackageExporter.cs" />
     <Compile Include="PartnumberCollection.cs" />
     <Compile Include="PartNumberConverter.cs" />
-    <Compile Include="PressureToTorque.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AsmViewer.resx">
@@ -649,10 +642,6 @@
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmAirmassResult.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmAirmassResult.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmBinCompare.resx">
       <DependentUpon>frmBinCompare.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -761,6 +750,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="quick_restart.ico" />
+    <Content Include="SaabOpenTech.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="usb_bdm.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
