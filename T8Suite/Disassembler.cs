@@ -2201,7 +2201,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             func_count = 0;
             FileInfo fi = new FileInfo(inputfile);
             CastProgressEvent("Start analyzing", 0, ProgressType.PassOne);
-            long[] adresses = TrionicFile.GetVectorAddresses(inputfile);
+            long[] adresses = Trionic8File.GetVectorAddresses(inputfile);
             for (int vec = 1; vec < adresses.Length; vec++)
             {
                 int percentage = (vec * 100) / adresses.Length;
@@ -2285,7 +2285,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             func_count = 0;
             FileInfo fi = new FileInfo(inputfile);
             CastProgressEvent("Starting disassembly", 0, ProgressType.DisassemblingVectors);
-            long[] vectors = TrionicFile.GetVectorAddresses(inputfile);
+            long[] vectors = Trionic8File.GetVectorAddresses(inputfile);
             for (int vec = 0; vec < vectors.Length; vec++)
             {
                 int percentage = ((vec + 1) * 100) / vectors.Length;
@@ -2309,7 +2309,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             //logger.Debug("Translating vector labels");
 
             int lblcount = 0;
-            string[] names = TrionicFile.GetVectorNames();
+            string[] names = Trionic8File.GetVectorNames();
             foreach (MNemonicHelper label in labels)
             {
                 //logger.Debug("label: " + label.Address.ToString("X8") + " " + label.Mnemonic);

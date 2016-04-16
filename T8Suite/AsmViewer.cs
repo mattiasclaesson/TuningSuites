@@ -47,7 +47,7 @@ namespace T8SuitePro
 
         public void FindStartAddress(string filename)
         {
-            long address = TrionicFile.GetStartVectorAddress(filename);
+            long address = Trionic8File.GetStartVectorAddress(filename);
             int offset = richTextBox1.Find(address.ToString("X8"));
             if (offset > 0)
             {

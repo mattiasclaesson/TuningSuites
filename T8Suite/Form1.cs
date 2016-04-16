@@ -573,16 +573,6 @@ namespace T8SuitePro
             }
         }
 
-        private bool ValidateTrionic8File(string filename)
-        {
-            byte[] testdata = readdatafromfile(filename, 0, 0x10);
-            if (testdata[0] == 0x00 && (testdata[1] == 0x10 || testdata[1] == 0x00) && testdata[2] == 0x0C && testdata[3] == 0x00)
-            {
-                return true;
-            }
-            return false;
-        }
-
         private void TryToOpenFile(string filename, out SymbolCollection symbol_collection, int filename_size)
         {
             SymbolTranslator translator = new SymbolTranslator();
@@ -605,10 +595,10 @@ namespace T8SuitePro
                 MessageBox.Show("File has incorrect length: " + Path.GetFileName(filename));
                 return;
             }
-            if (!ValidateTrionic8File(filename))
+            if (!Trionic8File.ValidateTrionic8File(filename))
             {
                 TryToByteFlipFile(filename);
-                if (!ValidateTrionic8File(filename))
+                if (!Trionic8File.ValidateTrionic8File(filename))
                 {
                     m_currentfile = string.Empty;
                     MessageBox.Show("File does not seem to be a Trionic 8 file: " + Path.GetFileName(filename));
@@ -626,12 +616,11 @@ namespace T8SuitePro
 
                 System.Windows.Forms.Application.DoEvents();
 
-                int sym_count = 0;
                 if (filename != string.Empty)
                 {
                     if (File.Exists(filename))
                     {
-                        TryToExtractPackedBinary(filename, sym_count, filename_size, out symbol_collection);
+                        TryToExtractPackedBinary(filename, filename_size, out symbol_collection);
                     }
                     // try to load additional symboltranslations that the user entered
                     symbolsLoaded = TryToLoadAdditionalBinSymbols(filename, symbol_collection);
@@ -779,7 +768,7 @@ namespace T8SuitePro
         }
 
 
-        private bool TryToExtractPackedBinary(string filename, int sym_count, int filename_size, out SymbolCollection symbol_collection)
+        private bool TryToExtractPackedBinary(string filename, int filename_size, out SymbolCollection symbol_collection)
         {
             bool retval = true;
             byte[] compressedSymbolTable;
@@ -797,7 +786,6 @@ namespace T8SuitePro
             System.Windows.Forms.Application.DoEvents();
 
             bool compr_created = extractCompressedSymbolTable(filename, out symboltableoffset, out compressedSymbolTable);
-            sym_count = 0;
             SetProgress("Finding address table... ");
             SetProgressPercentage(15);
             System.Windows.Forms.Application.DoEvents();
@@ -6493,7 +6481,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void CreateBinaryBackup(string filename, bool ShowMessages)
         {
-            if (m_currentfile != string.Empty)
+            if (filename != string.Empty)
             {
                 if (File.Exists(filename))
                 {
@@ -8507,7 +8495,36 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnAirmassResult_ItemClick(object sender, ItemClickEventArgs e)
         {
-            System.Windows.Forms.Application.DoEvents();
+            // start a dockview for this <GS-26012011>
+            DockPanel dockPanel;
+
+            if (CheckAllTablesAvailable())
+            {
+                //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
+                dockManager1.BeginUpdate();
+                try
+                {
+                    ctrlAirmassResult airmassResult = new ctrlAirmassResult();
+                    airmassResult.Dock = DockStyle.Fill;
+                    dockPanel = dockManager1.AddPanel(DockingStyle.Right);
+                    dockPanel.Tag = m_currentfile;
+                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.Text = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
+                    dockPanel.Width = 800;
+                    airmassResult.onStartTableViewer += new ctrlAirmassResult.StartTableViewer(airmassResult_onStartTableViewer);
+                    airmassResult.onClose += new ctrlAirmassResult.ViewerClose(airmassResult_onClose);
+                    airmassResult.Currentfile = m_currentfile;
+                    airmassResult.Symbols = m_symbols;
+                    airmassResult.Calculate();
+                    dockPanel.Controls.Add(airmassResult);
+                }
+                catch (Exception newdockE)
+                {
+                    logger.Debug(newdockE.Message);
+                }
+                dockManager1.EndUpdate();
+            }
+            /*System.Windows.Forms.Application.DoEvents();
             if (CheckAllTablesAvailable())
             {
                 // build a table that shows the maximum allowed airmass depending on the current limiters
@@ -8519,11 +8536,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 airmassresult.Calculate();
                 airmassresult.Show(); // not dialog?
             }
+            */
         }
 
-        void airmassresult_onStartTableViewer(object sender, frmAirmassResult.StartTableViewerEventArgs e)
+        void airmassResult_onClose(object sender, EventArgs e)
         {
-            // start the table viewer
+            // lookup the panel which cast this event
+            if (sender is ctrlAirmassResult)
+            {
+                string dockpanelname = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
+                foreach (DockPanel dp in dockManager1.Panels)
+                {
+                    if (dp.Text == dockpanelname)
+                    {
+                        dockManager1.RemovePanel(dp);
+                        break;
+                    }
+                }
+            }
+        }
+
+        void airmassResult_onStartTableViewer(object sender, ctrlAirmassResult.StartTableViewerEventArgs e)
+        {
             StartTableViewer(e.SymbolName);
         }
 
@@ -8751,8 +8785,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 dt.Columns.Add("Vector");
                 dt.Columns.Add("Address", System.Type.GetType("System.Int64"));
 
-                long[] adresses = TrionicFile.GetVectorAddresses(m_currentfile);
-                string[] names = TrionicFile.GetVectorNames();
+                long[] adresses = Trionic8File.GetVectorAddresses(m_currentfile);
+                string[] names = Trionic8File.GetVectorNames();
                 for (int i = 0; i < adresses.Length; i++)
                 {
                     dt.Rows.Add(names[i].Replace("_", " "), Convert.ToInt64(adresses.GetValue(i)));
@@ -8854,11 +8888,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     T8Header t8header = new T8Header();
 
                     t8header.init(m_currentfile);
-                    frmAirmassResult res = new frmAirmassResult();
-                    res.Currentfile = m_currentfile;
-                    res.Symbols = m_symbols;
-                    res.Calculate();
-                    int peak_airmass = res.PeakAirmass;
                     string newFilename = t8header.PartNumber.Trim() + "_" + t8header.SoftwareVersion.Trim() /*+ "_" + t8header.HardwareID.Trim() + "_" + t8header.DeviceType.Trim() + "_" + peak_airmass.ToString() + "mgc.bin"*/ + ".BIN";
 
                     if (!File.Exists(System.Windows.Forms.Application.StartupPath + "\\Binaries\\" + newFilename))
