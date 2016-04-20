@@ -623,12 +623,14 @@ namespace T8SuitePro
             this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit1.Properties.Items.AddRange(new object[] {
-            "Reverse",
+            "Undefined gear",
             "First gear",
             "Second gear",
             "Third gear",
             "Fourth gear",
-            "Fifth gear"});
+            "Fifth gear",
+            "Sixth gear",
+            "Reverse gear"});
             this.comboBoxEdit1.Size = new System.Drawing.Size(195, 20);
             this.comboBoxEdit1.TabIndex = 3;
             this.comboBoxEdit1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);

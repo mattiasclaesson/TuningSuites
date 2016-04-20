@@ -37,7 +37,7 @@ namespace T8SuitePro
             HX40W
         }
 
-        private CompressorMap _compressor = CompressorMap.T25_55;
+        private CompressorMap _compressor = CompressorMap.TD04;
 
         public CompressorMap Compressor
         {
@@ -133,7 +133,7 @@ namespace T8SuitePro
             Liter23
         }
 
-        private EngineType current_engineType = EngineType.Liter23;
+        private EngineType current_engineType = EngineType.Liter2;
 
         public EngineType Current_engineType
         {
