@@ -924,9 +924,9 @@ namespace T7
             return Convert.ToInt32(power);
         }
 
-        private int AirmassToTorqueLbft(SymbolCollection symbols, string filename, int airmass, int rpm, bool TrionicStyle)
+        private int TorqueToTorqueLbft(int torque)
         {
-            double tq = AirmassToTorque(symbols,filename, airmass, rpm, TrionicStyle);
+            double tq = torque;
             tq /= 1.3558;
             return Convert.ToInt32(tq);
         }
@@ -1041,15 +1041,8 @@ namespace T7
                 double o = Convert.ToDouble(dt.Rows[0].ItemArray.GetValue(i));
                 // convert to hp
                 int rpm = Convert.ToInt32(x_axisvalues.GetValue(i));
-                int torque;
-                if (displayTorqueInLBFT.Checked)
-                {
-                    torque = AirmassToTorqueLbft(symbols, filename, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-                }
-                else
-                {
-                    torque = AirmassToTorque(symbols, filename, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-                }
+                int torque = AirmassToTorque(symbols, filename, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+
                 int horsepower;
                 if (displayPowerInkW.Checked)
                 {
@@ -1058,6 +1051,11 @@ namespace T7
                 else
                 {
                     horsepower = TorqueToPower(torque, rpm);
+                }
+
+                if (displayTorqueInLBFT.Checked)
+                {
+                    torque = TorqueToTorqueLbft(torque);
                 }
 
                 double[] dvals = new double[1];
@@ -1139,15 +1137,8 @@ namespace T7
                     double o = Convert.ToDouble(dt.Rows[0].ItemArray.GetValue(i));
                     // convert to hp
                     int rpm = Convert.ToInt32(x_axisvalues.GetValue(i));
-                    int torque;
-                    if (displayTorqueInLBFT.Checked)
-                    {
-                        torque = AirmassToTorqueLbft(m_symbols, m_currentfile, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-                    }
-                    else
-                    {
-                        torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-                    }
+                    int torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
+                    
                     int horsepower;
                     if (displayPowerInkW.Checked)
                     {
@@ -1157,6 +1148,12 @@ namespace T7
                     {
                         horsepower = TorqueToPower(torque, rpm);
                     }
+
+                    if (displayTorqueInLBFT.Checked)
+                    {
+                        torque = TorqueToTorqueLbft(torque);
+                    }
+
                     int injDC = CalculateInjectorDC(Convert.ToInt32(o), rpm);
                     int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm);
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
@@ -1838,15 +1835,10 @@ namespace T7
                         {
                             // convert airmass to torque
                             int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
-                            int torque;
+                            int torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                             if (displayTorqueInLBFT.Checked)
                             {
-                                torque = AirmassToTorqueLbft(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
-                                e.DisplayText = torque.ToString();
-                            }
-                            else
-                            {
-                                torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
+                                torque = TorqueToTorqueLbft(torque);
                             }
                             e.DisplayText = torque.ToString();
                         }
