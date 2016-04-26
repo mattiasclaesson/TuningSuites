@@ -49,6 +49,8 @@ namespace T8SuitePro
         private int[] bstknkMaxAirmassMap_Xaxis;
         private int[] bstknkMaxAirmassMap_Yaxis;
 
+        private int[] bstknkMaxAirmassAuMap;
+
         private int[] ffMaxAirmassMap;
         private int[] ffMaxAirmassMap_Xaxis;
 
@@ -336,7 +338,7 @@ namespace T8SuitePro
                 gears.SetValue(6, 6); // Sixth gear      6
                 gears.SetValue(7, 7); // Reverse gear    7
 
-                int torquelimitManual = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimGear, xdummy, gears, comboBoxEdit1.SelectedIndex, 0));
+                int torquelimitManual = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimGear, xdummy, gears, cbGearSelectionEdit.SelectedIndex, 0));
                 if (torque > torquelimitManual)
                 {
                     logger.Debug("Manual gear torque limited from " + torque.ToString() + " to " + torquelimitManual.ToString() + " at " + rpm.ToString() + " rpm");
@@ -379,20 +381,29 @@ namespace T8SuitePro
         private int CheckAgainstAirmassLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool autogearbox, bool E85, ref LimitType AirmassLimiter)
         {            
             int airmasslimit = requestedairmass;
+            string message;
 
-            if (E85)
+            if (autogearbox)
+            {
+                airmasslimit = Convert.ToInt32(GetInterpolatedTableValue(bstknkMaxAirmassAuMap, bstknkMaxAirmassMap_Xaxis, bstknkMaxAirmassMap_Yaxis, rpm, 0));
+                message = "Reduced airmass because of BstKnkCal.MaxAirmassAu: " + requestedairmass.ToString() + " rpm: " + rpm.ToString();
+            }
+            else if (E85)
             {
                 airmasslimit = Convert.ToInt32(GetInterpolatedTableValue(ffMaxAirmassMap, ffMaxAirmassMap_Xaxis, bstknkMaxAirmassMap_Yaxis, rpm, 0)); // zero degree ignition offset
+                message = "Reduced airmass because of FFAirCal.m_maxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString();
             }
             else
             {
                 airmasslimit = Convert.ToInt32(GetInterpolatedTableValue(bstknkMaxAirmassMap, bstknkMaxAirmassMap_Xaxis, bstknkMaxAirmassMap_Yaxis, rpm, 0));
+                message = "Reduced airmass because of BstKnkCal.MaxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString();
             }
+
             if (airmasslimit < requestedairmass)
             {
                 requestedairmass = airmasslimit;
                 AirmassLimiter = LimitType.AirmassLimiter;
-                logger.Debug("Reduced airmass because of BstKnkCal.MaxAirmass/FFAirCal.m_maxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString() + " E85: " + E85.ToString());
+                logger.Debug(message);
             }
 
             return requestedairmass;
@@ -1096,6 +1107,11 @@ namespace T8SuitePro
                 }
                 bstknkMaxAirmassMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BstKnkCal.n_EngYSP"), GetSymbolLength(symbols, "BstKnkCal.n_EngYSP"));
 
+                if (SymbolExists("BstKnkCal.MaxAirmassAu", symbols))
+                {
+                    bstknkMaxAirmassAuMap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(symbols, "BstKnkCal.MaxAirmassAu"));
+                }
+
                 nominalTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.Trq_NominalMap"), GetSymbolLength(symbols, "TrqMastCal.Trq_NominalMap"));
                 nominalTorqueMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.m_AirXSP"), GetSymbolLength(symbols, "TrqMastCal.m_AirXSP"));
                 nominalTorqueMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.n_EngineYSP"), GetSymbolLength(symbols, "TrqMastCal.n_EngineYSP"));
@@ -1449,7 +1465,11 @@ namespace T8SuitePro
         private void labelControl1_DoubleClick(object sender, EventArgs e)
         {
             // start airmass limiter viewer
-            if (isFuelE85.Checked)
+            if (isCarAutomatic.Checked)
+            {
+                CastStartViewerEvent("BstKnkCal.MaxAirmassAu");
+            }
+            else if (isFuelE85.Checked)
             {
                 CastStartViewerEvent("FFAirCal.m_maxAirmass");
             }
@@ -1629,7 +1649,7 @@ namespace T8SuitePro
                         {
                             e.Graphics.FillPolygon(Brushes.CornflowerBlue, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        if (comboBoxEdit2.SelectedIndex == 1)
+                        if (cbTableSelectionEdit.SelectedIndex == 1)
                         {
                             // convert airmass to torque
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
@@ -1640,7 +1660,7 @@ namespace T8SuitePro
                             }
                             e.DisplayText = torque.ToString();
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 2)
+                        else if (cbTableSelectionEdit.SelectedIndex == 2)
                         {
                             //convert airmass to horsepower
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
@@ -1652,13 +1672,13 @@ namespace T8SuitePro
                             }
                             e.DisplayText = horsepower.ToString();
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 3) //injector DC
+                        else if (cbTableSelectionEdit.SelectedIndex == 3) //injector DC
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int injDC = CalculateInjectorDC(Convert.ToInt32(e.CellValue), rpm);
                             e.DisplayText = injDC.ToString();
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 4) //target lambda
+                        else if (cbTableSelectionEdit.SelectedIndex == 4) //target lambda
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
@@ -1667,7 +1687,7 @@ namespace T8SuitePro
                             e.DisplayText = dtarget.ToString("F2");
 
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 5) //target AFR
+                        else if (cbTableSelectionEdit.SelectedIndex == 5) //target AFR
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
@@ -1684,7 +1704,7 @@ namespace T8SuitePro
                             }
                             e.DisplayText = dtarget.ToString("F2");
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 6)
+                        else if (cbTableSelectionEdit.SelectedIndex == 6)
                         {
                             // convert to estimated EGT
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
