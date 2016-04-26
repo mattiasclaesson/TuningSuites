@@ -1328,7 +1328,7 @@ namespace T8SuitePro
                 Trionic8File.TryToExtractPackedBinary(m_current_comparefilename, (int)fi.Length, out Compare_symbol_collection);
                 // try to load additional symboltranslations that the user entered
                 Trionic8File.TryToLoadAdditionalBinSymbols(m_current_comparefilename, Compare_symbol_collection);
-                
+
                 // so... now determine the max values for the compare file
                 // show the dynograph
                 if (xtraTabControl1.SelectedTabPage == xtraTabPage2)

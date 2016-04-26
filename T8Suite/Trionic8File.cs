@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Data;
 using CommonSuite;
 using NLog;
+using System.Windows.Forms;
 
 namespace T8SuitePro
 {
@@ -91,11 +92,11 @@ namespace T8SuitePro
             set { m_sramOffsetForOpenFile = value; }
         }
 
-        private void CastProgressEvent(string info, int percentage)
+        private static void CastProgressEvent(string info, int percentage)
         {
             if (onProgress != null)
             {
-                onProgress(this, new ProgressEventArgs(info, percentage));
+                onProgress(typeof(Trionic8File), new ProgressEventArgs(info, percentage));
             }
         }
 
@@ -125,7 +126,7 @@ namespace T8SuitePro
         }
 
         public delegate void Progress(object sender, ProgressEventArgs e);
-        public event Trionic8File.Progress onProgress;
+        public static event Trionic8File.Progress onProgress;
 
         static private int ReadMarkerAddress(string filename, int value, int filelength, out int length, out string val)
         {
@@ -1227,14 +1228,11 @@ namespace T8SuitePro
 
             int symboltableoffset = 0;
             symbol_collection = new SymbolCollection();
-            //SetProgress("Unpacking file... ");
-            //SetProgressPercentage(5);
-            System.Windows.Forms.Application.DoEvents();
+            CastProgressEvent("Unpacking file... ",5);
 
             bool compr_created = extractCompressedSymbolTable(filename, out symboltableoffset, out compressedSymbolTable);
-            //SetProgress("Finding address table... ");
-            //SetProgressPercentage(15);
-            //System.Windows.Forms.Application.DoEvents();
+            CastProgressEvent("Finding address table... ",15);
+
             byte[] searchsequence = new byte[9];
             searchsequence.SetValue((byte)0x00, 0);
             searchsequence.SetValue((byte)0x00, 1);
@@ -1338,9 +1336,7 @@ namespace T8SuitePro
                 if (AddressTableOffset > 0)
                 {
                     AddressTableOffset = RealAddressTableOffset; // TEST 15092009
-                    //SetProgress("Reading address table... ");
-                    //SetProgressPercentage(25);
-                    //System.Windows.Forms.Application.DoEvents();
+                    CastProgressEvent("Reading address table... ", 25);
 
                     fsread.Seek(AddressTableOffset - 17, SeekOrigin.Begin);
                     bool endoftable = false;
@@ -1411,9 +1407,7 @@ namespace T8SuitePro
                                     symb_count++;
                                     if (symb_count % 500 == 0)
                                     {
-                                        //SetProgress("Symbol: " + sh.Varname);
-                                        //SetProgressPercentage(5);
-                                        //System.Windows.Forms.Application.DoEvents();
+                                        CastProgressEvent("Symbol: " + sh.Varname, 5);
                                     }
                                 }
                             }
@@ -1431,22 +1425,18 @@ namespace T8SuitePro
                     }
                     if (compr_created)
                     {
-                        //SetProgress("Decoding packed symbol table");
-                        //System.Windows.Forms.Application.DoEvents();
+                        CastProgressEvent("Decoding packed symbol table",30);
 
                         string[] allSymbolNames;
                         // Decompress the symbol table
                         TrionicSymbolDecompressor.ExpandComprStream(compressedSymbolTable, out allSymbolNames);
-                        //SetProgress("Adding names to symbols");
-                        //SetProgressPercentage(45);
                         AddNamesToSymbols(symbol_collection, allSymbolNames);
-                        //SetProgress("Cleaning up");
-                        //SetProgressPercentage(50);
+                        CastProgressEvent("Idle", 0);
                     }
                 }
                 else
                 {
-                    //MessageBox.Show("Could not find address table!");
+                    MessageBox.Show("Could not find address table!");
                     retval = false;
                 }
             }
@@ -1464,6 +1454,7 @@ namespace T8SuitePro
             {
                 try
                 {
+                    CastProgressEvent("Adding symbol names: ", (int)(((float)i / (float)allSymbolNames.Length) * 100));
                     SymbolHelper sh = symbol_collection[(i)];
                     sh.Varname = allSymbolNames[i + 1].Trim(); // Skip first in array since its "SymbolNames"
                     logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
@@ -1494,13 +1485,12 @@ namespace T8SuitePro
         static private void ImportSymbols(System.Data.DataTable dt, SymbolCollection coll2load)
         {
             SymbolTranslator st = new SymbolTranslator();
-            //SetProgress("Importing symbols... ");
             int numSym = coll2load.Count;
             int cnt = 0;
             foreach (SymbolHelper sh in coll2load)
             {
                 cnt = cnt + 1;
-                //SetProgressPercentage((int)(((float)cnt / (float)numSym) * 100));
+                CastProgressEvent("Importing symbols: ", (int)(((float)cnt / (float)numSym) * 100));
                 foreach (DataRow dr in dt.Rows)
                 {
                     try
@@ -1538,10 +1528,10 @@ namespace T8SuitePro
                     }
                 }
             }
-            //SetProgress("Completed");
+            CastProgressEvent("Completed", 0);
         }
 
-        static private bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection coll2load)
+        static public bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection coll2load)
         {
             if (File.Exists(filename))
             {
@@ -1572,7 +1562,6 @@ namespace T8SuitePro
                                             {"FF0L", "{0}\\FF0L_C.xml"},
                                             {"FE09", "{0}\\FE09_C.xml"},
                                             {"FD0G", "{0}\\FD0G_C.xml"}};
-            //SetProgress("Reading symboltable... ");
             T8Header fh = new T8Header();
             fh.init(filename);
             for (int i = 0; i < SymbolFiles.GetLength(0); i++)

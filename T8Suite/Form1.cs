@@ -205,6 +205,7 @@ namespace T8SuitePro
                 t8can.onReadProgress += new ITrionic.ReadProgress(t8can_onReadProgress);
                 t8can.onWriteProgress += new ITrionic.WriteProgress(t8can_onWriteProgress);
                 t8can.onCanInfo += new ITrionic.CanInfo(t8can_onCanInfo);
+                Trionic8File.onProgress += new Trionic8File.Progress(trionic8file_onProgress);
             }
             catch (Exception E)
             {
@@ -230,6 +231,12 @@ namespace T8SuitePro
         void t8can_onReadProgress(object sender, ITrionic.ReadProgressEventArgs e)
         {
             SetProgress(String.Format("Downloading {0} %", e.Percentage));
+            SetProgressPercentage(e.Percentage);
+        }
+
+        void trionic8file_onProgress(object sender, Trionic8File.ProgressEventArgs e)
+        {
+            SetProgress(e.Info);
             SetProgressPercentage(e.Percentage);
         }
 
@@ -620,10 +627,10 @@ namespace T8SuitePro
                 {
                     if (File.Exists(filename))
                     {
-                        TryToExtractPackedBinary(filename, filename_size, out symbol_collection);
+                        Trionic8File.TryToExtractPackedBinary(filename, filename_size, out symbol_collection);
                     }
                     // try to load additional symboltranslations that the user entered
-                    symbolsLoaded = TryToLoadAdditionalBinSymbols(filename, symbol_collection);
+                    symbolsLoaded = Trionic8File.TryToLoadAdditionalBinSymbols(filename, symbol_collection);
 
                 }
             }
@@ -731,24 +738,6 @@ namespace T8SuitePro
             gridViewSymbols.ActiveFilterEnabled = true;
         }
 
-        private int GetAddrTableOffset(string filename)
-        {
-            int addrtaboffset = GetStartOfAddressTableOffset(filename);
-            logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
-            //int NqNqNqOffset = GetNqNqNqStringFromOffset(addrtaboffset - 0x100, filename);
-            int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
-            logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
-
-            int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-            logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
-            //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
-            //                    symbtaboffset = NqNqNqOffset;
-            int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
-            int retval = NqNqNqOffset + 21;
-            logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
-            return retval;
-        }
-
         private int GetAddrTableOffsetBySymbolTable(string filename)
         {
             int addrtaboffset = GetEndOfSymbolTable(filename);
@@ -765,284 +754,6 @@ namespace T8SuitePro
             int retval = NqNqNqOffset + 21;
             logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
-        }
-
-
-        private bool TryToExtractPackedBinary(string filename, int filename_size, out SymbolCollection symbol_collection)
-        {
-            bool retval = true;
-            byte[] compressedSymbolTable;
-            //Test 15092009
-            //int RealAddressTableOffset = GetAddrTableOffset(filename) + 7; // was 17
-            int RealAddressTableOffset = GetAddrTableOffsetBySymbolTable(filename) + 7; // was 17 // <GS-22032010>
-
-            //Test 15092009
-            logger.Debug("Real symboltable offset: " + RealAddressTableOffset.ToString("X8"));
-
-            int symboltableoffset = 0;
-            symbol_collection = new SymbolCollection();
-            SetProgress("Unpacking file... ");
-            SetProgressPercentage(5);
-            System.Windows.Forms.Application.DoEvents();
-
-            bool compr_created = extractCompressedSymbolTable(filename, out symboltableoffset, out compressedSymbolTable);
-            SetProgress("Finding address table... ");
-            SetProgressPercentage(15);
-            System.Windows.Forms.Application.DoEvents();
-            byte[] searchsequence = new byte[9];
-            searchsequence.SetValue((byte)0x00, 0);
-            searchsequence.SetValue((byte)0x00, 1);
-            searchsequence.SetValue((byte)0x00, 2);
-            searchsequence.SetValue((byte)0x00, 3);
-            searchsequence.SetValue((byte)0x00, 4);
-            searchsequence.SetValue((byte)0x00, 5);
-            searchsequence.SetValue((byte)0x00, 6);
-            searchsequence.SetValue((byte)0x00, 7);
-            searchsequence.SetValue((byte)0x20, 8);
-            int AddressTableOffset = 0;//GetAddressTableOffset(searchsequence);
-            
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                fsread.Seek(symboltableoffset, SeekOrigin.Begin);
-                int adr_state = 0;
-                while ((fsread.Position < filename_size) && (AddressTableOffset == 0))
-                {
-                    byte adrb = br.ReadByte();
-                    switch (adr_state)
-                    {
-                        case 0:
-                            if (adrb == (byte)searchsequence.GetValue(0))
-                            {
-
-                                adr_state++;
-                            }
-                            break;
-                        case 1:
-                            if (adrb == (byte)searchsequence.GetValue(1)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 1;
-                            }
-                            break;
-                        case 2:
-                            if (adrb == (byte)searchsequence.GetValue(2)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 2;
-                            }
-                            break;
-                        case 3:
-                            if (adrb == (byte)searchsequence.GetValue(3)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 3;
-                            }
-                            break;
-                        case 4:
-                            if (adrb == (byte)searchsequence.GetValue(4)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 4;
-                            }
-                            break;
-                        case 5:
-                            if (adrb == (byte)searchsequence.GetValue(5)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 5;
-                            }
-                            break;
-                        case 6:
-                            if (adrb == (byte)searchsequence.GetValue(6)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 6;
-                            }
-                            break;
-                        case 7:
-                            if (adrb == (byte)searchsequence.GetValue(7)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 7;
-                            }
-                            break;
-                        case 8:
-                            if (adrb == (byte)searchsequence.GetValue(8))
-                            {
-                                // found it
-                                AddressTableOffset = (int)fsread.Position - 1;
-                            }
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 8;
-                            }
-                            break;
-                    }
-                }
-
-                if (AddressTableOffset > 0)
-                {
-                    AddressTableOffset = RealAddressTableOffset; // TEST 15092009
-                    SetProgress("Reading address table... ");
-                    SetProgressPercentage(25);
-                    System.Windows.Forms.Application.DoEvents();
-
-                    fsread.Seek(AddressTableOffset - 17, SeekOrigin.Begin);
-                    bool endoftable = false;
-                    Int64 internal_address = 0;
-                    int sramaddress = 0;
-                    int symbollength = 0;
-                    int bitmask = 0;
-                    int symb_count = 0;
-                    symbol_collection = new SymbolCollection();
-                    while (!endoftable)
-                    {
-                        // steeds 10 karaketers
-                        try
-                        {
-                            byte[] bytes = br.ReadBytes(10);
-                            if (bytes.Length == 10)
-                            {
-                                // DumpBytesToConsole(bytes);
-                                if ((Convert.ToInt32(bytes.GetValue(9)) != 0x00) /*|| (Convert.ToInt32(bytes.GetValue(6)) != 0x00)*/)
-                                {
-                                    endoftable = true;
-                                    //MessageBox.Show("EOT: " + fsread.Position.ToString("X6"));
-                                    logger.Debug("EOT: " + fsread.Position.ToString("X6"));
-                                }
-                                else
-                                {
-                                    //DumpBytesToConsole(bytes);
-
-                                    internal_address = Convert.ToInt64(bytes.GetValue(0)) * 256 * 256;
-                                    internal_address += Convert.ToInt64(bytes.GetValue(1)) * 256;
-                                    internal_address += Convert.ToInt64(bytes.GetValue(2));
-
-                                    /* if (bytes[1] == 0x7A && bytes[2] == 0xEE)
-                                     {
-                                         logger.Debug("suspicious");
-
-                                         if (internal_address == 0x7AEE)
-                                         {
-                                             logger.Debug("break: " + fsread.Position.ToString("X8"));
-                                         }
-                                     }*/
-                                    symbollength = Convert.ToInt32(bytes.GetValue(3)) * 256;
-                                    symbollength += Convert.ToInt32(bytes.GetValue(4));
-
-                                    bitmask = Convert.ToInt32(bytes.GetValue(5)) * 256;
-                                    bitmask += Convert.ToInt32(bytes.GetValue(6));
-
-
-                                    //                                                sramaddress = Convert.ToInt32(bytes.GetValue(7)) * 256 * 256;
-                                    //                                                sramaddress += Convert.ToInt32(bytes.GetValue(8)) * 256;
-                                    //                                                sramaddress += Convert.ToInt32(bytes.GetValue(9));
-                                    SymbolHelper sh = new SymbolHelper();
-                                    sh.Symbol_type = Convert.ToInt32(bytes.GetValue(7));
-                                    sh.Varname = "Symbolnumber " + symbol_collection.Count.ToString();
-                                    sh.Symbol_number = symbol_collection.Count;
-                                    sh.Symbol_number_ECU = symbol_collection.Count;
-                                    sh.Flash_start_address = internal_address;
-                                    sh.Start_address = internal_address;
-                                    sh.Length = symbollength;
-                                    sh.BitMask = bitmask;
-                                    /*if (internal_address == 0x0AE956)
-                                    {
-                                        DumpBytesToConsole(bytes);
-                                    }*/
-                                    //DumpToSymbolFile(sh.Varname + " : " + sh.Flash_start_address.ToString("X6"));
-
-                                    symbol_collection.Add(sh);
-                                    symb_count++;
-                                    if (symb_count % 500 == 0)
-                                    {
-                                        SetProgress("Symbol: " + sh.Varname);
-                                        SetProgressPercentage(5);
-                                        System.Windows.Forms.Application.DoEvents();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                endoftable = true;
-                            }
-                        }
-                        catch (Exception E)
-                        {
-                            logger.Debug(E.Message);
-                            retval = false;
-                        }
-
-                    }
-                    if (compr_created)
-                    {
-                        SetProgress("Decoding packed symbol table");
-                        System.Windows.Forms.Application.DoEvents();
-                        
-                        string[] allSymbolNames;
-                        // Decompress the symbol table
-                        TrionicSymbolDecompressor.ExpandComprStream(compressedSymbolTable, out allSymbolNames);
-                        SetProgress("Adding names to symbols");
-                        SetProgressPercentage(45);
-                        AddNamesToSymbols(symbol_collection, allSymbolNames);
-                        SetProgress("Cleaning up");
-                        SetProgressPercentage(50);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Could not find address table!");
-                    retval = false;
-                }
-            }
-            return retval;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="symbol_collection"></param>
-        /// <param name="allSymbolNames"></param>
-        private static void AddNamesToSymbols(SymbolCollection symbol_collection, string[] allSymbolNames)
-        {
-            for (int i = 0; i < allSymbolNames.Length-1; i++)
-            {
-                try
-                {
-                    SymbolHelper sh = symbol_collection[(i)];
-                    sh.Varname = allSymbolNames[i+1].Trim(); // Skip first in array since its "SymbolNames"
-                    logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
-                    SymbolTranslator translator = new SymbolTranslator();
-                    string help = string.Empty;
-                    XDFCategories category = XDFCategories.Undocumented;
-                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                    sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat);
-                    if (sh.Varname.Contains("."))
-                    {
-                        try
-                        {
-                            sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                        }
-                        catch (Exception cE)
-                        {
-                            logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
-                        }
-                    }
-                }
-                catch (Exception E)
-                {
-                    logger.Debug("Failed to add symbolnames: " + E.Message);
-                }
-            }
         }
 
         int m_currentfile_size = 0x100000;
@@ -8333,133 +8044,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         }
 
-        private string GetFileDescriptionFromFile(string file)
-        {
-            string retval = string.Empty;
-            try
-            {
-                using (StreamReader sr = new StreamReader(file))
-                {
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    string name = sr.ReadLine();
-                    name = name.Trim();
-                    name = name.Replace("<", "");
-                    name = name.Replace(">", "");
-                    //name = name.Replace("x0020", " ");
-                    name = name.Replace("_x0020_", " ");
-                    for (int i = 0; i <= 9; i++)
-                    {
-                        name = name.Replace("_x003" + i.ToString() + "_", i.ToString());
-                    }
-                    retval = name;
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-            return retval;
-        }
-
-        private void ImportSymbols(System.Data.DataTable dt, SymbolCollection coll2load)
-        {
-            SymbolTranslator st = new SymbolTranslator();
-            SetProgress("Importing symbols... ");
-            int numSym = coll2load.Count;
-            int cnt = 0;
-            foreach (SymbolHelper sh in coll2load)
-            {
-                cnt = cnt + 1;
-                SetProgressPercentage((int)(((float)cnt / (float)numSym) * 100));
-                foreach (DataRow dr in dt.Rows)
-                {
-                    try
-                    {
-                        if (dr["SYMBOLNAME"].ToString() == sh.Varname)
-                        {
-                            if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
-                            {
-                                // Swap varname and userdescription
-                                if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                                {
-                                    sh.Userdescription = sh.Varname;
-                                    sh.Varname = dr["DESCRIPTION"].ToString();
-                                }
-                                else
-                                {
-                                    sh.Userdescription = dr["DESCRIPTION"].ToString();
-                                }
-                                string helptext = string.Empty;
-                                XDFCategories cat = XDFCategories.Undocumented;
-                                XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub);
-
-                                if (sh.Category == "Undocumented" || sh.Category == "")
-                                {
-                                    sh.createAndUpdateCategory(sh.Varname);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    catch (Exception E)
-                    {
-                        logger.Debug(E.Message);
-                    }
-                }
-            }
-            SetProgress("Completed");
-        }
-
-        private bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection coll2load)
-        {
-            if (File.Exists(filename))
-            {
-                string binname = GetFileDescriptionFromFile(filename);
-                if (binname != string.Empty)
-                {
-                    System.Data.DataTable dt = new System.Data.DataTable(binname);
-                    dt.Columns.Add("SYMBOLNAME");
-                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                    dt.Columns.Add("DESCRIPTION");
-                    dt.ReadXml(filename);
-                    ImportSymbols(dt, coll2load);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool TryToLoadAdditionalBinSymbols(string filename, SymbolCollection coll2load)
-        {
-            // Look for a complete xml file first
-            string[,] SymbolFiles = new string[,] {{"FD0M", "{0}\\FD0M_C.xml"},
-                                            {"FD0I", "{0}\\FD0I_C.xml"},
-                                            {"FC0N", "{0}\\FC0N_C.xml"},
-                                            {"FC0U", "{0}\\FC0U_C.xml"},
-                                            {"FD0F", "{0}\\FD0F_C.xml"},
-                                            {"FF0L", "{0}\\FF0L_C.xml"},
-                                            {"FE09", "{0}\\FE09_C.xml"},
-                                            {"FD0G", "{0}\\FD0G_C.xml"}};
-            SetProgress("Reading symboltable... ");
-            T8Header fh = new T8Header();
-            fh.init(filename);
-            for (int i = 0; i < SymbolFiles.GetLength(0); i++)
-            {
-                if (fh.SoftwareVersion.Trim().StartsWith(SymbolFiles[i, 0].ToString(), StringComparison.OrdinalIgnoreCase))
-                {
-                    string completeXmlFile = String.Format(SymbolFiles[i, 1], System.Windows.Forms.Application.StartupPath);
-                    return TryToLoadAdditionalXMLSymbols(completeXmlFile, coll2load);
-                }
-            }
-
-            // Secondly load the .xml file with same path and filename as the .bin file. 
-            string xmlfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".xml");
-            return TryToLoadAdditionalXMLSymbols(xmlfile, coll2load);
-        }
-
         private bool SymbolExists(string symbolname)
         {
             foreach (SymbolHelper sh in m_symbols)
@@ -15465,7 +15049,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                TryToLoadAdditionalXMLSymbols(ofd.FileName, m_symbols);
+                Trionic8File.TryToLoadAdditionalXMLSymbols(ofd.FileName, m_symbols);
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
