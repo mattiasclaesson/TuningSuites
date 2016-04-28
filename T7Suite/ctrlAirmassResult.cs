@@ -35,6 +35,8 @@ namespace T7
         int columns;
 
         int m_injectorConstant = 0;
+        int[] injectorBatteryCorrection;
+        int[] injectorBatteryCorrection_axis;
 
         private int[] y_axisvalues;
         private int[] x_axisvalues;
@@ -324,6 +326,8 @@ namespace T7
             {
                 int[] injConstant = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(symbols, "InjCorrCal.InjectorConst"));
                 m_injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
+                injectorBatteryCorrection = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrTab"), GetSymbolLength(symbols, "InjCorrCal.BattCorrTab"));
+                injectorBatteryCorrection_axis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrSP"), GetSymbolLength(symbols, "InjCorrCal.BattCorrSP"));
                 fuelVEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.Map"), GetSymbolLength(symbols, "BFuelCal.Map"));
                 E85VEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.E85Map"), GetSymbolLength(symbols, "BFuelCal.E85Map"));
                 fuelVExaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.AirXSP"), GetSymbolLength(symbols, "BFuelCal.AirXSP"));
@@ -1154,7 +1158,7 @@ namespace T7
                         torque = TorqueToTorqueLbft(torque);
                     }
 
-                    int injDC = CalculateInjectorDC(Convert.ToInt32(o), rpm);
+                    int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(o), rpm);
                     int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm);
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
 
@@ -1459,49 +1463,51 @@ namespace T7
         string m_current_comparefilename = string.Empty;
         SymbolCollection Compare_symbol_collection = new SymbolCollection();
 
-        private int CalculateInjectorDC(int airmass, int rpm)
+        private int CalculateInjectorDCusingPulseWidth(int airmass, int rpm)
         {
             // calculate injector DC
             // needs injector constant, ve map, battery correction map
             int retval = 0;
-            // first calulcate simple
+            // first calculcate simple
             if (m_injectorConstant > 0 && fuelVEMap != null)
             {
-                float frpm = (float)rpm;
-                frpm /= 2; // injection once every 2 rounds in 4 stroke engine
-                float fairmass = (float)airmass;
-                float airmassperminute = fairmass * frpm;
-                airmassperminute /= 1000; // from mg/c to g/c
-
-                float m_requiredFuelForLambda = airmassperminute / 14.7F;
+                // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
+                double fuelToInjectPerCycle = (double)airmass / (14.65F * 1000); // mg/c *1000 = g/c
                 if (isFuelE85.Checked)
                 {
                     // running E85, different target lambda
-                    m_requiredFuelForLambda = airmassperminute / 9.76F;
+                    fuelToInjectPerCycle = (double)airmass / (9.84F * 1000); // mg/c *1000 = g/c
                 }
+
+                // Calculate how much fuel do we get for every millisecond of injection
+                double injectorFuelPerMs = (double)m_injectorConstant / (60 * 1000);
+
+                double baseFuelPulseWidth = fuelToInjectPerCycle / injectorFuelPerMs;
 
                 // get correct data from fuelVEmap ... by airmass and rpm
                 if (isFuelE85.Checked)
                 {
                     double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
                     vecorr /= 100;
-                    m_requiredFuelForLambda *= (float)vecorr;
-                    float injectorDC = m_requiredFuelForLambda / (float)m_injectorConstant;
-                    injectorDC *= 100;
-                    retval = Convert.ToInt32(injectorDC);
-
+                    baseFuelPulseWidth *= (double)vecorr;
                 }
                 else
                 {
                     double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
                     vecorr /= 100;
-                    m_requiredFuelForLambda *= (float)vecorr;
-                    float injectorDC = m_requiredFuelForLambda / (float)m_injectorConstant;
-                    injectorDC *= 100;
-                    retval = Convert.ToInt32(injectorDC);
+                    baseFuelPulseWidth *= (double)vecorr;                
                 }
-                
 
+                // Add battery correction.
+                int[] nullvalue = new int[1];
+                nullvalue.SetValue(0, 0);
+                double batteryCorrectionValue = GetInterpolatedTableValue(injectorBatteryCorrection, nullvalue, injectorBatteryCorrection_axis, 130, 0); // 13.0V
+                batteryCorrectionValue /= 1000; // ms
+                double finalFuelPulseWidth = baseFuelPulseWidth + batteryCorrectionValue;
+
+                // Calculate DC from pulse width
+                double injectorDC = (double)(finalFuelPulseWidth * rpm) / 1200; 
+                retval = Convert.ToInt32(Math.Round(injectorDC, 0));
             }
             return retval;
         }
@@ -1857,7 +1863,7 @@ namespace T7
                         else if (comboBoxEdit2.SelectedIndex == 3) //injector DC
                         {
                             int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
-                            int injDC = CalculateInjectorDC(Convert.ToInt32(e.CellValue), rpm);
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
                             e.DisplayText = injDC.ToString();
                         }
                         else if (comboBoxEdit2.SelectedIndex == 4) //target lambda

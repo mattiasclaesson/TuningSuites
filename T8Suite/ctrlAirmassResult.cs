@@ -34,6 +34,8 @@ namespace T8SuitePro
         private int[] pedal_Xaxis;
 
         private int injectorConstant = 0;
+        private int[] injectorBatteryCorrection;
+        private int[] injectorBatteryCorrection_axis;
 
         private byte[] fuelVEMap;
         private int[] fuelVE_Xaxis;
@@ -859,7 +861,7 @@ namespace T8SuitePro
                         torque = TorqueToTorqueLbft(torque);
                     }
 
-                    int injDC = CalculateInjectorDC(Convert.ToInt32(o), rpm);
+                    int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(o), rpm);
                     int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm);
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
 
@@ -1197,6 +1199,8 @@ namespace T8SuitePro
                 {
                     int[] injConstant = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(symbols, "InjCorrCal.InjectorConst"));
                     injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
+                    injectorBatteryCorrection = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrTab"), GetSymbolLength(symbols, "InjCorrCal.BattCorrTab"));
+                    injectorBatteryCorrection_axis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrSP"), GetSymbolLength(symbols, "InjCorrCal.BattCorrSP"));
                     if (isFuelE85.Checked)
                     {
                         fuelVEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "FFFuelCal.TempEnrichFacMAP"), GetSymbolLength(symbols, "FFFuelCal.TempEnrichFacMAP"));
@@ -1281,41 +1285,45 @@ namespace T8SuitePro
         string m_current_comparefilename = string.Empty;
         SymbolCollection Compare_symbol_collection = new SymbolCollection();
 
-        private int CalculateInjectorDC(int airmass, int rpm)
+        private int CalculateInjectorDCusingPulseWidth(int airmass, int rpm)
         {
             // calculate injector DC
             // needs injector constant, ve map, battery correction map
             int retval = 0;
-            // first calulcate simple
+            // first calculcate simple
             if (injectorConstant > 0 && fuelVEMap != null)
             {
-                float frpm = (float)rpm;
-                frpm /= 2; // injection once every 2 rounds in 4 stroke engine
-                float fairmass = (float)airmass;
-                float airmassperminute = fairmass * frpm;
-                airmassperminute /= 1000; // from mg/c to g/c
-
-                float m_requiredFuelForLambda = airmassperminute / 14.7F;
+                // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
+                double fuelToInjectPerCycle = (double)airmass / (14.65F * 1000); // mg/c *1000 = g/c
                 if (isFuelE85.Checked)
                 {
                     // running E85, different target lambda
-                    m_requiredFuelForLambda = airmassperminute / 9.76F;
+                    fuelToInjectPerCycle = (double)airmass / (9.84F * 1000); // mg/c *1000 = g/c
                 }
+
+                // Calculate how much fuel do we get for every millisecond of injection
+                double injectorFuelPerMs = (double)injectorConstant / (60 * 1000);
+
+                double baseFuelPulseWidth = fuelToInjectPerCycle / injectorFuelPerMs;
 
                 // get correct data from fuelVEmap ... by airmass and rpm
                 double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                 vecorr /= 128; //table is a byte value, with range 0.00-2.55 , 1.00 is 128
-                m_requiredFuelForLambda *= (float)vecorr;
+                baseFuelPulseWidth *= (double)vecorr;
 
-                float injectorDC = m_requiredFuelForLambda / (float)injectorConstant;
+                // Add battery correction.
+                int[] nullvalue = new int[1];
+                nullvalue.SetValue(0, 0);
+                double batteryCorrectionValue = GetInterpolatedTableValue(injectorBatteryCorrection, nullvalue, injectorBatteryCorrection_axis, 130, 0); // 13.0V
+                batteryCorrectionValue /= 1000; // ms
+                double finalFuelPulseWidth = baseFuelPulseWidth + batteryCorrectionValue;
 
-                injectorDC *= 100;
-                retval = Convert.ToInt32(injectorDC);
-
+                // Calculate DC from pulse width
+                double injectorDC = (double)(finalFuelPulseWidth * rpm) / 1200;
+                retval = Convert.ToInt32(Math.Round(injectorDC, 0));
             }
             return retval;
         }
-
 
         private void simpleButton3_Click(object sender, EventArgs e)
         {
@@ -1675,7 +1683,7 @@ namespace T8SuitePro
                         else if (cbTableSelectionEdit.SelectedIndex == 3) //injector DC
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
-                            int injDC = CalculateInjectorDC(Convert.ToInt32(e.CellValue), rpm);
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
                             e.DisplayText = injDC.ToString();
                         }
                         else if (cbTableSelectionEdit.SelectedIndex == 4) //target lambda
