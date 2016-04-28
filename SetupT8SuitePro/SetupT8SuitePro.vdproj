@@ -2163,11 +2163,6 @@
                     "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.0"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.10.0.x86"
-                    {
-                    "Name" = "8:Visual C++ 2010 Runtime Libraries (x86)"
-                    "ProductCode" = "8:Microsoft.Visual.C++.10.0.x86"
-                    }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
                     "Name" = "8:Windows Installer 3.1"
@@ -2204,11 +2199,6 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.0"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.10.0.x86"
-                    {
-                    "Name" = "8:Visual C++ 2010 Runtime Libraries (x86)"
-                    "ProductCode" = "8:Microsoft.Visual.C++.10.0.x86"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -5903,7 +5893,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
         "ProductCode" = "8:{50FF6B5A-DA98-4203-996C-09CDFC3997EB}"
-        "PackageCode" = "8:{DE1D623A-9B8A-4C8D-A3D0-E2EDEA4E3BC0}"
+        "PackageCode" = "8:{1C961EF8-D8D1-40C4-9431-A35A32160B45}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -6480,7 +6470,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2501F8CD56F14E15861AA14CF71FB1C9"
             {
-            "SourcePath" = "8:..\\T8Suite\\obj\\x86\\Debug\\T8SuitePro.exe"
+            "SourcePath" = "8:..\\T8Suite\\obj\\x86\\Release\\T8SuitePro.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
