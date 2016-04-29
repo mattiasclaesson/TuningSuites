@@ -4584,7 +4584,7 @@ namespace T7
                     airmassResult.Symbols = m_symbols;
                     airmassResult.CurrentSramOffsett = m_currentSramOffsett;
                     airmassResult.Currentfile_size = m_currentfile_size;
-                    airmassResult.Calculate(m_currentfile, m_symbols);
+                    airmassResult.Calculate();
                     dockPanel.Controls.Add(airmassResult);
                 }
                 catch (Exception newdockE)

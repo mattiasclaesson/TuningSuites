@@ -13,7 +13,7 @@ using NLog;
 
 namespace T7
 {
-    public enum limitType : int
+    public enum LimitType : int
     {
         None,
         TorqueLimiterEngine,
@@ -31,26 +31,26 @@ namespace T7
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
 
-        int rows;
-        int columns;
+        private int pedal_Rows;
+        private int pedal_Columns;
+        private int[] pedal_Yaxis;
+        private int[] pedal_Xaxis;
 
-        int m_injectorConstant = 0;
-        int[] injectorBatteryCorrection;
-        int[] injectorBatteryCorrection_axis;
+        private int injectorConstant = 0;
+        private int[] injectorBatteryCorrection;
+        private int[] injectorBatteryCorrection_axis;
 
-        private int[] y_axisvalues;
-        private int[] x_axisvalues;
-        private int[] limitermap;
-        byte[] fuelVEMap;
-        byte[] E85VEMap;
+        private byte[] fuelVEMap;
+        private int[] fuelVE_Xaxis;
+        private int[] fuelVE_Yaxis;
+        private byte[] E85VEMap;
 
-        int[] EGTMap;
-        int[] open_loop;
+        private int[] EGTMap;
 
-        int[] fuelVExaxis;
-        int[] fuelVEyaxis;
-        int[] open_loopyaxis;
+        private int[] open_loop;       
+        private int[] open_loopyaxis;
 
+		private LimitType[] limiterResult;
 
         private string m_currentfile = string.Empty;
         private int m_MaxValueInTable = 0;
@@ -67,6 +67,16 @@ namespace T7
             get { return m_symbols; }
             set { m_symbols = value; }
         }
+
+        int[] xdummy = new int[1];
+
+        int powerSeries = -1;
+        int powerCompareSeries = -1;
+        int torqueCompareSeries = -1;
+        int torqueSeries = -1;
+        int injectorDCSeries = -1;
+        int lambdaSeries = -1;
+        int EGTSeries = -1;
 
         public delegate void StartTableViewer(object sender, StartTableViewerEventArgs e);
         public event ctrlAirmassResult.StartTableViewer onStartTableViewer;
@@ -154,7 +164,7 @@ namespace T7
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Userdescription == symbolname || sh.Varname == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     if (IsSoftwareOpen() /*&& sh.Length >= 0x02 */&& sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
                     {
@@ -169,7 +179,7 @@ namespace T7
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Userdescription == symbolname || sh.Varname == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Length;
                 }
@@ -238,7 +248,7 @@ namespace T7
             bool retval = false;
             foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Varname == "TorqueCal.EnableOverBoost" || sh.Userdescription == "TorqueCal.EnableOverBoost")
+                if (sh.SmartVarname == "TorqueCal.EnableOverBoost")
                 {
                     // read data from file and verify if the value is > 0
                     byte[] overboostenable = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.EnableOverBoost"), (int)GetSymbolLength(symbols, "TorqueCal.EnableOverBoost"));
@@ -256,7 +266,7 @@ namespace T7
         {
             foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Varname == "TorqueCal.M_EngMaxE85Tab" || sh.Userdescription == "TorqueCal.M_EngMaxE85Tab")
+                if (sh.SmartVarname == "TorqueCal.M_EngMaxE85Tab")
                 {
                     return true;
                 }
@@ -268,7 +278,7 @@ namespace T7
         {
             foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Varname == "TorqueCal.M_CabGearLim" || sh.Userdescription == "TorqueCal.M_CabGearLim")
+                if (sh.SmartVarname == "TorqueCal.M_CabGearLim")
                 {
                     return true;
                 }
@@ -280,7 +290,7 @@ namespace T7
         {
             foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Varname == "TorqueCal.M_EngMaxE85TabAut" || sh.Userdescription == "TorqueCal.M_EngMaxE85TabAut")
+                if (sh.SmartVarname == "TorqueCal.M_EngMaxE85TabAut")
                 {
                     return true;
                 }
@@ -288,108 +298,9 @@ namespace T7
             return false;
         }
 
-        public void Calculate(string filename, SymbolCollection symbols)
+        public void Calculate()
         {
-            // do the math!
-
-            if (!IsBinaryBiopower(symbols))
-            {
-                isFuelE85.Checked = false;
-                isFuelE85.Enabled = false;
-            }
-            else
-            {
-                isFuelE85.Enabled = true;
-            }
-            if (IsBinaryConvertable(symbols))
-            {
-                isCarConvertible.Enabled = true;
-            }
-            else
-            {
-                isCarConvertible.Checked = false;
-                isCarConvertible.Enabled = false;
-            }
-            if (IsOverboostEnabled(filename, symbols))
-            {
-                isOverboostActive.Enabled = true;
-            }
-            else
-            {
-                isOverboostActive.Enabled = false;
-            }
-
-            bool e85automatic = IsBinaryBiopowerAuto(symbols);
-            
-            int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
-            try
-            {
-                int[] injConstant = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(symbols, "InjCorrCal.InjectorConst"));
-                m_injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
-                injectorBatteryCorrection = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrTab"), GetSymbolLength(symbols, "InjCorrCal.BattCorrTab"));
-                injectorBatteryCorrection_axis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrSP"), GetSymbolLength(symbols, "InjCorrCal.BattCorrSP"));
-                fuelVEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.Map"), GetSymbolLength(symbols, "BFuelCal.Map"));
-                E85VEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.E85Map"), GetSymbolLength(symbols, "BFuelCal.E85Map"));
-                fuelVExaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.AirXSP"), GetSymbolLength(symbols, "BFuelCal.AirXSP"));
-                fuelVEyaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.RpmYSP"), GetSymbolLength(symbols, "BFuelCal.RpmYSP"));
-                open_loop = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.MaxLoadNormTab"), GetSymbolLength(symbols, "LambdaCal.MaxLoadNormTab"));
-                if (isFuelE85.Checked)
-                {
-                    open_loop = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.MaxLoadE85Tab"), GetSymbolLength(symbols, "LambdaCal.MaxLoadE85Tab"));//
-                }
-                open_loopyaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.RpmSp"), GetSymbolLength(symbols, "LambdaCal.RpmSp"));
-
-                if (SymbolExists("ExhaustCal.T_Lambda1Map"))
-                {
-                    EGTMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "ExhaustCal.T_Lambda1Map"), GetSymbolLength(symbols, "ExhaustCal.T_Lambda1Map"));
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-            limitermap = new int[pedalrequestmap.Length];
-            int[] resulttable = new int[pedalrequestmap.Length]; // result 
-            rows = GetSymbolLength(symbols, "PedalMapCal.n_EngineMap") / 2;
-            columns = GetSymbolLength(symbols, "PedalMapCal.X_PedalMap") / 2;
-            int[] pedalXAxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.n_EngineMap"), GetSymbolLength(symbols, "PedalMapCal.n_EngineMap"));
-            int[] pedalYAxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.X_PedalMap"), GetSymbolLength(symbols, "PedalMapCal.X_PedalMap"));
-            y_axisvalues = pedalYAxis;
-            x_axisvalues = pedalXAxis;
-            // also get the axis for pedalrequestmap
-            // x = PedalMapCal.n_EngineMap (1x) rpm
-            // y = PedalMapCal.X_PedalMap (10x) pedalposition (%)
-            for (int colcount = 0; colcount < columns; colcount++)
-            {
-                for (int rowcount = 0; rowcount < rows; rowcount++)
-                {
-                    // get the current value from the request map
-                    int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
-                    limitType limiterType = limitType.None;
-                    int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, out limiterType);
-                    resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
-                    limitermap.SetValue(limiterType, (colcount * rows) + rowcount);
-                }
-            }
-            // now show resulttable
-            DataTable dt = new DataTable();
-            foreach (int xvalue in pedalXAxis)
-            {
-                dt.Columns.Add(xvalue.ToString());
-            }
-            // now fill the table rows
-            m_MaxValueInTable = 0;
-            for (int r = pedalYAxis.Length - 1; r >= 0; r--)
-            {
-                object[] values = new object[columns];
-                for (int t = 0; t < pedalXAxis.Length; t++)
-                {
-                    int currValue = (int)resulttable.GetValue((r * columns) + t);
-                    if (currValue > m_MaxValueInTable) m_MaxValueInTable = currValue;
-                    values.SetValue(resulttable.GetValue((r * columns) + t), t);
-                }
-                dt.Rows.Add(values);
-            }
+            DataTable dt = CalculateDataTable(m_currentfile, m_symbols, out limiterResult);
             gridControl1.DataSource = dt;
             if (xtraTabControl1.SelectedTabPage.Name == xtraTabPage2.Name)
             {
@@ -401,31 +312,31 @@ namespace T7
             }
         }
 
-        private bool SymbolExists(string symbolname)
+        private bool SymbolExists(string symbolname, SymbolCollection symbols)
         {
-            foreach (SymbolHelper sh in m_symbols)
+            foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname) return true;
+                if (sh.SmartVarname == symbolname) return true;
             }
             return false;
         }
 
-        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, out limitType limiterType)
+        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, out LimitType limiterType)
         {
             int retval = requestairmass;
             //logger.Debug("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
             //calculate the restricted airmass for the current point
             
-            limiterType = limitType.None;
+            limiterType = LimitType.None;
 
-            limitType TrqLimiterType = limitType.None;
+            LimitType TrqLimiterType = LimitType.None;
             retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, out TrqLimiterType);
             if (retval < requestairmass)
             {
                 limiterType = TrqLimiterType;
             }
 
-            limitType AirmassLimiterType = limitType.None;
+            LimitType AirmassLimiterType = LimitType.None;
             int TorqueLimitedAirmass = retval;
 
             retval = CheckAgainstAirmassLimiters(symbols, filename, rpm, retval, autogearbox, ref AirmassLimiterType);
@@ -445,10 +356,10 @@ namespace T7
         {
             foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Varname == "TorqueCal.ST_Loop" || sh.Userdescription == "TorqueCal.ST_Loop")
+                if (sh.SmartVarname == "TorqueCal.ST_Loop")
                 {
 
-                    byte[] toqruelimdata = readdatafromfile(filename, (int)GetSymbolAddress(m_symbols, "TorqueCal.ST_Loop"), sh.Length);
+                    byte[] toqruelimdata = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.ST_Loop"), sh.Length);
                     if (sh.Length == 1)
                     {
                         if ((byte)toqruelimdata.GetValue(0) == 0x00)
@@ -461,10 +372,10 @@ namespace T7
             return true;
         }
 
-        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, out limitType TrqLimiter)
+        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, out LimitType TrqLimiter)
         {
             int torque = 0;
-            TrqLimiter = limitType.None;
+            TrqLimiter = LimitType.None;
             int LimitedAirMass = requestedairmass;
 
             //only if torquelimiters are enabled
@@ -506,19 +417,19 @@ namespace T7
                     torque = torquelimit1;
                     if (E85Automatic && E85 && Automatic)
                     {
-                        TrqLimiter = limitType.TorqueLimiterEngineE85Auto;
+                        TrqLimiter = LimitType.TorqueLimiterEngineE85Auto;
                     }
                     else if (E85)
                     {
-                        TrqLimiter = limitType.TorqueLimiterEngineE85;
+                        TrqLimiter = LimitType.TorqueLimiterEngineE85;
                     }
                     else if (OverboostEnabled)
                     {
-                        TrqLimiter = limitType.OverBoostLimiter;
+                        TrqLimiter = LimitType.OverBoostLimiter;
                     }
                     else
                     {
-                        TrqLimiter = limitType.TorqueLimiterEngine;
+                        TrqLimiter = LimitType.TorqueLimiterEngine;
                     }
                 }
                 if (!Automatic)
@@ -541,7 +452,7 @@ namespace T7
                         if (torque > torquelimitConvertable)
                         {
                             torque = torquelimitConvertable;
-                            TrqLimiter = limitType.TorqueLimiterGear;
+                            TrqLimiter = LimitType.TorqueLimiterGear;
                             //logger.Debug("Convertable gear torque limit hit");
                         }
                     }
@@ -553,7 +464,7 @@ namespace T7
                         if (torque > torquelimitManual)
                         {
                             torque = torquelimitManual;
-                            TrqLimiter = limitType.TorqueLimiterGear;
+                            TrqLimiter = LimitType.TorqueLimiterGear;
                             //logger.Debug("Manual gear torque limit hit");
                         }
                     }
@@ -569,7 +480,7 @@ namespace T7
                         if (torque > torquelimit5th)
                         {
                             torque = torquelimit5th;
-                            TrqLimiter = limitType.TorqueLimiterGear;
+                            TrqLimiter = LimitType.TorqueLimiterGear;
                             //logger.Debug("Fifth gear torque limit hit");
                         }
                     }
@@ -586,7 +497,7 @@ namespace T7
                         if (torque > torquelimitreverse)
                         {
                             torque = torquelimitreverse;
-                            TrqLimiter = limitType.TorqueLimiterGear;
+                            TrqLimiter = LimitType.TorqueLimiterGear;
                             //logger.Debug("Reverse gear torque limit hit");
                         }
                     }
@@ -602,7 +513,7 @@ namespace T7
                         if (torque > torquelimit1st)
                         {
                             torque = torquelimit1st;
-                            TrqLimiter = limitType.TorqueLimiterGear;
+                            TrqLimiter = LimitType.TorqueLimiterGear;
                             //logger.Debug("First gear torque limit hit");
                         }
                     }
@@ -614,17 +525,17 @@ namespace T7
                 if (TestLimitedAirmass < LimitedAirMass)
                 {
                     LimitedAirMass = TestLimitedAirmass;
-                    if(TrqLimiter == limitType.None) TrqLimiter = limitType.AirTorqueCalibration;
+                    if(TrqLimiter == LimitType.None) TrqLimiter = LimitType.AirTorqueCalibration;
                 }
             }
 //            logger.Debug("1. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
-            if (TrqLimiter == limitType.None) LimitedAirMass = requestedairmass; // bugfix for if no limiter is active
+            if (TrqLimiter == LimitType.None) LimitedAirMass = requestedairmass; // bugfix for if no limiter is active
 //            logger.Debug("2. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
 
             return LimitedAirMass;
         }
 
-        private int CheckAgainstFuelcutLimiter(SymbolCollection symbols, string filename, int requestedairmass, ref limitType AirmassLimiter)
+        private int CheckAgainstFuelcutLimiter(SymbolCollection symbols, string filename, int requestedairmass, ref LimitType AirmassLimiter)
         {
             int retval = requestedairmass;
             if ((int)GetSymbolAddress(symbols, "FCutCal.m_AirInletLimit") > 0)
@@ -635,7 +546,7 @@ namespace T7
                     if (Convert.ToInt32(fuelcutlimit.GetValue(0)) < requestedairmass)
                     {
                         retval = Convert.ToInt32(fuelcutlimit.GetValue(0));
-                        AirmassLimiter = limitType.FuelCutLimiter;
+                        AirmassLimiter = LimitType.FuelCutLimiter;
                     }
                 }
             }
@@ -643,7 +554,7 @@ namespace T7
 
         }
 
-        private int CheckAgainstTurboSpeedLimiter(SymbolCollection symbols, string filename, int rpm, int requestedairmass, ref limitType AirmassLimiter)
+        private int CheckAgainstTurboSpeedLimiter(SymbolCollection symbols, string filename, int rpm, int requestedairmass, ref LimitType AirmassLimiter)
         {
             int[] turbospeed = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.TurboSpeedTab"), GetSymbolLength(symbols, "LimEngCal.TurboSpeedTab"));
             int[] nullvalue = new int[1];
@@ -661,12 +572,12 @@ namespace T7
             if (airmasslimit < requestedairmass)
             {
                 requestedairmass = airmasslimit;
-                AirmassLimiter = limitType.TurboSpeedLimiter;
+                AirmassLimiter = LimitType.TurboSpeedLimiter;
             }
             return requestedairmass;
         }
 
-        private int CheckAgainstAirmassLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool autogearbox, ref limitType AirmassLimiter)
+        private int CheckAgainstAirmassLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool autogearbox, ref LimitType AirmassLimiter)
         {
             //AirmassLimiter = limitType.None;
             //Y axis = BstKnkCal.n_EngYSP needed for interpolation (16)
@@ -692,7 +603,7 @@ namespace T7
             if (airmasslimit < requestedairmass)
             {
                 requestedairmass = airmasslimit;
-                AirmassLimiter = limitType.AirmassLimiter;
+                AirmassLimiter = LimitType.AirmassLimiter;
                 //logger.Debug("Reduced airmass because of BstKnkCal.MaxAirmass: " + requestedairmass.ToString() + " rpm: " + rpm.ToString());
             }
             return requestedairmass;
@@ -1000,14 +911,6 @@ namespace T7
                 onStartTableViewer(this, new StartTableViewerEventArgs(mapname));
             }
         }
-        
-        int powerSeries = -1;
-        int powerCompareSeries = -1;
-        int torqueCompareSeries = -1;
-        int torqueSeries = -1;
-        int injectorDCSeries = -1;
-        int lambdaSeries = -1;
-        int EGTSeries = -1;
 
         private string MaximizeFileLength(string filename)
         {
@@ -1015,8 +918,6 @@ namespace T7
             if (retval.Length > 16) retval = retval.Substring(0, 14) + "..";
             return retval;
         }
-
-
 
         private void LoadExtraGraphFromCompareBin(DataTable dt, string filename, SymbolCollection symbols)
         {
@@ -1044,9 +945,8 @@ namespace T7
             {
                 double o = Convert.ToDouble(dt.Rows[0].ItemArray.GetValue(i));
                 // convert to hp
-                int rpm = Convert.ToInt32(x_axisvalues.GetValue(i));
+                int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(i));
                 int torque = AirmassToTorque(symbols, filename, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
-
                 int horsepower;
                 if (displayPowerInkW.Checked)
                 {
@@ -1087,14 +987,14 @@ namespace T7
                 string torqueLabel = "Torque (Nm)";
                 if (displayTorqueInLBFT.Checked) torqueLabel = "Torque (lbft)";
 
-                string injectorDCLabel = "Injector DC";
-                string targetLambdaLabel = "Target lambda";
+                string injectorDCLabel = "Injector DC (%)";
+                string targetLambdaLabel = "Target lambda (*10)";
 
                 powerSeries = chartControl1.Series.Add(powerLabel, DevExpress.XtraCharts.ViewType.Spline);
                 torqueSeries = chartControl1.Series.Add(torqueLabel, DevExpress.XtraCharts.ViewType.Spline);
                 injectorDCSeries = chartControl1.Series.Add(injectorDCLabel, DevExpress.XtraCharts.ViewType.Spline);
                 lambdaSeries = chartControl1.Series.Add(targetLambdaLabel, DevExpress.XtraCharts.ViewType.Spline);
-                EGTSeries = chartControl1.Series.Add("EGT estimate", DevExpress.XtraCharts.ViewType.Spline);
+                EGTSeries = chartControl1.Series.Add("EGT estimate (°C)", DevExpress.XtraCharts.ViewType.Spline);
                 // set line colors
                 chartControl1.Series[powerSeries].Label.Border.Visible = false;
                 chartControl1.Series[torqueSeries].Label.Border.Visible = false;
@@ -1140,7 +1040,7 @@ namespace T7
                 {
                     double o = Convert.ToDouble(dt.Rows[0].ItemArray.GetValue(i));
                     // convert to hp
-                    int rpm = Convert.ToInt32(x_axisvalues.GetValue(i));
+                    int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(i));
                     int torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(o), rpm, useTrionicCalculationForTorque.Checked);
                     
                     int horsepower;
@@ -1159,7 +1059,11 @@ namespace T7
                     }
 
                     int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(o), rpm);
-                    int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm);
+                    int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm, injDC);
+                    if (injDC > 100)
+                    {
+                        injDC = 100;
+                    }
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
 
                     double[] dvals = new double[1];
@@ -1195,7 +1099,8 @@ namespace T7
             }
             if (m_current_comparefilename != string.Empty)
             {
-                DataTable dt2 = CalculateDataTable(m_current_comparefilename, Compare_symbol_collection);
+                LimitType[] diffBinaryLimitResult;
+                DataTable dt2 = CalculateDataTable(m_current_comparefilename, Compare_symbol_collection, out diffBinaryLimitResult);
                 LoadExtraGraphFromCompareBin(dt2, m_current_comparefilename, Compare_symbol_collection);
             }
             // load the graph with the current details from the airmass result viewer
@@ -1214,12 +1119,12 @@ namespace T7
             // first calulcate simple
             if (EGTMap != null)
             {
-                double egtvalue = GetInterpolatedTableValue(EGTMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                double egtvalue = GetInterpolatedTableValue(EGTMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                 if (isFuelE85.Checked)
                 {
                     if (E85VEMap != null)
                     {
-                        double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                        double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                         vecorr /= 100;
                         vecorr = 1 / vecorr;
                         int[] nullvalue = new int[1];
@@ -1238,7 +1143,7 @@ namespace T7
                 {
                     if (fuelVEMap != null)
                     {
-                        double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                        double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                         vecorr /= 100;
                         vecorr = 1 / vecorr;
                         int[] nullvalue = new int[1];
@@ -1267,7 +1172,7 @@ namespace T7
         //DONE: Add extra line in dyno to show inverted VE value (lambda)
         //DONE: Count E85 checkbox into equasion
 
-        private int CalculateTargetLambda(int airmass, int rpm)
+        private int CalculateTargetLambda(int airmass, int rpm, int injDC)
         {
             int retval = 0;
             // first calulcate simple
@@ -1276,10 +1181,15 @@ namespace T7
             {
                 if (E85VEMap != null)
                 {
-                    double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                    double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                     vecorr /= 100;
                     vecorr = 1 / vecorr;
                     vecorr *= 100; // range correction
+                    if (injDC > 100)
+                    {
+                        vecorr *= injDC;
+                        vecorr /= 100;
+                    }
                     retval = Convert.ToInt32(vecorr);
                 }
             }
@@ -1287,15 +1197,21 @@ namespace T7
             {
                 if (fuelVEMap != null)
                 {
-                    double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                    double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                     vecorr /= 100;
                     vecorr = 1 / vecorr;
                     vecorr *= 100; // range correction
+                    if (injDC > 100)
+                    {
+                        vecorr *= injDC;
+                        vecorr /= 100;
+                    }
                     retval = Convert.ToInt32(vecorr);
                 }
             }
             return retval;
         }
+
         private void LoadCompressorMapWithDetails()
         {
             // we should get the top line like for the chart
@@ -1348,14 +1264,15 @@ namespace T7
                 }
                 ctrlCompressorMap1.Boost_request = boost_req;
                 // set rpm range
-                ctrlCompressorMap1.Rpm_points = x_axisvalues;
-                PartNumberConverter pnc = new PartNumberConverter();
-                //
-                T7FileHeader header = new T7FileHeader();
-                header.init(m_currentfile, false);
-                ECUInformation ecuinfo = pnc.GetECUInfo(header.getPartNumber().Trim(), "");
+                ctrlCompressorMap1.Rpm_points = pedal_Xaxis;
+
                 if (!ctrlCompressorMap1.IsInitiallyLoaded)
                 {
+					PartNumberConverter pnc = new PartNumberConverter();
+	                //
+    	            T7FileHeader header = new T7FileHeader();
+    	            header.init(m_currentfile, false);
+    	            ECUInformation ecuinfo = pnc.GetECUInfo(header.getPartNumber().Trim(), "");
                     if (ecuinfo.Is2point3liter) ctrlCompressorMap1.Current_engineType = ctrlCompressorMap.EngineType.Liter23;
                     else ctrlCompressorMap1.Current_engineType = ctrlCompressorMap.EngineType.Liter2;
                     if (ecuinfo.Isaero) ctrlCompressorMap1.SetCompressorType(ctrlCompressorMap.CompressorMap.TD04);
@@ -1366,89 +1283,118 @@ namespace T7
             }
 
         }
-        private DataTable CalculateDataTable(string filename, SymbolCollection symbols)
+
+        private DataTable CalculateDataTable(string filename, SymbolCollection symbols, out LimitType[] limitResult)
         {
+            limitResult = null;
             // do the math!
-            if (IsBinaryBiopower(symbols))
-            {
-                isFuelE85.Enabled = true;
-            }
-            else
-            {
-                isFuelE85.Checked = false;
-                isFuelE85.Enabled = false;
-            }
-            if (IsBinaryConvertable(symbols))
-            {
-                isCarConvertible.Enabled = true;
-            }
-            else
-            {
-                isCarConvertible.Checked = false;
-                isCarConvertible.Enabled = false;
-            }
-            if (IsOverboostEnabled(filename, symbols))
-            {
-                isOverboostActive.Enabled = true;
-            }
-            else
-            {
-                isOverboostActive.Enabled = false;
-            }
+			try 
+			{
+		        if (IsBinaryBiopower(symbols))
+		        {
+		            isFuelE85.Enabled = true;
+		        }
+		        else
+		        {
+		            isFuelE85.Checked = false;
+		            isFuelE85.Enabled = false;
+		        }
+		        if (IsBinaryConvertable(symbols))
+		        {
+		            isCarConvertible.Enabled = true;
+		        }
+		        else
+		        {
+		            isCarConvertible.Checked = false;
+		            isCarConvertible.Enabled = false;
+		        }
+		        if (IsOverboostEnabled(filename, symbols))
+		        {
+		            isOverboostActive.Enabled = true;
+		        }
+		        else
+		        {
+		            isOverboostActive.Enabled = false;
+		        }
 
-            bool e85automatic = IsBinaryBiopowerAuto(symbols);
+		        bool e85automatic = IsBinaryBiopowerAuto(symbols);
+			
+				xdummy.SetValue(0, 0);
+		        int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
+		        limitResult = new LimitType[pedalrequestmap.Length];
+		        int[] resulttable = new int[pedalrequestmap.Length]; // result 
+		        pedal_Rows = GetSymbolLength(symbols, "PedalMapCal.n_EngineMap") / 2;
+		        pedal_Columns = GetSymbolLength(symbols, "PedalMapCal.X_PedalMap") / 2;
+		        pedal_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.n_EngineMap"), GetSymbolLength(symbols, "PedalMapCal.n_EngineMap"));
+		        pedal_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.X_PedalMap"), GetSymbolLength(symbols, "PedalMapCal.X_PedalMap"));
 
-            int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
-            //limitermap = new int[pedalrequestmap.Length];
-            int[] resulttable = new int[pedalrequestmap.Length]; // result 
-            rows = GetSymbolLength(symbols, "PedalMapCal.n_EngineMap") / 2;
-            columns = GetSymbolLength(symbols, "PedalMapCal.X_PedalMap") / 2;
-            int[] pedalXAxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.n_EngineMap"), GetSymbolLength(symbols, "PedalMapCal.n_EngineMap"));
-            int[] pedalYAxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.X_PedalMap"), GetSymbolLength(symbols, "PedalMapCal.X_PedalMap"));
-            y_axisvalues = pedalYAxis;
-            x_axisvalues = pedalXAxis;
-            // also get the axis for pedalrequestmap
-            // x = PedalMapCal.n_EngineMap (1x) rpm
-            // y = PedalMapCal.X_PedalMap (10x) pedalposition (%)
-            for (int colcount = 0; colcount < columns; colcount++)
-            {
-                for (int rowcount = 0; rowcount < rows; rowcount++)
+                try
                 {
-                    // get the current value from the request map
-                    int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * rows) + rowcount);
-                    logger.Debug("Current request = " + airmassrequestforcell.ToString() + " mg/c");
-                    limitType limiterType = limitType.None;
-                    int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedalYAxis.GetValue(colcount) / 10), /* rpm */(int)pedalXAxis.GetValue(rowcount), airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, out limiterType);
-                    resulttable.SetValue(resultingAirMass, (colcount * rows) + rowcount);
-                    //limitermap.SetValue(limiterType, (colcount * rows) + rowcount);
-                }
-            }
-            // now show resulttable
-            DataTable dt = new DataTable();
-            foreach (int xvalue in pedalXAxis)
-            {
-                dt.Columns.Add(xvalue.ToString());
-            }
-            // now fill the table rows
-            m_MaxValueInTable = 0;
-            for (int r = pedalYAxis.Length - 1; r >= 0; r--)
-            {
-                object[] values = new object[columns];
-                for (int t = 0; t < pedalXAxis.Length; t++)
-                {
-                    int currValue = (int)resulttable.GetValue((r * columns) + t);
-                    if (currValue > m_MaxValueInTable) m_MaxValueInTable = currValue;
-                    values.SetValue(resulttable.GetValue((r * columns) + t), t);
-                }
-                dt.Rows.Add(values);
-            }
-            //gridControl1.DataSource = dt;
-            //if (xtraTabControl1.SelectedTabPage.Name == xtraTabPage2.Name)
-            //{
-            //LoadGraphWithDetails();
-            //}
+                    int[] injConstant = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(symbols, "InjCorrCal.InjectorConst"));
+                    injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
+                    injectorBatteryCorrection = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrTab"), GetSymbolLength(symbols, "InjCorrCal.BattCorrTab"));
+                    injectorBatteryCorrection_axis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrSP"), GetSymbolLength(symbols, "InjCorrCal.BattCorrSP"));
+                    fuelVEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.Map"), GetSymbolLength(symbols, "BFuelCal.Map"));
+                    E85VEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.E85Map"), GetSymbolLength(symbols, "BFuelCal.E85Map"));
+                    fuelVE_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.AirXSP"), GetSymbolLength(symbols, "BFuelCal.AirXSP"));
+                    fuelVE_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.RpmYSP"), GetSymbolLength(symbols, "BFuelCal.RpmYSP"));
+                    open_loop = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.MaxLoadNormTab"), GetSymbolLength(symbols, "LambdaCal.MaxLoadNormTab"));
+                    if (isFuelE85.Checked)
+                    {
+                        open_loop = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.MaxLoadE85Tab"), GetSymbolLength(symbols, "LambdaCal.MaxLoadE85Tab"));//
+                    }
+                    open_loopyaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.RpmSp"), GetSymbolLength(symbols, "LambdaCal.RpmSp"));
 
-            return dt;
+                    if (SymbolExists("ExhaustCal.T_Lambda1Map", symbols))
+                    {
+                        EGTMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "ExhaustCal.T_Lambda1Map"), GetSymbolLength(symbols, "ExhaustCal.T_Lambda1Map"));
+                    }
+                }
+                catch (Exception E)
+                {
+                    logger.Debug(E.Message);
+                }
+
+		        // step thru the complete pedal and rpm range
+                for (int colcount = 0; colcount < pedal_Columns; colcount++)
+                {
+                    for (int rowcount = 0; rowcount < pedal_Rows; rowcount++)
+                    {
+                        // get the current value from the request map
+                        int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * pedal_Rows) + rowcount);
+                        logger.Debug("Current request = " + airmassrequestforcell.ToString() + " mg/c");
+                        LimitType limiterType = LimitType.None;
+                        int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedal_Yaxis.GetValue(colcount) / 10), /* rpm */(int)pedal_Xaxis.GetValue(rowcount), airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, out limiterType);
+                        resulttable.SetValue(resultingAirMass, (colcount * pedal_Rows) + rowcount);
+                        limitResult.SetValue(limiterType, (colcount * pedal_Rows) + rowcount);
+                    }
+                }
+                // now show resulttable
+                DataTable dt = new DataTable();
+                foreach (int xvalue in pedal_Xaxis)
+                {
+                    dt.Columns.Add(xvalue.ToString());
+                }
+                // now fill the table rows
+                m_MaxValueInTable = 0;
+                for (int r = pedal_Yaxis.Length - 1; r >= 0; r--)
+                {
+                    object[] values = new object[pedal_Columns];
+                    for (int t = 0; t < pedal_Xaxis.Length; t++)
+                    {
+                        int currValue = (int)resulttable.GetValue((r * pedal_Columns) + t);
+                        if (currValue > m_MaxValueInTable) m_MaxValueInTable = currValue;
+                        values.SetValue(resulttable.GetValue((r * pedal_Columns) + t), t);
+                    }
+                    dt.Rows.Add(values);
+                }
+                return dt;
+            }
+            catch (Exception E)
+            {
+                logger.Debug("Failed to calculate for file : " + filename);
+            }
+            return null;
         }
 
         private void UpdateGraphVisibility()
@@ -1469,7 +1415,7 @@ namespace T7
             // needs injector constant, ve map, battery correction map
             int retval = 0;
             // first calculcate simple
-            if (m_injectorConstant > 0 && fuelVEMap != null)
+            if (injectorConstant > 0 && fuelVEMap != null)
             {
                 // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
                 double fuelToInjectPerCycle = (double)airmass / (14.65F * 1000); // mg/c *1000 = g/c
@@ -1480,38 +1426,44 @@ namespace T7
                 }
 
                 // Calculate how much fuel do we get for every millisecond of injection
-                double injectorFuelPerMs = (double)m_injectorConstant / (60 * 1000);
+                double injectorFuelPerMs = (double)injectorConstant / (60 * 1000);
 
                 double baseFuelPulseWidth = fuelToInjectPerCycle / injectorFuelPerMs;
 
                 // get correct data from fuelVEmap ... by airmass and rpm
                 if (isFuelE85.Checked)
                 {
-                    double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                    double vecorr = GetInterpolatedTableValue(E85VEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                     vecorr /= 100;
                     baseFuelPulseWidth *= (double)vecorr;
                 }
                 else
                 {
-                    double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVExaxis, fuelVEyaxis, rpm, airmass);
+                    double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
                     vecorr /= 100;
-                    baseFuelPulseWidth *= (double)vecorr;                
+                    baseFuelPulseWidth *= (double)vecorr;
                 }
 
-                // Add battery correction.
-                int[] nullvalue = new int[1];
-                nullvalue.SetValue(0, 0);
-                double batteryCorrectionValue = GetInterpolatedTableValue(injectorBatteryCorrection, nullvalue, injectorBatteryCorrection_axis, 130, 0); // 13.0V
-                batteryCorrectionValue /= 1000; // ms
-                double finalFuelPulseWidth = baseFuelPulseWidth + batteryCorrectionValue;
-
                 // Calculate DC from pulse width
-                double injectorDC = (double)(finalFuelPulseWidth * rpm) / 1200; 
-                retval = Convert.ToInt32(Math.Round(injectorDC, 0));
+                double injectorDCbase = (double)(baseFuelPulseWidth * rpm) / 1200;
+                retval = Convert.ToInt32(Math.Round(injectorDCbase, 0));
+
+                if (retval < 100)
+                {
+                    // Add battery correction only if DC has not reached 100%
+                    int[] nullvalue = new int[1];
+                    nullvalue.SetValue(0, 0);
+                    double batteryCorrectionValue = GetInterpolatedTableValue(injectorBatteryCorrection, nullvalue, injectorBatteryCorrection_axis, 130, 0); // 13.0V
+                    batteryCorrectionValue /= 1000; // ms
+                    double finalFuelPulseWidth = baseFuelPulseWidth + batteryCorrectionValue;
+
+                    // Calculate DC from pulse width plus batterycorrection contribution
+                    double injectorDCbattcorr = (double)(finalFuelPulseWidth * rpm) / 1200;
+                    retval = Convert.ToInt32(Math.Round(injectorDCbattcorr, 0));
+                }
             }
             return retval;
         }
-
 
         private void simpleButton3_Click(object sender, EventArgs e)
         {
@@ -1546,16 +1498,20 @@ namespace T7
                 Compare_symbol_collection = t7file.ExtractFile(m_current_comparefilename, 44, m_current_softwareversion);
                 // so... now determine the max values for the compare file
                 // show the dynograph
-                xtraTabControl1.SelectedTabPage = xtraTabPage2;
-                LoadGraphWithDetails(); // initial values from original bin
-                //DataTable dt = CalculateDataTable(m_current_comparefilename, Compare_symbol_collection);
-                //LoadExtraGraphFromCompareBin(dt, m_current_comparefilename);
+                if (xtraTabControl1.SelectedTabPage == xtraTabPage2)
+                {
+                    LoadGraphWithDetails();
+                }
+                else
+                {
+                    xtraTabControl1.SelectedTabPage = xtraTabPage2;
+                }
             }
         }
 
         private void simpleButton2_Click(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -1576,27 +1532,32 @@ namespace T7
 
         private void isCarAutomatic_CheckedChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void checkEdit2_CheckedChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void isCarConvertible_CheckedChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void isOverboostActive_CheckedChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
+        }
+
+        private void isCarHighOutput_CheckedChanged(object sender, EventArgs e)
+        {
+            Calculate();
         }
 
         private void spinEdit1_EditValueChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void comboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
@@ -1614,12 +1575,12 @@ namespace T7
 
         private void comboBoxEdit1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void useTrionicCalculationForTorque_CheckedChanged(object sender, EventArgs e)
         {
-            Calculate(m_currentfile, m_symbols);
+            Calculate();
         }
 
         private void displayPowerInkW_CheckedChanged(object sender, EventArgs e)
@@ -1797,50 +1758,49 @@ namespace T7
                         e.Graphics.FillRectangle(sb, e.Bounds);
 
                         // check limiter type
-                        //limitermap
-                        int row = rows - (e.RowHandle + 1);
-                        limitType curLimit = (limitType)limitermap.GetValue((row * columns) + e.Column.AbsoluteIndex);
+                        int row = pedal_Rows - (e.RowHandle + 1);
+                        LimitType curLimit = (LimitType)limiterResult.GetValue((row * pedal_Columns) + e.Column.AbsoluteIndex);
                         Point[] pnts = new Point[4];
                         pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y), 0);
                         pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width - (e.Bounds.Height / 2), e.Bounds.Y), 1);
                         pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y + (e.Bounds.Height / 2)), 2);
                         pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y), 3);
-                        if (curLimit == limitType.AirmassLimiter)
+                        if (curLimit == LimitType.AirmassLimiter)
                         {
                             e.Graphics.FillPolygon(Brushes.Blue, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.TorqueLimiterEngineE85)
+                        else if (curLimit == LimitType.TorqueLimiterEngineE85)
                         {
                             e.Graphics.FillPolygon(Brushes.Purple, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.TorqueLimiterEngine)
+                        else if (curLimit == LimitType.TorqueLimiterEngine)
                         {
                             e.Graphics.FillPolygon(Brushes.Yellow, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.TurboSpeedLimiter)
+                        else if (curLimit == LimitType.TurboSpeedLimiter)
                         {
                             e.Graphics.FillPolygon(Brushes.Black, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.TorqueLimiterGear)
+                        else if (curLimit == LimitType.TorqueLimiterGear)
                         {
                             e.Graphics.FillPolygon(Brushes.SaddleBrown, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.FuelCutLimiter)
+                        else if (curLimit == LimitType.FuelCutLimiter)
                         {
                             e.Graphics.FillPolygon(Brushes.DarkGray, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.OverBoostLimiter)
+                        else if (curLimit == LimitType.OverBoostLimiter)
                         {
                             e.Graphics.FillPolygon(Brushes.CornflowerBlue, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        else if (curLimit == limitType.TorqueLimiterEngineE85Auto)
+                        else if (curLimit == LimitType.TorqueLimiterEngineE85Auto)
                         {
                             e.Graphics.FillPolygon(Brushes.White, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                         }
-                        if (comboBoxEdit2.SelectedIndex == 1)
+                        if (cbTableSelectionEdit.SelectedIndex == 1)
                         {
                             // convert airmass to torque
-                            int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                             if (displayTorqueInLBFT.Checked)
                             {
@@ -1848,10 +1808,10 @@ namespace T7
                             }
                             e.DisplayText = torque.ToString();
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 2)
+                        else if (cbTableSelectionEdit.SelectedIndex == 2)
                         {
                             //convert airmass to horsepower
-                            int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int torque = AirmassToTorque(m_symbols, m_currentfile, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                             int horsepower = TorqueToPower(torque, rpm);
                             if (displayPowerInkW.Checked)
@@ -1860,25 +1820,31 @@ namespace T7
                             }
                             e.DisplayText = horsepower.ToString();
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 3) //injector DC
+                        else if (cbTableSelectionEdit.SelectedIndex == 3) //injector DC
                         {
-                            int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            if (injDC > 100)
+                            {
+                                injDC = 100;
+                            }
                             e.DisplayText = injDC.ToString();
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 4) //target lambda
+                        else if (cbTableSelectionEdit.SelectedIndex == 4) //target lambda
                         {
-                            int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
-                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm, injDC);
                             float dtarget = (float)targetLambda;
                             dtarget /= 100;
                             e.DisplayText = dtarget.ToString("F2");
 
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 5) //target AFR
+                        else if (cbTableSelectionEdit.SelectedIndex == 5) //target AFR
                         {
-                            int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
-                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm, injDC);
                             float dtarget = (float)targetLambda;
                             dtarget /= 100;
                             if (isFuelE85.Checked)
@@ -1892,10 +1858,10 @@ namespace T7
                             }
                             e.DisplayText = dtarget.ToString("F2");
                         }
-                        else if (comboBoxEdit2.SelectedIndex == 6)
+                        else if (cbTableSelectionEdit.SelectedIndex == 6)
                         {
                             // convert to estimated EGT
-                            int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int airmass = Convert.ToInt32(e.CellValue);
                             int egt = CalculateEstimateEGT(airmass, rpm);
                             e.DisplayText = egt.ToString();
@@ -1923,11 +1889,11 @@ namespace T7
                 // e.Cache.DrawString("As waarde", this.Font, Brushes.MidnightBlue, e.Bounds, new StringFormat());
                 try
                 {
-                    if (y_axisvalues.Length > 0)
+                    if (pedal_Yaxis.Length > 0)
                     {
-                        if (y_axisvalues.Length > e.RowHandle)
+                        if (pedal_Yaxis.Length > e.RowHandle)
                         {
-                            int value = (int)y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle);
+                            int value = (int)pedal_Yaxis.GetValue((pedal_Yaxis.Length - 1) - e.RowHandle);
                             value /= 10;
                             string yvalue = value.ToString();
                             /*if (!m_isUpsideDown)
@@ -1971,7 +1937,7 @@ namespace T7
             if (sender is ctrlCompressorMap)
             {
                 // refresh the entire airmass viewer for data in the binary might have changed
-                Calculate(m_currentfile, m_symbols);
+                Calculate();
                 if (gridControl1.DataSource != null)
                 {
                     TurboType tt = TurboType.TD0415T;
@@ -2019,7 +1985,7 @@ namespace T7
                     ctrlCompressorMap1.Boost_request = boost_req;
 
                     // set rpm range
-                    ctrlCompressorMap1.Rpm_points = x_axisvalues;
+                    ctrlCompressorMap1.Rpm_points = pedal_Xaxis;
                     PartNumberConverter pnc = new PartNumberConverter();
                     //
                     /*T7FileHeader header = new T7FileHeader();

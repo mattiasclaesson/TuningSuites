@@ -79,7 +79,7 @@ namespace T7
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbTableSelectionEdit = new DevExpress.XtraEditors.ComboBoxEdit();
             this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.isCarConvertible = new DevExpress.XtraEditors.CheckEdit();
             this.isFuelE85 = new DevExpress.XtraEditors.CheckEdit();
@@ -117,7 +117,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbTableSelectionEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarConvertible.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).BeginInit();
@@ -376,7 +376,7 @@ namespace T7
             this.groupControl2.Controls.Add(this.labelControl3);
             this.groupControl2.Controls.Add(this.labelControl2);
             this.groupControl2.Controls.Add(this.labelControl1);
-            this.groupControl2.Controls.Add(this.comboBoxEdit2);
+            this.groupControl2.Controls.Add(this.cbTableSelectionEdit);
             this.groupControl2.Controls.Add(this.comboBoxEdit1);
             this.groupControl2.Controls.Add(this.isCarConvertible);
             this.groupControl2.Controls.Add(this.isFuelE85);
@@ -651,12 +651,12 @@ namespace T7
             // 
             // comboBoxEdit2
             // 
-            this.comboBoxEdit2.EditValue = "Show airmass";
-            this.comboBoxEdit2.Location = new System.Drawing.Point(254, 76);
-            this.comboBoxEdit2.Name = "comboBoxEdit2";
-            this.comboBoxEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.cbTableSelectionEdit.EditValue = "Show airmass";
+            this.cbTableSelectionEdit.Location = new System.Drawing.Point(254, 76);
+            this.cbTableSelectionEdit.Name = "comboBoxEdit2";
+            this.cbTableSelectionEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.comboBoxEdit2.Properties.Items.AddRange(new object[] {
+            this.cbTableSelectionEdit.Properties.Items.AddRange(new object[] {
             "Show airmass",
             "Show estimated torque",
             "Show estimated horsepower",
@@ -664,9 +664,9 @@ namespace T7
             "Show target lambda",
             "Show target AFR",
             "Show estimated EGT"});
-            this.comboBoxEdit2.Size = new System.Drawing.Size(195, 20);
-            this.comboBoxEdit2.TabIndex = 4;
-            this.comboBoxEdit2.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit2_SelectedIndexChanged);
+            this.cbTableSelectionEdit.Size = new System.Drawing.Size(195, 20);
+            this.cbTableSelectionEdit.TabIndex = 4;
+            this.cbTableSelectionEdit.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit2_SelectedIndexChanged);
             // 
             // comboBoxEdit1
             // 
@@ -785,7 +785,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbTableSelectionEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarConvertible.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).EndInit();
@@ -831,7 +831,7 @@ namespace T7
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit2;
+        private DevExpress.XtraEditors.ComboBoxEdit cbTableSelectionEdit;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit1;
         private DevExpress.XtraEditors.CheckEdit isCarConvertible;
         private DevExpress.XtraEditors.CheckEdit isFuelE85;
