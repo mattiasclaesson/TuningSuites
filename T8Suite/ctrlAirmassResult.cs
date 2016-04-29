@@ -790,14 +790,14 @@ namespace T8SuitePro
                 string torqueLabel = "Torque (Nm)";
                 if (displayTorqueInLBFT.Checked) torqueLabel = "Torque (lbft)";
 
-                string injectorDCLabel = "Injector DC";
-                string targetLambdaLabel = "Target lambda";
+                string injectorDCLabel = "Injector DC (%)";
+                string targetLambdaLabel = "Target lambda (*10)";
 
                 powerSeries = chartControl1.Series.Add(powerLabel, DevExpress.XtraCharts.ViewType.Spline);
                 torqueSeries = chartControl1.Series.Add(torqueLabel, DevExpress.XtraCharts.ViewType.Spline);
                 injectorDCSeries = chartControl1.Series.Add(injectorDCLabel, DevExpress.XtraCharts.ViewType.Spline);
                 lambdaSeries = chartControl1.Series.Add(targetLambdaLabel, DevExpress.XtraCharts.ViewType.Spline);
-                EGTSeries = chartControl1.Series.Add("EGT estimate", DevExpress.XtraCharts.ViewType.Spline);
+                EGTSeries = chartControl1.Series.Add("EGT estimate (°C)", DevExpress.XtraCharts.ViewType.Spline);
                 // set line colors
                 chartControl1.Series[powerSeries].Label.Border.Visible = false;
                 chartControl1.Series[torqueSeries].Label.Border.Visible = false;
@@ -862,7 +862,11 @@ namespace T8SuitePro
                     }
 
                     int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(o), rpm);
-                    int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm);
+                    int TargetLambda = CalculateTargetLambda(Convert.ToInt32(o), rpm, injDC);
+                    if (injDC > 100)
+                    {
+                        injDC = 100;
+                    }
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
 
                     double[] dvals = new double[1];
@@ -949,7 +953,7 @@ namespace T8SuitePro
         //DONE: Add extra line in dyno to show inverted VE value (lambda)
         //DONE: Count E85 checkbox into equasion
 
-        private int CalculateTargetLambda(int airmass, int rpm)
+        private int CalculateTargetLambda(int airmass, int rpm, int injDC)
         {
             int retval = 0;
             // first calulcate simple
@@ -959,8 +963,12 @@ namespace T8SuitePro
                 vecorr /= 128;
                 vecorr = 1 / vecorr;
                 vecorr *= 100; // range correction
+				if (injDC > 100)
+                {
+                    vecorr *= injDC;
+                    vecorr /= 100;
+                }
                 retval = Convert.ToInt32(vecorr);
-
             }
             return retval;
         }
@@ -1311,16 +1319,23 @@ namespace T8SuitePro
                 vecorr /= 128; //table is a byte value, with range 0.00-2.55 , 1.00 is 128
                 baseFuelPulseWidth *= (double)vecorr;
 
-                // Add battery correction.
-                int[] nullvalue = new int[1];
-                nullvalue.SetValue(0, 0);
-                double batteryCorrectionValue = GetInterpolatedTableValue(injectorBatteryCorrection, nullvalue, injectorBatteryCorrection_axis, 130, 0); // 13.0V
-                batteryCorrectionValue /= 1000; // ms
-                double finalFuelPulseWidth = baseFuelPulseWidth + batteryCorrectionValue;
-
                 // Calculate DC from pulse width
-                double injectorDC = (double)(finalFuelPulseWidth * rpm) / 1200;
-                retval = Convert.ToInt32(Math.Round(injectorDC, 0));
+                double injectorDCbase = (double)(baseFuelPulseWidth * rpm) / 1200;
+                retval = Convert.ToInt32(Math.Round(injectorDCbase, 0));
+
+                if (retval < 100)
+                {
+                    // Add battery correction only if DC has not reached 100%
+                    int[] nullvalue = new int[1];
+                    nullvalue.SetValue(0, 0);
+                    double batteryCorrectionValue = GetInterpolatedTableValue(injectorBatteryCorrection, nullvalue, injectorBatteryCorrection_axis, 130, 0); // 13.0V
+                    batteryCorrectionValue /= 1000; // ms
+                    double finalFuelPulseWidth = baseFuelPulseWidth + batteryCorrectionValue;
+
+                    // Calculate DC from pulse width plus batterycorrection contribution
+                    double injectorDCbattcorr = (double)(finalFuelPulseWidth * rpm) / 1200;
+                    retval = Convert.ToInt32(Math.Round(injectorDCbattcorr, 0));
+                }
             }
             return retval;
         }
@@ -1684,12 +1699,17 @@ namespace T8SuitePro
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            if (injDC > 100)
+                            {
+                                injDC = 100;
+                            }
                             e.DisplayText = injDC.ToString();
                         }
                         else if (cbTableSelectionEdit.SelectedIndex == 4) //target lambda
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
-                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm, injDC);
                             float dtarget = (float)targetLambda;
                             dtarget /= 100;
                             e.DisplayText = dtarget.ToString("F2");
@@ -1698,7 +1718,8 @@ namespace T8SuitePro
                         else if (cbTableSelectionEdit.SelectedIndex == 5) //target AFR
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
-                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm);
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm, injDC);
                             float dtarget = (float)targetLambda;
                             dtarget /= 100;
                             if (isFuelE85.Checked)
