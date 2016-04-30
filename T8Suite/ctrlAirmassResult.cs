@@ -21,7 +21,8 @@ namespace T8SuitePro
         TorqueLimiterGear,
         AirmassLimiter,
         FuelCutLimiter,
-        OverBoostLimiter
+        OverBoostLimiter,
+        AirTorqueCalibration
     }
 
     public partial class ctrlAirmassResult : DevExpress.XtraEditors.XtraUserControl
@@ -358,11 +359,15 @@ namespace T8SuitePro
                 }
             }
 
-            // else ???
-            if (TrqLimiter != LimitType.None)
+            int TestLimitedAirmass = Convert.ToInt32(GetInterpolatedTableValue(airTorqueMap, airTorqueMap_Xaxis, airTorqueMap_Yaxis, rpm, torque));
+            if (TestLimitedAirmass < LimitedAirMass)
             {
-                LimitedAirMass = Convert.ToInt32(GetInterpolatedTableValue(airTorqueMap, airTorqueMap_Xaxis, airTorqueMap_Yaxis, rpm, torque));
+                LimitedAirMass = TestLimitedAirmass;
+                if (TrqLimiter == LimitType.None) TrqLimiter = LimitType.AirTorqueCalibration;
             }
+            //            logger.Debug("1. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
+            if (TrqLimiter == LimitType.None) LimitedAirMass = requestedairmass; // bugfix for if no limiter is active
+            //            logger.Debug("2. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
 
             return LimitedAirMass;
         }
@@ -677,7 +682,7 @@ namespace T8SuitePro
 
         private int AirmassToTorque(SymbolCollection symbols, string filename, int airmass, int rpm, bool TrionicStyle)
         {
-            double tq = Convert.ToDouble(airmass) / 3.1;
+            double tq;
             if (TrionicStyle)
             {
                 // first convert airmass torque to torque using TrqMastCal.Trq_NominalMap
@@ -698,6 +703,7 @@ namespace T8SuitePro
             }
             else
             {
+                tq = Convert.ToDouble(airmass) / 3.1;
                 if (isFuelE85.Checked)
                 {
                     tq *= 1.07;
@@ -926,7 +932,7 @@ namespace T8SuitePro
                 if (fuelVEMap != null)
                 {
                     double vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
-                    vecorr /= 100;
+                    vecorr /= 128;
                     vecorr = 1 / vecorr;
                     int[] nullvalue = new int[1];
                     nullvalue.SetValue(0, 0);
@@ -1125,6 +1131,12 @@ namespace T8SuitePro
                 nominalTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.Trq_NominalMap"), GetSymbolLength(symbols, "TrqMastCal.Trq_NominalMap"));
                 nominalTorqueMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.m_AirXSP"), GetSymbolLength(symbols, "TrqMastCal.m_AirXSP"));
                 nominalTorqueMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.n_EngineYSP"), GetSymbolLength(symbols, "TrqMastCal.n_EngineYSP"));
+                for (int a = 0; a < nominalTorqueMap.Length; a++)
+                {
+                    int val = (int)nominalTorqueMap.GetValue(a);
+                    if (val > 32000) val = -(65536 - val);
+                    nominalTorqueMap.SetValue(val, a);
+                }
 
                 fuelcutAirInletLimit = Convert.ToInt32(readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(symbols, "FCutCal.m_AirInletLimit")).GetValue(0));
 
@@ -1228,13 +1240,6 @@ namespace T8SuitePro
                 catch (Exception E)
                 {
                     logger.Debug(E.Message);
-                }
-
-                for (int a = 0; a < nominalTorqueMap.Length; a++)
-                {
-                    int val = (int)nominalTorqueMap.GetValue(a);
-                    if (val > 32000) val = -(65536 - val);
-                    nominalTorqueMap.SetValue(val, a);
                 }
 
                 // step thru the complete pedal and rpm range
