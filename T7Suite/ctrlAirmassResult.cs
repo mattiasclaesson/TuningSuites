@@ -44,13 +44,42 @@ namespace T7
         private int[] fuelVE_Xaxis;
         private int[] fuelVE_Yaxis;
         private byte[] E85VEMap;
-
-        private int[] EGTMap;
-
         private int[] open_loop;       
         private int[] open_loopyaxis;
 
-		private LimitType[] limiterResult;
+        private int[] EGTMap;
+        
+        private int[] airTorqueMap;
+        private int[] airTorqueMap_Xaxis;
+        private int[] airTorqueMap_Yaxis;
+        
+        private int[] bstknkMaxAirmassMap;
+        private int[] bstknkMaxAirmassMap_Xaxis;
+        private int[] bstknkMaxAirmassMap_Yaxis;
+
+        private int[] bstknkMaxAirmassAuMap;
+
+        private int[] nominalTorqueMap;
+        private int[] nominalTorqueMap_Xaxis;
+        private int[] nominalTorqueMap_Yaxis;
+
+        private int fuelcutAirInletLimit;
+
+        private int[] enginetorquelimOverboost;
+        private int[] enginetorquelim;
+        private int[] enginetorquelimE85;
+        private int[] enginetorquelimE85Auto;
+        private int[] enginetorquelimGear;
+        private int[] enginetorquelimAuto;
+        private int[] enginetorquelimConvertible;
+        private int[] enginetorque_Yaxis;
+        private int[] enginetorquelimReverse;
+        private int[] enginetorquelim1st;
+        private int[] enginetorquelim1st_Yaxis;
+        private int[] enginetorquelim5th;
+        private int[] enginetorquelim5th_Yaxis;
+
+        private LimitType[] limiterResult;
 
         private string m_currentfile = string.Empty;
         private int m_MaxValueInTable = 0;
@@ -329,11 +358,15 @@ namespace T7
             
             limiterType = LimitType.None;
 
-            LimitType TrqLimiterType = LimitType.None;
-            retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, out TrqLimiterType);
-            if (retval < requestairmass)
+            //only if torquelimiters are enabled
+            if (HasBinaryTorqueLimiterEnabled(symbols, filename))
             {
-                limiterType = TrqLimiterType;
+                LimitType TrqLimiterType = LimitType.None;
+                retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, out TrqLimiterType);
+                if (retval < requestairmass)
+                {
+                    limiterType = TrqLimiterType;
+                }
             }
 
             LimitType AirmassLimiterType = LimitType.None;
@@ -374,159 +407,149 @@ namespace T7
 
         private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, out LimitType TrqLimiter)
         {
-            int torque = 0;
             TrqLimiter = LimitType.None;
             int LimitedAirMass = requestedairmass;
-
-            //only if torquelimiters are enabled
-            if (HasBinaryTorqueLimiterEnabled(symbols, filename))
-            {
-                torque = AirmassToTorque(symbols, filename, requestedairmass, rpm, useTrionicCalculationForTorque.Checked);
+            int torque = AirmassToTorque(symbols, filename, requestedairmass, rpm, useTrionicCalculationForTorque.Checked);
                 
-                // check against TorqueCal.M_EngMaxTab, TorqueCal.M_ManGearLim and TorqueCal.M_5GearLimTab
-                int[] enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxTab"));
-                if (E85Automatic && E85 && Automatic)
+            if (E85Automatic && E85 && Automatic)
+            {
+                int torquelimitE85Auto = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimE85, xdummy, airTorqueMap_Yaxis, rpm, 0));
+                if (torque > torquelimitE85Auto)
                 {
-                    enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85TabAut"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85TabAut"));
+                    logger.Debug("Torque E85Autolimit is limited from " + torque.ToString() + " to " + torquelimitE85Auto.ToString() + " at " + rpm.ToString() + " rpm");
+                    torque = torquelimitE85Auto;
+                    TrqLimiter = LimitType.TorqueLimiterEngineE85Auto;
                 }
-                else
+            }
+            else if (E85)
+            {
+                int torquelimitE85 = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimE85, xdummy, airTorqueMap_Yaxis, rpm, 0));
+                if (torque > torquelimitE85)
                 {
-                    // Old style binary where there are no dedicated TorqueCal.M_EngMaxE85TabAut
-                    if (Automatic)
-                    {
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxAutTab"));
-                    }
-                    if (E85)
-                    {
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85Tab"));
-                    }
+                    logger.Debug("Torque E85limit is limited from " + torque.ToString() + " to " + torquelimitE85.ToString() + " at " + rpm.ToString() + " rpm");
+                    torque = torquelimitE85;
+                    TrqLimiter = LimitType.TorqueLimiterEngineE85;
                 }
+            }
+            else if (Automatic)
+            {
+                int torquelimitAuto = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimAuto, xdummy, airTorqueMap_Yaxis, rpm, 0));
+                if (torque > torquelimitAuto)
+                {
+                    logger.Debug("Torque Autolimit is limited from " + torque.ToString() + " to " + torquelimitAuto.ToString() + " at " + rpm.ToString() + " rpm");
+                    torque = torquelimitAuto;
+                    TrqLimiter = LimitType.TorqueLimiterGear;
+                }
+            }
+            else
+            {
+                int torquelimitOverboost = 0;
                 if (OverboostEnabled)
                 {
-                    enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_OverBoostTab"), GetSymbolLength(symbols, "TorqueCal.M_OverBoostTab"));
+                    torquelimitOverboost = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimOverboost, xdummy, airTorqueMap_Yaxis, rpm, 0));
                 }
 
-                int[] xdummy = new int[1];
-                xdummy.SetValue(0, 0);
-                int[] yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
-                int torquelimit1 = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
-                //requestedairmass
-                if (torque > torquelimit1)
+                int torquelimitPetrol = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, airTorqueMap_Yaxis, rpm, 0));
+                if (OverboostEnabled && torque > torquelimitOverboost)
                 {
-                    //logger.Debug("Torque is limited from " + torque.ToString() + " to " + torquelimit1.ToString() + " at " + rpm.ToString() + " rpm");
-                    torque = torquelimit1;
-                    if (E85Automatic && E85 && Automatic)
-                    {
-                        TrqLimiter = LimitType.TorqueLimiterEngineE85Auto;
-                    }
-                    else if (E85)
-                    {
-                        TrqLimiter = LimitType.TorqueLimiterEngineE85;
-                    }
-                    else if (OverboostEnabled)
-                    {
-                        TrqLimiter = LimitType.OverBoostLimiter;
-                    }
-                    else
-                    {
-                        TrqLimiter = LimitType.TorqueLimiterEngine;
-                    }
+                    logger.Debug("Torque OverBoostLimit is limited from " + torque.ToString() + " to " + torquelimitOverboost.ToString() + " at " + rpm.ToString() + " rpm");
+                    torque = torquelimitOverboost;
+                    TrqLimiter = LimitType.OverBoostLimiter;
                 }
-                if (!Automatic)
+                else if (OverboostEnabled && torque < torquelimitOverboost && torque > torquelimitPetrol)
                 {
-                    int[] gears = new int[6];
-                    gears.SetValue(0, 0);
-                    gears.SetValue(1, 1);
-                    gears.SetValue(2, 2);
-                    gears.SetValue(3, 3);
-                    gears.SetValue(4, 4);
-                    gears.SetValue(5, 5);
-
-
-                    if (Convertable)
-                    {
-                        // extra check
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_CabGearLim"), GetSymbolLength(symbols, "TorqueCal.M_CabGearLim"));
-                        //
-                        int torquelimitConvertable = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, gears, comboBoxEdit1.SelectedIndex, 0));
-                        if (torque > torquelimitConvertable)
-                        {
-                            torque = torquelimitConvertable;
-                            TrqLimiter = LimitType.TorqueLimiterGear;
-                            //logger.Debug("Convertable gear torque limit hit");
-                        }
-                    }
-                    else
-                    {
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ManGearLim"), GetSymbolLength(symbols, "TorqueCal.M_ManGearLim"));
-                        //
-                        int torquelimitManual = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, gears, comboBoxEdit1.SelectedIndex, 0));
-                        if (torque > torquelimitManual)
-                        {
-                            torque = torquelimitManual;
-                            TrqLimiter = LimitType.TorqueLimiterGear;
-                            //logger.Debug("Manual gear torque limit hit");
-                        }
-                    }
-
-                    // and check 5th gear limiter as well!!! (if checkbox is 5)
-                    //TorqueCal.M_5GearTab		TorqueCal.n_Eng5GearSP
-                    if (comboBoxEdit1.SelectedIndex == 5)
-                    {
-                        //logger.Debug("Checking fifth gear!");
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(symbols, "TorqueCal.M_5GearLimTab"));
-                        yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng5GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng5GearSP"));
-                        int torquelimit5th = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
-                        if (torque > torquelimit5th)
-                        {
-                            torque = torquelimit5th;
-                            TrqLimiter = LimitType.TorqueLimiterGear;
-                            //logger.Debug("Fifth gear torque limit hit");
-                        }
-                    }
+                    logger.Debug("Torque OverBoostLimit replaced Petrol limit " + torquelimitPetrol.ToString() + " with " + torquelimitOverboost.ToString() + " at " + rpm.ToString() + " rpm");
+                    torque = torquelimitOverboost;
+                    TrqLimiter = LimitType.OverBoostLimiter;
                 }
-                else
+                else if (torque > torquelimitPetrol)
                 {
-                    // automatic!
-                    if (comboBoxEdit1.SelectedIndex == 0)
-                    {
-                        //logger.Debug("Checking reverse gear!");
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ReverseTab"), GetSymbolLength(symbols, "TorqueCal.M_ReverseTab"));
-                        yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngSP"), GetSymbolLength(symbols, "TorqueCal.n_EngSP"));
-                        int torquelimitreverse = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
-                        if (torque > torquelimitreverse)
-                        {
-                            torque = torquelimitreverse;
-                            TrqLimiter = LimitType.TorqueLimiterGear;
-                            //logger.Debug("Reverse gear torque limit hit");
-                        }
-                    }
-
-                    // first gear
-                    //TorqueCal.M_1GearTab		TorqueCal.n_Eng1GearSP
-                    else if (comboBoxEdit1.SelectedIndex == 1)
-                    {
-                        //logger.Debug("Checking first gear!");
-                        enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_1GearTab"), GetSymbolLength(symbols, "TorqueCal.M_1GearTab"));
-                        yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng1GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng1GearSP"));
-                        int torquelimit1st = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, yaxis, rpm, 0));
-                        if (torque > torquelimit1st)
-                        {
-                            torque = torquelimit1st;
-                            TrqLimiter = LimitType.TorqueLimiterGear;
-                            //logger.Debug("First gear torque limit hit");
-                        }
-                    }
+                    logger.Debug("Torque Petrol is limited from " + torque.ToString() + " to " + torquelimitPetrol.ToString() + " at " + rpm.ToString() + " rpm");
+                    torque = torquelimitPetrol;
+                    TrqLimiter = LimitType.TorqueLimiterEngine;
                 }
+            }
 
-                int[] airtorquemap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirTorqMap"), GetSymbolLength(symbols, "TorqueCal.m_AirTorqMap"));
-                int[] xairtorque = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngXSP"), GetSymbolLength(symbols, "TorqueCal.M_EngXSP"));
-                int TestLimitedAirmass = Convert.ToInt32(GetInterpolatedTableValue(airtorquemap, xairtorque, yaxis, rpm, torque));
-                if (TestLimitedAirmass < LimitedAirMass)
+            if (!isCarAutomatic.Checked)
+            {
+                int[] gears = new int[6];
+                gears.SetValue(0, 0);
+                gears.SetValue(1, 1);
+                gears.SetValue(2, 2);
+                gears.SetValue(3, 3);
+                gears.SetValue(4, 4);
+                gears.SetValue(5, 5);
+
+
+                if (Convertable)
                 {
-                    LimitedAirMass = TestLimitedAirmass;
-                    if(TrqLimiter == LimitType.None) TrqLimiter = LimitType.AirTorqueCalibration;
+                    int torquelimitConvertable = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimConvertible, xdummy, gears, comboBoxEdit1.SelectedIndex, 0));
+                    if (torque > torquelimitConvertable)
+                    {
+                        torque = torquelimitConvertable;
+                        TrqLimiter = LimitType.TorqueLimiterGear;
+                        //logger.Debug("Convertable gear torque limit hit");
+                    }
                 }
+                
+                int torquelimitManual = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimGear, xdummy, gears, comboBoxEdit1.SelectedIndex, 0));
+                if (torque > torquelimitManual)
+                {
+                    torque = torquelimitManual;
+                    TrqLimiter = LimitType.TorqueLimiterGear;
+                    //logger.Debug("Manual gear torque limit hit");
+                }
+                
+
+                // and check 5th gear limiter as well!!! (if checkbox is 5)
+                //TorqueCal.M_5GearTab		TorqueCal.n_Eng5GearSP
+                if (comboBoxEdit1.SelectedIndex == 5)
+                {
+                    //logger.Debug("Checking fifth gear!");
+                    int torquelimit5th = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim5th, xdummy, enginetorquelim5th_Yaxis, rpm, 0));
+                    if (torque > torquelimit5th)
+                    {
+                        torque = torquelimit5th;
+                        TrqLimiter = LimitType.TorqueLimiterGear;
+                        //logger.Debug("Fifth gear torque limit hit");
+                    }
+                }
+            }
+            else
+            {
+                // automatic!
+                if (comboBoxEdit1.SelectedIndex == 0)
+                {
+                    //logger.Debug("Checking reverse gear!");
+                    int torquelimitreverse = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimReverse, xdummy, enginetorque_Yaxis, rpm, 0));
+                    if (torque > torquelimitreverse)
+                    {
+                        torque = torquelimitreverse;
+                        TrqLimiter = LimitType.TorqueLimiterGear;
+                        //logger.Debug("Reverse gear torque limit hit");
+                    }
+                }
+
+                // first gear
+                //TorqueCal.M_1GearTab		TorqueCal.n_Eng1GearSP
+                else if (comboBoxEdit1.SelectedIndex == 1)
+                {
+                    //logger.Debug("Checking first gear!");
+                    int torquelimit1st = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim1st, xdummy, enginetorquelim1st_Yaxis, rpm, 0));
+                    if (torque > torquelimit1st)
+                    {
+                        torque = torquelimit1st;
+                        TrqLimiter = LimitType.TorqueLimiterGear;
+                        //logger.Debug("First gear torque limit hit");
+                    }
+                }
+            }
+            
+            int TestLimitedAirmass = Convert.ToInt32(GetInterpolatedTableValue(airTorqueMap, airTorqueMap_Xaxis, enginetorque_Yaxis, rpm, torque));
+            if (TestLimitedAirmass < LimitedAirMass)
+            {
+                LimitedAirMass = TestLimitedAirmass;
+                if(TrqLimiter == LimitType.None) TrqLimiter = LimitType.AirTorqueCalibration;
             }
 //            logger.Debug("1. Torque is " + torque.ToString() + " at " + rpm.ToString() + " rpm and airmass " + requestedairmass.ToString() + " res: " + LimitedAirMass.ToString() + " type: " + TrqLimiter.ToString());
             if (TrqLimiter == LimitType.None) LimitedAirMass = requestedairmass; // bugfix for if no limiter is active
@@ -538,20 +561,14 @@ namespace T7
         private int CheckAgainstFuelcutLimiter(SymbolCollection symbols, string filename, int requestedairmass, ref LimitType AirmassLimiter)
         {
             int retval = requestedairmass;
-            if ((int)GetSymbolAddress(symbols, "FCutCal.m_AirInletLimit") > 0)
+
+            if (fuelcutAirInletLimit < requestedairmass)
             {
-                int[] fuelcutlimit = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(symbols, "FCutCal.m_AirInletLimit"));
-                if (fuelcutlimit.Length > 0)
-                {
-                    if (Convert.ToInt32(fuelcutlimit.GetValue(0)) < requestedairmass)
-                    {
-                        retval = Convert.ToInt32(fuelcutlimit.GetValue(0));
-                        AirmassLimiter = LimitType.FuelCutLimiter;
-                    }
-                }
+                retval = fuelcutAirInletLimit;
+                AirmassLimiter = LimitType.FuelCutLimiter;
+                logger.Debug("Reduced airmass because of FuelCutLimiter: " + requestedairmass.ToString());
             }
             return retval;
-
         }
 
         private int CheckAgainstTurboSpeedLimiter(SymbolCollection symbols, string filename, int rpm, int requestedairmass, ref LimitType AirmassLimiter)
@@ -872,29 +889,30 @@ namespace T7
             return correction;
 
         }
-
+        
         private int AirmassToTorque(SymbolCollection symbols, string filename, int airmass, int rpm, bool TrionicStyle)
         {
-            double tq = Convert.ToDouble(airmass) / 3.1;
+            double tq;
             if (TrionicStyle)
             {
-                // first convert airmass torque to torque using TorqueCal.M_NominalMap
+                // convert airmass torque to torque using TorqueCal.M_NominalMap
                 // axis are 
                 // x = TorqueCal.m_AirXSP (airmass)
                 // y = TorqueCal.n_EngYSP (rpm)
-                int[] nominaltorque = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(symbols, "TorqueCal.M_NominalMap"));
-                for (int a = 0; a < nominaltorque.Length; a++)
-                {
-                    int val = (int)nominaltorque.GetValue(a);
-                    if (val > 32000) val = -(65536 - val);
-                    nominaltorque.SetValue(val, a);
-                }
-                int[] xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(symbols, "TorqueCal.m_AirXSP"));
-                int[] yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
-                tq = GetInterpolatedTableValue(nominaltorque, xaxis, yaxis, rpm, airmass);
+                //int[] nominaltorque = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(symbols, "TorqueCal.M_NominalMap"));
+                //for (int a = 0; a < nominaltorque.Length; a++)
+                //{
+                //    int val = (int)nominaltorque.GetValue(a);
+                //    if (val > 32000) val = -(65536 - val);
+                //    nominaltorque.SetValue(val, a);
+                //}
+                //int[] xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(symbols, "TorqueCal.m_AirXSP"));
+                //int[] yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
+                tq = GetInterpolatedTableValue(nominalTorqueMap, nominalTorqueMap_Xaxis, nominalTorqueMap_Yaxis, rpm, airmass);
             }
             else
             {
+                tq = Convert.ToDouble(airmass) / 3.1;
                 if (isFuelE85.Checked)
                 {
                     tq *= 1.07;
@@ -904,6 +922,7 @@ namespace T7
             }
             return Convert.ToInt32(tq);
         }
+
         private void CastStartViewerEvent(string mapname)
         {
             if (onStartTableViewer != null)
@@ -1327,6 +1346,35 @@ namespace T7
 		        pedal_Columns = GetSymbolLength(symbols, "PedalMapCal.X_PedalMap") / 2;
 		        pedal_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.n_EngineMap"), GetSymbolLength(symbols, "PedalMapCal.n_EngineMap"));
 		        pedal_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.X_PedalMap"), GetSymbolLength(symbols, "PedalMapCal.X_PedalMap"));
+
+                airTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirTorqMap"), GetSymbolLength(symbols, "TorqueCal.m_AirTorqMap"));
+                airTorqueMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngXSP"), GetSymbolLength(symbols, "TorqueCal.M_EngXSP"));
+                airTorqueMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
+
+                nominalTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(symbols, "TorqueCal.M_NominalMap"));
+                nominalTorqueMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(symbols, "TorqueCal.m_AirXSP"));
+                nominalTorqueMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
+                for (int a = 0; a < nominalTorqueMap.Length; a++)
+                {
+                    int val = (int)nominalTorqueMap.GetValue(a);
+                    if (val > 32000) val = -(65536 - val);
+                    nominalTorqueMap.SetValue(val, a);
+                }
+
+                fuelcutAirInletLimit = Convert.ToInt32(readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(symbols, "FCutCal.m_AirInletLimit")).GetValue(0));
+
+                enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxTab"));
+                enginetorquelimE85Auto = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85TabAut"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85TabAut"));
+                enginetorquelimAuto = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxAutTab"));
+                enginetorquelimE85 = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85Tab"));
+                enginetorque_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
+                enginetorquelimConvertible = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_CabGearLim"), GetSymbolLength(symbols, "TorqueCal.M_CabGearLim"));
+                enginetorquelimGear = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ManGearLim"), GetSymbolLength(symbols, "TorqueCal.M_ManGearLim"));
+                enginetorquelim5th = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(symbols, "TorqueCal.M_5GearLimTab"));
+                enginetorquelim5th_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng5GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng5GearSP"));
+                enginetorquelimReverse = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ReverseTab"), GetSymbolLength(symbols, "TorqueCal.M_ReverseTab"));
+                enginetorquelim1st = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_1GearTab"), GetSymbolLength(symbols, "TorqueCal.M_1GearTab"));
+                enginetorquelim1st_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng1GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng1GearSP"));
 
                 try
                 {
