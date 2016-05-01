@@ -408,6 +408,7 @@ namespace T7
             this.labelControl18.Size = new System.Drawing.Size(142, 13);
             this.labelControl18.TabIndex = 27;
             this.labelControl18.Text = "E85Auto engine torque limiter";
+            this.labelControl18.Click += new System.EventHandler(this.labelControl18_Click);
             // 
             // useTrionicCalculationForTorque
             // 
@@ -512,6 +513,7 @@ namespace T7
             this.labelControl12.Size = new System.Drawing.Size(89, 13);
             this.labelControl12.TabIndex = 16;
             this.labelControl12.Text = "Gear torque limiter";
+            this.labelControl12.Click += new System.EventHandler(this.labelControl12_Click);
             this.labelControl12.DoubleClick += new System.EventHandler(this.labelControl12_DoubleClick);
             // 
             // labelControl10
@@ -649,11 +651,11 @@ namespace T7
             this.labelControl1.Text = "Airmass limiter";
             this.labelControl1.DoubleClick += new System.EventHandler(this.labelControl1_DoubleClick);
             // 
-            // comboBoxEdit2
+            // cbTableSelectionEdit
             // 
             this.cbTableSelectionEdit.EditValue = "Show airmass";
             this.cbTableSelectionEdit.Location = new System.Drawing.Point(254, 76);
-            this.cbTableSelectionEdit.Name = "comboBoxEdit2";
+            this.cbTableSelectionEdit.Name = "cbTableSelectionEdit";
             this.cbTableSelectionEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cbTableSelectionEdit.Properties.Items.AddRange(new object[] {

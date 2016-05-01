@@ -78,6 +78,7 @@ namespace T7
         private int[] enginetorquelimConvertible;
         private int[] enginetorque_Yaxis;
         private int[] enginetorquelimReverse;
+        private int[] enginetorquelimReverse_Yaxis;
         private int[] enginetorquelim1st;
         private int[] enginetorquelim1st_Yaxis;
         private int[] enginetorquelim5th;
@@ -292,7 +293,6 @@ namespace T7
                 }
             }
             return retval;
-
         }
 
         private bool IsBinaryBiopower(SymbolCollection symbols)
@@ -331,6 +331,18 @@ namespace T7
             return false;
         }
 
+        private bool Has1stGearLimit(SymbolCollection symbols)
+        {
+            foreach (SymbolHelper sh in symbols)
+            {
+                if (sh.SmartVarname == "TorqueCal.")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void Calculate()
         {
             DataTable dt = CalculateDataTable(m_currentfile, m_symbols, out limiterResult);
@@ -354,7 +366,7 @@ namespace T7
             return false;
         }
 
-        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, bool TorqueLimitEnabled, out LimitType limiterType)
+        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, bool TorqueLimitEnabled, bool Gear1stLimitAvailable, out LimitType limiterType)
         {
             int retval = requestairmass;
             //logger.Debug("Pedalpos: " + pedalposition.ToString() + " Rpm: " + rpm.ToString() + " requests: " + requestairmass.ToString() + " mg/c");
@@ -365,7 +377,7 @@ namespace T7
             if (TorqueLimitEnabled)
             {
                 LimitType TrqLimiterType = LimitType.None;
-                retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, out TrqLimiterType);
+                retval = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, Gear1stLimitAvailable, out TrqLimiterType);
                 if (retval < requestairmass)
                 {
                     limiterType = TrqLimiterType;
@@ -408,7 +420,7 @@ namespace T7
             return true;
         }
 
-        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, out LimitType TrqLimiter)
+        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, bool Gear1stLimitAvailable, out LimitType TrqLimiter)
         {
             TrqLimiter = LimitType.None;
             int LimitedAirMass = requestedairmass;
@@ -503,9 +515,7 @@ namespace T7
                     //logger.Debug("Manual gear torque limit hit");
                 }
                 
-
                 // and check 5th gear limiter as well!!! (if checkbox is 5)
-                //TorqueCal.M_5GearTab		TorqueCal.n_Eng5GearSP
                 if (comboBoxEdit1.SelectedIndex == 5)
                 {
                     //logger.Debug("Checking fifth gear!");
@@ -524,7 +534,7 @@ namespace T7
                 if (comboBoxEdit1.SelectedIndex == 0)
                 {
                     //logger.Debug("Checking reverse gear!");
-                    int torquelimitreverse = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimReverse, xdummy, enginetorque_Yaxis, rpm, 0));
+                    int torquelimitreverse = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimReverse, xdummy, enginetorquelimReverse_Yaxis, rpm, 0));
                     if (torque > torquelimitreverse)
                     {
                         torque = torquelimitreverse;
@@ -532,18 +542,18 @@ namespace T7
                         //logger.Debug("Reverse gear torque limit hit");
                     }
                 }
-
-                // first gear
-                //TorqueCal.M_1GearTab		TorqueCal.n_Eng1GearSP
                 else if (comboBoxEdit1.SelectedIndex == 1)
                 {
                     //logger.Debug("Checking first gear!");
-                    int torquelimit1st = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim1st, xdummy, enginetorquelim1st_Yaxis, rpm, 0));
-                    if (torque > torquelimit1st)
-                    {
-                        torque = torquelimit1st;
-                        TrqLimiter = LimitType.TorqueLimiterGear;
-                        //logger.Debug("First gear torque limit hit");
+                    if (Gear1stLimitAvailable)
+                        {
+                        int torquelimit1st = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim1st, xdummy, enginetorquelim1st_Yaxis, rpm, 0));
+                        if (torque > torquelimit1st)
+                        {
+                            torque = torquelimit1st;
+                            TrqLimiter = LimitType.TorqueLimiterGear;
+                            //logger.Debug("First gear torque limit hit");
+                        }
                     }
                 }
             }
@@ -1317,6 +1327,8 @@ namespace T7
 		        bool e85automatic = IsBinaryBiopowerAuto(symbols);
 
                 bool torqueLimitEnabled = HasBinaryTorqueLimiterEnabled(symbols, filename);
+
+                bool gear1stLimitAvailable = Has1stGearLimit(symbols);
 			
 				xdummy.SetValue(0, 0);
 		        int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
@@ -1373,6 +1385,7 @@ namespace T7
                 enginetorquelim5th = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(symbols, "TorqueCal.M_5GearLimTab"));
                 enginetorquelim5th_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng5GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng5GearSP"));
                 enginetorquelimReverse = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ReverseTab"), GetSymbolLength(symbols, "TorqueCal.M_ReverseTab"));
+                enginetorquelimReverse_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngSP"), GetSymbolLength(symbols, "TorqueCal.n_EngSP"));
                 enginetorquelim1st = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_1GearTab"), GetSymbolLength(symbols, "TorqueCal.M_1GearTab"));
                 enginetorquelim1st_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng1GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng1GearSP"));
                 enginetorquelimOverboost = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_OverBoostTab"), GetSymbolLength(symbols, "TorqueCal.M_OverBoostTab"));
@@ -1413,7 +1426,7 @@ namespace T7
                         int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * pedal_Rows) + rowcount);
                         logger.Debug("Current request = " + airmassrequestforcell.ToString() + " mg/c");
                         LimitType limiterType = LimitType.None;
-                        int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedal_Yaxis.GetValue(colcount) / 10), /* rpm */(int)pedal_Xaxis.GetValue(rowcount), airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, torqueLimitEnabled, out limiterType);
+                        int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, ((int)pedal_Yaxis.GetValue(colcount) / 10), /* rpm */(int)pedal_Xaxis.GetValue(rowcount), airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, torqueLimitEnabled, gear1stLimitAvailable, out limiterType);
                         resulttable.SetValue(resultingAirMass, (colcount * pedal_Rows) + rowcount);
                         limitResult.SetValue(limiterType, (colcount * pedal_Rows) + rowcount);
                     }
@@ -1666,6 +1679,7 @@ namespace T7
         {
             // start turbospeed limiter viewer!
             CastStartViewerEvent("LimEngCal.TurboSpeedTab");
+            CastStartViewerEvent("LimEngCal.TurboSpeedTab2");
         }
 
         private void labelControl1_DoubleClick(object sender, EventArgs e)
@@ -1686,6 +1700,12 @@ namespace T7
         {
             // start E85 torque limiter
             CastStartViewerEvent("TorqueCal.M_EngMaxE85Tab");
+        }
+
+        private void labelControl18_Click(object sender, EventArgs e)
+        {
+            // start E85Auto torque limiter
+            CastStartViewerEvent("TorqueCal.M_EngMaxE85TabAut");
         }
 
         private void labelControl3_DoubleClick(object sender, EventArgs e)
@@ -1754,6 +1774,38 @@ namespace T7
         {
             // show overboost tab
             CastStartViewerEvent("TorqueCal.M_OverBoostTab");
+        }
+
+        private void labelControl12_Click(object sender, EventArgs e)
+        {
+            if (!isCarAutomatic.Checked)
+            {
+                if (isCarConvertible.Checked)
+                {
+                    CastStartViewerEvent("TorqueCal.M_CabGearLim");
+                }
+
+                if (comboBoxEdit1.SelectedIndex == 5)
+                {
+                    CastStartViewerEvent("TorqueCal.M_5GearLimTab");
+                }
+            }
+            else
+            {
+                // automatic!
+                if (comboBoxEdit1.SelectedIndex == 0)
+                {
+                    CastStartViewerEvent("TorqueCal.M_ReverseTab");
+                }
+
+                if (comboBoxEdit1.SelectedIndex == 1)
+                {
+                    if(SymbolExists("TorqueCal.M_1GearTab",m_symbols))
+                    {
+                        CastStartViewerEvent("TorqueCal.M_1GearTab");
+                    }
+                }
+            }
         }
 
         private void xtraTabControl1_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
