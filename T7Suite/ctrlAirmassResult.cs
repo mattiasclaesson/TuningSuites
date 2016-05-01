@@ -441,7 +441,7 @@ namespace T7
                 {
                     logger.Debug("Torque Autolimit is limited from " + torque.ToString() + " to " + torquelimitAuto.ToString() + " at " + rpm.ToString() + " rpm");
                     torque = torquelimitAuto;
-                    TrqLimiter = LimitType.TorqueLimiterGear;
+                    TrqLimiter = LimitType.TorqueLimiterEngine;
                 }
             }
             else
