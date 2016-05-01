@@ -1407,6 +1407,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F40F88852BE31DD566B2DBB5B0CDC2F7"
+        "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F40F88852BE31DD566B2DBB5B0CDC2F7"
+        "OwnerKey" = "8:_21F53013E1DC81D75373813E454322B1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F946AF267EB88D9B6E535DEBEC39CB80"
         "OwnerKey" = "8:_38202CB4A7FAFAAAF733A2C44037EF70"
         "MsmSig" = "8:_UNDEFINED"
@@ -1439,6 +1451,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A2EB884494CC4325A02BB529C0501358"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F40F88852BE31DD566B2DBB5B0CDC2F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2047,7 +2065,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5965.20530, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.5965.25038, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_0C735D0C1B73F271F6F333FE5A453FD6"
@@ -4123,6 +4141,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F40F88852BE31DD566B2DBB5B0CDC2F7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:canlibCLSNET, Version=8.14.384.1, Culture=neutral, PublicKeyToken=bb7f2cd46200de24, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_F40F88852BE31DD566B2DBB5B0CDC2F7"
+                    {
+                    "Name" = "8:canlibCLSNET.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:canlibCLSNET.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F946AF267EB88D9B6E535DEBEC39CB80"
             {
             "AssemblyRegister" = "3:1"
@@ -4210,15 +4259,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{1B3732FD-B6E3-481F-9DF1-D65427E1DEEE}"
-        "PackageCode" = "8:{2723FE88-68DC-4AAF-A128-9D88F26D1550}"
+        "ProductCode" = "8:{F28FBFDB-70D9-4F19-9D75-456FCD15CBFD}"
+        "PackageCode" = "8:{95505F09-4D4C-4352-AD39-52518076BD6A}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.21"
+        "ProductVersion" = "8:0.1.22"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"
