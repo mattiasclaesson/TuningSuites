@@ -886,19 +886,6 @@ namespace T7
             double tq;
             if (TrionicStyle)
             {
-                // convert airmass torque to torque using TorqueCal.M_NominalMap
-                // axis are 
-                // x = TorqueCal.m_AirXSP (airmass)
-                // y = TorqueCal.n_EngYSP (rpm)
-                //int[] nominaltorque = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(symbols, "TorqueCal.M_NominalMap"));
-                //for (int a = 0; a < nominaltorque.Length; a++)
-                //{
-                //    int val = (int)nominaltorque.GetValue(a);
-                //    if (val > 32000) val = -(65536 - val);
-                //    nominaltorque.SetValue(val, a);
-                //}
-                //int[] xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(symbols, "TorqueCal.m_AirXSP"));
-                //int[] yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
                 tq = GetInterpolatedTableValue(nominalTorqueMap, nominalTorqueMap_Xaxis, nominalTorqueMap_Yaxis, rpm, airmass);
             }
             else
@@ -1388,6 +1375,7 @@ namespace T7
                 enginetorquelimReverse = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ReverseTab"), GetSymbolLength(symbols, "TorqueCal.M_ReverseTab"));
                 enginetorquelim1st = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_1GearTab"), GetSymbolLength(symbols, "TorqueCal.M_1GearTab"));
                 enginetorquelim1st_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng1GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng1GearSP"));
+                enginetorquelimOverboost = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_OverBoostTab"), GetSymbolLength(symbols, "TorqueCal.M_OverBoostTab"));
 
                 try
                 {
