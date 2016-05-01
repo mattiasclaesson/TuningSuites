@@ -416,7 +416,7 @@ namespace T7
                 
             if (E85Automatic && E85 && Automatic)
             {
-                int torquelimitE85Auto = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimE85, xdummy, airTorqueMap_Yaxis, rpm, 0));
+                int torquelimitE85Auto = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimE85Auto, xdummy, airTorqueMap_Yaxis, rpm, 0));
                 if (torque > torquelimitE85Auto)
                 {
                     logger.Debug("Torque E85Autolimit is limited from " + torque.ToString() + " to " + torquelimitE85Auto.ToString() + " at " + rpm.ToString() + " rpm");
