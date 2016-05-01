@@ -23,12 +23,6 @@
   </para><para>
   </para>
   </summary>
-  <remarks><para>
-    This call replaces the <see cref="canLocateHardware()"/> API call and serves the
-   same purpose.
-  </para><para>
-  </para>
-  </remarks>
      </member>
 <member name="M:canlibCLSNET.Canlib.canClose(System.Int32)">
   <summary>
@@ -115,10 +109,11 @@
   <para>
   </para><para>
   </para><para>
-   This function sets the bus timing parameters for the specified CAN controller.
+   This function sets the nominal bus timing parameters for the specified CAN
+   controller.
   </para><para>
-   The library provides default values for <c>tseg1,</c> <c>tseg2,</c> <c>sjw</c> and  <c>noSamp</c> when <c>freq</c> is specified to one of the
-   pre-defined constants, <see cref="canBITRATE_xxx"/>.
+   The library provides default values for <c>tseg1,</c> <c>tseg2,</c> <c>sjw</c> and  <c>noSamp</c> when <c>freq</c> is specified to one of the pre-defined constants,
+   <see cref="canBITRATE_xxx"/> for classic CAN and <see cref="canFD_BITRATE_xxx"/> for CAN FD.
   </para><para>
    If <c>freq</c> is any other value, no default values are supplied by the
    library.
@@ -142,7 +137,8 @@
   </param>
   <param><para>
    Bit rate (measured in bits per second); or one of the
-   predefined constants <see cref="canBITRATE_xxx"/>, which are described below.
+   predefined constants (<see cref="canBITRATE_xxx"/> for classic
+   CAN and <see cref="canFD_BITRATE_xxx"/> for CAN FD).
   </para>
   </param>
   <param><para>
@@ -156,7 +152,7 @@
   </para>
   </param>
   <param><para>
-   The Synchronization Jump Width; can be 1,2,3, or 4.
+   The Synchronization Jump Width.
   </para>
   </param>
   <param><para>
@@ -178,12 +174,61 @@
          <see cref="page_user_guide_init_bit_rate"/>, <see cref="page_code_snippets_examples"/>
     <seealso cref="canSetBusParamsC200()"/>, <seealso cref="canGetBusParams()"/>
 </member>
+<member name="M:canlibCLSNET.Canlib.canSetBusParamsFd(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function sets the data phase bus timing parameters for the specified
+   CAN controller.
+  </para><para>
+   The library provides default values for <c>tseg1_brs,</c> <c>tseg2_brs</c> and
+   <c>sjw_brs</c> when <c>freq_brs</c> is specified to one of the pre-defined
+   constants, <see cref="canFD_BITRATE_xxx"/>.
+  </para><para>
+   If <c>freq_brs</c> is any other value, no default values are supplied
+   by the library.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN controller.
+  </para>
+  </param>
+  <param><para>
+   CAN FD data bit rate (measured in bits per second); or
+   one of the predefined constants <see cref=""/>
+   canFD_BITRATE_xxx.
+  </para>
+  </param>
+  <param><para>
+   Time segment 1, that is, the number of quanta from (but not
+   including) the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   Time segment 2, that is, the number of quanta from the sampling
+   point to the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   The Synchronization Jump Width.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
+</member>
 <member name="M:canlibCLSNET.Canlib.canGetBusParams(System.Int32,System.Int64@,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
   <summary>
   <para>
   </para><para>
   </para><para>
-   This function retrieves the current bus parameters for the specified
+   This function retrieves the current nominal bus parameters for the specified
    channel.
   </para><para>
    The anatomy of a CAN bit is discussed in detail at Kvaser's
@@ -210,7 +255,7 @@
   </para>
   </param>
   <param><para>
-   The Synchronization Jump Width; can be 1,2,3, or 4.
+   The Synchronization Jump Width.
   </para>
   </param>
   <param><para>
@@ -218,7 +263,7 @@
   </para>
   </param>
   <param><para>
-   Unsupported, always read as zero.
+   Unsupported, always read as one.
   </para><para>
   </para>
   </param>
@@ -230,6 +275,46 @@
   </para>
   </returns>
           <seealso cref="canSetBusParams()"/>, <seealso cref="canSetBusParamsC200()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.canGetBusParamsFd(System.Int32,System.Int64@,System.Int32@,System.Int32@,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   This function retrieves the current data bus parameters for the specified
+   CAN FD channel.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN FD controller.
+  </para>
+  </param>
+  <param><para>
+   Bit rate (bits per second).
+  </para>
+  </param>
+  <param><para>
+   Time segment 1, that is, the number of quanta from (but not
+   including) the Sync Segment to the sampling point.
+  </para>
+  </param>
+  <param><para>
+   Time segment 2, that is, the number of quanta from the sampling
+   point to the end of the bit.
+  </para>
+  </param>
+  <param><para>
+   The Synchronization Jump Width.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para>
+  </returns>
 </member>
 <member name="M:canlibCLSNET.Canlib.canSetBusOutputControl(System.Int32,System.Int32)">
   <summary>
@@ -326,7 +411,7 @@
    filtering is done by software. <see cref="canAccept()"/> behaves in the same way for all
    boards, however.
   </para><para>
-   <see cref="canSetAcceptanceFilter()"/> and <see cref="canAccept()"/> both serve the same purpose but the
+    <see cref="canSetAcceptanceFilter()"/> and  <see cref="canAccept()"/> both serve the same purpose but the
    former can set the code and mask in just one call.
   </para><para>
    If you want to remove a filter, call <see cref="canAccept()"/> with the mask set to 0.
@@ -492,7 +577,7 @@
   </para>
   </param>
   <param><para>
-   The length of the message. Can be at most 8.
+   The length of the message in bytes.<br>
   </para>
   </param>
   <param><para>
@@ -612,8 +697,8 @@
   </para>
   </returns>
              <see cref="page_user_guide_time_accuracy_and_resolution"/>
-    <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>,
-   <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
+     <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>,
+    <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
 </member>
 <member name="M:canlibCLSNET.Canlib.canReadWait(System.Int32,System.Int32@,System.Byte[],System.Int32@,System.Int32@,System.Int64@,System.Int64)">
   <summary>
@@ -699,7 +784,7 @@
    from thread A and thread B and then send a message from thread A, it will be
    This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
   </para><para>
-   It is allowed to pass <c>NULL</c> as the value of <c>id,</c> <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
+   It is allowed to pass <c>NULL</c> as the value of <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
   </para><para>
   </para>
   </summary>
@@ -849,7 +934,7 @@
    from thread A and thread B and then send a message from thread A, it will be
    This behaviour can be changed using <see cref="canIOCTL_SET_LOCAL_TXECHO"/>.
   </para><para>
-   It is allowed to pass <c>NULL</c> as the value of <c>id,</c> <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
+   It is allowed to pass <c>NULL</c> as the value of <c>msg,</c> <c>dlc,</c>  <c>flag,</c> and <c>time.</c>
   </para><para>
   </para>
   </summary>
@@ -972,7 +1057,7 @@
   </param>
   <param><para>
    A pointer to a buffer which receives the Synchronization
-   Jump Width; can be 1,2,3, or 4.
+   Jump Width.
   </para>
   </param>
   <param><para>
@@ -1245,7 +1330,9 @@
   </para><para>
   </para>
   </returns>
-         <seealso cref="kvReadTimer()"/>
+        
+    <seealso cref="kvReadTimer()"/>
+   
 </member>
 <member name="M:canlibCLSNET.Canlib.canOpenChannel(System.Int32,System.Int32)">
   <summary>
@@ -1282,9 +1369,6 @@
   </summary>
   <remarks><para>
     The handle returned may be zero which is perfectly valid.
-  </para><para>
-  </para><para>
-    This call replaces the <see cref="canOpen()"/> API call and serves the same purpose.
   </para><para>
   </para>
   </remarks>
@@ -1510,6 +1594,7 @@
   </para><para>
     <see cref="canERR_xxx"/> (negative) if failure
   </para><para>
+   
   </para>
   </returns>
     <seealso cref="canGetDriverMode()"/>
@@ -1559,6 +1644,7 @@
   </para><para>
     <see cref="canERR_xxx"/> (negative) if failure
   </para><para>
+   
   </para>
   </returns>
     <seealso cref="canSetDriverMode()"/>
@@ -1811,7 +1897,7 @@
   </para>
   </param>
   <param><para>
-   The Synchronization Jump Width; can be 1,2,3, or 4.
+   The Synchronization Jump Width.
   </para>
   </param>
   <param><para>
@@ -1923,7 +2009,7 @@
   </para>
   </param>
   <param><para>
-   The Synchronization Jump Width; can be 1,2,3, or 4.
+   The Synchronization Jump Width.
   </para>
   </param>
   <param><para>
@@ -2071,8 +2157,7 @@
   </para>
   </param>
   <param><para>
-   The length of the message. Must be at least 0 and at most 8
-   bytes.
+   The length of the message in bytes.<br>
   </para>
   </param>
   <param><para>
@@ -2426,7 +2511,7 @@
   </para>
   </param>
   <param><para>
-   The length of the message. Can be at most 8.
+   The length of the message in bytes.<br>
   </para>
   </param>
   <param><para>
@@ -2850,9 +2935,9 @@
   <para>
   </para><para>
   </para><para>
-   The <see cref="canSetBitrate()"/> function sets the bit rate of the specified CAN
-   channel. The SJW is left unchanged.  The sampling point is recalculated and
-   kept as close as possible to the value before the call.
+   The <see cref="canSetBitrate()"/> function sets the nominal bit rate of the specified
+   CAN channel. The sampling point is recalculated and kept as close as
+   possible to the value before the call.
   </para><para>
   </para>
   </summary>
@@ -2911,7 +2996,7 @@
   </para>
   </summary>
   <remarks><para>
-    This function is not implemented.
+    This function can be used to retrieve certain pieces of information about an open handle to a CANlib channel.
   </para><para>
   </para>
   </remarks>
@@ -2920,13 +3005,16 @@
   </para>
   </param>
   <param><para>
-     </para>
+   This parameter specifies what data to obtain for the specified handle. The value is one of the constants <see cref="canCHANNELDATA_xxx"/>
+  </para>
   </param>
   <param><para>
-     </para>
+   The address of a buffer which is to receive the data.
+  </para>
   </param>
   <param><para>
-     </para><para>
+   The size of the buffer to which the buffer parameter points.
+  </para><para>
   </para>
   </param>
   <returns><para>
@@ -4353,6 +4441,33 @@
   </para>
   </remarks>
 </member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_CAN_FD">
+  <summary>
+  <para>
+   The channel will use the CAN FD protocol, ISO compliant. This also means that messages with
+   <see cref="canFDMSG_xxx"/> flags can now be used.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_CAN_FD_NONISO">
+  <summary>
+  <para>
+   The channel will use the CAN FD NON-ISO protocol.
+   Use this if you want to configure the can controller to be able to communicate with
+   a can controller designed prior to the release of the CAN FD ISO specification.
+  </para><para>
+   Non ISO mode implies:
+  <list type="bullets">
+    <item><description>The stuff bit counter will not be included in the frame format.</description></item>
+    <item><description>Initial value for CRC17 and CRC21 will be zero.</description></item>
+    </list>   This also means that messages with <see cref="canFDMSG_xxx"/> flags can now be used.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para>
+  </summary>
+</member>
 <member name="F:canlibCLSNET.Canlib.canFILTER_ACCEPT">
   <summary>
   <para>
@@ -4472,6 +4587,36 @@
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canBITRATE_10K">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFD_BITRATE_500K_80P">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFD_BITRATE_1M_80P">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFD_BITRATE_2M_80P">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFD_BITRATE_4M_80P">
+  <summary>
+  <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canFD_BITRATE_8M_60P">
   <summary>
   <para>
   </para>
@@ -5055,6 +5200,29 @@
   </para>
   </summary>
 </member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_MAX_BITRATE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer which receives
+     maximum bitrate of the device. Zero value means no limit on
+     bitrate.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_CAP_MASK">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that receives the
+     capabilities_mask of the CAN channel.
+  </para>
+  </summary>
+</member>
 <member name="F:canlibCLSNET.Canlib.canCHANNEL_IS_EXCLUSIVE">
   <summary>
   <para>
@@ -5064,6 +5232,13 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNEL_IS_OPEN">
   <summary>
   <para>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNEL_IS_CANFD">
+  <summary>
+  <para>
+   opened as CAN FD.  */
   </para>
   </summary>
 </member>
@@ -5303,6 +5478,8 @@
      call returns. The call may return on an "internal" event in CANLIB and your
      application must be prepared to handle this (i.e. go to sleep again.)
   </para><para>
+     
+  </para><para>
       If <see cref="canWaitForEvent()"/> returns with success status (<see cref="canOK)"/>, you must call
      <see cref="canRead()"/> repeatedly until it returns <see cref="canERR_NOMSG"/>, before calling
      <see cref="canWaitForEvent()"/> again. This will flush the driver's internal event queues.
@@ -5313,6 +5490,7 @@
   </para>
   </remarks>
       <seealso cref="canWaitForEvent()"/>
+     
   <remarks><para>
       You must not set, reset, nor close this handle.  Waiting on it is
      the only supported operation.
@@ -5706,6 +5884,20 @@
      Note that not all
      devices support this. Some hardware will accept this command but neglect it.
      This can be found out by reading the scaled throttle.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_BRLIMIT">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Some hardware have bitrate limits, which must be met when using any of <c>canSetBusParams(),</c>
+     <c>canSetBusParamsC200(),</c> <c>canGetBusParams()</c> functions
+     which can be overriden with this IOCTL.
+     <c>buf</c> points to a <c>long</c> value that contains a user defined bitrate.
+     A value of 0 means that the device should use its own default bitrate limit.
   </para>
   </summary>
 </member>
