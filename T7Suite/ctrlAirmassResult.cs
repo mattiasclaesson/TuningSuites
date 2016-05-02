@@ -111,6 +111,7 @@ namespace T7
         int injectorDCSeries = -1;
         int lambdaSeries = -1;
         int EGTSeries = -1;
+        int FlowSeries = -1;
 
         public delegate void StartTableViewer(object sender, StartTableViewerEventArgs e);
         public event ctrlAirmassResult.StartTableViewer onStartTableViewer;
@@ -976,8 +977,6 @@ namespace T7
                 double[] dvalstorq = new double[1];
                 dvalstorq.SetValue(Convert.ToDouble(torque), 0);
                 chartControl1.Series[torqueCompareSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvalstorq));
-
-
             }
         }
 
@@ -995,13 +994,14 @@ namespace T7
                 if (displayTorqueInLBFT.Checked) torqueLabel = "Torque (lbft)";
 
                 string injectorDCLabel = "Injector DC (%)";
-                string targetLambdaLabel = "Target lambda (*10)";
+                string targetLambdaLabel = "Target lambda (*100)";
 
                 powerSeries = chartControl1.Series.Add(powerLabel, DevExpress.XtraCharts.ViewType.Spline);
                 torqueSeries = chartControl1.Series.Add(torqueLabel, DevExpress.XtraCharts.ViewType.Spline);
                 injectorDCSeries = chartControl1.Series.Add(injectorDCLabel, DevExpress.XtraCharts.ViewType.Spline);
                 lambdaSeries = chartControl1.Series.Add(targetLambdaLabel, DevExpress.XtraCharts.ViewType.Spline);
                 EGTSeries = chartControl1.Series.Add("EGT estimate (°C)", DevExpress.XtraCharts.ViewType.Spline);
+                FlowSeries = chartControl1.Series.Add("Fuel flow (l/h)", DevExpress.XtraCharts.ViewType.Spline);
                 // set line colors
                 chartControl1.Series[powerSeries].Label.Border.Visible = false;
                 chartControl1.Series[torqueSeries].Label.Border.Visible = false;
@@ -1013,6 +1013,8 @@ namespace T7
                 chartControl1.Series[injectorDCSeries].Label.Shadow.Visible = true;
                 chartControl1.Series[lambdaSeries].Label.Border.Visible = false;
                 chartControl1.Series[lambdaSeries].Label.Shadow.Visible = true;
+                chartControl1.Series[FlowSeries].Label.Border.Visible = false;
+                chartControl1.Series[FlowSeries].Label.Shadow.Visible = true;
 
 
                 chartControl1.Series[powerSeries].View.Color = Color.Red;
@@ -1020,6 +1022,8 @@ namespace T7
                 chartControl1.Series[injectorDCSeries].View.Color = Color.GreenYellow;
                 chartControl1.Series[lambdaSeries].View.Color = Color.DarkGreen;
                 chartControl1.Series[EGTSeries].View.Color = Color.Plum;
+                chartControl1.Series[FlowSeries].View.Color = Color.Black;
+
                 chartControl1.Series[powerSeries].ArgumentScaleType = ScaleType.Qualitative;
                 chartControl1.Series[powerSeries].ValueScaleType = ScaleType.Numerical;
                 chartControl1.Series[torqueSeries].ArgumentScaleType = ScaleType.Qualitative;
@@ -1028,6 +1032,8 @@ namespace T7
                 chartControl1.Series[injectorDCSeries].ValueScaleType = ScaleType.Numerical;
                 chartControl1.Series[lambdaSeries].ArgumentScaleType = ScaleType.Qualitative;
                 chartControl1.Series[lambdaSeries].ValueScaleType = ScaleType.Numerical;
+                chartControl1.Series[FlowSeries].ArgumentScaleType = ScaleType.Qualitative;
+                chartControl1.Series[FlowSeries].ValueScaleType = ScaleType.Numerical;
                 chartControl1.Series[EGTSeries].ArgumentScaleType = ScaleType.Qualitative;
                 chartControl1.Series[EGTSeries].ValueScaleType = ScaleType.Numerical;
                 chartControl1.Series[EGTSeries].Visible = false; // default not visible
@@ -1041,6 +1047,8 @@ namespace T7
                 sv = (SplineSeriesView)chartControl1.Series[lambdaSeries].View;
                 sv.LineMarkerOptions.Visible = false;
                 sv = (SplineSeriesView)chartControl1.Series[EGTSeries].View;
+                sv.LineMarkerOptions.Visible = false;
+                sv = (SplineSeriesView)chartControl1.Series[FlowSeries].View;
                 sv.LineMarkerOptions.Visible = false;
 
                 for (int i = 0; i < dt.Rows[0].ItemArray.Length; i++)
@@ -1073,6 +1081,8 @@ namespace T7
                     }
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
 
+                    int EstimateFlow = CalculateFuelFlow(Convert.ToInt32(o), rpm);
+                    
                     double[] dvals = new double[1];
                     dvals.SetValue(Convert.ToDouble(horsepower), 0);
                     chartControl1.Series[powerSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvals));
@@ -1081,28 +1091,22 @@ namespace T7
                     dvalstorq.SetValue(Convert.ToDouble(torque), 0);
                     chartControl1.Series[torqueSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvalstorq));
 
-                    //<GS-21062010>
                     double[] dvalsinjDC = new double[1];
                     dvalsinjDC.SetValue(Convert.ToDouble(injDC), 0);
                     chartControl1.Series[injectorDCSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvalsinjDC));
 
-                    //<GS-24062010>
                     double[] dvalsLambda = new double[1];
                     dvalsLambda.SetValue(Convert.ToDouble(TargetLambda), 0);
                     chartControl1.Series[lambdaSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvalsLambda));
 
-                    //<GS-03082010>
                     double[] dvalsEGT = new double[1];
                     dvalsEGT.SetValue(Convert.ToDouble(EstimateEGT), 0);
                     chartControl1.Series[EGTSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvalsEGT));
+
+                    double[] dvalsFlow = new double[1];
+                    dvalsFlow.SetValue(Convert.ToDouble(EstimateFlow), 0);
+                    chartControl1.Series[FlowSeries].Points.Add(new SeriesPoint(Convert.ToDouble(rpm), dvalsFlow));
                 }
-
-                /*if ((XYDiagram)chartControl1.Diagram != null)
-                {
-                    //((XYDiagram)chartControl1.Diagram).AxisX.Arg
-                }*/
-
-
             }
             if (m_current_comparefilename != string.Empty)
             {
@@ -1110,20 +1114,14 @@ namespace T7
                 DataTable dt2 = CalculateDataTable(m_current_comparefilename, Compare_symbol_collection, out diffBinaryLimitResult);
                 LoadExtraGraphFromCompareBin(dt2, m_current_comparefilename, Compare_symbol_collection);
             }
-            // load the graph with the current details from the airmass result viewer
-            /*
-                int rpm = Convert.ToInt32(x_axisvalues.GetValue(e.Column.AbsoluteIndex));
-                int torque = AirmassToTorque(Convert.ToInt32(e.CellValue), rpm);
-                int horsepower = TorqueToPower(torque, rpm);
-                e.DisplayText = horsepower.ToString();             
-            */
 
+            UpdateGraphVisibility();
         }
 
         private int CalculateEstimateEGT(int airmass, int rpm)
         {
             int retval = 0;
-            // first calulcate simple
+            
             if (EGTMap != null)
             {
                 double egtvalue = GetInterpolatedTableValue(EGTMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
@@ -1175,14 +1173,9 @@ namespace T7
             return retval;
         }
 
-        //DONE: Switch to InjectorDC in table view
-        //DONE: Add extra line in dyno to show inverted VE value (lambda)
-        //DONE: Count E85 checkbox into equasion
-
         private int CalculateTargetLambda(int airmass, int rpm, int injDC)
         {
             int retval = 0;
-            // first calulcate simple
 
             if (isFuelE85.Checked)
             {
@@ -1216,6 +1209,46 @@ namespace T7
                     retval = Convert.ToInt32(vecorr);
                 }
             }
+            return retval;
+        }
+
+        private int CalculateFuelFlow(int airmass, int rpm)
+        {
+            int retval = 0;
+            // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
+            double fuelToInjectPerCycle = (double)airmass / (14.65F * 1000); // mg/c *1000 = g/c
+            if (isFuelE85.Checked)
+            {
+                // running E85, different target lambda
+                fuelToInjectPerCycle = (double)airmass / (9.84F * 1000); // mg/c *1000 = g/c
+            }
+
+            double vecorr;
+            if (isFuelE85.Checked)
+            {
+                vecorr = GetInterpolatedTableValue(E85VEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
+            }
+            else
+            {
+                vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
+            }
+            vecorr /= 100;
+            fuelToInjectPerCycle *= vecorr;
+
+            double combustionsPerSecond = rpm * 2 / 60;
+            double fuelFlow = fuelToInjectPerCycle * combustionsPerSecond; // g/s
+
+            // convert fuel flow from g/s to l/h
+            if (isFuelE85.Checked)
+            {
+                fuelFlow *= 3600F / (1000F * 0.775F);
+                
+            }
+            else
+            {
+                fuelFlow *= 3600F / (1000F * 0.742F);
+            }
+            retval = Convert.ToInt32(fuelFlow);
             return retval;
         }
 
@@ -1462,10 +1495,13 @@ namespace T7
         private void UpdateGraphVisibility()
         {
             if (powerSeries >= 0) chartControl1.Series[powerSeries].Visible = checkEdit8.Checked;
+            if (powerCompareSeries >= 0) chartControl1.Series[powerCompareSeries].Visible = checkEdit8.Checked;
             if (torqueSeries >= 0) chartControl1.Series[torqueSeries].Visible = checkEdit9.Checked;
+            if (torqueCompareSeries >= 0) chartControl1.Series[torqueCompareSeries].Visible = checkEdit9.Checked;
             if (injectorDCSeries >= 0) chartControl1.Series[injectorDCSeries].Visible = checkEdit10.Checked;
             if (lambdaSeries >= 0) chartControl1.Series[lambdaSeries].Visible = checkEdit11.Checked;
             if (EGTSeries >= 0) chartControl1.Series[EGTSeries].Visible = checkEdit12.Checked;
+            if (FlowSeries >= 0) chartControl1.Series[FlowSeries].Visible = showFuelFlow.Checked;    
         }
         string m_current_softwareversion = string.Empty;
         string m_current_comparefilename = string.Empty;
@@ -1966,6 +2002,12 @@ namespace T7
                             int airmass = Convert.ToInt32(e.CellValue);
                             int egt = CalculateEstimateEGT(airmass, rpm);
                             e.DisplayText = egt.ToString();
+                        }
+                        else if (cbTableSelectionEdit.SelectedIndex == 7)
+                        {
+                            int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
+                            int fuelflow = CalculateFuelFlow(Convert.ToInt32(e.CellValue), rpm);
+                            e.DisplayText = fuelflow.ToString("F2");
                         }
                         else
                         {
