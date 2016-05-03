@@ -1034,6 +1034,7 @@ namespace T7
                 chartControl1.Series[lambdaSeries].ValueScaleType = ScaleType.Numerical;
                 chartControl1.Series[FlowSeries].ArgumentScaleType = ScaleType.Qualitative;
                 chartControl1.Series[FlowSeries].ValueScaleType = ScaleType.Numerical;
+                chartControl1.Series[FlowSeries].Visible = false; // default not visible
                 chartControl1.Series[EGTSeries].ArgumentScaleType = ScaleType.Qualitative;
                 chartControl1.Series[EGTSeries].ValueScaleType = ScaleType.Numerical;
                 chartControl1.Series[EGTSeries].Visible = false; // default not visible
@@ -1501,7 +1502,7 @@ namespace T7
             if (injectorDCSeries >= 0) chartControl1.Series[injectorDCSeries].Visible = checkEdit10.Checked;
             if (lambdaSeries >= 0) chartControl1.Series[lambdaSeries].Visible = checkEdit11.Checked;
             if (EGTSeries >= 0) chartControl1.Series[EGTSeries].Visible = checkEdit12.Checked;
-            if (FlowSeries >= 0) chartControl1.Series[FlowSeries].Visible = showFuelFlow.Checked;    
+            if (FlowSeries >= 0) chartControl1.Series[FlowSeries].Visible = showFuelFlow.Checked;
         }
         string m_current_softwareversion = string.Empty;
         string m_current_comparefilename = string.Empty;

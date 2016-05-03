@@ -193,7 +193,6 @@ namespace T7
             // showFuelFlow
             // 
             this.showFuelFlow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.showFuelFlow.EditValue = true;
             this.showFuelFlow.Location = new System.Drawing.Point(641, 324);
             this.showFuelFlow.Name = "showFuelFlow";
             this.showFuelFlow.Properties.Caption = "Show fuel flow";
