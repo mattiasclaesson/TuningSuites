@@ -526,7 +526,6 @@ namespace T7
             this.labelControl12.Size = new System.Drawing.Size(89, 13);
             this.labelControl12.TabIndex = 16;
             this.labelControl12.Text = "Gear torque limiter";
-            this.labelControl12.Click += new System.EventHandler(this.labelControl12_Click);
             this.labelControl12.DoubleClick += new System.EventHandler(this.labelControl12_DoubleClick);
             // 
             // labelControl10

@@ -2124,7 +2124,7 @@ namespace T7
 
                     // set rpm range
                     ctrlCompressorMap1.Rpm_points = pedal_Xaxis;
-                    PartNumberConverter pnc = new PartNumberConverter();
+                    //PartNumberConverter pnc = new PartNumberConverter();
                     //
                     /*T7FileHeader header = new T7FileHeader();
                     header.init(m_currentfile, false);
