@@ -44,6 +44,7 @@ namespace T8SuitePro
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
+            this.showFuelFlow = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit12 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit11 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit10 = new DevExpress.XtraEditors.CheckEdit();
@@ -89,6 +90,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.xtraTabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.showFuelFlow.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit11.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit10.Properties)).BeginInit();
@@ -140,7 +142,7 @@ namespace T8SuitePro
             // 
             this.xtraTabPage1.Controls.Add(this.gridControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(793, 350);
+            this.xtraTabPage1.Size = new System.Drawing.Size(797, 353);
             this.xtraTabPage1.Text = "Table view";
             // 
             // gridControl1
@@ -152,7 +154,7 @@ namespace T8SuitePro
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(793, 350);
+            this.gridControl1.Size = new System.Drawing.Size(797, 353);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -173,6 +175,7 @@ namespace T8SuitePro
             // 
             // xtraTabPage2
             // 
+            this.xtraTabPage2.Controls.Add(this.showFuelFlow);
             this.xtraTabPage2.Controls.Add(this.checkEdit12);
             this.xtraTabPage2.Controls.Add(this.checkEdit11);
             this.xtraTabPage2.Controls.Add(this.checkEdit10);
@@ -180,16 +183,26 @@ namespace T8SuitePro
             this.xtraTabPage2.Controls.Add(this.checkEdit8);
             this.xtraTabPage2.Controls.Add(this.chartControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(793, 350);
+            this.xtraTabPage2.Size = new System.Drawing.Size(797, 353);
             this.xtraTabPage2.Text = "Dyno graph view";
+            // 
+            // showFuelFlow
+            // 
+            this.showFuelFlow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.showFuelFlow.Location = new System.Drawing.Point(641, 324);
+            this.showFuelFlow.Name = "showFuelFlow";
+            this.showFuelFlow.Properties.Caption = "Show fuel flow";
+            this.showFuelFlow.Size = new System.Drawing.Size(105, 19);
+            this.showFuelFlow.TabIndex = 6;
+            this.showFuelFlow.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
             // checkEdit12
             // 
             this.checkEdit12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkEdit12.Location = new System.Drawing.Point(575, 324);
+            this.checkEdit12.Location = new System.Drawing.Point(507, 324);
             this.checkEdit12.Name = "checkEdit12";
-            this.checkEdit12.Properties.Caption = "Show EGT estimate curve";
-            this.checkEdit12.Size = new System.Drawing.Size(155, 19);
+            this.checkEdit12.Properties.Caption = "Show EGT estimate";
+            this.checkEdit12.Size = new System.Drawing.Size(128, 19);
             this.checkEdit12.TabIndex = 5;
             this.checkEdit12.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -197,10 +210,10 @@ namespace T8SuitePro
             // 
             this.checkEdit11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit11.EditValue = true;
-            this.checkEdit11.Location = new System.Drawing.Point(414, 324);
+            this.checkEdit11.Location = new System.Drawing.Point(362, 324);
             this.checkEdit11.Name = "checkEdit11";
-            this.checkEdit11.Properties.Caption = "Show target lambda curve";
-            this.checkEdit11.Size = new System.Drawing.Size(155, 19);
+            this.checkEdit11.Properties.Caption = "Show target lambda";
+            this.checkEdit11.Size = new System.Drawing.Size(133, 19);
             this.checkEdit11.TabIndex = 4;
             this.checkEdit11.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -208,10 +221,10 @@ namespace T8SuitePro
             // 
             this.checkEdit10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit10.EditValue = true;
-            this.checkEdit10.Location = new System.Drawing.Point(263, 324);
+            this.checkEdit10.Location = new System.Drawing.Point(224, 324);
             this.checkEdit10.Name = "checkEdit10";
-            this.checkEdit10.Properties.Caption = "Show injector DC curve";
-            this.checkEdit10.Size = new System.Drawing.Size(145, 19);
+            this.checkEdit10.Properties.Caption = "Show injector DC";
+            this.checkEdit10.Size = new System.Drawing.Size(113, 19);
             this.checkEdit10.TabIndex = 3;
             this.checkEdit10.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -219,10 +232,10 @@ namespace T8SuitePro
             // 
             this.checkEdit9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkEdit9.EditValue = true;
-            this.checkEdit9.Location = new System.Drawing.Point(133, 324);
+            this.checkEdit9.Location = new System.Drawing.Point(104, 324);
             this.checkEdit9.Name = "checkEdit9";
-            this.checkEdit9.Properties.Caption = "Show torque curve";
-            this.checkEdit9.Size = new System.Drawing.Size(124, 19);
+            this.checkEdit9.Properties.Caption = "Show torque";
+            this.checkEdit9.Size = new System.Drawing.Size(93, 19);
             this.checkEdit9.TabIndex = 2;
             this.checkEdit9.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -232,8 +245,8 @@ namespace T8SuitePro
             this.checkEdit8.EditValue = true;
             this.checkEdit8.Location = new System.Drawing.Point(3, 324);
             this.checkEdit8.Name = "checkEdit8";
-            this.checkEdit8.Properties.Caption = "Show power curve";
-            this.checkEdit8.Size = new System.Drawing.Size(124, 19);
+            this.checkEdit8.Properties.Caption = "Show power";
+            this.checkEdit8.Size = new System.Drawing.Size(88, 19);
             this.checkEdit8.TabIndex = 1;
             this.checkEdit8.CheckedChanged += new System.EventHandler(this.checkEdit8_CheckedChanged);
             // 
@@ -296,7 +309,7 @@ namespace T8SuitePro
             // 
             this.tabCompressormap.Controls.Add(this.ctrlCompressorMap1);
             this.tabCompressormap.Name = "tabCompressormap";
-            this.tabCompressormap.Size = new System.Drawing.Size(793, 350);
+            this.tabCompressormap.Size = new System.Drawing.Size(797, 353);
             this.tabCompressormap.Text = "Compressor map";
             // 
             // ctrlCompressorMap1
@@ -341,7 +354,7 @@ namespace T8SuitePro
         5500,
         6000,
         6500};
-            this.ctrlCompressorMap1.Size = new System.Drawing.Size(793, 350);
+            this.ctrlCompressorMap1.Size = new System.Drawing.Size(797, 353);
             this.ctrlCompressorMap1.TabIndex = 0;
             this.ctrlCompressorMap1.onRefreshData += new T8SuitePro.ctrlCompressorMap.RefreshData(this.ctrlCompressorMap1_onRefreshData);
             // 
@@ -610,7 +623,8 @@ namespace T8SuitePro
             "Show injector DC",
             "Show target lambda",
             "Show target AFR",
-            "Show estimated EGT"});
+            "Show estimated EGT",
+            "Show fuel flow"});
             this.cbTableSelectionEdit.Size = new System.Drawing.Size(195, 20);
             this.cbTableSelectionEdit.TabIndex = 4;
             this.cbTableSelectionEdit.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit2_SelectedIndexChanged);
@@ -710,6 +724,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.xtraTabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.showFuelFlow.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit12.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit11.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit10.Properties)).EndInit();
@@ -789,6 +804,7 @@ namespace T8SuitePro
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
+		private DevExpress.XtraEditors.CheckEdit showFuelFlow;
         private DevExpress.XtraEditors.CheckEdit isCarHighOutput;
     }
 }
