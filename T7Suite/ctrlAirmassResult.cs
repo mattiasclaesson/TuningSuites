@@ -1082,7 +1082,7 @@ namespace T7
                     }
                     int EstimateEGT = CalculateEstimateEGT(Convert.ToInt32(o), rpm);
 
-                    int EstimateFlow = CalculateFuelFlow(Convert.ToInt32(o), rpm);
+                    int EstimateFlow = CalculateFuelFlow(Convert.ToInt32(o), rpm, TargetLambda);
                     
                     double[] dvals = new double[1];
                     dvals.SetValue(Convert.ToDouble(horsepower), 0);
@@ -1213,7 +1213,7 @@ namespace T7
             return retval;
         }
 
-        private int CalculateFuelFlow(int airmass, int rpm)
+        private int CalculateFuelFlow(int airmass, int rpm, int lambda)
         {
             int retval = 0;
             // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
@@ -1224,17 +1224,9 @@ namespace T7
                 fuelToInjectPerCycle = (double)airmass / (9.84F * 1000); // mg/c *1000 = g/c
             }
 
-            double vecorr;
-            if (isFuelE85.Checked)
-            {
-                vecorr = GetInterpolatedTableValue(E85VEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
-            }
-            else
-            {
-                vecorr = GetInterpolatedTableValue(fuelVEMap, fuelVE_Xaxis, fuelVE_Yaxis, rpm, airmass);
-            }
-            vecorr /= 100;
-            fuelToInjectPerCycle *= vecorr;
+            double dtarget = (double)lambda;
+            dtarget /= 100;
+            fuelToInjectPerCycle /= dtarget;
 
             double combustionsPerSecond = rpm * 2 / 60;
             double fuelFlow = fuelToInjectPerCycle * combustionsPerSecond; // g/s
@@ -2007,7 +1999,9 @@ namespace T7
                         else if (cbTableSelectionEdit.SelectedIndex == 7)
                         {
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
-                            int fuelflow = CalculateFuelFlow(Convert.ToInt32(e.CellValue), rpm);
+                            int injDC = CalculateInjectorDCusingPulseWidth(Convert.ToInt32(e.CellValue), rpm);
+                            int targetLambda = CalculateTargetLambda(Convert.ToInt32(e.CellValue), rpm, injDC);
+                            int fuelflow = CalculateFuelFlow(Convert.ToInt32(e.CellValue), rpm, targetLambda);
                             e.DisplayText = fuelflow.ToString("F2");
                         }
                         else
