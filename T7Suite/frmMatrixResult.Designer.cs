@@ -99,7 +99,7 @@ namespace T7
             // xtraTabPage2
             // 
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(730, 401);
+            this.xtraTabPage2.Size = new System.Drawing.Size(726, 398);
             this.xtraTabPage2.Text = "Graph view";
             // 
             // frmMatrixResult

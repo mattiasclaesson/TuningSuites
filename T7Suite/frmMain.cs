@@ -4865,6 +4865,57 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
         }
 
+        private void Actions_EditTCMLimit_ItemClick_1(object sender, ItemClickEventArgs e)
+        {
+            const string symbolname = "VIOSCal.M_TCMOffset";
+            long tcmOffsetAddress = GetSymbolAddress(m_symbols, symbolname);
+            if (tcmOffsetAddress == 0)
+            {
+                frmInfoBox info = new frmInfoBox("File not compatible, symbol VIOSCal.M_TCMOffset missing!");
+            }
+            TCMLimitEdit tcmLimitEdit = new TCMLimitEdit();
+            if (!tcmLimitEdit.loadFile(m_currentfile, tcmOffsetAddress))
+            {
+                frmInfoBox info = new frmInfoBox("File not compatible!");
+            }
+            else
+            {
+                byte[] tcmLimit = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, symbolname), GetSymbolLength(m_symbols, symbolname));
+                int initialTorqueLimit = 0;
+                if (tcmLimit.Length == 2)
+                {
+                    initialTorqueLimit = Convert.ToInt32(tcmLimit[0]) * 256;
+                    initialTorqueLimit += Convert.ToInt32(tcmLimit[1]);
+                }
+                frmTcmLimit frmTcm = new frmTcmLimit();
+                frmTcm.TorqueLimit = initialTorqueLimit;
+                frmTcm.Modify = tcmLimitEdit.getModificationEnabled();
+
+                if (frmTcm.ShowDialog() == DialogResult.OK)
+                {
+                    if (!frmTcm.Modify.Equals(tcmLimitEdit.getModificationEnabled()))
+                    {
+                        tcmLimitEdit.setModificationEnabled(frmTcm.Modify);
+                        tcmLimitEdit.saveFile();
+                        // set default value 0 Nm as torquelimit if modification has been disabled
+                        if (!tcmLimitEdit.getModificationEnabled())
+                        {
+                            frmTcm.TorqueLimit = 0;
+                        }
+                    }
+
+                    if(!frmTcm.TorqueLimit.Equals(initialTorqueLimit))
+                    {
+                        int torque = frmTcm.TorqueLimit;
+                        tcmLimit[0] = Convert.ToByte(torque / 256);
+                        tcmLimit[1] = Convert.ToByte(torque - (int)tcmLimit[0] * 256);
+                        savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname), tcmLimit, m_currentfile, true, "TCM Limit modification VIOSCal.M_TCMOffset");
+                    }
+                    UpdateChecksum(m_currentfile);
+                }
+            }
+        }
+
         private void Actions_ImportAFRFeedbackMap_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (m_AFRMap != null && m_currentfile != string.Empty)

@@ -191,6 +191,13 @@
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="ChecksumHandler.cs" />
+    <Compile Include="frmTcmLimit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTcmLimit.designer.cs">
+      <DependentUpon>frmTcmLimit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TCMLimitEdit.cs" />
     <Compile Include="T7SuiteRegistry.cs" />
     <Compile Include="Plot3D\ColorHsl.cs" />
     <Compile Include="Plot3D\ColorHsv.cs" />
@@ -459,6 +466,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CompareResults.resx">
       <DependentUpon>CompareResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTcmLimit.resx">
+      <DependentUpon>frmTcmLimit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFirmwareInformation.resx">
@@ -748,6 +759,7 @@
     <EmbeddedResource Include="Compressormaps\GT17.jpg" />
     <Content Include="EU0AF01C.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="quick_restart.ico" />
     <Content Include="SaabOpenTech.exe">
