@@ -44,6 +44,7 @@ namespace T7
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.comboBoxEdit1.Properties.Items.AddRange(new object[] {
             "0 Nm : Full torque on all gears",
+            "285 Nm : 4spd 9-3 transmission",
             "295 Nm : 4spd 9-3 Aero transmission",
             "305 Nm : 4spd 9-5 transmission",
             "325 Nm : 4spd 9-5 Aero transmission",
