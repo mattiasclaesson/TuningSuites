@@ -1,6 +1,6 @@
 @echo off
-set T7.version=0.1.26.0
-set SetupT7Suite.version=0.1.26
+set T7.version=0.1.27.0
+set SetupT7Suite.version=0.1.27
 set TrionicCANLib.version=0.1.27.0
 set AquaGauge.version=1.5.7.0
 set ICSharpCode.TextEditor.version=3.0.0.3437
@@ -19,4 +19,4 @@ set combilib-net.version=1.0.5571.38176
 set FTD2XX_NET.version=1.0.10.0
 set LibUsbDotNet.version=2.2.8.104
 set PSTaskDialog.version=1.0.0.0
-set Wideband.version=1.0.1.0
+set Wideband.version=1.0.2.0
