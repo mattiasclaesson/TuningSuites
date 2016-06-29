@@ -1554,22 +1554,15 @@ namespace T8SuitePro
         static public bool TryToLoadAdditionalBinSymbols(string filename, SymbolCollection coll2load)
         {
             // Look for a complete xml file first
-            string[,] SymbolFiles = new string[,] {{"FD0M", "{0}\\FD0M_C.xml"},
-                                            {"FD0I", "{0}\\FD0I_C.xml"},
-                                            {"FC0N", "{0}\\FC0N_C.xml"},
-                                            {"FC0U", "{0}\\FC0U_C.xml"},
-                                            {"FD0F", "{0}\\FD0F_C.xml"},
-                                            {"FF0L", "{0}\\FF0L_C.xml"},
-                                            {"FE09", "{0}\\FE09_C.xml"},
-                                            {"FD0G", "{0}\\FD0G_C.xml"}};
             T8Header fh = new T8Header();
             fh.init(filename);
-            for (int i = 0; i < SymbolFiles.GetLength(0); i++)
+            string[] symbolFiles = Directory.GetFiles(System.Windows.Forms.Application.StartupPath, "*.xml");
+            foreach (string symbolFile in symbolFiles)
             {
-                if (fh.SoftwareVersion.Trim().StartsWith(SymbolFiles[i, 0].ToString(), StringComparison.OrdinalIgnoreCase))
+                string filenameWithoutExtension = Path.GetFileNameWithoutExtension(symbolFile);
+                if (fh.SoftwareVersion.Trim().StartsWith(filenameWithoutExtension, StringComparison.OrdinalIgnoreCase))
                 {
-                    string completeXmlFile = String.Format(SymbolFiles[i, 1], System.Windows.Forms.Application.StartupPath);
-                    return TryToLoadAdditionalXMLSymbols(completeXmlFile, coll2load);
+                    return TryToLoadAdditionalXMLSymbols(symbolFile, coll2load);
                 }
             }
 
