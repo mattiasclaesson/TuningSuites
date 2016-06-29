@@ -150,8 +150,6 @@ namespace T8SuitePro
             System.Windows.Forms.Application.DoEvents();
             InitializeComponent();
             addWizTuneFilePacks();
-            // Only have this enabled in debug mode until ready
-            this.barButtonItem29.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
 
             try
             {
