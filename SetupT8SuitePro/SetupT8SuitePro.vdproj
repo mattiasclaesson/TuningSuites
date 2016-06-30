@@ -5380,7 +5380,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WidebandSupport, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WidebandSupport, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_DB3B2AE9082F646BB8AB4A2B7FB7CBEE"
@@ -5953,15 +5953,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{15897F68-CE4A-41C2-8751-93870EA81DFC}"
-        "PackageCode" = "8:{98C52174-C900-46DB-95DF-20880A74C391}"
+        "ProductCode" = "8:{788C77B7-CD0C-4A28-8B27-4A6B2DA16C1F}"
+        "PackageCode" = "8:{017A2CDE-AD41-4992-8BBE-462781E40BFF}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.24"
+        "ProductVersion" = "8:0.1.25"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
