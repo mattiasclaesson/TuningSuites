@@ -11331,7 +11331,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private void barButtonItem33_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             StartAViewer("MaxSpdCal.n_EngLimAir");
-        }
+        } 
 
         private void barButtonItem34_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -11377,24 +11377,26 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private void barButtonItem55_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartAViewer("TorqueCal.M_NominalMap");
-
         }
 
         private void barButtonItem56_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartAViewer("TorqueCal.m_AirTorqMap");
-
         }
 
         private void barButtonItem57_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartAViewer("TorqueCal.m_AirXSP");
-
         }
 
         private void barButtonItem64_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartAViewer("IgnNormCal.Map");
+        }
+
+        private void barButtonItem27_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("IgnNormCal2.Map");
         }
 
         private void barButtonItem66_ItemClick(object sender, ItemClickEventArgs e)
@@ -19710,11 +19712,13 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     {
                         barButtonItem2.Visibility = BarItemVisibility.Always;
                         barButtonItem3.Visibility = BarItemVisibility.Always;
+                        barButtonItem27.Visibility = BarItemVisibility.Always;
                     }
                     else
                     {
                         barButtonItem2.Visibility = BarItemVisibility.Never;
                         barButtonItem3.Visibility = BarItemVisibility.Never;
+                        barButtonItem27.Visibility = BarItemVisibility.Never;
                     }
                     
                     if (IsSymbolInBinary("BoostCal.RegMap"))
