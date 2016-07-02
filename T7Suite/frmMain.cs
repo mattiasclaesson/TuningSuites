@@ -9344,6 +9344,18 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return false;
         }
 
+        private bool IsBinaryB308TrionicV6()
+        {
+            foreach (SymbolHelper sh in m_symbols)
+            {
+                if (sh.Varname == "IgnNormCal2.Map" || sh.Userdescription == "IgnNormCal2.Map")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool HasExhaustGasTemperatureCalculation()
         {
             foreach (SymbolHelper sh in m_symbols)
@@ -19704,11 +19716,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 if (File.Exists(m_currentfile))
                 {
-                    T7FileHeader t7header = new T7FileHeader();
-                    t7header.init(m_currentfile, false);
-                    string swVersion = t7header.getSoftwareVersion();
-                    // B308E
-                    if (swVersion.Substring(8, 3) == ".CB")
+                    if (IsBinaryB308TrionicV6())
                     {
                         barButtonItem2.Visibility = BarItemVisibility.Always;
                         barButtonItem3.Visibility = BarItemVisibility.Always;
