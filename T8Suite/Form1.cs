@@ -15889,6 +15889,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             FileTuningAction tp = new Form1.FileTuningAction(packname, file, packtype, whitelist, blacklist, code, author, msg);
                             installedTunings.Add(tp);
                         }
+                        else
+                        {
+                            logger.Debug("Signature check failed for file: " + file);
+                        }
                     }
                 }
             }

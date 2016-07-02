@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0329F0909E15495EA15F4E4295646796"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_06221BF213BD4FBE800801F596B0EB41"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -34,6 +40,12 @@
         "Entry"
         {
         "MsmKey" = "8:_087993AB3A2A45C98327783E219A667C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0A3654D8CA5F4B22895EBF48C696BF45"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -88,12 +100,6 @@
         "Entry"
         {
         "MsmKey" = "8:_0CEF4B83D5534AF99AC62B3F70FFEA4E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_135A7FB051A4400082F1579D39F821DC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -195,6 +201,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_272D6A7ED8CB4BC2A309142D0692B13F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2785151C3DBEC15FBB8FC367128EF582"
         "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
         "MsmSig" = "8:_UNDEFINED"
@@ -249,6 +261,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2B408F480FA04B06AB41234B5E520C23"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2B614ECEEA11B626A027ED219A204AD2"
         "OwnerKey" = "8:_C4E1773DF94A7C11A542ECEEF47DD58B"
         "MsmSig" = "8:_UNDEFINED"
@@ -291,6 +309,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_34F1CE4055BF40109E69169905967BCD"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3708F424DE9D4EFAA1C66872AD8C5006"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_397623B292B4481BF4588661F806D452"
         "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
         "MsmSig" = "8:_UNDEFINED"
@@ -304,12 +334,6 @@
         "Entry"
         {
         "MsmKey" = "8:_3A521A09817C4A17A7ADA29FD792D6EF"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_416C9D0303BA4D9FA4492A06DC3CA354"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -723,6 +747,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5B8E4B035D9C4278A6624BD4F04DA2EC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5C9D582F705A0578A70B0F361E9EAD00"
         "OwnerKey" = "8:_5F8C0481216095BBE36858EE1C9CDE18"
         "MsmSig" = "8:_UNDEFINED"
@@ -789,6 +819,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6929D964B0674016967E8C93672A3DCC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6AC106E0AD87486088B0D6A2C1835F6B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -801,19 +837,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6ED3FB80623E495D81FB0DC99FC18149"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6F4BE917CF44451285172E3162069535"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_70A21FA308704BE2BD359354B6A0F1E3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -844,12 +868,6 @@
         "Entry"
         {
         "MsmKey" = "8:_7896332CD8EB47E79AA20793A73F26CB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_78AF76780D5C49BF9281E0F120654AE3"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -934,12 +952,6 @@
         "Entry"
         {
         "MsmKey" = "8:_83357682BEB649FFB5BA291DD05D55B5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_833A5AECC16945D7ACC8B73E1B915910"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1043,6 +1055,12 @@
         {
         "MsmKey" = "8:_9099F87BC7E038233FB98BE1B25CF348"
         "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_91BFD55A86714F4F808E37665AB3DD86"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1173,12 +1191,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A17B2506F1C14B5089F34BB115FD11B0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A25139095E4AC98A1AF192848C4B579B"
         "OwnerKey" = "8:_5F8C0481216095BBE36858EE1C9CDE18"
         "MsmSig" = "8:_UNDEFINED"
@@ -1192,18 +1204,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A39A59F1AC644DE2B5D8A9C68BBA87B8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A5F5E00B9CD843F4B1FDE3A8A33B7EF9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A6A41503F04243D996E15EAE86F1EDBB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1365,6 +1365,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B216733461FE4317837DFF35C03E263E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B496FAC4B867401B8797CE8CA2812D74"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1485,7 +1491,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CD1A02A663344B5AAA46AB8C91D7479B"
+        "MsmKey" = "8:_CE13E02981994E1B929B20341D3A4C39"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1641,13 +1647,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E537DE61D271403F9F99EE8F98F35377"
+        "MsmKey" = "8:_E495F41B9AF44BE9B83340EEC06A0DFA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E559E60285244EDA8F9E2B3FA94F8B53"
+        "MsmKey" = "8:_E537DE61D271403F9F99EE8F98F35377"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1751,12 +1757,6 @@
         {
         "MsmKey" = "8:_F03B0660010D928D60A137797F0D3B18"
         "OwnerKey" = "8:_E8921965690C55A7ACCAD4496C4A842F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F112AA569F8B461C8D0D06327BA55DA4"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2297,6 +2297,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0329F0909E15495EA15F4E4295646796"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\875cc_Siemens_Injcorr_625.t8x"
+            "TargetName" = "8:875cc_Siemens_Injcorr_625.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_06221BF213BD4FBE800801F596B0EB41"
             {
             "SourcePath" = "8:..\\T8Binaries\\55565020_FC0G_C_FMEP_05_JWAFFF_83i.BIN"
@@ -2323,6 +2343,26 @@
             "TargetName" = "8:55353231_FA5I_C_FME2_72_FIEF_81d.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A3654D8CA5F4B22895EBF48C696BF45"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\FC0G_Torque_Limiter_Removal.t8x"
+            "TargetName" = "8:FC0G_Torque_Limiter_Removal.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2445,26 +2485,6 @@
             "TargetName" = "8:55353231_FA5I_C_FME2_72_FIEF_80c.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_135A7FB051A4400082F1579D39F821DC"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\630cc_Siemens_Injcorr_458.t8x"
-            "TargetName" = "8:630cc_Siemens_Injcorr_458.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2705,6 +2725,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_272D6A7ED8CB4BC2A309142D0692B13F"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\FD_Torque_Limiter_Removal.t8x"
+            "TargetName" = "8:FD_Torque_Limiter_Removal.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2785151C3DBEC15FBB8FC367128EF582"
             {
             "AssemblyRegister" = "3:1"
@@ -2813,6 +2853,26 @@
             "TargetName" = "8:55353231_FA5I_C_FME2_73_FIEF_80c.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2B408F480FA04B06AB41234B5E520C23"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\630cc_Siemens_Injcorr_458.t8x"
+            "TargetName" = "8:630cc_Siemens_Injcorr_458.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2940,6 +3000,46 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34F1CE4055BF40109E69169905967BCD"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\MY2007-2011_B207E_to_B207L_BP_conversion.t8x"
+            "TargetName" = "8:MY2007-2011_B207E_to_B207L_BP_conversion.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3708F424DE9D4EFAA1C66872AD8C5006"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\FF_Torque_Limiter_Removal.t8x"
+            "TargetName" = "8:FF_Torque_Limiter_Removal.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_397623B292B4481BF4588661F806D452"
             {
             "AssemblyRegister" = "3:1"
@@ -2997,26 +3097,6 @@
             "TargetName" = "8:55353231_FA5I_C_FME2_65_FIEF_81f.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_416C9D0303BA4D9FA4492A06DC3CA354"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\TD04L_14T_B207EL_Complete.t8x"
-            "TargetName" = "8:TD04L_14T_B207EL_Complete.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3366,6 +3446,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5B8E4B035D9C4278A6624BD4F04DA2EC"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\TD04L_14T_B207EL_Complete.t8x"
+            "TargetName" = "8:TD04L_14T_B207EL_Complete.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5C9D582F705A0578A70B0F361E9EAD00"
             {
             "AssemblyRegister" = "3:1"
@@ -3539,6 +3639,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6929D964B0674016967E8C93672A3DCC"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\550cc_Bosch_Injcorr_387.t8x"
+            "TargetName" = "8:550cc_Bosch_Injcorr_387.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6AC106E0AD87486088B0D6A2C1835F6B"
             {
             "SourcePath" = "8:..\\T8Binaries\\55567225_FE09_C_FME5_A0_FIEF_82x.BIN"
@@ -3579,52 +3699,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6ED3FB80623E495D81FB0DC99FC18149"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\FD_Torque_Limiter_Removal.t8x"
-            "TargetName" = "8:FD_Torque_Limiter_Removal.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6F4BE917CF44451285172E3162069535"
             {
             "SourcePath" = "8:..\\T8Binaries\\55353231_FA5I_C_FME4_73_FIEF_80d.BIN"
             "TargetName" = "8:55353231_FA5I_C_FME4_73_FIEF_80d.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_70A21FA308704BE2BD359354B6A0F1E3"
-            {
-            "SourcePath" = "8:..\\..\\T8SuitePro\\TuningPacks\\B207R_Suite_St1_MY03-06.t8x"
-            "TargetName" = "8:B207R_Suite_St1_MY03-06.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3725,26 +3805,6 @@
             "TargetName" = "8:55565020_FC0J_C_FMEP_63_FIEF_82s.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_78AF76780D5C49BF9281E0F120654AE3"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\550cc_Bosch_Injcorr_387.t8x"
-            "TargetName" = "8:550cc_Bosch_Injcorr_387.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3938,26 +3998,6 @@
             "TargetName" = "8:55353231_FA5L_C_FMEP_77_FIEF_82n.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_833A5AECC16945D7ACC8B73E1B915910"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\B207E_L_Suite_St1_MY03-06.t8x"
-            "TargetName" = "8:B207E_L_Suite_St1_MY03-06.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4194,6 +4234,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_91BFD55A86714F4F808E37665AB3DD86"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\MY2007-2011_B207E_to_B207L_GS_conversion.t8x"
+            "TargetName" = "8:MY2007-2011_B207E_to_B207L_GS_conversion.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9374EF83D107B29870E919115FDBB76C"
@@ -4582,26 +4642,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A17B2506F1C14B5089F34BB115FD11B0"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\MY03-06_B207E_to_B207L_conversion.t8x"
-            "TargetName" = "8:MY03-06_B207E_to_B207L_conversion.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A25139095E4AC98A1AF192848C4B579B"
             {
             "AssemblyRegister" = "3:1"
@@ -4639,46 +4679,6 @@
             "TargetName" = "8:55353231_FA5I_C_FME2_4R_FMEF_83g.BIN"
             "Tag" = "8:"
             "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A5F5E00B9CD843F4B1FDE3A8A33B7EF9"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\B207R_Suite_St1_MY03-06.t8x"
-            "TargetName" = "8:B207R_Suite_St1_MY03-06.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A6A41503F04243D996E15EAE86F1EDBB"
-            {
-            "SourcePath" = "8:..\\..\\T8SuitePro\\TuningPacks\\B207E_L_Suite_St1_MY03-06.t8x"
-            "TargetName" = "8:B207E_L_Suite_St1_MY03-06.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4793,6 +4793,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B216733461FE4317837DFF35C03E263E"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\B207E_L_Suite_St1_MY03-06.t8x"
+            "TargetName" = "8:B207E_L_Suite_St1_MY03-06.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B496FAC4B867401B8797CE8CA2812D74"
@@ -5090,10 +5110,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD1A02A663344B5AAA46AB8C91D7479B"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE13E02981994E1B929B20341D3A4C39"
             {
-            "SourcePath" = "8:..\\TuningPacks\\MY2007-2011_B207E_to_B207L_GS_conversion.t8x"
-            "TargetName" = "8:MY2007-2011_B207E_to_B207L_GS_conversion.t8x"
+            "SourcePath" = "8:..\\TuningPacks\\B207R_Suite_St1_MY03-06.t8x"
+            "TargetName" = "8:B207R_Suite_St1_MY03-06.t8x"
             "Tag" = "8:"
             "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
@@ -5478,12 +5498,12 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E537DE61D271403F9F99EE8F98F35377"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E495F41B9AF44BE9B83340EEC06A0DFA"
             {
-            "SourcePath" = "8:..\\T8Binaries\\55352688_FA5B_C_FME4_52_FIEF_81b.BIN"
-            "TargetName" = "8:55352688_FA5B_C_FME4_52_FIEF_81b.BIN"
+            "SourcePath" = "8:..\\TuningPacks\\MY03-06_B207E_to_B207L_conversion.t8x"
+            "TargetName" = "8:MY03-06_B207E_to_B207L_conversion.t8x"
             "Tag" = "8:"
-            "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5498,12 +5518,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E559E60285244EDA8F9E2B3FA94F8B53"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E537DE61D271403F9F99EE8F98F35377"
             {
-            "SourcePath" = "8:..\\TuningPacks\\875cc_Siemens_Injcorr_625.t8x"
-            "TargetName" = "8:875cc_Siemens_Injcorr_625.t8x"
+            "SourcePath" = "8:..\\T8Binaries\\55352688_FA5B_C_FME4_52_FIEF_81b.BIN"
+            "TargetName" = "8:55352688_FA5B_C_FME4_52_FIEF_81b.BIN"
             "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Folder" = "8:_A12878BAA14F47ABB9B6B8495CB798BB"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5711,26 +5731,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F112AA569F8B461C8D0D06327BA55DA4"
-            {
-            "SourcePath" = "8:..\\TuningPacks\\FF_Torque_Limiter_Removal.t8x"
-            "TargetName" = "8:FF_Torque_Limiter_Removal.t8x"
-            "Tag" = "8:"
-            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F2811E8F4B9B4198B968057826362E5C"
@@ -5953,15 +5953,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{788C77B7-CD0C-4A28-8B27-4A6B2DA16C1F}"
-        "PackageCode" = "8:{017A2CDE-AD41-4992-8BBE-462781E40BFF}"
+        "ProductCode" = "8:{DC3FC351-D12F-445A-BD6D-547D94A06317}"
+        "PackageCode" = "8:{E63B2BE9-B322-4F34-B29B-F7E4CD84D77A}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.25"
+        "ProductVersion" = "8:0.1.26"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
