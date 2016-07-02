@@ -54,7 +54,7 @@ namespace T7
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(357, 68);
+            this.simpleButton1.Location = new System.Drawing.Point(357, 88);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 1;
@@ -64,7 +64,7 @@ namespace T7
             // simpleButton2
             // 
             this.simpleButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.simpleButton2.Location = new System.Drawing.Point(276, 68);
+            this.simpleButton2.Location = new System.Drawing.Point(276, 88);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 2;
@@ -95,7 +95,7 @@ namespace T7
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
-            this.ClientSize = new System.Drawing.Size(444, 103);
+            this.ClientSize = new System.Drawing.Size(444, 123);
             this.ControlBox = false;
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.labelControl1);
