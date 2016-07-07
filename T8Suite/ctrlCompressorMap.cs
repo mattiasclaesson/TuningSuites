@@ -269,7 +269,6 @@ namespace T8SuitePro
                         x_multiplier = 5.03 * CalculateXCorrection(); // per lbs/m
                         y_multiplier = 167 * CalculateYCorrection(); // per bar
                         break;
-                        break;
                 }
                 PointF[] pnts = new PointF[16];
                 PointF[] pntsLow = new PointF[16];

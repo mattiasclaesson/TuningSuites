@@ -1288,7 +1288,6 @@ namespace T8SuitePro
                     }
                     symboltableoffset = val;
                     // MessageBox.Show("Packed table index: " + idx.ToString("X6") + " " + val.ToString("X6"));
-                    int state = 0;
                     FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
                     using (BinaryReader br = new BinaryReader(fsread))
                     {
@@ -2088,8 +2087,6 @@ namespace T8SuitePro
 
         private void RefreshTableViewers()
         {
-            DockPanel dockPanel;
-            bool found = true;
             for (int i = 0; i < dockManager1.Panels.Count; i++)
             {
                 // dockPanel = pnl.Controls.
@@ -2107,9 +2104,9 @@ namespace T8SuitePro
             }
 
         }
+
         private void DisposeTableViewers()
         {
-            DockPanel dockPanel;
             bool found = true;
             while (found)
             {
@@ -5976,7 +5973,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             dt.Columns.Add("SUBCATEGORYNAME");
                             dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
                             dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                            string category = "";
                             string ht = string.Empty;
                             double diffperc = 0;
                             int diffabs = 0;
@@ -6503,7 +6499,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     //int maxairmassforcell = TorqueToAirmass(maxtorqueforcell, E85);
                     //logger.Debug("Setting " + valueincell.ToString() + " to " + maxairmassforcell.ToString() + " at " + rpm.ToString() + " rpm");
                     //valueincell *= 10; // T8 has 10 factor
-                    valueincell = valueincell;
+                    //valueincell = valueincell;
                     //}
 
 
@@ -9852,7 +9848,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 if (projectprops.Rows.Count > 0)
                 {
                     m_currentfile = projectprops.Rows[0]["BINFILE"].ToString();//Application.StartupPath + "\\55559437  81f.bin";
-                    int symboltableoffset = 0;
 
                     TryToOpenFile(projectprops.Rows[0]["BINFILE"].ToString(), out m_symbols, m_currentfile_size);
 

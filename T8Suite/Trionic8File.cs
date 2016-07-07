@@ -993,7 +993,6 @@ namespace T8SuitePro
                     }
                     symboltableoffset = val;
                     // MessageBox.Show("Packed table index: " + idx.ToString("X6") + " " + val.ToString("X6"));
-                    int state = 0;
                     FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
                     using (BinaryReader br = new BinaryReader(fsread))
                     {

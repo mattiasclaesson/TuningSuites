@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using CommonSuite;
 using NLog;
-using CommonSuite;
 
 namespace T8SuitePro
 {
