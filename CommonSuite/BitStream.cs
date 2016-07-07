@@ -1178,7 +1178,7 @@ namespace BKSystem.IO
 		///		from.
 		/// </param>
 		/// <seealso cref="SByte"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(sbyte bits)
 		{
 			Write(bits, 0, SizeOfByte);
@@ -1205,7 +1205,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="SByte"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(sbyte bits, int bitIndex, int count)
 		{
 			// Convert the value to a byte
@@ -1231,7 +1231,7 @@ namespace BKSystem.IO
 		///		A <see cref="SByte"/> array specifying the buffer to write data from.
 		/// </param>
 		/// <seealso cref="SByte"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(sbyte [] bits)
 		{
 			if(!_blnIsOpen)
@@ -1274,7 +1274,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="SByte"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(sbyte [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -1327,7 +1327,7 @@ namespace BKSystem.IO
 		///		from.
 		/// </param>
 		/// <seealso cref="Char"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(char bits)
 		{
 			Write(bits, 0, SizeOfChar);
@@ -1364,7 +1364,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="Char"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(char bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -1400,7 +1400,7 @@ namespace BKSystem.IO
 		///		An <see cref="Char"/> array specifying the buffer to write data from.
 		/// </param>
 		/// <seealso cref="Char"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(char [] bits)
 		{
 			if(!_blnIsOpen)
@@ -1443,7 +1443,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="Char"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(char [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -1474,7 +1474,7 @@ namespace BKSystem.IO
 		///		from.
 		/// </param>
 		/// <seealso cref="UInt16"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ushort bits)
 		{
 			Write(bits, 0, SizeOfUInt16);
@@ -1511,7 +1511,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="UInt16"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ushort bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -1547,7 +1547,7 @@ namespace BKSystem.IO
 		///		An <see cref="UInt16"/> array specifying the buffer to write data from.
 		/// </param>
 		/// <seealso cref="UInt16"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ushort [] bits)
 		{
 			if(!_blnIsOpen)
@@ -1590,7 +1590,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="UInt16"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ushort [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -1750,7 +1750,7 @@ namespace BKSystem.IO
 		///		from.
 		/// </param>
 		/// <seealso cref="UInt32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(uint bits)
 		{
 			Write(bits, 0, SizeOfUInt32);
@@ -1787,7 +1787,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="UInt32"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(uint bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -1822,7 +1822,7 @@ namespace BKSystem.IO
 		///		An <see cref="UInt32"/> array specifying the buffer to write data from.
 		/// </param>
 		/// <seealso cref="UInt32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(uint [] bits)
 		{
 			if(!_blnIsOpen)
@@ -1865,7 +1865,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="UInt32"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(uint [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -2145,7 +2145,7 @@ namespace BKSystem.IO
 		///		from.
 		/// </param>
 		/// <seealso cref="UInt64"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ulong bits)
 		{
 			Write(bits, 0, SizeOfUInt64);
@@ -2184,7 +2184,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="UInt64"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ulong bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -2234,7 +2234,7 @@ namespace BKSystem.IO
 		///		An <see cref="UInt64"/> array specifying the buffer to write data from.
 		/// </param>
 		/// <seealso cref="UInt64"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ulong [] bits)
 		{
 			if(!_blnIsOpen)
@@ -2277,7 +2277,7 @@ namespace BKSystem.IO
 		/// </param>
 		/// <seealso cref="UInt64"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual void Write(ulong [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -3032,7 +3032,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="SByte"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		////[CLSCompliant(false)]
 		public virtual int Read(out sbyte bits)
 		{
 			return Read(out bits, 0, SizeOfByte);
@@ -3068,7 +3068,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="SByte"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out sbyte bits, int bitIndex, int count)
 		{
 			byte bytBits = 0;
@@ -3105,7 +3105,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="SByte"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(sbyte [] bits)
 		{
 			if(!_blnIsOpen)
@@ -3158,7 +3158,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="SByte"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(sbyte [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -3438,7 +3438,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt16"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out ushort bits)
 		{
 			return Read(out bits, 0, SizeOfUInt16);
@@ -3484,7 +3484,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt16"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out ushort bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -3534,7 +3534,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt16"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(ushort [] bits)
 		{
 			if(!_blnIsOpen)
@@ -3587,7 +3587,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt16"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(ushort [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -3804,7 +3804,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt32"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out uint bits)
 		{
 			return Read(out bits, 0, SizeOfUInt32);
@@ -3850,7 +3850,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt32"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out uint bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -3900,7 +3900,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt32"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(uint [] bits)
 		{
 			if(!_blnIsOpen)
@@ -3953,7 +3953,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt32"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(uint [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -4336,7 +4336,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt64"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out ulong bits)
 		{
 			return Read(out bits, 0, SizeOfUInt64);
@@ -4382,7 +4382,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt64"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(out ulong bits, int bitIndex, int count)
 		{
 			if(!_blnIsOpen)
@@ -4448,7 +4448,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt64"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(ulong [] bits)
 		{
 			if(!_blnIsOpen)
@@ -4501,7 +4501,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="UInt64"/>
 		/// <seealso cref="Int32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual int Read(ulong [] bits, int offset, int count)
 		{
 			if(!_blnIsOpen)
@@ -5323,7 +5323,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="String"/>
 		/// <seealso cref="SByte"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public static string ToString(sbyte bits)
 		{
 			byte bytBits = (byte)bits;
@@ -5396,7 +5396,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="String"/>
 		/// <seealso cref="UInt16"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public static string ToString(ushort bits)
 		{
 			short sBits = (short)bits;
@@ -5469,7 +5469,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="String"/>
 		/// <seealso cref="UInt32"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public static string ToString(uint bits)
 		{
 			StringBuilder sb = new StringBuilder(32);
@@ -5542,7 +5542,7 @@ namespace BKSystem.IO
 		/// </returns>
 		/// <seealso cref="String"/>
 		/// <seealso cref="UInt64"/>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public static string ToString(ulong bits)
 		{
 			StringBuilder sb = new StringBuilder(64);
@@ -5827,7 +5827,7 @@ namespace BKSystem.IO
 		/// <returns>
 		///		The integer array from which this stream was created.
 		/// </returns>
-		[CLSCompliant(false)]
+		//[CLSCompliant(false)]
 		public virtual uint [] GetBuffer()
 		{
 			return _auiBitBuffer;

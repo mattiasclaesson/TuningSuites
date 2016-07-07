@@ -147,12 +147,6 @@ namespace CommonSuite
         {
             string retval = faultcode;
            // build the list
-            switch (faultcode)
-            {
-
-
-
-            }
             if (retval == faultcode)
             {
                 // no translation done, give generic indication
