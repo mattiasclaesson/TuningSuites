@@ -952,6 +952,7 @@ namespace T8SuitePro
             symboltableoffset = 0;
             int len = 0;
             int val = 0;
+            Boolean retval = false;
             //int idx = ReadEndMarker(0x9B);
             try
             {
@@ -996,15 +997,25 @@ namespace T8SuitePro
                     FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
                     using (BinaryReader br = new BinaryReader(fsread))
                     {
-
-                        fsread.Seek(val, SeekOrigin.Begin);
-
-                        UnpackedLength = Convert.ToInt64(br.ReadByte());
-                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256;
-                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256;
-                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
-                        logger.Debug("UnpackedLength: " + UnpackedLength.ToString("X8"));
-                        fsread.Seek(val, SeekOrigin.Begin);
+                        fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+                        if (br.ReadByte() == 0xF1 && br.ReadByte() == 0x1A && br.ReadByte() == 0x06 && br.ReadByte() == 0x5B &&
+                            br.ReadByte() == 0xA2 && br.ReadByte() == 0x6B && br.ReadByte() == 0xCC && br.ReadByte() == 0x6F)
+                        {
+                            logger.Debug("New style symbolnames");
+                        }
+                        else
+                        {
+                            fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+                            UnpackedLength = Convert.ToInt64(br.ReadByte());
+                            UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256;
+                            UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256;
+                            UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
+                            logger.Debug("UnpackedLength: " + UnpackedLength.ToString("X8"));
+                            if (UnpackedLength <= 0x00FFFFFF)
+                            {
+                                retval = true;
+                            }
+                        }
 
                         // fill the byte array with the compressed symbol table
                         fsread.Seek(symboltableoffset, SeekOrigin.Begin);
@@ -1013,14 +1024,12 @@ namespace T8SuitePro
                     fsread.Close();
                     fsread.Dispose();
                 }
-                if (UnpackedLength > 0x00FFFFFF) return false;
-                return true;
             }
             catch (Exception E)
             {
                 logger.Debug("Error 1: " + E.Message);
             }
-            return false;
+            return retval;
         }
 
         static private int GetEndOfSymbolTable(string filename)
