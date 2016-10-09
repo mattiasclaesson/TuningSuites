@@ -520,27 +520,16 @@ namespace T7
             {
                 if (caddr != 0 && sh.Flash_start_address == caddr)
                 {
-                    if (sh.Userdescription != "" && sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
+                    if (sh.Flash_start_address < 0x80000)
                     {
-                        symbol = "ROM_" + sh.Userdescription;
+                        symbol = "ROM_" + sh.SmartVarname;
+                        retval = 1;
                     }
                     else
                     {
-                        symbol = "ROM_" + sh.Varname;
+                        symbol = "RAM_" + sh.SmartVarname;
+                        retval = 1;
                     }
-                    retval = 1;
-                }
-                else if (caddr != 0 && sh.Start_address == caddr)
-                {
-                    if (sh.Userdescription != "" && sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
-                    {
-                        symbol = "RAM_" + sh.Userdescription;
-                    }
-                    else
-                    {
-                        symbol = "RAM_" + sh.Varname;
-                    }
-                    retval = 1;
                 }
             }
             if (symbol == string.Empty)
