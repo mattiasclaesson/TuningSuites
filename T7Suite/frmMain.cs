@@ -4890,28 +4890,39 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 frmTcmLimit frmTcm = new frmTcmLimit();
                 frmTcm.TorqueLimit = initialTorqueLimit;
                 frmTcm.Modify = tcmLimitEdit.getModificationEnabled();
+                frmTcm.ModifyLowGearSpecific = tcmLimitEdit.getGearLimitModificationEnabled();
+                frmTcm.LowGearModify = tcmLimitEdit.Gear;
+                frmTcm.LowGearTorqueLimit = tcmLimitEdit.Limit;
 
                 if (frmTcm.ShowDialog() == DialogResult.OK)
                 {
-                    if (!frmTcm.Modify.Equals(tcmLimitEdit.getModificationEnabled()))
+                    if (!frmTcm.ModifyLowGearSpecific.Equals(tcmLimitEdit.getGearLimitModificationEnabled()) ||
+                        !frmTcm.LowGearModify.Equals(tcmLimitEdit.Gear) ||
+                        !frmTcm.LowGearTorqueLimit.Equals(tcmLimitEdit.Limit) ||
+                        !frmTcm.Modify.Equals(tcmLimitEdit.getModificationEnabled()) ||
+                        !frmTcm.TorqueLimit.Equals(initialTorqueLimit))
                     {
+                        tcmLimitEdit.setGearLimitModificationEnabled(frmTcm.ModifyLowGearSpecific);
                         tcmLimitEdit.setModificationEnabled(frmTcm.Modify);
+                        tcmLimitEdit.Gear = frmTcm.LowGearModify;
+                        tcmLimitEdit.Limit = frmTcm.LowGearTorqueLimit;
                         tcmLimitEdit.saveFile();
-                        // set default value 0 Nm as torquelimit if modification has been disabled
-                        if (!tcmLimitEdit.getModificationEnabled())
+
+                        // set default value 0 Nm as torquelimit if modifications has been disabled
+                        if (!tcmLimitEdit.getModificationEnabled() && !tcmLimitEdit.getGearLimitModificationEnabled())
                         {
                             frmTcm.TorqueLimit = 0;
                         }
-                    }
 
-                    if(!frmTcm.TorqueLimit.Equals(initialTorqueLimit))
-                    {
-                        int torque = frmTcm.TorqueLimit;
-                        tcmLimit[0] = Convert.ToByte(torque / 256);
-                        tcmLimit[1] = Convert.ToByte(torque - (int)tcmLimit[0] * 256);
-                        savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname), tcmLimit, m_currentfile, true, "TCM Limit modification VIOSCal.M_TCMOffset");
+                        if (!frmTcm.TorqueLimit.Equals(initialTorqueLimit))
+                        {
+                            int torque = frmTcm.TorqueLimit;
+                            tcmLimit[0] = Convert.ToByte(torque / 256);
+                            tcmLimit[1] = Convert.ToByte(torque - (int)tcmLimit[0] * 256);
+                            savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname), tcmLimit, m_currentfile, true, "TCM Limit modification VIOSCal.M_TCMOffset");
+                        }
+                        UpdateChecksum(m_currentfile);
                     }
-                    UpdateChecksum(m_currentfile);
                 }
             }
         }
