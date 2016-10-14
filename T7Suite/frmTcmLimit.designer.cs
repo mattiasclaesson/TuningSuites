@@ -95,9 +95,9 @@ namespace T7
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(129, 20);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(218, 17);
+            this.checkBox1.Size = new System.Drawing.Size(163, 17);
             this.checkBox1.TabIndex = 4;
-            this.checkBox1.Text = "Enable TCM limiter firmware modification";
+            this.checkBox1.Text = "Enable firmware modification";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -111,7 +111,7 @@ namespace T7
             this.groupBox1.Size = new System.Drawing.Size(456, 90);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "General gear limit";
+            this.groupBox1.Text = "TCM MOD v1 TCM threshold based solution";
             // 
             // groupBox2
             // 
@@ -125,7 +125,7 @@ namespace T7
             this.groupBox2.Size = new System.Drawing.Size(456, 111);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Low gear limiter";
+            this.groupBox2.Text = "TCM MOD v2 Customized TCM limit depending on active gear";
             // 
             // labelControl3
             // 
@@ -159,9 +159,9 @@ namespace T7
             this.checkBox2.AutoSize = true;
             this.checkBox2.Location = new System.Drawing.Point(129, 20);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(272, 17);
+            this.checkBox2.Size = new System.Drawing.Size(163, 17);
             this.checkBox2.TabIndex = 7;
-            this.checkBox2.Text = "Enable lower gear TCM limiter firmware modification";
+            this.checkBox2.Text = "Enable firmware modification";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
