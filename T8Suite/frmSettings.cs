@@ -448,24 +448,13 @@ namespace T8SuitePro
                 }
                 DialogResult = DialogResult.None;
             }
-            else if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.MXWIFI)
-            {
-                frmWifiSettings comportSel = new frmWifiSettings();
-                comportSel.Port = m_appSettings.WifiPort;
-                if (comportSel.ShowDialog() == DialogResult.OK)
-                {
-                    m_appSettings.WifiPort = comportSel.Port;
-                }
-                DialogResult = DialogResult.None;
-            }
         }
 
         private void comboBoxEdit3_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbAdapterType.SelectedIndex == (int)CANBusAdapter.COMBI || 
                 cbAdapterType.SelectedIndex == (int)CANBusAdapter.ELM327 ||
-                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC ||
-                cbAdapterType.SelectedIndex == (int)CANBusAdapter.MXWIFI)
+                cbAdapterType.SelectedIndex == (int)CANBusAdapter.JUST4TRIONIC)
             {
                 btnAdapterConfiguration.Enabled = true;
             }
@@ -583,6 +572,18 @@ namespace T8SuitePro
             set
             {
                 cbAdapter.SelectedItem = value;
+            }
+        }
+
+        public bool UseLegionBootloader
+        {
+            get
+            {
+                return ceLegionBootloader.Checked;
+            }
+            set
+            {
+                ceLegionBootloader.Checked = value;
             }
         }
     }

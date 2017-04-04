@@ -1516,18 +1516,6 @@ namespace CommonSuite
             }
         }
 
-        private int _WifiPort = 35000;
-
-        public int WifiPort
-        {
-            get { return _WifiPort; }
-            set
-            {
-                _WifiPort = value;
-                SaveRegistrySetting("WifiPort", _WifiPort);
-            }
-        }
-
         #region T7specific
         private int m_StandardFill = 0;
 
@@ -1709,6 +1697,17 @@ namespace CommonSuite
             set { m_Showpopupmap = value; }
         }
 
+        public bool m_UseLegionBootloader = false;
+        public bool UseLegionBootloader
+        {
+            get { return m_UseLegionBootloader; }
+            set
+            {
+                m_UseLegionBootloader = value;
+                SaveRegistrySetting("UseLegionBootloader", m_UseLegionBootloader);
+            }
+        }
+
         #endregion
 
         private void SaveRegistrySetting(string key, string value)
@@ -1778,7 +1777,6 @@ namespace CommonSuite
 
                 saveSettings.SetValue("MeasureAFRInLambda", m_MeasureAFRInLambda);
                 saveSettings.SetValue("Baudrate", _Baudrate);
-                saveSettings.SetValue("WifiPort", _WifiPort);
 
                 saveSettings.SetValue("LastXAxisFromMatrix", _LastXAxisFromMatrix);
                 saveSettings.SetValue("LastYAxisFromMatrix", _LastYAxisFromMatrix);
@@ -1902,6 +1900,7 @@ namespace CommonSuite
 
                 saveSettings.SetValue("MapDetectionActive", m_MapDetectionActive);
                 saveSettings.SetValue("Showpopupmap", m_Showpopupmap);
+                saveSettings.SetValue("UseLegionBootloader", m_UseLegionBootloader);
             }
         }
 
@@ -2518,9 +2517,9 @@ namespace CommonSuite
                             {
                                 m_AdapterType = Settings.GetValue(a).ToString();
                             }
-                            else if (a == "WifiPort")
+                            else if (a == "UseLegionBootloader")
                             {
-                                _WifiPort = Convert.ToInt32(Settings.GetValue(a).ToString());
+                                m_UseLegionBootloader = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                         }
                         catch (Exception E)

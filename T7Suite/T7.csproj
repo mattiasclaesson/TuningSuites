@@ -88,6 +88,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\T7Libs\Be.Windows.Forms.HexBox.dll</HintPath>
     </Reference>
+    <Reference Include="canlibCLSNET">
+      <HintPath>..\T7Libs\canlibCLSNET.dll</HintPath>
+    </Reference>
     <Reference Include="canusbdrv_net, Version=2.0.0.1, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\T7Libs\canusbdrv_net.dll</HintPath>
@@ -524,9 +527,7 @@
     <None Include="ASM-Mode.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="canlib32.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="canlib32.dll" />
     <Content Include="DTC_Descriptions.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

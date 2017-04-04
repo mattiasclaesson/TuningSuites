@@ -5177,6 +5177,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             set.WidebandComPort = m_appSettings.WbPort;
             set.AdapterType = m_appSettings.AdapterType;
             set.Adapter = m_appSettings.Adapter;
+            set.UseLegionBootloader = m_appSettings.UseLegionBootloader;
 
             if (set.ShowDialog() == DialogResult.OK)
             {
@@ -5213,6 +5214,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 m_appSettings.WbPort = set.WidebandComPort;
                 m_appSettings.AdapterType = set.AdapterType;
                 m_appSettings.Adapter = set.Adapter;
+                m_appSettings.UseLegionBootloader = set.UseLegionBootloader;
 
                 SetupMeasureAFRorLambda();
                 SetupDocking();
@@ -10568,11 +10570,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 t8can.setCANDevice(CANBusAdapter.KVASER);
             }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.MXWIFI))
-            {
-                t8can.ForcedBaudrate = m_appSettings.WifiPort;
-                t8can.setCANDevice(CANBusAdapter.MXWIFI);
-            }
             
             if (m_appSettings.Adapter != string.Empty)
             {
@@ -13074,7 +13071,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     m_prohibitReading = true;                   
                     DoWorkEventArgs args = new DoWorkEventArgs(sfd.FileName);
 
-                    t8can.ReadFlash(this, args);
+                    if (m_appSettings.UseLegionBootloader)
+                    {
+                        t8can.ReadFlashLegT8(this, args);
+                    }
+                    else
+                    {
+                        t8can.ReadFlash(this, args);
+                    }
                     while (args.Result == null)
                     {
                         System.Windows.Forms.Application.DoEvents();
@@ -13111,7 +13115,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
                     DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
-                    t8can.WriteFlash(this, args);
+                    if (m_appSettings.UseLegionBootloader)
+                    {
+                        t8can.WriteFlashLegT8(this, args);
+                    }
+                    else
+                    {
+                        t8can.WriteFlash(this, args);
+                    }
                     while (args.Result == null)
                     {
                         System.Windows.Forms.Application.DoEvents();
@@ -13127,7 +13138,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             if (MessageBox.Show("Flash was erased but programming failed, do you which to attempt to recover the ECU?", "Warning!", MessageBoxButtons.YesNo) == DialogResult.OK)
                             {
-                                t8can.RecoverECU(this, args);
+                                if (m_appSettings.UseLegionBootloader)
+                                {
+                                    t8can.RecoverECU_Leg(this, args);
+                                }
+                                else
+                                {
+                                    t8can.RecoverECU_Def(this, args);
+                                }
                                 while (args.Result == null)
                                 {
                                     System.Windows.Forms.Application.DoEvents();
@@ -14969,7 +14987,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
                     DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
-                    t8can.RecoverECU(this, args);
+                    if (m_appSettings.UseLegionBootloader)
+                    {
+                        t8can.RecoverECU_Leg(this, args);
+                    }
+                    else
+                    {
+                        t8can.RecoverECU_Def(this, args);
+                    }
                     while (args.Result == null)
                     {
                         System.Windows.Forms.Application.DoEvents();

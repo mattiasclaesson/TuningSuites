@@ -78,7 +78,8 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>Libs\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Owf.Controls.DigitalDisplayControl">
@@ -93,7 +94,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrionicCANLib">
+    <Reference Include="TrionicCANLib, Version=0.1.34.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\TrionicCANLib.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -226,12 +228,6 @@
     </Compile>
     <Compile Include="Forms\frmVectorlist.Designer.cs">
       <DependentUpon>frmVectorlist.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmWifiSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmWifiSettings.designer.cs">
-      <DependentUpon>frmWifiSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmRebuildFileParameters.cs">
       <SubType>Form</SubType>
@@ -370,9 +366,6 @@
       <DependentUpon>frmVectorlist.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmWifiSettings.resx">
-      <DependentUpon>frmWifiSettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmRebuildFileParameters.resx">
       <DependentUpon>frmRebuildFileParameters.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -407,9 +400,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Libs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>

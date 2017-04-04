@@ -10298,11 +10298,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 trionic7.setCANDevice(CANBusAdapter.KVASER);
             }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.MXWIFI))
-            {
-                trionic7.ForcedBaudrate = m_appSettings.WifiPort;
-                trionic7.setCANDevice(CANBusAdapter.MXWIFI);
-            }
 
             if (m_appSettings.Adapter != string.Empty)
             {
