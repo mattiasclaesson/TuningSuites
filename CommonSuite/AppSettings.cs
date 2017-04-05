@@ -1697,7 +1697,7 @@ namespace CommonSuite
             set { m_Showpopupmap = value; }
         }
 
-        public bool m_UseLegionBootloader = false;
+        public bool m_UseLegionBootloader = true;
         public bool UseLegionBootloader
         {
             get { return m_UseLegionBootloader; }
