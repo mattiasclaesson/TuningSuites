@@ -1,7 +1,7 @@
 @echo off
-set T8.version=0.1.28.0
-set SetupT8Suite.version=0.1.28
-set TrionicCANLib.version=0.1.30.0
+set T8.version=0.1.29.0
+set SetupT8Suite.version=0.1.29
+set TrionicCANLib.version=0.1.34.0
 set AquaGauge.version=1.5.7.0
 set ICSharpCode.TextEditor.version=3.0.0.3437
 set LBIndustrialCtrls.version=1.5.7.0
