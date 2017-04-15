@@ -3673,11 +3673,6 @@ namespace T8SuitePro
             return false;
         }
 
-        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            System.Windows.Forms.Application.Exit();
-        }
-
         private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             // Verify checksums
@@ -5740,16 +5735,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 }
             }
             return dataArray;
-        }
-
-        private void barButtonItem21_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            m_symbols = new SymbolCollection();
-            TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
-            m_symbols.SortColumn = "Length";
-            m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
-            m_symbols.Sort();
-            gridControlSymbols.DataSource = m_symbols;
         }
 
         private void barButtonItem22_ItemClick(object sender, ItemClickEventArgs e)
@@ -8004,40 +7989,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 StartAssemblerViewer(outputfile, progress);
                 progress.Close();
             }
-        }
-
-        private void barButtonItem32_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // save as a byte flipped file
-            if (m_currentfile != "")
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Binary files|*.bin";
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    logger.Debug("Flipping file");
-                    string filenamenew = sfd.FileName;
-                    FileStream fromfile = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
-                    FileStream tofile = new FileStream(filenamenew, FileMode.CreateNew);
-                    using (BinaryReader brori = new BinaryReader(fromfile))
-                    {
-                        using (BinaryWriter brnew = new BinaryWriter(tofile))
-                        {
-                            for (int t = 0; t < 0x100000; t += 2)
-                            {
-                                byte bfirst = brori.ReadByte();
-                                byte bsecond = brori.ReadByte();
-                                brnew.Write(bsecond);
-                                brnew.Write(bfirst);
-                            }
-                        }
-                    }
-                    fromfile.Close();
-                    tofile.Close();
-                }
-            }
-
-
         }
 
         private bool SymbolExists(string symbolname)
@@ -16202,6 +16153,55 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         void difgen_onExportProgress(object sender, CSVGenerator.ProgressEventArgs e)
         {
             frmProgressLogWorks.SetProgressPercentage(e.Percentage);
+        }
+
+        private void File_SaveAll_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //review all open editors and save the data still pending
+            bool _datasaved = false;
+            foreach (DockPanel pnl in dockManager1.Panels)
+            {
+                foreach (Control c in pnl.Controls)
+                {
+                    if (c is IMapViewer)
+                    {
+                        IMapViewer vwr = (IMapViewer)c;
+                        if (vwr.SaveData()) _datasaved = true;
+                    }
+                    else if (c is DockPanel)
+                    {
+                        DockPanel tpnl = (DockPanel)c;
+                        foreach (Control c2 in tpnl.Controls)
+                        {
+                            if (c2 is IMapViewer)
+                            {
+                                IMapViewer vwr2 = (IMapViewer)c2;
+                                if (vwr2.SaveData()) _datasaved = true;
+                            }
+                        }
+                    }
+                    else if (c is ControlContainer)
+                    {
+                        ControlContainer cntr = (ControlContainer)c;
+                        foreach (Control c3 in cntr.Controls)
+                        {
+                            if (c3 is IMapViewer)
+                            {
+                                IMapViewer vwr3 = (IMapViewer)c3;
+                                if (vwr3.SaveData()) _datasaved = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (_datasaved)
+            {
+                frmInfoBox info = new frmInfoBox("All pending changes saved to binary");
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("Binary was already up to date!");
+            }
         }
     }
 }

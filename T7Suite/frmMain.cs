@@ -611,12 +611,6 @@ namespace T7
             }
         }
 
-        private void File_Exit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            trionic7.Cleanup();
-            System.Windows.Forms.Application.Exit();
-        }
-
         private void File_CreateBackupFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (m_currentfile != string.Empty)
@@ -3901,30 +3895,6 @@ namespace T7
             // this can result in a compare between flash maps and the sram map values
             m_currentsramfile = filename;
             barStaticItem1.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
-
-        }
-
-        private void Actions_ExtractSymboltable_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            m_symbols = new SymbolCollection();
-
-            TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
-            barProgress.EditValue = 70;
-            barProgress.Caption = "Sorting data";
-            System.Windows.Forms.Application.DoEvents();
-
-            m_symbols.SortColumn = "Length";
-            m_symbols.SortingOrder = GenericComparer.SortOrder.Descending;
-            m_symbols.Sort();
-            barProgress.EditValue = 70;
-            barProgress.Caption = "Loading data into view";
-            System.Windows.Forms.Application.DoEvents();
-
-            gridControlSymbols.DataSource = m_symbols;
-            barProgress.EditValue = 0;
-            barProgress.Caption = "Done";
-            barProgress.Visibility = BarItemVisibility.Never;
-            System.Windows.Forms.Application.DoEvents();
 
         }
 
@@ -10712,9 +10682,30 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private void barButtonItem19_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void GetSRAMSnapshot_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            GetSRAMSnapshot();
+            if (CheckCANConnectivity())
+            {
+                m_prohibitReading = true;
+                SetProgress("Starting snapshot download");
+                string filename = Path.GetDirectoryName(m_currentfile) + "\\SRAM" + DateTime.Now.Year.ToString("D4") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2") + DateTime.Now.Millisecond.ToString("D3") + ".RAM";
+                if (m_CurrentWorkingProject != "")
+                {
+                    if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots");
+                    filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots\\Snapshot" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".RAM";
+                }
+                if (trionic7.GetSRAMSnapshot(filename))
+                {
+                    frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
+                }
+                m_prohibitReading = false;
+                SetProgressIdle();
+            }
+            else
+            {
+                // not connected to ECU
+                frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to download a snapshot");
+            }
         }
 
         private SymbolCollection GetRealtimeNotificationSymbols()
@@ -15717,37 +15708,6 @@ If boost regulation reports errors you can increase the difference between boost
         private void ribbonControl1_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void GetSRAMSnapshot()
-        {
-            if (CheckCANConnectivity())
-            {
-                m_prohibitReading = true;
-                SetProgress("Starting snapshot download");
-                string filename = Path.GetDirectoryName(m_currentfile) + "\\SRAM" + DateTime.Now.Year.ToString("D4") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2") + DateTime.Now.Millisecond.ToString("D3") + ".RAM";
-                if (m_CurrentWorkingProject != "")
-                {
-                    if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots");
-                    filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots\\Snapshot" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".RAM";
-                }
-                if (trionic7.GetSRAMSnapshot(filename))
-                {
-                    frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
-                }
-                m_prohibitReading = false;
-                SetProgressIdle();
-            }
-            else
-            {
-                // not connected to ECU
-                frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to download a snapshot");
-            }
-        }
-
-        private void brnCreateSRAMSnapshot_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            GetSRAMSnapshot();
         }
 
         private void OpenAndDisplayLogFile(string filename)
