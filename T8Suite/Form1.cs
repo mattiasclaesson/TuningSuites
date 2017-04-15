@@ -10520,31 +10520,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        private void btnSRAMSnapshot_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Snapshots|*.RAM";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                SetCanAdapter();
-                SetProgress("Starting snapshot download");
-                if (!t8can.isOpen())
-                {
-                    t8can.openDevice(false);
-                }
-                if (t8can.isOpen())
-                {
-
-                    m_prohibitReading = true;
-                    byte[] snapshot = t8can.ReadSRAMSnapshot();
-                    File.WriteAllBytes(sfd.FileName, snapshot);
-                    frmInfoBox info = new frmInfoBox("Snapshot done");
-                    m_prohibitReading = false;
-                    SetProgressIdle();
-                }
-            }
-        }
-
         private void SetCanAdapter()
         {
             t8can.OnlyPBus = m_appSettings.OnlyPBus;
@@ -13095,13 +13070,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         }
 
         private void btnFlashECU_ItemClick(object sender, ItemClickEventArgs e)
-        {            
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Binary files|*.bin";
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
+        {
+            if (File.Exists(m_currentfile))
             {
-
                 SetCanAdapter();
 
                 SetProgress("Starting flash download");
@@ -13114,7 +13085,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     m_prohibitReading = true;
                     Thread.Sleep(1000);
                     System.Windows.Forms.Application.DoEvents();
-                    DoWorkEventArgs args = new DoWorkEventArgs(ofd.FileName);
+                    DoWorkEventArgs args = new DoWorkEventArgs(m_currentfile);
                     if (m_appSettings.UseLegionBootloader)
                     {
                         t8can.WriteFlashLegT8(this, args);
