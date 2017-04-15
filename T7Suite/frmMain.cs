@@ -157,7 +157,6 @@ namespace T7
         private string m_currentsramfile = string.Empty;
         private AFRViewType AfrViewMode = AFRViewType.AFRMode;
         private Stopwatch _sw = new Stopwatch();
-        private Stopwatch _sw2 = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
         frmSplash splash;
         private bool m_connectedToECU = false;
@@ -8460,82 +8459,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                             }
 
-
-                            /*byte[] result = ReadSymbolFromSRAM((uint)symbolindex);
-                            string debugstring = "Data: ";
-                            foreach (byte b in result)
-                            {
-                                debugstring += b.ToString("X2") + " ";
-                            }
-                            logger.Debug(debugstring);*/
-                            //TODO: remove this line
-                            //byte[] result = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, e.Mapname), (int)GetSymbolLength(m_symbols, e.Mapname));
-                            //TODO: remove this line ^^
-                            //MessageBox.Show("Data refreshed for symbol: " + e.Mapname);
                         }
                     }
-                    /*else if(m_appSettings.DebugMode)
-                    {
-                        // only if debug
-                        writepossible = true;
-                        byte[] result = new byte[GetSymbolLength(m_symbols, e.Mapname)];
-                        int rows = 0;
-                        int cols = 0;
-                        foreach (DevExpress.XtraBars.Docking.DockPanel pnl in dockManager1.Panels)
-                        {
-                            if (pnl.Text.StartsWith("Symbol: ") || pnl.Text.StartsWith("SRAM"))
-                            {
-                                foreach (Control c in pnl.Controls)
-                                {
-                                    if (c is IMapViewer)
-                                    {
-                                        IMapViewer vwr = (IMapViewer)c;
-                                        if (vwr.Map_name == e.Mapname)
-                                        {
-                                            vwr.Map_content = result;
-                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
-                                            vwr.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                        }
-                                    }
-                                    else if (c is DevExpress.XtraBars.Docking.DockPanel)
-                                    {
-                                        DevExpress.XtraBars.Docking.DockPanel tpnl = (DevExpress.XtraBars.Docking.DockPanel)c;
-                                        foreach (Control c2 in tpnl.Controls)
-                                        {
-                                            if (c2 is IMapViewer)
-                                            {
-                                                IMapViewer vwr2 = (IMapViewer)c2;
-                                                if (vwr2.Map_name == e.Mapname)
-                                                {
-                                                    vwr2.Map_content = result;
-                                                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
-                                                    vwr2.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else if (c is DevExpress.XtraBars.Docking.ControlContainer)
-                                    {
-                                        DevExpress.XtraBars.Docking.ControlContainer cntr = (DevExpress.XtraBars.Docking.ControlContainer)c;
-                                        foreach (Control c3 in cntr.Controls)
-                                        {
-                                            if (c3 is IMapViewer)
-                                            {
-                                                IMapViewer vwr3 = (IMapViewer)c3;
-                                                if (vwr3.Map_name == e.Mapname)
-                                                {
-                                                    vwr3.Map_content = result;
-                                                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
-                                                    vwr3.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }*/
                 }
                 if (!writepossible)
                 {
@@ -11093,24 +11018,19 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private byte[] ReadSymbolFromSRAM(uint symbolnumber, string symbolname, uint sramaddress, int length, out bool _success)
+        private byte[] ReadSymbolFromSRAM(uint symbolnumber, string symbolname, uint sramaddress, int length, out bool success)
         {
             byte[] data;
             data = new byte[length];
             data[0] = (byte)0xFF;
-            _success = false;
+            success = false;
             logger.Debug("Getting symbolnumber: " + symbolnumber.ToString() + " symbolname: " + symbolname);
             if (m_connectedToECU)
             {
                 if (length <= 4)
                 {
-                    _sw2.Reset();
-                    _sw2.Start();
-                    logger.Debug("Get Value by SRAMAddress : " + sramaddress.ToString());
-                    //m_prohibitReading = true;
-                    byte[] retdata = trionic7.ReadValueFromSRAM(sramaddress, length, out _success);
-                    //m_prohibitReading = false;
-                    
+                    byte[] retdata = trionic7.ReadValueFromSRAM(sramaddress, length, out success);
+
                     if (length == 1)
                     {
                         data[0] = retdata[1];
@@ -11133,41 +11053,15 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         data[2] = retdata[3];
                         data[3] = retdata[4];
                     }
-                    else
-                    {
-                        logger.Debug("length higher than allowed :" + length);
-                    }
-                    
-                    logger.Debug("          Get value Updated via sramaddress in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
-                    _sw2.Stop();
                 }
-               else
-              {
-                    _sw2.Reset();
-                    _sw2.Start();
-                    logger.Debug("          Get symbolnumber (2): " + symbolnumber.ToString());
-                    data = trionic7.ReadSymbolNumber(symbolnumber, out _success);
-                    logger.Debug("          Get symbolnumber (2) Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");
-                    _sw2.Stop();
-              }
-                /* else
-                    {                                                                                                             
-                        _sw2.Reset();                                                                                             
-                        _sw2.Start();                                                                                             
-                        int sram = (int)GetSymbolAddressSRAM(m_symbols, symbolname);                                              
-                        logger.Debug("          Get single byte : " + sram.ToString());                                           
-                        SymbolHelper sh = new SymbolHelper();                                                                     
-                        sh.Length = 1;                                                                                            
-                        sh.Start_address = sram;                                                                                  
-                        m_prohibitReading = true;                                                                                 
-                        data = trionic7.ReadMapFromSRAMVarLength(sh);                                                             
-                        m_prohibitReading = false;                                                                                
-                        _success = true;                                                                                          
-                        logger.Debug("          Get single byte Updated in " + _sw2.ElapsedMilliseconds.ToString() + " ms");      
-                        _sw2.Stop();                                                                                              
-                    }                                                                                                             
-                   */                                                                                                          
-                                                                                                                                 
+                else
+                {
+                    data = trionic7.ReadSymbolNumber(symbolnumber, out success);
+                    if (!success)
+                    {
+                        logger.Debug("Failed getting symbolnumber: " + symbolnumber.ToString() + " symbolname: " + symbolname);
+                    }
+                }
             }
 
             return data;
@@ -11196,7 +11090,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         logger.Debug("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symName);
                         if (symbolnumber >= 0)
                         {
-                            //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh, true);
                             logger.Debug("read " + result.Length.ToString() + " bytes from SRAM!");
 
@@ -15855,7 +15748,6 @@ If boost regulation reports errors you can increase the difference between boost
             if (CheckCANConnectivity())
             {
                 m_prohibitReading = true;
-                bool _success = false;
                 SetProgress("Starting snapshot download");
                 string filename = Path.GetDirectoryName(m_currentfile) + "\\SRAM" + DateTime.Now.Year.ToString("D4") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2") + DateTime.Now.Millisecond.ToString("D3") + ".RAM";
                 if (m_CurrentWorkingProject != "")
