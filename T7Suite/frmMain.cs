@@ -10712,30 +10712,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private void barButtonItem18_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            // first stop the canbus interface 
-            TerminateOnlineProcesses();
-            
-            int adapter = 0;
-            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
-            {
-                adapter = 1;
-            }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
-            {
-                adapter = 2;
-            }
-
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Binary files|*.bin";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", adapter.ToString() + " 2 \"" + ofd.FileName + "\"");
-                Process.Start(psi);
-            }
-        }
-
         private void barButtonItem19_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             GetSRAMSnapshot();
