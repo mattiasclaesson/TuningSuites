@@ -214,7 +214,7 @@ namespace CommonSuite
             return retval;
         }
 
-        public void ClearCodes()
+        public void Init()
         {
             //listBox1.Items.Clear();
             DataTable dtn = new DataTable();

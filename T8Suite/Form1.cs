@@ -1462,10 +1462,47 @@ namespace T8SuitePro
             //if (m_currentfile != string.Empty) LoadRealtimeTable();
         }
 
-        private void gridView1_DoubleClick(object sender, EventArgs e)
+        private void gridViewSymbols_DoubleClick(object sender, EventArgs e)
         {
-            StartTableViewer();
+            System.Windows.Forms.Application.DoEvents();
+            int[] selectedrows = gridViewSymbols.GetSelectedRows();
+
+            if (selectedrows.Length > 0)
+            {
+                int grouplevel = gridViewSymbols.GetRowLevel((int)selectedrows.GetValue(0));
+                if (grouplevel >= gridViewSymbols.GroupCount)
+                {
+                    int[] selrows = gridViewSymbols.GetSelectedRows();
+                    if (selrows.Length > 0)
+                    {
+                        SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
+                        if (sh == null)
+                            return;
+
+                        if (sh.Flash_start_address > m_currentfile_size)
+                        {
+                            logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
+                            if (RealtimeCheckAndConnect())
+                            {
+                                ShowRealtimeMapFromECU(sh.SmartVarname);
+                            }
+                        }
+                        else
+                        {
+                            StartTableViewer();
+                        }
+                    }
+                }
+            }
+            if (m_appSettings.HideSymbolTable)
+            {
+                // hide the symbollist again
+                dockSymbols.HideImmediately();
+            }
+            System.Windows.Forms.Application.DoEvents();
+            logger.Debug("Double click seen");
         }
+
         private void GetAxisDescriptions(string filename, SymbolCollection curSymbols, string symbolname, out string x, out string y, out string z)
         {
             x = "x-axis";
@@ -2156,7 +2193,7 @@ namespace T8SuitePro
                         StartBitMaskViewer(sh);
                         return;
                     }
-                    if (sh.Flash_start_address > m_currentfile_size && !m_connectedToECU)
+                    if (sh.Flash_start_address > m_currentfile_size && !m_RealtimeConnectedToECU)
                     {
                         MessageBox.Show("Symbol outside of flash boundary, probably SRAM only symbol");
                         return;
@@ -2404,7 +2441,7 @@ namespace T8SuitePro
                                 tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                                 tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
 
-                                if (m_connectedToECU)
+                                if (m_RealtimeConnectedToECU)
                                 {
                                     tabdet.IsRAMViewer = true;
                                     tabdet.OnlineMode = true;
@@ -2955,6 +2992,8 @@ namespace T8SuitePro
             if (GetSymbolAddress(m_symbols, symbolname) > 0)
             {
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
+                gridViewSymbols.ApplyFindFilter("");
+
                 SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
                 int rtel = 0;
                 foreach (SymbolHelper sh in sc)
@@ -2970,6 +3009,7 @@ namespace T8SuitePro
                             gridViewSymbols.SelectRow(rhandle);
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
+
                             StartTableViewer();
                             break;
                         }
@@ -4665,7 +4705,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            m_connectedToECU = false;
+            m_RealtimeConnectedToECU = false;
             m_prohibitReading = true;
             if (m_CurrentWorkingProject != "")
             {
@@ -6050,6 +6090,12 @@ So, 0x101 byte buffer with first byte ignored (convention)
         void m_msiUpdater_onUpdateProgressChanged(msiupdater.MSIUpdateProgressEventArgs e)
         {
 
+        }
+
+        private void SetCANStatus(string text)
+        {
+            barECUNameText.Caption = text;
+            System.Windows.Forms.Application.DoEvents();
         }
 
         private void SetStatusText(string text)
@@ -10382,17 +10428,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnToggleRealtime_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // start realtime mode
             if (dockRealtime.Visibility == DockVisibility.Visible)
             {
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
                 m_enableRealtimeTimer = false;
-                barConnectedECUName.Caption = string.Empty;
-                if (t8can.isOpen())
-                {
-                    t8can.Cleanup();
-                }
 
                 if (m_appSettings.UseDigitalWidebandLambda)
                 {
@@ -10406,100 +10446,43 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             else
             {
-                SetCanAdapter();
-                if (!t8can.isOpen())
+                m_enableRealtimeTimer = true;
+
+                if (m_appSettings.ResetRealtimeSymbolOnTabPageSwitch)
                 {
-                    t8can.openDevice(true);
+                    FillRealtimeTable(MonitorType.Dashboard); // default
                 }
-                if (t8can.isOpen())
+
+                if (RealtimeCheckAndConnect())
                 {
-                    // whatever
-                    // get the software version from the ECU
-                    if (m_swversion == string.Empty) // not yet connected
-                    {
-                        m_realtimeAddresses = new System.Data.DataTable();
-                        m_realtimeAddresses.Columns.Add("SymbolName");
-                        m_realtimeAddresses.Columns.Add("SymbolNumber", System.Type.GetType("System.Int32"));
-                        m_realtimeAddresses.Columns.Add("VarName");
-
-                        m_swversion = t8can.GetSoftwareVersion();
-                        //logger.Debug("Version: " + m_swversion);
-                        logger.Debug("***");
-                        for (int i = 0; i < m_swversion.Length; i++)
-                        {
-                            Console.Write(Convert.ToByte(m_swversion[i]).ToString("X2") + " ");
-                        }
-                        logger.Debug("***");
-                        barConnectedECUName.Caption = m_swversion;
-
-                        // fill realtime table
-                    }
-                    if (m_appSettings.ResetRealtimeSymbolOnTabPageSwitch)
-                    {
-                        FillRealtimeTable(MonitorType.Dashboard); // default
-                    }
-                    dockRealtime.Visibility = DockVisibility.Visible;
-                    int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
-                    int height = dockManager1.Form.ClientSize.Height;
-                    if (width > 660) width = 660;
-
-                    dockRealtime.Dock = DockingStyle.Left;
-                    dockRealtime.Width = width;
-
-                    if (m_appSettings.UseDigitalWidebandLambda)
-                    {
-                        try
-                        {
-                            wbFactory = new WidebandFactory(m_appSettings.WidebandDevice, m_appSettings.WbPort, false);
-                            wbReader = wbFactory.CreateInstance();
-                            wbReader.Start();
-                        }
-                        catch (Exception ex)
-                        {
-                            wbFactory = null;
-                            wbReader = null;
-                            MessageBox.Show(ex.Message, "Wideband error", MessageBoxButtons.OK);
-                        }
-                    }
-
-                    // set default skin
-                    SwitchRealtimePanelMode(m_appSettings.Panelmode);
-                    m_connectedToECU = true;
-                    tmrRealtime.Enabled = true;
-                    m_enableRealtimeTimer = true;
+                    tmrRealtime.Enabled = m_enableRealtimeTimer;
                 }
-            }
-        }
+                dockRealtime.Visibility = DockVisibility.Visible;
+                int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
+                int height = dockManager1.Form.ClientSize.Height;
+                if (width > 660) width = 660;
 
-        private void SetCanAdapter()
-        {
-            t8can.OnlyPBus = m_appSettings.OnlyPBus;
-            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
-            {
-                t8can.setCANDevice(CANBusAdapter.LAWICEL);
-            }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
-            {
-                t8can.setCANDevice(CANBusAdapter.COMBI);
-            }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
-            {
-                t8can.ForcedBaudrate = m_appSettings.Baudrate;
-                t8can.setCANDevice(CANBusAdapter.ELM327);
-            }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.JUST4TRIONIC))
-            {
-                t8can.ForcedBaudrate = m_appSettings.Baudrate;
-                t8can.setCANDevice(CANBusAdapter.JUST4TRIONIC);
-            }
-            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.KVASER))
-            {
-                t8can.setCANDevice(CANBusAdapter.KVASER);
-            }
-            
-            if (m_appSettings.Adapter != string.Empty)
-            {
-                t8can.SetSelectedAdapter(m_appSettings.Adapter);
+                dockRealtime.Dock = DockingStyle.Left;
+                dockRealtime.Width = width;
+
+                if (m_appSettings.UseDigitalWidebandLambda)
+                {
+                    try
+                    {
+                        wbFactory = new WidebandFactory(m_appSettings.WidebandDevice, m_appSettings.WbPort, false);
+                        wbReader = wbFactory.CreateInstance();
+                        wbReader.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        wbFactory = null;
+                        wbReader = null;
+                        MessageBox.Show(ex.Message, "Wideband error", MessageBoxButtons.OK);
+                    }
+                }
+
+                // set default skin
+                SwitchRealtimePanelMode(m_appSettings.Panelmode);
             }
         }
 
@@ -11915,7 +11898,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             return false;
         }
 
-        private bool m_connectedToECU = false;
+        private bool m_RealtimeConnectedToECU = false;
         private bool m_prohibitReading = false;
         private bool m_enableRealtimeTimer = false;
         private bool _soundAllowed = true;
@@ -11928,7 +11911,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             tmrRealtime.Enabled = false;
             try
             {
-                if (m_connectedToECU)
+                if (m_RealtimeConnectedToECU)
                 {
                     if (!m_prohibitReading)
                     {
@@ -13479,7 +13462,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 m_prohibitReading = true;
                 //if (flash != null)
                 {
-                    if (m_connectedToECU)
+                    if (m_RealtimeConnectedToECU)
                     {
                         writepossible = true;
                         //T5 byte[] resulttemp = tcan.readRAM((ushort)GetSymbolAddressSRAM(m_symbols, e.Mapname), (uint)GetSymbolLength(m_symbols, e.Mapname) + 1);
@@ -13512,7 +13495,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                             GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
                                                             vwr.IsRAMViewer = false;
                                                             vwr.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                            if ((m_connectedToECU) /*|| m_appSettings.DebugMode*/)
+                                                            if ((m_RealtimeConnectedToECU) /*|| m_appSettings.DebugMode*/)
                                                             {
                                                                 vwr.OnlineMode = true;
                                                                 vwr.IsRAMViewer = true;
@@ -13537,7 +13520,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
                                                                     vwr2.IsRAMViewer = false;
                                                                     vwr2.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                                    if ((m_connectedToECU) /*|| m_appSettings.DebugMode*/)
+                                                                    if ((m_RealtimeConnectedToECU) /*|| m_appSettings.DebugMode*/)
                                                                     {
                                                                         vwr2.OnlineMode = true;
                                                                         vwr2.IsRAMViewer = true;
@@ -13564,7 +13547,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
                                                                     vwr3.IsRAMViewer = false;
                                                                     vwr3.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                                    if ((m_connectedToECU) /*|| m_appSettings.DebugMode*/)
+                                                                    if ((m_RealtimeConnectedToECU) /*|| m_appSettings.DebugMode*/)
                                                                     {
                                                                         vwr3.OnlineMode = true;
                                                                         vwr3.IsRAMViewer = true;
@@ -13618,7 +13601,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 //if (flash != null)
                 {
-                    if (m_connectedToECU)
+                    if (m_RealtimeConnectedToECU)
                     {
                         writepossible = true;
                         m_prohibitReading = true;
@@ -13985,7 +13968,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void btnGetECUInfo_ItemClick(object sender, ItemClickEventArgs e)
         {
             SetCanAdapter();
-            SetProgress("Starting ECU info retrieval");
             if (!t8can.isOpen())
             {
                 t8can.openDevice(true);
@@ -14019,9 +14001,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 info.SetEngineType(t8can.RequestECUInfo(0x0C, ""));
                 info.SetSpeedLimit(t8can.GetTopSpeed() + " km/h");
                 m_prohibitReading = false;
-
             }
-            SetProgressIdle();
         }
 
         private void LoadMyMaps()
@@ -14656,27 +14636,37 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             plotsel.ShowDialog();
         }
 
+        private void StartAViewer(string symbolname)
+        {
+            if (m_RealtimeConnectedToECU)
+            {
+                ShowRealtimeMapFromECU(symbolname);
+            }
+            else
+            {
+                StartTableViewer(symbolname);
+            }
+        }
+
         private void ShowRealtimeMapFromECU(string symbolname)
         {
-            if (m_connectedToECU)
+            if (RealtimeCheckAndConnect())
             {
                 foreach (SymbolHelper sh in m_symbols)
                 {
-                    string varname = sh.SmartVarname;
-                    if (varname == symbolname)
+                    if (sh.SmartVarname == symbolname)
                     {
                         // convert to realtime symbol
                         // start an SRAM mapviewer for this symbol
-                        int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, varname), varname);
+                        int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symbolname), symbolname);
                         sh.Symbol_number = symbolnumber;
 
-                        logger.Debug("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + varname);
+                        logger.Debug("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symbolname);
                         if (symbolnumber >= 0)
                         {
-                            //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh);
                             logger.Debug("read " + result.Length.ToString() + " bytes from SRAM!");
-                            StartTableViewer(varname);
+                            StartTableViewer(symbolname);
                             try
                             {
                                 int rows = 0;
@@ -14690,13 +14680,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                             if (c is IMapViewer)
                                             {
                                                 IMapViewer vwr = (IMapViewer)c;
-                                                if (vwr.Map_name == varname)
+                                                if (vwr.Map_name == symbolname)
                                                 {
                                                     vwr.Map_content = result;
-                                                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, varname, out cols, out rows);
+                                                    GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out cols, out rows);
                                                     vwr.IsRAMViewer = true;
                                                     vwr.OnlineMode = true;
-                                                    vwr.ShowTable(cols, isSixteenBitTable(varname));
+                                                    vwr.ShowTable(cols, isSixteenBitTable(symbolname));
                                                 }
                                             }
                                             else if (c is DockPanel)
@@ -14707,13 +14697,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     if (c2 is IMapViewer)
                                                     {
                                                         IMapViewer vwr2 = (IMapViewer)c2;
-                                                        if (vwr2.Map_name == varname)
+                                                        if (vwr2.Map_name == symbolname)
                                                         {
                                                             vwr2.Map_content = result;
-                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, varname, out cols, out rows);
+                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out cols, out rows);
                                                             vwr2.IsRAMViewer = true;
                                                             vwr2.OnlineMode = true;
-                                                            vwr2.ShowTable(cols, isSixteenBitTable(varname));
+                                                            vwr2.ShowTable(cols, isSixteenBitTable(symbolname));
                                                         }
                                                     }
                                                 }
@@ -14726,13 +14716,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                     if (c3 is IMapViewer)
                                                     {
                                                         IMapViewer vwr3 = (IMapViewer)c3;
-                                                        if (vwr3.Map_name == varname)
+                                                        if (vwr3.Map_name == symbolname)
                                                         {
                                                             vwr3.Map_content = result;
-                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, varname, out cols, out rows);
+                                                            GetTableMatrixWitdhByName(m_currentfile, m_symbols, symbolname, out cols, out rows);
                                                             vwr3.IsRAMViewer = true;
                                                             vwr3.OnlineMode = true;
-                                                            vwr3.ShowTable(cols, isSixteenBitTable(varname));
+                                                            vwr3.ShowTable(cols, isSixteenBitTable(symbolname));
                                                         }
                                                     }
                                                 }
@@ -14761,7 +14751,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnViewMissfireMap_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //ShowRealtimeMapFromECU("MissfAdap.MissfCntMap");
+            ShowRealtimeMapFromECU("MisfAdap.N_MisfCountCyl");
         }
 
         private void btnCreateFromTISFile_ItemClick(object sender, ItemClickEventArgs e)
@@ -15840,34 +15830,39 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
-        private void btnReadFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnGetFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
         {
-             // Connect at accesslevel01, need to close connection if already open
-            if (m_connectedToECU)
+            // Connect at accesslevel01, need to close connection if already open
+            RealtimeDisconnectAndHide();
+
+            try
             {
-                t8can.Cleanup();
-                m_connectedToECU = false;
+                SetCanAdapter();
+                t8can.SecurityLevel = AccessLevel.AccessLevel01;
+                t8can.openDevice(false);
+ 
+                frmFaultcodes frmfaults = new frmFaultcodes();
+                frmfaults.onClearCurrentDTC += new frmFaultcodes.onClearDTC(frmfaults_onClearCurrentDTC);
+                frmfaults.onCloseFrm += new frmFaultcodes.frmClose(frmfaults_onClose);
+ 
+                string[] faults = t8can.ReadDTC();
+                foreach (string fault in faults)
+                {
+                    frmfaults.addFault(fault.Substring(5,5));
+                }
+                frmfaults.Show();
             }
-            SetCanAdapter();
-            t8can.SecurityLevel = AccessLevel.AccessLevel01;
-            t8can.openDevice(false);
- 
-            frmFaultcodes frmfaults = new frmFaultcodes();
-            frmfaults.onClearCurrentDTC += new frmFaultcodes.onClearDTC(frmfaults_onClearCurrentDTC);
-            frmfaults.onCloseFrm += new frmFaultcodes.frmClose(frmfaults_onClose);
- 
-            string[] faults = t8can.ReadDTC();
-            foreach (string fault in faults)
+            catch (Exception E)
             {
-                frmfaults.addFault(fault.Substring(5,5));
+                logger.Debug(E.Message);
             }
-            frmfaults.Show();
+
+            // Cleanup
+            RealtimeDisconnectAndHide();
         }
 
         void frmfaults_onClose(object sender, EventArgs e)
         {
-            t8can.Cleanup();
-            barConnectedECUName.Caption = string.Empty;
         }
 
         void frmfaults_onClearCurrentDTC(object sender, frmFaultcodes.ClearDTCEventArgs e)
@@ -15879,14 +15874,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     int DTCCode = Convert.ToInt32(e.DTCCode.Substring(1, e.DTCCode.Length - 1), 16);
 
-                    //TODO ClearDTCCodes() must be added to the api
-                    //t8can.ClearDTCCodes(DTCCode);
-                    t8can.ClearDTCCodes(); // clear all codes
+                    //TODO ClearDTCCodes(DTCCode) must be added to the api
+                    t8can.ClearDTCCodes(); // clear all codes for now
 
                     if (sender is frmFaultcodes)
                     {
                         frmFaultcodes frmfaults = (frmFaultcodes)sender;
-                        frmfaults.ClearCodes();
+                        frmfaults.Init();
                         
                         string[] faults = t8can.ReadDTC();
                         foreach (string fault in faults)
@@ -15905,14 +15899,27 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnClearDTCs_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (m_connectedToECU)
+            // Connect at accesslevel01, need to close connection if already open
+            RealtimeDisconnectAndHide();
+
+            try
             {
-                m_prohibitReading = true;
-                t8can.ReadDTC();
-                //TODO ClearDTCCodes() must be added to the api
-                //t8can.ClearDTCCodes();
-                m_prohibitReading = false;
+                SetCanAdapter();
+                t8can.SecurityLevel = AccessLevel.AccessLevel01;
+                t8can.openDevice(false);
+
+                string[] codes = t8can.ReadDTC();
+                bool success = t8can.ClearDTCCodes();
+
+                frmInfoBox info = new frmInfoBox(string.Format("Clear DTC codes was {0}", success ? "successful" : "failed"));
             }
+            catch (Exception E)
+            {
+                logger.Debug(E.Message);
+            }
+
+            // Cleanup
+            RealtimeDisconnectAndHide();
         }
 
         private void addToMyMapsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -16201,6 +16208,119 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             else
             {
                 frmInfoBox info = new frmInfoBox("Binary was already up to date!");
+            }
+        }
+
+        private void RealtimeDisconnectAndHide()
+        {
+            if (dockRealtime.Visibility == DockVisibility.Visible)
+            {
+                dockRealtime.Visibility = DockVisibility.Hidden;
+                tmrRealtime.Enabled = false;
+            }
+
+            RealtimeDisconnect();
+        }
+
+        private void btnConnectDisconnect_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_RealtimeConnectedToECU)
+            {
+                RealtimeDisconnect();
+            }
+            else
+            {
+                if (RealtimeCheckAndConnect())
+                {
+                    btnConnectDisconnect.Caption = "Disconnect ECU";
+                }
+            }
+        }
+
+        private void RealtimeDisconnect()
+        {
+            m_RealtimeConnectedToECU = false;
+            t8can.Cleanup();
+            btnConnectDisconnect.Caption = "Connect ECU";
+            SetCANStatus("");
+        }
+
+        private bool RealtimeCheckAndConnect()
+        {
+            if (m_RealtimeConnectedToECU)
+            {
+                return true;
+            }
+            else
+            {
+                SetCANStatus("Initializing CANbus interface");
+            }
+
+            SetCanAdapter();
+            if (!t8can.isOpen())
+            {
+                if (t8can.openDevice(true))
+                {
+                    SetCANStatus("Connected");
+                    btnConnectDisconnect.Caption = "Disconnect ECU";
+                    m_RealtimeConnectedToECU = true;
+
+                    DisplaySoftwareVersionFromECU();
+                }
+                else
+                {
+                    SetCANStatus("Failed to connect");
+                    t8can.Cleanup();
+                    return false;
+                }
+            }
+            
+            return m_RealtimeConnectedToECU;
+        }
+
+        private void DisplaySoftwareVersionFromECU()
+        {
+            if (m_swversion == string.Empty) // not yet connected
+            {
+                m_realtimeAddresses = new System.Data.DataTable();
+                m_realtimeAddresses.Columns.Add("SymbolName");
+                m_realtimeAddresses.Columns.Add("SymbolNumber", System.Type.GetType("System.Int32"));
+                m_realtimeAddresses.Columns.Add("VarName");
+
+                barConnectedECUName.Caption = t8can.GetSoftwareVersion();
+            }
+        }
+
+        private void SetCanAdapter()
+        {
+            t8can.SecurityLevel = AccessLevel.AccessLevelFD;
+            t8can.OnlyPBus = m_appSettings.OnlyPBus;
+            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
+            {
+                t8can.setCANDevice(CANBusAdapter.LAWICEL);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
+            {
+                t8can.setCANDevice(CANBusAdapter.COMBI);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
+            {
+                t8can.ForcedBaudrate = m_appSettings.Baudrate;
+                t8can.setCANDevice(CANBusAdapter.ELM327);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.JUST4TRIONIC))
+            {
+                t8can.ForcedBaudrate = m_appSettings.Baudrate;
+                t8can.setCANDevice(CANBusAdapter.JUST4TRIONIC);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.KVASER))
+            {
+                t8can.setCANDevice(CANBusAdapter.KVASER);
+            }
+
+            if (m_appSettings.Adapter != string.Empty)
+            {
+                t8can.SetSelectedAdapter(m_appSettings.Adapter);
             }
         }
     }
