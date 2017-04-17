@@ -2284,24 +2284,7 @@ namespace T7
                     {
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
-                        IMapViewer tabdet;
-                        if (m_appSettings.UseNewMapViewer)
-                        {
-                            tabdet = new MapViewerEx();
-                        }
-                        else
-                        {
-                            tabdet = new MapViewer();
-                        }
-
-                        tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                        tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                        tabdet.SetViewSize(m_appSettings.DefaultViewSize);
-                        tabdet.Viewtype = m_appSettings.DefaultViewType;
-                        tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                        tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                        tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                        tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                        IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
                         tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -2600,25 +2583,7 @@ namespace T7
                 {
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = SRAMFilename;
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                    tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                    //tabdet.IsHexMode = true; // always in hexmode!
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
-                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                     tabdet.Filename = SRAMFilename;
                     tabdet.Map_name = SymbolName;
                     //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -2969,24 +2934,8 @@ namespace T7
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = filename1;
 
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                     tabdet.IsCompareViewer = true;
-
-
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Filename = filename1;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = symbolDescription;
@@ -7564,25 +7513,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             dockManager1.BeginUpdate();
                             try
                             {
-                                IMapViewer tabdet;
-                                if (m_appSettings.UseNewMapViewer)
-                                {
-                                    tabdet = new MapViewerEx();
-                                }
-                                else
-                                {
-                                    tabdet = new MapViewer();
-                                }
-
-                                tabdet.AutoUpdateIfSRAM = m_appSettings.AutoUpdateSRAMViewers;
-                                tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                                tabdet.SetViewSize(m_appSettings.DefaultViewSize);
-                                tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                                tabdet.Viewtype = m_appSettings.DefaultViewType;
-                                tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                                tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                                tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
-
+                                IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                                 tabdet.Visible = false;
                                 tabdet.Filename = m_currentfile;
                                 tabdet.Map_name = varname;
@@ -8785,24 +8716,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 {
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                    tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
-                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                     tabdet.Filename = Filename;
                     tabdet.Map_name = SymbolName;
                     //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -14114,25 +14028,8 @@ If boost regulation reports errors you can increase the difference between boost
                                 dockPanel.FloatSize = new Size(650, 450);
                             }
                             dockPanel.Tag = m_currentsramfile;
-                            IMapViewer tabdet;
-                            if (m_appSettings.UseNewMapViewer)
-                            {
-                                tabdet = new MapViewerEx();
-                            }
-                            else
-                            {
-                                tabdet = new MapViewer();
-                            }
-
-                            tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                            tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                            tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                            IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                             tabdet.Filename = m_currentsramfile;
-                            tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                            tabdet.Viewtype = m_appSettings.DefaultViewType;
-                            tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                            tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                            tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                             tabdet.Map_name = sh.Varname;
                             tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
                             tabdet.Map_cat = XDFCategories.Undocumented;
@@ -14430,25 +14327,8 @@ If boost regulation reports errors you can increase the difference between boost
                 {
                     dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                    tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
-                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                     tabdet.Filename = filename;
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
                     tabdet.Map_cat = XDFCategories.Undocumented;
@@ -16015,24 +15895,9 @@ If boost regulation reports errors you can increase the difference between boost
                 dockManager1.BeginUpdate();
                 try
                 {
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                     tabdet.Visible = false;
                     tabdet.Filename = m_currentfile;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = "Target AFR map for use with wideband lambda sensor";
                     if (mapname == "FeedbackAFR") tabdet.Map_descr = "Feedback AFR map from wideband lambda sensor";
@@ -16897,24 +16762,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 {
                     dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
-                    IMapViewer tabdet;
-                    if (m_appSettings.UseNewMapViewer)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else
-                    {
-                        tabdet = new MapViewer();
-                    }
-
-                    tabdet.AutoUpdateIfSRAM = false;// m_appSettings.AutoUpdateSRAMViewers;
-                    tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                     tabdet.Filename = filename;
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
                     tabdet.Map_cat = XDFCategories.Undocumented;

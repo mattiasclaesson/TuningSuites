@@ -34,6 +34,30 @@ namespace T8SuitePro
 
         }
 
+        public int AutoUpdateInterval
+        {
+            get
+            {
+                return Convert.ToInt32(spinEdit1.Value);
+            }
+            set
+            {
+                spinEdit1.Value = value;
+            }
+        }
+
+        public bool AutoUpdateSRAMViewers
+        {
+            get
+            {
+                return checkEdit4.Checked;
+            }
+            set
+            {
+                checkEdit4.Checked = value;
+            }
+        }
+
         public bool ResetRealtimeSymbolOnTabPageSwitch
         {
             get
@@ -271,18 +295,6 @@ namespace T8SuitePro
             set
             {
                 checkEdit2.Checked = value;
-            }
-        }
-
-        public bool ViewTablesInHex
-        {
-            get
-            {
-                return checkEdit4.Checked;
-            }
-            set
-            {
-                checkEdit4.Checked = value;
             }
         }
 

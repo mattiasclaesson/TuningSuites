@@ -200,6 +200,7 @@
     <Compile Include="frmTcmLimit.designer.cs">
       <DependentUpon>frmTcmLimit.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapViewerFactory.cs" />
     <Compile Include="TCMLimitEdit.cs" />
     <Compile Include="T7SuiteRegistry.cs" />
     <Compile Include="Plot3D\ColorHsl.cs" />

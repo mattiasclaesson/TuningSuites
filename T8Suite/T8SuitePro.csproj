@@ -218,6 +218,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapViewerFactory.cs" />
     <Compile Include="T8SuiteRegistry.cs" />
     <Compile Include="CompareResults.cs">
       <SubType>UserControl</SubType>

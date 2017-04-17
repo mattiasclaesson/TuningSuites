@@ -1163,7 +1163,7 @@ namespace T8SuitePro
             }
             m_trackbarBlocked = false;
 
-            if (this.m_map_address >= 0xF00000 || (m_isOpenSoftware && m_isRAMViewer))
+            if (this.m_map_address >= 0x100000 || (m_isOpenSoftware && m_isRAMViewer))
             {
                 this.m_isRAMViewer = true;
                 this.OnlineMode = true;
