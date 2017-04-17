@@ -12,15 +12,6 @@ namespace T7
 {
     abstract public class IMapViewer : DevExpress.XtraEditors.XtraUserControl
     {
-
-        /*public abstract bool AutoUpdateChecksum
-        {
-            get;
-            set;
-        }*/
-
-
-
         public abstract bool AutoUpdateIfSRAM
         {
             get;

@@ -3075,8 +3075,6 @@ namespace T8SuitePro
                             tabdet = new MapViewer();
                         }
                         tabdet.SetViewSize(m_appSettings.DefaultViewSize);
-
-                        //tabdet.IsHexMode = barViewInHex.Checked;
                         tabdet.Viewtype = m_appSettings.DefaultViewType;
                         tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                         tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
@@ -9489,7 +9487,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = filename;
-                    IMapViewer tabdet;//= new MapViewer();
+                    IMapViewer tabdet;
                     if (m_appSettings.UseNewMapViewer)
                     {
                         tabdet = new MapViewerEx();
@@ -13155,7 +13153,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     tabdet.Filename = filename;
                     tabdet.Viewtype = m_appSettings.DefaultViewType;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    //tabdet.IsHexMode = barViewInHex.Checked;
                     if (m_appSettings.Viewinhex)
                     {
                         tabdet.Viewtype = SuiteViewType.Hexadecimal;
@@ -13677,7 +13674,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                             tabdet.Filename = m_currentsramfile;
                             tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                            //tabdet.IsHexMode = barViewInHex.Checked;
                             tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
                             if (m_appSettings.Viewinhex)
                             {
