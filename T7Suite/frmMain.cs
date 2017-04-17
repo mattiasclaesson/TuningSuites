@@ -159,7 +159,7 @@ namespace T7
         private Stopwatch _sw = new Stopwatch();
         private EngineStatus _currentEngineStatus = new EngineStatus();
         frmSplash splash;
-        private bool m_connectedToECU = false;
+        private bool m_RealtimeConnectedToECU = false;
         private bool m_enableRealtimeTimer = false;
         msiupdater m_msiUpdater;
         public DelegateUpdateBDMProgress m_DelegateUpdateBDMProgress;
@@ -6909,7 +6909,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private void gridViewSymbols_DoubleClick(object sender, EventArgs e)
         {
             System.Windows.Forms.Application.DoEvents();
-            //this.LayoutMdi(MdiLayout.Cascade);
             int[] selectedrows = gridViewSymbols.GetSelectedRows();
 
             if (selectedrows.Length > 0)
@@ -6921,20 +6920,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     if (selrows.Length > 0)
                     {
                         SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                        if (sh == null) return;
+                        if (sh == null)
+                            return;
 
-                        string symName = sh.Varname;
-                        if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
-                        {
-                            symName = sh.Userdescription;
-                        }
-                        
-                        if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash in stead of sram
+                        if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash instead of sram
                         {   
                             // Should we start a viewer in realtime mode or in offline mode?
-                            if (m_connectedToECU)
+                            if (m_RealtimeConnectedToECU)
                             {
-                                ShowRealtimeMapFromECU(symName);
+                                ShowRealtimeMapFromECU(sh.SmartVarname);
                             }
                             else
                             {
@@ -6946,12 +6940,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             if (sh.Flash_start_address > m_currentfile_size)
                             {
                                 logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
-                                if (CheckCANConnectivity())
+                                if (RealtimeCheckAndConnect())
                                 {
-                                    ShowRealtimeMapFromECU(symName);
+                                    ShowRealtimeMapFromECU(sh.SmartVarname);
                                 }
                             }
-
                             else
                             {
                                 StartTableViewer(ECUMode.Auto);
@@ -7208,9 +7201,29 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Length;
+                }
+            }
+            return 0;
+        }
+
+        private Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
+        {
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == symbolname)
+                {
+                    if (IsSoftwareOpen() && IsSymbolCalibration(symbolname) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
+                    {
+                        return sh.Flash_start_address - GetOpenFileOffset();
+                    }
+                    /*if (sh.Varname == "X_AccPedalManSP" || sh.Varname == "X_AccPedalAutTAB" || sh.Varname == "X_AccPedalAutSP" || sh.Varname == "X_AccPedalManTAB")
+                    {
+                        return sh.Flash_start_address - 0x0C;
+                    }*/
+                    return sh.Flash_start_address;
                 }
             }
             return 0;
@@ -7220,9 +7233,33 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
+                if (sh.SmartVarname == symbolname)
                 {
                     return sh.Symbol_number;
+                }
+            }
+            return 0;
+        }
+
+        private string GetUserDescription(SymbolCollection curSymbolCollection, string symbolname)
+        {
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == symbolname)
+                {
+                    return sh.Userdescription;
+                }
+            }
+            return symbolname;
+        }
+
+        private Int64 GetSymbolAddressSRAM(SymbolCollection curSymbolCollection, string symbolname)
+        {
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == symbolname)
+                {
+                    return sh.Start_address;
                 }
             }
             return 0;
@@ -7238,55 +7275,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             if (symbolname.Contains("Cal4.")) return true;
             if (symbolname.StartsWith("X_Acc")) return true;
             return false;
-        }
-
-        private Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
-        {
-            foreach (SymbolHelper sh in curSymbolCollection)
-            {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
-                {
-                    string name = sh.Varname;
-                    if (sh.Varname.StartsWith("Symbol") && sh.Userdescription != "")
-                    {
-                        name = sh.Userdescription;
-                    }
-                    if (IsSoftwareOpen() && IsSymbolCalibration(name) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
-                    {
-                        return sh.Flash_start_address - GetOpenFileOffset(); 
-                    }
-                    /*if (sh.Varname == "X_AccPedalManSP" || sh.Varname == "X_AccPedalAutTAB" || sh.Varname == "X_AccPedalAutSP" || sh.Varname == "X_AccPedalManTAB")
-                    {
-                        return sh.Flash_start_address - 0x0C;
-                    }*/
-                    return sh.Flash_start_address;
-                }
-            }
-            return 0;
-        }
-
-        private string GetUserDescription(SymbolCollection curSymbolCollection, string symbolname)
-        {
-            foreach (SymbolHelper sh in curSymbolCollection)
-            {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
-                {
-                    return sh.Userdescription;
-                }
-            }
-            return symbolname;
-        }
-
-        private Int64 GetSymbolAddressSRAM(SymbolCollection curSymbolCollection, string symbolname)
-        {
-            foreach (SymbolHelper sh in curSymbolCollection)
-            {
-                if (sh.Varname == symbolname || sh.Userdescription == symbolname)
-                {
-                    return sh.Start_address;
-                }
-            }
-            return 0;
         }
 
         private int GetTableMatrixWitdhByName(string filename, SymbolCollection curSymbols, string symbolname, out int columns, out int rows)
@@ -7532,7 +7520,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
         public enum ECUMode : int
         {
             Offline,
-            Online,
             Auto
         }
 
@@ -7547,9 +7534,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     if (row >= 0)
                     {
                         SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                        if (sh.Flash_start_address == 0 && sh.Start_address == 0) return;
-                        string varname = sh.Varname;
+                        if (sh.Flash_start_address == 0 && sh.Start_address == 0)
+                            return;
 
+                        string varname = sh.Varname;
                         if (varname.StartsWith("Symbol") && sh.Userdescription != "")
                         {
                             varname = sh.Userdescription;
@@ -7827,24 +7815,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     //                                    m_connectedToECU = true;
 
                                     //<GS-07102010>
-                                    if (mode == ECUMode.Auto || mode == ECUMode.Online)
+                                    if (mode == ECUMode.Auto)
                                     {
-                                        if ((m_connectedToECU && !m_appSettings.UseNewMapViewer))
+                                        if ((m_RealtimeConnectedToECU))
                                         {
-                                            tabdet.IsRAMViewer = true;
-                                        }
-                                        else
-                                        {
-                                            tabdet.IsRAMViewer = false;
-                                        }
-                                    }
-
-                                    //<GS-07102010>
-                                    if (mode == ECUMode.Auto || mode == ECUMode.Online)
-                                    {
-                                        if ((m_connectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
-                                        {
-                                            tabdet.OnlineMode = true;
+                                            if (m_appSettings.UseNewMapViewer)
+                                            {
+                                                tabdet.OnlineMode = true;
+                                            }
                                             tabdet.IsRAMViewer = true;
                                         }
                                         else
@@ -8294,7 +8272,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 m_prohibitReading = true;
                 //if (flash != null)
                 {
-                    if (CheckCANConnectivity())
+                    if (RealtimeCheckAndConnect())
                     {
                         writepossible = true;
                         //T5 byte[] resulttemp = tcan.readRAM((ushort)GetSymbolAddressSRAM(m_symbols, e.Mapname), (uint)GetSymbolLength(m_symbols, e.Mapname) + 1);
@@ -8325,7 +8303,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                         {
                                                             vwr.Map_content = result;
                                                             GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
-                                                            if ((m_connectedToECU && !m_appSettings.UseNewMapViewer))
+                                                            if ((m_RealtimeConnectedToECU && !m_appSettings.UseNewMapViewer))
                                                             {
                                                                 vwr.IsRAMViewer = true;
                                                             }
@@ -8335,7 +8313,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                             }
 
                                                             vwr.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                            if ((m_connectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
+                                                            if ((m_RealtimeConnectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
                                                             {
                                                                 vwr.OnlineMode = true;
                                                                 vwr.IsRAMViewer = true;
@@ -8358,7 +8336,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                                 {
                                                                     vwr2.Map_content = result;
                                                                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
-                                                                    if ((m_connectedToECU && !m_appSettings.UseNewMapViewer))
+                                                                    if ((m_RealtimeConnectedToECU && !m_appSettings.UseNewMapViewer))
                                                                     {
                                                                         vwr2.IsRAMViewer = true;
                                                                     }
@@ -8368,7 +8346,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                                     }
 
                                                                     vwr2.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                                    if ((m_connectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
+                                                                    if ((m_RealtimeConnectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
                                                                     {
                                                                         vwr2.OnlineMode = true;
                                                                         vwr2.IsRAMViewer = true;
@@ -8393,7 +8371,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                                 {
                                                                     vwr3.Map_content = result;
                                                                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
-                                                                    if ((m_connectedToECU && !m_appSettings.UseNewMapViewer))
+                                                                    if ((m_RealtimeConnectedToECU && !m_appSettings.UseNewMapViewer))
                                                                     {
                                                                         vwr3.IsRAMViewer = true;
                                                                     }
@@ -8403,7 +8381,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                                                     }
 
                                                                     vwr3.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                                    if ((m_connectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
+                                                                    if ((m_RealtimeConnectedToECU && m_appSettings.UseNewMapViewer) /*|| m_appSettings.DebugMode*/)
                                                                     {
                                                                         vwr3.OnlineMode = true;
                                                                         vwr3.IsRAMViewer = true;
@@ -8452,7 +8430,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 //if (flash != null)
                 {
-                    if (CheckCANConnectivity())
+                    if (RealtimeCheckAndConnect())
                     {
                         writepossible = true;
                         m_prohibitReading = true;
@@ -8500,7 +8478,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
                 savedatatobinary(e.SymbolAddress, e.SymbolLength, e.SymbolDate, e.Filename, true, note);
                 UpdateChecksum(e.Filename);
-                if (!tabdet.IsRAMViewer && m_connectedToECU) // <GS-12102010> don't refresh from binary when in online mode
+                if (!tabdet.IsRAMViewer && m_RealtimeConnectedToECU) // <GS-12102010> don't refresh from binary when in online mode
                 {
                     tabdet.Map_content = readdatafromfile(e.Filename, e.SymbolAddress, e.SymbolLength);
                 }
@@ -8662,19 +8640,16 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
         private void StartTableViewer(string symbolname)
         {
-            int rtel = 0;
-            bool _vwrstarted = false;
             if (GetSymbolAddress(m_symbols, symbolname) > 0)
             {
-                //logger.Debug("Option one");
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
                 gridViewSymbols.ApplyFindFilter("");
-                
+
                 SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
-                rtel = 0;
+                int rtel = 0;
                 foreach (SymbolHelper sh in sc)
                 {
-                    if (sh.Varname == symbolname)
+                    if (sh.SmartVarname == symbolname)
                     {
                         try
                         {
@@ -8683,30 +8658,18 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             gridViewSymbols.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
                             gridViewSymbols.ClearSelection();
                             gridViewSymbols.SelectRow(rhandle);
-                            //gridViewSymbols.SelectRows(rhandle, rhandle);
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
-                            //gridViewSymbols.SelectRange(rhandle, rhandle);
-                            _vwrstarted = true;
 
-                            if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash in stead of sram
+                            if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash instead of sram
                             {
-
-                                // Should we start a viewer in realtime mode or in offline mode?
-                                if (m_connectedToECU)
+                                if (m_RealtimeConnectedToECU)
                                 {
                                     sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                    StartTableViewer(ECUMode.Auto);
-                                }
-                                else
-                                {
-                                    StartTableViewer(ECUMode.Auto);
                                 }
                             }
-                            else
-                            {
-                                StartTableViewer(ECUMode.Auto);
-                            }
+
+                            StartTableViewer(ECUMode.Auto);
                             break;
                         }
                         catch (Exception E)
@@ -8716,109 +8679,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     }
 
                     rtel++;
-                }
-                if (!_vwrstarted)
-                {
-                    rtel = 0;
-                    foreach (SymbolHelper sh in sc)
-                    {
-                        if (sh.Userdescription == symbolname)
-                        {
-                            try
-                            {
-                                int rhandle = gridViewSymbols.GetRowHandle(rtel);
-                                gridViewSymbols.OptionsSelection.MultiSelect = true;
-                                gridViewSymbols.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-                                gridViewSymbols.ClearSelection();
-                                gridViewSymbols.SelectRow(rhandle);
-                                //gridViewSymbols.SelectRows(rhandle, rhandle);
-                                gridViewSymbols.MakeRowVisible(rhandle, true);
-                                gridViewSymbols.FocusedRowHandle = rhandle;
-                                //gridViewSymbols.SelectRange(rhandle, rhandle);
-                                _vwrstarted = true;
-                                if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash in stead of sram
-                                {
-
-                                    // Should we start a viewer in realtime mode or in offline mode?
-                                    if (m_connectedToECU)
-                                    {
-                                        sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                        StartTableViewer(ECUMode.Auto);
-                                    }
-                                    else
-                                    {
-                                        StartTableViewer(ECUMode.Auto);
-                                    }
-                                }
-                                else
-                                {
-                                    StartTableViewer(ECUMode.Auto);
-                                }
-                                break;
-                            }
-                            catch (Exception E)
-                            {
-                                MessageBox.Show(E.Message);
-                            }
-                        }
-                        rtel++;
-                    }
                 }
             }
             else
             {
-                //logger.Debug("Option two");
-                gridViewSymbols.ActiveFilter.Clear(); // clear filter
-                SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
-
-                rtel = 0;
-                foreach (SymbolHelper sh in sc)
-                {
-                    if (sh.Userdescription == symbolname)
-                    {
-                        try
-                        {
-                            int rhandle = gridViewSymbols.GetRowHandle(rtel);
-                            gridViewSymbols.OptionsSelection.MultiSelect = true;
-                            gridViewSymbols.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-                            gridViewSymbols.ClearSelection();
-                            gridViewSymbols.SelectRow(rhandle);
-                            //gridViewSymbols.SelectRows(rhandle, rhandle);
-                            gridViewSymbols.MakeRowVisible(rhandle, true);
-                            gridViewSymbols.FocusedRowHandle = rhandle;
-                            //gridViewSymbols.SelectRange(rhandle, rhandle);
-                            _vwrstarted = true;
-                            if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash in stead of sram
-                            {
-
-                                // Should we start a viewer in realtime mode or in offline mode?
-                                if (m_connectedToECU)
-                                {
-                                    sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
-                                    StartTableViewer(ECUMode.Auto);
-                                }
-                                else
-                                {
-                                    StartTableViewer(ECUMode.Auto);
-                                }
-                            }
-                            else
-                            {
-                                StartTableViewer(ECUMode.Auto);
-                            }
-                            break;
-                        }
-                        catch (Exception E)
-                        {
-                            MessageBox.Show(E.Message);
-                        }
-                    }
-                    rtel++;
-                }
-                if (!_vwrstarted)
-                {
-                    frmInfoBox info = new frmInfoBox("Symbol " + symbolname + " does not exist in this file");
-                }
+                MessageBox.Show("Symbol " + symbolname + " does not exist in this file");
             }
         }
 
@@ -8852,10 +8717,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             gridViewSymbols.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
                             gridViewSymbols.ClearSelection();
                             gridViewSymbols.SelectRow(rhandle);
-                            //gridViewSymbols.SelectRows(rhandle, rhandle);
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
-                            //gridViewSymbols.SelectRange(rhandle, rhandle);
                             StartTableViewer(ECUMode.Auto);
                             break;
                         }
@@ -10155,9 +10018,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private bool CheckCANConnectivity()
+        private bool RealtimeCheckAndConnect()
         {
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
                 return true;
             }
@@ -10166,11 +10029,28 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 SetCANStatus("Initializing CANbus interface");
             }
 
+            SetCanAdapter();
+            if (trionic7.openDevice())
+            {
+                SetCANStatus("Connected");
+                btnConnectDisconnect.Caption = "Disconnect ECU";
+                m_RealtimeConnectedToECU = true;
+            }
+            else
+            {
+                SetCANStatus("Failed to start KWP session");
+                trionic7.Cleanup();
+                return false;
+            }
+            return m_RealtimeConnectedToECU;
+        }
+
+        private void SetCanAdapter()
+        {
             trionic7.OnlyPBus = m_appSettings.OnlyPBus;
             trionic7.DisableCanConnectionCheck = m_appSettings.DisableCanCheck;
-            //trionic7.ELM327Kline = m_appSettings.ELM327Kline; Disabled too slow to be used
             trionic7.Latency = Latency.Low;
-            
+
             if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
             {
                 trionic7.setCANDevice(CANBusAdapter.LAWICEL);
@@ -10198,20 +10078,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 trionic7.SetSelectedAdapter(m_appSettings.Adapter);
             }
-
-            if (trionic7.openDevice())
-            {
-                SetCANStatus("Connected");
-                btnConnectDisconnect.Caption = "Disconnect ECU";
-                m_connectedToECU = true;
-            }
-            else
-            {
-                SetCANStatus("Failed to start KWP session");
-                trionic7.Cleanup();
-                return false;
-            }
-            return m_connectedToECU;
         }
 
         private string ConvertFuelcutStatus(int value)
@@ -10452,7 +10318,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
     
         private void barButtonItem17_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            TerminateOnlineProcesses();
+            RealtimeDisconnectAndHide();
             
             int adapter = 0;
 
@@ -10684,7 +10550,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
         private void GetSRAMSnapshot_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (CheckCANConnectivity())
+            if (RealtimeCheckAndConnect())
             {
                 m_prohibitReading = true;
                 SetProgress("Starting snapshot download");
@@ -10992,7 +10858,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             data[0] = (byte)0xFF;
             success = false;
             logger.Debug("Getting symbolnumber: " + symbolnumber.ToString() + " symbolname: " + symbolname);
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
                 if (length <= 4)
                 {
@@ -11042,15 +10908,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow(gridViewSymbols.FocusedRowHandle);
                 // convert to realtime symbol
                 // start an SRAM mapviewer for this symbol
-                if (!m_connectedToECU)
+                if (!m_RealtimeConnectedToECU)
                 {
-                    if (CheckCANConnectivity())
+                    if (RealtimeCheckAndConnect())
                     {
-                        string symName = sh.Varname;
-                        if (symName.StartsWith("Symbol") && sh.Userdescription != string.Empty)
-                        {
-                            symName = sh.Userdescription;
-                        }
+                        string symName = sh.SmartVarname;
                         int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symName), symName);
                         sh.Symbol_number = symbolnumber;
 
@@ -11137,7 +10999,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     // read symbol from file
                     StartTableViewer(ECUMode.Offline);
                     // update the right viewer with filedata
-
                 }
             }
         }
@@ -11155,7 +11016,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
         private void StartAViewer(string symbolname)
         {
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
                 ShowRealtimeMapFromECU(symbolname);
             }
@@ -12290,7 +12151,7 @@ If boost regulation reports errors you can increase the difference between boost
             {
                 trionic7.SuspendAlivePolling();
                 m_enableRealtimeTimer = true;
-                bool _start_Timer = false;
+
                 if (m_appSettings.ResetRealtimeSymbolOnTabPageSwitch)
                 {
                     FillRealtimeTable(MonitorType.Dashboard); // default
@@ -12309,9 +12170,9 @@ If boost regulation reports errors you can increase the difference between boost
                     btnSportMode.Visible = false;
 
                 }
-                if (CheckCANConnectivity())
+                if (RealtimeCheckAndConnect())
                 {
-                        tmrRealtime.Enabled = m_enableRealtimeTimer;
+                    tmrRealtime.Enabled = m_enableRealtimeTimer;
                 }
                 dockRealtime.Visibility = DockVisibility.Visible;
                 int width = dockManager1.Form.ClientSize.Width - dockSymbols.Width;
@@ -13932,7 +13793,7 @@ If boost regulation reports errors you can increase the difference between boost
             tmrRealtime.Enabled = false;
             try
             {
-                if (m_connectedToECU)
+                if (m_RealtimeConnectedToECU)
                 {
                     if (!m_prohibitReading)
                     {
@@ -14864,7 +14725,7 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
                 readSymbolToolStripMenuItem.Enabled = true;
                 readSymbolToolStripMenuItem.Text = "Read symbol from binary file";
@@ -15029,7 +14890,7 @@ If boost regulation reports errors you can increase the difference between boost
             // first stop the canbus interface 
             if (File.Exists(m_currentfile))
             {
-                TerminateOnlineProcesses();
+                RealtimeDisconnectAndHide();
 
                 int adapter = 0;
                 if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
@@ -15813,7 +15674,7 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void btnReadFaultCodes_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (CheckCANConnectivity())
+            if (RealtimeCheckAndConnect())
             {
                 // 16 25 16 22 00 00 00 00 00 00 00 00 
                 frmFaultcodes frmfaults = new frmFaultcodes();
@@ -15864,7 +15725,7 @@ If boost regulation reports errors you can increase the difference between boost
                 try
                 {
                     int DTCCode = Convert.ToInt32(e.DTCCode.Substring(1, e.DTCCode.Length - 1), 16);
-                    if (CheckCANConnectivity())
+                    if (RealtimeCheckAndConnect())
                     {
                         trionic7.ClearDTCCode(DTCCode);
                     }
@@ -15872,7 +15733,7 @@ If boost regulation reports errors you can increase the difference between boost
                     {
                         frmFaultcodes frmfaults = (frmFaultcodes)sender;
                         bool _success = false;
-                        frmfaults.ClearCodes();
+                        frmfaults.Init();
                         int symbolnumber = GetSymbolNumber(m_symbols, "obdFaults");
                         if (symbolnumber == 0)
                         {
@@ -15907,7 +15768,7 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void btnClearDTCs_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (CheckCANConnectivity())
+            if (RealtimeCheckAndConnect())
             {
                 m_prohibitReading = true;
                 trionic7.ReadDTC();
@@ -15918,11 +15779,11 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void ShowRealtimeMapFromECU(string symbolname)
         {
-            if (CheckCANConnectivity())
+            if (RealtimeCheckAndConnect())
             {
                 foreach (SymbolHelper sh in m_symbols)
                 {
-                    if (sh.Varname == symbolname || (sh.Userdescription == symbolname && sh.Varname.StartsWith("Symbol")))
+                    if (sh.SmartVarname == symbolname)
                     {
                         // convert to realtime symbol
                         // start an SRAM mapviewer for this symbol
@@ -15932,7 +15793,6 @@ If boost regulation reports errors you can increase the difference between boost
                         logger.Debug("Got symbolnumber: " + symbolnumber.ToString() + " for map: " + symbolname);
                         if (symbolnumber >= 0)
                         {
-                            //byte[] result = ReadSymbolFromSRAM((uint)symbolnumber);
                             byte[] result = ReadMapFromSRAM(sh, true);
                             logger.Debug("read " + result.Length.ToString() + " bytes from SRAM!");
                             StartTableViewer(symbolname);
@@ -16006,9 +15866,8 @@ If boost regulation reports errors you can increase the difference between boost
             }
         }
 
-        private void barButtonItem85_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnViewKnockCountMap_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // open a viewer with SRAM data from the ECU showing knkdetadap.knkcntmap
             ShowRealtimeMapFromECU("KnkDetAdap.KnkCntMap");
         }
 
@@ -18167,7 +18026,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 if (MessageBox.Show("This will overwrite data in your binary file. Are you sure you want to proceed?", "Warning!", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
 
-                    if (CheckCANConnectivity())
+                    if (RealtimeCheckAndConnect())
                     {
                         frmProgress progress = new frmProgress();
                         progress.Show();
@@ -18218,7 +18077,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 if (MessageBox.Show("This will overwrite data in your ECU. Are you sure you want to proceed?", "Warning!", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
-                    if (CheckCANConnectivity())
+                    if (RealtimeCheckAndConnect())
                     {
                         frmProgress progress = new frmProgress();
                         progress.Show();
@@ -18269,7 +18128,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             // upload a t7p file to the ECU
             if (m_currentfile != "")
             {
-                if (CheckCANConnectivity())
+                if (RealtimeCheckAndConnect())
                 {
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Filter = "Trionic 7 packages|*.t7p";
@@ -18348,7 +18207,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             // generate the default maps as a tuning package from the ECUs SRAM
             if (m_currentfile != "")
             {
-                if (CheckCANConnectivity())
+                if (RealtimeCheckAndConnect())
                 {
                     frmProgress progress = new frmProgress();
                     progress.SetProgress("Downloading tuning package...");
@@ -19063,7 +18922,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         void acceptMap_onUpdateFuelMap(object sender, frmFuelMapAccept.UpdateFuelMapEventArgs e)
         {
             // write to ECU if possible
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
                 if (e.Value == 0) return; // test for value 0... nothing todo
                 if (m_AFRMap == null)
@@ -19103,7 +18962,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         void m_AFRMap_onFuelmapCellChanged(object sender, AFRMap.FuelmapChangedEventArgs e)
         {
             // seems that we need to adjust a value in the current fuelmap
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
                 if (m_appSettings.AutoUpdateFuelMap)
                 {
@@ -19177,14 +19036,19 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
-        private void TerminateOnlineProcesses()
+        private void RealtimeDisconnectAndHide()
         {
             if (dockRealtime.Visibility == DockVisibility.Visible)
             {
                 dockRealtime.Visibility = DockVisibility.Hidden;
                 tmrRealtime.Enabled = false;
             }
-            m_connectedToECU = false;
+            RealtimeDisconnect();
+        }
+
+        private void RealtimeDisconnect()
+        {
+            m_RealtimeConnectedToECU = false;
             trionic7.Cleanup();
             SetCANStatus("");
             btnConnectDisconnect.Caption = "Connect ECU";
@@ -19192,7 +19056,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void SpawnSaabOpenTech(string arguments, bool showWindow)
         {
-            TerminateOnlineProcesses();
+            RealtimeDisconnectAndHide();
 
             if (showWindow)
             {
@@ -19427,17 +19291,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
         private void btnConnectDisconnect_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (m_connectedToECU)
+            if (m_RealtimeConnectedToECU)
             {
-                m_connectedToECU = false;
                 trionic7.SuspendAlivePolling();
-                trionic7.Cleanup();
-                btnConnectDisconnect.Caption = "Connect ECU";
-                SetCANStatus("");
+                RealtimeDisconnect();
             }
             else
             {
-                if (CheckCANConnectivity())
+                if (RealtimeCheckAndConnect())
                 {
                     trionic7.ResumeAlivePolling();
                     btnConnectDisconnect.Caption = "Disconnect ECU";
