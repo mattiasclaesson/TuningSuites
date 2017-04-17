@@ -1451,20 +1451,6 @@ namespace CommonSuite
                 }
             }
         }
-        private bool m_viewinhex = false;
-
-        public bool Viewinhex
-        {
-            get { return m_viewinhex; }
-            set 
-            {
-                if (m_viewinhex != value)
-                {
-                    m_viewinhex = value;
-                    SaveRegistrySetting("ViewInHex", m_viewinhex);
-                }
-            }
-        }
 
         private bool m_debugmode = false;
 
@@ -1835,7 +1821,6 @@ namespace CommonSuite
                 saveSettings.SetValue("WidebandLowAFR", m_WidebandLowAFR.ToString());
                 saveSettings.SetValue("WidebandHighAFR", m_WidebandHighAFR.ToString());
 
-                saveSettings.SetValue("ViewInHex", m_viewinhex);
                 saveSettings.SetValue("LastFilename", m_lastfilename);
                 saveSettings.SetValue("AutoExtractSymbols", m_AutoExtractSymbols);
                 saveSettings.SetValue("WriteECUBatchfile", m_write_ecubatchfile);
@@ -1939,10 +1924,6 @@ namespace CommonSuite
                             else if (a == "MapDetectionActive")
                             {
                                 m_MapDetectionActive = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "ViewInHex")
-                            {
-                                m_viewinhex = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "DebugMode")
                             {

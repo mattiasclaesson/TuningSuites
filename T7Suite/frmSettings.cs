@@ -298,18 +298,6 @@ namespace T7
             }
         }
 
-        public bool ViewTablesInHex
-        {
-            get
-            {
-                return checkEdit4.Checked;
-            }
-            set
-            {
-                checkEdit4.Checked = value;
-            }
-        }
-
         public bool ShowGraphsInMapViewer
         {
             get

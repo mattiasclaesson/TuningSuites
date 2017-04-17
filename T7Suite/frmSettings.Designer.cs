@@ -28,9 +28,9 @@ namespace T7
         /// </summary>
         private void InitializeComponent()
         {
-            DevExpress.Utils.SuperToolTip superToolTip21 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem21 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem21 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip20 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem20 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem20 = new DevExpress.Utils.ToolTipItem();
             DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
@@ -85,9 +85,6 @@ namespace T7
             DevExpress.Utils.SuperToolTip superToolTip18 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem18 = new DevExpress.Utils.ToolTipTitleItem();
             DevExpress.Utils.ToolTipItem toolTipItem18 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip19 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem19 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem19 = new DevExpress.Utils.ToolTipItem();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.comboBoxEdit4 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.checkEdit30 = new DevExpress.XtraEditors.CheckEdit();
@@ -110,7 +107,6 @@ namespace T7
             this.checkEdit7 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit6 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit5 = new DevExpress.XtraEditors.CheckEdit();
-            this.checkEdit4 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
             this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
@@ -171,7 +167,6 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit7.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
@@ -225,7 +220,6 @@ namespace T7
             this.groupControl1.Controls.Add(this.checkEdit7);
             this.groupControl1.Controls.Add(this.checkEdit6);
             this.groupControl1.Controls.Add(this.checkEdit5);
-            this.groupControl1.Controls.Add(this.checkEdit4);
             this.groupControl1.Controls.Add(this.checkEdit2);
             this.groupControl1.Controls.Add(this.checkEdit1);
             this.groupControl1.Location = new System.Drawing.Point(10, 12);
@@ -238,7 +232,7 @@ namespace T7
             // comboBoxEdit4
             // 
             this.comboBoxEdit4.EditValue = "Square closed loop indicator";
-            this.comboBoxEdit4.Location = new System.Drawing.Point(473, 203);
+            this.comboBoxEdit4.Location = new System.Drawing.Point(473, 173);
             this.comboBoxEdit4.Name = "comboBoxEdit4";
             this.comboBoxEdit4.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -251,22 +245,23 @@ namespace T7
             // 
             // checkEdit30
             // 
+            this.checkEdit30.EditValue = true;
             this.checkEdit30.Location = new System.Drawing.Point(471, 53);
             this.checkEdit30.Name = "checkEdit30";
             this.checkEdit30.Properties.Caption = "Use new mapviewer";
             this.checkEdit30.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem21.Text = "Use new mapviewer";
-            toolTipItem21.LeftIndent = 6;
-            toolTipItem21.Text = "If checked, the new type of mapviewer will be used to display data.";
-            superToolTip21.Items.Add(toolTipTitleItem21);
-            superToolTip21.Items.Add(toolTipItem21);
-            this.checkEdit30.SuperTip = superToolTip21;
+            toolTipTitleItem20.Text = "Use new mapviewer";
+            toolTipItem20.LeftIndent = 6;
+            toolTipItem20.Text = "If checked, the new type of mapviewer will be used to display data.";
+            superToolTip20.Items.Add(toolTipTitleItem20);
+            superToolTip20.Items.Add(toolTipItem20);
+            this.checkEdit30.SuperTip = superToolTip20;
             this.checkEdit30.TabIndex = 21;
             // 
             // checkEdit27
             // 
             this.checkEdit27.EditValue = true;
-            this.checkEdit27.Location = new System.Drawing.Point(471, 127);
+            this.checkEdit27.Location = new System.Drawing.Point(471, 103);
             this.checkEdit27.Name = "checkEdit27";
             this.checkEdit27.Properties.Caption = "Write timestamp marker in binary";
             this.checkEdit27.Size = new System.Drawing.Size(212, 19);
@@ -283,7 +278,7 @@ namespace T7
             // checkEdit17
             // 
             this.checkEdit17.EditValue = true;
-            this.checkEdit17.Location = new System.Drawing.Point(471, 103);
+            this.checkEdit17.Location = new System.Drawing.Point(10, 127);
             this.checkEdit17.Name = "checkEdit17";
             this.checkEdit17.Properties.Caption = "Show table upside down";
             this.checkEdit17.Size = new System.Drawing.Size(212, 19);
@@ -297,7 +292,7 @@ namespace T7
             // 
             // checkEdit29
             // 
-            this.checkEdit29.Location = new System.Drawing.Point(471, 176);
+            this.checkEdit29.Location = new System.Drawing.Point(471, 151);
             this.checkEdit29.Name = "checkEdit29";
             this.checkEdit29.Properties.Caption = "Use T7Suite AFR maps";
             this.checkEdit29.Size = new System.Drawing.Size(212, 19);
@@ -375,7 +370,7 @@ namespace T7
             // comboBoxEdit1
             // 
             this.comboBoxEdit1.EditValue = "Easy view";
-            this.comboBoxEdit1.Location = new System.Drawing.Point(148, 199);
+            this.comboBoxEdit1.Location = new System.Drawing.Point(148, 203);
             this.comboBoxEdit1.Name = "comboBoxEdit1";
             this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -405,7 +400,7 @@ namespace T7
             // checkEdit13
             // 
             this.checkEdit13.Enabled = false;
-            this.checkEdit13.Location = new System.Drawing.Point(471, 152);
+            this.checkEdit13.Location = new System.Drawing.Point(471, 127);
             this.checkEdit13.Name = "checkEdit13";
             this.checkEdit13.Properties.Caption = "Always re-create repository items";
             this.checkEdit13.Size = new System.Drawing.Size(212, 19);
@@ -537,34 +532,19 @@ namespace T7
             this.checkEdit5.SuperTip = superToolTip15;
             this.checkEdit5.TabIndex = 3;
             // 
-            // checkEdit4
-            // 
-            this.checkEdit4.Location = new System.Drawing.Point(10, 127);
-            this.checkEdit4.Name = "checkEdit4";
-            this.checkEdit4.Properties.Caption = "View tables in hexadecimal values";
-            this.checkEdit4.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem16.Text = "View tables in hexadecimal values";
-            toolTipItem16.LeftIndent = 6;
-            toolTipItem16.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
-    "maps will  be displayed in easy mode when they are opened.";
-            superToolTip16.Items.Add(toolTipTitleItem16);
-            superToolTip16.Items.Add(toolTipItem16);
-            this.checkEdit4.SuperTip = superToolTip16;
-            this.checkEdit4.TabIndex = 2;
-            // 
             // checkEdit2
             // 
             this.checkEdit2.Location = new System.Drawing.Point(10, 78);
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.Caption = "Use red and white maps";
             this.checkEdit2.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem17.Text = "Use red and white maps";
-            toolTipItem17.LeftIndent = 6;
-            toolTipItem17.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
+            toolTipTitleItem16.Text = "Use red and white maps";
+            toolTipItem16.LeftIndent = 6;
+            toolTipItem16.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
     "o display low values and red for higher values.";
-            superToolTip17.Items.Add(toolTipTitleItem17);
-            superToolTip17.Items.Add(toolTipItem17);
-            this.checkEdit2.SuperTip = superToolTip17;
+            superToolTip16.Items.Add(toolTipTitleItem16);
+            superToolTip16.Items.Add(toolTipItem16);
+            this.checkEdit2.SuperTip = superToolTip16;
             this.checkEdit2.TabIndex = 1;
             // 
             // checkEdit1
@@ -573,12 +553,12 @@ namespace T7
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Auto size new mapwindows";
             this.checkEdit1.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem18.Text = "Auto size new mapwindows";
-            toolTipItem18.LeftIndent = 6;
-            toolTipItem18.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
-            superToolTip18.Items.Add(toolTipTitleItem18);
-            superToolTip18.Items.Add(toolTipItem18);
-            this.checkEdit1.SuperTip = superToolTip18;
+            toolTipTitleItem17.Text = "Auto size new mapwindows";
+            toolTipItem17.LeftIndent = 6;
+            toolTipItem17.Text = "When checked, new mapwindows will try to autosize to fit the displayed table.";
+            superToolTip17.Items.Add(toolTipTitleItem17);
+            superToolTip17.Items.Add(toolTipItem17);
+            this.checkEdit1.SuperTip = superToolTip17;
             this.checkEdit1.TabIndex = 0;
             // 
             // groupControl2
@@ -876,13 +856,13 @@ namespace T7
             this.checkEdit28.Name = "checkEdit28";
             this.checkEdit28.Properties.Caption = "Measure AFR in lambda";
             this.checkEdit28.Size = new System.Drawing.Size(212, 19);
-            toolTipTitleItem19.Text = "Measure AFR in lambda";
-            toolTipItem19.LeftIndent = 6;
-            toolTipItem19.Text = "If you prefer AFR measurements in lambda values in stead of AFR values, enable th" +
+            toolTipTitleItem18.Text = "Measure AFR in lambda";
+            toolTipItem18.LeftIndent = 6;
+            toolTipItem18.Text = "If you prefer AFR measurements in lambda values in stead of AFR values, enable th" +
     "is.";
-            superToolTip19.Items.Add(toolTipTitleItem19);
-            superToolTip19.Items.Add(toolTipItem19);
-            this.checkEdit28.SuperTip = superToolTip19;
+            superToolTip18.Items.Add(toolTipTitleItem18);
+            superToolTip18.Items.Add(toolTipItem18);
+            this.checkEdit28.SuperTip = superToolTip18;
             this.checkEdit28.TabIndex = 21;
             // 
             // labelControl3
@@ -1035,7 +1015,6 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit7.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit5.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.checkEdit4.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
@@ -1079,7 +1058,6 @@ namespace T7
         private DevExpress.XtraEditors.CheckEdit checkEdit1;
         private DevExpress.XtraEditors.CheckEdit checkEdit2;
         private DevExpress.XtraEditors.CheckEdit checkEdit3;
-        private DevExpress.XtraEditors.CheckEdit checkEdit4;
         private DevExpress.XtraEditors.CheckEdit checkEdit5;
         private DevExpress.XtraEditors.CheckEdit checkEdit6;
         private DevExpress.XtraEditors.CheckEdit checkEdit7;

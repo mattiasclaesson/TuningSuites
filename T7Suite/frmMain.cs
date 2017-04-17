@@ -999,7 +999,6 @@ namespace T7
             set.HideSymbolWindow = m_appSettings.HideSymbolTable;
             set.ShowGraphsInMapViewer = m_appSettings.ShowGraphs;
             set.UseRedAndWhiteMaps = m_appSettings.ShowRedWhite;
-            set.ViewTablesInHex = m_appSettings.Viewinhex;
             set.AutoDockSameFile = m_appSettings.AutoDockSameFile;
             set.AutoDockSameSymbol = m_appSettings.AutoDockSameSymbol;
             set.DisableMapviewerColors = m_appSettings.DisableMapviewerColors;
@@ -1072,7 +1071,6 @@ namespace T7
                 m_appSettings.HideSymbolTable = set.HideSymbolWindow;
                 m_appSettings.ShowGraphs = set.ShowGraphsInMapViewer;
                 m_appSettings.ShowRedWhite = set.UseRedAndWhiteMaps;
-                m_appSettings.Viewinhex = set.ViewTablesInHex;
                 m_appSettings.DisableMapviewerColors = set.DisableMapviewerColors;
                 m_appSettings.AutoDockSameFile = set.AutoDockSameFile;
                 m_appSettings.AutoDockSameSymbol = set.AutoDockSameSymbol;
@@ -6631,22 +6629,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             InitSkins();
             SetupDisplayOptions();
             InitMruSystem();
-            try
-            {
-                IMapViewer mv;
-                if (m_appSettings.UseNewMapViewer)
-                {
-                    mv = new MapViewerEx();
-                }
-                else
-                {
-                    mv = new MapViewer();
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
+
             splash.Close();
 
             LoadLayoutFiles();
@@ -7534,11 +7517,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         if (sh.Flash_start_address == 0 && sh.Start_address == 0)
                             return;
 
-                        string varname = sh.Varname;
-                        if (varname.StartsWith("Symbol") && sh.Userdescription != "")
-                        {
-                            varname = sh.Userdescription;
-                        }
                         //DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                         if (sh == null) return;
                         /*if (sh.Flash_start_address > m_currentfile_size)
@@ -7546,8 +7524,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             MessageBox.Show("Symbol outside of flash boundary, probably SRAM only symbol");
                             return;
                         }*/
+
+                        string varname = sh.SmartVarname;
                         DockPanel dockPanel;
-                        DockPanel sramdockPanel;
+                        //DockPanel sramdockPanel;
                         bool pnlfound = false;
                         //bool srampnlfound = false;
 
@@ -7597,13 +7577,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 tabdet.AutoUpdateIfSRAM = m_appSettings.AutoUpdateSRAMViewers;
                                 tabdet.AutoUpdateInterval = m_appSettings.AutoUpdateInterval;
                                 tabdet.SetViewSize(m_appSettings.DefaultViewSize);
-                                tabdet.Visible = false;
-                                tabdet.Filename = m_currentfile;
                                 tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                                tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
+                                tabdet.Viewtype = m_appSettings.DefaultViewType;
                                 tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                                 tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                                 tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+
+                                tabdet.Visible = false;
+                                tabdet.Filename = m_currentfile;
                                 tabdet.Map_name = varname;
                                 tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
                                 tabdet.Map_cat = XDFCategories.Undocumented; //TranslateSymbolNameToCategory(tabdet.Map_name);
@@ -14148,11 +14129,7 @@ If boost regulation reports errors you can increase the difference between boost
                             tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                             tabdet.Filename = m_currentsramfile;
                             tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                            tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
-                            if (m_appSettings.Viewinhex)
-                            {
-                                tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                            }
+                            tabdet.Viewtype = m_appSettings.DefaultViewType;
                             tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                             tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                             tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
@@ -14469,10 +14446,6 @@ If boost regulation reports errors you can increase the difference between boost
                     tabdet.Filename = filename;
                     tabdet.Viewtype = m_appSettings.DefaultViewType;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    if (m_appSettings.Viewinhex)
-                    {
-                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                    }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                     tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
@@ -16056,11 +16029,7 @@ If boost regulation reports errors you can increase the difference between boost
                     tabdet.Visible = false;
                     tabdet.Filename = m_currentfile;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
-                    if (m_appSettings.Viewinhex)
-                    {
-                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                    }
+                    tabdet.Viewtype = m_appSettings.DefaultViewType;
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                     tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
@@ -16943,10 +16912,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     tabdet.Filename = filename;
                     tabdet.Viewtype = m_appSettings.DefaultViewType;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    if (m_appSettings.Viewinhex)
-                    {
-                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                    }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
                     tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                     tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
