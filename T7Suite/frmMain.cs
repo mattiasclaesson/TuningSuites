@@ -1015,7 +1015,6 @@ namespace T7
             set.AutoFixFooter = m_appSettings.AutoFixFooter;
             set.EnableCanLog = m_appSettings.EnableCanLog;
             set.OnlyPBus = m_appSettings.OnlyPBus;
-            set.DisableConnectionCheck = m_appSettings.DisableCanCheck;
             set.AutoCreateAFRMaps = m_appSettings.AutoCreateAFRMaps;
             set.AutoUpdateSRAMViewers = m_appSettings.AutoUpdateSRAMViewers;
             set.UseAdditionalCanbusFrames = false;// m_appSettings.UseAdditionalCanbusFrames;
@@ -1090,7 +1089,6 @@ namespace T7
                 m_appSettings.EnableCanLog = set.EnableCanLog;
                 m_appSettings.AutoCreateAFRMaps = set.AutoCreateAFRMaps;
                 m_appSettings.OnlyPBus = set.OnlyPBus;
-                m_appSettings.DisableCanCheck = set.DisableConnectionCheck;
                 m_appSettings.AutoUpdateSRAMViewers = set.AutoUpdateSRAMViewers;
                 m_appSettings.UseAdditionalCanbusFrames = set.UseAdditionalCanbusFrames;
                 m_appSettings.ResetRealtimeSymbolOnTabPageSwitch = set.ResetRealtimeSymbolOnTabPageSwitch;
@@ -9939,7 +9937,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private void SetCanAdapter()
         {
             trionic7.OnlyPBus = m_appSettings.OnlyPBus;
-            trionic7.DisableCanConnectionCheck = m_appSettings.DisableCanCheck;
             trionic7.Latency = Latency.Low;
 
             if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
@@ -13575,10 +13572,6 @@ If boost regulation reports errors you can increase the difference between boost
                     if (idx > 0)
                     {
                         logworksstring = logworksstring.Substring(0, idx);
-                        //string parameterstring = "\"" + Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.dif" + "\"";
-                        //                        logger.Debug(logworksstring);
-                        //logger.Debug(parameterstring);
-
                         System.Diagnostics.Process.Start(logworksstring, "\"" + filename + "\"");
                     }
                 }
@@ -13789,7 +13782,6 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void barButtonItem44_ItemClick(object sender, ItemClickEventArgs e)
         {
-
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Trionic 7 logfiles|*.t7l";
             ofd.Title = "Open CAN bus logfile";
@@ -13797,10 +13789,7 @@ If boost regulation reports errors you can increase the difference between boost
             string logworksstring = GetLogWorksFromRegistry();
             if (logworksstring == string.Empty)
             {
-                if (MessageBox.Show("Logworks is not installed on this computer, do you wish to install it now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    Process.Start(System.Windows.Forms.Application.StartupPath + "\\LogWorks\\LogWorks3Setup.exe");
-                }
+                frmInfoBox info = new frmInfoBox("Logworks is not installed on this computer, download from http://www.innovatemotorsports.com/");
             }
             else if (ofd.ShowDialog() == DialogResult.OK)
             {

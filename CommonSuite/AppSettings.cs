@@ -1551,18 +1551,6 @@ namespace CommonSuite
             }
         }
 
-        private bool m_DisableCanCheck = false;
-
-        public bool DisableCanCheck
-        {
-            get { return m_DisableCanCheck; }
-            set
-            {
-                m_DisableCanCheck = value;
-                SaveRegistrySetting("DisableCanCheck", m_DisableCanCheck);
-            }
-        }
-
         private bool m_EnableCanLog = false;
 
         public bool EnableCanLog
@@ -1856,7 +1844,6 @@ namespace CommonSuite
                 saveSettings.SetValue("LastOpenedType", m_LastOpenedType);
                 saveSettings.SetValue("ProjectFolder", m_ProjectFolder);
                 saveSettings.SetValue("OnlyPBus", m_OnlyPBus);
-                saveSettings.SetValue("DisableCanCheck", m_DisableCanCheck);
                 saveSettings.SetValue("InterpolateLogWorksTimescale", m_InterpolateLogWorksTimescale);
                 saveSettings.SetValue("AutoUpdateSRAMViewers", m_AutoUpdateSRAMViewers);
                 saveSettings.SetValue("UseAdditionalCanbusFrames", m_UseAdditionalCanbusFrames);
@@ -2249,10 +2236,6 @@ namespace CommonSuite
                             else if (a == "OnlyPBus")
                             {
                                 m_OnlyPBus = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                            else if (a == "DisableCanCheck")
-                            {
-                                m_DisableCanCheck = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                             else if (a == "InterpolateLogWorksTimescale")
                             {

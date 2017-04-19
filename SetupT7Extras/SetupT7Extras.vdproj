@@ -297,12 +297,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2EEB1A2D459543DA81764D4E610287C0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_30EB41FAACAC460A856AE485E11711E9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2581,26 +2575,6 @@
             "TargetName" = "8:55564149.bin"
             "Tag" = "8:"
             "Folder" = "8:_DED708C7692C44C4BA82A8B43730473A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2EEB1A2D459543DA81764D4E610287C0"
-            {
-            "SourcePath" = "8:..\\LogWorks\\LogWorks3Setup.exe"
-            "TargetName" = "8:LogWorks3Setup.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_E8AC4C1D0E7A4D7885838FCED6DB2B2B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6822,17 +6796,6 @@
                         {
                         }
                     }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_E8AC4C1D0E7A4D7885838FCED6DB2B2B"
-                    {
-                    "Name" = "8:LogWorks"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_79D3D2629B77410791FB120102A9FAE3"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_BD1E711298AD4E3A9DB811FBCF460DC2"
@@ -6873,15 +6836,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Extras"
-        "ProductCode" = "8:{2DE1ABDB-1BFC-4F61-A3C7-E498EB78BF92}"
-        "PackageCode" = "8:{1C088500-5A39-4C99-87C5-1DE0BDAE9DB0}"
+        "ProductCode" = "8:{B33C9205-1A45-4F51-96AF-3584509E6F44}"
+        "PackageCode" = "8:{2E8170BE-0A5B-4105-A9E9-99D412242323}"
         "UpgradeCode" = "8:{3603838F-42F3-4759-A64E-2E54296F3DE4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"

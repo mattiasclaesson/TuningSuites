@@ -467,18 +467,6 @@ namespace T7
             }
         }
 
-        public bool DisableConnectionCheck
-        {
-            get
-            {
-                return ceDisableConnectionCheck.Checked;
-            }
-            set
-            {
-                ceDisableConnectionCheck.Checked = value;
-            }
-        }
-
         public bool AutoCreateAFRMaps
         {
             get

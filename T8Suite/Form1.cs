@@ -10499,7 +10499,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void btnExportToLogWorks_ItemClick(object sender, ItemClickEventArgs e)
         {
-
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Trionic 8 logfiles|*.t8l";
             ofd.Title = "Open CAN bus logfile";
@@ -10507,18 +10506,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             string logworksstring = GetLogWorksFromRegistry();
             if (logworksstring == string.Empty)
             {
-                if (MessageBox.Show("Logworks is not installed on this computer, do you wish to install it now?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    Process.Start(System.Windows.Forms.Application.StartupPath + "\\LogWorks\\LogWorks3Setup.exe");
-                }
+                frmInfoBox info = new frmInfoBox("Logworks is not installed on this computer, download from http://www.innovatemotorsports.com/");
             }
             else if (ofd.ShowDialog() == DialogResult.OK)
             {
-                //                OpenAndDisplayLogFile(ofd.FileName);
-                ConvertFileToDif(ofd.FileName, false); // TEST
-
+                ConvertFileToDif(ofd.FileName, false);
             }
-
         }
 
         private void ConvertFileToDif(string filename, bool AutoExport)
@@ -10685,10 +10678,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if (idx > 0)
                     {
                         logworksstring = logworksstring.Substring(0, idx);
-                        //string parameterstring = "\"" + Path.GetDirectoryName(m_currentfile) + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-CanTraceExt.dif" + "\"";
-                        //                        logger.Debug(logworksstring);
-                        //logger.Debug(parameterstring);
-
                         System.Diagnostics.Process.Start(logworksstring, "\"" + filename + "\"");
                     }
                 }
