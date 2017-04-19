@@ -13169,6 +13169,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                         tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                         tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
+
                         tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
 
                         tabdet.IsRAMViewer = true;
