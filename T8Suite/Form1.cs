@@ -88,7 +88,6 @@ using PSTaskDialog;
 using Microsoft.Win32;
 using DevExpress.XtraBars.Docking;
 using System.Threading;
-using RealtimeGraph;
 using DevExpress.Skins;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
@@ -14076,47 +14075,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             SetupLogFilters();
         }
 
-        private void OpenAndDisplayLogFile(string filename)
-        {
-            // create a new dock with a graph view in it
-            //dockManager1.BeginUpdate();
-            DockPanel dp = dockManager1.AddPanel(DockingStyle.Left);
-            dp.Size = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width, dockSymbols.Height);
-            dp.Hide();
-            //dp.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
-
-            //dp.FloatLocation = new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 5, dockSymbols.Location.Y + 5);
-            //dp.FloatSize = new Size(this.Bounds.
-            //dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
-            dp.Text = "CANBus logfile: " + Path.GetFileName(filename);
-            RealtimeGraphControl lfv = new RealtimeGraphControl();
-            //LogFilters lfhelper = new LogFilters();
-            //lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
-            dp.Controls.Add(lfv);
-            lfv.ImportT5Logfile(filename);
-            //dp.Height = 600;
-            lfv.Dock = DockStyle.Fill;
-
-            dp.Show();
-
-
-            //dockManager1.EndUpdate();
-        }
-
-        private void btnLoadTrionic8Logfile_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // open a logfile from the canlog
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Trionic 8 logfiles|*.t8l";
-            ofd.Title = "Open CAN bus logfile";
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                CheckDefaultSymbolColors();
-                OpenAndDisplayLogFile(ofd.FileName);
-            }
-        }
-
         System.Data.DataTable avgTable;
 
 
@@ -15941,10 +15899,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                 if (AutoExport)
                 {
-                    foreach (SymbolHelper sh in sc)
-                    {
-                        sh.Color = GetColorFromRegistry(sh.Varname);
-                    }
                     CSVGenerator csvgen = new CSVGenerator();
                     csvgen.AppSettings = m_appSettings;
 
@@ -15973,7 +15927,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 else
                 {
-
                     // show selection screen
                     frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
