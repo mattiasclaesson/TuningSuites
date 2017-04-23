@@ -195,15 +195,7 @@ namespace CommonSuite
             bool pfakpresent = false;
             bool ifakpresent = false;
             bool dfakpresent = false;
-           
-            foreach (SymbolHelper sh in sc)
-            {
-                if (sh.Varname == "Pgm_status")
-                {
-                    //sc.Remove(sh);
-                    break;
-                }
-            }
+
             int colorindex = 1;
             foreach (SymbolHelper sh in sc)
             {
@@ -211,9 +203,6 @@ namespace CommonSuite
                 {
                     sh.Color = System.Drawing.Color.FromArgb(0, colorindex, colorindex, colorindex);
                     colorindex++;
-                    //sc.Remove(sh);
-                    //symbolremoved = true;
-                    //break;
                 }
             }
             foreach (SymbolHelper sh in sc)

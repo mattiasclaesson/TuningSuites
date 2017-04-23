@@ -118,7 +118,7 @@ namespace CommonSuite
         }
 
 
-        public bool ConvertFileToCSV(string filename, SymbolCollection sc, DateTime startDate, DateTime endDate)
+        public bool ConvertFileToCSV(string filename, DateTime startDate, DateTime endDate)
         {
             bool retval = false;
             string newfilename = Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".csv";
@@ -274,19 +274,6 @@ namespace CommonSuite
                     }
                 }
             }
-            return retval;
-        }
-
-        private int ConvertToColor(string symbolname)
-        {
-            int retval = 0;
-
-            
-            for (int i = 0; i < symbolname.Length; i++)
-            {
-                retval += Convert.ToInt32(symbolname[i]);
-            }
-            retval *= symbolname.Length * 256;
             return retval;
         }
 

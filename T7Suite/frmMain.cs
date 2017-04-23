@@ -136,7 +136,7 @@ namespace T7
 
         private string m_filename = string.Empty;
         private string m_swversion = string.Empty;
-        private frmProgress frmProgressLogWorks;
+        private frmProgress frmProgressExportLog;
         SymbolCollection m_symbols = new SymbolCollection();
         private SuiteRegistry suiteRegistry = new T7SuiteRegistry();
         AppSettings m_appSettings;
@@ -193,9 +193,14 @@ namespace T7
         private WidebandFactory wbFactory = null;
         private IWidebandReader wbReader = null;
 
+        private SymbolColors symbolColors;
+
+        private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
+
         public frmMain(string[] args)
         {
             m_appSettings = new AppSettings(suiteRegistry);
+            symbolColors = new SymbolColors(suiteRegistry);
 
             Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
             //System.Threading.Thread.CurrentThread.CurrentUICulture
@@ -13365,101 +13370,20 @@ If boost regulation reports errors you can increase the difference between boost
             DateTime endDate = DateTime.MinValue;
             try
             {
-                SymbolCollection sc = new SymbolCollection();
-                string[] alllines = File.ReadAllLines(filename);
-                //using (StreamReader sr = new StreamReader(filename))
-                {
-                    //string line = string.Empty;
-                    char[] sep = new char[1];
-                    char[] sep2 = new char[1];
-                    //int linecount = 0;
-                    sep.SetValue('|', 0);
-                    sep2.SetValue('=', 0);
-                    //while ((line = sr.ReadLine()) != null)
-
-                    foreach(string line in alllines)
-                    {
-                        string[] values = line.Split(sep);
-                        if (values.Length > 0)
-                        {
-                            try
-                            {
-                                //dd/MM/yyyy HH:mm:ss
-                                //string logline = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "|";
-
-                                string dtstring = (string)values.GetValue(0);
-                                DateTime dt = new DateTime(Convert.ToInt32(dtstring.Substring(6, 4)), Convert.ToInt32(dtstring.Substring(3, 2)), Convert.ToInt32(dtstring.Substring(0, 2)), Convert.ToInt32(dtstring.Substring(11, 2)), Convert.ToInt32(dtstring.Substring(14, 2)), Convert.ToInt32(dtstring.Substring(17, 2)));
-                                if (dt > endDate) endDate = dt;
-                                if (dt < startDate) startDate = dt;
-                                for (int t = 1; t < values.Length; t++)
-                                {
-                                    string subvalue = (string)values.GetValue(t);
-                                    string[] subvals = subvalue.Split(sep2);
-                                    if (subvals.Length == 2)
-                                    {
-                                        string varname = (string)subvals.GetValue(0);
-                                        bool sfound = false;
-                                        foreach (SymbolHelper sh in sc)
-                                        {
-                                            if (sh.Varname == varname || sh.Userdescription == varname)
-                                            {
-                                                sfound = true;
-                                            }
-                                        }
-                                        SymbolHelper nsh = new SymbolHelper();
-                                        nsh.Varname = varname;
-                                        if (!sfound) sc.Add(nsh);
-                                    }
-                                }
-                            }
-                            catch (Exception pE)
-                            {
-                                logger.Debug(pE.Message);
-                            }
-                        }
-                    }
-                }
+                SymbolCollection sc = LogFile.FindSymbols(filename, ref startDate, ref endDate);
 
                 if (AutoExport)
                 {
-                    foreach (SymbolHelper sh in sc)
-                    {
-                        sh.Color = GetColorFromRegistry(sh.Varname);
-                    }
-                    DifGenerator difgen = new DifGenerator();
-                    difgen.AppSettings = m_appSettings;
-                    
-                    //difgen.LowAFR = m_appSettings.WidebandLowAFR;
-                    //difgen.HighAFR = m_appSettings.WidebandHighAFR;
-                    //difgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
-                    //difgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
-                    difgen.WidebandSymbol = m_appSettings.WideBandSymbol;
-                    //difgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
-                    difgen.UseWidebandInput = false;
-
-                    difgen.onExportProgress += new DifGenerator.ExportProgress(difgen_onExportProgress);
-                    frmProgressLogWorks = new frmProgress();
-                    frmProgressLogWorks.SetProgress("Exporting to LogWorks");
-                    frmProgressLogWorks.Show();
-                    System.Windows.Forms.Application.DoEvents();
-                    try
-                    {
-                        difgen.ConvertFileToDif(filename, sc, startDate, endDate, m_appSettings.InterpolateLogWorksTimescale, m_appSettings.InterpolateLogWorksTimescale);
-                    }
-                    catch (Exception expE1)
-                    {
-                        logger.Debug(expE1.Message);
-                    }
-                    frmProgressLogWorks.Close();
+                    symbolColors.AddColorsFromRegistry(sc);
+                    InitExportDif(filename, startDate, endDate, sc);
                 }
                 else
                 {
-
                     // show selection screen
                     frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
                     {
-                        plotsel.AddItemToList(sh.Varname);
+                        plotsel.AddItemToList(sh.SmartVarname);
                     }
                     plotsel.Startdate = startDate;
                     plotsel.Enddate = endDate;
@@ -13469,48 +13393,51 @@ If boost regulation reports errors you can increase the difference between boost
                         sc = plotsel.Sc;
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
-                        DifGenerator difgen = new DifGenerator();
-                        LogFilters filterhelper = new LogFilters(suiteRegistry);
-                        difgen.SetFilters(filterhelper.GetFiltersFromRegistry());
-                        difgen.AppSettings = m_appSettings;
-                        //difgen.LowAFR = m_appSettings.WidebandLowAFR;
-                        //difgen.HighAFR = m_appSettings.WidebandHighAFR;
-                        //difgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
-                        //difgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
-                        difgen.WidebandSymbol = m_appSettings.WideBandSymbol;
-                        //difgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
-                        difgen.UseWidebandInput = false;
-
-                        difgen.onExportProgress += new DifGenerator.ExportProgress(difgen_onExportProgress);
-                        frmProgressLogWorks = new frmProgress();
-                        frmProgressLogWorks.SetProgress("Exporting to LogWorks");
-                        frmProgressLogWorks.Show();
-                        System.Windows.Forms.Application.DoEvents();
-                        try
-                        {
-                            if (difgen.ConvertFileToDif(filename, sc, startDate, endDate, m_appSettings.InterpolateLogWorksTimescale, m_appSettings.InterpolateLogWorksTimescale))
-                            {
-                                StartLogWorksWithCurrentFile(Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".dif");
-                            }
-                            else
-                            {
-                                frmInfoBox info = new frmInfoBox("No data was found to export!");
-                            }
-                        }
-                        catch (Exception expE2)
-                        {
-                            logger.Debug(expE2.Message);
-                        }
-                        frmProgressLogWorks.Close();
+                        InitExportDif(filename, startDate, endDate, sc);
                     }
-                    TimeSpan ts = new TimeSpan(endDate.Ticks - startDate.Ticks);
-                    //MessageBox.Show("LogFile should be " + ts.ToString());
                 }
             }
             catch (Exception E)
             {
                 logger.Debug(E.Message);
             }
+        }
+
+        private void InitExportDif(string filename, DateTime startDate, DateTime endDate, SymbolCollection sc)
+        {
+            DifGenerator difgen = new DifGenerator();
+            LogFilters filterhelper = new LogFilters(suiteRegistry);
+            difgen.SetFilters(filterhelper.GetFiltersFromRegistry());
+            difgen.AppSettings = m_appSettings;
+            //difgen.LowAFR = m_appSettings.WidebandLowAFR;
+            //difgen.HighAFR = m_appSettings.WidebandHighAFR;
+            //difgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
+            //difgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
+            difgen.WidebandSymbol = m_appSettings.WideBandSymbol;
+            //difgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
+            difgen.UseWidebandInput = false;
+
+            difgen.onExportProgress += new DifGenerator.ExportProgress(difgen_onExportProgress);
+            frmProgressExportLog = new frmProgress();
+            frmProgressExportLog.SetProgress("Exporting to LogWorks");
+            frmProgressExportLog.Show();
+            System.Windows.Forms.Application.DoEvents();
+            try
+            {
+                if (difgen.ConvertFileToDif(filename, sc, startDate, endDate, m_appSettings.InterpolateLogWorksTimescale, m_appSettings.InterpolateLogWorksTimescale))
+                {
+                    StartLogWorksWithCurrentFile(Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".dif");
+                }
+                else
+                {
+                    frmInfoBox info = new frmInfoBox("No data was found to export!");
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E.Message);
+            }
+            frmProgressExportLog.Close();
         }
 
 
@@ -13557,117 +13484,22 @@ If boost regulation reports errors you can increase the difference between boost
 
         void difgen_onExportProgress(object sender, DifGenerator.ProgressEventArgs e)
         {
-            frmProgressLogWorks.SetProgressPercentage(e.Percentage);
+            frmProgressExportLog.SetProgressPercentage(e.Percentage);
         }
 
         private void StartLogWorksWithCurrentFile(string filename)
         {
             try
             {
-                string logworksstring = GetLogWorksFromRegistry();
                 if (logworksstring != string.Empty)
-                {
-                    logworksstring = logworksstring.Substring(1, logworksstring.Length - 1);
-                    int idx = logworksstring.IndexOf('\"');
-                    if (idx > 0)
-                    {
-                        logworksstring = logworksstring.Substring(0, idx);
-                        System.Diagnostics.Process.Start(logworksstring, "\"" + filename + "\"");
-                    }
+                {                    
+                    System.Diagnostics.Process.Start(logworksstring, "\"" + filename + "\"");
                 }
             }
             catch (Exception E)
             {
                 logger.Debug(E.Message);
             }
-        }
-
-        private string GetLogWorksFromRegistry()
-        {
-            RegistryKey TempKey = null;
-            string foundvalue = string.Empty;
-            TempKey = Registry.LocalMachine;
-
-            using (RegistryKey Settings = TempKey.OpenSubKey("SOFTWARE\\Classes\\d32FileHandler\\Shell\\Open\\Command"))
-            {
-                if (Settings != null)
-                {
-                    string[] vals = Settings.GetValueNames();
-                    foreach (string a in vals)
-                    {
-                        try
-                        {
-                            foundvalue = Settings.GetValue(a).ToString();
-                        }
-                        catch (Exception E)
-                        {
-                            logger.Debug(E.Message);
-                        }
-                    }
-                }
-            }
-
-            if (foundvalue == string.Empty)
-            {
-                using (RegistryKey Settings = TempKey.OpenSubKey("SOFTWARE\\Classes\\Applications\\LogWorks2.exe\\shell\\Open\\Command"))
-                {
-                    if (Settings != null)
-                    {
-                        string[] vals = Settings.GetValueNames();
-                        foreach (string a in vals)
-                        {
-                            try
-                            {
-                                foundvalue = Settings.GetValue(a).ToString();
-                            }
-                            catch (Exception E)
-                            {
-                                logger.Debug(E.Message);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (foundvalue == string.Empty)
-            {
-                using (RegistryKey Settings = TempKey.OpenSubKey("SOFTWARE\\Classes\\d32.File\\shell\\open\\command"))
-                {
-                    if (Settings != null)
-                    {
-                        string[] vals = Settings.GetValueNames();
-                        try
-                        {
-                            foundvalue = Settings.GetValue(vals[0]).ToString();
-                        }
-                        catch (Exception E)
-                        {
-                            logger.Debug(E.Message);
-                        }
-                    }
-                }
-            }
-
-            if (foundvalue == string.Empty)
-            {
-                using (RegistryKey Settings = TempKey.OpenSubKey("HKEY_CLASSES_ROOT\\Applications\\LogWorks3.exe\\shell\\open\\command"))
-                {
-                    if (Settings != null)
-                    {
-                        string[] vals = Settings.GetValueNames();
-                        try
-                        {
-                            foundvalue = Settings.GetValue(vals[0]).ToString();
-                        }
-                        catch (Exception E)
-                        {
-                            logger.Debug(E.Message);
-                        }
-                    }
-                }
-            }
-
-            return foundvalue;
         }
 
         private int _delayUpdateCounter = 0;
@@ -13786,14 +13618,13 @@ If boost regulation reports errors you can increase the difference between boost
             ofd.Filter = "Trionic 7 logfiles|*.t7l";
             ofd.Title = "Open CAN bus logfile";
             ofd.Multiselect = false;
-            string logworksstring = GetLogWorksFromRegistry();
             if (logworksstring == string.Empty)
             {
                 frmInfoBox info = new frmInfoBox("Logworks is not installed on this computer, download from http://www.innovatemotorsports.com/");
             }
             else if (ofd.ShowDialog() == DialogResult.OK)
             {
-                ConvertFileToDif(ofd.FileName, false); 
+                ConvertFileToDif(ofd.FileName, false);
             }
         }
 
@@ -15443,66 +15274,18 @@ If boost regulation reports errors you can increase the difference between boost
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                CheckDefaultSymbolColors();
                 OpenAndDisplayLogFile(ofd.FileName);
             }
-        }
-
-        private void SaveRegistryColor(string key, int value)
-        {
-            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
-
-            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("SymbolColors"))
-            {
-                saveSettings.SetValue(key, value.ToString(), RegistryValueKind.String);
-            }
-        }
-
-        private void CheckDefaultSymbolColors()
-        {
-            if (GetValueFromRegistry("ActualIn.n_Engine") == 0) SaveRegistryColor("ActualIn.n_Engine", ColorTranslator.ToWin32(Color.LightCyan));
-            if (GetValueFromRegistry("ActualIn.T_Engine") == 0) SaveRegistryColor("ActualIn.T_Engine", ColorTranslator.ToWin32(Color.LightSalmon));
-            if (GetValueFromRegistry("ActualIn.T_AirInlet") == 0) SaveRegistryColor("ActualIn.T_AirInlet", ColorTranslator.ToWin32(Color.LightBlue));
-            if (GetValueFromRegistry("ECMStat.ST_ActiveAirDem") == 0) SaveRegistryColor("ECMStat.ST_ActiveAirDem", ColorTranslator.ToWin32(Color.Lime));
-            if (GetValueFromRegistry("Lambda.Status") == 0) SaveRegistryColor("Lambda.Status", ColorTranslator.ToWin32(Color.Azure));
-            if (GetValueFromRegistry("IgnProt.fi_Offset") == 0) SaveRegistryColor("IgnProt.fi_Offset", ColorTranslator.ToWin32(Color.Pink));
-            if (GetValueFromRegistry("m_Request") == 0) SaveRegistryColor("m_Request", ColorTranslator.ToWin32(Color.Orange));
-            if (GetValueFromRegistry("Out.M_Engine") == 0) SaveRegistryColor("Out.M_Engine", ColorTranslator.ToWin32(Color.DarkGray));
-            if (GetValueFromRegistry("ECMStat.P_Engine") == 0) SaveRegistryColor("ECMStat.P_Engine", ColorTranslator.ToWin32(Color.LightSlateGray));
-            if (GetValueFromRegistry("In.p_AirInlet") == 0) SaveRegistryColor("In.p_AirInlet", ColorTranslator.ToWin32(Color.Red));
-            if (GetValueFromRegistry("ECMStat.p_Diff") == 0) SaveRegistryColor("ECMStat.p_Diff", ColorTranslator.ToWin32(Color.Red));
-            if (GetValueFromRegistry("Out.PWM_BoostCntrl") == 0) SaveRegistryColor("Out.PWM_BoostCntrl", ColorTranslator.ToWin32(Color.Wheat));
-            if (GetValueFromRegistry("Out.fi_Ignition") == 0) SaveRegistryColor("Out.fi_Ignition", ColorTranslator.ToWin32(Color.LightGoldenrodYellow));
-            if (GetValueFromRegistry("Out.X_AccPedal") == 0) SaveRegistryColor("Out.X_AccPedal", ColorTranslator.ToWin32(Color.Crimson));
-            if (GetValueFromRegistry("MAF.m_AirInlet") == 0) SaveRegistryColor("MAF.m_AirInlet", ColorTranslator.ToWin32(Color.OrangeRed));
-            if (GetValueFromRegistry("In.v_Vehicle") == 0) SaveRegistryColor("In.v_Vehicle", ColorTranslator.ToWin32(Color.Green));
-            if (GetValueFromRegistry("Exhaust.T_Calc") == 0) SaveRegistryColor("Exhaust.T_Calc", ColorTranslator.ToWin32(Color.Goldenrod));
-            if (GetValueFromRegistry("BFuelProt.CurrentFuelCon") == 0) SaveRegistryColor("BFuelProt.CurrentFuelCon", ColorTranslator.ToWin32(Color.White));
         }
 
         private void btnSetSymbolColors_ItemClick(object sender, ItemClickEventArgs e)
         {
             frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
-            // get values from realtime panel
-            // LoadRealtimeTable();
-            CheckDefaultSymbolColors();
             foreach (SymbolHelper sh in m_symbols)
             {
                 if (sh.Start_address > 0)
                 {
-                    if (sh.Userdescription != "")
-                    {
-                        if (sh.Userdescription != String.Format("Symbolnumber {0}", sh.Symbol_number))
-                        {
-                            plotsel.AddItemToList(sh.Userdescription);
-                        }
-                    }
-                    else
-                    {
-                        plotsel.AddItemToList(sh.Varname);
-                    }
+                    plotsel.AddItemToList(sh.SmartVarname);
                 }
             }
             plotsel.ShowDialog();
@@ -19291,101 +19074,19 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             DateTime endDate = DateTime.MinValue;
             try
             {
-                SymbolCollection sc = new SymbolCollection();
-                string[] alllines = File.ReadAllLines(filename);
-                //using (StreamReader sr = new StreamReader(filename))
-                {
-                    //string line = string.Empty;
-                    char[] sep = new char[1];
-                    char[] sep2 = new char[1];
-                    //int linecount = 0;
-                    sep.SetValue('|', 0);
-                    sep2.SetValue('=', 0);
-                    //while ((line = sr.ReadLine()) != null)
-
-                    foreach (string line in alllines)
-                    {
-                        string[] values = line.Split(sep);
-                        if (values.Length > 0)
-                        {
-                            try
-                            {
-                                //dd/MM/yyyy HH:mm:ss
-                                //string logline = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "|";
-
-                                string dtstring = (string)values.GetValue(0);
-                                DateTime dt = new DateTime(Convert.ToInt32(dtstring.Substring(6, 4)), Convert.ToInt32(dtstring.Substring(3, 2)), Convert.ToInt32(dtstring.Substring(0, 2)), Convert.ToInt32(dtstring.Substring(11, 2)), Convert.ToInt32(dtstring.Substring(14, 2)), Convert.ToInt32(dtstring.Substring(17, 2)));
-                                if (dt > endDate) endDate = dt;
-                                if (dt < startDate) startDate = dt;
-                                for (int t = 1; t < values.Length; t++)
-                                {
-                                    string subvalue = (string)values.GetValue(t);
-                                    string[] subvals = subvalue.Split(sep2);
-                                    if (subvals.Length == 2)
-                                    {
-                                        string varname = (string)subvals.GetValue(0);
-                                        bool sfound = false;
-                                        foreach (SymbolHelper sh in sc)
-                                        {
-                                            if (sh.Varname == varname || sh.Userdescription == varname)
-                                            {
-                                                sfound = true;
-                                            }
-                                        }
-                                        SymbolHelper nsh = new SymbolHelper();
-                                        nsh.Varname = varname;
-                                        if (!sfound) sc.Add(nsh);
-                                    }
-                                }
-                            }
-                            catch (Exception pE)
-                            {
-                                logger.Debug(pE.Message);
-                            }
-                        }
-                    }
-                }
+                SymbolCollection sc = LogFile.FindSymbols(filename, ref startDate, ref endDate);
 
                 if (AutoExport)
                 {
-                    foreach (SymbolHelper sh in sc)
-                    {
-                        sh.Color = GetColorFromRegistry(sh.Varname);
-                    }
-                    CSVGenerator csvgen = new CSVGenerator();
-                    csvgen.AppSettings = m_appSettings;
-
-                    //csvgen.LowAFR = m_appSettings.WidebandLowAFR;
-                    //csvgen.HighAFR = m_appSettings.WidebandHighAFR;
-                    //csvgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
-                    //csvgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
-                    csvgen.WidebandSymbol = m_appSettings.WideBandSymbol;
-                    //csvgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
-                    csvgen.UseWidebandInput = false;
-
-                    csvgen.onExportProgress += new CSVGenerator.ExportProgress(difgen_onExportProgress);
-                    frmProgressLogWorks = new frmProgress();
-                    frmProgressLogWorks.SetProgress("Exporting to CSV");
-                    frmProgressLogWorks.Show();
-                    System.Windows.Forms.Application.DoEvents();
-                    try
-                    {
-                        csvgen.ConvertFileToCSV(filename, sc, startDate, endDate);
-                    }
-                    catch (Exception expE1)
-                    {
-                        logger.Debug(expE1.Message);
-                    }
-                    frmProgressLogWorks.Close();
+                    InitExportCSV(filename, startDate, endDate);
                 }
                 else
                 {
-
                     // show selection screen
                     frmPlotSelection plotsel = new frmPlotSelection(suiteRegistry);
                     foreach (SymbolHelper sh in sc)
                     {
-                        plotsel.AddItemToList(sh.Varname);
+                        plotsel.AddItemToList(sh.SmartVarname);
                     }
                     plotsel.Startdate = startDate;
                     plotsel.Enddate = endDate;
@@ -19395,38 +19096,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         sc = plotsel.Sc;
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
-                        CSVGenerator csvgen = new CSVGenerator();
-                        LogFilters filterhelper = new LogFilters(suiteRegistry);
-                        csvgen.SetFilters(filterhelper.GetFiltersFromRegistry());
-                        csvgen.AppSettings = m_appSettings;
-                        //csvgen.LowAFR = m_appSettings.WidebandLowAFR;
-                        //csvgen.HighAFR = m_appSettings.WidebandHighAFR;
-                        //csvgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
-                        //csvgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
-                        csvgen.WidebandSymbol = m_appSettings.WideBandSymbol;
-                        //csvgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
-                        csvgen.UseWidebandInput = false;
-
-                        csvgen.onExportProgress += new CSVGenerator.ExportProgress(difgen_onExportProgress);
-                        frmProgressLogWorks = new frmProgress();
-                        frmProgressLogWorks.SetProgress("Exporting to CSV");
-                        frmProgressLogWorks.Show();
-                        System.Windows.Forms.Application.DoEvents();
-                        try
-                        {
-                            if (!csvgen.ConvertFileToCSV(filename, sc, startDate, endDate))
-                            {
-                                frmInfoBox info = new frmInfoBox("No data was found to export!");
-                            }
-                        }
-                        catch (Exception expE2)
-                        {
-                            logger.Debug(expE2.Message);
-                        }
-                        frmProgressLogWorks.Close();
+                        InitExportCSV(filename, startDate, endDate);
                     }
-                    TimeSpan ts = new TimeSpan(endDate.Ticks - startDate.Ticks);
-                    //MessageBox.Show("LogFile should be " + ts.ToString());
                 }
             }
             catch (Exception E)
@@ -19435,9 +19106,42 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             }
         }
 
+        private void InitExportCSV(string filename, DateTime startDate, DateTime endDate)
+        {
+            CSVGenerator csvgen = new CSVGenerator();
+            LogFilters filterhelper = new LogFilters(suiteRegistry);
+            csvgen.SetFilters(filterhelper.GetFiltersFromRegistry());
+            csvgen.AppSettings = m_appSettings;
+            //csvgen.LowAFR = m_appSettings.WidebandLowAFR;
+            //csvgen.HighAFR = m_appSettings.WidebandHighAFR;
+            //csvgen.MaximumVoltageWideband = m_appSettings.WidebandHighVoltage;
+            //csvgen.MinimumVoltageWideband = m_appSettings.WidebandLowVoltage;
+            csvgen.WidebandSymbol = m_appSettings.WideBandSymbol;
+            //csvgen.UseWidebandInput = m_appSettings.UseWidebandLambdaThroughSymbol;
+            csvgen.UseWidebandInput = false;
+
+            csvgen.onExportProgress += new CSVGenerator.ExportProgress(difgen_onExportProgress);
+            frmProgressExportLog = new frmProgress();
+            frmProgressExportLog.SetProgress("Exporting to CSV");
+            frmProgressExportLog.Show();
+            System.Windows.Forms.Application.DoEvents();
+            try
+            {
+                if (!csvgen.ConvertFileToCSV(filename, startDate, endDate))
+                {
+                    frmInfoBox info = new frmInfoBox("No data was found to export!");
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E.Message);
+            }
+            frmProgressExportLog.Close();
+        }
+
         void difgen_onExportProgress(object sender, CSVGenerator.ProgressEventArgs e)
         {
-            frmProgressLogWorks.SetProgressPercentage(e.Percentage);
+            frmProgressExportLog.SetProgressPercentage(e.Percentage);
         }
     }
 }

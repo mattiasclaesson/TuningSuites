@@ -22,7 +22,7 @@ namespace CommonSuite
             set
             {
                 _startdate = value;
-                dateEdit1.EditValue = _startdate;
+                dateEditFrom.EditValue = _startdate;
             }
         }
         private DateTime _enddate;
@@ -33,7 +33,7 @@ namespace CommonSuite
             set
             {
                 _enddate = value;
-                dateEdit2.EditValue = _enddate;
+                dateEditTo.EditValue = _enddate;
             }
         }
 
@@ -46,81 +46,21 @@ namespace CommonSuite
         }
 
         SuiteRegistry _suiteRegistry;
+        SymbolColors _symbolColors;
 
         public frmPlotSelection(SuiteRegistry suiteRegistry)
         {
             InitializeComponent();
             _suiteRegistry = suiteRegistry;
-        }
-
-        private void SaveRegistrySetting(string key, int value)
-        {
-            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
-
-            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("SymbolColors"))
-            {
-                saveSettings.SetValue(key, value.ToString(), RegistryValueKind.String);
-            }
-        }
-
-        private Int32 GetValueFromRegistry(string symbolname)
-        {
-            Int32 win32color = 0;
-            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey(_suiteRegistry.getRegistryPath());
-
-            using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
-            {
-                if (Settings != null)
-                {
-                    string[] vals = Settings.GetValueNames();
-                    foreach (string a in vals)
-                    {
-                        try
-                        {
-                            if (a == symbolname)
-                            {
-                                string value = Settings.GetValue(a).ToString();
-                                win32color = Convert.ToInt32(value);
-                            }
-                        }
-                        catch (Exception E)
-                        {
-                            logger.Debug(E.Message);
-                        }
-                    }
-                }
-            }
-            return win32color;
-        }
-
-        private void SaveColorToRegistry(string symbolname, Color c)
-        {
-            int win32color = c.ToArgb();// System.Drawing.ColorTranslator.ToAr(c);
-            SaveRegistrySetting(symbolname, win32color);
-        }
-
-        private Color GetColorFromRegistry(string symbolname)
-        {
-            Color c = Color.Black;
-            Int32 win32color = GetValueFromRegistry(symbolname);
-            c = Color.FromArgb((int)win32color);
-             //c = System.Drawing.ColorTranslator.FromWin32(win32color);
-            return c;
+            _symbolColors = new SymbolColors(suiteRegistry);
         }
 
         public void AddItemToList(string varname)
         {
-            //checkedListBoxControl1.Items.Add(varname);
             if (gridControl1.DataSource != null)
             {
                 DataTable dt = (DataTable)gridControl1.DataSource;
-                dt.Rows.Add(varname, GetColorFromRegistry(varname).ToArgb());
-                //logger.Debug(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
-                //dt.Rows.Add(varname, Color.Red.ToArgb());
+                dt.Rows.Add(varname, _symbolColors.GetColorFromRegistry(varname).ToArgb());
             }
             else
             {
@@ -129,8 +69,7 @@ namespace CommonSuite
                 dt.Columns.Add("SYMBOLNAME");
                 
                 dt.Columns.Add("COLOR", Type.GetType("System.Int32"));
-                dt.Rows.Add(varname, GetColorFromRegistry(varname).ToArgb());
-                //logger.Debug(varname + " got color: " + GetColorFromRegistry(varname).ToArgb().ToString());
+                dt.Rows.Add(varname, _symbolColors.GetColorFromRegistry(varname).ToArgb());
                 gridControl1.DataSource = dt;
             }
             UpdateColors();
@@ -138,7 +77,7 @@ namespace CommonSuite
 
         public void UpdateColors()
         {
-            
+            gridControl1.Update();
         }
 
         private void simpleButton2_Click(object sender, EventArgs e)
@@ -157,7 +96,7 @@ namespace CommonSuite
 
                 foreach (DataRow dr in dt.Rows)
                 {
-                    SaveColorToRegistry(dr["SYMBOLNAME"].ToString(), Color.FromArgb(Convert.ToInt32(dr["COLOR"])));
+                    _symbolColors.SaveColorToRegistry(dr["SYMBOLNAME"].ToString(), Color.FromArgb(Convert.ToInt32(dr["COLOR"])));
                 }
 
                 int[] selrows = gridView1.GetSelectedRows();
@@ -174,50 +113,38 @@ namespace CommonSuite
                 }
                 
             }
-
-            /*
-            foreach (DevExpress.XtraEditors.Controls.CheckedListBoxItem item in checkedListBoxControl1.Items)
-            {
-                if (item.CheckState == CheckState.Checked)
-                {
-                    SymbolHelper sh = new SymbolHelper();
-                    sh.Varname = item.Value.ToString();
-                    _sc.Add(sh);
-                }
-            }*/
             this.Close();
         }
 
-        private void dateEdit1_EditValueChanged(object sender, EventArgs e)
+        private void dateEditFrom_EditValueChanged(object sender, EventArgs e)
         {
-            if (dateEdit1.EditValue != null)
+            if (dateEditFrom.EditValue != null)
             {
-                if (dateEdit1.EditValue != DBNull.Value)
+                if (dateEditFrom.EditValue != DBNull.Value)
                 {
-                    _startdate = Convert.ToDateTime(dateEdit1.EditValue);
+                    _startdate = Convert.ToDateTime(dateEditFrom.EditValue);
                 }
             }
         }
 
-        private void dateEdit2_EditValueChanged(object sender, EventArgs e)
+        private void dateEditTo_EditValueChanged(object sender, EventArgs e)
         {
-            if (dateEdit2.EditValue != null)
+            if (dateEditTo.EditValue != null)
             {
-                if (dateEdit2.EditValue != DBNull.Value)
+                if (dateEditTo.EditValue != DBNull.Value)
                 {
-                    _enddate = Convert.ToDateTime(dateEdit2.EditValue);
+                    _enddate = Convert.ToDateTime(dateEditTo.EditValue);
                 }
             }
 
         }
-
 
         public void SelectAllSymbols()
         {
             gridView1.SelectAll();
         }
 
-        private void simpleButton3_Click(object sender, EventArgs e)
+        private void btnFilters_Click(object sender, EventArgs e)
         {
             // setup the export filters
             LogFilters filterhelper = new LogFilters(_suiteRegistry);

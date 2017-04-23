@@ -104,6 +104,9 @@
     <Compile Include="BitStream.cs" />
     <Compile Include="CellHelper.cs" />
     <Compile Include="CellHelperCollection.cs" />
+    <Compile Include="LogFile.cs" />
+    <Compile Include="LogWorks.cs" />
+    <Compile Include="SymbolColors.cs" />
     <Compile Include="CSVGenerator.cs" />
     <Compile Include="DifGenerator.cs" />
     <Compile Include="Forms\frmCombiAdapterConfig.cs">
