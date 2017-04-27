@@ -203,9 +203,7 @@ namespace T7
             symbolColors = new SymbolColors(suiteRegistry);
 
             Thread.CurrentThread.Priority = ThreadPriority.AboveNormal;
-            //System.Threading.Thread.CurrentThread.CurrentUICulture
-            CultureInfo tci = new CultureInfo("nl-NL");
-            Thread.CurrentThread.CurrentCulture = tci;
+
             splash = new frmSplash();
             splash.Show();
             System.Windows.Forms.Application.DoEvents();
@@ -3362,6 +3360,7 @@ namespace T7
 
         private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
         {
+            CultureInfo saved = Thread.CurrentThread.CurrentCulture;
             //en-US
             CultureInfo tci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = tci;
@@ -3534,9 +3533,7 @@ namespace T7
             {
                 logger.Debug("Failed to export to excel: " + E.Message);
             }
-            tci = new CultureInfo("nl-NL");
-            Thread.CurrentThread.CurrentCulture = tci;
-
+            Thread.CurrentThread.CurrentCulture = saved;
         }
 
         private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
@@ -3595,8 +3592,7 @@ namespace T7
 
                     //                    DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                     //frmTableDetail tabdet = new frmTableDetail();
-                    string Map_name = sh.Varname;
-                    if (Map_name.StartsWith("Symbol") && sh.Userdescription != "") Map_name = sh.Userdescription;
+                    string Map_name = sh.SmartVarname;
                     int columns = 8;
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, Map_name, out columns, out rows);
