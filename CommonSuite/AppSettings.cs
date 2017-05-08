@@ -1074,7 +1074,7 @@ namespace CommonSuite
             }
         }
 
-        private string m_ProjectFolder = Application.StartupPath + "\\Projects";
+        private string m_ProjectFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TxSuite\\Projects";
 
         public string ProjectFolder
         {
