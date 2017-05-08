@@ -829,6 +829,12 @@ namespace CommonSuite
                 case "AirMassMast.m_Request":
                     retval = "2000";
                     break;
+                case "In.U_O2SensFront":
+                    retval = "2000";
+                    break;
+                case "Out.t_Injection":
+                    retval = "124000";
+                    break;
                 default:
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
@@ -1015,6 +1021,12 @@ namespace CommonSuite
                 case "FFTrqProt.Trq_MaxEngineBefComp":
                     retval = "-50";
                     break;
+                case "In.U_O2SensFront":
+                    retval = "0";
+                    break;
+                case "Out.t_Injection":
+                    retval = "0";
+                    break;
                 default:
                     if (symbolname == m_appSettings.Adc1channelname)
                     {
@@ -1190,6 +1202,12 @@ namespace CommonSuite
                 case "MAF.m_AirInlet":
                 case "AirMassMast.m_Request":
                     retval = "mg/c";
+                    break;
+                case "In.U_O2SensFront":
+                    retval = "mV";
+                    break;
+                case "Out.t_Injection":
+                    retval = "us";
                     break;
                 default:
                     if (symbolname == _widebandSymbol)
