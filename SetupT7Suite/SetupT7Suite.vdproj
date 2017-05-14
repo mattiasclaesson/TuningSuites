@@ -1984,7 +1984,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6316.41155, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6343.17239, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_038BBC9082718C1627EE1A6822C93811"
@@ -2210,7 +2210,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.35.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.39.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_21F53013E1DC81D75373813E454322B1"
@@ -2786,7 +2786,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.2.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.3.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_610381617B3BF3A29390AE40945BCDAF"
@@ -4198,15 +4198,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{72239874-48C3-4581-90EA-B9382B7A0F6E}"
-        "PackageCode" = "8:{2146BC8A-D0EA-4E83-9365-AFDE69F81088}"
+        "ProductCode" = "8:{FE9DB970-D2DA-42C2-B450-9500345CB83F}"
+        "PackageCode" = "8:{8E8A6E26-4C09-477F-AC2D-91FD0F9C3D7F}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.34"
+        "ProductVersion" = "8:0.1.35"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"
