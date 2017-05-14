@@ -347,9 +347,9 @@ namespace T8SuitePro
             // 
             this.labelControl3.Location = new System.Drawing.Point(48, 151);
             this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(79, 13);
+            this.labelControl3.Size = new System.Drawing.Size(65, 13);
             this.labelControl3.TabIndex = 4;
-            this.labelControl3.Text = "Immobilizer code";
+            this.labelControl3.Text = "Serial number";
             this.labelControl3.DoubleClick += new System.EventHandler(this.labelControl3_DoubleClick);
             // 
             // textEdit2

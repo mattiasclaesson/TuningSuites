@@ -81,12 +81,12 @@ namespace T8SuitePro
             set { m_hardwareID = value; }
         }
 
-        private string m_ImmobilizerID = string.Empty;
+        private string m_SerialNumber = string.Empty;
 
-        public string ImmobilizerID
+        public string SerialNumber
         {
-            get { return m_ImmobilizerID; }
-            set { m_ImmobilizerID = value; }
+            get { return m_SerialNumber; }
+            set { m_SerialNumber = value; }
         }
         private string m_SoftwareVersion = string.Empty;
 
@@ -467,12 +467,12 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                                 m_PartNumber = t_PartNumber.Trim();
                                 // first 10 bytes are serialnumber (but different from PI-area?)
                                 // 16 bytes immocode
-                                string t_ImmobilizerID = "";
+                                string t_SerialNumber = "";
                                 for (pc = 0; pc < 16; pc++)
                                 {
-                                    t_ImmobilizerID += Convert.ToChar(file_data[lowaddress[t] - 0x4000 + pc + 10]);
+                                    t_SerialNumber += Convert.ToChar(file_data[lowaddress[t] - 0x4000 + pc + 10]);
                                 }
-                                m_ImmobilizerID = t_ImmobilizerID.Trim();
+                                m_SerialNumber = t_SerialNumber.Trim();
                             }
                             catch (Exception E)
                             {
@@ -551,12 +551,12 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                                 m_PartNumber = t_PartNumber.Trim();
                                 // first 10 bytes are serialnumber (but different from PI-area?)
                                 // 16 bytes immocode
-                                string t_ImmobilizerID = "";
+                                string t_serialNumber = "";
                                 for (pc = 0; pc < 16; pc++)
                                 {
-                                    t_ImmobilizerID += Convert.ToChar(file_data[highaddress[t] - 0x6000 + pc + 10]);
+                                    t_serialNumber += Convert.ToChar(file_data[highaddress[t] - 0x6000 + pc + 10]);
                                 }
-                                m_ImmobilizerID = t_ImmobilizerID.Trim();
+                                m_SerialNumber = t_serialNumber.Trim();
                             }
                             catch (Exception E)
                             {
@@ -621,7 +621,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
 
         public bool init(string a_filename)
         {
-            m_ImmobilizerID = string.Empty;
+            m_SerialNumber = string.Empty;
             m_SoftwareVersion = string.Empty;
             m_CarDescription = string.Empty;
             m_PartNumber = string.Empty;
@@ -702,7 +702,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
         internal bool UpdateVinAndImmoCode()
         {
             UpdateVin(m_ChassisID);
-            UpdateImmobilizerCode(m_ImmobilizerID);
+            UpdateSerialNumber(m_SerialNumber);
             return true;
             /*bool retval = false;
             // save the currently set vin and immocode into the file
@@ -735,28 +735,28 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
             return retval;*/
         }
 
-        internal bool UpdateImmobilizerCode(string immocode)
+        internal bool UpdateSerialNumber(string serialNumber)
         {
             if (fbc != null)
             {
                 int pc = 0;
-                byte[] immoBytes = new byte[16];
-                m_ImmobilizerID.PadRight(16, ' ');
+                byte[] serialBytes = new byte[16];
+                m_SerialNumber.PadRight(16, ' ');
                 for (pc = 0; pc < 16; pc++)
                 {
-                    immoBytes[pc] = Convert.ToByte(immocode[pc]);
+                    serialBytes[pc] = Convert.ToByte(serialNumber[pc]);
                 }
                 for(int i = 0; i < lowtypes.Length; i ++)
                 {
                     // get the type of block?
                     if (lowtypes[i] == 0xFF && lowaddress[i] != 0 && lowaddress[i] != 0xFFFF)
                     {
-                        logger.Debug("Updating for immocode: " + lowaddress[i].ToString("X8"));
+                        logger.Debug("Updating for serialNumber: " + lowaddress[i].ToString("X8"));
                         for (pc = 0; pc < 16; pc++)
                         {
-                            immoBytes[pc] = Convert.ToByte(m_ImmobilizerID[pc]);
+                            serialBytes[pc] = Convert.ToByte(m_SerialNumber[pc]);
                         }
-                        savedatatobinary(lowaddress[i] + 10, 16, immoBytes, m_fileName);
+                        savedatatobinary(lowaddress[i] + 10, 16, serialBytes, m_fileName);
                     }
                 }
                 for(int i = 0; i < hightypes.Length; i ++)
@@ -764,12 +764,12 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                     // get the type of block?
                     if (hightypes[i] == 0xFF && highaddress[i] != 0 && highaddress[i] != 0xFFFF)
                     {
-                        logger.Debug("Updating for immocode: " + highaddress[i].ToString("X8"));
+                        logger.Debug("Updating for serialNumber: " + highaddress[i].ToString("X8"));
                         for (pc = 0; pc < 16; pc++)
                         {
-                            immoBytes[pc] = Convert.ToByte(m_ImmobilizerID[pc]);
+                            serialBytes[pc] = Convert.ToByte(m_SerialNumber[pc]);
                         }
-                        savedatatobinary(highaddress[i] + 10, 16, immoBytes, m_fileName);
+                        savedatatobinary(highaddress[i] + 10, 16, serialBytes, m_fileName);
                     }
                 }
             }

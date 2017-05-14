@@ -77,7 +77,7 @@ namespace T8SuitePro
         }
 
 
-        public string ImmoID
+        public string SerialNumber
         {
             get
             {

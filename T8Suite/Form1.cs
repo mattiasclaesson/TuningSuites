@@ -4229,7 +4229,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     engineTypeBySWVersion = DetermineCarInfoBySWVersion(swversion);
                     frminfo.ChassisID = t8header.ChassisID;
                     frminfo.EngineTypeBySoftwareVersion = engineTypeBySWVersion;//t8header.CarDescription;
-                    frminfo.ImmoID = t8header.ImmobilizerID;
+                    frminfo.SerialNumber = t8header.SerialNumber;
                     frminfo.HardwareID = t8header.HardwareID;
                     frminfo.HardwareType = t8header.DeviceType;
                     frminfo.ECUDescription = t8header.EcuDescription;
@@ -4238,7 +4238,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
                     if (frminfo.ShowDialog() == DialogResult.OK)
                     {
-                        t8header.ImmobilizerID = frminfo.ImmoID;
+                        t8header.SerialNumber = frminfo.SerialNumber;
                         t8header.SoftwareVersion = frminfo.SoftwareID;
                         t8header.CarDescription = frminfo.EngineTypeBySoftwareVersion;
                         t8header.ChassisID = frminfo.ChassisID;
