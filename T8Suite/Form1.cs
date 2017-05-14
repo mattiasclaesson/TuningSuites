@@ -730,6 +730,7 @@ namespace T8SuitePro
                 barProgress.Caption = descr;
                 System.Windows.Forms.Application.DoEvents();
             }
+            logger.Trace(descr);
         }
 
         private void SetDefaultFilters()
