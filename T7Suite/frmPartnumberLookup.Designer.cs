@@ -29,6 +29,7 @@ namespace T7
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPartnumberLookup));
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
             this.buttonEdit1 = new DevExpress.XtraEditors.ButtonEdit();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.lblTorque = new DevExpress.XtraEditors.LabelControl();
@@ -62,7 +63,7 @@ namespace T7
             resources.ApplyResources(this.buttonEdit1, "buttonEdit1");
             this.buttonEdit1.Name = "buttonEdit1";
             this.buttonEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(((DevExpress.XtraEditors.Controls.ButtonPredefines)(resources.GetObject("buttonEdit1.Properties.Buttons"))), ((System.Drawing.Image)(resources.GetObject("buttonEdit1.Properties.Buttons1"))), null)});
+            new DevExpress.XtraEditors.Controls.EditorButton(((DevExpress.XtraEditors.Controls.ButtonPredefines)(resources.GetObject("buttonEdit1.Properties.Buttons"))), resources.GetString("buttonEdit1.Properties.Buttons1"), ((int)(resources.GetObject("buttonEdit1.Properties.Buttons2"))), ((bool)(resources.GetObject("buttonEdit1.Properties.Buttons3"))), ((bool)(resources.GetObject("buttonEdit1.Properties.Buttons4"))), ((bool)(resources.GetObject("buttonEdit1.Properties.Buttons5"))), ((DevExpress.XtraEditors.ImageLocation)(resources.GetObject("buttonEdit1.Properties.Buttons6"))), ((System.Drawing.Image)(resources.GetObject("buttonEdit1.Properties.Buttons7"))), new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, resources.GetString("buttonEdit1.Properties.Buttons8"), ((object)(resources.GetObject("buttonEdit1.Properties.Buttons9"))), ((DevExpress.Utils.SuperToolTip)(resources.GetObject("buttonEdit1.Properties.Buttons10"))), ((bool)(resources.GetObject("buttonEdit1.Properties.Buttons11"))))});
             this.buttonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.buttonEdit1_ButtonClick);
             this.buttonEdit1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buttonEdit1_KeyDown);
             // 
@@ -85,29 +86,25 @@ namespace T7
             // 
             // lblTorque
             // 
-            this.lblTorque.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.lblTorque.Appearance.Options.UseForeColor = true;
+            this.lblTorque.Appearance.ForeColor = ((System.Drawing.Color)(resources.GetObject("lblTorque.Appearance.ForeColor")));
             resources.ApplyResources(this.lblTorque, "lblTorque");
             this.lblTorque.Name = "lblTorque";
             // 
             // lblPower
             // 
-            this.lblPower.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.lblPower.Appearance.Options.UseForeColor = true;
+            this.lblPower.Appearance.ForeColor = ((System.Drawing.Color)(resources.GetObject("lblPower.Appearance.ForeColor")));
             resources.ApplyResources(this.lblPower, "lblPower");
             this.lblPower.Name = "lblPower";
             // 
             // lblEngineType
             // 
-            this.lblEngineType.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.lblEngineType.Appearance.Options.UseForeColor = true;
+            this.lblEngineType.Appearance.ForeColor = ((System.Drawing.Color)(resources.GetObject("lblEngineType.Appearance.ForeColor")));
             resources.ApplyResources(this.lblEngineType, "lblEngineType");
             this.lblEngineType.Name = "lblEngineType";
             // 
             // lblCarModel
             // 
-            this.lblCarModel.Appearance.ForeColor = System.Drawing.Color.Blue;
-            this.lblCarModel.Appearance.Options.UseForeColor = true;
+            this.lblCarModel.Appearance.ForeColor = ((System.Drawing.Color)(resources.GetObject("lblCarModel.Appearance.ForeColor")));
             resources.ApplyResources(this.lblCarModel, "lblCarModel");
             this.lblCarModel.Name = "lblCarModel";
             // 

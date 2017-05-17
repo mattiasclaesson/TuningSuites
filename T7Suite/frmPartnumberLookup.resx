@@ -112,12 +112,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="buttonEdit1.Location" type="System.Drawing.Point, System.Drawing">
     <value>91, 12</value>
   </data>
@@ -125,25 +125,57 @@
   <data name="buttonEdit1.Properties.Buttons" type="DevExpress.XtraEditors.Controls.ButtonPredefines, DevExpress.Utils.v11.2">
     <value>Glyph</value>
   </data>
-  <data name="buttonEdit1.Properties.Buttons1" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="buttonEdit1.Properties.Buttons1" xml:space="preserve">
+    <value />
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="buttonEdit1.Properties.Buttons2" type="System.Int32, mscorlib">
+    <value>-1</value>
+  </data>
+  <data name="buttonEdit1.Properties.Buttons3" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="buttonEdit1.Properties.Buttons4" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="buttonEdit1.Properties.Buttons5" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <assembly alias="DevExpress.XtraEditors.v11.2" name="DevExpress.XtraEditors.v11.2, Version=11.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+  <data name="buttonEdit1.Properties.Buttons6" type="DevExpress.XtraEditors.ImageLocation, DevExpress.XtraEditors.v11.2">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="buttonEdit1.Properties.Buttons7" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAgdJREFUOE+Nk19I
-        E3EcwDMMe+vPcw/Rc4EF9hQURO9Gig8+CEar9DTJJWpswyZYQ5ImrTnKP4wSG2EPbQUiVmyKThpxxiRM
-        FInYQ2t4Y5Od3KffHWpbu7SDD/fjy93n+73vfb8l+7auMet+ts/595percQsXhAb7yhlM/cTWBK8FQwI
-        3Kg5J77Gg6biHYGeGVRBSjAtGBZ4t+hHy9bw2HLg3xJdoKntkLkhqAKtTmR2EArex+loo7lBorq6eQ9B
-        rhVt7Txa9Ci56Am8D1uweSbxRBIMx9cZeTNPo+Q1KOqHUUGeIOC+SO/YNMEMOMNp7rxLEU9DUsn+n6Dz
-        roM58XBMdCGSVhlczNA1keTFmoZncqlYolcgB0/vfMK9nj6+ipfnBbJgQeCJKTS8+sXIF8VcoCRGkV8e
-        I/KojLb2buLqplHBtmQqpeL8mOFJ+Ie5QFOHQPHDeoieB37m5FWSQjAr+CyYyUFABG67JvZu4rfQKWw2
-        L+8XvhNTNWO0osk0rudhrks+Np5VFEr+/gvap+OsztTS6Rikq+81roEQV5u8VFa2Eui4BP6zhRIzActV
-        ZJetLI6fYaq7FLelzMhqk1r4cO0IDJWjPD33pxJdkpgtNwZJr0AXbKxYkUdPFo2x/WYdsnRYVFJBypcn
-        0efdDLNNtFtqid86hNx/YfdF222N7fWXaaq/wm/4UvKNHdBVXAAAAABJRU5ErkJggg==
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAfFJREFUOE+Nkl9I
+        k2EUhyMMu+vPdRfRdYEFdhUURPdGShdeCEardJrkEjW2YROsIUmT1hzlH0aJjbCLtgIRKzZFJ434jEmY
+        JCKxi+bwG5vsk+/pbMxy+aX+4Ll5z3uec3h5921mxLIfIwrlnTPaVsJG9hewILwT+gQXWtaBt/7gzpLc
+        FNCEpDApDAqeAr3omas8MR34vyQn0LVWSN8UKkGvkcl2goEHOOwtNNaZqapq3EWQbUZfPo8eOUo2cgLP
+        oyas7nHc4TiDsTWG3s5Sb/bkKbT9zb8Cv+si3SOTBNLgCKW4+z5JLAUJNbM3Qfs9OzNyOSovEE5p9M+n
+        6RhL8HJZxz2+sF2SEyiB038E97t6+CbNs4IizAnuqErd61WGvqrGAjU+jPLqGOHHpbS0dhLTNvIbbEom
+        khqOT2mehn4aC3RtAFQfrAXpeuhjRlkiIY3TwhdhKgt+ObjjHNv9Db4HT2G1evgwt0JU0/NfK5JI4XwR
+        4obZy/rzcoMNtgj0z8dZmqqm3d5PR88bnH1BrjV4qKhoxt92CXxniyVGAhYrySxamB89w0RnCS5Tab7B
+        am7i4/UjMFCG+uxcsSQ+XVYkWP9hQRk+ue0b227VoJgPyyblJL1bJLmLRhTKRbGZqondPoTSe8GwvqfY
+        ai/TUHuF36Kl+0Cqm2V2AAAAAElFTkSuQmCC
 </value>
+  </data>
+  <data name="buttonEdit1.Properties.Buttons8" xml:space="preserve">
+    <value />
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="buttonEdit1.Properties.Buttons9" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="buttonEdit1.Properties.Buttons10" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="buttonEdit1.Properties.Buttons11" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="buttonEdit1.Size" type="System.Drawing.Size, System.Drawing">
     <value>447, 22</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="buttonEdit1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
@@ -158,6 +190,9 @@
   </data>
   <data name="&gt;&gt;buttonEdit1.ZOrder" xml:space="preserve">
     <value>6</value>
+  </data>
+  <data name="lblTorque.Appearance.ForeColor" type="System.Drawing.Color, System.Drawing">
+    <value>Blue</value>
   </data>
   <data name="lblTorque.Location" type="System.Drawing.Point, System.Drawing">
     <value>353, 107</value>
@@ -183,6 +218,9 @@
   <data name="&gt;&gt;lblTorque.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="lblPower.Appearance.ForeColor" type="System.Drawing.Color, System.Drawing">
+    <value>Blue</value>
+  </data>
   <data name="lblPower.Location" type="System.Drawing.Point, System.Drawing">
     <value>353, 83</value>
   </data>
@@ -207,6 +245,9 @@
   <data name="&gt;&gt;lblPower.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="lblEngineType.Appearance.ForeColor" type="System.Drawing.Color, System.Drawing">
+    <value>Blue</value>
+  </data>
   <data name="lblEngineType.Location" type="System.Drawing.Point, System.Drawing">
     <value>353, 59</value>
   </data>
@@ -230,6 +271,9 @@
   </data>
   <data name="&gt;&gt;lblEngineType.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="lblCarModel.Appearance.ForeColor" type="System.Drawing.Color, System.Drawing">
+    <value>Blue</value>
   </data>
   <data name="lblCarModel.Location" type="System.Drawing.Point, System.Drawing">
     <value>353, 35</value>
@@ -310,7 +354,7 @@
     <value>Full pressure turbo</value>
   </data>
   <data name="checkEdit5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 18</value>
+    <value>112, 19</value>
   </data>
   <data name="checkEdit5.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -382,7 +426,7 @@
     <value>Turbo engine</value>
   </data>
   <data name="checkEdit4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 18</value>
+    <value>112, 19</value>
   </data>
   <data name="checkEdit4.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -406,7 +450,7 @@
     <value>2.3L engine</value>
   </data>
   <data name="checkEdit2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 18</value>
+    <value>112, 19</value>
   </data>
   <data name="checkEdit2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -430,7 +474,7 @@
     <value>2.0L engine</value>
   </data>
   <data name="checkEdit1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 18</value>
+    <value>112, 19</value>
   </data>
   <data name="checkEdit1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -573,7 +617,6 @@
   <data name="&gt;&gt;simpleButton3.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="simpleButton4.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left</value>
   </data>
@@ -604,7 +647,7 @@
   <data name="&gt;&gt;simpleButton4.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">

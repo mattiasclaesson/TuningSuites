@@ -41,9 +41,9 @@ namespace T7
             // 
             // groupControl1
             // 
-            this.groupControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupControl1.Controls.Add(this.checkedListBoxControl1);
             this.groupControl1.Location = new System.Drawing.Point(12, 12);
             this.groupControl1.Name = "groupControl1";
@@ -55,9 +55,9 @@ namespace T7
             // 
             this.checkedListBoxControl1.CheckOnClick = true;
             this.checkedListBoxControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkedListBoxControl1.Location = new System.Drawing.Point(2, 20);
+            this.checkedListBoxControl1.Location = new System.Drawing.Point(2, 21);
             this.checkedListBoxControl1.Name = "checkedListBoxControl1";
-            this.checkedListBoxControl1.Size = new System.Drawing.Size(603, 348);
+            this.checkedListBoxControl1.Size = new System.Drawing.Size(603, 347);
             this.checkedListBoxControl1.TabIndex = 0;
             // 
             // simpleButton1
