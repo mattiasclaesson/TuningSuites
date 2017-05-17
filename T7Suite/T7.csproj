@@ -201,6 +201,7 @@
       <DependentUpon>frmTcmLimit.cs</DependentUpon>
     </Compile>
     <Compile Include="MapViewerFactory.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="TCMLimitEdit.cs" />
     <Compile Include="T7SuiteRegistry.cs" />
     <Compile Include="Plot3D\ColorHsl.cs" />
@@ -670,16 +671,8 @@
       <DependentUpon>frmChecksumIncorrect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPartNumberList.nl.resx">
-      <DependentUpon>frmPartNumberList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmPartNumberList.resx">
       <DependentUpon>frmPartNumberList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPartnumberLookup.nl.resx">
-      <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPartnumberLookup.resx">
