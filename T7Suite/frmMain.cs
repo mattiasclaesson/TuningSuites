@@ -7292,23 +7292,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return columns;
         }
 
-
-        private double ConvertToDoubleCorrection(string v)
-        {
-            double d = 0;
-            if (v == "") return d;
-            string vs = "";
-            vs = v.Replace(".", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-            Double.TryParse(vs, out d);
-            return d;
-        }
-
         private double ConvertToDouble(string v)
         {
             double d = 0;
             if (v == "") return d;
             string vs = "";
-            vs = v.Replace(System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberGroupSeparator, System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+            vs = v.Replace(".", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
             Double.TryParse(vs, out d);
             return d;
         }
