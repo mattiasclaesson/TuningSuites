@@ -196,6 +196,7 @@ namespace T7
         private SymbolColors symbolColors;
 
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
+        private DirectoryInfo configurationFilesPath = Directory.GetParent(System.Windows.Forms.Application.UserAppDataPath);
 
         public frmMain(string[] args)
         {
@@ -6562,7 +6563,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             m_appSettings.ShowMenu = !ribbonControl1.Minimized;
             SaveLayoutFiles();
-            SaveRealtimeTable();
+            SaveRealtimeTable(Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt"));
             SaveMRUList();
             SaveAFRAndCounterMaps();
 
@@ -6763,7 +6764,10 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 logger.Debug(E.Message);
             }
 
-            if (m_currentfile != string.Empty) LoadRealtimeTable();
+            if (m_currentfile != string.Empty)
+            {
+                LoadRealtimeTable(Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt"));
+            }
             // <GS-07072011> If the opened file is a BioPower file, then BFuelCal.StartMap = the actual fuel E85 map
             if (IsBinaryBiopower())
             {
@@ -10205,22 +10209,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             try
             {
-                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\SymbolViewLayout.xml"))
-                {
-                    gridViewSymbols.RestoreLayoutFromXml(System.Windows.Forms.Application.StartupPath + "\\SymbolViewLayout.xml");
-                }
-            }
-            catch (Exception E1)
-            {
-                logger.Debug(E1.Message);
-            }
-        }
+                string filename = Path.Combine(configurationFilesPath.FullName, "SymbolViewLayout.xml");
 
-        private void SaveLayoutFiles()
-        {
-            try
-            {
-                gridViewSymbols.SaveLayoutToXml(System.Windows.Forms.Application.StartupPath + "\\SymbolViewLayout.xml");
+                if (File.Exists(filename))
+                {
+                    gridViewSymbols.RestoreLayoutFromXml(filename);
+                }
             }
             catch (Exception E)
             {
@@ -10228,59 +10222,15 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private void LoadRealtimeTable()
+        private void SaveLayoutFiles()
         {
             try
             {
-                // create a tabel from scratch
-                System.Data.DataTable dt = new System.Data.DataTable();
-                dt.TableName = "RTSymbols";
-                dt.Columns.Add("SymbolName");
-                dt.Columns.Add("Description");
-                dt.Columns.Add("Symbolnumber", Type.GetType("System.Int32"));
-                dt.Columns.Add("Value", Type.GetType("System.Double"));
-                dt.Columns.Add("Offset", Type.GetType("System.Double"));
-                dt.Columns.Add("Correction", Type.GetType("System.Double"));
-                dt.Columns.Add("Peak", Type.GetType("System.Double"));
-                dt.Columns.Add("Minimum", Type.GetType("System.Double"));
-                dt.Columns.Add("Maximum", Type.GetType("System.Double"));
-                dt.Columns.Add("ConvertedSymbolnumber", Type.GetType("System.Int32"));
-                dt.Columns.Add("SRAMAddress", Type.GetType("System.Int32"));
-                dt.Columns.Add("Length", Type.GetType("System.Int32"));
-                dt.Columns.Add("UserDefined", Type.GetType("System.Int32"));
-                dt.Columns.Add("Delay", Type.GetType("System.Int32"));
-                dt.Columns.Add("Reload", Type.GetType("System.Int32"));
-                gridRealtime.DataSource = dt;
-
-                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\rtsymbols.txt"))
-                {
-                    using (StreamReader sr = new StreamReader(System.Windows.Forms.Application.StartupPath + "\\rtsymbols.txt"))
-                    {
-                        string line = string.Empty;
-                        char[] sep = new char[1];
-                        sep.SetValue('|', 0);
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            string[] values = line.Split(sep);
-                            if (values.Length == 9)
-                            {
-                                string symbolname = (string)values.GetValue(0);
-                                AddSymbolToRealTimeList(symbolname, GetSymbolNumber(m_symbols, symbolname), ConvertToDouble((string)values.GetValue(2)), ConvertToDouble((string)values.GetValue(3)), ConvertToDouble((string)values.GetValue(4)), ConvertToDouble((string)values.GetValue(5)), symbolname, Convert.ToUInt32((string)values.GetValue(7)), true);
-                            }
-                            else if (values.Length == 10) // we added the description, so now there are 10 fields.
-                            {
-                                string symbolname = (string)values.GetValue(0);
-                                string description = (string)values.GetValue(9);
-                                AddSymbolToRealTimeList(symbolname, GetSymbolNumber(m_symbols, symbolname), ConvertToDouble((string)values.GetValue(2)), ConvertToDouble((string)values.GetValue(3)), ConvertToDouble((string)values.GetValue(4)), ConvertToDouble((string)values.GetValue(5)), description, Convert.ToUInt32((string)values.GetValue(7)), true);
-                            }
-                        }
-                    }
-                }
-
+                gridViewSymbols.SaveLayoutToXml(Path.Combine(configurationFilesPath.FullName, "SymbolViewLayout.xml"));
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to load realtime symbol table: " + E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -10288,7 +10238,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         {
             try
             {
-                // create a tabel from scratch
+                // create a table from scratch
                 System.Data.DataTable dt = new System.Data.DataTable();
                 dt.TableName = "RTSymbols";
                 dt.Columns.Add("SymbolName");
@@ -10323,6 +10273,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 string symbolname = (string)values.GetValue(0);
                                 AddSymbolToRealTimeList(symbolname, GetSymbolNumber(m_symbols, symbolname), ConvertToDouble((string)values.GetValue(2)), ConvertToDouble((string)values.GetValue(3)), ConvertToDouble((string)values.GetValue(4)), ConvertToDouble((string)values.GetValue(5)), symbolname, Convert.ToUInt32((string)values.GetValue(7)), true);
                             }
+                            else if (values.Length == 10) // we added the description, so now there are 10 fields.
+                            {
+                                string symbolname = (string)values.GetValue(0);
+                                string description = (string)values.GetValue(9);
+                                AddSymbolToRealTimeList(symbolname, GetSymbolNumber(m_symbols, symbolname), ConvertToDouble((string)values.GetValue(2)), ConvertToDouble((string)values.GetValue(3)), ConvertToDouble((string)values.GetValue(4)), ConvertToDouble((string)values.GetValue(5)), description, Convert.ToUInt32((string)values.GetValue(7)), true);
+                            }
                         }
                     }
                 }
@@ -10331,32 +10287,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             catch (Exception E)
             {
                 logger.Debug("Failed to load realtime symbol table: " + E.Message);
-            }
-        }
-
-        private void SaveRealtimeTable()
-        {
-            try
-            {
-                if (gridRealtime.DataSource != null)
-                {
-                    System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
-                    // save the user defined symbols
-                    using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\rtsymbols.txt"))
-                    {
-                        foreach (DataRow dr in dt.Rows)
-                        {
-                            if (Convert.ToInt32(dr["UserDefined"]) == 1)
-                            {
-                                sw.WriteLine(dr["SymbolName"].ToString() + "|" + dr["Symbolnumber"].ToString() + "|" + dr["Minimum"].ToString() + "|" + dr["Maximum"].ToString() + "|" + dr["Offset"].ToString() + "|" + dr["Correction"].ToString() + "|" + dr["ConvertedSymbolnumber"].ToString() + "|" + dr["SRAMAddress"].ToString() + "|" + dr["Length"].ToString() + "|" + dr["Description"].ToString().Replace("|", ""));
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug("Failed to write realtime datatable: " + E.Message);
             }
         }
 
@@ -18799,16 +18729,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 btnset.ItemClick += new ItemClickEventHandler(MyMapDefine_ItemClick);
                 rpgset.ItemLinks.Add(btnset);
                 page_maps.Groups.Add(rpgset);
+                string filename = Path.Combine(configurationFilesPath.FullName, "mymaps.xml");
 
-                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml"))
+                if (File.Exists(filename))
                 {
                     try
                     {
                         System.Xml.XmlDocument mymaps = new System.Xml.XmlDocument();
-                        mymaps.Load(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml");
-
-
-
+                        mymaps.Load(filename);
 
                         foreach (System.Xml.XmlNode category in mymaps.SelectNodes("categories/category"))
                         {
@@ -18842,13 +18770,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             // define myMaps!
             frmDefineMyMaps mymapsdef = new frmDefineMyMaps();
-            if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml"))
+            string filename = Path.Combine(configurationFilesPath.FullName, "mymaps.xml");
+            if (File.Exists(filename))
             {
-                mymapsdef.Filename = System.Windows.Forms.Application.StartupPath + "\\mymaps.xml";
+                mymapsdef.Filename = filename;
             }
             else
             {
-                mymapsdef.CreateNewFile(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml");
+                mymapsdef.CreateNewFile(filename);
             }
             if (mymapsdef.ShowDialog() == DialogResult.OK)
             {
@@ -18908,13 +18837,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 shnewmymap.Description = sh.Varname;
                 shnewmymap.Category = "Directly added";
                 scmymaps.Add(shnewmymap);
-                string filename = System.Windows.Forms.Application.StartupPath + "\\mymaps.xml";
+                string filename = Path.Combine(configurationFilesPath.FullName, "mymaps.xml");
+
                 if (File.Exists(filename))
                 {
                     try
                     {
                         System.Xml.XmlDocument mymaps = new System.Xml.XmlDocument();
-                        mymaps.Load(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml");
+                        mymaps.Load(filename);
                         foreach (System.Xml.XmlNode category in mymaps.SelectNodes("categories/category"))
                         {
                             foreach (System.Xml.XmlNode map in category.SelectNodes("map"))
