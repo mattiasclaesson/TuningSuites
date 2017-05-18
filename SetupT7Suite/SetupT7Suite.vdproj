@@ -501,12 +501,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_71680C1488164EBEA91E89E99463130F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_73D3897BEBBEDC76836BB334FC13D00E"
         "OwnerKey" = "8:_C2AF6E38B59939CDEA9ADEDA8A2C7B7B"
         "MsmSig" = "8:_UNDEFINED"
@@ -969,12 +963,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A2EB884494CC4325A02BB529C0501358"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A3F9428DD3AD7C1DDC57EBCAB16A2764"
         "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
         "MsmSig" = "8:_UNDEFINED"
@@ -1421,12 +1409,6 @@
         {
         "MsmKey" = "8:_F946AF267EB88D9B6E535DEBEC39CB80"
         "OwnerKey" = "8:_00B8825D0BAABCCC29843A0DB7B098F1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A2EB884494CC4325A02BB529C0501358"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1984,7 +1966,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6343.36177, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6346.40832, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_038BBC9082718C1627EE1A6822C93811"
@@ -2895,26 +2877,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_71680C1488164EBEA91E89E99463130F"
-            {
-            "SourcePath" = "8:..\\T7CANFlasher.exe.config"
-            "TargetName" = "8:T7CANFlasher.exe.config"
-            "Tag" = "8:"
-            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_73D3897BEBBEDC76836BB334FC13D00E"
             {
             "AssemblyRegister" = "3:1"
@@ -3449,37 +3411,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A2EB884494CC4325A02BB529C0501358"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:T7CANFlasher, Version=2.5.6.0, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_A2EB884494CC4325A02BB529C0501358"
-                    {
-                    "Name" = "8:T7CANFlasher.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\T7CANFlasher.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_1724C4C0C3D34AE68BA9B523B82731D8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A3F9428DD3AD7C1DDC57EBCAB16A2764"
@@ -4199,7 +4130,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
         "ProductCode" = "8:{BFF95C60-B0D7-4ED8-B001-904583E9DDFB}"
-        "PackageCode" = "8:{55EC37F7-1BE2-4EC1-B6D8-4BDB5C15B8D4}"
+        "PackageCode" = "8:{19476B51-951D-4F99-84B2-FEF38D6451A0}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

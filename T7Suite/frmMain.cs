@@ -437,6 +437,14 @@ namespace T7
         private void updateStatusInBox(ITrionic.CanInfoEventArgs e)
         {
             SetProgress(e.Info);
+
+            if (e.Type == ActivityType.FinishedFlashing || e.Type == ActivityType.FinishedDownloadingFlash)
+            {
+                SetCANStatus("");
+                trionic7.Cleanup();
+                logger.Trace("Connection closed");
+                SetProgressIdle();
+            }
         }
 
         private void UpdateFrame(ITrionic.CanFrameEventArgs e)
@@ -9908,7 +9916,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 SetCANStatus("Initializing CANbus interface");
             }
 
-            SetCanAdapter();
+            SetupCanAdapter(Latency.Low);
             if (trionic7.openDevice())
             {
                 SetCANStatus("Connected");
@@ -9924,10 +9932,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return m_RealtimeConnectedToECU;
         }
 
-        private void SetCanAdapter()
+        private void SetupCanAdapter(Latency latency)
         {
             trionic7.OnlyPBus = m_appSettings.OnlyPBus;
-            trionic7.Latency = Latency.Low;
+            trionic7.Latency = latency;
 
             if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
             {
@@ -10193,32 +10201,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             return retval;
         }
 
-    
-        private void barButtonItem17_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            RealtimeDisconnectAndHide();
-            
-            int adapter = 0;
-
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Binary files|*.bin";
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
-                {
-                    adapter = 1;
-                }
-                else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
-                {
-                    adapter = 2;
-                }
-
-                ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", adapter.ToString() + " 1 \"" + sfd.FileName + "\"");
-                Process.Start(psi);
-            }
-        }
-
         private void LoadLayoutFiles()
         {
             try
@@ -10423,32 +10405,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
             catch (Exception stargetE)
             {
                 logger.Debug(stargetE.Message);
-            }
-        }
-
-        private void GetSRAMSnapshot_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (RealtimeCheckAndConnect())
-            {
-                m_prohibitReading = true;
-                SetProgress("Starting snapshot download");
-                string filename = Path.GetDirectoryName(m_currentfile) + "\\SRAM" + DateTime.Now.Year.ToString("D4") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2") + DateTime.Now.Millisecond.ToString("D3") + ".RAM";
-                if (m_CurrentWorkingProject != "")
-                {
-                    if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots");
-                    filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots\\Snapshot" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".RAM";
-                }
-                if (trionic7.GetSRAMSnapshot(filename))
-                {
-                    frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
-                }
-                m_prohibitReading = false;
-                SetProgressIdle();
-            }
-            else
-            {
-                // not connected to ECU
-                frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to download a snapshot");
             }
         }
 
@@ -14537,24 +14493,94 @@ If boost regulation reports errors you can increase the difference between boost
             }
         }
 
-        private void barButtonItem63_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnGetFlashContent_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            // first stop the canbus interface 
+            RealtimeDisconnectAndHide();
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Binary files|*.bin";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                if (FlasherConnect())
+                {
+                    SetProgress("Starting flash download");
+                    trionic7.ReadFlash(sfd.FileName);
+                }
+                else
+                {
+                    frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to read flash");
+                }
+            }
+        }
+
+        private void btnFlashECU_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            RealtimeDisconnectAndHide();
+
             if (File.Exists(m_currentfile))
             {
-                RealtimeDisconnectAndHide();
+                if (FlasherConnect())
+                {
+                    SetProgress("Starting flash upload");
+                    trionic7.WriteFlash(m_currentfile);
+                }
+                else
+                {
+                    frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to write flash");
+                }
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("No file has been loaded");
+            }
+        }
 
-                int adapter = 0;
-                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
+        private void btnGetSRAMSnapshot_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            RealtimeDisconnectAndHide();
+
+            if (FlasherConnect())
+            {
+                SetProgress("Starting snapshot download");
+                string filename = Path.GetDirectoryName(m_currentfile) + "\\SRAM" + DateTime.Now.Year.ToString("D4") + DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2") + DateTime.Now.Millisecond.ToString("D3") + ".RAM";
+                if (m_CurrentWorkingProject != "")
                 {
-                    adapter = 1;
+                    if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots");
+                    filename = m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Snapshots\\Snapshot" + DateTime.Now.ToString("MMddyyyyHHmmss") + ".RAM";
                 }
-                else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.ELM327))
+                if (trionic7.GetSRAMSnapshot(filename))
                 {
-                    adapter = 2;
+                    frmInfoBox info = new frmInfoBox("Snapshot downloaded and saved to: " + filename);
                 }
-                ProcessStartInfo psi = new ProcessStartInfo(System.Windows.Forms.Application.StartupPath + "\\T7CANFlasher.exe", adapter.ToString() + " 2 \"" + m_currentfile + "\"");
-                Process.Start(psi);
+                trionic7.Cleanup();
+                SetCANStatus("");
+                SetProgressIdle();
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("An active CAN bus connection is needed to read a sram snapshot");
+            }
+        }
+
+        private bool FlasherConnect()
+        {
+            if (trionic7.isOpen())
+            {
+                trionic7.Cleanup();
+            }
+            SetCANStatus("Initializing CANbus interface");
+
+            SetupCanAdapter(Latency.Default);
+            if (trionic7.openDevice())
+            {
+                SetCANStatus("Connected");
+                return true;
+            }
+            else
+            {
+                SetCANStatus("Failed to start KWP session");
+                trionic7.Cleanup();
+                return false;
             }
         }
 
