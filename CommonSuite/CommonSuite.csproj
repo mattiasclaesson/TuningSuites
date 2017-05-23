@@ -143,6 +143,7 @@
     <Compile Include="PressureToTorque.cs" />
     <Compile Include="SuiteRegistry.cs" />
     <Compile Include="SymbolCollection.cs" />
+    <Compile Include="SystemFileAssociation.cs" />
     <Compile Include="zipmsiupdater.cs" />
     <Compile Include="DTCDescription.cs" />
     <Compile Include="Forms\frmChangeNote.cs">
