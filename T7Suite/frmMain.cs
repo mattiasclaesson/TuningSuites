@@ -248,31 +248,6 @@ namespace T7
 
             try
             {
-                RegistryKey TempKeyCM = null;
-                TempKeyCM = Registry.ClassesRoot.CreateSubKey(@"SystemFileAssociations\.bin\shell\Edit in T7 Suite\command");
-                string StartKey = System.Windows.Forms.Application.ExecutablePath + " \"%1\"";
-                TempKeyCM.SetValue("", StartKey);
-                TempKeyCM.Close();
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-            try
-            {
-                RegistryKey TempKeyCM = null;
-                TempKeyCM = Registry.ClassesRoot.CreateSubKey(@"SystemFileAssociations\.bin\shell\Auto detect Trionic file type\command");
-                string StartKey = System.Windows.Forms.Application.StartupPath + "\\SuiteLauncher.exe" + " \"%1\"";
-                TempKeyCM.SetValue("", StartKey);
-                TempKeyCM.Close();
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-
-            try
-            {
                 // should be done only once!
                 this.fio_callback = this.on_fio;
                 BdmAdapter_SetFIOCallback(this.fio_callback);
@@ -294,6 +269,8 @@ namespace T7
             {
                 logger.Debug(E.Message);
             }
+
+            SystemFileAssociation.Create(@"SystemFileAssociations\.bin\shell\Edit in T7 Suite\command");
         }
 
         void trionicCan_onWriteProgress(object sender, ITrionic.WriteProgressEventArgs e)

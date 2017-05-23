@@ -156,31 +156,6 @@ namespace T8SuitePro
             InitializeComponent();
             addWizTuneFilePacks();
 
-            try
-            {
-                RegistryKey TempKeyCM = null;
-                TempKeyCM = Registry.ClassesRoot.CreateSubKey(@"SystemFileAssociations\.bin\shell\Edit in T8 Suite\command");
-                string StartKey = System.Windows.Forms.Application.ExecutablePath + " \"%1\"";
-                TempKeyCM.SetValue("", StartKey);
-                TempKeyCM.Close();
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-            try
-            {
-                RegistryKey TempKeyCM = null;
-                TempKeyCM = Registry.ClassesRoot.CreateSubKey(@"SystemFileAssociations\.bin\shell\Auto detect Trionic file type\command");
-                string StartKey = System.Windows.Forms.Application.StartupPath + "\\SuiteLauncher.exe" + " \"%1\"";
-                TempKeyCM.SetValue("", StartKey);
-                TempKeyCM.Close();
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-
             if (args.Length > 0)
             {
                 if (args[0].ToString().ToUpper().EndsWith(".BIN"))
@@ -215,9 +190,10 @@ namespace T8SuitePro
             {
                 logger.Debug(E.Message);
             }
-
-
+            
             splash.Close();
+
+            SystemFileAssociation.Create(@"SystemFileAssociations\.bin\shell\Edit in T8 Suite\command");
         }
 
         void t8can_onWriteProgress(object sender, ITrionic.WriteProgressEventArgs e)
