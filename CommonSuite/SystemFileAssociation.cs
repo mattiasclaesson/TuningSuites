@@ -21,7 +21,7 @@ namespace CommonSuite
                 proc.UseShellExecute = true;
                 proc.WorkingDirectory = Environment.CurrentDirectory;
                 proc.FileName = "SuiteLauncher.exe";
-                proc.Arguments = System.Windows.Forms.Application.ExecutablePath + " \"" + command + "\"";
+                proc.Arguments = "\"" + System.Windows.Forms.Application.ExecutablePath + "\"" + " \"" + command + "\"";
                 proc.Verb = "runas";
 
                 try
