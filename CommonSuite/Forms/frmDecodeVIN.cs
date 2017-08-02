@@ -21,6 +21,7 @@ namespace CommonSuite
 
         private void DecodeVIN()
         {
+            textEdit1.Text = textEdit1.Text.ToUpper();
             lblBody.Text = "---";
             lblCarModel.Text = "---";
             lblEngineType.Text = "---";
@@ -28,6 +29,7 @@ namespace CommonSuite
             lblPlant.Text = "---";
             lblSeries.Text = "---";
             lblTurbo.Text = "---";
+            lblChecksum.Text = "Not verified";
             VINDecoder decoder = new VINDecoder();
             VINCarInfo carinfo = decoder.DecodeVINNumber(textEdit1.Text);
             lblBody.Text = carinfo.Body;
@@ -38,12 +40,15 @@ namespace CommonSuite
             lblSeries.Text = carinfo.Series;
             lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_","-");
             lblGearbox.Text = carinfo.GearboxDescription;
+            if (carinfo.CalculatedChecksum != '*')
+            {
+                lblChecksum.Text = carinfo.CalculatedChecksum == textEdit1.Text[8] ? "Valid" : "WRONG! Expected: " + carinfo.CalculatedChecksum + " but found: " + textEdit1.Text[8];
+            }
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
             DecodeVIN();
-            
         }
 
         public void SetVinNumber(string vinnumber)
