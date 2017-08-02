@@ -21,6 +21,7 @@ namespace CommonSuite
 
         private void DecodeVIN()
         {
+            textEdit1.Text = textEdit1.Text.ToUpper(); // Make sure it is all capitol letters
             lblBody.Text = "---";
             lblCarModel.Text = "---";
             lblEngineType.Text = "---";
@@ -38,18 +39,33 @@ namespace CommonSuite
             lblSeries.Text = carinfo.Series;
             lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_","-");
             lblGearbox.Text = carinfo.GearboxDescription;
+            lblChecksum.Text = carinfo.IsChecksumValid ? "Valid" : "WRONG!";
+            btnFixChecksum.Enabled = !carinfo.IsChecksumValid;
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
             DecodeVIN();
-            
         }
 
         public void SetVinNumber(string vinnumber)
         {
-            textEdit1.Text = vinnumber;
+            textEdit1.Text = vinnumber; // Make sure it is all capitol letters
             DecodeVIN();
         }
+
+        private void btnFixChecksum_Click(object sender, EventArgs e)
+        {
+            VINDecoder decoder = new VINDecoder();
+            char checksum;
+            if (decoder.CalculateChecksum(textEdit1.Text, out checksum))
+            {
+                System.Text.StringBuilder strBuilder = new System.Text.StringBuilder(textEdit1.Text);
+                strBuilder[8] = checksum;
+                textEdit1.Text = strBuilder.ToString();
+                DecodeVIN();
+            } 
+        }
+
     }
 }

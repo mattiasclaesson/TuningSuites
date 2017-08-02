@@ -48,6 +48,9 @@ namespace CommonSuite
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.lblGearbox = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
+            this.lblChecksum = new DevExpress.XtraEditors.LabelControl();
+            this.btnFixChecksum = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -222,6 +225,33 @@ namespace CommonSuite
             this.lblGearbox.TabIndex = 18;
             this.lblGearbox.Text = "---";
             // 
+            // labelControl3
+            // 
+            this.labelControl3.Location = new System.Drawing.Point(83, 199);
+            this.labelControl3.Name = "labelControl3";
+            this.labelControl3.Size = new System.Drawing.Size(66, 13);
+            this.labelControl3.TabIndex = 21;
+            this.labelControl3.Text = "VIN checksum";
+            // 
+            // lblChecksum
+            // 
+            this.lblChecksum.Appearance.ForeColor = System.Drawing.Color.DarkBlue;
+            this.lblChecksum.Location = new System.Drawing.Point(196, 199);
+            this.lblChecksum.Name = "lblChecksum";
+            this.lblChecksum.Size = new System.Drawing.Size(12, 13);
+            this.lblChecksum.TabIndex = 20;
+            this.lblChecksum.Text = "---";
+            // 
+            // btnFixChecksum
+            // 
+            this.btnFixChecksum.Enabled = false;
+            this.btnFixChecksum.Location = new System.Drawing.Point(401, 185);
+            this.btnFixChecksum.Name = "btnFixChecksum";
+            this.btnFixChecksum.Size = new System.Drawing.Size(75, 23);
+            this.btnFixChecksum.TabIndex = 22;
+            this.btnFixChecksum.Text = "Fix checksum";
+            this.btnFixChecksum.Click += new System.EventHandler(this.btnFixChecksum_Click);
+            // 
             // frmDecodeVIN
             // 
             this.AcceptButton = this.simpleButton1;
@@ -229,6 +259,9 @@ namespace CommonSuite
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
             this.ClientSize = new System.Drawing.Size(488, 249);
+            this.Controls.Add(this.btnFixChecksum);
+            this.Controls.Add(this.labelControl3);
+            this.Controls.Add(this.lblChecksum);
             this.Controls.Add(this.labelControl2);
             this.Controls.Add(this.lblGearbox);
             this.Controls.Add(this.simpleButton2);
@@ -256,7 +289,6 @@ namespace CommonSuite
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VIN decoder";
-            
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -285,5 +317,8 @@ namespace CommonSuite
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl lblGearbox;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
+        private DevExpress.XtraEditors.LabelControl lblChecksum;
+        private DevExpress.XtraEditors.SimpleButton btnFixChecksum;
     }
 }
