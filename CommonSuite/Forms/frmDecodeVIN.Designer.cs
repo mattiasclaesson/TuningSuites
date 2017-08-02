@@ -50,7 +50,6 @@ namespace CommonSuite
             this.lblGearbox = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.lblChecksum = new DevExpress.XtraEditors.LabelControl();
-            this.btnFixChecksum = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -242,16 +241,6 @@ namespace CommonSuite
             this.lblChecksum.TabIndex = 20;
             this.lblChecksum.Text = "---";
             // 
-            // btnFixChecksum
-            // 
-            this.btnFixChecksum.Enabled = false;
-            this.btnFixChecksum.Location = new System.Drawing.Point(401, 185);
-            this.btnFixChecksum.Name = "btnFixChecksum";
-            this.btnFixChecksum.Size = new System.Drawing.Size(75, 23);
-            this.btnFixChecksum.TabIndex = 22;
-            this.btnFixChecksum.Text = "Fix checksum";
-            this.btnFixChecksum.Click += new System.EventHandler(this.btnFixChecksum_Click);
-            // 
             // frmDecodeVIN
             // 
             this.AcceptButton = this.simpleButton1;
@@ -259,7 +248,6 @@ namespace CommonSuite
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.simpleButton2;
             this.ClientSize = new System.Drawing.Size(488, 249);
-            this.Controls.Add(this.btnFixChecksum);
             this.Controls.Add(this.labelControl3);
             this.Controls.Add(this.lblChecksum);
             this.Controls.Add(this.labelControl2);
@@ -319,6 +307,5 @@ namespace CommonSuite
         private DevExpress.XtraEditors.LabelControl lblGearbox;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl lblChecksum;
-        private DevExpress.XtraEditors.SimpleButton btnFixChecksum;
     }
 }

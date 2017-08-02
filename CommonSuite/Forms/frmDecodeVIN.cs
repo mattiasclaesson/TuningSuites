@@ -21,7 +21,7 @@ namespace CommonSuite
 
         private void DecodeVIN()
         {
-            textEdit1.Text = textEdit1.Text.ToUpper(); // Make sure it is all capitol letters
+            textEdit1.Text = textEdit1.Text.ToUpper();
             lblBody.Text = "---";
             lblCarModel.Text = "---";
             lblEngineType.Text = "---";
@@ -29,6 +29,7 @@ namespace CommonSuite
             lblPlant.Text = "---";
             lblSeries.Text = "---";
             lblTurbo.Text = "---";
+            lblChecksum.Text = "Not verified";
             VINDecoder decoder = new VINDecoder();
             VINCarInfo carinfo = decoder.DecodeVINNumber(textEdit1.Text);
             lblBody.Text = carinfo.Body;
@@ -39,8 +40,8 @@ namespace CommonSuite
             lblSeries.Text = carinfo.Series;
             lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_","-");
             lblGearbox.Text = carinfo.GearboxDescription;
-            lblChecksum.Text = carinfo.IsChecksumValid ? "Valid" : "WRONG!";
-            btnFixChecksum.Enabled = !carinfo.IsChecksumValid;
+            char checksum;
+            if (decoder.CalculateChecksum(textEdit1.Text, out checksum)) lblChecksum.Text = checksum == textEdit1.Text[8] ? "Valid" : "WRONG! Expected: " + checksum + " but found: " + textEdit1.Text[8];
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -50,22 +51,8 @@ namespace CommonSuite
 
         public void SetVinNumber(string vinnumber)
         {
-            textEdit1.Text = vinnumber; // Make sure it is all capitol letters
+            textEdit1.Text = vinnumber;
             DecodeVIN();
         }
-
-        private void btnFixChecksum_Click(object sender, EventArgs e)
-        {
-            VINDecoder decoder = new VINDecoder();
-            char checksum;
-            if (decoder.CalculateChecksum(textEdit1.Text, out checksum))
-            {
-                System.Text.StringBuilder strBuilder = new System.Text.StringBuilder(textEdit1.Text);
-                strBuilder[8] = checksum;
-                textEdit1.Text = strBuilder.ToString();
-                DecodeVIN();
-            } 
-        }
-
     }
 }

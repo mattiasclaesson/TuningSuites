@@ -168,10 +168,6 @@ namespace CommonSuite
                 _carInfo.Valid = true;
             }
 
-            char checksum;
-            if (CalculateChecksum(VINNumber, out checksum)) _carInfo.IsChecksumValid = (checksum == VINNumber[8]);
-            else _carInfo.IsChecksumValid = false;
-
             return _carInfo;
         }
 
@@ -659,22 +655,5 @@ V = 2.5 liter V-6
             get { return _gearboxDescription; }
             set { _gearboxDescription = value; }
         }
-
-        private string _checksumText;
-
-        public string ChecksumText
-        {
-            get { return _checksumText; }
-            set { _checksumText = value; }
-        }
-
-        private bool _validChecksum;
-
-        public bool IsChecksumValid
-        {
-            get { return _validChecksum; }
-            set { _validChecksum = value; }
-        }
-
     }
 }
