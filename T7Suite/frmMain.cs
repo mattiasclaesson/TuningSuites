@@ -422,6 +422,15 @@ namespace T7
                 trionic7.Cleanup();
                 logger.Trace("Connection closed");
                 SetProgressIdle();
+
+                if (e.Type == ActivityType.FinishedFlashing)
+                {
+                    frmInfoBox info = new frmInfoBox("Flash sequence done");
+                }
+                else
+                {
+                    frmInfoBox info = new frmInfoBox("Download done");
+                }
             }
         }
 
