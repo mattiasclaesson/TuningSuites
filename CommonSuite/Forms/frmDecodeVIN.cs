@@ -40,8 +40,10 @@ namespace CommonSuite
             lblSeries.Text = carinfo.Series;
             lblTurbo.Text = carinfo.TurboModel.ToString().Replace("_","-");
             lblGearbox.Text = carinfo.GearboxDescription;
-            char checksum;
-            if (decoder.CalculateChecksum(textEdit1.Text, out checksum)) lblChecksum.Text = checksum == textEdit1.Text[8] ? "Valid" : "WRONG! Expected: " + checksum + " but found: " + textEdit1.Text[8];
+            if (carinfo.CalculatedChecksum != '*')
+            {
+                lblChecksum.Text = carinfo.CalculatedChecksum == textEdit1.Text[8] ? "Valid" : "WRONG! Expected: " + carinfo.CalculatedChecksum + " but found: " + textEdit1.Text[8];
+            }
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)

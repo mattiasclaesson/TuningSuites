@@ -82,6 +82,7 @@ namespace T8Test
             Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series I, Driver and passenger airbags", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 012475
         }
 
@@ -103,6 +104,7 @@ namespace T8Test
             Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series IV, Driver and passenger airbags", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 510826
         }
         
@@ -124,6 +126,7 @@ namespace T8Test
             Assert.AreEqual("6 speed automatic / all wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-3)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-3 TurboX", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 130440
         }
 
@@ -145,6 +148,7 @@ namespace T8Test
             Assert.AreEqual("5 speed automatic / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series I, Driver and passenger airbags", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 505541
         }
         
@@ -166,6 +170,7 @@ namespace T8Test
             Assert.AreEqual("6 speed automatic / all wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan (9-5)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-5 Aero", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 001333
         }
 
@@ -187,6 +192,7 @@ namespace T8Test
             Assert.AreEqual("6 speed manual / all wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line A (9-3)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-3 X", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 306559
         }
 
@@ -208,6 +214,7 @@ namespace T8Test
             Assert.AreEqual("6 speed automatic / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan (9-5)", actual.PlantInfo);
             Assert.AreEqual("Saab 9-5 Vector", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 002240
         }
 
@@ -229,6 +236,7 @@ namespace T8Test
             Assert.AreEqual("6 speed automatic / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line B (900 / 9-3)", actual.PlantInfo);
             Assert.AreEqual("Model series I, Driver and passenger airbags", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 301688
         }
 
@@ -250,6 +258,7 @@ namespace T8Test
             Assert.AreEqual("6 speed manual / front wheel drive", actual.GearboxDescription);
             Assert.AreEqual("Trollhättan line B (900 / 9-3)", actual.PlantInfo);
             Assert.AreEqual("Model series II, Driver and passenger airbags", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 300776
         }
 
@@ -267,7 +276,140 @@ namespace T8Test
             Assert.AreEqual(2005, actual.Makeyear);
             Assert.AreEqual(VINEngineType.Z20NET, actual.EngineType);
             Assert.AreEqual(VINTurboModel.GarrettGT2052, actual.TurboModel);
+            Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
             // Serialnumber not decoded 095720
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EE55EX63507433()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EE55EX63507433";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235E, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.GarrettGT1752, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series III, Driver airbag", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
+            // Serialnumber not decoded 002240
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EE55EX63507423()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EE55EX63507423";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235E, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.GarrettGT1752, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series III, Driver airbag", actual.Series);
+            Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
+            // Serialnumber not decoded
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EE55E263507433()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EE55E263507433";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235E, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.GarrettGT1752, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series III, Driver airbag", actual.Series);
+            Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
+            // Serialnumber not decoded
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EE55GX63507433()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EE55GX63507433";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235R, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15T_5, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series III, Driver airbag", actual.Series);
+            Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
+            // Serialnumber not decoded
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EE55G863507433()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EE55G863507433";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235R, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15T_5, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series III, Driver airbag", actual.Series);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
+            // Serialnumber not decoded
+        }
+
+        /// <summary>
+        ///A test for DecodeVINNumber
+        ///</summary>
+        [TestMethod()]
+        public void DecodeVINNumberTestYS3EE55G863507633()
+        {
+            VINDecoder target = new VINDecoder();
+            string VINNumber = "YS3EE55G863507633";
+            VINCarInfo actual;
+            actual = target.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
+            Assert.AreEqual(2006, actual.Makeyear);
+            Assert.AreEqual("5 door combi coupe", actual.Body);
+            Assert.AreEqual(VINEngineType.B235R, actual.EngineType);
+            Assert.AreEqual(VINTurboModel.MitsubishiTD04HL_15T_5, actual.TurboModel);
+            Assert.AreEqual("5 speed manual / front wheel drive", actual.GearboxDescription);
+            Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
+            Assert.AreEqual("Model series III, Driver airbag", actual.Series);
+            Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
+            // Serialnumber not decoded
         }
     }
 }

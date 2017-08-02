@@ -168,6 +168,8 @@ namespace CommonSuite
                 _carInfo.Valid = true;
             }
 
+            _carInfo.CalculatedChecksum = CalculateChecksum(VINNumber);
+
             return _carInfo;
         }
 
@@ -562,24 +564,23 @@ V = 2.5 liter V-6
         }
 
         // VIN checksum, for more details: https://en.wikibooks.org/wiki/Vehicle_Identification_Numbers_(VIN_codes)/Check_digit
-        public bool CalculateChecksum(string VINnumber, out char checksum)
+        public char CalculateChecksum(string VINnumber)
         {
-            checksum = '*';
-            if (VINnumber.Length != 17) return false;
+            char checksum = '*'; // * means not possible to calculate checksum
+            if (VINnumber.Length != 17) return checksum;
             int[] weights = new int[17] { 8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2 };
             int sum = 0;
             for (int i = 0; i < 17; i++)
             {
                 if (i == 8) continue; // Skip checksum digit
                 int value = TranslateVINdigit(VINnumber[i]);
-                if (value < 0) return false;
+                if (value < 0) return checksum;
                 sum += value * weights[i];
             }
             int checksumValue = sum % 11;
             if (checksumValue >= 0 && checksumValue <= 9) checksum = checksumValue.ToString()[0];
             else if (checksumValue == 10) checksum = 'X';
-            else return false;
-            return true;
+            return checksum;
         }
 
     }
@@ -654,6 +655,14 @@ V = 2.5 liter V-6
         {
             get { return _gearboxDescription; }
             set { _gearboxDescription = value; }
+        }
+
+        private char _calculatedChecksum = '*';
+
+        public char CalculatedChecksum
+        {
+            get { return _calculatedChecksum; }
+            set { _calculatedChecksum = value; }
         }
     }
 }
