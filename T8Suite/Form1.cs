@@ -4983,7 +4983,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void btnMaxAirmassMapAuto_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.btnMaxAirmassMapAuto.Tag == "Old")
+            if ((string)this.btnMaxAirmassMapAuto.Tag == "Old")
                 StartTableViewer("BstKnkCal.MaxAirmassAu");
             else
                 StartTableViewer("FFAirCal.m_maxAirmass");
@@ -5022,7 +5022,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem14_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem14.Tag == "Old")
+            if ((string)this.barButtonItem14.Tag == "Old")
                 StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab2");
             else
                 StartTableViewer("TrqLimCal.Trq_MaxEngineTab2");
@@ -5030,7 +5030,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem13_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem13.Tag == "Old")
+            if ((string)this.barButtonItem13.Tag == "Old")
                 StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab1");
             else
                 StartTableViewer("TrqLimCal.Trq_MaxEngineTab1");
@@ -5039,7 +5039,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem16_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem16.Tag == "Old")
+            if ((string)this.barButtonItem16.Tag == "Old")
                 StartTableViewer("TrqLimCal.Trq_MaxEngineManTab2");
             else
                 StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab2");
@@ -5048,7 +5048,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem15_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem15.Tag == "Old")
+            if ((string)this.barButtonItem15.Tag == "Old")
                 StartTableViewer("TrqLimCal.Trq_MaxEngineManTab1");
             else
                 StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab1");
@@ -14960,13 +14960,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void barButtonItem41_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem41.Tag != "Old")
+            if ((string)this.barButtonItem41.Tag != "Old")
                 StartTableViewer("TMCCal.Trq_MaxEngineLowTab");
         }
 
         private void barButtonItem42_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem42.Tag != "Old")
+            if ((string)this.barButtonItem42.Tag != "Old")
                 StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
 
