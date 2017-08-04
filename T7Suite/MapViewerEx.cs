@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
-using System.Runtime.InteropServices;
 using Nevron.Chart;
 using Nevron.GraphicsCore;
 using Nevron.Chart.WinForm;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using DevExpress.XtraBars.Docking;
-using System.IO;
 using CommonSuite;
 using NLog;
 
 namespace T7
 {
-
 
     public partial class MapViewerEx : /*DevExpress.XtraEditors.XtraUserControl */IMapViewer
     {
@@ -167,7 +162,7 @@ namespace T7
         private bool m_isRedWhite = false;
         private int m_textheight = 12;
         private string m_xformatstringforhex = "X4";
-        private bool m_isDragging = false;
+        //private bool m_isDragging = false;
         private int _mouse_drag_x = 0;
         private int _mouse_drag_y = 0;
         private bool m_prohibitlock_change = false;
@@ -2867,7 +2862,7 @@ namespace T7
         {
             if (e.Button == MouseButtons.Left)
             {
-                m_isDragging = true;
+                //m_isDragging = true;
                 timer4.Enabled = true;
                 _mouse_drag_x = e.X;
                 _mouse_drag_y = e.Y;
@@ -2986,7 +2981,7 @@ namespace T7
 
         private void chartControl1_MouseUp(object sender, MouseEventArgs e)
         {
-            m_isDragging = false;
+            //m_isDragging = false;
             _sp_dragging = null;
             timer4.Enabled = false;
         }

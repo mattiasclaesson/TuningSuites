@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
-using System.Runtime.InteropServices;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using DevExpress.XtraBars.Docking;
-using System.IO;
 using CommonSuite;
 using NLog;
 

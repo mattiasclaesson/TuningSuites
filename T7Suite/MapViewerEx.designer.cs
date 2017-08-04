@@ -778,8 +778,8 @@ namespace T7
         //private DevExpress.XtraEditors.SimpleButton btnSaveToRAM;
         //private DevExpress.XtraEditors.SimpleButton btnReadFromRAM;
         private System.Windows.Forms.ToolStripMenuItem smoothSelectionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportMapToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem asPreferredSettingInT5DashboardToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem exportMapToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem asPreferredSettingInT5DashboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;

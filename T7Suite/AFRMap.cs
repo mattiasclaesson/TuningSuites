@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Diagnostics;
-using CommonSuite;
 using NLog;
 
 namespace T7
@@ -394,7 +393,7 @@ namespace T7
                         }
                     }
                 }
-                catch (Exception E)
+                catch (Exception)
                 {
                     //      MessageBox.Show("Failed to load target AFR map: " + E.Message);
                     // something went wrong, try to reinitialize the map
@@ -433,7 +432,7 @@ namespace T7
                         }
                     }
                 }
-                catch (Exception E)
+                catch (Exception)
                 {
                     //  MessageBox.Show("Failed to load target AFR counter map: " + E.Message);
                 }
@@ -510,7 +509,7 @@ namespace T7
                     map.SetValue(b2, idx++);
                 }
             }
-            catch (Exception E)
+            catch (Exception)
             {
                 //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
             }
@@ -534,7 +533,7 @@ namespace T7
                     map.SetValue(b2, idx++);
                 }
             }
-            catch (Exception E)
+            catch (Exception)
             {
                 //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
             }
@@ -547,7 +546,7 @@ namespace T7
         private int[] fuelcorrectioncountermap;
         private float[] targetmap;
 
-        private bool _HasValidFuelmap = false;
+        //private bool _HasValidFuelmap = false;
 
         public void SetCurrentFuelMap(byte[] fuelmapdata)
         {
@@ -564,7 +563,7 @@ namespace T7
                 fuelcorrectioncountermap[i] = 0; // initialize
             }
             m_FuelMapInformation.SetOriginalFuelMap(fuelmapdata);
-            _HasValidFuelmap = true;
+            //_HasValidFuelmap = true;
         }
 
         public void SetOriginalFuelMap(byte[] fuelmapdata)

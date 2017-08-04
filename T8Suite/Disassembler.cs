@@ -59,11 +59,11 @@ namespace T8SuitePro
         public delegate void Progress(object sender, ProgressEventArgs e);
         public event Disassembler.Progress onProgress;
 
-        uint swap = 0;
+        //uint swap = 0;
         //FILE *IN, *OUT, *TST;
 
-        long SRAM_start = 0x1000L;
-        long SRAM_end = 0x7FFFL;
+        //long SRAM_start = 0x1000L;
+        //long SRAM_end = 0x7FFFL;
 
         long[] A_reg =  new long[8];// = {0, 0, 0, 0, 0, 0, 0, 0};
         long[] D_reg = new long[8];// = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -471,7 +471,7 @@ namespace T8SuitePro
         {
             uint ilen = 0;
             byte ch3, ch4, ch5, ch6;
-            long trgdata = 0;
+            //long trgdata = 0;
             long disp = 0;
 
             if ((ch2 > 0) && (ch2 < 0xff))
@@ -974,12 +974,12 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             uint i, ilen;       /* word, inst length */
             byte ch1, ch2;     /* Bytes */
             byte ch3, ch4;     /* Extra bytes */
-            byte ch5, ch6;     /* Extra bytes */
-            byte ch7, ch8;     /* Extra bytes */
+            //byte ch5, ch6;     /* Extra bytes */
+            //byte ch7, ch8;     /* Extra bytes */
             byte n1, n2, n3, n4; /* Nibbles */
             long trgaddr; /* Target address */
-            long trgdata; /* Target data */
-            long disp;  /* Displacement */
+            //long trgdata; /* Target data */
+            //long disp;  /* Displacement */
             string sour;
             string dest;
             trgdata = 0L;
@@ -2167,25 +2167,27 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
         private MNemonicCollection findLabels(string inputfile)
         {
             _labels = new MNemonicCollection();
-            uint i, t, seg, adr;
-            long addr, endaddr, adrcntr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
+            //uint i, t, seg, adr;
+            long addr, adrcntr;
+            //long endaddr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
 
-            byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
+            //byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
             //byte n1, n2, n3, n4;
             //uint infile = 0, outfile = 0, 
-            uint addoff = 0;
-            string inname, outname, offsetval;
+            //uint addoff = 0;
+            //string outname, offsetval;
+            string inname;
             //byte inname[80], outname[80], offsetval[40];
             //byte str[80],cmd[80];
-            string str, cmd;
-            str = string.Empty;
+            //string cmd;
+            string str = string.Empty;
             for (int temp = 0; temp < 8; temp++)
             {
                 A_reg.SetValue(0, temp);
                 D_reg.SetValue(0, temp);
             }
-            swap = 0;
-            addr = offaddr = 0;
+            //swap = 0;
+            addr = /*offaddr =*/ 0;
 
             inname = inputfile;
             adrcntr = 0L;
@@ -2242,26 +2244,29 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
             _passOne = false;
 
-            int i, t, seg, adr;
-            long addr, endaddr, adrcntr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
+            //int t, seg, adr;
+            int i;
+            //long endaddr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
+            long addr, adrcntr;
 
-            byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
+            //byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
             //byte n1, n2, n3, n4;
             //uint infile = 0, outfile = 0, 
-            uint addoff = 0;
-            string inname, outname, offsetval;
+            //uint addoff = 0;
+            //string outname, offsetval;
+            string inname;
             //byte inname[80], outname[80], offsetval[40];
             //byte str[80],cmd[80];
-            string str, cmd;
-            str = string.Empty;
+            //string cmd;
+            string str = string.Empty;
             for (int temp = 0; temp < 8; temp++)
             {
                 A_reg.SetValue(0, temp);
                 D_reg.SetValue(0, temp);
             }
             m_symbols = symbols;
-            swap = 0;
-            addr = offaddr = 0;
+            //swap = 0;
+            addr = /*offaddr =*/ 0;
 
             inname = inputfile;
             //infile = 1;
@@ -2739,15 +2744,15 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             string inname, outname;
             //byte inname[80], outname[80], offsetval[40];
             //byte str[80],cmd[80];
-            string str, cmd;
-            str = string.Empty;
+            //string cmd;
+            string str = string.Empty;
             for (int temp = 0; temp < 8; temp++)
             {
                 A_reg.SetValue(0, temp);
                 D_reg.SetValue(0, temp);
             }
             m_symbols = symbols;
-            swap = 0;
+            //swap = 0;
             addr = offaddr = 0;
 
             inname = inputfile;

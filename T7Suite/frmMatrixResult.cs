@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using Nevron.Chart;
 using Nevron.Chart.WinForm;
 using Nevron.GraphicsCore;
-using CommonSuite;
 using NLog;
 
 namespace T7
@@ -195,7 +191,7 @@ namespace T7
                     {
                         ivalue = Convert.ToInt32(value * 100);
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to convert to integer value: " + value.ToString());
                     }
@@ -206,7 +202,7 @@ namespace T7
                         b1 = Convert.ToByte(ivalue / 256);
                         b2 = Convert.ToByte(ivalue - (int)b1 * 256);
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to convert to byte value + " + ivalue.ToString());
                     }
@@ -510,7 +506,7 @@ namespace T7
                     }
                 }
             }
-            catch (Exception E)
+            catch (Exception)
             {
                 // nothing
             }

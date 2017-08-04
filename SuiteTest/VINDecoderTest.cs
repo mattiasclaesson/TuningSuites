@@ -299,7 +299,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded 002240
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507423
         }
 
         /// <summary>
@@ -343,7 +343,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507633
         }
     }
 }

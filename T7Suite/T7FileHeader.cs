@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using CommonSuite;
 using NLog;
 
 namespace T7
@@ -119,7 +118,7 @@ namespace T7
         }
         string m_softwareVersion = "";
         string m_carDescription = "";
-        string m_SIDDate = "";
+        //string m_SIDDate = "";
         string m_partNumber = string.Empty;
         long fileLength;
         int m_checksumF2;

@@ -101,7 +101,6 @@ using System.Xml;
 using DevExpress.Skins;
 using PSTaskDialog;
 using CommonSuite;
-using TrionicCANLib;
 using TrionicCANLib.API;
 using WidebandSupport;
 using NLog;
@@ -180,7 +179,7 @@ namespace T7
         private Microsoft.Office.Interop.Excel.Application xla;
         private string m_commandLineFile = string.Empty;
         private bool m_startFromCommandLine = false;
-        System.Data.DataTable m_realtimeAddresses;
+        System.Data.DataTable m_realtimeAddresses = null;
         private System.Data.DataTable mrudt = new System.Data.DataTable();
         private bool m_prohibitReading = false;
         private frmEditTuningPackage tunpackeditWindow = null;
@@ -2003,7 +2002,8 @@ namespace T7
                     tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
                     dockPanel.Controls.Add(tabdet);
                     dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                    dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                    //dockPanel
+                    dockPanel.DockTo(DockingStyle.Left, 1);
 
                     dockPanel.Width = 700;
 
@@ -2367,7 +2367,7 @@ namespace T7
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -2498,7 +2498,7 @@ namespace T7
                 dockPanel.Controls.Add(tabdet);
                 //dockPanel.DockAsTab(dockPanel1);
                 dockPanel.Text = "SRAM <> BIN Compare results: " + Path.GetFileName(sramfilename);
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
                 //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
                 tabdet.CompareSymbolCollection = scdiff;
@@ -2704,7 +2704,7 @@ namespace T7
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -2871,7 +2871,7 @@ namespace T7
                         }
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                            dockPanel.DockTo(DockingStyle.Left, 1);
                             dockPanel.Width = 700;
                         }
                         //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
@@ -3035,7 +3035,7 @@ namespace T7
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -4094,7 +4094,7 @@ namespace T7
                             tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectForFind);
                             dockPanel.Controls.Add(tabdet);
                             dockPanel.Text = "Search results: " + Path.GetFileName(m_currentfile);
-                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                            dockPanel.DockTo(DockingStyle.Left, 1);
 
                             dockPanel.Width = 700;
 
@@ -5506,7 +5506,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -5631,7 +5631,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             try
             {
-                string str;
+                //string str;
                 int percentage = 0;
                 int max_bytes = 0x80000;
                 switch (_globalECUType)
@@ -8827,7 +8827,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -13935,7 +13935,7 @@ If boost regulation reports errors you can increase the difference between boost
 
                                 if (!isDocked)
                                 {
-                                    dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                    dockPanel.DockTo(DockingStyle.Right, 0);
                                     if (m_appSettings.AutoSizeNewWindows)
                                     {
                                         if (tabdet.X_axisvalues.Length > 0)
@@ -14162,7 +14162,7 @@ If boost regulation reports errors you can increase the difference between boost
 
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                            dockPanel.DockTo(DockingStyle.Right, 0);
                             if (m_appSettings.AutoSizeNewWindows)
                             {
                                 if (tabdet.X_axisvalues.Length > 0)
@@ -14237,7 +14237,7 @@ If boost regulation reports errors you can increase the difference between boost
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -16583,7 +16583,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     if (!isDocked)
                     {
-                        dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                        dockPanel.DockTo(DockingStyle.Right, 0);
                         if (m_appSettings.AutoSizeNewWindows)
                         {
                             if (tabdet.X_axisvalues.Length > 0)
@@ -17418,8 +17418,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Black;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.FromArgb(0, 192, 0);
                 ViewRealtime.OptionsView.ShowColumnHeaders = false;
-                ViewRealtime.OptionsView.ShowHorzLines = false;
-                ViewRealtime.OptionsView.ShowVertLines = false;
+                ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+                ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
             else

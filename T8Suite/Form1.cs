@@ -570,7 +570,7 @@ namespace T8SuitePro
             m_currentsramfile = string.Empty; // geen sramfile erbij
             barStaticItem1.Caption = "";
             barFilenameText.Caption = "";
-            bool _hideRealtime = false;
+            //bool _hideRealtime = false;
             //XDFCategories category = XDFCategories.Undocumented;
             //XDFSubCategory subcat = XDFSubCategory.Undocumented;
             symbol_collection = new SymbolCollection();
@@ -1032,7 +1032,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1098,7 +1098,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1158,7 +1158,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1187,7 +1187,7 @@ namespace T8SuitePro
                         retval += Convert.ToInt32(br.ReadByte()) * 256;
                         retval += Convert.ToInt32(br.ReadByte());
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve address from: " + offset.ToString("X6"));
                     }
@@ -1215,7 +1215,7 @@ namespace T8SuitePro
                         retval = Convert.ToInt32(br.ReadByte()) * 256;
                         retval += Convert.ToInt32(br.ReadByte());
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve length from: " + offset.ToString("X6"));
                     }
@@ -1230,7 +1230,7 @@ namespace T8SuitePro
             bytes = null;
             Int64 UnpackedLength = 0;
             symboltableoffset = 0;
-            int len = 0;
+            //int len = 0;
             int val = 0;
             //int idx = ReadEndMarker(0x9B);
             try
@@ -3160,7 +3160,7 @@ namespace T8SuitePro
                                     }
                                 }
                                 dockPanel.Width = width;
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                             }
                             dockPanel.Controls.Add(tabdet);
                             // dock to another panel?
@@ -3316,7 +3316,7 @@ namespace T8SuitePro
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -3431,7 +3431,7 @@ namespace T8SuitePro
                         tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
                         dockPanel.Controls.Add(tabdet);
                         dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                        dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                        dockPanel.DockTo(DockingStyle.Left, 1);
 
                         dockPanel.Width = 700;
 
@@ -5908,7 +5908,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             }
                             dockPanel.Text = resultText;
 
-                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                            dockPanel.DockTo(DockingStyle.Left, 1);
 
                             dockPanel.Width = 700;
 
@@ -5929,9 +5929,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
                             dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
                             string ht = string.Empty;
-                            double diffperc = 0;
-                            int diffabs = 0;
-                            double diffavg = 0;
+                            //double diffperc = 0;
+                            //int diffabs = 0;
+                            //double diffavg = 0;
                             XDFCategories cat = XDFCategories.Undocumented;
                             XDFSubCategory subcat = XDFSubCategory.Undocumented;
                             foreach (SymbolHelper shfound in result_Collection)
@@ -6267,7 +6267,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
 
 
-                    bool m_fileparsed = false;
+                    //bool m_fileparsed = false;
 
                     //listView1.Items.Clear();
                     SetStatusText("Start symbol parsing");
@@ -6870,10 +6870,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
             if ((int)GetSymbolAddress(m_symbols, limitername) > 0)
             {
                 byte[] maxtorqueaut = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, limitername), GetSymbolLength(m_symbols, limitername));
-                int cols = 0;
-                int rows = 0;
-
-                rows = maxtorqueaut.Length;
+                //int cols = 0;
+                int rows = maxtorqueaut.Length;
 
                 if (isSixteenBitTable(limitername)) rows /= 2;
                 for (int rt = 0; rt < rows; rt++)
@@ -7826,7 +7824,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -7857,7 +7855,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -9003,7 +9001,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 lstTp.Add(fileTP);
                             }
                         }
-                        catch (Exception E)
+                        catch (Exception)
                         {
                             // add failure
                             byte[] dataToInsert = new byte[0];
@@ -9539,7 +9537,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     if (!isDocked)
                     {
-                        dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                        dockPanel.DockTo(DockingStyle.Right, 0);
                         if (m_appSettings.AutoSizeNewWindows)
                         {
                             if (tabdet.X_axisvalues.Length > 0)
@@ -10783,8 +10781,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Black;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.FromArgb(0, 192, 0);
                 ViewRealtime.OptionsView.ShowColumnHeaders = false;
-                ViewRealtime.OptionsView.ShowHorzLines = false;
-                ViewRealtime.OptionsView.ShowVertLines = false;
+                ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+                ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
             else
@@ -10806,9 +10804,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Empty;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.Empty;
                 ViewRealtime.OptionsView.ShowColumnHeaders = true;
-                //ViewRealtime.OptionsView.ShowHorzLines = true;
                 ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.True;
-                //ViewRealtime.OptionsView.ShowVertLines = true;
                 ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.True;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
@@ -11436,8 +11432,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         if (m_appSettings.WideBandSymbol == "DisplProt.AD_Scanner") corr = 1;
                         AddToRealtimeTable(dt, m_appSettings.WideBandSymbol, "Lambda value (wbO2)", GetSymbolNumber(m_symbols, m_appSettings.WideBandSymbol), 0, 0, corr, 0, 10, 20, GetSymbolNumber(m_symbols, m_appSettings.WideBandSymbol), (uint)GetSymbolAddressSRAM(m_symbols, m_appSettings.WideBandSymbol), GetSymbolLength(m_symbols, m_appSettings.WideBandSymbol), 1);
                         // AFR feedback map initialiseren // <GS-19042010>
-                        int _width = 18;
-                        int _height = 16;
+                        //int _width = 18;
+                        //int _height = 16;
                     }
                 }
                 else
@@ -12874,7 +12870,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                            dockPanel.DockTo(DockingStyle.Right, 0);
                             if (m_appSettings.AutoSizeNewWindows)
                             {
                                 if (tabdet.X_axisvalues.Length > 0)
@@ -13458,7 +13454,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                                 if (!isDocked)
                                 {
-                                    dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                    dockPanel.DockTo(DockingStyle.Right, 0);
                                     if (m_appSettings.AutoSizeNewWindows)
                                     {
                                         if (tabdet.X_axisvalues.Length > 0)
@@ -14720,8 +14716,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             if (symbolName != string.Empty && description != string.Empty)
                             {
                                 string ht = string.Empty;
-                                XDFCategories cat = XDFCategories.Undocumented;
-                                XDFSubCategory subcat = XDFSubCategory.Undocumented;
+                                //XDFCategories cat = XDFCategories.Undocumented;
+                                //XDFSubCategory subcat = XDFSubCategory.Undocumented;
                                 //  if (st.TranslateSymbolToHelpText(symbolName, out ht, out cat, out subcat) == string.Empty)
                                 {
                                     DumpSymbolToSourceFile(symbolName, xaxisSymbol, yaxisSymbol, description, divisor, type);
