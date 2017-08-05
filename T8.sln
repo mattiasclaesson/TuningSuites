@@ -31,9 +31,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonSuite", "CommonSuite\CommonSuite.csproj", "{61FE31C4-B244-4C13-BAF6-F66857F0B88E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B6151B58-6411-4C07-842B-4CE761ABB74D}"
-	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
-	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT8Extras", "SetupT8Extras\SetupT8Extras.vdproj", "{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}"
 EndProject
@@ -108,9 +105,9 @@ Global
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}.Release|x86.Build.0 = Release|Any CPU
-		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Debug|Any CPU.ActiveCfg = Debug
-		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Debug|Any CPU.Build.0 = Debug
-		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Debug|x86.ActiveCfg = Debug
+		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Debug|Any CPU.ActiveCfg = Release
+		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Debug|Any CPU.Build.0 = Release
+		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Debug|x86.ActiveCfg = Release
 		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Release|Any CPU.ActiveCfg = Release
 		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Release|Any CPU.Build.0 = Release
 		{8D815C33-4E90-4FC8-911E-B689FDCA8BEA}.Release|x86.ActiveCfg = Release
@@ -130,9 +127,9 @@ Global
 		{61FE31C4-B244-4C13-BAF6-F66857F0B88E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61FE31C4-B244-4C13-BAF6-F66857F0B88E}.Release|x86.ActiveCfg = Release|x86
 		{61FE31C4-B244-4C13-BAF6-F66857F0B88E}.Release|x86.Build.0 = Release|x86
-		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Debug|Any CPU.ActiveCfg = Debug
-		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Debug|Any CPU.Build.0 = Debug
-		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Debug|x86.ActiveCfg = Debug
+		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Debug|Any CPU.ActiveCfg = Release
+		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Debug|Any CPU.Build.0 = Release
+		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Debug|x86.ActiveCfg = Release
 		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Release|Any CPU.ActiveCfg = Release
 		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Release|Any CPU.Build.0 = Release
 		{167E1B8F-6FAE-46AD-A06E-CC43B0D6B3C6}.Release|x86.ActiveCfg = Release
