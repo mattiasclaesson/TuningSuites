@@ -4201,8 +4201,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     // and determine engine type MY by VIN number
                     string engineTypeBySWVersion = string.Empty;
                     string engineTypeByVIN = string.Empty;
-                    VINDecoder decoder = new VINDecoder();
-                    VINCarInfo carinfo = decoder.DecodeVINNumber(t8header.ChassisID);
+                    VINCarInfo carinfo = VINDecoder.DecodeVINNumber(t8header.ChassisID);
                     engineTypeByVIN = carinfo.EngineType + " MY" + carinfo.Makeyear.ToString() + " " + carinfo.GearboxDescription;
                     frminfo.EngineTypeByVIN = engineTypeByVIN;
                     string swversion = t8header.SoftwareVersion.Trim();
@@ -8398,8 +8397,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         File.Copy(file, System.Windows.Forms.Application.StartupPath + "\\Binaries\\" + newFilename);
 
                         // test
-                        VINDecoder dec = new VINDecoder();
-                        VINCarInfo info = dec.DecodeVINNumber(t8header.ChassisID);
+                        VINCarInfo info = VINDecoder.DecodeVINNumber(t8header.ChassisID);
                         AddToPartnumberCollectionFile(t8header.PartNumber.Trim(), info.Makeyear, t8header.SoftwareVersion.Trim());
                         AddToPartnumberConverterFile(t8header.PartNumber.Trim(), info.EngineType, info.CarModel, t8header.SoftwareVersion.Trim());
                         // test

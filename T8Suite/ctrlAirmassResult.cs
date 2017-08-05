@@ -1071,8 +1071,7 @@ namespace T8SuitePro
                     //ECUInformation ecuinfo = pnc.GetECUInfo(header.PartNumber.Trim(), "");
                     //ecuinfo.Turbomodel;
                     // VIN
-                    VINDecoder decoder = new VINDecoder();
-                    VINCarInfo carinfo = decoder.DecodeVINNumber(header.ChassisID);
+                    VINCarInfo carinfo = VINDecoder.DecodeVINNumber(header.ChassisID);
                     if (carinfo.TurboModel == VINTurboModel.MitsubishiTD04L_14T)
                     {
                         ctrlCompressorMap1.SetCompressorType(ctrlCompressorMap.CompressorMap.TD04);
