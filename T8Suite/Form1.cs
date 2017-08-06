@@ -142,7 +142,7 @@ namespace T8SuitePro
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        private enum Age { Old, New };
+        private enum CalibrationType { Old, New };
 
         public Form1(string[] args)
         {
@@ -2876,21 +2876,21 @@ namespace T8SuitePro
                         if (v < 'C' || swVersion.Substring(0,6) == "FC01_O")
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map (manual)";
-                            this.btnMaxAirmassMapManual.Tag = Age.Old;
+                            this.btnMaxAirmassMapManual.Tag = CalibrationType.Old;
                             this.btnMaxAirmassMapAuto.Caption = "Max airmass map (auto)";
-                            this.btnMaxAirmassMapAuto.Tag = Age.Old;
+                            this.btnMaxAirmassMapAuto.Tag = CalibrationType.Old;
                             this.barButtonItem13.Caption = "Trq limit auto 175+ hp";
-                            this.barButtonItem13.Tag = Age.Old;
+                            this.barButtonItem13.Tag = CalibrationType.Old;
                             this.barButtonItem14.Caption = "Trq limit auto 150 hp";
-                            this.barButtonItem14.Tag = Age.Old;
+                            this.barButtonItem14.Tag = CalibrationType.Old;
                             this.barButtonItem15.Caption = "Trq limit manual 175+ hp";
-                            this.barButtonItem15.Tag = Age.Old;
+                            this.barButtonItem15.Tag = CalibrationType.Old;
                             this.barButtonItem16.Caption = "Trq limit manual 150 hp";
-                            this.barButtonItem16.Tag = Age.Old;
+                            this.barButtonItem16.Tag = CalibrationType.Old;
                             this.barButtonItem41.Visibility = BarItemVisibility.Never;
-                            this.barButtonItem41.Tag = Age.Old;
+                            this.barButtonItem41.Tag = CalibrationType.Old;
                             this.barButtonItem42.Visibility = BarItemVisibility.Never;
-                            this.barButtonItem42.Tag = Age.Old;
+                            this.barButtonItem42.Tag = CalibrationType.Old;
                             /* Conditional FlexFuel */
                             this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Never;
                             this.barButtonItem15.Visibility = BarItemVisibility.Always;
@@ -2899,21 +2899,21 @@ namespace T8SuitePro
                         else
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map #1";
-                            this.btnMaxAirmassMapManual.Tag = Age.New;
+                            this.btnMaxAirmassMapManual.Tag = CalibrationType.New;
                             this.btnMaxAirmassMapAuto.Caption = "Max airmass map #2";
-                            this.btnMaxAirmassMapAuto.Tag = Age.New;
+                            this.btnMaxAirmassMapAuto.Tag = CalibrationType.New;
                             this.barButtonItem13.Caption = "Trq limit 175/200hp";
-                            this.barButtonItem13.Tag = Age.New;
+                            this.barButtonItem13.Tag = CalibrationType.New;
                             this.barButtonItem14.Caption = "Trq limit 150hp";
-                            this.barButtonItem14.Tag = Age.New;
+                            this.barButtonItem14.Tag = CalibrationType.New;
                             this.barButtonItem15.Caption = "Trq limit E85 175/200hp";
-                            this.barButtonItem15.Tag = Age.New;
+                            this.barButtonItem15.Tag = CalibrationType.New;
                             this.barButtonItem16.Caption = "Trq limit E85 150hp";
-                            this.barButtonItem16.Tag = Age.New;
+                            this.barButtonItem16.Tag = CalibrationType.New;
                             this.barButtonItem41.Visibility = BarItemVisibility.Always;
-                            this.barButtonItem41.Tag = Age.New;
+                            this.barButtonItem41.Tag = CalibrationType.New;
                             this.barButtonItem42.Visibility = BarItemVisibility.Always;
-                            this.barButtonItem42.Tag = Age.New;
+                            this.barButtonItem42.Tag = CalibrationType.New;
                             /* Conditional FlexFuel */
                             // FA = MY03-06 Gasoline / front wheel drive
                             // FC = MY07-11 Gasoline / front wheel drive
@@ -4981,7 +4981,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void btnMaxAirmassMapAuto_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.btnMaxAirmassMapAuto.Tag == Age.Old)
+            if ((CalibrationType)this.btnMaxAirmassMapAuto.Tag == CalibrationType.Old)
                 StartTableViewer("BstKnkCal.MaxAirmassAu");
             else
                 StartTableViewer("FFAirCal.m_maxAirmass");
@@ -5020,7 +5020,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem14_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.barButtonItem14.Tag == Age.Old)
+            if ((CalibrationType)this.barButtonItem14.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab2");
             else
                 StartTableViewer("TrqLimCal.Trq_MaxEngineTab2");
@@ -5028,7 +5028,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem13_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.barButtonItem13.Tag == Age.Old)
+            if ((CalibrationType)this.barButtonItem13.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab1");
             else
                 StartTableViewer("TrqLimCal.Trq_MaxEngineTab1");
@@ -5037,7 +5037,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem16_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.barButtonItem16.Tag == Age.Old)
+            if ((CalibrationType)this.barButtonItem16.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineManTab2");
             else
                 StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab2");
@@ -5046,7 +5046,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem15_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.barButtonItem15.Tag == Age.Old)
+            if ((CalibrationType)this.barButtonItem15.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineManTab1");
             else
                 StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab1");
@@ -14961,13 +14961,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void barButtonItem41_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.barButtonItem41.Tag != Age.Old)
+            if ((CalibrationType)this.barButtonItem41.Tag != CalibrationType.Old)
                 StartTableViewer("TMCCal.Trq_MaxEngineLowTab");
         }
 
         private void barButtonItem42_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if ((Age)this.barButtonItem42.Tag != Age.Old)
+            if ((CalibrationType)this.barButtonItem42.Tag != CalibrationType.Old)
                 StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
 

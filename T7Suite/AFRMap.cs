@@ -99,8 +99,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
-                    logger.Debug(E.Message);
+                    logger.Debug("Failed to load target AFR map: " + E.Message);
                 }
             }
             else
@@ -199,10 +198,8 @@ namespace T7
                     }
                     catch (Exception E)
                     {
-                        //      MessageBox.Show("Failed to load target AFR map: " + E.Message);
                         // something went wrong, try to reinitialize the map
-                        logger.Debug(E.Message);
-
+                        logger.Debug("Failed to load target AFR map: " + E.Message);
                     }
                 }
             }
@@ -395,9 +392,8 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    //      MessageBox.Show("Failed to load target AFR map: " + E.Message);
                     // something went wrong, try to reinitialize the map
-                    logger.Debug(E.Message);
+                    logger.Debug("Failed to load target AFR map: " + E.Message);
                 }
             }
             return map;
@@ -434,8 +430,7 @@ namespace T7
                 }
                 catch (Exception E)
                 {
-                    //  MessageBox.Show("Failed to load target AFR counter map: " + E.Message);
-                    logger.Debug(E.Message);
+                    logger.Debug("Failed to load target AFR counter map: " + E.Message);
                 }
             }
             return map;
@@ -512,8 +507,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
-                logger.Debug(E.Message);
+                logger.Debug("Failed to load target AFR map: " + E.Message);
             }
 
             return map;
@@ -537,8 +531,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
-                logger.Debug(E.Message);
+                logger.Debug("Failed to load target AFR map: " + E.Message);
             }
 
             return map;
