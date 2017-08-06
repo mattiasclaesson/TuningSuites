@@ -247,8 +247,9 @@ namespace T8SuitePro
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception E)
                 {
+                    logger.Debug(E.Message);
                 }
                 logger.Debug("Len: " + len.ToString("X2") + " Type = " + type.ToString("X2") + "   " + data);
                 /*

@@ -11688,9 +11688,9 @@ If boost regulation reports errors you can increase the difference between boost
                 profcolortable.CustomToolstripGradientEnd = c;
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(profcolortable);
             }
-            catch (Exception)
+            catch (Exception E)
             {
-
+                logger.Debug(E.Message);
             }
 
         }

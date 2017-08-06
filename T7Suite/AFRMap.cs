@@ -393,11 +393,11 @@ namespace T7
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception E)
                 {
                     //      MessageBox.Show("Failed to load target AFR map: " + E.Message);
                     // something went wrong, try to reinitialize the map
-
+                    logger.Debug(E.Message);
                 }
             }
             return map;
@@ -432,9 +432,10 @@ namespace T7
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception E)
                 {
                     //  MessageBox.Show("Failed to load target AFR counter map: " + E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             return map;
@@ -509,9 +510,10 @@ namespace T7
                     map.SetValue(b2, idx++);
                 }
             }
-            catch (Exception)
+            catch (Exception E)
             {
                 //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
+                logger.Debug(E.Message);
             }
 
             return map;
@@ -533,9 +535,10 @@ namespace T7
                     map.SetValue(b2, idx++);
                 }
             }
-            catch (Exception)
+            catch (Exception E)
             {
                 //   MessageBox.Show("Failed to load target AFR map: " + E.Message);
+                logger.Debug(E.Message);
             }
 
             return map;
@@ -545,8 +548,6 @@ namespace T7
         private byte[] originalfuelmap;
         private int[] fuelcorrectioncountermap;
         private float[] targetmap;
-
-        //private bool _HasValidFuelmap = false;
 
         public void SetCurrentFuelMap(byte[] fuelmapdata)
         {
@@ -563,7 +564,6 @@ namespace T7
                 fuelcorrectioncountermap[i] = 0; // initialize
             }
             m_FuelMapInformation.SetOriginalFuelMap(fuelmapdata);
-            //_HasValidFuelmap = true;
         }
 
         public void SetOriginalFuelMap(byte[] fuelmapdata)

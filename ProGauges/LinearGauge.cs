@@ -12,9 +12,7 @@ namespace ProGauges
     public partial class LinearGauge : UserControl, ISupportInitialize
     {
         private PrivateFontCollection m_pfc = new PrivateFontCollection();
-
         private Color m_BackGroundColor = Color.FromArgb(24,24,24);
-        //private bool m_bIsInitializing;
         private Rectangle rcentre;
         private int m_NumberOfDecimals = 0;
 
@@ -291,12 +289,10 @@ namespace ProGauges
 
         void ISupportInitialize.BeginInit()
         {
-            //this.m_bIsInitializing = true;
         }
 
         void ISupportInitialize.EndInit()
         {
-            //this.m_bIsInitializing = false;
             base.Invalidate();
         }
 
@@ -373,10 +369,7 @@ namespace ProGauges
                 if (this.m_nHighlightOpaqueEnd != value)
                 {
                     this.m_nHighlightOpaqueEnd = value;
-                    //if (!this.m_bIsInitializing)
-                    //{
-                        base.Invalidate();
-                    //}
+                    base.Invalidate();
                 }
             }
         }
@@ -401,10 +394,7 @@ namespace ProGauges
                 if (this.m_nHighlightOpaqueStart != value)
                 {
                     this.m_nHighlightOpaqueStart = value;
-                    //if (!this.m_bIsInitializing)
-                    //{
                     base.Invalidate();
-                    //}
                 }
             }
         }

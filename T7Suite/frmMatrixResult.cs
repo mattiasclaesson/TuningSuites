@@ -506,9 +506,9 @@ namespace T7
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception E)
             {
-                // nothing
+                logger.Debug(E.Message);
             }
         }
 

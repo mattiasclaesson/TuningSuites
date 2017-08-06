@@ -506,9 +506,9 @@ namespace T8SuitePro
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception E)
             {
-                // nothing
+                logger.Debug(E.Message);
             }
         }
 

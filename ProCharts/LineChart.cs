@@ -10,7 +10,6 @@ namespace ProCharts
     public partial class LineChart : UserControl, ISupportInitialize
     {
         private Color m_BackGroundColor = Color.FromArgb(24, 24, 24);
-        //private bool m_bIsInitializing = false;
         private Rectangle rcentre;
 
 
@@ -21,17 +20,12 @@ namespace ProCharts
 
         void ISupportInitialize.BeginInit()
         {
-            //this.m_bIsInitializing = true;
         }
 
         void ISupportInitialize.EndInit()
         {
-            //this.m_bIsInitializing = false;
             base.Invalidate();
         }
-
-
-
 
         [Browsable(true), Category("LinearGauge"), Description("Set the gauge background color"), DefaultValue(typeof(Color), "System.Drawing.Color.Black")]
         public Color BackGroundColor
@@ -198,10 +192,7 @@ namespace ProCharts
                 if (this.m_nHighlightOpaqueEnd != value)
                 {
                     this.m_nHighlightOpaqueEnd = value;
-                    //if (!this.m_bIsInitializing)
-                    //{
                     base.Invalidate();
-                    //}
                 }
             }
         }
@@ -226,10 +217,7 @@ namespace ProCharts
                 if (this.m_nHighlightOpaqueStart != value)
                 {
                     this.m_nHighlightOpaqueStart = value;
-                    //if (!this.m_bIsInitializing)
-                    //{
                     base.Invalidate();
-                    //}
                 }
             }
         }
