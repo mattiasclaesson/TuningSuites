@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CommonSuite;
-using TrionicCANLib;
 using System.IO.Ports;
 using TrionicCANLib.API;
 using DevExpress.XtraEditors.Controls;
-using CommonSuite;
 
 namespace T7
 {

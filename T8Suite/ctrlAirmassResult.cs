@@ -1012,6 +1012,7 @@ namespace T8SuitePro
 
             if (gridControl1.DataSource != null)
             {
+                /*
                 TurboType tt = TurboType.TD0415T;
                 if (ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_55 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_60 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.GT17)
                 {
@@ -1037,6 +1038,7 @@ namespace T8SuitePro
                 {
                     tt = TurboType.HX40w;
                 }
+                */
                 DataTable dt = (DataTable)gridControl1.DataSource;
                 double[] boost_req = new double[dt.Columns.Count];
                 /*PressureToTorque ptt = new PressureToTorque();
@@ -1069,8 +1071,7 @@ namespace T8SuitePro
                     //ECUInformation ecuinfo = pnc.GetECUInfo(header.PartNumber.Trim(), "");
                     //ecuinfo.Turbomodel;
                     // VIN
-                    VINDecoder decoder = new VINDecoder();
-                    VINCarInfo carinfo = decoder.DecodeVINNumber(header.ChassisID);
+                    VINCarInfo carinfo = VINDecoder.DecodeVINNumber(header.ChassisID);
                     if (carinfo.TurboModel == VINTurboModel.MitsubishiTD04L_14T)
                     {
                         ctrlCompressorMap1.SetCompressorType(ctrlCompressorMap.CompressorMap.TD04);
@@ -1306,7 +1307,7 @@ namespace T8SuitePro
                 }
                 return dt;
             }
-            catch (Exception E)
+            catch (Exception)
             {
                 logger.Debug("Failed to calculate for file : " + filename);
             }
@@ -1858,6 +1859,7 @@ namespace T8SuitePro
                 Calculate();
                 if (gridControl1.DataSource != null)
                 {
+                    /*
                     TurboType tt = TurboType.TD0415T;
                     if (ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_55 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_60 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.GT17)
                     {
@@ -1883,6 +1885,7 @@ namespace T8SuitePro
                     {
                         tt = TurboType.HX40w;
                     }
+                    */
                     DataTable dt = (DataTable)gridControl1.DataSource;
 
                     double[] boost_req = new double[dt.Columns.Count];

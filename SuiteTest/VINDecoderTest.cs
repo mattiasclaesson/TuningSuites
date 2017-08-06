@@ -13,8 +13,6 @@ namespace T8Test
     [TestClass()]
     public class VINDecoderTest
     {
-
-
         private TestContext testContextInstance;
 
         /// <summary>
@@ -70,10 +68,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EB55A143012475()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EB55A143012475";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EB55A143012475";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2004, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -92,10 +89,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EH55GX63510826()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EH55GX63510826";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EH55GX63510826";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -114,10 +110,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3FM52RX81130440()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3FM52RX81130440";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3FM52RX81130440";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab93new, actual.CarModel);
             Assert.AreEqual(2008, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -136,10 +131,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EB59A553505541()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EB59A553505541";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EB59A553505541";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2005, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -158,10 +152,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3GR4BJ0B4001333()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3GR4BJ0B4001333";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3GR4BJ0B4001333";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95new, actual.CarModel);
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("4 door sedan (SN)", actual.Body);
@@ -180,10 +173,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3FD5NT8B1306559()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3FD5NT8B1306559";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3FD5NT8B1306559";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab93new, actual.CarModel);
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -202,10 +194,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3GP4AR2B4002240()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3GP4AR2B4002240";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3GP4AR2B4002240";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95new, actual.CarModel);
             Assert.AreEqual(2011, actual.Makeyear);
             Assert.AreEqual("4 door sedan (SN)", actual.Body);
@@ -224,10 +215,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYSCFB51W482301688()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YSCFB51W482301688";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YSCFB51W482301688";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.CadillacBTS, actual.CarModel);
             Assert.AreEqual(2008, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -246,10 +236,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYSCFD56S782300776()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YSCFD56S782300776";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YSCFD56S782300776";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.CadillacBTS, actual.CarModel);
             Assert.AreEqual(2008, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -268,10 +257,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestW0L0ZCF3551095720()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "W0L0ZCF3551095720";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "W0L0ZCF3551095720";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.OpelVectra, actual.CarModel);
             Assert.AreEqual(2005, actual.Makeyear);
             Assert.AreEqual(VINEngineType.Z20NET, actual.EngineType);
@@ -286,10 +274,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EE55EX63507433()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EE55EX63507433";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EE55EX63507433";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -299,7 +286,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded 002240
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -308,10 +295,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EE55EX63507423()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EE55EX63507423";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EE55EX63507423";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -321,7 +307,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507423
         }
 
         /// <summary>
@@ -330,10 +316,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EE55E263507433()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EE55E263507433";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EE55E263507433";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -343,7 +328,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -352,10 +337,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EE55GX63507433()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EE55GX63507433";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EE55GX63507433";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -365,7 +349,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -374,10 +358,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EE55G863507433()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EE55G863507433";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EE55G863507433";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -387,7 +370,7 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507433
         }
 
         /// <summary>
@@ -396,10 +379,9 @@ namespace T8Test
         [TestMethod()]
         public void DecodeVINNumberTestYS3EE55G863507633()
         {
-            VINDecoder target = new VINDecoder();
-            string VINNumber = "YS3EE55G863507633";
-            VINCarInfo actual;
-            actual = target.DecodeVINNumber(VINNumber);
+            
+            const string VINNumber = "YS3EE55G863507633";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
             Assert.AreEqual(VINCarModel.Saab95, actual.CarModel);
             Assert.AreEqual(2006, actual.Makeyear);
             Assert.AreEqual("5 door combi coupe", actual.Body);
@@ -409,7 +391,28 @@ namespace T8Test
             Assert.AreEqual("Trollhättan line A (9-5)", actual.PlantInfo);
             Assert.AreEqual("Model series III, Driver airbag", actual.Series);
             Assert.AreNotEqual(actual.CalculatedChecksum, VINNumber[8]);
-            // Serialnumber not decoded
+            // Serialnumber not decoded 507633
+        }
+
+        /// <summary>
+        ///A test for calculate VIN checksum algorithm
+        ///</summary>
+        [TestMethod()]
+        public void CalculateVINchecksum()
+        {
+            
+            string VINNumber = "11111111111111111";
+            VINCarInfo actual = VINDecoder.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
+            VINNumber = "1M8GDM9AXKP042788";
+            actual = VINDecoder.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(actual.CalculatedChecksum, VINNumber[8]);
+            VINNumber = "1234567890123456"; // Too short
+            actual = VINDecoder.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(actual.CalculatedChecksum, '*');
+            VINNumber = "1Q8GIM9AXKO042788"; // Invalid characters: I, O, Q
+            actual = VINDecoder.DecodeVINNumber(VINNumber);
+            Assert.AreEqual(actual.CalculatedChecksum, '*');
         }
     }
 }

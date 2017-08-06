@@ -77,15 +77,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
-using T8SuitePro;
 using System.Diagnostics;
 using DevExpress.XtraBars;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using System.Data.OleDb;
 using Microsoft.Office.Interop.Excel;
-using System.Reflection;
 using PSTaskDialog;
-using Microsoft.Win32;
 using DevExpress.XtraBars.Docking;
 using System.Threading;
 using RealtimeGraph;
@@ -144,6 +141,8 @@ namespace T8SuitePro
 
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
         private static Logger logger = LogManager.GetCurrentClassLogger();
+
+        private enum CalibrationType { Old, New };
 
         public Form1(string[] args)
         {
@@ -570,7 +569,7 @@ namespace T8SuitePro
             m_currentsramfile = string.Empty; // geen sramfile erbij
             barStaticItem1.Caption = "";
             barFilenameText.Caption = "";
-            bool _hideRealtime = false;
+            //bool _hideRealtime = false;
             //XDFCategories category = XDFCategories.Undocumented;
             //XDFSubCategory subcat = XDFSubCategory.Undocumented;
             symbol_collection = new SymbolCollection();
@@ -1032,7 +1031,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1098,7 +1097,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1158,7 +1157,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1187,7 +1186,7 @@ namespace T8SuitePro
                         retval += Convert.ToInt32(br.ReadByte()) * 256;
                         retval += Convert.ToInt32(br.ReadByte());
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve address from: " + offset.ToString("X6"));
                     }
@@ -1215,7 +1214,7 @@ namespace T8SuitePro
                         retval = Convert.ToInt32(br.ReadByte()) * 256;
                         retval += Convert.ToInt32(br.ReadByte());
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve length from: " + offset.ToString("X6"));
                     }
@@ -1230,7 +1229,7 @@ namespace T8SuitePro
             bytes = null;
             Int64 UnpackedLength = 0;
             symboltableoffset = 0;
-            int len = 0;
+            //int len = 0;
             int val = 0;
             //int idx = ReadEndMarker(0x9B);
             try
@@ -2877,21 +2876,21 @@ namespace T8SuitePro
                         if (v < 'C' || swVersion.Substring(0,6) == "FC01_O")
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map (manual)";
-                            this.btnMaxAirmassMapManual.Tag = "Old";
+                            this.btnMaxAirmassMapManual.Tag = CalibrationType.Old;
                             this.btnMaxAirmassMapAuto.Caption = "Max airmass map (auto)";
-                            this.btnMaxAirmassMapAuto.Tag = "Old";
+                            this.btnMaxAirmassMapAuto.Tag = CalibrationType.Old;
                             this.barButtonItem13.Caption = "Trq limit auto 175+ hp";
-                            this.barButtonItem13.Tag = "Old";
+                            this.barButtonItem13.Tag = CalibrationType.Old;
                             this.barButtonItem14.Caption = "Trq limit auto 150 hp";
-                            this.barButtonItem14.Tag = "Old";
+                            this.barButtonItem14.Tag = CalibrationType.Old;
                             this.barButtonItem15.Caption = "Trq limit manual 175+ hp";
-                            this.barButtonItem15.Tag = "Old";
+                            this.barButtonItem15.Tag = CalibrationType.Old;
                             this.barButtonItem16.Caption = "Trq limit manual 150 hp";
-                            this.barButtonItem16.Tag = "Old";
+                            this.barButtonItem16.Tag = CalibrationType.Old;
                             this.barButtonItem41.Visibility = BarItemVisibility.Never;
-                            this.barButtonItem41.Tag = "Old";
+                            this.barButtonItem41.Tag = CalibrationType.Old;
                             this.barButtonItem42.Visibility = BarItemVisibility.Never;
-                            this.barButtonItem42.Tag = "Old";
+                            this.barButtonItem42.Tag = CalibrationType.Old;
                             /* Conditional FlexFuel */
                             this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Never;
                             this.barButtonItem15.Visibility = BarItemVisibility.Always;
@@ -2900,21 +2899,21 @@ namespace T8SuitePro
                         else
                         {
                             this.btnMaxAirmassMapManual.Caption = "Max airmass map #1";
-                            this.btnMaxAirmassMapManual.Tag = "New";
+                            this.btnMaxAirmassMapManual.Tag = CalibrationType.New;
                             this.btnMaxAirmassMapAuto.Caption = "Max airmass map #2";
-                            this.btnMaxAirmassMapAuto.Tag = "New";
+                            this.btnMaxAirmassMapAuto.Tag = CalibrationType.New;
                             this.barButtonItem13.Caption = "Trq limit 175/200hp";
-                            this.barButtonItem13.Tag = "New";
+                            this.barButtonItem13.Tag = CalibrationType.New;
                             this.barButtonItem14.Caption = "Trq limit 150hp";
-                            this.barButtonItem14.Tag = "New";
+                            this.barButtonItem14.Tag = CalibrationType.New;
                             this.barButtonItem15.Caption = "Trq limit E85 175/200hp";
-                            this.barButtonItem15.Tag = "New";
+                            this.barButtonItem15.Tag = CalibrationType.New;
                             this.barButtonItem16.Caption = "Trq limit E85 150hp";
-                            this.barButtonItem16.Tag = "New";
+                            this.barButtonItem16.Tag = CalibrationType.New;
                             this.barButtonItem41.Visibility = BarItemVisibility.Always;
-                            this.barButtonItem41.Tag = "New";
+                            this.barButtonItem41.Tag = CalibrationType.New;
                             this.barButtonItem42.Visibility = BarItemVisibility.Always;
-                            this.barButtonItem42.Tag = "New";
+                            this.barButtonItem42.Tag = CalibrationType.New;
                             /* Conditional FlexFuel */
                             // FA = MY03-06 Gasoline / front wheel drive
                             // FC = MY07-11 Gasoline / front wheel drive
@@ -3160,7 +3159,7 @@ namespace T8SuitePro
                                     }
                                 }
                                 dockPanel.Width = width;
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                             }
                             dockPanel.Controls.Add(tabdet);
                             // dock to another panel?
@@ -3316,7 +3315,7 @@ namespace T8SuitePro
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                dockPanel.DockTo(DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -3431,7 +3430,7 @@ namespace T8SuitePro
                         tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
                         dockPanel.Controls.Add(tabdet);
                         dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                        dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                        dockPanel.DockTo(DockingStyle.Left, 1);
 
                         dockPanel.Width = 700;
 
@@ -4201,8 +4200,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     // and determine engine type MY by VIN number
                     string engineTypeBySWVersion = string.Empty;
                     string engineTypeByVIN = string.Empty;
-                    VINDecoder decoder = new VINDecoder();
-                    VINCarInfo carinfo = decoder.DecodeVINNumber(t8header.ChassisID);
+                    VINCarInfo carinfo = VINDecoder.DecodeVINNumber(t8header.ChassisID);
                     engineTypeByVIN = carinfo.EngineType + " MY" + carinfo.Makeyear.ToString() + " " + carinfo.GearboxDescription;
                     frminfo.EngineTypeByVIN = engineTypeByVIN;
                     string swversion = t8header.SoftwareVersion.Trim();
@@ -4403,9 +4401,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception E)
             {
-
+                logger.Debug(E.Message);
             }
             return retval;
         }
@@ -4537,9 +4535,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 profcolortable.CustomToolstripGradientEnd = c;
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(profcolortable);
             }
-            catch (Exception)
+            catch (Exception E)
             {
-
+                logger.Debug(E.Message);
             }
 
         }
@@ -4983,7 +4981,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void btnMaxAirmassMapAuto_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.btnMaxAirmassMapAuto.Tag == "Old")
+            if ((CalibrationType)this.btnMaxAirmassMapAuto.Tag == CalibrationType.Old)
                 StartTableViewer("BstKnkCal.MaxAirmassAu");
             else
                 StartTableViewer("FFAirCal.m_maxAirmass");
@@ -5022,7 +5020,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem14_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem14.Tag == "Old")
+            if ((CalibrationType)this.barButtonItem14.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab2");
             else
                 StartTableViewer("TrqLimCal.Trq_MaxEngineTab2");
@@ -5030,7 +5028,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem13_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem13.Tag == "Old")
+            if ((CalibrationType)this.barButtonItem13.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineAutTab1");
             else
                 StartTableViewer("TrqLimCal.Trq_MaxEngineTab1");
@@ -5039,7 +5037,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem16_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem16.Tag == "Old")
+            if ((CalibrationType)this.barButtonItem16.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineManTab2");
             else
                 StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab2");
@@ -5048,7 +5046,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void barButtonItem15_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem15.Tag == "Old")
+            if ((CalibrationType)this.barButtonItem15.Tag == CalibrationType.Old)
                 StartTableViewer("TrqLimCal.Trq_MaxEngineManTab1");
             else
                 StartTableViewer("FFTrqCal.FFTrq_MaxEngineTab1");
@@ -5908,7 +5906,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             }
                             dockPanel.Text = resultText;
 
-                            dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                            dockPanel.DockTo(DockingStyle.Left, 1);
 
                             dockPanel.Width = 700;
 
@@ -5929,9 +5927,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
                             dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
                             string ht = string.Empty;
-                            double diffperc = 0;
-                            int diffabs = 0;
-                            double diffavg = 0;
+                            //double diffperc = 0;
+                            //int diffabs = 0;
+                            //double diffavg = 0;
                             XDFCategories cat = XDFCategories.Undocumented;
                             XDFSubCategory subcat = XDFSubCategory.Undocumented;
                             foreach (SymbolHelper shfound in result_Collection)
@@ -6267,7 +6265,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
 
 
-                    bool m_fileparsed = false;
+                    //bool m_fileparsed = false;
 
                     //listView1.Items.Clear();
                     SetStatusText("Start symbol parsing");
@@ -6858,9 +6856,9 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 }
                 savedatatobinary((int)GetSymbolAddress(m_symbols, mapname), mapdata.Length, mapdata, m_currentfile, true);
             }
-            catch (Exception)
+            catch (Exception E)
             {
-
+                logger.Debug(E.Message);
             }
         }
 
@@ -6870,10 +6868,8 @@ So, 0x101 byte buffer with first byte ignored (convention)
             if ((int)GetSymbolAddress(m_symbols, limitername) > 0)
             {
                 byte[] maxtorqueaut = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, limitername), GetSymbolLength(m_symbols, limitername));
-                int cols = 0;
-                int rows = 0;
-
-                rows = maxtorqueaut.Length;
+                //int cols = 0;
+                int rows = maxtorqueaut.Length;
 
                 if (isSixteenBitTable(limitername)) rows /= 2;
                 for (int rt = 0; rt < rows; rt++)
@@ -7826,7 +7822,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -7857,7 +7853,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DockingStyle.Left, 1);
+                dockPanel.DockTo(DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -8400,8 +8396,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         File.Copy(file, System.Windows.Forms.Application.StartupPath + "\\Binaries\\" + newFilename);
 
                         // test
-                        VINDecoder dec = new VINDecoder();
-                        VINCarInfo info = dec.DecodeVINNumber(t8header.ChassisID);
+                        VINCarInfo info = VINDecoder.DecodeVINNumber(t8header.ChassisID);
                         AddToPartnumberCollectionFile(t8header.PartNumber.Trim(), info.Makeyear, t8header.SoftwareVersion.Trim());
                         AddToPartnumberConverterFile(t8header.PartNumber.Trim(), info.EngineType, info.CarModel, t8header.SoftwareVersion.Trim());
                         // test
@@ -9003,7 +8998,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 lstTp.Add(fileTP);
                             }
                         }
-                        catch (Exception E)
+                        catch (Exception)
                         {
                             // add failure
                             byte[] dataToInsert = new byte[0];
@@ -9539,7 +9534,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     if (!isDocked)
                     {
-                        dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                        dockPanel.DockTo(DockingStyle.Right, 0);
                         if (m_appSettings.AutoSizeNewWindows)
                         {
                             if (tabdet.X_axisvalues.Length > 0)
@@ -10783,8 +10778,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Black;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.FromArgb(0, 192, 0);
                 ViewRealtime.OptionsView.ShowColumnHeaders = false;
-                ViewRealtime.OptionsView.ShowHorzLines = false;
-                ViewRealtime.OptionsView.ShowVertLines = false;
+                ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+                ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
             else
@@ -10806,9 +10801,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 ViewRealtime.Appearance.SelectedRow.BackColor2 = Color.Empty;
                 ViewRealtime.Appearance.SelectedRow.ForeColor = Color.Empty;
                 ViewRealtime.OptionsView.ShowColumnHeaders = true;
-                //ViewRealtime.OptionsView.ShowHorzLines = true;
                 ViewRealtime.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.True;
-                //ViewRealtime.OptionsView.ShowVertLines = true;
                 ViewRealtime.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.True;
                 ViewRealtime.OptionsBehavior.Editable = false;
             }
@@ -11436,8 +11429,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         if (m_appSettings.WideBandSymbol == "DisplProt.AD_Scanner") corr = 1;
                         AddToRealtimeTable(dt, m_appSettings.WideBandSymbol, "Lambda value (wbO2)", GetSymbolNumber(m_symbols, m_appSettings.WideBandSymbol), 0, 0, corr, 0, 10, 20, GetSymbolNumber(m_symbols, m_appSettings.WideBandSymbol), (uint)GetSymbolAddressSRAM(m_symbols, m_appSettings.WideBandSymbol), GetSymbolLength(m_symbols, m_appSettings.WideBandSymbol), 1);
                         // AFR feedback map initialiseren // <GS-19042010>
-                        int _width = 18;
-                        int _height = 16;
+                        //int _width = 18;
+                        //int _height = 16;
                     }
                 }
                 else
@@ -12874,7 +12867,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                            dockPanel.DockTo(DockingStyle.Right, 0);
                             if (m_appSettings.AutoSizeNewWindows)
                             {
                                 if (tabdet.X_axisvalues.Length > 0)
@@ -13458,7 +13451,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
                                 if (!isDocked)
                                 {
-                                    dockPanel.DockTo(dockManager1, DockingStyle.Right, 0);
+                                    dockPanel.DockTo(DockingStyle.Right, 0);
                                     if (m_appSettings.AutoSizeNewWindows)
                                     {
                                         if (tabdet.X_axisvalues.Length > 0)
@@ -14290,7 +14283,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 ofd.InitialDirectory = Path.Combine(System.Windows.Forms.Application.StartupPath, "Binaries");
             }
-            catch (Exception) { }
+            catch (Exception E)
+            {
+                logger.Debug(E.Message);
+            }
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -14720,8 +14716,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             if (symbolName != string.Empty && description != string.Empty)
                             {
                                 string ht = string.Empty;
-                                XDFCategories cat = XDFCategories.Undocumented;
-                                XDFSubCategory subcat = XDFSubCategory.Undocumented;
+                                //XDFCategories cat = XDFCategories.Undocumented;
+                                //XDFSubCategory subcat = XDFSubCategory.Undocumented;
                                 //  if (st.TranslateSymbolToHelpText(symbolName, out ht, out cat, out subcat) == string.Empty)
                                 {
                                     DumpSymbolToSourceFile(symbolName, xaxisSymbol, yaxisSymbol, description, divisor, type);
@@ -14783,16 +14779,17 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 {
                                     divisor = (float)(1.0F / Convert.ToDouble(resvalues.GetValue(1)));
                                 }
-                                catch (Exception)
+                                catch (Exception E)
                                 {
+                                    logger.Debug(E.Message);
                                 }
                                 try
                                 {
                                     type = resvalues.GetValue(8).ToString();
                                 }
-                                catch (Exception)
+                                catch (Exception E)
                                 {
-
+                                    logger.Debug(E.Message);
                                 }
                             }
                             if (xaxislineCount == 0)
@@ -14964,13 +14961,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         private void barButtonItem41_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem41.Tag != "Old")
+            if ((CalibrationType)this.barButtonItem41.Tag != CalibrationType.Old)
                 StartTableViewer("TMCCal.Trq_MaxEngineLowTab");
         }
 
         private void barButtonItem42_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.barButtonItem42.Tag != "Old")
+            if ((CalibrationType)this.barButtonItem42.Tag != CalibrationType.Old)
                 StartTableViewer("TMCCal.Trq_MaxEngineTab");
         }
 

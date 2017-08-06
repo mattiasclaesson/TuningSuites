@@ -875,7 +875,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -935,7 +935,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -950,7 +950,7 @@ namespace T8SuitePro
             bytes = null;
             Int64 UnpackedLength = 0;
             symboltableoffset = 0;
-            int len = 0;
+            //int len = 0;
             int val = 0;
             Boolean retval = false;
             //int idx = ReadEndMarker(0x9B);
@@ -1211,7 +1211,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to retrieve NqNqNq from: " + offset.ToString("X6"));
                     }
@@ -1349,7 +1349,7 @@ namespace T8SuitePro
                     fsread.Seek(AddressTableOffset - 17, SeekOrigin.Begin);
                     bool endoftable = false;
                     Int64 internal_address = 0;
-                    int sramaddress = 0;
+                    //int sramaddress = 0;
                     int symbollength = 0;
                     int bitmask = 0;
                     int symb_count = 0;

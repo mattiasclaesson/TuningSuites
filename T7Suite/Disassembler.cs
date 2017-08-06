@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using CommonSuite;
 using NLog;
@@ -58,12 +57,6 @@ namespace T7
 
         public delegate void Progress(object sender, ProgressEventArgs e);
         public event Disassembler.Progress onProgress;
-
-        uint swap = 0;
-        //FILE *IN, *OUT, *TST;
-
-        long SRAM_start = 0x1000L;
-        long SRAM_end = 0x7FFFL;
 
         long[] A_reg =  new long[8];// = {0, 0, 0, 0, 0, 0, 0, 0};
         long[] D_reg = new long[8];// = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -471,7 +464,7 @@ namespace T7
         {
             uint ilen = 0;
             byte ch3, ch4, ch5, ch6;
-            long trgdata = 0;
+            //long trgdata = 0;
             long disp = 0;
 
             if ((ch2 > 0) && (ch2 < 0xff))
@@ -685,12 +678,12 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             uint i, ilen;       /* word, inst length */
             byte ch1, ch2;     /* Bytes */
             byte ch3, ch4;     /* Extra bytes */
-            byte ch5, ch6;     /* Extra bytes */
-            byte ch7, ch8;     /* Extra bytes */
+            //byte ch5, ch6;     /* Extra bytes */
+            //byte ch7, ch8;     /* Extra bytes */
             byte n1, n2, n3, n4; /* Nibbles */
             long trgaddr; /* Target address */
-            long trgdata; /* Target data */
-            long disp;  /* Displacement */
+            //long trgdata; /* Target data */
+            //long disp;  /* Displacement */
             string sour;
             string dest;
             trgdata = 0L;
@@ -1839,29 +1832,14 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
         private MNemonicCollection findLabels(string inputfile)
         {
             _labels = new MNemonicCollection();
-            uint i, t, seg, adr;
-            long addr, endaddr, adrcntr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
-
-            byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
-            //byte n1, n2, n3, n4;
-            //uint infile = 0, outfile = 0, 
-            uint addoff = 0;
-            string inname, outname, offsetval;
-            //byte inname[80], outname[80], offsetval[40];
-            //byte str[80],cmd[80];
-            string str, cmd;
-            str = string.Empty;
+            const long addr = 0;
+            string str = string.Empty;
             for (int temp = 0; temp < 8; temp++)
             {
                 A_reg.SetValue(0, temp);
                 D_reg.SetValue(0, temp);
             }
-            swap = 0;
-            addr = offaddr = 0;
-
-            inname = inputfile;
-            adrcntr = 0L;
-            FileStream fsbr = new FileStream(inname, FileMode.Open, FileAccess.Read);
+            FileStream fsbr = new FileStream(inputfile, FileMode.Open, FileAccess.Read);
             if (fsbr == null) return _labels;
             BinaryReader br = new BinaryReader(fsbr);
             if (br == null)
@@ -1870,7 +1848,6 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 return _labels;
             }
             fsbr.Position = addr;
-            adrcntr = addr;
             // iterate through all functions
             // first get all the pointers to work from
             func_count = 0;
@@ -1914,37 +1891,22 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
             _passOne = false;
 
-            uint i, t, seg, adr;
-            long addr, endaddr, adrcntr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
-
-            byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
-            //byte n1, n2, n3, n4;
-            //uint infile = 0, outfile = 0, 
-            uint addoff = 0;
-            string inname, outname, offsetval;
-            //byte inname[80], outname[80], offsetval[40];
-            //byte str[80],cmd[80];
-            string str, cmd;
-            str = string.Empty;
+            string str = string.Empty;
             for (int temp = 0; temp < 8; temp++)
             {
                 A_reg.SetValue(0, temp);
                 D_reg.SetValue(0, temp);
             }
             m_symbols = symbols;
-            swap = 0;
-            addr = offaddr = 0;
 
-            inname = inputfile;
             //infile = 1;
 //            outname = outputfile;
             //outfile = 1;
             //addr = startaddress;
             /********************* DISASSEMBLY STARTS HERE *********************/
             /* Read all the preceding words first */
-            adrcntr = 0L;
             //StreamWriter sw = new StreamWriter(outname, false);
-            FileStream fsbr = new FileStream(inname, FileMode.Open, FileAccess.Read);
+            FileStream fsbr = new FileStream(inputfile, FileMode.Open, FileAccess.Read);
             if (fsbr == null) return false;
             BinaryReader br = new BinaryReader(fsbr);
             if (br == null)
@@ -1954,7 +1916,6 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 return false;
             }
             //fsbr.Position = addr;
-            adrcntr = addr;
             // iterate through all functions
             // first get all the pointers to work from
             func_count = 0;
@@ -1990,7 +1951,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 //logger.Debug("label: " + label.Address.ToString("X8") + " " + label.Mnemonic);
                 int percentage = (lblcount++ * 100) / labels.Count;
                 CastProgressEvent("Translating vector labels", percentage, ProgressType.TranslatingVectors);
-                for (i = 0; i < vectors.Length; i++)
+                for (uint i = 0; i < vectors.Length; i++)
                 {
                     if (label.Address == Convert.ToInt64(vectors.GetValue(i)))
                     {
@@ -2402,40 +2363,19 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
 
         public bool DisassembleFileRtf(string inputfile, string outputfile, long endaddress, SymbolCollection symbols)
         {
-            uint i, t, seg, adr;
-            long addr, endaddr, adrcntr, trgaddr, trgaddr1, trgaddr2, trgaddr3, offaddr;
-            
-            byte ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
-            //byte n1, n2, n3, n4;
-            //uint infile = 0, outfile = 0, 
-            uint addoff = 0;
-            string inname, outname;
-            //byte inname[80], outname[80], offsetval[40];
-            //byte str[80],cmd[80];
-            string str, cmd;
-            str = string.Empty;
             for (int temp = 0; temp < 8; temp++)
             {
                 A_reg.SetValue(0, temp);
                 D_reg.SetValue(0, temp);
             }
             m_symbols = symbols;
-            swap = 0;
-            addr = offaddr = 0;
-
-            inname = inputfile;
-            //infile = 1;
-            outname = outputfile;
-            //outfile = 1;
-
-            endaddr = endaddress;
-            addr = 0;
+                       
             /********************* DISASSEMBLY STARTS HERE *********************/
             /* Read all the preceding words first */
-            adrcntr = 0L;
-            StreamWriter sw = new StreamWriter(outname, false);
-            FileStream fsbr = new FileStream(inname, FileMode.Open, FileAccess.Read);
-            if (fsbr == null) return false;
+            StreamWriter sw = new StreamWriter(outputfile, false);
+            FileStream fsbr = new FileStream(inputfile, FileMode.Open, FileAccess.Read);
+            if (fsbr == null)
+                return false;
             BinaryReader br = new BinaryReader(fsbr);
             if (br == null)
             {
@@ -2443,29 +2383,30 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 sw.Close();
                 return false;
             }
+            long addr = 0;
+            const long offaddr = 0;
             fsbr.Position = addr;
-            adrcntr = addr;
-
             // start rtf file.
             sw.Write(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1043{\fonttbl{\f0\fswiss\fcharset0 Courier new;}}{\colortbl ;\red255\green0\blue0;\red0\green128\blue0;\red0\green0\blue255;}{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\lang1033\f0\fs20 ");
-
-
             /* Parse starting from address addr */
             bool issub = false;
             bool isjump = false;
             bool endsub = false;
-            while (addr <= endaddr)
+            while (addr <= endaddress)
             {
                 try
                 {
-                    ch1 = br.ReadByte();
-                    ch2 = br.ReadByte();
-                    i = (uint)((ch1 << 8) + ch2);
-                    seg = (uint)(((addr + offaddr) & 0xffff0000) >> 16);
-                    adr = (uint)(((addr + offaddr) & 0xffff));
-                    t = disasm(out str, addr, ch1, ch2, offaddr, br, out endsub, out issub, out isjump);
-                    if (t > 5) t = 5;
+                    long trgaddr1, trgaddr2, trgaddr3;
+                    byte ch1 = br.ReadByte(), ch2 = br.ReadByte(), ch3, ch4, ch5, ch6, ch7, ch8, ch9, ch10;
+                    string str = string.Empty;
+                    uint i = (uint)((ch1 << 8) + ch2);
+                    uint seg = (uint)(((addr + offaddr) & 0xffff0000) >> 16);
+                    uint adr = (uint)(((addr + offaddr) & 0xffff));
+                    uint t = disasm(out str, addr, ch1, ch2, offaddr, br, out endsub, out issub, out isjump);
+                    if (t > 5)
+                        t = 5;
                     string myline = string.Empty;
+                    long trgaddr;
                     switch (t)
                     {
                         case 0:
@@ -2543,12 +2484,10 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
                 }
             }
             sw.Write(@"\lang1043\par}");
-
             br.Close();
             fsbr.Close();
             sw.Close();
             return true;
-
         }
 
         private string HighlightText(string value)

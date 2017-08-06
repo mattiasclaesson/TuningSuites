@@ -1473,6 +1473,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_ED1888F3A4624D2F909220EC7632A9C0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_EF95352575D14EC692EF74C7C8CBAA5C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1552,38 +1558,6 @@
     }
     "Configurations"
     {
-        "Debug"
-        {
-        "DisplayName" = "8:Debug"
-        "IsDebugOnly" = "11:TRUE"
-        "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\T7Extras.msi"
-        "PackageFilesAs" = "3:2"
-        "PackageFileSize" = "3:-2147483648"
-        "CabType" = "3:1"
-        "Compression" = "3:2"
-        "SignOutput" = "11:FALSE"
-        "CertificateFile" = "8:"
-        "PrivateKeyFile" = "8:"
-        "TimeStampServer" = "8:"
-        "InstallerBootstrapper" = "3:2"
-            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
-            {
-            "Enabled" = "11:TRUE"
-            "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:1"
-            "Url" = "8:"
-            "ComponentsUrl" = "8:"
-                "Items"
-                {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
-                    {
-                    "Name" = "8:Windows Installer 3.1"
-                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
-                    }
-                }
-            }
-        }
         "Release"
         {
         "DisplayName" = "8:Release"
@@ -1593,7 +1567,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:3"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -6509,6 +6483,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ED1888F3A4624D2F909220EC7632A9C0"
+            {
+            "SourcePath" = "8:..\\T7Suite\\quick_restart.ico"
+            "TargetName" = "8:quick_restart.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_DED708C7692C44C4BA82A8B43730473A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EF95352575D14EC692EF74C7C8CBAA5C"
             {
             "SourcePath" = "8:..\\T7Binaries\\5380795.bin"
@@ -6837,24 +6831,24 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Extras"
         "ProductCode" = "8:{B33C9205-1A45-4F51-96AF-3584509E6F44}"
-        "PackageCode" = "8:{2E8170BE-0A5B-4105-A9E9-99D412242323}"
+        "PackageCode" = "8:{F5F24069-1299-44E6-813F-5B554D1C25EA}"
         "UpgradeCode" = "8:{3603838F-42F3-4759-A64E-2E54296F3DE4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
+        "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:http://www.txsuite.org"
+        "ARPHELPLINK" = "8:http://www.trionictuning.com"
         "Title" = "8:T7Extras"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Dilemma, Mattias Claesson"
-        "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
+        "Keywords" = "8:Trionic7"
+        "ARPCOMMENTS" = "8:Extra binaries files for T7Suite"
         "ARPURLINFOABOUT" = "8:http://www.txsuite.org"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_ED1888F3A4624D2F909220EC7632A9C0"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"

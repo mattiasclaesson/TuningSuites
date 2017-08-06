@@ -112,7 +112,7 @@ namespace CommonSuite
 
     public class VINDecoder
     {
-        public VINCarInfo DecodeVINNumber(string VINNumber)
+        public static VINCarInfo DecodeVINNumber(string VINNumber)
         {
             // Pos 1-3 World Manufacturer Identifier
             // Pos 1 Geographical Area: Y=Northern Europe
@@ -173,7 +173,7 @@ namespace CommonSuite
             return _carInfo;
         }
 
-        private VINCarModel DecodeCarModelOpel(string VINNumber)
+        private static VINCarModel DecodeCarModelOpel(string VINNumber)
         {
             if (VINNumber.Length < 8) return VINCarModel.Unknown;
             else if (VINNumber[7] == '3') return VINCarModel.OpelVectra;
@@ -181,7 +181,7 @@ namespace CommonSuite
             else return VINCarModel.Unknown;
         }
 
-        private VINTurboModel DecodeTurboModel(VINEngineType vINEngineType, VINCarModel carModel, int makeYear)
+        private static VINTurboModel DecodeTurboModel(VINEngineType vINEngineType, VINCarModel carModel, int makeYear)
         {
             // depending on enginetype and vehicletype, determine turbo type
             switch (vINEngineType)
@@ -244,7 +244,7 @@ namespace CommonSuite
             return VINTurboModel.None;
         }
 
-        private string DecodeTransmissionType(string VINNumber)
+        private static string DecodeTransmissionType(string VINNumber)
         {
             if (VINNumber.Length < 7) return string.Empty;
             else if (VINNumber[6] == '1') return "6 speed automatic / front wheel drive";
@@ -270,7 +270,7 @@ namespace CommonSuite
              * */
         }
 
-        private string DecodeBodyType(string VINNumber)
+        private static string DecodeBodyType(string VINNumber)
         {
             if (VINNumber.Length < 6) return string.Empty;
             else if (VINNumber[5] == '2') return "2 door sedan";
@@ -291,7 +291,7 @@ namespace CommonSuite
              * */
         }
 
-        private string DecodeSeries(string VINNumber, VINCarModel carModel, int makeYear)
+        private static string DecodeSeries(string VINNumber, VINCarModel carModel, int makeYear)
         {
             if (VINNumber.Length < 5) return string.Empty;
             else if (carModel == VINCarModel.Saab93new)
@@ -349,7 +349,7 @@ namespace CommonSuite
              * */
         }
 
-        private string DecodePlantInfo(string VINNumber)
+        private static string DecodePlantInfo(string VINNumber)
         {
             if (VINNumber.Length < 11) return string.Empty;
             else if (VINNumber[10] == '1') return "Trollhättan line A (9-3)";
@@ -374,7 +374,7 @@ namespace CommonSuite
             return string.Empty;
         }
 
-        private VINCarModel DecodeCarModel(string VINNumber)
+        private static VINCarModel DecodeCarModel(string VINNumber)
         {
             if (VINNumber.Length < 4) return VINCarModel.Unknown;
             else if (VINNumber[3] == 'A') return VINCarModel.Saab900;
@@ -387,7 +387,7 @@ namespace CommonSuite
             else return VINCarModel.Unknown;
         }
 
-        private VINEngineType DecodeEngineType(string VINNumber, VINCarModel carModel, int makeYear)
+        private static VINEngineType DecodeEngineType(string VINNumber, VINCarModel carModel, int makeYear)
         {
             if (VINNumber.Length < 8) return VINEngineType.Unknown;
             // else if (makeYear > 2010 && carModel == VINCarModel.Saab93new)
@@ -515,7 +515,7 @@ V = 2.5 liter V-6
             return VINEngineType.Unknown;
         }
 
-        private int DecodeMakeyear(string VINNumber)
+        private static int DecodeMakeyear(string VINNumber)
         {
             if (VINNumber.Length < 10) return 0;
             else if (VINNumber[9] == 'M') return 1991;
@@ -545,7 +545,7 @@ V = 2.5 liter V-6
             return 0;
         }
 
-        private int TranslateVINdigit(char letter)
+        private static int TranslateVINdigit(char letter)
         {
             if (letter >= '0' && letter <= '9') return letter - '0';
             if (letter >= 'A' && letter <= 'Z')
@@ -564,11 +564,11 @@ V = 2.5 liter V-6
         }
 
         // VIN checksum, for more details: https://en.wikibooks.org/wiki/Vehicle_Identification_Numbers_(VIN_codes)/Check_digit
-        public char CalculateChecksum(string VINnumber)
+        public static char CalculateChecksum(string VINnumber)
         {
             char checksum = '*'; // * means not possible to calculate checksum
             if (VINnumber.Length != 17) return checksum;
-            int[] weights = new int[17] { 8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] weights = { 8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2 };
             int sum = 0;
             for (int i = 0; i < 17; i++)
             {

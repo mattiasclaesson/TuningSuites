@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
@@ -12,7 +10,6 @@ namespace ProCharts
     public partial class LineChart : UserControl, ISupportInitialize
     {
         private Color m_BackGroundColor = Color.FromArgb(24, 24, 24);
-        private bool m_bIsInitializing = false;
         private Rectangle rcentre;
 
 
@@ -23,17 +20,12 @@ namespace ProCharts
 
         void ISupportInitialize.BeginInit()
         {
-            this.m_bIsInitializing = true;
         }
 
         void ISupportInitialize.EndInit()
         {
-            this.m_bIsInitializing = false;
             base.Invalidate();
         }
-
-
-
 
         [Browsable(true), Category("LinearGauge"), Description("Set the gauge background color"), DefaultValue(typeof(Color), "System.Drawing.Color.Black")]
         public Color BackGroundColor
@@ -200,10 +192,7 @@ namespace ProCharts
                 if (this.m_nHighlightOpaqueEnd != value)
                 {
                     this.m_nHighlightOpaqueEnd = value;
-                    //if (!this.m_bIsInitializing)
-                    //{
                     base.Invalidate();
-                    //}
                 }
             }
         }
@@ -228,10 +217,7 @@ namespace ProCharts
                 if (this.m_nHighlightOpaqueStart != value)
                 {
                     this.m_nHighlightOpaqueStart = value;
-                    //if (!this.m_bIsInitializing)
-                    //{
                     base.Invalidate();
-                    //}
                 }
             }
         }
@@ -416,7 +402,7 @@ namespace ProCharts
                 string text = ch.ChannelName;
                 float width = e.Graphics.MeasureString(text, this.Font).Width;
                 float height = e.Graphics.MeasureString(text, this.Font).Height;
-                double angle =  Math.PI/2;
+                //double angle =  Math.PI/2;
                 float rotationAngle = -90;
                 e.Graphics.TranslateTransform((channelnumber * 65) + 10, splitContainer1.Panel1.ClientRectangle.Height - 100);
                     //(splitContainer1.Panel1.ClientRectangle.Width + (float)(height * Math.Sin(angle)) - (float)(width * Math.Cos(angle))) / 2,

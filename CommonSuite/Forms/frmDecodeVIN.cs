@@ -30,8 +30,8 @@ namespace CommonSuite
             lblSeries.Text = "---";
             lblTurbo.Text = "---";
             lblChecksum.Text = "Not verified";
-            VINDecoder decoder = new VINDecoder();
-            VINCarInfo carinfo = decoder.DecodeVINNumber(textEdit1.Text);
+            
+            VINCarInfo carinfo = VINDecoder.DecodeVINNumber(textEdit1.Text);
             lblBody.Text = carinfo.Body;
             lblCarModel.Text = carinfo.CarModel.ToString();
             lblEngineType.Text = carinfo.EngineType.ToString();

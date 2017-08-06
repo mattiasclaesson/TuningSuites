@@ -124,8 +124,8 @@ namespace T8SuitePro
         /// </summary>
         class FileHeaderField
         {
-            public byte m_fieldID;
-            public byte m_fieldLength;
+            //public byte m_fieldID;
+            //public byte m_fieldLength;
             public byte[] m_data = new byte[255];
         }
 
@@ -247,8 +247,9 @@ namespace T8SuitePro
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception E)
                 {
+                    logger.Debug(E.Message);
                 }
                 logger.Debug("Len: " + len.ToString("X2") + " Type = " + type.ToString("X2") + "   " + data);
                 /*

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using System.IO;
 using DevExpress.XtraCharts;
 using CommonSuite;
@@ -1251,6 +1249,7 @@ namespace T7
 
             if (gridControl1.DataSource != null)
             {
+                /*
                 TurboType tt = TurboType.TD0415T;
                 if (ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_55 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_60 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.GT17)
                 {
@@ -1276,6 +1275,7 @@ namespace T7
                 {
                     tt = TurboType.HX40w;
                 }
+                */
                 DataTable dt = (DataTable)gridControl1.DataSource;
                 double[] boost_req = new double[dt.Columns.Count];
                 /*PressureToTorque ptt = new PressureToTorque();
@@ -1478,7 +1478,7 @@ namespace T7
                 }
                 return dt;
             }
-            catch (Exception E)
+            catch (Exception)
             {
                 logger.Debug("Failed to calculate for file : " + filename);
             }
@@ -2078,6 +2078,7 @@ namespace T7
                 Calculate();
                 if (gridControl1.DataSource != null)
                 {
+                    /*
                     TurboType tt = TurboType.TD0415T;
                     if (ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_55 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.T25_60 || ctrlCompressorMap1.Compressor == ctrlCompressorMap.CompressorMap.GT17)
                     {
@@ -2103,6 +2104,7 @@ namespace T7
                     {
                         tt = TurboType.HX40w;
                     }
+                    */
                     DataTable dt = (DataTable)gridControl1.DataSource;
 
                     double[] boost_req = new double[dt.Columns.Count];

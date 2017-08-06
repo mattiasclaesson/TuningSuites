@@ -191,7 +191,7 @@ namespace T8SuitePro
                     {
                         ivalue = Convert.ToInt32(value * 100);
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to convert to integer value: " + value.ToString());
                     }
@@ -202,7 +202,7 @@ namespace T8SuitePro
                         b1 = Convert.ToByte(ivalue / 256);
                         b2 = Convert.ToByte(ivalue - (int)b1 * 256);
                     }
-                    catch (Exception E)
+                    catch (Exception)
                     {
                         logger.Debug("Failed to convert to byte value + " + ivalue.ToString());
                     }
@@ -508,7 +508,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                // nothing
+                logger.Debug(E.Message);
             }
         }
 

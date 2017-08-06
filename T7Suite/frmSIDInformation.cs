@@ -550,9 +550,9 @@ namespace T7
                                             sramdiff += Convert.ToInt32(symbolvalues.GetValue(1));
                                             sh.AddressSRAM = GetSymbolAddressSRAM(symbolvalues.GetValue(0).ToString()) + sramdiff;
                                         }
-                                        catch (Exception)
+                                        catch (Exception E)
                                         {
-
+                                            logger.Debug(E.Message);
                                         }
                                     }
                                     else

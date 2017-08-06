@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
-using CommonSuite;
 using NLog;
 
 namespace T7
@@ -268,7 +263,6 @@ namespace T7
                         y_offset = 762 * CalculateYCorrection();
                         x_multiplier = 5.03 * CalculateXCorrection(); // per lbs/m
                         y_multiplier = 167 * CalculateYCorrection(); // per bar
-                        break;
                         break;
                 }
                 PointF[] pnts = new PointF[16];
