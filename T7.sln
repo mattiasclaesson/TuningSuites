@@ -29,14 +29,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonSuite", "CommonSuite\
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Extras", "SetupT7Extras\SetupT7Extras.vdproj", "{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Suite", "SetupT7Suite\SetupT7Suite.vdproj", "{2797CCD3-055C-4B29-81FB-F72ACF12C40A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6DCFB06D-4B31-4D4E-BF49-41F5285B396B} = {6DCFB06D-4B31-4D4E-BF49-41F5285B396B}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuiteLauncher", "SuiteLauncher\SuiteLauncher.csproj", "{6DCFB06D-4B31-4D4E-BF49-41F5285B396B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T7SuiteTest", "SuiteTest\T7SuiteTest.csproj", "{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupT7Suite", "SetupT7Suite\SetupT7Suite.vdproj", "{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,12 +117,6 @@ Global
 		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|Any CPU.ActiveCfg = Release
 		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|Any CPU.Build.0 = Release
 		{9FE31BA1-2761-43E4-A024-F7C9CAEE4CA2}.Release|x86.ActiveCfg = Release
-		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|Any CPU.ActiveCfg = Release
-		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|Any CPU.Build.0 = Release
-		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Debug|x86.ActiveCfg = Release
-		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|Any CPU.ActiveCfg = Release
-		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|Any CPU.Build.0 = Release
-		{2797CCD3-055C-4B29-81FB-F72ACF12C40A}.Release|x86.ActiveCfg = Release
 		{6DCFB06D-4B31-4D4E-BF49-41F5285B396B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DCFB06D-4B31-4D4E-BF49-41F5285B396B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DCFB06D-4B31-4D4E-BF49-41F5285B396B}.Debug|x86.ActiveCfg = Debug|x86
@@ -142,6 +133,12 @@ Global
 		{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}.Release|x86.ActiveCfg = Release|x86
 		{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}.Release|x86.Build.0 = Release|x86
+		{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}.Debug|Any CPU.ActiveCfg = Release
+		{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}.Debug|Any CPU.Build.0 = Release
+		{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}.Debug|x86.ActiveCfg = Release
+		{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}.Release|Any CPU.ActiveCfg = Release
+		{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}.Release|Any CPU.Build.0 = Release
+		{C05EDAE0-C65E-4321-B9DA-E7FEF27888C0}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
