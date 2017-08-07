@@ -529,7 +529,9 @@
     <None Include="ASM-Mode.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="canlib32.dll" />
+    <Content Include="canlib32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DTC_Descriptions.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

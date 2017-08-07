@@ -509,7 +509,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="canlib32.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Compressormaps\GT17.jpg" />
     <EmbeddedResource Include="Compressormaps\gt2871r-48.jpg" />

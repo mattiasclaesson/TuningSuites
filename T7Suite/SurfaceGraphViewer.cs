@@ -687,8 +687,8 @@ namespace T7
         {
             int delta = e.Delta;
             //if((uint)e.Delta > 0xff000000) delta = (int)(0x100000000- (long)delta);
-            logger.Debug("e.Delta: " + e.Delta.ToString());
-            logger.Debug("Delta: " + delta.ToString());
+            logger.Debug("e.Delta: " + e.Delta);
+            logger.Debug("Delta: " + delta);
             pov_d += (delta * 0.0001);
             sr.ReCalculateTransformationsCoeficients(pov_x, pov_y, pov_z, pan_x, pan_y, ClientRectangle.Width, ClientRectangle.Height, pov_d, 0, 0);
             CastGraphChangedEvent();
@@ -698,9 +698,9 @@ namespace T7
         public SurfaceGraphViewer()
         {
             InitializeComponent();
-            this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.SurfaceGraphMouseWheel);
-
+            MouseWheel += SurfaceGraphMouseWheel;
             sr = new Surface3DRenderer(pov_x, pov_y, pov_z, pan_x, pan_y, ClientRectangle.Width, ClientRectangle.Height, pov_d, 0, 0);
+            BackColor = Color.White;
             sr.ColorSchema = new ColorSchema(0);
             sr.Density = 1; 
             ResizeRedraw = true;
