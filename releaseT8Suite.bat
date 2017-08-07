@@ -6,15 +6,15 @@ pushd SetupT8SuitePro\Release\
 "C:\Program Files\7-Zip\7z.exe" a -tzip T8Suite.zip T8Suite.* setup.exe
 popd
 
-mkdir C:\users\mattias\Delivery\T8Suite\%T8.version%
-xcopy SetupT8SuitePro\version.bat C:\users\mattias\Delivery\T8Suite\%T8.version%\
-xcopy SetupT8SuitePro\Release\T8Suite.msi C:\users\mattias\Delivery\T8Suite\%T8.version%\
-xcopy SetupT8SuitePro\Release\T8Suite.md5 C:\users\mattias\Delivery\T8Suite\%T8.version%\
-xcopy SetupT8SuitePro\Release\T8Suite.zip C:\users\mattias\Delivery\T8Suite\%T8.version%\
-xcopy SetupT8SuitePro\Release\setup.exe C:\users\mattias\Delivery\T8Suite\%T8.version%\
+mkdir z:\T8Suite\%T8.version%
+xcopy SetupT8SuitePro\version.bat z:\T8Suite\%T8.version%\
+xcopy SetupT8SuitePro\Release\T8Suite.msi z:\T8Suite\%T8.version%\
+xcopy SetupT8SuitePro\Release\T8Suite.md5 z:\T8Suite\%T8.version%\
+xcopy SetupT8SuitePro\Release\T8Suite.zip z:\T8Suite\%T8.version%\
+xcopy SetupT8SuitePro\Release\setup.exe z:\T8Suite\%T8.version%\
 
-echo ^<?xml version="1.0" encoding="utf-8"?^>  > C:\users\mattias\Delivery\T8Suite\version.xml
-echo ^<t8suitepro version="%T8.version%"/^> >> C:\users\mattias\Delivery\T8Suite\version.xml
+echo ^<?xml version="1.0" encoding="utf-8"?^>  > z:\T8Suite\version.xml
+echo ^<t8suitepro version="%T8.version%"/^> >> z:\T8Suite\version.xml
 
 echo ----------------------------------------------------
 git changes
