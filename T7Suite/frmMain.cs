@@ -6935,7 +6935,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 System.Windows.Forms.Application.DoEvents();
             }            
 
-            byte[] completedata = trionic7.ReadMapfromSRAM(sh, showProgress);
+            byte[] completedata = trionic7.ReadMapfromSRAM(sh.Start_address,sh.Length, showProgress);
 
             m_prohibitReading = false;
             if (showProgress)
