@@ -39,18 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_03AA360D2949012410B1974ADF5090F9"
-        "OwnerKey" = "8:_D46A767FA1FDBC84367C284E7EAFFFA4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_03AA360D2949012410B1974ADF5090F9"
-        "OwnerKey" = "8:_8621F5C971964C2097B515B96AC70E18"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_044B935C71A6481E9861B123AE8183E3"
         "OwnerKey" = "8:_C89118EDA281606BE53614B30374CCB7"
         "MsmSig" = "8:_UNDEFINED"
@@ -580,12 +568,6 @@
         "Entry"
         {
         "MsmKey" = "8:_4860B0398C169821AA56D4418B4772EE"
-        "OwnerKey" = "8:_03AA360D2949012410B1974ADF5090F9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4860B0398C169821AA56D4418B4772EE"
         "OwnerKey" = "8:_8621F5C971964C2097B515B96AC70E18"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -617,12 +599,6 @@
         {
         "MsmKey" = "8:_4E9C6201BF6B34D4C4B0FDAB2943EAE5"
         "OwnerKey" = "8:_8621F5C971964C2097B515B96AC70E18"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4E9C6201BF6B34D4C4B0FDAB2943EAE5"
-        "OwnerKey" = "8:_03AA360D2949012410B1974ADF5090F9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1966,12 +1942,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_03AA360D2949012410B1974ADF5090F9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_00BFF509C49883A655617CF1ED587E83"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2383,37 +2353,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_03AA360D2949012410B1974ADF5090F9"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.39.0, Culture=neutral, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_03AA360D2949012410B1974ADF5090F9"
-                    {
-                    "Name" = "8:TrionicCANLib.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:TrionicCANLib.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_1463CF7BEC194251859C3D8699CDB556"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_044B935C71A6481E9861B123AE8183E3"
@@ -4340,7 +4279,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MouseGestures, Version=1.0.6429.40272, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:MouseGestures, Version=1.0.6429.42642, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_745424720F6820D960300748F5F1E6EC"
@@ -6756,7 +6695,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T5SuiteII"
         "ProductCode" = "8:{C8BDEB5F-EB2D-4FEE-96B0-D5F22D16CB79}"
-        "PackageCode" = "8:{6BD882EC-A0EA-4E42-B9BE-5B544914CFA4}"
+        "PackageCode" = "8:{C8EE4202-3E97-4037-A11C-825824CC687F}"
         "UpgradeCode" = "8:{85094B92-5F73-4D18-A5DD-994336DF4031}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
