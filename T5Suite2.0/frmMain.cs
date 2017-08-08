@@ -131,6 +131,7 @@ using DevExpress.XtraPrinting;
 using DevExpress.XtraPrinting.Preview;
 using System.Media;
 using DevExpress.Skins;
+using NLog;
 
 namespace T5Suite2
 {
@@ -271,7 +272,9 @@ namespace T5Suite2
         private ProgramModeSettings m_ProgramModeSettings = new ProgramModeSettings();
         private AFRMaps m_AFRMaps;
         private IgnitionMaps m_IgnitionMaps;
+
         private string logworksstring = CommonSuite.LogWorks.GetLogWorksPathFromRegistry();
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         public Form1(string[] args)
         {
@@ -283,7 +286,7 @@ namespace T5Suite2
             string computerID = _id.GetUniqueIdentifier(Application.StartupPath);
             //_splash.SetProgressText("ID: " + computerID);
             Trionic5Immo immo = new Trionic5Immo();
-            //Console.WriteLine("ID: " + computerID);
+            //logger.Debug("ID: " + computerID);
             if (immo.ImmoValid(computerID))
             {
                 _immoValid = true;
@@ -310,7 +313,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             _splash.SetProgressText("Loading settings...");
 
@@ -321,7 +324,7 @@ namespace T5Suite2
             }
             catch (Exception sndE)
             {
-                Console.WriteLine(sndE.Message);
+                logger.Debug(sndE.Message);
             }
             // reload last file?
             _splash.SetProgressText("Starting desktop...");
@@ -343,13 +346,13 @@ namespace T5Suite2
                 // should be done only once!
                 this.fio_callback = new FIOCallback(this.on_fio);
                 BdmAdapter_SetFIOCallback(this.fio_callback);
-                Console.WriteLine("BDM adapter callback set!");
+                logger.Debug("BDM adapter callback set!");
                 // should be done only once!
 
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("BDM init failed: " + BDMException.Message);
+                logger.Debug("BDM init failed: " + BDMException.Message);
             }
             if (args.Length > 0)
             {
@@ -371,7 +374,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to instantiate the combiadapter monitor: " + E.Message);
+                logger.Debug("Failed to instantiate the combiadapter monitor: " + E.Message);
             }
         }
 
@@ -379,7 +382,7 @@ namespace T5Suite2
         {
             if (e.Present)
             {
-                //Console.WriteLine(e.Type.ToString() + " connected");
+                //logger.Debug(e.Type.ToString() + " connected");
                 barItemCombiAdapter.Caption = e.Type.ToString() + " connected";
                 if (e.Type == AdapterType.LAWICEL && m_appSettings.CanDevice != "Lawicel")
                 {
@@ -420,7 +423,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -439,7 +442,7 @@ namespace T5Suite2
         void _ecuConnection_onCanBusInfo(object sender, ECUConnection.CanInfoEventArgs e)
         {
             SetStatusText(e.Info);
-            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss:fff") + " " + e.Info);
+            logger.Debug(DateTime.Now.ToString("HH:mm:ss:fff") + " " + e.Info);
         }
 
         void _ecuConnection_onWriteDataToECU(object sender, ECUConnection.ProgressEventArgs e)
@@ -460,7 +463,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
 
@@ -701,7 +704,7 @@ namespace T5Suite2
                 _currentAFR = value;
                 if (m_AFRMaps != null)
                 {
-                    //Console.WriteLine("boost: " + _currentBoostLevel.ToString());
+                    //logger.Debug("boost: " + _currentBoostLevel.ToString());
                     if (ctrlRealtime1.AutoTuning)
                     {
                         if (_autoTuneAllowed && _currentThrottlePosition != 9999 /*|| m_appSettings.DebugMode*/) // <GS-17032010>
@@ -713,7 +716,7 @@ namespace T5Suite2
                     {
                         // TEST
                         //if (_currentEngineSpeed < 800) _currentEngineSpeed = 880;
-                        //Console.WriteLine("AFR: " + _currentAFR.ToString());
+                        //logger.Debug("AFR: " + _currentAFR.ToString());
                         m_AFRMaps.LogWidebandAFR(_currentAFR, _currentEngineSpeed, _currentBoostLevel, _idleMapActive);
                         UpdateFeedbackMaps();
                     }
@@ -734,7 +737,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }
@@ -943,7 +946,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine("Failed to remove read only flag: " + E.Message);
+                    logger.Debug("Failed to remove read only flag: " + E.Message);
                     btnReadOnly.Caption = "File is READ ONLY";
                 }
 
@@ -1049,7 +1052,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 LoadKnockMaps();
                 SetTaskProgress(0, false);
@@ -1146,7 +1149,7 @@ namespace T5Suite2
                 enableBar = false;
                 Application.DoEvents();
             }
-            //Console.WriteLine("Perc: " + progress.ToString() + " enable: " + enableBar.ToString());
+            //logger.Debug("Perc: " + progress.ToString() + " enable: " + enableBar.ToString());
             if (barEditItem1.Enabled && !enableBar)
             {
                 barEditItem1.Caption = "---";
@@ -1461,7 +1464,7 @@ namespace T5Suite2
                 }
                 catch (Exception highlightE)
                 {
-                    Console.WriteLine(highlightE.Message);
+                    logger.Debug(highlightE.Message);
                 }
             }
 
@@ -2188,11 +2191,11 @@ namespace T5Suite2
                 int grouplevel = gridViewSymbols.GetRowLevel((int)selectedrows.GetValue(0));
                 if (grouplevel >= gridViewSymbols.GroupCount)
                 {
-                    //Console.WriteLine("In row");
+                    //logger.Debug("In row");
                     if (gridViewSymbols.GetFocusedRow() is Trionic5Tools.SymbolHelper)
                     {
                         Trionic5Tools.SymbolHelper sh = (Trionic5Tools.SymbolHelper)gridViewSymbols.GetFocusedRow();
-                        //Console.WriteLine("Symbol:" + sh.Varname);
+                        //logger.Debug("Symbol:" + sh.Varname);
                         if (!_ecuConnection.Opened && sh.Flash_start_address == 0/*!sh.Varname.Contains("!")*/ && m_trionicFileInformation.SRAMfilename == "")
                         {
                                 frmInfoBox info = new frmInfoBox("Symbol resides in SRAM and you are in offline mode. T5Suite is unable to fetch this symboldata in offline mode");
@@ -2220,7 +2223,7 @@ namespace T5Suite2
             {
                 // set from binary sram dump in stead of live data
                 _ecuConnection.SramDumpFile = Application.StartupPath + "\\workbin.RAM";
-                Console.WriteLine("Loaded working.RAM");
+                logger.Debug("Loaded working.RAM");
             }*/
             btnSwitchMode.Caption = "Connecting...";
             Application.DoEvents();
@@ -2251,7 +2254,7 @@ namespace T5Suite2
                 string swversion = _ecuConnection.GetSoftwareVersion();
                 btnSwitchMode.Caption = "Connected: " + swversion;
                 Application.DoEvents();
-                Console.WriteLine("SW version: " + swversion);
+                logger.Debug("SW version: " + swversion);
                 if (swversion == "")
                 {
                     // special case, no ECU connected
@@ -2315,7 +2318,7 @@ namespace T5Suite2
                 }
                 if (dt_ecu > dt_file)
                 {
-                    Console.WriteLine("Sync when start ECU connection: ECU to bin");
+                    logger.Debug("Sync when start ECU connection: ECU to bin");
                     frmSyncFileECU syncdlg = new frmSyncFileECU();
                     syncdlg.SetTimeStamps(dt_file, dt_ecu);
                     syncdlg.SetInformation("Proposed sync: ECU to binary");
@@ -2336,7 +2339,7 @@ namespace T5Suite2
                 }
                 else if (dt_file > dt_ecu)
                 {
-                    Console.WriteLine("Sync when start ECU connection: bin to ECU");
+                    logger.Debug("Sync when start ECU connection: bin to ECU");
                     frmSyncFileECU syncdlg = new frmSyncFileECU();
                     syncdlg.SetTimeStamps(dt_file, dt_ecu);
                     syncdlg.SetInformation("Proposed sync: binary to ECU");
@@ -2442,12 +2445,12 @@ namespace T5Suite2
                     startinfo.WindowStyle = ProcessWindowStyle.Hidden;
                     //startinfo.UseShellExecute = false;
                     startinfo.WorkingDirectory = Application.StartupPath;
-                    Console.WriteLine("Spawning WakeupCANbus.exe");
+                    logger.Debug("Spawning WakeupCANbus.exe");
                     System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
                     conv_proc.WaitForExit(10000); // wait for 30 seconds max
                     if (!conv_proc.HasExited)
                     {
-                        Console.WriteLine("Killing WakeupCANbus.exe");
+                        logger.Debug("Killing WakeupCANbus.exe");
                         conv_proc.Kill();
                     }
                     _connectionWasOpenedBefore = true;
@@ -2539,7 +2542,7 @@ namespace T5Suite2
                 {
                     if (dt_ecu > dt_file)
                     {
-                        Console.WriteLine("Sync when start online mode: ECU to bin");
+                        logger.Debug("Sync when start online mode: ECU to bin");
                         frmSyncFileECU syncdlg = new frmSyncFileECU();
                         syncdlg.SetTimeStamps(dt_file, dt_ecu);
                         syncdlg.SetInformation("Proposed sync: ECU to binary");
@@ -2558,7 +2561,7 @@ namespace T5Suite2
                     }
                     else if (dt_file > dt_ecu)
                     {
-                        Console.WriteLine("Sync when start online mode: bin to ECU");
+                        logger.Debug("Sync when start online mode: bin to ECU");
                         frmSyncFileECU syncdlg = new frmSyncFileECU();
                         syncdlg.SetTimeStamps(dt_file, dt_ecu);
                         syncdlg.SetInformation("Proposed sync: binary to ECU");
@@ -2716,7 +2719,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             SetStatusText("Idle");
@@ -2774,7 +2777,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             InitSkins();
             SetAdditionalHelpPanelSize();
@@ -2801,7 +2804,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3055,11 +3058,11 @@ namespace T5Suite2
                 }
                 catch (Exception canE)
                 {
-                    Console.WriteLine("Failed to change logging settings in canbus driver: " + canE.Message);
+                    logger.Debug("Failed to change logging settings in canbus driver: " + canE.Message);
                 }
                 m_appSettings.CanDevice = set.CanUSBDevice;
                 if (_ecuConnection != null) _ecuConnection.CanusbDevice = m_appSettings.CanDevice;
-                //Console.WriteLine("selected canusb device: " + _ecuConnection.CanusbDevice);
+                //logger.Debug("selected canusb device: " + _ecuConnection.CanusbDevice);
                 if (!m_appSettings.FancyDocking)
                 {
                     dockManager1.DockMode = DevExpress.XtraBars.Docking.Helpers.DockMode.Standard;
@@ -3116,7 +3119,7 @@ namespace T5Suite2
                 {
                     if (o != DBNull.Value)
                     {
-                        //Console.WriteLine("Showing help for symbol: " + o.ToString());
+                        //logger.Debug("Showing help for symbol: " + o.ToString());
                         if (o is Trionic5Tools.SymbolHelper)
                         {
                             Trionic5Tools.SymbolHelper sh = (Trionic5Tools.SymbolHelper)o;
@@ -3132,7 +3135,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine("TryShowHelpForSymbol: " + E.Message);
+                logger.Debug("TryShowHelpForSymbol: " + E.Message);
             }
         }
 
@@ -3236,7 +3239,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             ctrl.EndUpdate();
         }
@@ -3685,7 +3688,7 @@ namespace T5Suite2
                             }
                             catch (Exception pE)
                             {
-                                Console.WriteLine(pE.Message);
+                                logger.Debug(pE.Message);
                             }
                         }
                     }
@@ -3714,7 +3717,7 @@ namespace T5Suite2
                     }
                     catch (Exception expE1)
                     {
-                        Console.WriteLine(expE1.Message);
+                        logger.Debug(expE1.Message);
                     }
                 }
                 else
@@ -3761,7 +3764,7 @@ namespace T5Suite2
                         }
                         catch (Exception expE2)
                         {
-                            Console.WriteLine(expE2.Message);
+                            logger.Debug(expE2.Message);
                         }
                     }
                     TimeSpan ts = new TimeSpan(endDate.Ticks - startDate.Ticks);
@@ -3769,7 +3772,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3806,7 +3809,7 @@ namespace T5Suite2
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -3834,7 +3837,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                //logger.Debug(E.Message);
+                logger.Debug(E.Message);
             }
         }
         #endregion
@@ -3910,7 +3913,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to get initial update: " + E.Message);
+                logger.Debug("Failed to get initial update: " + E.Message);
             }
             if (IsChristmasTime())
             {
@@ -3920,12 +3923,12 @@ namespace T5Suite2
 
         void m_msiUpdater_onUpdateProgressChanged(msiupdater.MSIUpdateProgressEventArgs e)
         {
-            Console.WriteLine("m_msiUpdater_onUpdateProgressChanged: " + e.PercentageDone.ToString());
+            logger.Debug("m_msiUpdater_onUpdateProgressChanged: " + e.PercentageDone.ToString());
         }
 
         void m_msiUpdater_onDataPump(msiupdater.MSIUpdaterEventArgs e)
         {
-            Console.WriteLine("m_msiUpdater_onDataPump: " + e.Data + " " + e.XMLFile);
+            logger.Debug("m_msiUpdater_onDataPump: " + e.Data + " " + e.XMLFile);
             SetStatusText(e.Data);
 
             
@@ -3947,7 +3950,7 @@ namespace T5Suite2
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -4108,7 +4111,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -4129,7 +4132,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -4149,7 +4152,7 @@ namespace T5Suite2
             }
             catch (Exception E2)
             {
-                Console.WriteLine(E2.Message);
+                logger.Debug(E2.Message);
             }
         }
 
@@ -4169,7 +4172,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -4252,7 +4255,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -4404,7 +4407,7 @@ namespace T5Suite2
             catch (Exception E)
             {
                 //BdmAdapter_Close();
-                Console.WriteLine("Failed to close BDM: " + E.Message);
+                logger.Debug("Failed to close BDM: " + E.Message);
             }
             if (m_CurrentWorkingProject != "")
             {
@@ -4605,7 +4608,7 @@ namespace T5Suite2
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        logger.Debug(E.Message);
                     }
                     dockManager1.EndUpdate();
                 }
@@ -4680,18 +4683,18 @@ namespace T5Suite2
             if (sender is HexViewer)
             {
                 HexViewer hv = (HexViewer)sender;
-                Console.WriteLine("Closed file: " + hv.LastFilename);
+                logger.Debug("Closed file: " + hv.LastFilename);
                 // revert to previous file in that case?
             }
             // close the corresponding dockpanel
             /*if (sender is HexViewer)
             {
                 HexViewer hv = (HexViewer)sender;
-                Console.WriteLine("Hexviewer parent: " + hv.Parent.GetType().ToString());
+                logger.Debug("Hexviewer parent: " + hv.Parent.GetType().ToString());
                 if (hv.Parent is DevExpress.XtraBars.Docking.ControlContainer)
                 {
                     DevExpress.XtraBars.Docking.ControlContainer cc = (DevExpress.XtraBars.Docking.ControlContainer)hv.Parent;
-                    Console.WriteLine("cc parent: " + cc.Parent.GetType().ToString());
+                    logger.Debug("cc parent: " + cc.Parent.GetType().ToString());
                 }
             }*/
         }
@@ -4720,7 +4723,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -4982,7 +4985,7 @@ namespace T5Suite2
                         if (gridViewSymbols.GetFocusedRow() is Trionic5Tools.SymbolHelper)
                         {
                             Trionic5Tools.SymbolHelper sh = (Trionic5Tools.SymbolHelper)gridViewSymbols.GetFocusedRow();
-                            Console.WriteLine("Symbol:" + sh.Varname);
+                            logger.Debug("Symbol:" + sh.Varname);
                             if (!_ecuConnection.Opened && !sh.Varname.Contains("!") && m_trionicFileInformation.SRAMfilename == "")
                             {
                                 frmInfoBox info = new frmInfoBox("Symbol resides in SRAM and you are in offline mode. T5Suite is unable to fetch this symboldata in offline mode");
@@ -4996,7 +4999,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
 
             }
@@ -5421,7 +5424,7 @@ namespace T5Suite2
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    //Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    //logger.Debug("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                     //mapdata.SetValue((byte)(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
@@ -5542,7 +5545,7 @@ namespace T5Suite2
                 catch (Exception E)
                 {
 
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -5657,7 +5660,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             dockManager1.EndUpdate();
         }
@@ -5884,7 +5887,7 @@ namespace T5Suite2
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        logger.Debug(E.Message);
                     }
                     dockManager1.EndUpdate();
                 }
@@ -5894,7 +5897,7 @@ namespace T5Suite2
             }
             catch (Exception startnewcompareE)
             {
-                Console.WriteLine(startnewcompareE.Message);
+                logger.Debug(startnewcompareE.Message);
             }
 
         }
@@ -6267,7 +6270,7 @@ namespace T5Suite2
                                     }
                                     catch (Exception E)
                                     {
-                                        Console.WriteLine(E.Message);
+                                        logger.Debug(E.Message);
                                     }
                                 }
                             }
@@ -6329,7 +6332,7 @@ namespace T5Suite2
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        logger.Debug(E.Message);
                     }
                     dockManager1.EndUpdate();
                     SetStatusText("SRAM compare done");
@@ -6505,7 +6508,7 @@ namespace T5Suite2
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    //Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    //logger.Debug("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
                             }
@@ -6604,7 +6607,7 @@ namespace T5Suite2
                 catch (Exception E)
                 {
 
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -6660,7 +6663,7 @@ namespace T5Suite2
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine("Failed to determine knock counter for cylinders: " + E.Message);
+                            logger.Debug("Failed to determine knock counter for cylinders: " + E.Message);
                         }
                         // average knock count for cylinders
                         int iknockaverage = (iknockcyl1 + iknockcyl2 + iknockcyl3 + iknockcyl4) / 4;
@@ -6764,7 +6767,7 @@ namespace T5Suite2
                                     // retard ignition at this point
 
                                     int ign_map_0_value = Convert.ToInt32(ign_map_0[(rt * cols * 2) + (ct * 2)]) * 256 + Convert.ToInt32(ign_map_0[(rt * cols * 2) + (ct * 2) + 1]);
-                                    //Console.WriteLine("Ignition advance at knocking position is " + ign_map_0_value.ToString());
+                                    //logger.Debug("Ignition advance at knocking position is " + ign_map_0_value.ToString());
                                     if (iknockcount < 50)
                                     {
                                         ign_map_0_value -= 5; // decrease by .5 degree
@@ -6884,7 +6887,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             dockManager1.EndUpdate();
         }
@@ -7016,7 +7019,7 @@ namespace T5Suite2
                             {
                                 for (int bt = 0; bt < mapdata2.Length; bt++)
                                 {
-                                    //Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    //logger.Debug("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdataOri.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
                             }
@@ -7108,7 +7111,7 @@ namespace T5Suite2
                 catch (Exception E)
                 {
 
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -7478,7 +7481,7 @@ namespace T5Suite2
                         if (sh.Start_address > 0 && sh.Length > 0)
                         {
                             //progress.SetProgress("Verifying " + sh.Varname);
-                            Console.WriteLine("map: " + sh.Varname);
+                            logger.Debug("map: " + sh.Varname);
                             Thread.Sleep(50);
                             byte[] symboldataECU = _ecuConnection.ReadSymbolDataNoProhibitRead(sh.Varname, (uint)sh.Start_address, (uint)sh.Length);
 
@@ -7902,7 +7905,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -8048,7 +8051,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine("Refresh viewer with AFR data error: " + E.Message);
+                logger.Debug("Refresh viewer with AFR data error: " + E.Message);
             }
         }
 
@@ -8074,7 +8077,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             if (!pnlfound)
             {
@@ -8343,7 +8346,7 @@ namespace T5Suite2
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    logger.Debug(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -8376,7 +8379,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             if (!pnlfound)
             {
@@ -8644,7 +8647,7 @@ namespace T5Suite2
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    logger.Debug(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -8657,7 +8660,7 @@ namespace T5Suite2
 
         void onAFRRefresh(object sender, MapViewer.ReadFromSRAMEventArgs e)
         {
-            //Console.WriteLine("Refresh: " + e.Mapname);
+            //logger.Debug("Refresh: " + e.Mapname);
             // reload target afr
             if (sender is IMapViewer)
             {
@@ -8957,7 +8960,7 @@ namespace T5Suite2
         {
 
             this.fio_bytes += (uint)bytes;
-            //Console.WriteLine("on_fio: " + this.fio_bytes.ToString());
+            //logger.Debug("on_fio: " + this.fio_bytes.ToString());
             if (!this.IsDisposed)
             {
                 try
@@ -8966,7 +8969,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
             //this.fio_invoke();
@@ -8997,7 +9000,7 @@ namespace T5Suite2
                 percentage = ((int)this.fio_bytes * 100) / max_bytes;
                 if (Convert.ToInt32(barEditItem1.EditValue) != percentage)
                 {
-                    //Console.WriteLine("Updating with : " + this.fio_bytes.ToString());
+                    //logger.Debug("Updating with : " + this.fio_bytes.ToString());
                     // need to calculate the percentage
 
                     barEditItem1.EditValue = percentage;
@@ -9017,7 +9020,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine("fio_invoke: " + E.Message);
+                logger.Debug("fio_invoke: " + E.Message);
             }
         }
 
@@ -9081,7 +9084,7 @@ namespace T5Suite2
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("Failed to dump ECU: " + BDMException.Message);
+                logger.Debug("Failed to dump ECU: " + BDMException.Message);
                 frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
             }
         }
@@ -9147,7 +9150,7 @@ namespace T5Suite2
                     }
                     FileInfo fileInfoOutputFile = new FileInfo(path + "\\scripts\\" + saveAsName);
                     //CHECK IF FILE EXISTS AND DO SOMETHING DEPENDING ON YOUR NEEDS
-                    Console.WriteLine("Extracting: " + fileInfoOutputFile.FullName);
+                    logger.Debug("Extracting: " + fileInfoOutputFile.FullName);
                     if (fileInfoOutputFile.Exists)
                     {
                         //overwrite if desired  (depending on your needs)
@@ -9181,7 +9184,7 @@ namespace T5Suite2
         {
             // remove the entire folder
             path += "\\scripts";
-            Console.WriteLine("Deleting scripts folder: " + path);
+            logger.Debug("Deleting scripts folder: " + path);
             Directory.Delete(path, true);
         }
 
@@ -9244,7 +9247,7 @@ namespace T5Suite2
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("Failed to program ECU: " + BDMException.Message);
+                logger.Debug("Failed to program ECU: " + BDMException.Message);
                 frmInfoBox info= new frmInfoBox("Failed to program ECU: " + BDMException.Message);
             }
         }
@@ -9578,7 +9581,7 @@ namespace T5Suite2
 
         void acceptMap_onSyncDates(object sender, EventArgs e)
         {
-            Console.WriteLine("Timestamp sync after fuelmap accept");
+            logger.Debug("Timestamp sync after fuelmap accept");
             if (_ecuConnection.Opened)
             {
                 DateTime ecudt = _ecuConnection.GetMemorySyncDate();
@@ -9601,12 +9604,12 @@ namespace T5Suite2
         void acceptMap_onUpdateFuelMap(object sender, frmFuelMapAccept.UpdateFuelMapEventArgs e)
         {
             // write to ECU if possible
-            //Console.WriteLine("Update fuel after accept");
+            //logger.Debug("Update fuel after accept");
             if (_ecuConnection.Opened)
             {
                 if (e.Value == 0) return; // test for value 0... nothing todo
 
-                //Console.WriteLine("x: " + e.X.ToString() + " y: " + e.Y.ToString() + " val: " + e.Value.ToString() + " syn: " + e.doSync.ToString());
+                //logger.Debug("x: " + e.X.ToString() + " y: " + e.Y.ToString() + " val: " + e.Value.ToString() + " syn: " + e.doSync.ToString());
 
 
                 if (m_AFRMaps == null)
@@ -9636,7 +9639,7 @@ namespace T5Suite2
                     fuelMapAddress = m_trionicFileInformation.GetSymbolAddressSRAM("Adapt_korr"); // write to adapt_korr in stead of insp_mat
                 }
                 fuelMapAddress += (y * 16) + e.X;
-                //Console.WriteLine("Writing data: " + data2Write[0].ToString("D3") + " to address: " + fuelMapAddress.ToString("X6") + " ori was: " + fuelmap[(y * 16) + e.X].ToString("D3"));
+                //logger.Debug("Writing data: " + data2Write[0].ToString("D3") + " to address: " + fuelMapAddress.ToString("X6") + " ori was: " + fuelmap[(y * 16) + e.X].ToString("D3"));
                 //_ecuConnection.WriteData(data2Write, (uint)fuelMapAddress);
                 _ecuConnection.WriteSymbolDataForced(fuelMapAddress, 1, data2Write);
                 // and write to the current binary file as well
@@ -9661,11 +9664,11 @@ namespace T5Suite2
                     int grouplevel = gridViewSymbols.GetRowLevel((int)selectedrows.GetValue(0));
                     if (grouplevel >= gridViewSymbols.GroupCount)
                     {
-                        //Console.WriteLine("In row");
+                        //logger.Debug("In row");
                         if (gridViewSymbols.GetFocusedRow() is Trionic5Tools.SymbolHelper)
                         {
                             Trionic5Tools.SymbolHelper sh = (Trionic5Tools.SymbolHelper)gridViewSymbols.GetFocusedRow();
-                            //Console.WriteLine("Symbol:" + sh.Varname);
+                            //logger.Debug("Symbol:" + sh.Varname);
                             if (m_trionicFileInformation.SRAMfilename != "")
                             {
                                 // show menu option
@@ -9691,7 +9694,7 @@ namespace T5Suite2
                 int grouplevel = gridViewSymbols.GetRowLevel((int)selectedrows.GetValue(0));
                 if (grouplevel >= gridViewSymbols.GroupCount)
                 {
-                    //Console.WriteLine("In row");
+                    //logger.Debug("In row");
                     if (gridViewSymbols.GetFocusedRow() is Trionic5Tools.SymbolHelper)
                     {
                         Trionic5Tools.SymbolHelper sh = (Trionic5Tools.SymbolHelper)gridViewSymbols.GetFocusedRow();
@@ -9761,7 +9764,7 @@ namespace T5Suite2
             }
             catch (Exception BDMException)
             {
-                Console.WriteLine("Failed to dump ECU: " + BDMException.Message);
+                logger.Debug("Failed to dump ECU: " + BDMException.Message);
                 frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
             }
         }
@@ -9948,7 +9951,7 @@ namespace T5Suite2
                                 }
                                 catch (Exception pE)
                                 {
-                                    Console.WriteLine(pE.Message);
+                                    logger.Debug(pE.Message);
                                 }
                             }
                         }
@@ -9956,7 +9959,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 frmMatrixSelection sel = new frmMatrixSelection();
                 sel.SetSymbolList(sc);
@@ -10038,7 +10041,7 @@ namespace T5Suite2
                                 }
                                 catch (Exception pE)
                                 {
-                                    Console.WriteLine(pE.Message);
+                                    logger.Debug(pE.Message);
                                 }
                             }
                         }
@@ -10064,7 +10067,7 @@ namespace T5Suite2
 
                         double xvalue = xmin;
                         if(i>0) xvalue = xmin + i * ((xmax - xmin) / (15));
-                        //Console.WriteLine("Adding: " + xvalue.ToString());
+                        //logger.Debug("Adding: " + xvalue.ToString());
                         dtresult.Columns.Add(xvalue.ToString(), Type.GetType("System.Double"));
                         x_values.SetValue(xvalue, i); //    test: andersom?
                     }
@@ -10133,7 +10136,7 @@ namespace T5Suite2
                                 }
                                 catch (Exception pE)
                                 {
-                                    Console.WriteLine(pE.Message);
+                                    logger.Debug(pE.Message);
                                 }
                                 // add point to the datatable
                                 AddPointToDataTable(dtresult, _lastX, _lastY, _lastZ, xmin, xmax, ymin, ymax, zmin, zmax, type);
@@ -10169,7 +10172,7 @@ namespace T5Suite2
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine("Failed to convert to integer value: " + value.ToString());
+                                logger.Debug("Failed to convert to integer value: " + value.ToString());
                             }
                             byte b1 = 0;
                             byte b2 = 0;
@@ -10180,7 +10183,7 @@ namespace T5Suite2
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine("Failed to convert to byte value + " + ivalue.ToString());
+                                logger.Debug("Failed to convert to byte value + " + ivalue.ToString());
                             }
 
                             m_map_content[idx++] = b1;
@@ -10384,7 +10387,7 @@ namespace T5Suite2
                 //if (props.IsTrionic55)
                 {
                     Application.DoEvents();
-                    //Console.WriteLine("Starting with " + outputfile);
+                    //logger.Debug("Starting with " + outputfile);
                     //Process.Start(Application.StartupPath + "\\TextEditor.exe", "\"" + outputfile + "\"");
                     DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
                     panel.Width = this.ClientSize.Width - dockSymbols.Width;
@@ -10476,7 +10479,7 @@ namespace T5Suite2
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
                 dockManager1.EndUpdate();
             }
@@ -11307,8 +11310,8 @@ namespace T5Suite2
 
         private void SetToolstripTheme()
         {
-          /*  Console.WriteLine("Rendermode was: " + ToolStripManager.RenderMode.ToString());
-            Console.WriteLine("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
+          /*  logger.Debug("Rendermode was: " + ToolStripManager.RenderMode.ToString());
+            logger.Debug("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
             if (DevExpress.LookAndFeel.UserLookAndFeel.Default.SkinName.Contains("Black") || DevExpress.LookAndFeel.UserLookAndFeel.Default.SkinName.Contains("black") || DevExpress.LookAndFeel.UserLookAndFeel.Default.SkinName.Contains("Dark") || DevExpress.LookAndFeel.UserLookAndFeel.Default.SkinName.Contains("dark") || DevExpress.LookAndFeel.UserLookAndFeel.Default.SkinName.Contains("Pumpkin"))
             {
                 ToolStripManager.RenderMode = ToolStripManagerRenderMode.Professional;
@@ -11323,11 +11326,11 @@ namespace T5Suite2
                 ToolStripManager.RenderMode = ToolStripManagerRenderMode.Professional;
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer();
             }*/
-            //Console.WriteLine("Rendermode was: " + ToolStripManager.RenderMode.ToString());
-            //Console.WriteLine("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
-            //Console.WriteLine("Skinname: " + appSettings.SkinName);
-            //Console.WriteLine("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
-            //Console.WriteLine("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
+            //logger.Debug("Rendermode was: " + ToolStripManager.RenderMode.ToString());
+            //logger.Debug("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
+            //logger.Debug("Skinname: " + appSettings.SkinName);
+            //logger.Debug("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
+            //logger.Debug("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
             try
             {
                 Skin currentSkin = CommonSkins.GetSkin(defaultLookAndFeel1.LookAndFeel);
@@ -11402,7 +11405,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             SetToolstripTheme();
         }
@@ -11710,7 +11713,7 @@ namespace T5Suite2
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        logger.Debug(E.Message);
                     }
                 }
             }
@@ -12036,13 +12039,13 @@ namespace T5Suite2
                         max_value_x_axis *= 200;
                         max_value_x_axis /= 100;
                     }
-                    //Console.WriteLine("max x: " + max_value_x_axis.ToString());
+                    //logger.Debug("max x: " + max_value_x_axis.ToString());
                     float max_support_boost = max_value_x_axis;
                     max_support_boost /= 100;
                     max_support_boost -= 1;
                     float corr_inj = 1.4F / max_support_boost;
                     corr_inj *= 100;
-                    //Console.WriteLine("corr_inj = " + corr_inj.ToString());
+                    //logger.Debug("corr_inj = " + corr_inj.ToString());
                     max_injection *= (int)corr_inj;
                     max_injection /= 100;
 
@@ -12927,7 +12930,7 @@ namespace T5Suite2
                             {
                                 for (int bt = 0; bt < _dataToCompare.Length; bt++)
                                 {
-                                    //Console.WriteLine("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
+                                    //logger.Debug("Byte diff: " + mapdata.GetValue(bt).ToString() + " - " + mapdata2.GetValue(bt).ToString() + " = " + (byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))));
                                     mapdata.SetValue((byte)Math.Abs(((byte)mapdata.GetValue(bt) - (byte)_dataToCompare.GetValue(bt))), bt);
                                     //mapdata.SetValue((byte)(((byte)mapdata.GetValue(bt) - (byte)mapdata2.GetValue(bt))), bt);
                                 }
@@ -13004,7 +13007,7 @@ namespace T5Suite2
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    logger.Debug(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -13207,7 +13210,7 @@ namespace T5Suite2
 
                     write[0] = b1;
                     write[1] = b2;
-                    //Console.WriteLine("Updating cellindex: " + e.Mapindex.ToString());
+                    //logger.Debug("Updating cellindex: " + e.Mapindex.ToString());
                     _ecuConnection.WriteSymbolDataForced(m_trionicFileInformation.GetSymbolAddressSRAM(m_trionicFileInformation.GetIgnitionMap()) + e.Mapindex * 2, 2, write);
                 }
 
@@ -13285,7 +13288,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
             if (!pnlfound)
             {
@@ -13538,7 +13541,7 @@ namespace T5Suite2
                 }
                 catch (Exception newdockE)
                 {
-                    Console.WriteLine(newdockE.Message);
+                    logger.Debug(newdockE.Message);
                 }
                 dockManager1.EndUpdate();
 
@@ -13684,7 +13687,7 @@ namespace T5Suite2
                 if (advance > 32000) advance = -(65535 - advance);
                 if (advance > m_appSettings.GlobalMaximumIgnitionAdvance * 10)
                 {
-                    Console.WriteLine("We need to cap: " + advance.ToString());
+                    logger.Debug("We need to cap: " + advance.ToString());
                     advance = Convert.ToInt32(m_appSettings.GlobalMaximumIgnitionAdvance * 10);
 
                     // write into the map and indicate we have to update the map in the ECU
@@ -13714,7 +13717,7 @@ namespace T5Suite2
                     int hardRPMLimit = m_trionicFile.GetHardcodedRPMLimit(m_trionicFileInformation.Filename);
                     int hardRPMLimitTwo = m_trionicFile.GetHardcodedRPMLimitTwo(m_trionicFileInformation.Filename);
                     int softRPMLimit = m_trionicFile.GetSymbolAsInt("Rpm_max!") * 10;
-                    Console.WriteLine(Path.GetFileName(libFile) + " softrpm: " + softRPMLimit.ToString() + " hardrpm: " + hardRPMLimit.ToString() + " hardrpm2: " + hardRPMLimitTwo.ToString() + " " + "T55: " + props.IsTrionic55.ToString());
+                    logger.Debug(Path.GetFileName(libFile) + " softrpm: " + softRPMLimit.ToString() + " hardrpm: " + hardRPMLimit.ToString() + " hardrpm2: " + hardRPMLimitTwo.ToString() + " " + "T55: " + props.IsTrionic55.ToString());
                 }
             }*/
             
@@ -13818,7 +13821,7 @@ namespace T5Suite2
             }
             catch (Exception myMapsE)
             {
-                Console.WriteLine("Failed to create myMaps menu: " + myMapsE.Message);
+                logger.Debug("Failed to create myMaps menu: " + myMapsE.Message);
             }
         }
 
