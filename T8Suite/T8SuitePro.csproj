@@ -418,6 +418,9 @@
     <Compile Include="PartNumberConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="FC0J_C_FMEP_Exp.xml" />
+    <Content Include="FE18_C_FME2.xml" />
+    <Content Include="FE1D_C_FMEP_Exp.xml" />
     <Content Include="T8.ico" />
     <EmbeddedResource Include="CompareResults.resx">
       <DependentUpon>CompareResults.cs</DependentUpon>
