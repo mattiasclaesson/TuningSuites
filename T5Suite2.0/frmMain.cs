@@ -9849,7 +9849,6 @@ namespace T5Suite2
         private void OpenAndDisplayLogFile(string filename)
         {
             // create a new dock with a graph view in it
-            //dockManager1.BeginUpdate();
             DevExpress.XtraBars.Docking.DockPanel dp = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Left);
 
             dp.Size = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width, dockSymbols.Height);
@@ -9860,12 +9859,11 @@ namespace T5Suite2
             lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
             dp.Controls.Add(lfv);
             lfv.ImportT5Logfile(filename);
-            //dp.Height = 600;
             lfv.Dock = DockStyle.Fill;
             dp.Show();
         }
 
-        private void btnViewLogInternally_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnViewLogFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Trionic 5 logfiles|*.t5l";

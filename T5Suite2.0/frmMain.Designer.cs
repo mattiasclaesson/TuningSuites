@@ -1253,7 +1253,7 @@ namespace T5Suite2
             this.btnViewLogInternally.Hint = "Opens a view in T5Suite to analyze data from a previously made logfile";
             this.btnViewLogInternally.Id = 86;
             this.btnViewLogInternally.Name = "btnViewLogInternally";
-            this.btnViewLogInternally.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnViewLogInternally_ItemClick);
+            this.btnViewLogInternally.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnViewLogFile_ItemClick);
             // 
             // btnViewMatrixFromLog
             // 
