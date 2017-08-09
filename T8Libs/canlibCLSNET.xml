@@ -411,8 +411,8 @@
    filtering is done by software. <see cref="canAccept()"/> behaves in the same way for all
    boards, however.
   </para><para>
-    <see cref="canSetAcceptanceFilter()"/> and  <see cref="canAccept()"/> both serve the same purpose but the
-   former can set the code and mask in just one call.
+    <see cref="canSetAcceptanceFilter()"/> and <see cref="canAccept()"/> both serve the same purpose but the
+   former can set the code and mask in just one call. 
   </para><para>
    If you want to remove a filter, call <see cref="canAccept()"/> with the mask set to 0.
   </para><para>
@@ -451,7 +451,7 @@
   </para><para>
   </para>
   </returns>
-        <see cref="page_user_guide_send_recv_filters"/>,
+        <see cref="page_user_guide_misc_code_and_mask"/>,
    <see cref="page_code_snippets_examples"/>
 </member>
 <member name="M:canlibCLSNET.Canlib.canReadStatus(System.Int32,System.Int64@)">
@@ -581,7 +581,8 @@
   </para>
   </param>
   <param><para>
-   A combination of message flags, <see cref="canMSG_xxx"/>.
+   A combination of message flags, <see cref="canMSG_xxx"/>
+   enabled).
    Use this parameter to send extended (29-bit) frames
    and/or remote frames. Use <see cref="canMSG_EXT"/> and/or
    <see cref="canMSG_RTR"/> for this purpose.
@@ -696,9 +697,11 @@
   </para><para>
   </para>
   </returns>
-             <see cref="page_user_guide_time_accuracy_and_resolution"/>
-     <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>,
-    <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
+        <see cref="page_user_guide_send_recv_mailboxes"/>,
+   <see cref="page_code_snippets_examples"/>,
+   <see cref="page_user_guide_time_accuracy_and_resolution"/>
+    <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>,
+   <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
 </member>
 <member name="M:canlibCLSNET.Canlib.canReadWait(System.Int32,System.Int32@,System.Byte[],System.Int32@,System.Int32@,System.Int64@,System.Int64)">
   <summary>
@@ -833,7 +836,10 @@
   </para><para>
   </para>
   </returns>
-                 <seealso cref="canRead()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>, <seealso cref="canReadSyncSpecific()"/>,
+     <seealso cref=""/>
+   page_user_guide_send_recv_reading <see cref=""/>
+   page_user_guide_time_accuracy_and_resolution
+    <seealso cref="canRead()"/>, <seealso cref="canReadSpecificSkip()"/>, <seealso cref="canReadSync()"/>, <seealso cref="canReadSyncSpecific()"/>,
    <see cref="canReadWait()"/>
 </member>
 <member name="M:canlibCLSNET.Canlib.canReadSync(System.Int32,System.Int64)">
@@ -872,7 +878,7 @@
   </para><para>
   </para>
   </returns>
-    <seealso cref="canRead()"/>,  <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>,
+    <seealso cref="canRead()"/>, <seealso cref="canReadSpecific()"/>, <seealso cref="canReadSpecificSkip()"/>,
    <see cref="canReadSyncSpecific()"/>, <see cref="canReadWait()"/>
 </member>
 <member name="M:canlibCLSNET.Canlib.canReadSyncSpecific(System.Int32,System.Int32,System.Int64)">
@@ -1040,7 +1046,8 @@
   </summary>
   <param><para>
    A pointer to a <c>DWORD</c> which contains the <see cref="canBITRATE_xxx"/>
-   constant to translate
+   constant to translate. The bitrate constant value is
+   overwritten with the frequency value.
   </para>
   </param>
   <param><para>
@@ -1062,11 +1069,11 @@
   </param>
   <param><para>
    A pointer to a buffer which receives the number of
-   sampling points; can be 1 or 3.
+   sampling points.
   </para>
   </param>
   <param><para>
-   Unsupported, always read as zero.
+   Unsupported, always read as zero. May be set to NULL.
   </para><para>
   </para>
   </param>
@@ -2214,7 +2221,7 @@
   </para><para>
   </para>
   </returns>
-        <see cref="page_user_guide_send_recv_obj_buf"/>
+         <see cref="page_user_guide_send_recv_obj_buf"/>
 </member>
 <member name="M:canlibCLSNET.Canlib.canObjBufSetFlags(System.Int32,System.Int32,System.Int32)">
   <summary>
@@ -2539,11 +2546,13 @@
   <para>
   </para><para>
   </para><para>
+   
    Use this function if you are loading CANLIB32.DLL dynamically (that is,
    using the Win32 API <c>LoadLibrary)</c> and need to unload it using the Win32
    API <c>FreeLibrary.</c> <see cref="canUnloadLibrary()"/> will free allocated memory, unload
    the DLLs canlib32.dll has loaded and de-initialize data structures. You must
    call <see cref="canInitializeLibrary()"/> again to use the API functions in canlib32.dll.
+   
   </para><para>
   </para>
   </summary>
@@ -2601,6 +2610,7 @@
   </para><para>
     Not all CAN boards support different masks for standard and
    extended CAN identifiers.
+  </para><para>
   </para><para>
   </para>
   </remarks>
@@ -2831,6 +2841,7 @@
   <para>
   </para><para>
   </para><para>
+   
    The canRequestChipStatus function requests that the hardware report the chip
    status (bus on/error passive status etc.) to the driver. The chip status can
    later be retrieved using the <see cref="canReadStatus()"/> function.
@@ -2844,18 +2855,21 @@
    is actually available via a call to <see cref="canReadStatus()"/> is not
    defined. <see cref="canReadStatus()"/> always returns the latest data reported by the
    hardware.
+   
   </para><para>
   </para>
   </remarks>
   <param><para>
    An open handle to a CAN channel.
   </para><para>
+   
   </para>
   </param>
   <returns><para>
     <see cref="canOK"/> (zero) if success
   </para><para>
     <see cref="canERR_xxx"/> (negative) if failure
+   
   </para><para>
   </para>
   </returns>
@@ -3348,78 +3362,6 @@
   </returns>
     <seealso cref="canBusOn()"/>, <seealso cref="canResetBus()"/>
 </member>
-<member name="M:canlibCLSNET.Canlib.kvReadTimer(System.Int32,System.Int32@)">
-  <summary>
-  <para>
-  </para><para>
-  </para><para>
-   The <see cref="kvReadTimer"/> reads the hardware clock on the specified device and returns
-   the value.
-  </para><para>
-   When the call to <see cref="kvReadTimer()"/> returns, the time value is already
-   obsolete. The time required for the device firmware, any intermediary buses
-   defined.
-  </para><para>
-   This call should be used instead of <see cref="canReadTimer()"/> because it can return an
-   error code if it fails.
-  </para><para>
-  </para>
-  </summary>
-  <param><para>
-   An open handle to a CAN channel.
-  </para>
-  </param>
-  <param><para>
-   A pointer to a 32-bit unsigned integer that will receive
-   the time value.
-  </para><para>
-  </para>
-  </param>
-  <returns><para>
-    <see cref="canOK"/> (zero) if success
-  </para><para>
-    <see cref="canERR_xxx"/> (negative) if failure
-  </para><para>
-  </para>
-  </returns>
-    <seealso cref="canReadTimer()"/>, <seealso cref="kvReadTimer64()"/>
-</member>
-<member name="M:canlibCLSNET.Canlib.kvReadTimer64(System.Int32,System.Int64@)">
-  <summary>
-  <para>
-  </para><para>
-  </para><para>
-   The <see cref="kvReadTimer64"/> reads the hardware clock on the specified device and
-   returns the value.
-  </para><para>
-   When the call to <see cref="kvReadTimer64()"/> returns, the time value is already
-   obsolete. The time required for the device firmware, any intermediary buses
-   defined.
-  </para><para>
-   This call should be used instead of <see cref="canReadTimer()"/> because it can return an
-   error code if it fails.
-  </para><para>
-  </para>
-  </summary>
-  <param><para>
-   An open handle to a CAN channel.
-  </para>
-  </param>
-  <param><para>
-   A pointer to a 64-bit signed integer that will receive the
-   time value.
-  </para><para>
-  </para>
-  </param>
-  <returns><para>
-    <see cref="canOK"/> (zero) if success
-  </para><para>
-    <see cref="canERR_xxx"/> (negative) if failure
-  </para><para>
-  </para>
-  </returns>
-    <seealso cref="kvReadTimer()"/>, <seealso cref="canReadTimer()"/>
-</member>
 <member name="M:canlibCLSNET.Canlib.kvReadDeviceCustomerData(System.Int32,System.Int32,System.Int32,System.Byte[],System.Int32)">
   <summary>
   <para>
@@ -3428,6 +3370,7 @@
    Reading customer data works with Kvaser Leaf (of all
    types), Kvaser USBcan Professional, Kvaser Memorator Professional, Kvaser Eagle and
    Kvaser Memorator Light. To write customer data use external tools.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -3553,6 +3496,7 @@
    The <see cref="kvScriptSendEvent()"/> function sends an event of a type, and an event
    number and associated data to a script running in a specific slot.
   </para><para>
+  </para><para>
   </para>
   </summary>
   <param><para>
@@ -3611,6 +3555,7 @@
    A pointer to a 32-bit integer that will receive the
    size of the envvar in bytes.
   </para><para>
+  </para><para>
   </para>
   </param>
   <returns><para>
@@ -3628,6 +3573,7 @@
   </para><para>
   </para><para>
    The <see cref="kvScriptEnvvarClose()"/> function closes an open envvar.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -3651,6 +3597,7 @@
   </para><para>
   </para><para>
    The <see cref="kvScriptEnvvarSetInt()"/> sets the value of an <c>int</c> envvar.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -3680,6 +3627,7 @@
   </para><para>
    The <see cref="kvScriptEnvvarGetInt()"/> function retrieves the value of an <c>int</c> envvar.
   </para><para>
+  </para><para>
   </para>
   </summary>
   <param><para>
@@ -3707,6 +3655,7 @@
   </para><para>
   </para><para>
    The <see cref="kvScriptEnvvarSetFloat()"/> sets the value of a <c>float</c> envvar.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -3736,6 +3685,7 @@
   </para><para>
    The <see cref="kvScriptEnvvarGetFloat()"/> function retrieves the value of a <c>float</c> envvar.
   </para><para>
+  </para><para>
   </para>
   </summary>
   <param><para>
@@ -3764,6 +3714,7 @@
   </para><para>
   </para><para>
    The <see cref="kvScriptEnvvarSetData()"/> function sets a range of data bytes in an envvar.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -3803,6 +3754,7 @@
   </para><para>
    The <see cref="kvScriptEnvvarGetData()"/> function retrieves a range of data bytes from an envvar.
   </para><para>
+  </para><para>
   </para>
   </summary>
   <param><para>
@@ -3840,6 +3792,7 @@
   </para><para>
    The <see cref="kvScriptLoadFileOnDevice()"/> function loads a compiled script file (.txe)
    stored on the device (SD card) into a script slot on the device.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -3982,6 +3935,7 @@
   </para><para>
    The <see cref="kvScriptStatus()"/> function reads the current status of a script slot.
   </para><para>
+  </para><para>
   </para>
   </summary>
   <param><para>
@@ -4046,6 +4000,7 @@
    The <see cref="kvFileCopyFromDevice()"/> function copies an arbitrary file from the device
    to the host.
   </para><para>
+  </para><para>
   </para>
   </summary>
   <param><para>
@@ -4078,6 +4033,7 @@
   </para><para>
   </para><para>
    The <see cref="kvFileDelete()"/> function deletes a file on the device.
+  </para><para>
   </para><para>
   </para>
   </summary>
@@ -4330,13 +4286,85 @@
   </para>
   </returns>
 </member>
-<member name="F:canlibCLSNET.Canlib.CanHandle">
+<member name="M:canlibCLSNET.Canlib.kvReadTimer(System.Int32,System.Int32@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvReadTimer"/> reads the hardware clock on the specified device and returns
+   the value.
+  </para><para>
+   When the call to <see cref="kvReadTimer()"/> returns, the time value is already
+   obsolete. The time required for the device firmware, any intermediary buses
+   defined.
+  </para><para>
+   This call should be used instead of <see cref="canReadTimer()"/> because it can return an
+   error code if it fails.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 32-bit unsigned integer that will receive
+   the time value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="canReadTimer()"/>, <seealso cref="kvReadTimer64()"/>
+</member>
+<member name="M:canlibCLSNET.Canlib.kvReadTimer64(System.Int32,System.Int64@)">
+  <summary>
+  <para>
+  </para><para>
+  </para><para>
+   The <see cref="kvReadTimer64"/> reads the hardware clock on the specified device and
+   returns the value.
+  </para><para>
+   When the call to <see cref="kvReadTimer64()"/> returns, the time value is already
+   obsolete. The time required for the device firmware, any intermediary buses
+   defined.
+  </para><para>
+   This call should be used instead of <see cref="canReadTimer()"/> because it can return an
+   error code if it fails.
+  </para><para>
+  </para>
+  </summary>
+  <param><para>
+   An open handle to a CAN channel.
+  </para>
+  </param>
+  <param><para>
+   A pointer to a 64-bit signed integer that will receive the
+   time value.
+  </para><para>
+  </para>
+  </param>
+  <returns><para>
+    <see cref="canOK"/> (zero) if success
+  </para><para>
+    <see cref="canERR_xxx"/> (negative) if failure
+  </para><para>
+  </para>
+  </returns>
+    <seealso cref="kvReadTimer()"/>, <seealso cref="canReadTimer()"/>
+</member>
+<member name="F:canlibCLSNET.Canlib.canINVALID_HANDLE">
   <summary>
   <para>
   </para>
   </summary>
 </member>
-<member name="F:canlibCLSNET.Canlib.canINVALID_HANDLE">
+<member name="F:canlibCLSNET.Canlib.CanHandle">
   <summary>
   <para>
   </para>
@@ -4463,6 +4491,15 @@
     <item><description>The stuff bit counter will not be included in the frame format.</description></item>
     <item><description>Initial value for CRC17 and CRC21 will be zero.</description></item>
     </list>   This also means that messages with <see cref="canFDMSG_xxx"/> flags can now be used.
+  </para><para>
+   This define is used in <see cref="canOpenChannel()"/>.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canOPEN_LIN">
+  <summary>
+  <para>
+   This is for internal use with our LIN interfaces. 
   </para><para>
    This define is used in <see cref="canOpenChannel()"/>.
   </para>
@@ -4676,6 +4713,26 @@
   </para>
   </summary>
 </member>
+<member name="F:canlibCLSNET.Canlib.kvREMOTE_TYPE_NOT_REMOTE">
+  <summary>
+  <para>
+    kvREMOTE_TYPExxx
+    kvREMOTE_TYPExxx
+  </para><para>
+   Remote type, returned when using <see cref="canCHANNELDATA_REMOTE_TYPE"/>
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.kvLOGGER_TYPE_NOT_A_LOGGER">
+  <summary>
+  <para>
+    kvLOGGER_TYPE_xxx
+    kvLOGGER_TYPE_xxx
+  </para><para>
+   Logger type, returned when using <see cref="canCHANNELDATA_LOGGER_TYPE"/>
+  </para>
+  </summary>
+</member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_CAP">
   <summary>
   <para>
@@ -4691,12 +4748,14 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_CAP">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a 32-bit unsigned integer that receives the
      capabilities of the CAN transceiver; this is a combination of the
      <see cref="canDRIVER_CAP_xxx"/> flags.
+     
   </para>
   </summary>
 </member>
@@ -4709,7 +4768,7 @@
   </para>
   </summary>
   <remarks><para>
-      Currently not implemented.
+      Currently not implemented
   </para>
   </remarks>
 </member>
@@ -4728,6 +4787,7 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CARD_NUMBER">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4735,6 +4795,7 @@
      number in the computer. Each card type is numbered separately. For
      example, the first LAPcan card in a machine will have number 0, the second
      LAPcan number 1, etc.
+     
   </para>
   </summary>
 </member>
@@ -4765,12 +4826,14 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_SERIAL_NO">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a 64-bit (8 bytes) area which receives the serial
      number of the transceiver. The serial number is an 8-byte unsigned
      integer. If the transceiver doesn't have a serial number, 0 is returned.
+     
   </para>
   </summary>
 </member>
@@ -4818,6 +4881,7 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_UPC_NO">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4825,6 +4889,7 @@
      the transceiver. If there is no UPC number, the buffer is filled with
      zeros. The UPC (EAN) number is coded as a BCD string with the LSB first,
      so e.g. 733-0130-00122-0 is coded as 0x30001220 0x00073301.
+     
   </para>
   </summary>
 </member>
@@ -4855,6 +4920,7 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DLL_FILE_VERSION">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4869,12 +4935,14 @@
     <item><description>1: The build number</description></item>
     <item><description>2: The minor revision number</description></item>
     <item><description>3: The major revision number</description></item>
+     
     </list>  </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DLL_PRODUCT_VERSION">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4889,12 +4957,14 @@
     <item><description>1: 1</description></item>
     <item><description>2: The minor revision number</description></item>
     <item><description>3: The major revision number</description></item>
+     
     </list>  </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DLL_FILETYPE">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4907,18 +4977,21 @@
   <list type="bullets">
     <item><description>1: kvalapw.dll - used with CANLIB up to 2.29.</description></item>
     <item><description>2: kvalapw2.dll - used with CANLIB from 3.0 and on.</description></item>
+     
     </list>  </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TRANS_TYPE">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a 32-bit unsigned integer which receives the CAN
      transceiver type of the specified channel.  This value is one of the
      <see cref="canTRANSCEIVER_TYPE_xxx"/>
+     
   </para>
   </summary>
 </member>
@@ -4945,12 +5018,14 @@
   </para><para>
   <list type="bullets">
     <item><description>USB: The port number.</description></item>
-    </list>  </para>
+    </list>     Not implemented.
+  </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_UI_NUMBER">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4960,12 +5035,14 @@
      a number printed next to the slot on the board, or some other number that
      makes locating the physical device easier for the user. For buses with no
      such convention, or when the UI number is unknown, 0xFFFFFFFF is returned.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TIMESYNC_ENABLED">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -4988,6 +5065,7 @@
      II. It is not related to Kvaser MagiSync(tm) which is implemented in the
      high-end members of the Kvaser Leaf family. Kvaser MagiSync(tm) is always
      enabled and allows for much more accurate time synchronization.
+     
   </para><para>
   </para>
   </remarks>
@@ -4995,6 +5073,7 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DRIVER_FILE_VERSION">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -5008,12 +5087,14 @@
     <item><description>1: 0</description></item>
     <item><description>2: The minor revision number</description></item>
     <item><description>3: The major revision number</description></item>
+     
     </list>  </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DRIVER_PRODUCT_VERSION">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -5027,17 +5108,20 @@
     <item><description>1: 0</description></item>
     <item><description>2: The minor revision number</description></item>
     <item><description>3: The major revision number</description></item>
+     
     </list>  </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_MFGNAME_UNICODE">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a buffer which receives the device manufacturer's name
      as a zero-terminated Unicode string.
+     
   </para>
   </summary>
 </member>
@@ -5055,11 +5139,13 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DEVDESCR_UNICODE">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a buffer which receives the product name of the device
      as a zero-terminated Unicode string.
+     
   </para>
   </summary>
 </member>
@@ -5094,6 +5180,7 @@
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CHANNEL_QUALITY">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -5103,34 +5190,40 @@
      For WLAN, -90 dBm and -35 dBm are considered 0% and 100%, respectively.
   </para><para>
      The quality is 100% for any directly connected channel (USB, PCI etc.).
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_ROUNDTRIP_TIME">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> point to a 32-bit unsigned integer that receives the roundtrip
      time which is measured in milliseconds.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_BUS_TYPE">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a 32-bit unsigned integer that receives the
      <see cref="kvBUSTYPE_GROUP_xxx"/> bus type.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_DEVNAME_ASCII">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -5139,12 +5232,14 @@
   </para><para>
      If device name is not set or the device does not support this
      functionality, an error will be returned.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_TIME_SINCE_LAST_SEEN">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
@@ -5152,51 +5247,60 @@
      milliseconds since the last communication occured.
   </para><para>
      For WLAN devices, this is the time since the last keep-alive message.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_OPERATIONAL_MODE">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a 32-bit unsigned integer that receives the
      current WLAN operational mode of the remote capable device;
      <see cref="canCHANNEL_OPMODE_xxx"/>.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_PROFILE_NAME">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a buffer which receives the remote profile name
      of the device as a zero-terminated ASCII string.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_HOST_NAME">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a buffer which receives the remote host name
      of the device as a zero-terminated ASCII string.
+     
   </para>
   </summary>
 </member>
 <member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_MAC">
   <summary>
   <para>
+     
      This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a buffer which receives the mac address
      of the device as a zero-terminated ASCII string.
+     
   </para>
   </summary>
 </member>
@@ -5219,7 +5323,82 @@
      mentioned below refers to this functions argument.
   </para><para>
      <c>buffer</c> points to a 32-bit unsigned integer that receives the
-     capabilities_mask of the CAN channel.
+     capabilities mask of the CAN channel. This mask specifies
+     which capabilities corresponding device is guaranteed
+     to support/not support at the moment, see <see cref="canCHANNEL_CAP_xxx"/>
+     for info about flags.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_IS_REMOTE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that is 1 if 
+     the channel(device) is currently connected as a remote device. 0 if it is not 
+     currenty a remote device.    */
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_REMOTE_TYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that returns the type of remote connection. 
+     See <see cref="kvREMOTE_TYPExxx"/> for returned values. 
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_LOGGER_TYPE">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to a 32-bit unsigned integer that returns the logger type of the device.  
+     See <see cref="kvLOGGER_TYPE_xxx"/> for returned values. 
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_HW_STATUS">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an array of six 32-bit unsigned integers that receives 
+     hardware status codes for the device.  
+  </para><para>
+     This is only intended for internal use. 
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_FEATURE_EAN">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> points to an array of two 32-bit unsigned integers that returns 
+     the feature eanLo and feature eanHi of the device.  
+  </para><para>
+     This is only intended for internal use.
+  </para>
+  </summary>
+</member>
+<member name="F:canlibCLSNET.Canlib.canCHANNELDATA_CUST_CHANNEL_NAME">
+  <summary>
+  <para>
+     This define is used in <see cref="canGetChannelData()"/>, <c>buffer</c>
+     mentioned below refers to this functions argument.
+  </para><para>
+     <c>buffer</c> is a user supplied byte array of length 'bufsize' (at
+     least one byte long) to which the null terminated UTF-8 coded
+     channel name will be placed.
   </para>
   </summary>
 </member>
@@ -5321,18 +5500,17 @@
 <member name="F:canlibCLSNET.Canlib.canIOCTL_CLEAR_ERROR_COUNTERS">
   <summary>
   <para>
+     The following canIOCTL code is deprecated.
+     It is recommended to use <see cref="canIOCTL_RESET_OVERRUN_COUNT"/> to reset overrun status
+     changed back to their original values after this call)
+  </para><para>
      This define is used in <see cref="canIoCtl()"/>, <c>buf</c> and <c>buflen</c> refers to this
      functions arguments.
   </para><para>
-     Tells CANLIB to clear the CAN error counters. The contents of <c>buf</c> and  <c>buflen</c> are ignored.
+     Tells CANLIB to clear the CAN error counters. The contents of <c>buf</c> and  <c>buflen</c> are ignored. CAN error counters on device side are NOT updated.
   </para><para>
   </para>
   </summary>
-  <remarks><para>
-      Not all CAN controllers support this operation (and if they don't,
-     nothing will happen.)
-  </para>
-  </remarks>
 </member>
 <member name="F:canlibCLSNET.Canlib.canIOCTL_SET_TIMER_SCALE">
   <summary>
@@ -5554,7 +5732,7 @@
      This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
      functions argument.
   </para><para>
-     <c>buf</c> points to a BYTE which contains
+     <c>buf</c> points to a unsigned char which contains
   </para><para>
   <list type="bullets">
     <item><description><c>0</c> to turn access error reporting off, and</description></item>
@@ -5569,7 +5747,7 @@
      This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
      functions argument.
   </para><para>
-     <c>buf</c> points to a BYTE which receives the current setting of the access
+     <c>buf</c> points to a unsigned char which receives the current setting of the access
      error reporting (0 or 1.)
   </para>
   </summary>
@@ -5841,6 +6019,20 @@
   </para>
   </remarks>
 </member>
+<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_BRLIMIT">
+  <summary>
+  <para>
+     This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
+     functions argument.
+  </para><para>
+     Some hardware have bitrate limits, which must be met when using any of <c>canSetBusParams(),</c>
+     <c>canSetBusParamsC200(),</c> <c>canGetBusParams()</c> functions
+     which can be overriden with this IOCTL.
+     <c>buf</c> points to a <c>long</c> value that contains a user defined bitrate.
+     A value of 0 means that the device should use its own default bitrate limit.
+  </para>
+  </summary>
+</member>
 <member name="F:canlibCLSNET.Canlib.canIOCTL_SET_USB_THROTTLE_SCALED">
   <summary>
   <para>
@@ -5887,19 +6079,15 @@
   </para>
   </summary>
 </member>
-<member name="F:canlibCLSNET.Canlib.canIOCTL_SET_BRLIMIT">
+<member name="F:canlibCLSNET.Canlib.canIOCTL_RESET_OVERRUN_COUNT">
   <summary>
   <para>
      This define is used in <see cref="canIoCtl()"/>, <c>buf</c> mentioned below refers to this
      functions argument.
   </para><para>
-     Some hardware have bitrate limits, which must be met when using any of <c>canSetBusParams(),</c>
-     <c>canSetBusParamsC200(),</c> <c>canGetBusParams()</c> functions
-     which can be overriden with this IOCTL.
-     <c>buf</c> points to a <c>long</c> value that contains a user defined bitrate.
-     A value of 0 means that the device should use its own default bitrate limit.
   </para>
   </summary>
+     This ioctl resets overrun count and flags,  <seealso cref="canReadStatus"/>  <seealso cref="canGetBusStatistics"/>
 </member>
 <member name="F:canlibCLSNET.Canlib.canVERSION_CANLIB32_VERSION">
   <summary>
