@@ -20,4 +20,4 @@ set FTD2XX_NET.version=1.0.10.0
 set LibUsbDotNet.version=2.2.8.104
 set PSTaskDialog.version=1.0.0.0
 set Wideband.version=1.0.2.0
-set CommonSuite.version=1.0.5.0
+set CommonSuite.version=1.0.6.0
