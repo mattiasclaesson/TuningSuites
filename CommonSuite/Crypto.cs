@@ -5,9 +5,9 @@ using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
-    class Crypto
+    public class Crypto
     {
         public static string CalculateMD5Hash(string input)
         {

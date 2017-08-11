@@ -227,7 +227,6 @@
       <DependentUpon>CompareResults.cs</DependentUpon>
     </Compile>
     <Compile Include="crc64.cs" />
-    <Compile Include="Crypto.cs" />
     <Compile Include="ctrlDisassembler.cs">
       <SubType>UserControl</SubType>
     </Compile>

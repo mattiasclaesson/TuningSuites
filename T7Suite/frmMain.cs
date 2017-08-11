@@ -104,6 +104,7 @@ using CommonSuite;
 using TrionicCANLib.API;
 using WidebandSupport;
 using NLog;
+using System.Text.RegularExpressions;
 
 namespace T7
 {
@@ -136,7 +137,7 @@ namespace T7
         private string m_filename = string.Empty;
         private string m_swversion = string.Empty;
         private frmProgress frmProgressExportLog;
-        SymbolCollection m_symbols = new SymbolCollection();
+        public static SymbolCollection m_symbols = new SymbolCollection();
         private SuiteRegistry suiteRegistry = new T7SuiteRegistry();
         AppSettings m_appSettings;
         int m_currentfile_size = 0x80000;
@@ -727,84 +728,7 @@ namespace T7
 
         private void File_ImportTuningPackage_ItemClick(object sender, ItemClickEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Trionic 7 packages|*.t7p";
-            ofd.Multiselect = false;
-            char[] sep = new char[1];
-            sep.SetValue(',', 0);
-
-            SymbolCollection scToImport = new SymbolCollection();
-            System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("Map");
-            dt.Columns.Add("Result");
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                //TODO: create a list of maps to import .. maybe?
-                using (StreamReader sr = new StreamReader(ofd.FileName))
-                {
-                    string line = string.Empty;
-                    SymbolHelper sh_Import = new SymbolHelper();
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("symbol="))
-                        {
-                            //
-                            sh_Import = new SymbolHelper();
-                            sh_Import.Varname = line.Replace("symbol=", "");
-                        }
-                        else if (line.StartsWith("length="))
-                        {
-                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
-                        }
-                        else if (line.StartsWith("data="))
-                        {
-                            //
-                            try
-                            {
-                                string dataBytes = line.Replace("data=", "");
-                                // split using ','
-                                string[] bytesInStrings = dataBytes.Split(sep);
-                                byte[] dataToInsert = new byte[sh_Import.Length];
-                                for (int t = 0; t < sh_Import.Length; t++)
-                                {
-                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
-                                    dataToInsert.SetValue(b, t);
-                                }
-                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
-                                if (addressInFile > 0)
-                                {
-                                    if (_softwareIsOpen && sh_Import.Varname == "MapChkCal.ST_Enable")
-                                    {
-                                        dt.Rows.Add(sh_Import.Varname, "Skipped");
-                                    }
-                                    else
-                                    {
-                                        savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                        // add successful
-                                        dt.Rows.Add(sh_Import.Varname, "Success");
-                                    }
-                                }
-                                else
-                                {
-                                    // add failure
-                                    dt.Rows.Add(sh_Import.Varname, "Fail");
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                // add failure
-                                dt.Rows.Add(sh_Import.Varname, "Fail");
-                                logger.Debug(E.Message);
-                            }
-                        }
-                    }
-                }
-                UpdateChecksum(m_currentfile);
-                frmImportResults res = new frmImportResults();
-                res.SetDataTable(dt);
-                res.ShowDialog();
-            }
+            ImportTuningPackage();
         }
 
         private void File_EditTuningPackage(object sender, ItemClickEventArgs e)
@@ -8533,6 +8457,26 @@ TorqueCal.M_IgnInflTroqMap 8*/
             t7InfoHeader.save(m_fileName);
         }
 
+        private void RefreshTableViewers()
+        {
+            for (int i = 0; i < dockManager1.Panels.Count; i++)
+            {
+                // dockPanel = pnl.Controls.
+                if (dockManager1.Panels[i].Text != string.Empty)
+                    if ((dockManager1.Panels[i].Text.Substring(0, 7) == "Symbol:"))
+                    {
+                        bool isVisible = false;
+                        if (dockManager1.Panels[i].Visibility == DockVisibility.Visible)
+                            isVisible = true;
+                        string symName = dockManager1.Panels[i].Text.Split(' ')[1].Trim();
+                        dockManager1.Panels[i].Dispose();
+                        if (isVisible)
+                            StartTableViewer(symName);
+                    }
+            }
+
+        }
+
         private void StartTableViewer(string symbolname)
         {
             if (GetSymbolAddress(m_symbols, symbolname) > 0)
@@ -14889,115 +14833,6 @@ If boost regulation reports errors you can increase the difference between boost
             return returnvalue;
         }
 
-        private void btnTuneBinary_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (ValidateFile())
-            {
-                // read tuned marker to see if binary has been tuned before
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(m_currentfile, m_appSettings.AutoFixFooter);
-                PartNumberConverter pnc = new PartNumberConverter();
-                ECUInformation ecuinfo = pnc.GetECUInfo(fh.getPartNumber().Trim(), "");
-                //<GS-05102010> Need to validate the type of binary file loaded (which engine type and turbo type, A/M transmission)
-                // and base the initially targeted torque and power figures on that
-                frmTuningWizard tunWiz = new frmTuningWizard();
-
-                string msg = "Partnumber not recognized, tuning will continue anyway, please verify settings afterwards";
-                //msg += Environment.NewLine + " desired airmass " + maxairmass.ToString() + " mg/c and peak torque " + peaktorque.ToString() + " Nm";
-                if (ecuinfo.Valid)
-                {
-                    msg = "Partnumber " + fh.getPartNumber() + ", carmodel " + ecuinfo.Carmodel.ToString() + ", engine " + ecuinfo.Enginetype.ToString();
-                    //msg += Environment.NewLine + " desired airmass " + maxairmass.ToString() + " mg/c and peak torque " + peaktorque.ToString() + " Nm";
-                }
-                tunWiz.ExtraInfo = msg;
-
-                if (ecuinfo.Stage1torque != 0)
-                {
-                    tunWiz.PeakTorque = Convert.ToInt32(ecuinfo.Stage1torque);
-                }
-                if (tunWiz.ShowDialog() == DialogResult.OK)
-                {
-                    int desiredHP = tunWiz.DesiredHP;
-                    bool carRunsE85 = tunWiz.CarRunsE85;
-
-                    // convert HP to torque and airmass
-                    //int torque = PowerToTorque(desiredHP, 6000);
-                    //int peaktorque = (110 * torque) / 100;
-                    int peaktorque = tunWiz.PeakTorque;
-                    int maxairmass = TorqueToAirmass(peaktorque, carRunsE85);
-
-                    // give user a warning if airmass/c > 1300 mg/c
-                    if (maxairmass > 1300)
-                    {
-                        frmInfoBox info = new frmInfoBox("Your maximum requested airmass exceeds 1300 mg/c [" + maxairmass.ToString() + " mg/c]. Please make sure all your other maps will support this airflow!");
-                    }
-
-                    TuneToStageNew(1, maxairmass, peaktorque, desiredHP, ecuinfo.Enginetype, carRunsE85);
-                    TuningReport tuningrep = new TuningReport();
-                    tuningrep.DataSource = resumeTuning;
-                    tuningrep.CreateReport();
-                    tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                }
-
-
-
-                // start window to ask user for desired horses (depending on E85 usage?)
-                /*frmTuneBinary frmTune = new frmTuneBinary();
-                if (ecuinfo.Stage1torque != 0)
-                {
-                    frmTune.PeakTorque = Convert.ToInt32(ecuinfo.Stage1torque);
-                }
-                if (frmTune.ShowDialog() == DialogResult.OK)
-                {
-                    int desiredHP = frmTune.DesiredHP;
-                    bool carRunsE85 = frmTune.CarRunsE85;
-
-                    // convert HP to torque and airmass
-                    //int torque = PowerToTorque(desiredHP, 6000);
-                    //int peaktorque = (110 * torque) / 100;
-                    int peaktorque = frmTune.PeakTorque;
-                    int maxairmass = TorqueToAirmass(peaktorque, carRunsE85);
-
-                    // give user a warning if airmass/c > 1300 mg/c
-                    if (maxairmass > 1300)
-                    {
-                        MessageBox.Show("Your maximum requested airmass exceeds 1300 mg/c [" + maxairmass.ToString() + " mg/c]. Please make sure all your other maps will support this airflow!", "Warning!", MessageBoxButtons.OK);
-                    }
-
-                    string msg = "Partnumber not recognized, tuning will continue anyway, please verify settings afterwards";
-                    msg += Environment.NewLine + " desired airmass " + maxairmass.ToString() + " mg/c and peak torque " + peaktorque.ToString() + " Nm";
-                    if (ecuinfo.Valid)
-                    {
-                        msg = "Partnumber " + fh.getPartNumber() + ", carmodel " + ecuinfo.Carmodel.ToString() + ", engine " + ecuinfo.Enginetype.ToString();
-                        msg += Environment.NewLine + " desired airmass " + maxairmass.ToString() + " mg/c and peak torque " + peaktorque.ToString() + " Nm";
-                    }
-                    PSTaskDialog.cTaskDialog.ForceEmulationMode = false;
-                    PSTaskDialog.cTaskDialog.EmulatedFormWidth = 600;
-                    PSTaskDialog.cTaskDialog.UseToolWindowOnXP = false;
-                    PSTaskDialog.cTaskDialog.VerificationChecked = true;
-                    PSTaskDialog.cTaskDialog.ShowTaskDialogBox("Tune me up™ wizard", "This wizard will tune your binary.", "Several maps will be altered" + Environment.NewLine + msg, "Happy driving!!!\nDilemma © 2009", "The author does not take responsibility for any damage done to your car or other objects in any form!", "Show me a summary after tuning", "", "Yes, tune me up!|No thanks!", eTaskDialogButtons.None, eSysIcons.Information, eSysIcons.Warning);
-                    switch (PSTaskDialog.cTaskDialog.CommandButtonResult)
-                    {
-                        case 0:
-                            // tune to stage x
-                            // must use fixed maps, scaled to be good for the current airmass (e.g. pedalrequest map)
-                            TuneToStageNew(1, maxairmass, peaktorque, desiredHP, ecuinfo.Enginetype, carRunsE85);
-                            break;
-                        case 1:
-                            // cancel
-                            break;
-                    }
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked && PSTaskDialog.cTaskDialog.CommandButtonResult != 1)
-                    {
-                        TuningReport tuningrep = new TuningReport();
-                        tuningrep.DataSource = resumeTuning;
-                        tuningrep.CreateReport();
-                        tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                    }
-                }*/
-            }
-        }
-
         private void AddToRealtimeTable(System.Data.DataTable dt, string varname, string description, int symbolnumber, double value, double offset, double correction, double peak, double minimum, double maximum, int convertedSymbolnumber, uint sramaddress, int length, int delay)
         {
             bool fnd = false;
@@ -15564,6 +15399,747 @@ If boost regulation reports errors you can increase the difference between boost
                 }
 
             }
+        }
+
+        public enum FileTuningPackType
+        {
+            None = 0,
+            SymbolTp,
+            ApplyBin,
+            SearchAndReplace
+        };
+
+        public class FileTuningPackage
+        {
+            public FileTuningPackType type;
+            public bool succesful;
+            public FileTuningPackage() { }
+            public string result;
+            public bool hasResult = false;
+
+            public virtual string GetNameTPAction()
+            {
+                return "";
+            }
+
+        }
+
+        public class SymbolFileTuningPackage : FileTuningPackage
+        {
+            public SymbolHelper sh_Import;
+            public int addressInFile;
+            public byte[] dataToInsert;
+
+            public SymbolFileTuningPackage(SymbolHelper _sh_Import, int _addressInFile, byte[] _dataToInsert, bool _successful)
+            {
+                type = FileTuningPackType.SymbolTp;
+                succesful = _successful;
+                sh_Import = _sh_Import;
+                addressInFile = _addressInFile;
+                dataToInsert = _dataToInsert;
+            }
+
+            public override string GetNameTPAction()
+            {
+                return sh_Import.Varname;
+            }
+        }
+
+        public class SearchReplaceTuningPackage : FileTuningPackage
+        {
+            string _name;
+            public SearchReplacePattern srp; // byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail
+            public SearchReplaceTuningPackage(string searchReplace)
+            {
+                type = FileTuningPackType.SearchAndReplace;
+
+                //
+                // Parses a string and transform it to byte arrays
+                // 'Name',{SEARCH},{REPLACE},{{{HEAD_1},{TAIL_1}},{{HEAD_N},{TAIL__N}}}
+                // E.g.
+                // 'NEW',{0x3D,0x7C,0x0C,0x4E},{0x3D,0x7C,0x0F,0xA0},{{{0x01, 0xAA},{0xFF}},{{},{0xFE}}}
+                // 'NEW',{0x3D,0x7C},{0x0F,0xA0},{{{0x01, 0xAA},{0xFF}}}
+                //
+                int foundS1 = 0;
+                int foundS2 = 0;
+                byte[] bSearch = new byte[] { };
+                byte[] bReplace = new byte[] { };
+                byte[][][] myCheckHeadAndTail = new byte[][][] { };
+                List<byte[][]> headTailList = new List<byte[][]>();
+
+                // Validate input
+                int count_in = 0;
+                int count_out = 0;
+                int count_in_br = 0;
+                int count_out_br = 0;
+                int count_st = 0;
+                int count_cm = 0;
+                foreach (char c in searchReplace)
+                {
+                    if (c == '{') count_in++;
+                    if (c == '}') count_out++;
+                    if (c == '[') count_in_br++;
+                    if (c == ']') count_out_br++;
+                    if (c == '\'') count_st++;
+                    if (c == ',') count_cm++;
+                }
+                if (count_in_br > 0)
+                {
+                    if ((count_in != 2 || count_in != count_out || count_in_br != 1 || count_in_br != count_out_br || count_st != 2 || count_cm < 2))
+                    {
+                        _name = "FAIL IN REP VALIDATION: " + searchReplace.Substring(0, 6) + "...";
+                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        return;
+                    }
+                }
+                else
+                {
+                    if ((count_in < 6 || count_in != count_out || count_st != 2 || count_cm < 4))
+                    {
+                        _name = "FAIL IN SnR VALIDATION: " + searchReplace.Substring(0, 6) + "...";
+                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        return;
+                    }
+                }
+
+                // Create a string to work with
+                string inputStr = searchReplace.Trim();
+
+                // Extract the name
+                foundS1 = inputStr.IndexOf('\'') + 1;
+                foundS2 = inputStr.IndexOf('\'', foundS1);
+                _name = inputStr.Substring(foundS1, foundS2 - foundS1);
+                inputStr = inputStr.Remove(0, foundS2 + 2);
+
+                // Remove all whitespace
+                inputStr = Regex.Replace(inputStr, @"\s+", "");
+
+                // Extract search pattern
+                foundS1 = inputStr.IndexOf('{') + 1;
+                foundS2 = inputStr.IndexOf('}');
+
+                // Simple replace
+                int foundS1B = 0;
+                int foundS2B = 0;
+                string adress_string = string.Empty;
+                int address = -1;
+
+                if ((foundS1B = inputStr.IndexOf('[')) >= 0)
+                {
+                    foundS1B++;
+                    foundS2B = inputStr.IndexOf(']');
+                    adress_string = inputStr.Substring(foundS1B, foundS2B - foundS1B);
+                    adress_string = adress_string.Replace("0x", "");
+                    address = Int32.Parse(adress_string, System.Globalization.NumberStyles.HexNumber);
+                    if (address == -1)
+                    {
+                        bSearch = new byte[] { };
+                        bReplace = new byte[] { };
+                        _name = _name + " failing for unknown reason";
+                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        return;
+                    }
+                }
+                else
+                {
+                    string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                    bSearch = new byte[searchString.Length];
+                    for (int i = 0; i < searchString.Length; i++)
+                    {
+                        bSearch[i] = Convert.ToByte(searchString[i].Trim(), 16);
+                    }
+                }
+                inputStr = inputStr.Remove(0, foundS2 + 2);
+
+                // Extract replace pattern
+                foundS1 = inputStr.IndexOf('{') + 1;
+                foundS2 = inputStr.IndexOf('}');
+                string[] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                bReplace = new byte[replaceString.Length];
+                for (int i = 0; i < replaceString.Length; i++)
+                {
+                    bReplace[i] = Convert.ToByte(replaceString[i].Trim(), 16);
+                }
+
+                // Check that the search and replace match in length
+                if ((address == -1) && (bSearch.Length != bReplace.Length))
+                {
+                    bSearch = new byte[] { };
+                    bReplace = new byte[] { };
+                    _name = _name + " failing due to mismatch in length";
+                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                    return;
+                }
+
+                if (address == -1) // No head/tail in a replace
+                {
+                    // Parse the head/tail arrays, e.g. {{{0xAA,0xBB},{0xCC,0xDD}},{{0xEE,0xFF},{0x11, 0x22}}}
+                    // Remove leading "{{{"
+                    inputStr = inputStr.Remove(0, foundS2 + 2);
+                    for (int i = 0; i < 3; i++)
+                        inputStr = inputStr.Remove(0, inputStr.IndexOf('{') + 1);
+
+                    // Split the multiple headtails found by "}},{{". Whitespace already removed
+                    string[] headTails = Regex.Split(inputStr, @"}},{{");
+
+                    // Parse through the results, always start with a number or }
+                    foreach (string headTail in headTails)
+                    {
+                        byte[] bHead = { };
+                        byte[] bTail = { };
+                        string ht = headTail;
+
+                        // Extract the head
+                        foundS1 = 0;
+                        foundS2 = headTail.IndexOf('}');
+                        string head = headTail.Substring(0, foundS2);
+
+                        // Find the start of tail
+                        foundS1 = ht.IndexOf('{');
+                        ht = ht.Remove(0, foundS1 + 1);
+
+                        // Find the end of the tail
+                        foundS1 = 0;
+                        foundS2 = ht.IndexOf('}');
+                        string tail;
+                        if (foundS2 <= 0) //All but last string lacks a }
+                            tail = ht;
+                        else
+                            tail = ht.Substring(0, foundS2);
+
+                        // Convert head to byte array
+                        if (head.Length > 0)
+                        {
+                            if (head[0] == '*')
+                            {
+                                // This is as symbol, find it's flash address (XXXTBDXXX)
+                                string searchSymbol = head.Substring(1);
+                                foreach (SymbolHelper cfsh in m_symbols)
+                                {
+                                    if (cfsh.SmartVarname == searchSymbol)
+                                    {
+                                        bHead = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                        Array.Reverse(bHead);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                string[] lHead = head.Split(',');
+                                bHead = new byte[lHead.Length];
+                                for (int i = 0; i < lHead.Length; i++)
+                                {
+                                    if (lHead[i].Length > 0)
+                                    {
+                                        bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                                    }
+                                    else
+                                    {
+                                        bHead = new byte[] { };
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Convert tail to byte array
+                        if (tail.Length > 0)
+                        {
+                            if (tail[0] == '*')
+                            {
+                                // This is as symbol, find it's flash address (XXXTBDXXX)
+                                string searchSymbol = tail.Substring(1);
+                                foreach (SymbolHelper cfsh in m_symbols)
+                                {
+                                    if (cfsh.SmartVarname == searchSymbol)
+                                    {
+                                        bTail = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                        Array.Reverse(bTail);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                string[] lTail = tail.Split(',');
+                                bTail = new byte[lTail.Length];
+                                for (int i = 0; i < lTail.Length; i++)
+                                {
+                                    if (lTail[i].Length > 0)
+                                    {
+                                        bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
+                                    }
+                                    else
+                                    {
+                                        bTail = new byte[] { };
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Add headtail to list
+                        byte[][] bHeadTail = { bHead, bTail };
+                        headTailList.Add(bHeadTail);
+                    }
+
+                    // Store headtail for output
+                    myCheckHeadAndTail = new byte[headTailList.Count][][];
+                    for (int i = 0; i < headTailList.Count; i++)
+                    {
+                        myCheckHeadAndTail[i] = headTailList[i];
+                    }
+                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                }
+                else
+                {
+                    srp = new SearchReplacePattern(address, bReplace);
+                }
+
+            }
+
+            public override string GetNameTPAction()
+            {
+                if (!hasResult)
+                    return _name;
+                else
+                    return result;
+            }
+        }
+
+        public class BinFileTuningPackage : FileTuningPackage
+        {
+            string _binAction;
+
+            public BinFileTuningPackage(string binAction)
+            {
+                type = FileTuningPackType.ApplyBin;
+                _binAction = binAction;
+            }
+
+            public override string GetNameTPAction()
+            {
+                if (!hasResult)
+                    return _binAction;
+                else
+                    return result;
+            }
+        }
+
+        private void ImportTuningPackage()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Trionic 7 packages|*.t7p";
+            ofd.Multiselect = false;
+            char[] sep = new char[1];
+            sep.SetValue(',', 0);
+
+            SymbolCollection scToImport = new SymbolCollection();
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("Map");
+            dt.Columns.Add("Result");
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                //TODO: create a list of maps to import .. maybe?
+                using (StreamReader sr = new StreamReader(ofd.FileName))
+                {
+                    string line = string.Empty;
+                    SymbolHelper sh_Import = new SymbolHelper();
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("symbol="))
+                        {
+                            //
+                            sh_Import = new SymbolHelper();
+                            sh_Import.Varname = line.Replace("symbol=", "");
+                        }
+                        else if (line.StartsWith("length="))
+                        {
+                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
+                        }
+                        else if (line.StartsWith("data="))
+                        {
+                            //
+                            try
+                            {
+                                string dataBytes = line.Replace("data=", "");
+                                // split using ','
+                                string[] bytesInStrings = dataBytes.Split(sep);
+                                byte[] dataToInsert = new byte[sh_Import.Length];
+                                for (int t = 0; t < sh_Import.Length; t++)
+                                {
+                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
+                                    dataToInsert.SetValue(b, t);
+                                }
+                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
+                                if (addressInFile > 0)
+                                {
+                                    if (_softwareIsOpen && sh_Import.Varname == "MapChkCal.ST_Enable")
+                                    {
+                                        dt.Rows.Add(sh_Import.Varname, "Skipped");
+                                    }
+                                    else
+                                    {
+                                        savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
+                                        // add successful
+                                        dt.Rows.Add(sh_Import.Varname, "Success");
+                                    }
+                                }
+                                else
+                                {
+                                    // add failure
+                                    dt.Rows.Add(sh_Import.Varname, "Fail");
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                // add failure
+                                dt.Rows.Add(sh_Import.Varname, "Fail");
+                                logger.Debug(E.Message);
+                            }
+                        }
+                    }
+                }
+                UpdateChecksum(m_currentfile);
+                frmImportResults res = new frmImportResults();
+                res.SetDataTable(dt);
+                res.ShowDialog();
+            }
+        }
+
+        private List<FileTuningPackage> ReadTuningPackageFile(bool encoded, string tpFile, out string binSwType, out string whitelist, out string blacklist, out string code)
+        {
+            char[] sep = new char[1];
+            sep.SetValue(',', 0);
+            binSwType = string.Empty;
+            whitelist = string.Empty;
+            blacklist = string.Empty;
+            code = string.Empty;
+            List<FileTuningPackage> lstTp = new List<FileTuningPackage>();
+
+            using (StreamReader sr = new StreamReader(tpFile))
+            {
+                string line = string.Empty;
+                string in_line = string.Empty;
+                SymbolHelper sh_Import = new SymbolHelper();
+
+                if (encoded)
+                {
+                    // Read signature
+                    string signature = string.Empty;
+                    string s = sr.ReadLine();
+                    if (s != null && s.StartsWith("<SIGNATURE>"))
+                    {
+                        while ((s = sr.ReadLine()) != null)
+                        {
+                            if (s.StartsWith("</SIGNATURE>"))
+                                break;
+                            signature += s;
+                        }
+                    }
+                }
+                while ((in_line = sr.ReadLine()) != null)
+                {
+                    if (encoded)
+                        line = Crypto.DecodeAES(in_line).Trim();
+                    else
+                        line = in_line.Trim();
+
+                    if (line.StartsWith("packname="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("bintype="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("whitelist="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("blacklist="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("code="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("author="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("msg="))
+                    {
+                        // Do nothing
+                    }
+                    else if (line.StartsWith("binaction="))
+                    {
+                        string inS = line.Replace("binaction=", "");
+                        FileTuningPackage binTP = new BinFileTuningPackage(inS);
+                        lstTp.Add(binTP);
+                    }
+                    else if (line.StartsWith("searchreplace="))
+                    {
+                        string inS = line.Replace("searchreplace=", "");
+                        FileTuningPackage srTP = new SearchReplaceTuningPackage(inS);
+                        lstTp.Add(srTP);
+                    }
+                    else if (line.StartsWith("symbol="))
+                    {
+                        //
+                        sh_Import = new SymbolHelper();
+                        sh_Import.Varname = line.Replace("symbol=", "");
+                    }
+                    else if (line.StartsWith("length="))
+                    {
+                        sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
+                    }
+                    else if (line.StartsWith("data="))
+                    {
+                        try
+                        {
+                            string dataBytes = line.Replace("data=", "");
+                            // split using ','
+                            string[] bytesInStrings = dataBytes.Split(sep);
+                            byte[] dataToInsert = new byte[sh_Import.Length];
+                            for (int t = 0; t < sh_Import.Length; t++)
+                            {
+                                byte b = Convert.ToByte(bytesInStrings[t], 16);
+                                dataToInsert.SetValue(b, t);
+                            }
+                            int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
+                            if (addressInFile != 0)
+                            {
+                                FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, true);
+                                lstTp.Add(fileTP);
+                            }
+                            else
+                            {
+                                FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, false);
+                                lstTp.Add(fileTP);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // add failure
+                            byte[] dataToInsert = new byte[0];
+                            FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, 0, dataToInsert, false);
+                            lstTp.Add(fileTP);
+                        }
+                    }
+                }
+            }
+            return lstTp;
+        }
+
+        private void ApplyTuningPackage(List<FileTuningPackage> fileTP)
+        {
+            string log_file = Path.GetFileNameWithoutExtension(m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-WIZARD.log";
+            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            log_file = r.Replace(log_file, "");
+            log_file = Path.GetDirectoryName(m_currentfile) + "\\" + log_file;
+
+            using (StreamWriter log = new StreamWriter(log_file))
+            {
+                foreach (FileTuningPackage fTP in fileTP)
+                {
+                    if (fTP.type == FileTuningPackType.SymbolTp)
+                    {
+                        SymbolFileTuningPackage sTP = (SymbolFileTuningPackage)fTP;
+                        if (sTP.addressInFile > 0)
+                        {
+                            log.WriteLine("Updating symbol: " + sTP.GetNameTPAction());
+                            savedatatobinary(sTP.addressInFile, sTP.sh_Import.Length, sTP.dataToInsert, m_currentfile, true);
+                        }
+                        if (!sTP.succesful)
+                        {
+                            log.WriteLine("Updating symbol: " + sTP.GetNameTPAction() + " FAILED");
+                        }
+                    }
+                    else if (fTP.type == FileTuningPackType.ApplyBin)
+                    {
+                        string result = "";
+                        fTP.succesful = performBinAction(fTP.GetNameTPAction(), out result);
+                        if (result != "")
+                        {
+                            fTP.hasResult = true;
+                            fTP.result = result;
+                        }
+                        log.WriteLine("Applied binaction: " + fTP.GetNameTPAction());
+
+                    }
+                    else if (fTP.type == FileTuningPackType.SearchAndReplace)
+                    {
+                        int num = 0;
+                        SearchReplaceTuningPackage srtp = (SearchReplaceTuningPackage)fTP;
+                        num = performSearchAndReplace(srtp.srp);
+                        srtp.result = srtp.GetNameTPAction() + ": " + num.ToString() + " replacements";
+                        srtp.hasResult = true;
+                        if (num > 0)
+                            srtp.succesful = true;
+
+                        log.WriteLine("Applied searchandreplace: " + fTP.GetNameTPAction());
+                    }
+                }
+                UpdateChecksum(m_currentfile);
+            }
+        }
+
+        public bool performBinAction(string binAction, out string result)
+        {
+            bool retval = false;
+            result = "";
+            if (binAction == "") // Name your binaction
+            {
+                // Apply your binaction
+                result = "Failed undefined binaction";
+                retval = false;
+            }
+            else
+            {
+                result = "Failed with binaction=" + binAction;
+                retval = false;
+            }
+            return retval;
+        }
+
+        public class SearchReplacePattern
+        {
+            public int ReplaceAddress;
+            public byte[] SearchPattern;
+            public byte[] ReplaceWith;
+            public byte[][][] CheckHeadAndTail; //(Head XXYY and Tail AABB) or (Head ZZWW and Tail CCDD) or ...
+            public SearchReplacePattern(byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail)
+            {
+                ReplaceAddress = 0;
+                SearchPattern = _SearchPattern;
+                ReplaceWith = _ReplaceWith;
+                CheckHeadAndTail = _CheckHeadAndTail;
+            }
+
+            public SearchReplacePattern(int _ReplaceAddress, byte[] _ReplaceWith)
+            {
+                ReplaceAddress = _ReplaceAddress;
+                ReplaceWith = _ReplaceWith;
+            }
+
+            public bool isDirectReplace()
+            {
+                if (ReplaceAddress == 0)
+                    return false;
+                else
+                    return true;
+            }
+        }
+
+        public void ReplaceBytePattern(byte[] data, SearchReplacePattern srp)
+        {
+            for (int j = 0; j < srp.ReplaceWith.Length; j++)
+            {
+                data[srp.ReplaceAddress + j] = srp.ReplaceWith[j];
+            }
+        }
+
+        public int SearchReplaceBytePattern(byte[] data, SearchReplacePattern srp)
+        {
+            int matches = 0;
+
+            // Will browse the file multiple times
+            // Can be made more effective to read once and match
+            // all SearchReplacePattern at each position
+            for (int i = 0; i < data.Length - srp.SearchPattern.Length; i++)
+            {
+                bool match = true;
+                for (int k = 0; k < srp.SearchPattern.Length; k++)
+                {
+                    if (data[i + k] != srp.SearchPattern[k])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
+                {
+                    // Check if the Head AND Tail is matching
+                    foreach (byte[][] htArray in srp.CheckHeadAndTail)
+                    {
+                        // Head in htArray[0]
+                        bool headmatch = true;
+                        for (int j = 0; j < htArray[0].Length; j++)
+                        {
+                            if (data[i - htArray[0].Length + j] == htArray[0][j])
+                            {
+                                headmatch = true;
+                            }
+                            else
+                            {
+                                headmatch = false;
+                                break;
+                            }
+                        }
+
+                        // Tail in htArray[1]
+                        bool tailmatch = true;
+                        for (int j = 0; j < htArray[1].Length; j++)
+                        {
+                            if (data[i + srp.SearchPattern.Length + j] == htArray[1][j])
+                            {
+                                tailmatch = true;
+                            }
+                            else
+                            {
+                                tailmatch = false;
+                                break;
+                            }
+                        }
+
+                        if (match && headmatch && tailmatch)
+                        {
+                            // Do the actual replacement
+                            matches++;
+                            for (int j = 0; j < srp.SearchPattern.Length; j++)
+                            {
+                                data[i + j] = srp.ReplaceWith[j];
+
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            return matches;
+        }
+
+        public int performSearchAndReplace(SearchReplacePattern sp)
+        {
+            int num_replacements = 0;
+
+            // Read the complete file into memory since we will scan it over and over again
+            if (File.Exists(m_currentfile))
+            {
+                byte[] buff = File.ReadAllBytes(m_currentfile);
+
+                // Search and replace
+                //int num_replacements = ReplaceBytePattern(buff, find_p, replace_p, 0xFF, 0xFE);
+                if (sp.isDirectReplace())
+                {
+                    num_replacements = 1;
+                    ReplaceBytePattern(buff, sp);
+                }
+                else
+                {
+                    num_replacements = SearchReplaceBytePattern(buff, sp);
+                }
+
+                // Store the file
+                File.WriteAllBytes(m_currentfile, buff);
+            }
+            return num_replacements;
         }
 
         private void ShowAfrMAP(string mapname, string filename)
@@ -19069,6 +19645,290 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         void difgen_onExportProgress(object sender, CSVGenerator.ProgressEventArgs e)
         {
             frmProgressExportLog.SetProgressPercentage(e.Percentage);
+        }
+
+        public enum TuneWizardType
+        {
+            None = 0,       // Should never happen
+            Embedded,       // Hard coded routines
+            TuningFile      // Future: Tuning Packages when installing solution.
+        };
+
+        public class TuningAction
+        {
+            public string WizName;
+            public string WizIdOrFilename;
+            public TuneWizardType WizType;
+            public string[] WizWhitelist;
+            public string[] WizBlacklist;
+            public string WizCode;
+            public string WizAuth;
+            public string WizMsg;
+
+            public TuningAction()
+            {
+                WizType = TuneWizardType.None;
+                WizName = string.Empty;
+                WizIdOrFilename = string.Empty;
+                WizWhitelist = new string[] { };
+                WizBlacklist = new string[] { };
+                WizCode = string.Empty;
+                WizAuth = string.Empty;
+            }
+
+            public override string ToString()
+            {
+                if (WizCode != string.Empty)
+                    return WizName + " [Protected]";
+
+                return WizName;
+            }
+
+            public string GetWizardIdOrFilename()
+            {
+                return WizIdOrFilename;
+            }
+
+            public TuneWizardType GetWizardType()
+            {
+                return WizType;
+            }
+
+            public bool compatibelSoftware(string software)
+            {
+                bool inWhiteList = true; // If no whitelist exist, it is ok
+                if (WizWhitelist.Length > 0)
+                {
+                    inWhiteList = false; // When whitelist exist, make sure it's in there
+                    foreach (string white in WizWhitelist)
+                    {
+                        if (white.Length <= 0)
+                            continue;
+
+                        int ast = white.IndexOf('*');
+                        string strComp = string.Empty;
+                        if (ast != -1)
+                            strComp = white.Substring(0, ast);
+                        else
+                            strComp = white;
+
+                        if (software.StartsWith(strComp))
+                        {
+                            // We have a white list match, we are now done
+                            inWhiteList = true;
+                            break;
+                        }
+                    }
+                }
+
+                bool inBlackList = false; // Assume not in blacklist
+                foreach (string black in WizBlacklist)
+                {
+                    if (black.Length <= 0)
+                        continue;
+
+                    int ast = black.IndexOf('*');
+                    string strComp = string.Empty;
+                    if (ast != -1)
+                        strComp = black.Substring(0, ast);
+                    else
+                        strComp = black;
+
+                    if (software.StartsWith(strComp))
+                    {
+                        // We have a white list match, we are now done
+                        inBlackList = true;
+                        break;
+                    }
+                }
+
+                if (inWhiteList && !inBlackList)
+                    return true;
+
+                return false;
+            }
+
+            public virtual int performTuningAction(frmMain p, string software, out List<string> out_mod_symbols)
+            {
+                // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
+                //       we need to call frmMain functions though the instance of it
+                out_mod_symbols = new List<string>();
+                return 0;
+            }
+        }
+        public class FileTuningAction : TuningAction
+        {
+            public FileTuningAction(string name, string filename, string[] whitelist, string[] blacklist, string code, string author, string msg)
+            {
+                WizName = name;
+                WizIdOrFilename = filename;
+                WizType = TuneWizardType.TuningFile;
+                WizWhitelist = whitelist;
+                WizBlacklist = blacklist;
+                WizCode = code;
+                WizAuth = author;
+                WizMsg = msg;
+            }
+
+            public override int performTuningAction(frmMain p, string software, out List<string> out_mod_symbols)
+            {
+                out_mod_symbols = new List<string>();
+                List<FileTuningPackage> tuningPackages;
+                string binType = string.Empty;
+                string whitelist = string.Empty;  // Not used in t8p
+                string blacklist = string.Empty;  // Not used in t8p
+                string code = string.Empty;       // Not used in t8p
+
+                tuningPackages = p.ReadTuningPackageFile(true, WizIdOrFilename, out binType, out whitelist, out blacklist, out code);
+
+                // Here we need the software version in memory
+                if (compatibelSoftware(software))
+                {
+                    // Save a copy
+                    string backup_file = Path.GetFileNameWithoutExtension(p.m_currentfile) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-BACKUP-BEFORE-WIZARD-" + WizName + ".bin";
+                    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+                    backup_file = r.Replace(backup_file, "");
+
+                    backup_file = Path.GetDirectoryName(p.m_currentfile) + "\\" + backup_file;
+                    File.Copy(p.m_currentfile, backup_file, true);
+
+                    p.ApplyTuningPackage(tuningPackages);
+                    foreach (FileTuningPackage tp in tuningPackages)
+                        if (tp.hasResult)
+                        {
+                            out_mod_symbols.Add(tp.result);
+                        }
+                        else
+                        {
+                            if (tp.succesful)
+                                out_mod_symbols.Add("OK: " + tp.GetNameTPAction());
+                            else
+                                out_mod_symbols.Add("Fail: " + tp.GetNameTPAction());
+                        }
+                    p.RefreshTableViewers();
+                }
+                return 0;
+            }
+        }
+
+        public class DateAndName : TuningAction
+        {
+            public DateAndName()
+            {
+                WizType = TuneWizardType.Embedded;
+                WizName = "Update footer";
+                WizIdOrFilename = "ap_dateName";
+            }
+
+            public override int performTuningAction(frmMain p, string software, out List<string> out_mod_symbols)
+            {
+                // NOTE: To avoid error "Cannot access a non-static member of outer type  via nested type"
+                //       we need to call frmMain functions though the instance of it
+                out_mod_symbols = new List<string>();
+
+                T7FileHeader t7header = new T7FileHeader();
+                t7header.init(p.m_currentfile, false);
+                t7header.setSIDDate(DateTime.Now.ToString("yyMMdd"));
+                return 0;
+            }
+        }
+
+        public static List<TuningAction> installedTunings = new List<TuningAction>
+        {
+            new DateAndName() // This SHOULD BE IN POSITION #1
+        };
+
+        public void addWizTuneFilePacks()
+        {
+            // List all files in start-up directory/TuningPacks
+            string path = Path.Combine(System.Windows.Forms.Application.StartupPath, "TuningPacks");
+            if (Directory.Exists(path))
+            {
+                string[] files = Directory.GetFiles(path, "*.t7x");
+                foreach (string file in files)
+                {
+                    using (StreamReader sr = new StreamReader(file))
+                    {
+                        string file_for_md5 = string.Empty;
+                        string line = string.Empty;
+                        string enc_line = string.Empty;
+                        string packname = string.Empty;
+                        string sPacktype = string.Empty;
+                        string signature = string.Empty;
+                        string code = string.Empty;
+                        string msg = string.Empty;
+                        string author = string.Empty;
+                        string[] whitelist = new string[] { };
+                        string[] blacklist = new string[] { };
+
+                        // Read signature
+                        string s = sr.ReadLine();
+                        if (s != null && s.StartsWith("<SIGNATURE>"))
+                        {
+                            while ((s = sr.ReadLine()) != null)
+                            {
+                                if (s.StartsWith("</SIGNATURE>"))
+                                    break;
+                                signature += s;
+                            }
+                        }
+
+                        // Read and decrypt the tuning package 
+                        while ((enc_line = sr.ReadLine()) != null)
+                        {
+                            line = Crypto.DecodeAES(enc_line).Trim();
+                            file_for_md5 += line + "\x0d\x0a";
+                            if (line.StartsWith("packname="))
+                            {
+                                packname = line.Replace("packname=", "");
+                            }
+                            else if (line.StartsWith("whitelist="))
+                            {
+                                line = Regex.Replace(line, @"\s+", "");
+                                whitelist = line.Replace("whitelist=", "").Split(',');
+                            }
+                            else if (line.StartsWith("blacklist="))
+                            {
+                                line = Regex.Replace(line, @"\s+", "");
+                                blacklist = line.Replace("blacklist=", "").Split(',');
+                            }
+                            else if (line.StartsWith("code="))
+                            {
+                                line = Regex.Replace(line, @"\s+", "");
+                                code = line.Replace("code=", "");
+                            }
+                            else if (line.StartsWith("msg="))
+                            {
+                                //line = Regex.Replace(line, @"\s+", "");
+                                msg = line.Replace("msg=", "");
+                            }
+                            else if (line.StartsWith("author="))
+                            {
+                                //line = Regex.Replace(line, @"\s+", "");
+                                author = line.Replace("author=", "");
+                            }
+                        }
+
+                        // Calculate MD5 of content and verify it against signature
+                        if (Crypto.VerifyRSASignature(Crypto.CalculateMD5Hash(file_for_md5), signature))
+                        {
+                            FileTuningAction tp = new frmMain.FileTuningAction(packname, file, whitelist, blacklist, code, author, msg);
+                            installedTunings.Add(tp);
+                        }
+                        else
+                        {
+                            logger.Debug("Signature check failed for file: " + file);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void barButtonItem9_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            frmTuningWizard frmTunWiz = new frmTuningWizard(this, m_currentfile);
+            frmTunWiz.ShowDialog();
         }
     }
 }
