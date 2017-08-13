@@ -19878,7 +19878,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         string author = string.Empty;
                         string[] whitelist = new string[] { };
                         string[] blacklist = new string[] { };
-                        frmMain.BinaryType packtype = Form1.BinaryType.None;
+                        frmMain.BinaryType packtype = frmMain.BinaryType.None;
 
                         // Read signature
                         string s = sr.ReadLine();
@@ -19906,7 +19906,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                                 sPacktype = line.Replace("bintype=", "");
                                 if (sPacktype == "OLD")
                                 {
-                                    packtype = Form1.BinaryType.OldBin;
+                                    packtype = frmMain.BinaryType.OldBin;
                                 }
                                 else if (sPacktype == "NEW")
                                 {
@@ -19947,7 +19947,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         // Calculate MD5 of content and verify it against signature
                         if (Crypto.VerifyRSASignature(Crypto.CalculateMD5Hash(file_for_md5), signature))
                         {
-                            FileTuningAction tp = new frmMain.FileTuningAction(packname, file, whitelist, blacklist, code, author, msg);
+                            FileTuningAction tp = new frmMain.FileTuningAction(packname, file, packtype, whitelist, blacklist, code, author, msg);
                             installedTunings.Add(tp);
                         }
                         else
