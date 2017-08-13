@@ -19654,11 +19654,20 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             TuningFile      // Future: Tuning Packages when installing solution.
         };
 
+        public enum BinaryType
+        {
+            None = 0,       // Should never happen
+            OldBin,         // BIN Older than FC01
+            NewBin,         // BIN Newer than FC01
+            BothBin
+        };
+
         public class TuningAction
         {
             public string WizName;
             public string WizIdOrFilename;
             public TuneWizardType WizType;
+            public BinaryType WizBinType;
             public string[] WizWhitelist;
             public string[] WizBlacklist;
             public string WizCode;
@@ -19670,6 +19679,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 WizType = TuneWizardType.None;
                 WizName = string.Empty;
                 WizIdOrFilename = string.Empty;
+                WizBinType = BinaryType.None;
                 WizWhitelist = new string[] { };
                 WizBlacklist = new string[] { };
                 WizCode = string.Empty;
@@ -19692,6 +19702,11 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             public TuneWizardType GetWizardType()
             {
                 return WizType;
+            }
+
+            public BinaryType GetWizBinaryType()
+            {
+                return WizBinType;
             }
 
             public bool compatibelSoftware(string software)
@@ -19758,11 +19773,12 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         }
         public class FileTuningAction : TuningAction
         {
-            public FileTuningAction(string name, string filename, string[] whitelist, string[] blacklist, string code, string author, string msg)
+            public FileTuningAction(string name, string filename, BinaryType type, string[] whitelist, string[] blacklist, string code, string author, string msg)
             {
                 WizName = name;
                 WizIdOrFilename = filename;
                 WizType = TuneWizardType.TuningFile;
+                WizBinType = type;
                 WizWhitelist = whitelist;
                 WizBlacklist = blacklist;
                 WizCode = code;
@@ -19817,6 +19833,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             public DateAndName()
             {
                 WizType = TuneWizardType.Embedded;
+                WizBinType = BinaryType.None;
                 WizName = "Update footer";
                 WizIdOrFilename = "ap_dateName";
             }
@@ -19861,6 +19878,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         string author = string.Empty;
                         string[] whitelist = new string[] { };
                         string[] blacklist = new string[] { };
+                        frmMain.BinaryType packtype = Form1.BinaryType.None;
 
                         // Read signature
                         string s = sr.ReadLine();
@@ -19882,6 +19900,22 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             if (line.StartsWith("packname="))
                             {
                                 packname = line.Replace("packname=", "");
+                            }
+                            else if (line.StartsWith("bintype="))
+                            {
+                                sPacktype = line.Replace("bintype=", "");
+                                if (sPacktype == "OLD")
+                                {
+                                    packtype = Form1.BinaryType.OldBin;
+                                }
+                                else if (sPacktype == "NEW")
+                                {
+                                    packtype = BinaryType.NewBin;
+                                }
+                                else if (sPacktype == "BOTH")
+                                {
+                                    packtype = BinaryType.BothBin;
+                                }
                             }
                             else if (line.StartsWith("whitelist="))
                             {
