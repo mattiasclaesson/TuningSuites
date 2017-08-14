@@ -77,6 +77,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="canlibCLSNET, Version=8.14.384.1, Culture=neutral, PublicKeyToken=bb7f2cd46200de24, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\reference files\canlibCLSNET.dll</HintPath>
+    </Reference>
     <Reference Include="combilib-net, Version=1.0.4093.28460, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\reference files\combilib-net.dll</HintPath>
@@ -88,6 +92,10 @@
     <Reference Include="LibUsbDotNet, Version=2.2.8.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\reference files\LibUsbDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\reference files\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -111,6 +119,7 @@
     <Compile Include="CAN\ICANDevice.cs" />
     <Compile Include="CAN\ICANListener.cs" />
     <Compile Include="CAN\Just4TrionicDevice.cs" />
+    <Compile Include="CAN\KvaserCANDevice.cs" />
     <Compile Include="CAN\Lawicel_canusb.cs" />
     <Compile Include="CAN\LPCCANDevice_T5.cs" />
     <Compile Include="CAN\MctCanDevice.cs" />
