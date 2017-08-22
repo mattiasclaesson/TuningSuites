@@ -12,9 +12,9 @@ namespace T5Suite2
 {
     public partial class frmMultiAdapterConfig : DevExpress.XtraEditors.XtraForm
     {
-        private AppSettings m_appSettings;
+        private T5AppSettings m_appSettings;
 
-        public AppSettings AppSettings
+        public T5AppSettings AppSettings
         {
             get { return m_appSettings; }
             set

@@ -46,11 +46,6 @@ namespace RealtimeGraph
             this.label1.TabIndex = 0;
             this.label1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // RealtimeGraphControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -69,6 +64,7 @@ namespace RealtimeGraph
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RealtimeGraphControl_MouseDown);
             this.Resize += new System.EventHandler(this.RealtimeGraphControl_Resize);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RealtimeGraphControl_MouseUp);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RealtimeGraphControl_KeyDown);
             this.ResumeLayout(false);
 
         }

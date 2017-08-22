@@ -930,26 +930,6 @@ namespace OnlineGraph
             }
         }
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-            // paint the graphs in the control
-            
-
-            //this.DrawBackground(e.ClipRectangle, e.Graphics);
-            //this.DrawGrid(e.ClipRectangle, e.Graphics);
-            //this.DrawLines(e.ClipRectangle, e.Graphics);
-            //Console.WriteLine("Done painting panel2");
-            //this.DrawLabels(e.Graphics);
-            /*foreach(GraphLine line in _lines)
-            {
-                Console.WriteLine(line.Symbol + " contains: " + line.Numberofmeasurements.ToString());
-                foreach (GraphMeasurement measurement in line.Measurements)
-                {
-                    Console.WriteLine("  measurement " + measurement.Timestamp.ToString("HH:mm:ss") + " " + measurement.Value.ToString("F2"));
-                }
-            }*/
-        }
-
         private string DetermineGraphNameByLinesPosition(Rectangle r, float x, float y,out DateTime measurementdt, out float value, out bool _valid)
         {
             

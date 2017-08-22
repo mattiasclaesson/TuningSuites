@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-//using System.Security.Permissions;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +8,7 @@ using System.Data.Odbc;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
+
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 
@@ -46,7 +46,7 @@ namespace Trionic5Tools
         TouchscreenView
     }
 
-    public class AppSettings
+    public class T5AppSettings
     {
 
         private string _LastXAxisFromMatrix = string.Empty;
@@ -2018,10 +2018,8 @@ namespace Trionic5Tools
             }
         }
 
-        public AppSettings()
+        public T5AppSettings()
         {
-
-
             // laad alle waarden uit het register
             RegistryKey TempKey = null;
             TempKey = Registry.CurrentUser.CreateSubKey("Software");

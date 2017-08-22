@@ -18,6 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProGauges", "ProGauges\ProG
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeGraph", "T5RealtimeGraph\RealtimeGraph.csproj", "{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61FE31C4-B244-4C13-BAF6-F66857F0B88E} = {61FE31C4-B244-4C13-BAF6-F66857F0B88E}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuiteLauncher", "SuiteLauncher\SuiteLauncher.csproj", "{6DCFB06D-4B31-4D4E-BF49-41F5285B396B}"
 EndProject

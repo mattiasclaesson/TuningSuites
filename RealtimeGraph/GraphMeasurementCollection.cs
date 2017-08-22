@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using CommonSuite;
 
 namespace RealtimeGraph
 {
@@ -20,7 +21,11 @@ namespace RealtimeGraph
         {
             get
             {
-                return ((GraphMeasurement)List[index]);
+                if (index < List.Count && index >= 0)
+                {
+                    return ((GraphMeasurement)List[index]);
+                }
+                else return new GraphMeasurement();
             }
             set
             {

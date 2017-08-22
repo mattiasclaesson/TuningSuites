@@ -96,11 +96,11 @@
     <Compile Include="frmLineselection.Designer.cs">
       <DependentUpon>frmLineselection.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmProgress.cs">
+    <Compile Include="frmRealtimeProgress.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmProgress.Designer.cs">
-      <DependentUpon>frmProgress.cs</DependentUpon>
+    <Compile Include="frmRealtimeProgress.designer.cs">
+      <DependentUpon>frmRealtimeProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSectionSelection.cs">
       <SubType>Form</SubType>
@@ -121,7 +121,6 @@
       <DependentUpon>RealtimeGraphControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SortableCollectionBase.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
@@ -129,9 +128,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmLineselection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmProgress.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmProgress.cs</DependentUpon>
+    <EmbeddedResource Include="frmRealtimeProgress.resx">
+      <DependentUpon>frmRealtimeProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSectionSelection.resx">
       <DependentUpon>frmSectionSelection.cs</DependentUpon>
@@ -169,6 +167,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonSuite\CommonSuite.csproj">
+      <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
+      <Name>CommonSuite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\radiobutton\LEDRadioButton.csproj">
       <Project>{98096340-5853-42D0-8B2F-1CD364C5A152}</Project>
       <Name>LEDRadioButton</Name>

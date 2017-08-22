@@ -481,9 +481,9 @@ namespace T5Suite2
             }
         }
 
-        private AppSettings m_appSettings;
+        private T5AppSettings m_appSettings;
 
-        public AppSettings AppSettings
+        public T5AppSettings AppSettings
         {
             get { return m_appSettings; }
             set { m_appSettings = value; }

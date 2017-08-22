@@ -20,6 +20,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProGauges", "ProGauges\ProGauges.csproj", "{A53A3F2C-5553-405D-BAF0-DE5C779D3E7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeGraph", "RealtimeGraph\RealtimeGraph.csproj", "{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61FE31C4-B244-4C13-BAF6-F66857F0B88E} = {61FE31C4-B244-4C13-BAF6-F66857F0B88E}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.TextEditor", "ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj", "{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}"
 EndProject

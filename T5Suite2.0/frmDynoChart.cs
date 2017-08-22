@@ -315,9 +315,9 @@ namespace T5Suite2
             set { _trionicFile = value; }
         }
 
-        private AppSettings _appSettings;
+        private T5AppSettings _appSettings;
 
-        public AppSettings AppSettings
+        public T5AppSettings AppSettings
         {
             get { return _appSettings; }
             set { _appSettings = value; }

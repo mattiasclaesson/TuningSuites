@@ -137,9 +137,6 @@
       <DependentUpon>RealtimeGraphControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SortableCollectionBase.cs" />
-    <Compile Include="SymbolCollection.cs" />
-    <Compile Include="SymbolHelper.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +183,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonSuite\CommonSuite.csproj">
+      <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
+      <Name>CommonSuite</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

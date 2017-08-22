@@ -40,7 +40,6 @@ namespace RealtimeGraph
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxControl1.DisplayMember = "Description";
             this.listBoxControl1.Location = new System.Drawing.Point(11, 10);
-            this.listBoxControl1.MultiColumn = true;
             this.listBoxControl1.Name = "listBoxControl1";
             this.listBoxControl1.Size = new System.Drawing.Size(330, 212);
             this.listBoxControl1.TabIndex = 0;

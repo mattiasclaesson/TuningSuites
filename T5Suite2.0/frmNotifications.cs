@@ -12,7 +12,7 @@ namespace T5Suite2
 {
     public partial class frmNotifications : DevExpress.XtraEditors.XtraForm
     {
-        AppSettings m_appSettings;
+        T5AppSettings m_appSettings;
 
         SymbolCollection m_symbols = new SymbolCollection();
 
@@ -36,7 +36,7 @@ namespace T5Suite2
 
         
 
-        public AppSettings AppSettings
+        public T5AppSettings AppSettings
         {
             get { return m_appSettings; }
             set

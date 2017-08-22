@@ -225,7 +225,7 @@ namespace T5Suite2
         private void simpleButton2_Click(object sender, EventArgs e)
         {
             // show the details for this transaction (including data, meaning 2 mapviewers showing the details)
-            frmInfoBox info = new frmInfoBox("Still needs to be implemented");
+            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Still needs to be implemented");
         }
 
         private void gridView1_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)

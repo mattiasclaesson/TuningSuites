@@ -248,7 +248,7 @@ namespace T5Suite2
         ECUConnection _ecuConnection = new ECUConnection();
         OperationMode _APPmode = OperationMode.ModeOffline; // always start in offline mode
         OperationMode _ECUmode = OperationMode.ModeOffline; // always start in offline mode
-        AppSettings m_appSettings;
+        T5AppSettings m_appSettings;
         private bool _overruleTPS = false;
         private bool _syncAskedForECUConnect = false;
         public DelegateUpdateRealtimeValue m_DelegateUpdateRealtimeValue;
@@ -259,7 +259,7 @@ namespace T5Suite2
         private msiupdater m_msiUpdater;
         private bool _connectionWasOpenedBefore = false;
         private string m_CurrentWorkingProject = string.Empty;
-        private TrionicProjectLog m_ProjectLog = new TrionicProjectLog();
+        private CommonSuite.TrionicProjectLog m_ProjectLog = new CommonSuite.TrionicProjectLog();
         SoundPlayer sndplayer;
         /*private float[] targetmap;
         private float[] AFRMapInMemory;
@@ -273,8 +273,10 @@ namespace T5Suite2
         private AFRMaps m_AFRMaps;
         private IgnitionMaps m_IgnitionMaps;
 
+        private CommonSuite.SymbolColors symbolColors;
         private string logworksstring = CommonSuite.LogWorks.GetLogWorksPathFromRegistry();
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private CommonSuite.SuiteRegistry suiteRegistry = new T5SuiteRegistry();
 
         public Form1(string[] args)
         {
@@ -317,7 +319,9 @@ namespace T5Suite2
             }
             _splash.SetProgressText("Loading settings...");
 
-            m_appSettings = new AppSettings();
+            m_appSettings = new T5AppSettings();
+            symbolColors = new CommonSuite.SymbolColors(suiteRegistry);
+
             try
             {
                 sndplayer = new SoundPlayer();
@@ -386,7 +390,7 @@ namespace T5Suite2
                 barItemCombiAdapter.Caption = e.Type.ToString() + " connected";
                 if (e.Type == AdapterType.LAWICEL && m_appSettings.CanDevice != "Lawicel")
                 {
-                    frmInfoBox info = new frmInfoBox("You have connected a Lawicel CANUSB adapter but the settings show that this is not the currently selected canusb device!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You have connected a Lawicel CANUSB adapter but the settings show that this is not the currently selected canusb device!");
                 }
             }
             else
@@ -403,7 +407,7 @@ namespace T5Suite2
                 barItemCombiAdapter.Caption = "CombiAdapter connected";
                 if (m_appSettings.CanDevice != "Multiadapter" && m_appSettings.CanDevice != "CombiAdapter")
                 {
-                    frmInfoBox info = new frmInfoBox("You have connected a CombiAdapter but the settings show that this is not the currently selected canusb device!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You have connected a CombiAdapter but the settings show that this is not the currently selected canusb device!");
                 }
             }
             else
@@ -1183,7 +1187,7 @@ namespace T5Suite2
             DockPanel dp = dockManager1.AddPanel(DockingStyle.Right);
             dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
             dp.Tag = xmlfilename;
-            ctrlReleaseNotes mv = new ctrlReleaseNotes();
+            CommonSuite.ctrlReleaseNotes mv = new CommonSuite.ctrlReleaseNotes();
             mv.LoadXML(xmlfilename);
             mv.Dock = DockStyle.Fill;
             dp.Width = 500;
@@ -1196,12 +1200,12 @@ namespace T5Suite2
         {
             if (m_trionicFile == null)
             {
-                frmInfoBox info = new frmInfoBox("You should open a binary file first");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You should open a binary file first");
                 return;
             }
             if (!m_trionicFile.HasSymbol(symbolname))
             {
-                frmInfoBox info = new frmInfoBox(symbolname + " is not present in the current file");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox(symbolname + " is not present in the current file");
                 return;
             }
             // make it 100% self-defining
@@ -1378,12 +1382,12 @@ namespace T5Suite2
         {
             if (m_trionicFile == null)
             {
-                frmInfoBox info = new frmInfoBox("You should open a binary file first");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You should open a binary file first");
                 return;
             }
             if(!m_trionicFile.HasSymbol(symbolname))
             {
-                frmInfoBox info = new frmInfoBox(symbolname + " is not present in the current file");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox(symbolname + " is not present in the current file");
                 return;
             }
             
@@ -1827,12 +1831,12 @@ namespace T5Suite2
             }
             if (m_trionicFile == null)
             {
-                frmInfoBox info = new frmInfoBox("You should open a binary file first");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You should open a binary file first");
                 return;
             }
             if (!m_trionicFile.HasSymbol(symbolname))
             {
-                frmInfoBox info = new frmInfoBox(symbolname + " is not present in the current file");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox(symbolname + " is not present in the current file");
                 return;
             }
             // make it 100% self-defining
@@ -2198,7 +2202,7 @@ namespace T5Suite2
                         //logger.Debug("Symbol:" + sh.Varname);
                         if (!_ecuConnection.Opened && sh.Flash_start_address == 0/*!sh.Varname.Contains("!")*/ && m_trionicFileInformation.SRAMfilename == "")
                         {
-                                frmInfoBox info = new frmInfoBox("Symbol resides in SRAM and you are in offline mode. T5Suite is unable to fetch this symboldata in offline mode");
+                                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Symbol resides in SRAM and you are in offline mode. T5Suite is unable to fetch this symboldata in offline mode");
 
                         }
                         else
@@ -2404,7 +2408,7 @@ namespace T5Suite2
                     SetOnlineButtons(false);
                     UpdateOnlineOffLineTexts();
                     Application.DoEvents();
-                    frmInfoBox info = new frmInfoBox("Failed to open canbus connection!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to open canbus connection!");
                 }
             }
             else
@@ -2603,7 +2607,7 @@ namespace T5Suite2
                 SetOnlineButtons(false);
                 UpdateOnlineOffLineTexts();
                 Application.DoEvents();
-                frmInfoBox info = new frmInfoBox("Failed to open canbus connection!");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to open canbus connection!");
             }
         }
 
@@ -2829,7 +2833,7 @@ namespace T5Suite2
                 }
                 /*else
                 {
-                    frmInfoBox info = new frmInfoBox("You cannot flash the ECU while the engine is running!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You cannot flash the ECU while the engine is running!");
                 }*/
             }
         }
@@ -3562,7 +3566,7 @@ namespace T5Suite2
                 }
                 /*else
                 {
-                    frmInfoBox info = new frmInfoBox("You cannot download the flash content while the engine is running!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("You cannot download the flash content while the engine is running!");
                 }*/
             }
         }
@@ -3598,7 +3602,7 @@ namespace T5Suite2
             }
             else
             {
-                frmInfoBox info = new frmInfoBox("A canbus connection is needed to create a SRAM snapshot");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("A canbus connection is needed to create a SRAM snapshot");
             }
         }
 
@@ -3623,7 +3627,7 @@ namespace T5Suite2
             ofd.Multiselect = false;
             if (logworksstring == string.Empty)
             {
-                frmInfoBox info = new frmInfoBox("Logworks is not installed on this computer, download from http://www.innovatemotorsports.com/");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Logworks is not installed on this computer, download from http://www.innovatemotorsports.com/");
             }
             else if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -3640,7 +3644,7 @@ namespace T5Suite2
             DateTime endDate = DateTime.MinValue;
             try
             {
-                Trionic5Tools.SymbolCollection sc = new Trionic5Tools.SymbolCollection();
+                CommonSuite.SymbolCollection sc = new CommonSuite.SymbolCollection();
                 string[] alllines = File.ReadAllLines(filename);
                 //using (StreamReader sr = new StreamReader(filename))
                 {
@@ -3680,7 +3684,7 @@ namespace T5Suite2
                                                 sfound = true;
                                             }
                                         }
-                                        Trionic5Tools.SymbolHelper nsh = new Trionic5Tools.SymbolHelper();
+                                        CommonSuite.SymbolHelper nsh = new CommonSuite.SymbolHelper();
                                         nsh.Varname = varname;
                                         if (!sfound) sc.Add(nsh);
                                     }
@@ -3696,7 +3700,7 @@ namespace T5Suite2
 
                 if (AutoExport)
                 {
-                    foreach (Trionic5Tools.SymbolHelper sh in sc)
+                    foreach (CommonSuite.SymbolHelper sh in sc)
                     {
                         sh.Color = GetColorFromRegistry(sh.Varname);
                     }
@@ -3724,8 +3728,8 @@ namespace T5Suite2
                 {
 
                     // show selection screen
-                    frmPlotSelection plotsel = new frmPlotSelection();
-                    foreach (Trionic5Tools.SymbolHelper sh in sc)
+                    CommonSuite.frmPlotSelection plotsel = new CommonSuite.frmPlotSelection(suiteRegistry);
+                    foreach (CommonSuite.SymbolHelper sh in sc)
                     {
                         if (sh.Varname != "Pgm_status")
                         {
@@ -3741,7 +3745,7 @@ namespace T5Suite2
                         endDate = plotsel.Enddate;
                         startDate = plotsel.Startdate;
                         DifGenerator difgen = new DifGenerator();
-                        LogFilters filterhelper = new LogFilters();
+                        CommonSuite.LogFilters filterhelper = new CommonSuite.LogFilters(suiteRegistry);
                         difgen.SetFilters(filterhelper.GetFiltersFromRegistry());
                         difgen.LowAFR = m_appSettings.WidebandLowAFR / 1000;
                         difgen.HighAFR = m_appSettings.WidebandHighAFR / 1000;
@@ -3759,7 +3763,7 @@ namespace T5Suite2
                             }
                             else
                             {
-                                frmInfoBox info = new frmInfoBox("No data was found to export!");
+                                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("No data was found to export!");
                             }
                         }
                         catch (Exception expE2)
@@ -4085,7 +4089,7 @@ namespace T5Suite2
                 {
                     if (m_trionicFile.ValidateChecksum())
                     {
-                        frmInfoBox info = new frmInfoBox("Checksum is valid");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Checksum is valid");
                     }
                     else
                     {
@@ -4127,7 +4131,7 @@ namespace T5Suite2
                 }
                 else
                 {
-                    frmInfoBox info = new frmInfoBox("User manual could not be found or opened!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("User manual could not be found or opened!");
                 }
             }
             catch (Exception E)
@@ -4147,7 +4151,7 @@ namespace T5Suite2
                 }
                 else
                 {
-                    frmInfoBox info = new frmInfoBox("Trionic 5 documentation could not be found or opened!");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Trionic 5 documentation could not be found or opened!");
                 }
             }
             catch (Exception E2)
@@ -4283,7 +4287,7 @@ namespace T5Suite2
                         tuningrep.DataSource = resume.ResumeTuning;
                         tuningrep.CreateReport();
                         tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                        frmInfoBox info = new frmInfoBox("Data was transferred to the target binary");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Data was transferred to the target binary");
                     }
                     else
                     {
@@ -4988,7 +4992,7 @@ namespace T5Suite2
                             logger.Debug("Symbol:" + sh.Varname);
                             if (!_ecuConnection.Opened && !sh.Varname.Contains("!") && m_trionicFileInformation.SRAMfilename == "")
                             {
-                                frmInfoBox info = new frmInfoBox("Symbol resides in SRAM and you are in offline mode. T5Suite is unable to fetch this symboldata in offline mode");
+                                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Symbol resides in SRAM and you are in offline mode. T5Suite is unable to fetch this symboldata in offline mode");
                             }
                             else
                             {
@@ -5228,7 +5232,7 @@ namespace T5Suite2
             }
             else
             {
-                frmInfoBox info = new frmInfoBox("No file selected, please select one first");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("No file selected, please select one first");
             }
 
         }
@@ -5538,7 +5542,7 @@ namespace T5Suite2
                         }
                         else
                         {
-                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Map lengths don't match...");
                         }
                     }
                 }
@@ -6195,7 +6199,7 @@ namespace T5Suite2
             }
             else
             {
-                frmInfoBox info = new frmInfoBox("No file is currently opened, you need to open a binary file first to compare it to another one!");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("No file is currently opened, you need to open a binary file first to compare it to another one!");
             }
         }
 
@@ -6243,7 +6247,7 @@ namespace T5Suite2
                         byte[] data_2 = m_trionicFile.ReadDataFromFile(filename_2, (uint)sh.Start_address, (uint)sh.Length);
                         if (data_1.Length != data_2.Length)
                         {
-                            frmInfoBox info = new frmInfoBox("Sram data structure invalid... " + sh.Varname);
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Sram data structure invalid... " + sh.Varname);
                             return;
                         }
                         else
@@ -6596,7 +6600,7 @@ namespace T5Suite2
                         }
                         else
                         {
-                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Map lengths don't match...");
                         }
                         if (dockPanel != null)
                         {
@@ -6620,7 +6624,7 @@ namespace T5Suite2
             //Import an SRAM snapshots data into the binfile.
             //First find out what maps / vars are different and prompt the user to make a selection from these.
             // also remember the last set of selected symbols here
-            // frmInfoBox info = new frmInfoBox("Still needs to be implemented");
+            // CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Still needs to be implemented");
             // let the user select a SRAM file first
             OpenFileDialog ofd1 = new OpenFileDialog();
             ofd1.Title = "Select SRAM file...";
@@ -6792,7 +6796,7 @@ namespace T5Suite2
                     //tuningrep.DataSource = resumeTuning;
                     //tuningrep.CreateReport();
                     //tuningrep.ShowPreview(defaultLookAndFeel1.LookAndFeel);
-                    frmInfoBox info = new frmInfoBox("Data was imported");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Data was imported");
                 }
             }
         }
@@ -6800,7 +6804,7 @@ namespace T5Suite2
         private void btnCompareSRAMtoBinary_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //Compare the data from an sram snapshot to the binary file
-            //frmInfoBox info = new frmInfoBox("Still needs to be implemented");
+            //frmInfoBox info = new CommonSuite.frmInfoBox("Still needs to be implemented");
             // read all symbols from list and compare to sram equivalent!
             OpenFileDialog ofd1 = new OpenFileDialog();
             ofd1.Title = "Select SRAM file to compare...";
@@ -7104,7 +7108,7 @@ namespace T5Suite2
                         }
                         else
                         {
-                            frmInfoBox info = new frmInfoBox("Map lengths don't match...");
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Map lengths don't match...");
                         }
                     }
                 }
@@ -7183,7 +7187,7 @@ namespace T5Suite2
                     fs2.Close();
                     fsi1.Close();
                     br1.Close();
-                    frmInfoBox info = new frmInfoBox("File split to chip1.bin and chip2.bin");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("File split to chip1.bin and chip2.bin");
                 }
             }
         }
@@ -7193,7 +7197,7 @@ namespace T5Suite2
             props = m_trionicFile.GetTrionicProperties();
             if ((int)props.TuningStage > 3)
             {
-                frmInfoBox infofail = new frmInfoBox("This file has already been tuned to a higher stage, the tuning wizard will not be started");
+                CommonSuite.frmInfoBox infofail = new CommonSuite.frmInfoBox("This file has already been tuned to a higher stage, the tuning wizard will not be started");
                 return;
             }
             
@@ -7241,7 +7245,7 @@ namespace T5Suite2
                 Application.DoEvents();
                 Trionic5Tuner _tuner = new Trionic5Tuner();
                 _tuner.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                frmInfoBox info;
+                CommonSuite.frmInfoBox info;
                 TuningResult result = TuningResult.TuningFailed;
                 if (tunWiz.TuningStage == 4)
                 {
@@ -7255,13 +7259,13 @@ namespace T5Suite2
                 switch (result)
                 {
                     case TuningResult.TuningFailed:
-                        info = new frmInfoBox("Tuning of the binary file failed!");
+                        info = new CommonSuite.frmInfoBox("Tuning of the binary file failed!");
                         break;
                     case TuningResult.TuningFailedAlreadyTuned:
-                        info = new frmInfoBox("Your binary file was already tuned!");
+                        info = new CommonSuite.frmInfoBox("Your binary file was already tuned!");
                         break;
                     case TuningResult.TuningFailedThreebarSensor:
-                        info = new frmInfoBox("Your binary file was already tuned (3 bar sensor)!");
+                        info = new CommonSuite.frmInfoBox("Your binary file was already tuned (3 bar sensor)!");
                         break;
                     case TuningResult.TuningSuccess:
                         // show report
@@ -7271,11 +7275,11 @@ namespace T5Suite2
                         tuningrep.SetDataSource(_tuner.Resume.ResumeTuning);
                         tuningrep.CreateReport();
                         tuningrep.ShowReportPreview(defaultLookAndFeel1.LookAndFeel);
-                        //info = new frmInfoBox("Your binary file was succesfully tuned to stage 1");
+                        //info = new CommonSuite.frmInfoBox("Your binary file was succesfully tuned to stage 1");
                         break;
                     case TuningResult.TuningCancelled:
                         // show report
-                        info = new frmInfoBox("Tuning process cancelled by user");
+                        info = new CommonSuite.frmInfoBox("Tuning process cancelled by user");
                         break;
                 }
             }
@@ -7290,23 +7294,23 @@ namespace T5Suite2
         {
             Trionic5Tuner _tuner = new Trionic5Tuner();
             _tuner.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-            frmInfoBox info;
+            CommonSuite.frmInfoBox info;
             TuningResult result = _tuner.TuneFileToStage(2, m_trionicFile.GetFileInfo().Filename, m_trionicFile, m_trionicFileInformation, false);
             switch (result)
             {
                 case TuningResult.TuningFailed:
-                    info = new frmInfoBox("Tuning of the binary file failed!");
+                    info = new CommonSuite.frmInfoBox("Tuning of the binary file failed!");
                     break;
                 case TuningResult.TuningFailedAlreadyTuned:
-                    info = new frmInfoBox("Your binary file was already tuned!");
+                    info = new CommonSuite.frmInfoBox("Your binary file was already tuned!");
                     break;
                 case TuningResult.TuningFailedThreebarSensor:
-                    info = new frmInfoBox("Your binary file was already tuned (3 bar sensor)!");
+                    info = new CommonSuite.frmInfoBox("Your binary file was already tuned (3 bar sensor)!");
                     break;
                 case TuningResult.TuningSuccess:
                     // show report
                     props = m_trionicFile.GetTrionicProperties();
-                    //info = new frmInfoBox("Your binary file was succesfully tuned to stage 2");
+                    //info = new CommonSuite.frmInfoBox("Your binary file was succesfully tuned to stage 2");
                     TuningReport tuningrep = new TuningReport();
                     tuningrep.ReportTitle = "Tuning report (stage II)";
                     tuningrep.SetDataSource(_tuner.Resume.ResumeTuning);
@@ -7315,7 +7319,7 @@ namespace T5Suite2
                     break;
                 case TuningResult.TuningCancelled:
                     // show report
-                    info = new frmInfoBox("Tuning process cancelled by user");
+                    info = new CommonSuite.frmInfoBox("Tuning process cancelled by user");
                     break;
 
             }
@@ -7325,23 +7329,23 @@ namespace T5Suite2
         {
             Trionic5Tuner _tuner = new Trionic5Tuner();
             _tuner.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-            frmInfoBox info;
+            CommonSuite.frmInfoBox info;
             TuningResult result = _tuner.TuneFileToStage(3, m_trionicFile.GetFileInfo().Filename, m_trionicFile, m_trionicFileInformation, false);
             switch (result)
             {
                 case TuningResult.TuningFailed:
-                    info = new frmInfoBox("Tuning of the binary file failed!");
+                    info = new CommonSuite.frmInfoBox("Tuning of the binary file failed!");
                     break;
                 case TuningResult.TuningFailedAlreadyTuned:
-                    info = new frmInfoBox("Your binary file was already tuned!");
+                    info = new CommonSuite.frmInfoBox("Your binary file was already tuned!");
                     break;
                 case TuningResult.TuningFailedThreebarSensor:
-                    info = new frmInfoBox("Your binary file was already tuned (3 bar sensor)!");
+                    info = new CommonSuite.frmInfoBox("Your binary file was already tuned (3 bar sensor)!");
                     break;
                 case TuningResult.TuningSuccess:
                     // show report
                     props = m_trionicFile.GetTrionicProperties();
-                    //info = new frmInfoBox("Your binary file was succesfully tuned to stage 3");
+                    //info = new CommonSuite.frmInfoBox("Your binary file was succesfully tuned to stage 3");
                     TuningReport tuningrep = new TuningReport();
                     tuningrep.ReportTitle = "Tuning report (stage III)";
                     tuningrep.SetDataSource(_tuner.Resume.ResumeTuning);
@@ -7350,7 +7354,7 @@ namespace T5Suite2
                     break;
                 case TuningResult.TuningCancelled:
                     // show report
-                    info = new frmInfoBox("Tuning process cancelled by user");
+                    info = new CommonSuite.frmInfoBox("Tuning process cancelled by user");
                     break;
 
             }
@@ -7366,7 +7370,7 @@ namespace T5Suite2
             //TODO: implement a wizard for usage with larger/different injectors.
             // it should contain a list with known injectors
             // and adjust not only inj_const but also battery correction maps.
-            //frmInfoBox info = new frmInfoBox("Still needs to be implemented");
+            //frmInfoBox info = new CommonSuite.frmInfoBox("Still needs to be implemented");
             // guide the user along all relevant maps
             if (m_trionicFile != null)
             {
@@ -7432,7 +7436,7 @@ namespace T5Suite2
                     tuningrep.SetDataSource(_tuner.Resume.ResumeTuning);
                     tuningrep.CreateReport();
                     tuningrep.ShowReportPreview(defaultLookAndFeel1.LookAndFeel);
-                    //frmInfoBox info = new frmInfoBox("Conversion to E85 fuel done");
+                    //frmInfoBox info = new CommonSuite.frmInfoBox("Conversion to E85 fuel done");
                 }
             }
         }
@@ -7440,7 +7444,7 @@ namespace T5Suite2
         private void SyncMaps(SyncOption which_direction)
         {
             //synchronize maps with the ECU
-            //frmInfoBox info = new frmInfoBox("Still needs to be implemented");
+            //frmInfoBox info = new CommonSuite.frmInfoBox("Still needs to be implemented");
             // sync ECU with binary file
             int cnt = 0;
             _ecuConnection.ProhibitRead = true;
@@ -7449,7 +7453,7 @@ namespace T5Suite2
             {
                 if (m_CurrentWorkingProject != string.Empty)
                 {
-                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.SynchronizationStarted, which_direction.ToString());
+                    m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.SynchronizationStarted, which_direction.ToString());
                 }
                 foreach (Trionic5Tools.SymbolHelper sh in m_trionicFile.GetFileInfo().SymbolCollection)
                 {
@@ -7550,12 +7554,12 @@ namespace T5Suite2
                 }
                 else
                 {
-                    frmInfoBox info = new frmInfoBox("Synchronization not needed");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Synchronization not needed");
                 }
             }
             else 
             {
-                    frmInfoBox info = new frmInfoBox("No connection to ECU available");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("No connection to ECU available");
             }
         }
 
@@ -7587,7 +7591,7 @@ namespace T5Suite2
                     m_trionicFile.SetManualRpmHigh(boostAdaptWiz.ManualRPMHigh);
                     m_trionicFile.SetManualRpmLow(boostAdaptWiz.ManualRPMLow);
                     m_trionicFile.SetMaxBoostError(boostAdaptWiz.BoostError);
-                    frmInfoBox info = new frmInfoBox("Boost adaption ranges were set");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Boost adaption ranges were set");
                 }
                 m_trionicFile.UpdateChecksum(); //<GS-28112009>
                 
@@ -7627,7 +7631,7 @@ namespace T5Suite2
                 // also copy the binary file into the subfolder for this project
                 if (Directory.Exists(m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName)))
                 {
-                    frmInfoBox info = new frmInfoBox("The chosen projectname already exists, please choose another one");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("The chosen projectname already exists, please choose another one");
                     //TODO: reshow the dialog if the project name already exists
                 }
                 else
@@ -7715,7 +7719,7 @@ namespace T5Suite2
             File.Copy(GetBinaryForProject(m_CurrentWorkingProject), filename);
             if (m_CurrentWorkingProject != string.Empty)
             {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.BackupfileCreated, filename);
+                m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.BackupfileCreated, filename);
             }
 
 
@@ -7853,7 +7857,7 @@ namespace T5Suite2
             }
             else
             {
-                frmInfoBox info = new frmInfoBox("No projects were found, please create one first!");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("No projects were found, please create one first!");
             }
 
         }
@@ -9034,7 +9038,7 @@ namespace T5Suite2
                 {
                     if (!BdmAdapter_Open())
                     {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Could not connect to the BDM adapter");
                         _continue = false;
                     }
                 }
@@ -9045,7 +9049,7 @@ namespace T5Suite2
                     {
                         if (!BdmAdapter_GetVersion(ref BDMversion))
                         {
-                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("BDM adapter is not compatible");
                             _continue = false;
                         }
                     }
@@ -9070,7 +9074,7 @@ namespace T5Suite2
                                 fio_bytes = 0;
                                 if (!BdmAdapter_DumpECU(sfd.FileName, typesel.GetECUType()))
                                 {
-                                    frmInfoBox info = new frmInfoBox("Failed to dump ECU");
+                                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to dump ECU");
                                 }
                                 DeleteScripts(Path.GetDirectoryName(sfd.FileName));
                             }
@@ -9085,7 +9089,7 @@ namespace T5Suite2
             catch (Exception BDMException)
             {
                 logger.Debug("Failed to dump ECU: " + BDMException.Message);
-                frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
             }
         }
 
@@ -9198,7 +9202,7 @@ namespace T5Suite2
                 {
                     if (!BdmAdapter_Open())
                     {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Could not connect to the BDM adapter");
                         _continue = false;
                     }
                 }
@@ -9209,7 +9213,7 @@ namespace T5Suite2
                     {
                         if (!BdmAdapter_GetVersion(ref BDMversion))
                         {
-                            frmInfoBox info1 = new frmInfoBox("BDM adapter is not compatible");
+                            CommonSuite.frmInfoBox info1 = new CommonSuite.frmInfoBox("BDM adapter is not compatible");
                             _continue = false;
                         }
                     }
@@ -9248,7 +9252,7 @@ namespace T5Suite2
             catch (Exception BDMException)
             {
                 logger.Debug("Failed to program ECU: " + BDMException.Message);
-                frmInfoBox info= new frmInfoBox("Failed to program ECU: " + BDMException.Message);
+                CommonSuite.frmInfoBox info= new CommonSuite.frmInfoBox("Failed to program ECU: " + BDMException.Message);
             }
         }
 
@@ -9715,7 +9719,7 @@ namespace T5Suite2
                 {
                     if (!BdmAdapter_Open())
                     {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Could not connect to the BDM adapter");
                         _continue = false;
                     }
                 }
@@ -9726,7 +9730,7 @@ namespace T5Suite2
                     {
                         if (!BdmAdapter_GetVersion(ref BDMversion))
                         {
-                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("BDM adapter is not compatible");
                             _continue = false;
                         }
                     }
@@ -9750,7 +9754,7 @@ namespace T5Suite2
                                 fio_bytes = 0;
                                 if (!BdmAdapter_ReadSRAM(sfd.FileName, typesel.GetECUType()))
                                 {
-                                    frmInfoBox info = new frmInfoBox("Failed to dump ECU");
+                                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to dump ECU");
                                 }
                                 DeleteScripts(Path.GetDirectoryName(sfd.FileName));
                             }
@@ -9765,7 +9769,7 @@ namespace T5Suite2
             catch (Exception BDMException)
             {
                 logger.Debug("Failed to dump ECU: " + BDMException.Message);
-                frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
             }
         }
 
@@ -9840,7 +9844,7 @@ namespace T5Suite2
                 tuningrep.SetDataSource(_tuner.Resume.ResumeTuning);
                 tuningrep.CreateReport();
                 tuningrep.ShowReportPreview(defaultLookAndFeel1.LookAndFeel);
-               //frmInfoBox info = new frmInfoBox(text);
+               //frmInfoBox info = new CommonSuite.frmInfoBox(text);
             }
             
 
@@ -9855,7 +9859,7 @@ namespace T5Suite2
             dp.Hide();
             dp.Text = "CANBus logfile: " + Path.GetFileName(filename);
             RealtimeGraphControl lfv = new RealtimeGraphControl();
-            LogFilters lfhelper = new LogFilters();
+            CommonSuite.LogFilters lfhelper = new CommonSuite.LogFilters(suiteRegistry);
             lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
             dp.Controls.Add(lfv);
             lfv.ImportT5Logfile(filename);
@@ -10047,7 +10051,7 @@ namespace T5Suite2
                     // now we have it all
                     if (xmin == xmax || ymin == ymax)
                     {
-                        frmInfoBox info = new frmInfoBox("No data to display ... x or y axis contains no differentiated values");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("No data to display ... x or y axis contains no differentiated values");
                         return;
                     }
                     frmMatrixResult result = new frmMatrixResult();
@@ -10587,7 +10591,7 @@ namespace T5Suite2
                     }
                     else
                     {
-                        frmInfoBox info = new frmInfoBox("Batch file not found. Check parameters");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Batch file not found. Check parameters");
                     }
                 }
                 catch (Exception E)
@@ -10610,7 +10614,7 @@ namespace T5Suite2
                     }
                     else
                     {
-                        frmInfoBox info = new frmInfoBox("Batch file not found. Check parameters");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Batch file not found. Check parameters");
                     }
                 }
                 catch (Exception E)
@@ -10643,7 +10647,7 @@ namespace T5Suite2
                     }
                     else
                     {
-                        frmInfoBox info = new frmInfoBox("Batch file not found. Check parameters");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Batch file not found. Check parameters");
                     }
                 }
                 catch (Exception E)
@@ -10676,7 +10680,7 @@ namespace T5Suite2
                     }
                     else
                     {
-                        frmInfoBox info = new frmInfoBox("Batch file not found. Check parameters");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Batch file not found. Check parameters");
                     }
                 }
                 catch (Exception E)
@@ -10709,7 +10713,7 @@ namespace T5Suite2
                     }
                     else
                     {
-                        frmInfoBox info = new frmInfoBox("Batch file not found. Check parameters");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Batch file not found. Check parameters");
                     }
                 }
                 catch (Exception E)
@@ -10794,7 +10798,7 @@ namespace T5Suite2
                     // save
                     m_trionicFile.SetRegulationDivisorValue(boostrangeWiz.RangeStep);
                     //m_trionicFile.SetHardcodedRPMLimit(m_trionicFileInformation.Filename, boostrangeWiz.HardcodedRPMLimit);
-                    frmInfoBox info = new frmInfoBox("Boost bias range has been changed");
+                    CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Boost bias range has been changed");
                 }
                 m_trionicFile.UpdateChecksum(); //<GS-28112009>
 
@@ -10847,7 +10851,7 @@ namespace T5Suite2
             if (m_CurrentWorkingProject != string.Empty)
             {
                 
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionRolledforward, m_trionicFileInformation.GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
+                m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.TransactionRolledforward, m_trionicFileInformation.GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
             }
 
             UpdateRollbackForwardControls();
@@ -10874,7 +10878,7 @@ namespace T5Suite2
             m_ProjectTransactionLog.SetEntryRolledBack(entry.TransactionNumber);
             if (m_CurrentWorkingProject != string.Empty)
             {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionRolledback, m_trionicFileInformation.GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
+                m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.TransactionRolledback, m_trionicFileInformation.GetSymbolNameByAddress(entry.SymbolAddress) + " " + entry.Note + " " + entry.TransactionNumber.ToString());
             }
 
             UpdateRollbackForwardControls();
@@ -10915,7 +10919,7 @@ namespace T5Suite2
             // <GS-18032010> insert logbook entry here if project is opened
             if (m_CurrentWorkingProject != string.Empty)
             {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.TransactionExecuted, m_trionicFileInformation.GetSymbolNameByAddress(e.Entry.SymbolAddress) + " " + e.Entry.Note);
+                m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.TransactionExecuted, m_trionicFileInformation.GetSymbolNameByAddress(e.Entry.SymbolAddress) + " " + e.Entry.Note);
             }
         }
 
@@ -11028,7 +11032,7 @@ namespace T5Suite2
                 }
                 if (m_CurrentWorkingProject != string.Empty)
                 {
-                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.ProjectFileRecreated, "Reconstruct upto " + filepar.SelectedDateTime.ToString("dd/MM/yyyy") + " selected file " + file2Process);
+                    m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.ProjectFileRecreated, "Reconstruct upto " + filepar.SelectedDateTime.ToString("dd/MM/yyyy") + " selected file " + file2Process);
                 }
                 UpdateRollbackForwardControls();
             }
@@ -11106,7 +11110,7 @@ namespace T5Suite2
                 {
                     OpenProject(m_CurrentWorkingProject);
                 }
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.PropertiesEdited, projectproperties.Version);
+                m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.PropertiesEdited, projectproperties.Version);
             }
             
         }
@@ -11119,7 +11123,7 @@ namespace T5Suite2
             {
                 if (m_CurrentWorkingProject != string.Empty)
                 {
-                    m_ProjectLog.WriteLogbookEntry(LogbookEntryType.Note, newNote.Note);
+                    m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.Note, newNote.Note);
                 }
             }
         }
@@ -11128,7 +11132,7 @@ namespace T5Suite2
         {
             if (m_CurrentWorkingProject != string.Empty)
             {
-                m_ProjectLog.WriteLogbookEntry(LogbookEntryType.LogfileStarted, e.File);
+                m_ProjectLog.WriteLogbookEntry(CommonSuite.LogbookEntryType.LogfileStarted, e.File);
             }
         }
 
@@ -11244,7 +11248,7 @@ namespace T5Suite2
                 {
                     text = "Tuning process aborted, file was converted to another mapsensor type before!";
                 }
-                frmInfoBox info = new frmInfoBox(text);
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox(text);
             }
         }
 
@@ -11411,7 +11415,7 @@ namespace T5Suite2
         private void ShowChristmasWish()
         {
             int newyear = DateTime.Now.Year + 1;
-            frmInfoBox info = new frmInfoBox("Merry christmas and a happy " + newyear.ToString("D4") + "\rDilemma");
+            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Merry christmas and a happy " + newyear.ToString("D4") + "\rDilemma");
         }
 
         private bool IsChristmasTime()
@@ -12297,7 +12301,7 @@ namespace T5Suite2
                             srec2bin convert = new srec2bin();
                             if (!convert.ConvertBinToSrec(m_trionicFileInformation.Filename, sfd.FileName))
                             {
-                                frmInfoBox info = new frmInfoBox("Failed to convert file to S19 format");
+                                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Failed to convert file to S19 format");
                             }
                         }
                         else
@@ -12348,12 +12352,12 @@ namespace T5Suite2
         private void SetupLogFilters()
         {
             // setup the export filters
-            LogFilters filterhelper = new LogFilters();
-            frmLogFilters frmfilters = new frmLogFilters();
-            LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
+            CommonSuite.LogFilters filterhelper = new CommonSuite.LogFilters(suiteRegistry);
+            CommonSuite.frmLogFilters frmfilters = new CommonSuite.frmLogFilters();
+            CommonSuite.LogFilterCollection filters = filterhelper.GetFiltersFromRegistry();
             frmfilters.SetFilters(filters);
-            Trionic5Tools.SymbolCollection sc = new Trionic5Tools.SymbolCollection();
-            foreach (Trionic5Tools.SymbolHelper sh in m_trionicFileInformation.SymbolCollection)
+            CommonSuite.SymbolCollection sc = new CommonSuite.SymbolCollection();
+            foreach (CommonSuite.SymbolHelper sh in m_trionicFileInformation.SymbolCollection)
             {
                 if (!sh.Varname.Contains("!")) sc.Add(sh);
             }
@@ -13021,7 +13025,7 @@ namespace T5Suite2
             // DO NOT support T5.2 anymore, because of lack of proper knock detection
             if (!props.IsTrionic55)
             {
-                frmInfoBox info = new frmInfoBox("T5.2 is currently not supported for Autotuning Ignition");
+                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("T5.2 is currently not supported for Autotuning Ignition");
                 return;
             }
 
@@ -13754,18 +13758,18 @@ namespace T5Suite2
 
                                 m_trionicFile.UpdateChecksum();
 
-                                frmInfoBox info = new frmInfoBox("RPM limiters have been changed");
+                                CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("RPM limiters have been changed");
 
                             }
                         }
                         else
                         {
-                            frmInfoBox info = new frmInfoBox("This file is not supported by this wizard");
+                            CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("This file is not supported by this wizard");
                         }
                     }
                     else
                     {
-                        frmInfoBox info = new frmInfoBox("Trionic 5.2 files are not supported by this wizard");
+                        CommonSuite.frmInfoBox info = new CommonSuite.frmInfoBox("Trionic 5.2 files are not supported by this wizard");
                     }
                 }
             }

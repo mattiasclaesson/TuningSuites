@@ -19,7 +19,7 @@ using Microsoft.Win32;
 using System.IO;
 using DevExpress.XtraEditors.Controls;
 using System.Diagnostics;
-using Trionic5Tools;
+using CommonSuite;
 
 namespace RealtimeGraph
 {
@@ -228,21 +228,6 @@ namespace RealtimeGraph
             return retval;
         }
 
-        /*private void WriteLastestValuesToLog()
-        {
-            DateTime datet = DateTime.Now;
-
-            string logline = datet.ToString("dd/MM/yyyy HH:mm:ss") + "." + datet.Millisecond.ToString("D3") + "|";
-            foreach (GraphLine line in _lines)
-            {
-                logline += line.Symbol + "=" + line.Measurements[line.Measurements.Count - 1].Value.ToString("F2") + "|";
-            }
-            using (StreamWriter sw = new StreamWriter(Application.StartupPath + "\\" + DateTime.Now.ToString("yyyyMMdd") + "-"+ _contextDescription + ".t5l", true))
-            {
-                sw.WriteLine(logline);
-            }
-        }*/
-
         public void ForceRepaint()
         {
             _selectionDetermined = false;
@@ -250,8 +235,6 @@ namespace RealtimeGraph
             _maxDateTimeDone = false;
 
             this.Invalidate();
-            // all new values, write them to a logfile (5tl)
-           // WriteLastestValuesToLog();
         }
 
         Stopwatch sw = new Stopwatch();
@@ -335,7 +318,7 @@ namespace RealtimeGraph
         private DateTime GetMinDateTime()
         {
             if (_minDateTimeDone) return _minDateTime;
-            
+
             DateTime retval = DateTime.Now.AddDays(1);
             _minDateTime = retval;
             foreach (GraphLine _line in _lines)
@@ -349,6 +332,7 @@ namespace RealtimeGraph
             _minDateTimeDone = true;
             return retval;
         }
+
         private bool _maxDateTimeDone = false;
         private DateTime _maxDateTime;
         private DateTime GetMaxDateTime()
@@ -848,13 +832,10 @@ namespace RealtimeGraph
                         if (cnt > 0)
                         {
                             float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
-                            //Console.WriteLine("Sectionwidth: " + sectionwidth.ToString());
                             float totalticks = _maxdt.Ticks - _mindt.Ticks;
                             float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
                             float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
-                            
-                            //float x1 = (float)(cnt - 1) * sectionwidth + 100;
-                            //float x2 = (float)cnt * sectionwidth + 100;
+
                             float y1 = (r.Height - 100) - (line.Measurements[cnt - 1].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
                             float y2 = (r.Height - 100) - (line.Measurements[cnt].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
 //                            Console.WriteLine("Line with value from : " + line.Measurements[cnt -1].Value.ToString() + " and to: " + line.Measurements[cnt].Value.ToString() + " x1: " + x1.ToString() + " y1: " + y1.ToString() + " x2: " + x2.ToString() + " y2: " + y2.ToString());
@@ -972,8 +953,6 @@ namespace RealtimeGraph
                     _selectionDetermined = false;
                     _minDateTimeDone = false;
                     _maxDateTimeDone = false;
-//                    Console.WriteLine("Zooming in");
-                    // determine centerdatetime by the point the user clicked
                     _centerDateTime = GetCenterDateTimeByMouseClick(e.Location.X, e.Location.Y);
 
                     Invalidate(); // <GS-21012010> 
@@ -1011,6 +990,7 @@ namespace RealtimeGraph
             _selectionDetermined = false;
             _minDateTimeDone = false;
             _maxDateTimeDone = false;
+
             DateTime returnvalue = _centerDateTime;
             int graphwidth = this.ClientRectangle.Width - 175;
             int positioningraph = x - 100;
@@ -1111,6 +1091,7 @@ namespace RealtimeGraph
                 _minDateTimeDone = false;
                 _maxDateTimeDone = false;
                 _zoomfactor = 1;
+
                 Invalidate();
             }
             else
@@ -1161,40 +1142,6 @@ namespace RealtimeGraph
             Double.TryParse(vs, out d);
             return d;
         }
-
-        /*
-if (symbolname == "BIL_HAST") retval = "Speed";
-            else if (symbolname == "P_MANIFOLD") retval = "Boost";
-            else if (symbolname == "P_MANIFOLD10") retval = "Boost";
-            else if (symbolname == "LUFTTEMP") retval = "IAT";
-            else if (symbolname == "KYL_TEMP") retval = "Coolant";
-            else if (symbolname == "AD_SOND") retval = "Lambda A/D";
-            else if (symbolname == "RPM") retval = "Rpm";
-            else if (symbolname == "INSPTID_MS10") retval = "Inj.dur";
-            else if (symbolname == "GEAR") retval = "Gear";
-            else if (symbolname == "APC_DECRESE") retval = "APCD";
-            else if (symbolname == "IGN_ANGLE") retval = "Ign.angle";
-            else if (symbolname == "P_FAK") retval = "P factor";
-            else if (symbolname == "I_FAK") retval = "I factor";
-            else if (symbolname == "D_FAK") retval = "D factor";
-            else if (symbolname == "REGL_TRYCK") retval = "Target boost";
-            else if (symbolname == "MAX_TRYCK") retval = "Max boost";
-            else if (symbolname == "PWM_UT10") retval = "APC PWM";
-            else if (symbolname == "REG_KON_APC") retval = "Reg. value";
-            else if (symbolname == "MEDELTROT") retval = "TPS";
-            else if (symbolname == "TROT_MIN") retval = "TPS offset";
-            else if (symbolname == "KNOCK_MAP_OFFSET") retval = "Map offset";
-            else if (symbolname == "KNOCK_OFFSET1234") retval = "Offset1234";
-            else if (symbolname == "KNOCK_AVERAGE") retval = "Average";
-            else if (symbolname == "KNOCK_AVERAGE_LIMIT") retval = "Average limit";
-            else if (symbolname == "KNOCK_LEVEL") retval = "Level";
-            else if (symbolname == "KNOCK_MAP_LIM") retval = "Ign.map limit";
-            else if (symbolname == "KNOCK_LIM") retval = "Map limit";
-            else if (symbolname == "KNOCK_REF_LEVEL") retval = "Ref. level";
-            else if (symbolname == "LKNOCK_OREF_LEVEL") retval = "ORef level";
-            else if (symbolname == "SPIK_COUNT") retval = "Spik";
-            else if (symbolname == "KNOCK_DIAG_LEVEL") retval = "Diag level";// (groter maken)
-            else if (symbolname == "KNOCK_ANG_DEC!") retval = "Ign. decrease";         */
 
         private Color GetGraphColor(string symbolname)
         {
@@ -1276,7 +1223,7 @@ if (symbolname == "BIL_HAST") retval = "Speed";
 
         public void ImportT5Logfile(string filename)
         {
-            frmProgress progress = new frmProgress();
+            frmRealtimeProgress progress = new frmRealtimeProgress();
             progress.Show();
             Application.DoEvents();
             DateTime _dtFrom = DateTime.MinValue;
@@ -1609,26 +1556,6 @@ if (symbolname == "BIL_HAST") retval = "Speed";
             }
         }
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-            // paint the graphs in the control
-            
-
-            //this.DrawBackground(e.ClipRectangle, e.Graphics);
-            //this.DrawGrid(e.ClipRectangle, e.Graphics);
-            //this.DrawLines(e.ClipRectangle, e.Graphics);
-            //Console.WriteLine("Done painting panel2");
-            //this.DrawLabels(e.Graphics);
-            /*foreach(GraphLine line in _lines)
-            {
-                Console.WriteLine(line.Symbol + " contains: " + line.Numberofmeasurements.ToString());
-                foreach (GraphMeasurement measurement in line.Measurements)
-                {
-                    Console.WriteLine("  measurement " + measurement.Timestamp.ToString("HH:mm:ss") + " " + measurement.Value.ToString("F2"));
-                }
-            }*/
-        }
-
         private string DetermineGraphNameByLinesPosition(Rectangle r, float x, float y,out DateTime measurementdt, out float value, out bool _valid, out Color lineColor)
         {
 
@@ -1892,30 +1819,8 @@ if (symbolname == "BIL_HAST") retval = "Speed";
             Cursor = Cursors.Default;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            /*if (_panning)
-            {
-                if (_pantype == PanType.PanLeft)
-                {
-                    if (!PanToLeft())
-                    {
-                        _panning = false;
-                    }
-                }
-                else
-                {
-                    if (!PanToRight())
-                    {
-                        _panning = false;
-                    }
-                }
-            }*/
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
-                // pan left
             PanToLeft();
         }
 
