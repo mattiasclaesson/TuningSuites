@@ -150,7 +150,8 @@ namespace T5CanFlasher
             "Lawicel CANUSB",
             "combiAdapter",
             "Mictronics DIY",
-            "Just4Trionic"});
+            "Just4Trionic",
+            "Kvaser"});
             this.comboInterface.Location = new System.Drawing.Point(470, 9);
             this.comboInterface.Name = "comboInterface";
             this.comboInterface.Size = new System.Drawing.Size(150, 21);

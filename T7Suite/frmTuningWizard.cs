@@ -1,74 +1,155 @@
-using System;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using System.IO;
 
 namespace T7
 {
-    public partial class frmTuningWizard : DevExpress.XtraEditors.XtraForm
+    public partial class frmTuningWizard : Form
     {
-        public frmTuningWizard()
+        readonly frmMain parent;
+        private string softwareVersion;
+
+        public frmTuningWizard(frmMain inParent, string in_m_currentfile)
         {
             InitializeComponent();
+            parent = inParent;
+
+            // Set-up some navigation rules
+            this.wizConfirmPage.AllowNext = false;
+            this.wizCompletedPage.AllowBack = false;
+
+            // Read software version from binary
+            if (in_m_currentfile != string.Empty)
+            {
+                if (File.Exists(in_m_currentfile))
+                {
+                    T7FileHeader t7InfoHeader = new T7FileHeader();
+                    t7InfoHeader.init(in_m_currentfile, false);
+                    softwareVersion = t7InfoHeader.getSoftwareVersion().Trim();
+                    this.lblSoftwareVersion.Text = softwareVersion.Substring(0, 8);
+                }
+            }
+            // List all compatible tuning packages
+            foreach (frmMain.TuningAction t in frmMain.installedTunings)
+                if (t.compatibelSoftware(softwareVersion))
+                    this.listTuningActions.Items.Add(t);
+            if (this.listTuningActions.ItemCount <= 0)
+                this.wizSelectActionPage.AllowNext = false;
+
         }
 
-        public string ExtraInfo
+        private void wizardTuning_NextClick(object sender, DevExpress.XtraWizard.WizardCommandButtonClickEventArgs e)
         {
-            set
+            // Update coming pages based on listbox selection
+            if (e.Page.Name == "wizSelectActionPage")
             {
-                memoEdit4.Text = "Details " + Environment.NewLine + Environment.NewLine + value;
+                this.lblTuningActionConfirm.Text = this.listTuningActions.SelectedItem.ToString();
+                frmMain.TuningAction selAction = (frmMain.TuningAction)this.listTuningActions.SelectedItem;
+                if (selAction.WizCode != string.Empty)
+                {
+                    this.textPassword.Text = "";
+                    //this.textPassword.Focus()
+                    this.theCode.Text = selAction.WizCode;
+                    this.wizardCodePage.Visible = true;
+                    this.wizardCodePage.AllowNext = false;
+                    this.lblAuthorText.Text = "Hint: Try with authors first. For this Tuning Package it is " + selAction.WizAuth;
+                    this.lblCode.Text = "The Tuning Package \'" + this.listTuningActions.SelectedItem.ToString() + "\' requires that you enter the correct code.";
+                }
+            }
+
+            // Perform the selected tuning action, and disable possibility to press cancel. 
+            // At this stage, it is to late. Modifications has been done.
+            else if(e.Page.Name == "wizConfirmPage")
+            {
+                // Disable turning back
+                this.wizCompletedPage.AllowCancel = false;
+                frmMain.TuningAction selAction = (frmMain.TuningAction)this.listTuningActions.SelectedItem;
+
+                // Perform the tuning action
+                List<string> outList = new List<string>();
+                if (selAction.performTuningAction(parent, softwareVersion, out outList) == 0)
+                {
+                    // Inform the user of the tuning action
+                    this.wizCompletedPage.FinishText = "You have now completed the Tuning Action '" +
+                        this.listTuningActions.SelectedItem.ToString() +
+                        "'. Please check the modified maps below so that they are what you expect them to be." +
+                        " Easiest way to do that is to compare to the original binary.";
+
+                    // Fill list with impacted maps
+                    foreach (string impM in outList)
+                        this.listModifiedMaps.Items.Add(impM);
+
+                    frmMain.TuningAction nameDate = frmMain.installedTunings.ElementAt(0);
+                    if (nameDate.WizIdOrFilename == "ap_dateName")
+                    {
+                        nameDate.performTuningAction(parent, softwareVersion, out outList);
+                        foreach (string impM in outList)
+                            this.listModifiedMaps.Items.Add(impM);
+                    }
+
+                    // Show the message of the tuning pack if present
+                    if (selAction.WizMsg != string.Empty)
+                    {
+                        MessageBox.Show(selAction.WizMsg, "Tuning Wizard Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    this.wizCompletedPage.FinishText = "The Tuning Action '" + 
+                        this.listTuningActions.SelectedItem.ToString() +
+                        "' failed! You should likely not use this binary at this point.";
+                }
             }
         }
 
-        public int DesiredHP
+        private void wizardTuning_PrevClick(object sender, DevExpress.XtraWizard.WizardCommandButtonClickEventArgs e)
         {
-            get
+            // Uncheck confirmation when used clicked back from confirmation page. He is ambivalent.
+            if (e.Page.Name == "wizConfirmPage")
+                this.checkIUnderstand.Checked = false;
+        }
+
+        private void checkIUnderstand_CheckedChanged(object sender, EventArgs e)
+        {
+            // Only allow to move forward if user is ready to face consequences
+            CheckEdit edit = sender as CheckEdit;
+            switch (edit.Checked)
             {
-                return Convert.ToInt32(spinEdit1.Value);
-            }
-            set
-            {
-                spinEdit1.Value = value;
+                case true:
+                    this.wizConfirmPage.AllowNext = true;
+                    break;
+                case false:
+                    this.wizConfirmPage.AllowNext = false;
+                    break;
             }
         }
 
-
-        public int PeakTorque
+        private void textPassword_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            get
-            {
-                return Convert.ToInt32(spinEdit2.Value);
-            }
-            set
-            {
-                spinEdit2.Value = value;
-            }
+            if (this.textPassword.Text == this.theCode.Text)
+                this.wizardCodePage.AllowNext = true;
+            else
+                this.wizardCodePage.AllowNext = false;
+
         }
 
-        public bool CarRunsE85
+        private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            get
-            {
-                return checkEdit1.Checked;
-            }
-            set
-            {
-                checkEdit1.Checked = value;
-            }
+            // Specify that the link was visited. 
+            this.linkLabel1.LinkVisited = true;
+
+            // Navigate to a URL.
+            System.Diagnostics.Process.Start("http://www.trionictuning.com");
+
         }
 
-        private void wizardPage1_PageCommit(object sender, EventArgs e)
+        private void listTuningActions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            memoEdit5.Text = "Settings to review" + Environment.NewLine + Environment.NewLine;
-            memoEdit5.Text += "Peak torque: " + PeakTorque.ToString()+ " Nm" + Environment.NewLine;
-            memoEdit5.Text += "Peak power: " + DesiredHP.ToString() +" bhp" + Environment.NewLine;
-            if (CarRunsE85) memoEdit5.Text += "Fuel: Ethanol (E85)";
-            else memoEdit5.Text += "Fuel: Petrol";
+            frmMain.TuningAction selAction = (frmMain.TuningAction)this.listTuningActions.SelectedItem;
+            this.lblAuthor.Text = selAction.WizAuth;
         }
     }
 }

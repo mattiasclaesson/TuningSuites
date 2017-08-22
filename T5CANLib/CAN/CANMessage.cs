@@ -105,6 +105,22 @@ namespace T5CANLib.CAN
         }
 
         /// <summary>
+        /// Set a byte array as data of a CANMessage
+        /// </summary>
+        /// <param name="a_bytes">The bytes to set</param>
+        /// <param name="a_length">Length of data</param>
+        public void setCanData(byte[] a_bytes, byte a_length)
+        {
+            setData(0L);
+
+            m_length = a_length;
+            for (uint i = 0; i < m_length; i++)
+            {
+                setCanData(a_bytes[i], i);
+            }
+        }
+
+        /// <summary>
         /// Get a byte of the data contained in a CANMessage
         /// </summary>
         /// <param name="a_index"></param>
@@ -114,5 +130,14 @@ namespace T5CANLib.CAN
             return (byte)(m_data >> (int)(a_index * 8));
         }
 
+        public byte[] getDataAsByteArray()
+        {
+            byte[] msg = new byte[m_length];
+            for (uint i = 0; i < m_length; i++)
+            {
+                msg[i] = getCanData(i);
+            }
+            return msg;
+        }
     }
 }

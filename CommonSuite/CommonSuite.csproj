@@ -100,6 +100,7 @@
     <Compile Include="BitStream.cs" />
     <Compile Include="CellHelper.cs" />
     <Compile Include="CellHelperCollection.cs" />
+    <Compile Include="Crypto.cs" />
     <Compile Include="LogFile.cs" />
     <Compile Include="LogWorks.cs" />
     <Compile Include="SymbolColors.cs" />

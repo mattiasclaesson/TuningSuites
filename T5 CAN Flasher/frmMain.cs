@@ -43,6 +43,9 @@ namespace T5CanFlasher
                 case "J4T":
                     comboInterface.SelectedIndex = 3;
                     break;
+                case "Kvaser":
+                    comboInterface.SelectedIndex = 4;
+                    break;
                 default:
                     comboInterface.SelectedIndex = 0;
                     break;
@@ -64,6 +67,9 @@ namespace T5CanFlasher
                             break;
                         case "J4T":
                             comboInterface.SelectedIndex = 3;
+                            break;
+                        case "Kvaser":
+                            comboInterface.SelectedIndex = 4;
                             break;
                         default:
                             comboInterface.SelectedIndex = 0;
@@ -609,6 +615,10 @@ namespace T5CanFlasher
                 case 3:     // useJust4Trionic
                     device = new T5CANLib.CAN.Just4TrionicDevice();
                     this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [Just4Trionic Adapter]";
+                    break;
+                case 4:     // useKvaser
+                    device = new T5CANLib.CAN.KvaserCANDevice();
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [Kvaser Adapter]";
                     break;
                 default:
                     device = null;
