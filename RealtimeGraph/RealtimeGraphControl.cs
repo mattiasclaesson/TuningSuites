@@ -132,10 +132,17 @@ namespace RealtimeGraph
             set { m_allowconfig = value; }
         }
 
-        public RealtimeGraphControl()
+        SuiteRegistry _suiteRegistry;
+        SymbolColors _symbolColors;
+        Channels _channels;
+
+        public RealtimeGraphControl(SuiteRegistry suiteRegistry)
         {
             InitializeComponent();
             this.MouseWheel += new MouseEventHandler(RealtimeGraphControl_MouseWheel);
+            _suiteRegistry = suiteRegistry;
+            _symbolColors = new SymbolColors(suiteRegistry);
+            _channels = new Channels(suiteRegistry);
         }
 
         void RealtimeGraphControl_MouseWheel(object sender, MouseEventArgs e)
@@ -182,7 +189,7 @@ namespace RealtimeGraph
             {
                 GraphLine _newline = new GraphLine();
                 _newline.Symbol = SymbolName;
-                _newline.NumberOfDecimals = GetChannelResolution(SymbolName);
+                _newline.NumberOfDecimals = _channels.GetChannelResolution(SymbolName);
                 _newline.ChannelName = Graphname;
                 _newline.Clear();
                 _lines.Add(_newline);
@@ -190,43 +197,12 @@ namespace RealtimeGraph
 //                if (value > maxrange) maxrange = value;
                 _newline.AddPoint(value, Timestamp, minrange, maxrange, linecolor);
                 // set visible or invisible according to registry setting
-                _newline.LineVisible = GetRegistryValue(Graphname);
+                _newline.LineVisible = _channels.GetChannelFromRegistry(Graphname);
                 if (_newline.ChannelName == "KnockInfo") _newline.LineVisible = false;
                 if (_newline.ChannelName == "Idle") _newline.LineVisible = false;
                 if (_newline.ChannelName == "ClosedLoop") _newline.LineVisible = false;
                 if (_newline.ChannelName == "Warmup") _newline.LineVisible = false;
             }
-        }
-
-        private bool GetRegistryValue(string key)
-        {
-            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
-            bool retval = true;
-
-            using (RegistryKey Settings = SuiteKey.CreateSubKey("Channels"))
-            {
-                if (Settings != null)
-                {
-                    string[] vals = Settings.GetValueNames();
-                    foreach (string a in vals)
-                    {
-                        try
-                        {
-                            if (a == key.ToUpper())
-                            {
-                                retval = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                        }
-                        catch (Exception E)
-                        {
-                            Console.WriteLine(E.Message);
-                        }
-                    }
-                }
-            }
-            return retval;
         }
 
         public void ForceRepaint()
@@ -511,30 +487,13 @@ namespace RealtimeGraph
             {
                 GraphLine _newline = new GraphLine();
                 _newline.Symbol = SymbolName;
-                _newline.NumberOfDecimals = GetChannelResolution(SymbolName);
+                _newline.NumberOfDecimals = _channels.GetChannelResolution(SymbolName);
                 _newline.ChannelName = Graphname;
                 _newline.Clear();
                 coll.Add(_newline);
                 _newline.AddPoint(value, Timestamp, minrange, maxrange, linecolor);
-                _newline.LineVisible = GetRegistryValue(Graphname);
+                _newline.LineVisible = _channels.GetChannelFromRegistry(Graphname);
             }
-        }
-
-        private int GetChannelResolution(string symbolname)
-        {
-            int numberOfDecimals = 0;
-            switch (symbolname)
-            {
-                case "In.p_AirInlet":
-                case "InjectorDC":
-                case "Out.fi_Ignition":
-                case "AFR":
-                    numberOfDecimals = 2;
-                    break;
-
-            }
-            //Console.WriteLine(symbolname);
-            return numberOfDecimals;
         }
 
         GraphLineCollection selcoll = new GraphLineCollection();
@@ -621,11 +580,6 @@ namespace RealtimeGraph
             sbback.Dispose();
         }
 
-        private void RealtimeGraphControl_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void DumpLineVisiblity()
         {
             foreach (GraphLine line in _lines)
@@ -674,22 +628,9 @@ namespace RealtimeGraph
         {
             foreach (GraphLine line in _lines)
             {
-                SaveRegistrySetting(line.ChannelName, line.LineVisible);
+                _channels.SaveChannelToRegistry(line.ChannelName, line.LineVisible);
             }
         }
-
-        private void SaveRegistrySetting(string key, bool value)
-        {
-            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
-
-            using (RegistryKey saveSettings = SuiteKey.CreateSubKey("Channels"))
-            {
-                saveSettings.SetValue(key.ToUpper(), value);
-            }
-        }
-
 
         private void RealtimeGraphControl_MouseClick(object sender, MouseEventArgs e)
         {
@@ -900,81 +841,13 @@ namespace RealtimeGraph
             return d;
         }
 
-        private Int32 GetValueFromRegistry(string symbolname)
-        {
-            Int32 win32color = 0;
-            RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-            RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-            RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
-            using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
-            {
-                if (Settings != null)
-                {
-                    string[] vals = Settings.GetValueNames();
-                    foreach (string a in vals)
-                    {
-                        try
-                        {
-                            if (a == symbolname)
-                            {
-                                string value = Settings.GetValue(a).ToString();
-                                win32color = Convert.ToInt32(value);
-                            }
-                        }
-                        catch (Exception E)
-                        {
-                            Console.WriteLine(E.Message);
-                        }
-                    }
-                }
-            }
-            return win32color;
-        }
-
-        SymbolCollection _colorCollection = new SymbolCollection();
-
         private Color GetGraphColor(string symbolname)
         {
-            Color retval = Color.White;
-            if (_colorCollection.Count == 0)
+            Color retval = _symbolColors.GetColorFromRegistry(symbolname);
+            if (retval == Color.Black)
             {
-                RegistryKey SoftwareKey = Registry.CurrentUser.CreateSubKey("Software");
-                RegistryKey ManufacturerKey = SoftwareKey.CreateSubKey("MattiasC");
-                RegistryKey SuiteKey = ManufacturerKey.CreateSubKey("T7SuitePro");
-                using (RegistryKey Settings = SuiteKey.CreateSubKey("SymbolColors"))
-                {
-                    if (Settings != null)
-                    {
-                        string[] vals = Settings.GetValueNames();
-                        foreach (string a in vals)
-                        {
-                            try
-                            {
-                                // a = symbolname
-                                
-                                SymbolHelper ch = new SymbolHelper();
-                                ch.Color = ColorTranslator.FromWin32(Convert.ToInt32(Settings.GetValue(a)));
-                                ch.Varname = a;
-                                _colorCollection.Add(ch);
-                            }
-                            catch (Exception E)
-                            {
-                                Console.WriteLine("error retrieving registry settings: " + E.Message);
-                            }
-
-                        }
-                    }
-                }
+                retval = Color.White;
             }
-
-            foreach (SymbolHelper ch in _colorCollection)
-            {
-                if (ch.Varname == symbolname)
-                {
-                    return ch.Color;
-                }
-            }
-            // load graphcolors into table and lookup from there
 
             return retval;
         }
@@ -1531,16 +1404,6 @@ namespace RealtimeGraph
         {
             _panning = false;
             Cursor = Cursors.Default;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            PanToLeft();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            PanToRight();
         }
 
         private void RealtimeGraphControl_KeyDown(object sender, KeyEventArgs e)

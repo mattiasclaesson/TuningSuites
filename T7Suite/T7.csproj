@@ -155,10 +155,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ProGauges\obj\x86\Release\ProGauges.dll</HintPath>
     </Reference>
-    <Reference Include="RealtimeGraph, Version=1.8.7.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\RealtimeGraph.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -825,6 +821,10 @@
     <ProjectReference Include="..\PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj">
       <Project>{0253E98B-6374-48AA-8740-89BC2939FF77}</Project>
       <Name>PSTaskDialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RealtimeGraph\RealtimeGraph.csproj">
+      <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>
+      <Name>RealtimeGraph</Name>
     </ProjectReference>
     <ProjectReference Include="..\RealtimeGraph\RealtimeGraph.csproj">
       <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>

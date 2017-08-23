@@ -15007,7 +15007,7 @@ If boost regulation reports errors you can increase the difference between boost
             dp.Size = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width, dockSymbols.Height);
             dp.Hide();
             dp.Text = "CANBus logfile: " + Path.GetFileName(filename);
-            RealtimeGraphControl lfv = new RealtimeGraphControl();
+            RealtimeGraphControl lfv = new RealtimeGraphControl(suiteRegistry);
             //LogFilters lfhelper = new LogFilters();
             //lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
             dp.Controls.Add(lfv);
