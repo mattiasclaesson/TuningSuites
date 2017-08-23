@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Trionic5Tools;
 using System.IO;
+using CommonSuite;
 
 namespace Trionic5Controls
 {

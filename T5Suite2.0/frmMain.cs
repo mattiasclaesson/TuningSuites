@@ -132,6 +132,7 @@ using DevExpress.XtraPrinting.Preview;
 using System.Media;
 using DevExpress.Skins;
 using NLog;
+using CommonSuite;
 
 namespace T5Suite2
 {
@@ -1237,61 +1238,61 @@ namespace T5Suite2
                 mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                 mv.GraphVisible = m_appSettings.ShowGraphs;
 
-                mv.SetViewSize((Trionic5Tools.ViewSize)m_appSettings.DefaultViewSize);
+                mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
 
                 if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal;
+                        mv.Viewtype = SuiteViewType.Decimal;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy;
+                        mv.Viewtype = SuiteViewType.Easy;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                        mv.Viewtype = SuiteViewType.Decimal3Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                        mv.Viewtype = SuiteViewType.Easy3Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                        mv.Viewtype = SuiteViewType.Decimal35Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                        mv.Viewtype = SuiteViewType.Easy35Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                        mv.Viewtype = SuiteViewType.Decimal4Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                        mv.Viewtype = SuiteViewType.Easy4Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                        mv.Viewtype = SuiteViewType.Decimal5Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                        mv.Viewtype = SuiteViewType.Easy5Bar;
                     }
                 }
                 //mv.LoadSymbol(symbolname, m_trionicFile);
@@ -1524,60 +1525,60 @@ namespace T5Suite2
                 mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                 mv.GraphVisible = m_appSettings.ShowGraphs;
                 // set viewsize
-                mv.SetViewSize((Trionic5Tools.ViewSize)m_appSettings.DefaultViewSize);
+                mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
                 if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal;
+                        mv.Viewtype = SuiteViewType.Decimal;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy;
+                        mv.Viewtype = SuiteViewType.Easy;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                        mv.Viewtype = SuiteViewType.Decimal3Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                        mv.Viewtype = SuiteViewType.Easy3Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                        mv.Viewtype = SuiteViewType.Decimal35Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                        mv.Viewtype = SuiteViewType.Easy35Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                        mv.Viewtype = SuiteViewType.Decimal4Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                        mv.Viewtype = SuiteViewType.Easy4Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                        mv.Viewtype = SuiteViewType.Decimal5Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                        mv.Viewtype = SuiteViewType.Easy5Bar;
                     }
                 }
                 mv.LoadSymbol(symbolname, m_trionicFile);
@@ -1872,60 +1873,60 @@ namespace T5Suite2
                 }
                 mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                 mv.GraphVisible = m_appSettings.ShowGraphs;
-                mv.SetViewSize((Trionic5Tools.ViewSize)m_appSettings.DefaultViewSize);
+                mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
                 if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal;
+                        mv.Viewtype = SuiteViewType.Decimal;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy;
+                        mv.Viewtype = SuiteViewType.Easy;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                        mv.Viewtype = SuiteViewType.Decimal3Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                        mv.Viewtype = SuiteViewType.Easy3Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                        mv.Viewtype = SuiteViewType.Decimal35Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                        mv.Viewtype = SuiteViewType.Easy35Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                        mv.Viewtype = SuiteViewType.Decimal4Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                        mv.Viewtype = SuiteViewType.Easy4Bar;
                     }
                 }
                 else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                 {
-                    if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                        mv.Viewtype = SuiteViewType.Decimal5Bar;
                     }
                     else
                     {
-                        mv.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                        mv.Viewtype = SuiteViewType.Easy5Bar;
                     }
                 }
                 mv.LoadSymbol(symbolname, m_trionicFile);
@@ -1948,7 +1949,7 @@ namespace T5Suite2
                 m_trionicFile.GetMapMatrixWitdhByName(symbolname, out cols, out rows);
                /* if (m_trionicFile.GetMapSensorType() == MapSensorType.MapSensor30)
                 {
-                    mv.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                    mv.Viewtype = SuiteViewType.Easy3Bar;
                 }*/
                 mv.ShowTable(cols, m_trionicFile.IsTableSixteenBits(symbolname));
                 mv.Dock = DockStyle.Fill;
@@ -5314,57 +5315,57 @@ namespace T5Suite2
                     //tabdet.IsHexMode = true; // always in hexmode!
                     if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                            tabdet.Viewtype = SuiteViewType.Decimal;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                         }
                     }
                     else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
                         }
                     }
                     else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
                         }
                     }
                     else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
                         }
                     }
 
@@ -5721,60 +5722,60 @@ namespace T5Suite2
                        // tabdet.SetViewSize(m_appSettings.DefaultViewSize);
 
                         //tabdet.IsHexMode = barViewInHex.Checked;
-                        tabdet.Viewtype = (Trionic5Tools.ViewType)m_appSettings.DefaultViewType;
+                        tabdet.Viewtype = (SuiteViewType)m_appSettings.DefaultViewType;
                         if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                         {
-                            if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                                tabdet.Viewtype = SuiteViewType.Decimal;
                             }
                             else
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                                tabdet.Viewtype = SuiteViewType.Easy;
                             }
                         }
                         else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                         {
-                            if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                                tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                             }
                             else
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                                tabdet.Viewtype = SuiteViewType.Easy3Bar;
                             }
                         }
                         else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                         {
-                            if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                                tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                             }
                             else
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                                tabdet.Viewtype = SuiteViewType.Easy35Bar;
                             }
                         }
                         else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                         {
-                            if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                                tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                             }
                             else
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                                tabdet.Viewtype = SuiteViewType.Easy4Bar;
                             }
                         }
                         else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                         {
-                            if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                                tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                             }
                             else
                             {
-                                tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                                tabdet.Viewtype = SuiteViewType.Easy5Bar;
                             }
                         }
                         //tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
@@ -5830,7 +5831,7 @@ namespace T5Suite2
                             //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
                             //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
                             
-                            tabdet.SetViewSize((Trionic5Tools.ViewSize)m_appSettings.DefaultViewSize);
+                            tabdet.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
                             //dockPanel.DockAsTab(dockPanel1);
                             //dockPanel.Text = "Symbol: " + SymbolName + " [" + Filename + "]";
                             dockPanel.Text = Path.GetFileName(Filename) + " [" + SymbolName + "]"; 
@@ -6404,60 +6405,60 @@ namespace T5Suite2
                     tabdet.IsCompareViewer = true;
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
 
-                    //tabdet.Viewtype = Trionic5Tools.ViewType.Hexadecimal;
+                    //tabdet.Viewtype = SuiteViewType.Hexadecimal;
                     if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                            tabdet.Viewtype = SuiteViewType.Decimal;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
                         }
                     }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
@@ -6965,7 +6966,7 @@ namespace T5Suite2
 
                     mv.DirectSRAMWriteOnSymbolChange = false;
 
-                    mv.Viewtype = Trionic5Tools.ViewType.Decimal;
+                    mv.Viewtype = SuiteViewType.Decimal;
                     mv.DisableColors = m_appSettings.DisableMapviewerColors;
                     mv.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
                     mv.GraphVisible = m_appSettings.ShowGraphs;
@@ -8113,62 +8114,62 @@ namespace T5Suite2
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                            tabdet.Viewtype = SuiteViewType.Decimal;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
                         }
                     }
                    /* if (barViewInHex.Checked)
                     {
-                        tabdet.Viewtype = Trionic5Tools.ViewType.Hexadecimal;
+                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
                     }*/
                     /*else
                     {
@@ -8415,62 +8416,62 @@ namespace T5Suite2
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                            tabdet.Viewtype = SuiteViewType.Decimal;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
                         }
                     }
                     /* if (barViewInHex.Checked)
                      {
-                         tabdet.Viewtype = Trionic5Tools.ViewType.Hexadecimal;
+                         tabdet.Viewtype = SuiteViewType.Hexadecimal;
                      }*/
                     /*else
                     {
@@ -10222,8 +10223,8 @@ namespace T5Suite2
             mv.AutoUpdateChecksum = false;
             mv.GraphVisible = m_appSettings.ShowGraphs;
             // set viewsize
-            mv.SetViewSize((Trionic5Tools.ViewSize)m_appSettings.DefaultViewSize);
-            mv.Viewtype = Trionic5Tools.ViewType.Easy;
+            mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
+            mv.Viewtype = SuiteViewType.Easy;
             mv.Map_content = data;
             int[] ixaxis = new int[xaxis.Length];
             int[] iyaxis = new int[yaxis.Length];
@@ -12748,57 +12749,57 @@ namespace T5Suite2
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                            tabdet.Viewtype = SuiteViewType.Decimal;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
                         }
                     }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
@@ -13322,57 +13323,57 @@ namespace T5Suite2
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal;
+                            tabdet.Viewtype = SuiteViewType.Decimal;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy;
+                            tabdet.Viewtype = SuiteViewType.Easy;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal3Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy3Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal35Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy35Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal4Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy4Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
                         }
                     }
                     else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
                     {
-                        if (m_appSettings.DefaultViewType == ViewType.Decimal)
+                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Decimal5Bar;
+                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
                         }
                         else
                         {
-                            tabdet.Viewtype = Trionic5Tools.ViewType.Easy5Bar;
+                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
                         }
                     }
                     tabdet.DisableColors = m_appSettings.DisableMapviewerColors;

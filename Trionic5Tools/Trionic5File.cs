@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Data;
 using System.Diagnostics;
+using CommonSuite;
 
 namespace Trionic5Tools
 {
@@ -65,19 +66,6 @@ namespace Trionic5Tools
     {
         Trionic5Valve,
         Trionic7Valve
-    }
-
-    public enum TurboType : int
-    {
-        Stock,
-        TD0415T,
-        TD0419T,
-        GT28BB,
-        GT28RS,
-        GT3071R,
-        HX35w,
-        HX40w,
-        S400SX371
     }
 
     public enum TuningStage : int

@@ -98,6 +98,8 @@
     <Compile Include="AFRMaps.cs" />
     <Compile Include="AFRMeasurement.cs" />
     <Compile Include="AFRMeasurementCollection.cs" />
+    <Compile Include="SortableCollectionBase.cs" />
+    <Compile Include="SymbolCollection.cs" />
     <Compile Include="T5AppSettings.cs" />
     <Compile Include="CombiAdapterMonitor.cs" />
     <Compile Include="Engine.cs" />
@@ -121,15 +123,10 @@
     <Compile Include="KnockMapInfoCollection.cs" />
     <Compile Include="PartnumberCollection.cs" />
     <Compile Include="PartNumberConverter.cs" />
-    <Compile Include="PressureToTorque.cs" />
     <Compile Include="ProgramModeSettings.cs" />
-    <Compile Include="SortableCollectionBase.cs" />
     <Compile Include="SymbolAxesTranslator.cs" />
-    <Compile Include="SymbolCollection.cs" />
     <Compile Include="SymbolHelper.cs" />
     <Compile Include="SymbolTranslator.cs" />
-    <Compile Include="TransactionCollection.cs" />
-    <Compile Include="TransactionEntry.cs" />
     <Compile Include="Trionic5Immo.cs" />
     <Compile Include="Trionic5Anomalies.cs" />
     <Compile Include="Trionic5Bootloader.cs" />
@@ -141,7 +138,6 @@
     <Compile Include="Trionic5Tuner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trionic5SymbolInformation.cs" />
-    <Compile Include="TrionicTransactionLog.cs" />
     <Compile Include="TuningReferenceMaps.cs" />
     <Compile Include="VINDecoder.cs" />
     <Compile Include="XDFWriter.cs" />
@@ -180,6 +176,10 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonSuite\CommonSuite.csproj">
+      <Project>{61FE31C4-B244-4C13-BAF6-F66857F0B88E}</Project>
+      <Name>CommonSuite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PSTaskDialog\PSTaskDialog\PSTaskDialog.csproj">
       <Project>{0253E98B-6374-48AA-8740-89BC2939FF77}</Project>
       <Name>PSTaskDialog</Name>

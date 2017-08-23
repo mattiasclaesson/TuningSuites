@@ -333,12 +333,6 @@
     <Compile Include="frmSyncFileECU.Designer.cs">
       <DependentUpon>frmSyncFileECU.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTransactionLog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTransactionLog.Designer.cs">
-      <DependentUpon>frmTransactionLog.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmUpdateAvailable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -532,10 +526,6 @@
       <DependentUpon>frmSyncFileECU.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTransactionLog.resx">
-      <DependentUpon>frmTransactionLog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmUpdateAvailable.nl.resx">
       <DependentUpon>frmUpdateAvailable.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -548,6 +538,7 @@
       <DependentUpon>frmVectorlist.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

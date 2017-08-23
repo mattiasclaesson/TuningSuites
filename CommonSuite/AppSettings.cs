@@ -13,39 +13,6 @@ using NLog;
 
 namespace CommonSuite
 {
-    public enum PanelMode : int
-    {
-        Day,
-        Night
-    }
-
-    public enum MonitorType : int
-    {
-        Default,
-        Dashboard
-    }
-
-    public enum AFRViewType : int
-    {
-        AFRMode,
-        LambdaMode
-    }
-
-    public enum SuiteViewType : int
-    {
-        Hexadecimal = 0,
-        Decimal,
-        Easy,
-        ASCII
-    }
-
-    public enum ViewSize : int
-    {
-        NormalView = 0,
-        SmallView,
-        ExtraSmallView
-    }
-
     public class AppSettings
     {
         private Logger logger = LogManager.GetCurrentClassLogger();

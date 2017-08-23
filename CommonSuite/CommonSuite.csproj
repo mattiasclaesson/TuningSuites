@@ -142,6 +142,9 @@
     <Compile Include="SymbolCollection.cs" />
     <Compile Include="SymbolHelper.cs" />
     <Compile Include="SystemFileAssociation.cs" />
+    <Compile Include="TransactionEntry.cs" />
+    <Compile Include="TurboType.cs" />
+    <Compile Include="ViewEnums.cs" />
     <Compile Include="zipmsiupdater.cs" />
     <Compile Include="DTCDescription.cs" />
     <Compile Include="Forms\frmChangeNote.cs">
@@ -258,7 +261,6 @@
     <Compile Include="ProfColorTable.cs" />
     <Compile Include="SortableCollectionBase.cs" />
     <Compile Include="TransactionCollection.cs" />
-    <Compile Include="TransactionEntry.cs" />
     <Compile Include="TrionicProjectLog.cs" />
     <Compile Include="TrionicSymbolDecompressor.cs" />
     <Compile Include="TrionicTransactionLog.cs" />

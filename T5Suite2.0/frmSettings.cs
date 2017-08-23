@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace T5Suite2
 {
@@ -148,11 +149,11 @@ namespace T5Suite2
             }
         }
 
-        public ViewType DefaultViewType
+        public SuiteViewType DefaultViewType
         {
             get
             {
-                return (ViewType)comboBoxEdit1.SelectedIndex;
+                return (SuiteViewType)comboBoxEdit1.SelectedIndex;
             }
             set
             {
@@ -890,9 +891,9 @@ namespace T5Suite2
             DialogResult = DialogResult.None;
         }
 
-        private SymbolCollection m_symbols;
+        private Trionic5Tools.SymbolCollection m_symbols;
 
-        public SymbolCollection Symbols
+        public Trionic5Tools.SymbolCollection Symbols
         {
             get { return m_symbols; }
             set { m_symbols = value; }

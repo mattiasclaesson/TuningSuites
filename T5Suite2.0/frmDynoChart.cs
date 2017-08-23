@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using Nevron.GraphicsCore;
 using Nevron.Chart;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace T5Suite2
 {

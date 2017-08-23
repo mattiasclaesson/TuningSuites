@@ -8,44 +8,12 @@ using System.Data.Odbc;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-
+using CommonSuite;
 
 //[assembly: RegistryPermissionAttribute(SecurityAction.RequestMinimum,ViewAndModify = "HKEY_CURRENT_USER")]
 
 namespace Trionic5Tools
 {
-
-    public enum ViewType : int
-    {
-        Hexadecimal = 0,
-        Decimal,
-        Easy,
-        ASCII,
-        Decimal3Bar,
-        Easy3Bar,
-        Decimal35Bar,
-        Easy35Bar,
-        Decimal4Bar,
-        Easy4Bar,
-        Decimal5Bar,
-        Easy5Bar
-    }
-
-    public enum MapviewerType : int
-    {
-        Fancy = 0,
-        Normal,
-        Simple
-    }
-
-    public enum ViewSize : int
-    {
-        NormalView = 0,
-        SmallView,
-        ExtraSmallView,
-        TouchscreenView
-    }
-
     public class T5AppSettings
     {
 
@@ -1385,9 +1353,9 @@ namespace Trionic5Tools
             }
         }
 
-        private ViewType m_DefaultViewType = ViewType.Easy;
+        private SuiteViewType m_DefaultViewType = SuiteViewType.Easy;
 
-        public ViewType DefaultViewType
+        public SuiteViewType DefaultViewType
         {
             get { return m_DefaultViewType; }
             set
@@ -2401,7 +2369,7 @@ namespace Trionic5Tools
                                     {
                                         int vt = Convert.ToInt32(Settings.GetValue(a).ToString());
                                         if (vt > 3) vt = 2;
-                                        m_DefaultViewType = (ViewType)vt;
+                                        m_DefaultViewType = (SuiteViewType)vt;
 
                                     }
                                     else if (a == "MapViewerType")
@@ -3030,7 +2998,7 @@ namespace Trionic5Tools
                             {
                                 int vt = Convert.ToInt32(Settings.GetValue(a).ToString());
                                 if (vt > 3) vt = 2;
-                                m_DefaultViewType = (ViewType)vt;
+                                m_DefaultViewType = (SuiteViewType)vt;
                             }
                             else if (a == "MapViewerType")
                             {

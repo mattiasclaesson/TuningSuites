@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using PSTaskDialog;
-
+using CommonSuite;
 
 namespace Trionic5Tools
 {

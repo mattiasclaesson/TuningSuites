@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
+using System.Data;
 
 namespace CommonSuite
 {
@@ -19,6 +20,16 @@ namespace CommonSuite
             {
                 xrLabel2.Text = value;
             }
+        }
+
+        public void SetDataSource(DataTable dt)
+        {
+            this.DataSource = dt;
+        }
+
+        public void ShowReportPreview(DevExpress.LookAndFeel.UserLookAndFeel lookAndFeel)
+        {
+            ShowPreview(lookAndFeel);
         }
 
         public void CreateReport()

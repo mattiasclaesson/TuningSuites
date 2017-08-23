@@ -13,32 +13,10 @@ using System.Drawing.Drawing2D;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using System.Diagnostics;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace Trionic5Controls
 {
-
-    /*public enum ViewType : int
-    {
-        Hexadecimal = 0,
-        Decimal,
-        Easy,
-        ASCII,
-        Decimal3Bar,
-        Easy3Bar,
-        Decimal35Bar,
-        Easy35Bar,
-        Decimal4Bar,
-        Easy4Bar
-    }
-
-    public enum ViewSize : int
-    {
-        NormalView = 0,
-        SmallView,
-        ExtraSmallView,
-        TouchscreenView
-    }*/
-
     public partial class SimpleMapViewer : IMapViewer // DevExpress.XtraEditors.XtraUserControl
     {
         
@@ -50,8 +28,8 @@ namespace Trionic5Controls
         private bool m_prohibitcellchange = false;
         private bool m_prohibitsplitchange = false;
         private bool m_prohibitgraphchange = false;
-        private Trionic5Tools.ViewType m_viewtype = Trionic5Tools.ViewType.Hexadecimal;
-        private Trionic5Tools.ViewType m_previousviewtype = Trionic5Tools.ViewType.Easy;
+        private SuiteViewType m_viewtype = SuiteViewType.Hexadecimal;
+        private SuiteViewType m_previousviewtype = SuiteViewType.Easy;
         private bool m_prohibit_viewchange = false;
         private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
@@ -152,15 +130,15 @@ namespace Trionic5Controls
             set { m_DirectSRAMWriteOnSymbolChange = value; }
         }
 
-        private SymbolCollection m_SymbolCollection = new SymbolCollection();
+        private Trionic5Tools.SymbolCollection m_SymbolCollection = new Trionic5Tools.SymbolCollection();
 
-        public override SymbolCollection mapSymbolCollection
+        public override Trionic5Tools.SymbolCollection mapSymbolCollection
         {
             get { return m_SymbolCollection; }
             set { m_SymbolCollection = value; }
         }
 
-        public override Trionic5Tools.ViewType Viewtype
+        public override SuiteViewType Viewtype
         {
             get { return m_viewtype; }
             set
@@ -584,7 +562,7 @@ namespace Trionic5Controls
             btnReadFromRAM.Enabled = true;
             m_MaxValueInTable = 0;
             //if (m_isHexMode)
-            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+            if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 int lenvals = m_map_length;
                 if (issixteenbits) lenvals /= 2;
@@ -646,7 +624,7 @@ namespace Trionic5Controls
                                     }
 
                                 }
-                                if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                 {
                                     // correct with 1.2
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -655,7 +633,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                                 {
                                     // correct with 1.4
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -664,7 +642,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                 {
                                     // correct with 1.6
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -673,7 +651,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                 {
                                     // correct with 1.6
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -688,11 +666,11 @@ namespace Trionic5Controls
                                 //b = (int)(correction_offset + (double)b);
                                 // TEST
                                 //if (m_isHexMode)
-                                if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X4"), j);
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
@@ -746,7 +724,7 @@ namespace Trionic5Controls
 
                                         b = -b;
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                     {
                                         // correct with 1.2
                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -755,7 +733,7 @@ namespace Trionic5Controls
                                             b /= 100;
                                         }
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                                     {
                                         // correct with 1.4
                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -764,7 +742,7 @@ namespace Trionic5Controls
                                             b /= 100;
                                         }
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                     {
                                         // correct with 1.6
                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -773,7 +751,7 @@ namespace Trionic5Controls
                                             b /= 100;
                                         }
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                     {
                                         // correct with 1.6
                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -790,11 +768,11 @@ namespace Trionic5Controls
                                     // TEST
 
 //                                    if (m_isHexMode)
-                                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.ASCII)
+                                    else if (m_viewtype == SuiteViewType.ASCII)
                                     {
                                         //objarr.SetValue(b.ToString("X4"), j);
                                         // show as ascii characters
@@ -837,7 +815,7 @@ namespace Trionic5Controls
                             for (int j = 0; j < (tablewidth); j++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
-                                if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                 {
                                     // correct with 1.2
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -846,7 +824,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                                 {
                                     // correct with 1.4
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -855,7 +833,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                 {
                                     // correct with 1.6
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -864,7 +842,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                 {
                                     // correct with 1.6
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -881,11 +859,11 @@ namespace Trionic5Controls
                                 // TEST
 
                                 //if (m_isHexMode)
-                                if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), j);
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
@@ -917,7 +895,7 @@ namespace Trionic5Controls
                             for (int v = map_offset; v < m_map_length /*- 1*/; v++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
-                                if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                 {
                                     // correct with 1.2
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -926,7 +904,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                                 {
                                     // correct with 1.4
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -935,7 +913,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                 {
                                     // correct with 1.6
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -944,7 +922,7 @@ namespace Trionic5Controls
                                         b /= 100;
                                     }
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                 {
                                     // correct with 1.6
                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -961,11 +939,11 @@ namespace Trionic5Controls
                                 // TEST
 
                                 //if (m_isHexMode)
-                                if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), sicnt);
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
@@ -1009,13 +987,13 @@ namespace Trionic5Controls
                 for (int i = 0; i < y_axisvalues.Length; i++)
                 {
                     string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
-                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
                     }
                     if (m_y_axis_name == "MAP")
                     {
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                        if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                         {
                             int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
                             tempval *= 120;
@@ -1023,7 +1001,7 @@ namespace Trionic5Controls
                             //                                y_axisvalues.SetValue(tempval, i);
                             yval = tempval.ToString("X4");
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                         {
                             int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
                             tempval *= 140;
@@ -1031,7 +1009,7 @@ namespace Trionic5Controls
                             //                                y_axisvalues.SetValue(tempval, i);
                             yval = tempval.ToString("X4");
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                        else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
                         {
                             int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
                             tempval *= 160;
@@ -1039,7 +1017,7 @@ namespace Trionic5Controls
                             //                                y_axisvalues.SetValue(tempval, i);
                             yval = tempval.ToString("X4");
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar || m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                        else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                         {
                             int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
                             tempval *= 200;
@@ -1068,7 +1046,7 @@ namespace Trionic5Controls
 
                     if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
                     {
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                        if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                         {
                             int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
                             tempval *= 120;
@@ -1076,7 +1054,7 @@ namespace Trionic5Controls
                             //x_axisvalues.SetValue(tempval, i);
                             xval = tempval;
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                        else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                         {
                             int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
                             tempval *= 140;
@@ -1084,7 +1062,7 @@ namespace Trionic5Controls
                             //x_axisvalues.SetValue(tempval, i);
                             xval = tempval;
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                         {
                             int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
                             tempval *= 160;
@@ -1092,7 +1070,7 @@ namespace Trionic5Controls
                             //x_axisvalues.SetValue(tempval, i);
                             xval = tempval;
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                         {
                             int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
                             tempval *= 200;
@@ -1329,7 +1307,7 @@ namespace Trionic5Controls
                         int b = 0;
                         int cellvalue = 0;
                         //if (m_isHexMode)
-                        if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             b = Convert.ToInt32(e.CellValue.ToString(), 16);
                             cellvalue = b;
@@ -1420,14 +1398,14 @@ namespace Trionic5Controls
                             //Console.WriteLine("Failed to draw changed by user indicator: " + changedUserE.Message);
                         }
 
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy || m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                        if (m_viewtype == SuiteViewType.Easy || m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Easy5Bar)
                         {
                             float dispvalue = 0;
                             dispvalue = (float)cellvalue;
                             if (correction_offset != 0 || correction_factor != 1)
                             {
                                 dispvalue = (float)((float)cellvalue * (float)correction_factor) + (float)correction_offset;
-                                if (m_viewtype != Trionic5Tools.ViewType.Hexadecimal)
+                                if (m_viewtype != SuiteViewType.Hexadecimal)
                                 //if (!m_isHexMode)
                                 {
                                     if (m_map_name.StartsWith("Ign_map_0!") || m_map_name.StartsWith("Ign_map_4!"))
@@ -1918,14 +1896,14 @@ namespace Trionic5Controls
                                             string bstr1 = "0";
                                             string bstr2 = "0";
                                             //if (m_isHexMode)
-                                            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                            if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
                                                 cellvalue = Convert.ToInt32(o.ToString(), 16);
                                             }
                                             else
                                             {
                                                 cellvalue = Convert.ToInt32(o.ToString());
-                                                if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                                if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -1934,7 +1912,7 @@ namespace Trionic5Controls
                                                         cellvalue /= 120;
                                                     }
                                                 }
-                                                else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                                else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -1943,7 +1921,7 @@ namespace Trionic5Controls
                                                         cellvalue /= 140;
                                                     }
                                                 }
-                                                else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                                else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -1952,7 +1930,7 @@ namespace Trionic5Controls
                                                         cellvalue /= 160;
                                                     }
                                                 }
-                                                else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar || m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                                else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -1974,7 +1952,7 @@ namespace Trionic5Controls
                                         else
                                         {
                                             //if (m_isHexMode)
-                                            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                            if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
                                                 //double v = Convert.ToDouble(o);
                                                 int iv = Convert.ToInt32(o.ToString(), 16);//(int)Math.Floor(v);
@@ -1983,7 +1961,7 @@ namespace Trionic5Controls
                                             else
                                             {
                                                 double v = Convert.ToDouble(o);
-                                                if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                                if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -1992,7 +1970,7 @@ namespace Trionic5Controls
                                                         v /= 120;
                                                     }
                                                 }
-                                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                                else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -2001,7 +1979,7 @@ namespace Trionic5Controls
                                                         v /= 140;
                                                     }
                                                 }
-                                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                                else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -2010,7 +1988,7 @@ namespace Trionic5Controls
                                                         v /= 160;
                                                     }
                                                 }
-                                                else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                                else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                                 {
                                                     // convert back to normal value
                                                     if (MapIsScalableFor3Bar(m_map_name))
@@ -2050,7 +2028,7 @@ namespace Trionic5Controls
                                             string bstr1 = "0";
                                             string bstr2 = "0";
                                             //if (m_isHexMode)
-                                            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                            if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
                                                 cellvalue = Convert.ToInt32(o.ToString(), 16);
                                             }
@@ -2059,7 +2037,7 @@ namespace Trionic5Controls
                                                 try
                                                 {
                                                     cellvalue = Convert.ToInt32(o.ToString());
-                                                    if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2068,7 +2046,7 @@ namespace Trionic5Controls
                                                             cellvalue /= 120;
                                                         }
                                                     }
-                                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                                    else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2077,7 +2055,7 @@ namespace Trionic5Controls
                                                             cellvalue /= 140;
                                                         }
                                                     }
-                                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                                    else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2086,7 +2064,7 @@ namespace Trionic5Controls
                                                             cellvalue /= 160;
                                                         }
                                                     }
-                                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar || m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                                    else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2113,7 +2091,7 @@ namespace Trionic5Controls
                                         else
                                         {
                                             //                                        if (m_isHexMode)
-                                            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                            if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
 
                                                 //double v = Convert.ToDouble(o);
@@ -2135,7 +2113,7 @@ namespace Trionic5Controls
                                                 try
                                                 {
                                                     double v = Convert.ToDouble(o);
-                                                    if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2144,7 +2122,7 @@ namespace Trionic5Controls
                                                             v /= 120;
                                                         }
                                                     }
-                                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                                    else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2153,7 +2131,7 @@ namespace Trionic5Controls
                                                             v /= 140;
                                                         }
                                                     }
-                                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                                    else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2162,7 +2140,7 @@ namespace Trionic5Controls
                                                             v /= 160;
                                                         }
                                                     }
-                                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                                    else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                                     {
                                                         // convert back to normal value
                                                         if (MapIsScalableFor3Bar(m_map_name))
@@ -2214,28 +2192,28 @@ namespace Trionic5Controls
                     case 2: // max value
 
                         int max_value = 0xFF;
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                        if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                         {
                             if (MapIsScalableFor3Bar(m_map_name))
                             {
                                 max_value = 306;
                             }
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                         {
                             if (MapIsScalableFor3Bar(m_map_name))
                             {
                                 max_value = 357;
                             }
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                        else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
                         {
                             if (MapIsScalableFor3Bar(m_map_name))
                             {
                                 max_value = 408;
                             }
                         }
-                        else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar || m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                        else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                         {
                             if (MapIsScalableFor3Bar(m_map_name))
                             {
@@ -2297,19 +2275,19 @@ namespace Trionic5Controls
         {
             int return_index = -1;
             double multiplywith = 1;
-            if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+            if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
             {
                 multiplywith = 1.2;
             }
-            else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+            else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
             {
                 multiplywith = 1.4;
             }
-            else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+            else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
             {
                 multiplywith = 1.6;
             }
-            else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+            else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
             {
                 multiplywith = 2.0;
             }
@@ -2334,19 +2312,19 @@ namespace Trionic5Controls
         {
             int return_index = -1;
             double multiplywith = 1;
-            if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+            if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
             {
                 multiplywith = 1.2;
             }
-            else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+            else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
             {
                 multiplywith = 1.4;
             }
-            else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+            else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
             {
                 multiplywith = 1.6;
             }
-            else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+            else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
             {
                 multiplywith = 2.0;
             }
@@ -2651,7 +2629,7 @@ namespace Trionic5Controls
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if(m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if(m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value++;
@@ -2663,7 +2641,7 @@ namespace Trionic5Controls
                             }
                             else
                             {
-                                if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 {
                                     if (value > 0xFF) value = 0xFF;
                                 }
@@ -2671,19 +2649,19 @@ namespace Trionic5Controls
                                 {
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
-                                        if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             if (value > 306) value = 306;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                         {
                                             if (value > 357) value = 357;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             if (value > 408) value = 408;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             if (value > 510) value = 510;
                                         }
@@ -2708,7 +2686,7 @@ namespace Trionic5Controls
                             }
                             else
                             {
-                                if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 {
                                     if (value > 0xFF) value = 0xFF;
                                 }
@@ -2716,19 +2694,19 @@ namespace Trionic5Controls
                                 {
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
-                                        if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             if (value > 306) value = 306;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                         {
                                             if (value > 357) value = 357;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             if (value > 408) value = 408;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             if (value > 510) value = 510;
                                         }
@@ -2751,7 +2729,7 @@ namespace Trionic5Controls
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value--;
@@ -2795,7 +2773,7 @@ namespace Trionic5Controls
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value += 0x10;
@@ -2807,7 +2785,7 @@ namespace Trionic5Controls
                             }
                             else
                             {
-                                if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 {
                                     if (value > 0xFF) value = 0xFF;
                                 }
@@ -2815,19 +2793,19 @@ namespace Trionic5Controls
                                 {
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
-                                        if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             if (value > 306) value = 306;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                         {
                                             if (value > 357) value = 357;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             if (value > 408) value = 408;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             if (value > 510) value = 510;
                                         }
@@ -2852,7 +2830,7 @@ namespace Trionic5Controls
                             }
                             else
                             {
-                                if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 {
                                     if (value > 0xFF) value = 0xFF;
                                 }
@@ -2860,19 +2838,19 @@ namespace Trionic5Controls
                                 {
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
-                                        if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             if (value > 306) value = 306;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                         {
                                             if (value > 357) value = 357;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             if (value > 408) value = 408;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             if (value > 510) value = 510;
                                         }
@@ -2895,7 +2873,7 @@ namespace Trionic5Controls
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value-=0x10;
@@ -2939,7 +2917,7 @@ namespace Trionic5Controls
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
 
                             int value = 0xFFFF;
@@ -2950,7 +2928,7 @@ namespace Trionic5Controls
                             }
                             else
                             {
-                                if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 {
                                     value = 0xFF;
                                 }
@@ -2958,19 +2936,19 @@ namespace Trionic5Controls
                                 {
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
-                                        if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             if (value > 306) value = 306;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                         {
                                             if (value > 357) value = 357;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             if (value > 408) value = 408;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             if (value > 510) value = 510;
                                         }
@@ -2996,7 +2974,7 @@ namespace Trionic5Controls
                             }
                             else
                             {
-                                if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 {
                                     value = 0xFF;
                                 }
@@ -3004,19 +2982,19 @@ namespace Trionic5Controls
                                 {
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
-                                        if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             if (value > 306) value = 306;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                         {
                                             if (value > 357) value = 357;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             if (value > 408) value = 408;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             if (value > 510) value = 510;
                                         }
@@ -3040,7 +3018,7 @@ namespace Trionic5Controls
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = 0;
                             if (m_issixteenbit)
@@ -3090,13 +3068,13 @@ namespace Trionic5Controls
                                 // dan andere waarde nemen
                                 yvalue = y_axisvalues.GetValue(e.RowHandle).ToString();
                             }
-                            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                            if (m_viewtype == SuiteViewType.Hexadecimal)
                             {
                                 yvalue = Convert.ToInt32(/*y_axisvalues.GetValue(e.RowHandle)*/y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle)).ToString("X4");
                             }
                             if (m_y_axis_name == "MAP" )
                             {
-                                if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
                                 {
                                     int tempval = Convert.ToInt32(y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle));
                                     if (!m_isUpsideDown)
@@ -3107,7 +3085,7 @@ namespace Trionic5Controls
                                     tempval /= 100;
                                     yvalue = tempval.ToString();
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                 {
                                     int tempval = Convert.ToInt32(y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle));
                                     if (!m_isUpsideDown)
@@ -3118,7 +3096,7 @@ namespace Trionic5Controls
                                     tempval /= 100;
                                     yvalue = tempval.ToString();
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
                                 {
                                     int tempval = Convert.ToInt32(y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle));
                                     if (!m_isUpsideDown)
@@ -3129,7 +3107,7 @@ namespace Trionic5Controls
                                     tempval /= 100;
                                     yvalue = tempval.ToString();
                                 }
-                                else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar || m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                                 {
                                     int tempval = Convert.ToInt32(y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle));
                                     if (!m_isUpsideDown)
@@ -3169,31 +3147,31 @@ namespace Trionic5Controls
                         if (x_axisvalues.Length > e.Column.VisibleIndex)
                         {
                             string xvalue = x_axisvalues.GetValue(e.Column.VisibleIndex).ToString();
-                            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                            if (m_viewtype == SuiteViewType.Hexadecimal)
                             {
                                 xvalue = Convert.ToInt32(x_axisvalues.GetValue(e.Column.VisibleIndex)).ToString(m_xformatstringforhex);
                             }
-                            else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Decimal || m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                            else if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Decimal || m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                             {
                                 if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
                                 {
                                     int tempvalue = Convert.ToInt32(x_axisvalues.GetValue(e.Column.VisibleIndex));
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal3Bar)
                                     {
                                         tempvalue *= 120;
                                         tempvalue /= 100;
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal35Bar)
                                     {
                                         tempvalue *= 140;
                                         tempvalue /= 100;
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal4Bar)
                                     {
                                         tempvalue *= 160;
                                         tempvalue /= 100;
                                     }
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal5Bar)
                                     {
                                         tempvalue *= 200;
                                         tempvalue /= 100;
@@ -3201,26 +3179,26 @@ namespace Trionic5Controls
                                     xvalue = tempvalue.ToString();
                                 }
                             }
-                            if (m_viewtype == Trionic5Tools.ViewType.Easy || m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                            if (m_viewtype == SuiteViewType.Easy || m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Easy5Bar)
                             {
                                 if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
                                 {
                                     try
                                     {
                                         float v = (float)Convert.ToDouble(xvalue);
-                                        if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                        if (m_viewtype == SuiteViewType.Easy3Bar)
                                         {
                                             v *= 1.2F;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy35Bar)
                                         {
                                             v *= 1.4F;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy4Bar)
                                         {
                                             v *= 1.6F;
                                         }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                        else if (m_viewtype == SuiteViewType.Easy5Bar)
                                         {
                                             v *= 2.0F;
                                         }
@@ -3329,28 +3307,28 @@ namespace Trionic5Controls
                 if (m_y_axis_name == "MAP")
                 {
                     // <GS-10112009> hier afmaken?
-                    if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy)
                     {
                         int tempvalue = Convert.ToInt32(axisvalue);
                         tempvalue *= 100;
                         tempvalue /= 120;
                         axisvalue = tempvalue.ToString();
                     }
-                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                    else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                     {
                         int tempvalue = Convert.ToInt32(axisvalue);
                         tempvalue *= 100;
                         tempvalue /= 140;
                         axisvalue = tempvalue.ToString();
                     }
-                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                    else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                     {
                         int tempvalue = Convert.ToInt32(axisvalue);
                         tempvalue *= 100;
                         tempvalue /= 160;
                         axisvalue = tempvalue.ToString();
                     }
-                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                    else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                     {
                         int tempvalue = Convert.ToInt32(axisvalue);
                         tempvalue *= 100;
@@ -3388,7 +3366,7 @@ namespace Trionic5Controls
                     e.Handled = true;
 
                     //if (IsHexMode)
-                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
                         value++;
@@ -3400,7 +3378,7 @@ namespace Trionic5Controls
                         }
                         else
                         {
-                            if (m_viewtype != Trionic5Tools.ViewType.Easy3Bar && m_viewtype != Trionic5Tools.ViewType.Decimal3Bar)
+                            if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                             {
                                 if (value > 0xFF) value = 0xFF;
                             }
@@ -3408,19 +3386,19 @@ namespace Trionic5Controls
                             {
                                 if (MapIsScalableFor3Bar(m_map_name))
                                 {
-                                    if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                    if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                     {
                                         if (value > 306) value = 306;
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
                                     {
                                         if (value > 357) value = 357;
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                                     {
                                         if (value > 408) value = 408;
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                     {
                                         if (value > 510) value = 510;
                                     }
@@ -3457,7 +3435,7 @@ namespace Trionic5Controls
                     e.SuppressKeyPress = true;
                     e.Handled = true;
                     //if (IsHexMode)
-                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
                         value--;
@@ -3502,7 +3480,7 @@ namespace Trionic5Controls
                 ch.Rowhandle = gc.RowHandle;
                 ch.Columnindex = gc.Column.AbsoluteIndex;
                 object o = gridView1.GetRowCellValue(gc.RowHandle, gc.Column);
-                if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     ch.Value = Convert.ToInt32(o.ToString(), 16);
                 }
@@ -3561,7 +3539,7 @@ namespace Trionic5Controls
                         string serialized = Clipboard.GetText();
                         //   Console.WriteLine(serialized);
                         int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
-                        Trionic5Tools.ViewType vtclip = (Trionic5Tools.ViewType)viewtypeinclipboard;
+                        SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
                         char[] sep = new char[1];
                         sep.SetValue('~', 0);
@@ -3578,17 +3556,17 @@ namespace Trionic5Controls
                                 int colindex = Convert.ToInt32(vals.GetValue(0));
                                 int ivalue = 0;
                                 double dvalue = 0;
-                                if (vtclip == Trionic5Tools.ViewType.Hexadecimal)
+                                if (vtclip == SuiteViewType.Hexadecimal)
                                 {
                                     ivalue = Convert.ToInt32(vals.GetValue(2).ToString());
                                     dvalue = ivalue;
                                 }
-                                else if (vtclip == Trionic5Tools.ViewType.Decimal || vtclip == Trionic5Tools.ViewType.Decimal3Bar || vtclip == Trionic5Tools.ViewType.Decimal35Bar || vtclip == Trionic5Tools.ViewType.Decimal4Bar || vtclip == Trionic5Tools.ViewType.Decimal5Bar)
+                                else if (vtclip == SuiteViewType.Decimal || vtclip == SuiteViewType.Decimal3Bar || vtclip == SuiteViewType.Decimal35Bar || vtclip == SuiteViewType.Decimal4Bar || vtclip == SuiteViewType.Decimal5Bar)
                                 {
                                     ivalue = Convert.ToInt32(vals.GetValue(2));
                                     dvalue = ivalue;
                                 }
-                                else if (vtclip == Trionic5Tools.ViewType.Easy || vtclip == Trionic5Tools.ViewType.Easy3Bar || vtclip == Trionic5Tools.ViewType.Easy35Bar || vtclip == Trionic5Tools.ViewType.Easy4Bar || vtclip == Trionic5Tools.ViewType.Easy5Bar)
+                                else if (vtclip == SuiteViewType.Easy || vtclip == SuiteViewType.Easy3Bar || vtclip == SuiteViewType.Easy35Bar || vtclip == SuiteViewType.Easy4Bar || vtclip == SuiteViewType.Easy5Bar)
                                 {
                                     dvalue = Convert.ToDouble(vals.GetValue(2));
                                 }
@@ -3599,7 +3577,7 @@ namespace Trionic5Controls
                                 {
                                     try
                                     {
-                                        if (vtclip == Trionic5Tools.ViewType.Hexadecimal)
+                                        if (vtclip == SuiteViewType.Hexadecimal)
                                         {
                                             //gridView1.SetRowCellValue(rowhandle, gridView1.Columns[colindex], ivalue.ToString("X"));
                                             gridView1.SetRowCellValue(rowhandlefrom + (rowhandle - originalrowoffset), gridView1.Columns[colindexfrom + (colindex - originalcolumnoffset)], ivalue.ToString("X"));
@@ -3636,7 +3614,7 @@ namespace Trionic5Controls
                 {
                     //   Console.WriteLine(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
-                    Trionic5Tools.ViewType vtclip = (Trionic5Tools.ViewType)viewtypeinclipboard;
+                    SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
 
                     char[] sep = new char[1];
@@ -3654,17 +3632,17 @@ namespace Trionic5Controls
                             //int value = Convert.ToInt32(vals.GetValue(2));
                             int ivalue = 0;
                             double dvalue = 0;
-                            if (vtclip == Trionic5Tools.ViewType.Hexadecimal)
+                            if (vtclip == SuiteViewType.Hexadecimal)
                             {
                                 ivalue = Convert.ToInt32(vals.GetValue(2).ToString());
                                 dvalue = ivalue;
                             }
-                            else if (vtclip == Trionic5Tools.ViewType.Decimal || vtclip == Trionic5Tools.ViewType.Decimal3Bar || vtclip == Trionic5Tools.ViewType.Decimal35Bar || vtclip == Trionic5Tools.ViewType.Decimal4Bar || vtclip == Trionic5Tools.ViewType.Decimal5Bar)
+                            else if (vtclip == SuiteViewType.Decimal || vtclip == SuiteViewType.Decimal3Bar || vtclip == SuiteViewType.Decimal35Bar || vtclip == SuiteViewType.Decimal4Bar || vtclip == SuiteViewType.Decimal5Bar)
                             {
                                 ivalue = Convert.ToInt32(vals.GetValue(2));
                                 dvalue = ivalue;
                             }
-                            else if (vtclip == Trionic5Tools.ViewType.Easy || vtclip == Trionic5Tools.ViewType.Easy3Bar || vtclip == Trionic5Tools.ViewType.Easy35Bar || vtclip == Trionic5Tools.ViewType.Easy4Bar || vtclip == Trionic5Tools.ViewType.Easy5Bar)
+                            else if (vtclip == SuiteViewType.Easy || vtclip == SuiteViewType.Easy3Bar || vtclip == SuiteViewType.Easy35Bar || vtclip == SuiteViewType.Easy4Bar || vtclip == SuiteViewType.Easy5Bar)
                             {
                                 dvalue = Convert.ToDouble(vals.GetValue(2));
                             }
@@ -3672,7 +3650,7 @@ namespace Trionic5Controls
                             {
                                 try
                                 {
-                                    if (vtclip == Trionic5Tools.ViewType.Hexadecimal)
+                                    if (vtclip == SuiteViewType.Hexadecimal)
                                     {
                                         gridView1.SetRowCellValue(rowhandle, gridView1.Columns[colindex], ivalue.ToString("X"));
                                     }
@@ -3710,7 +3688,7 @@ namespace Trionic5Controls
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
 //            m_isHexMode = !m_isHexMode;
-            if (m_viewtype != Trionic5Tools.ViewType.Hexadecimal) m_viewtype = Trionic5Tools.ViewType.Hexadecimal;
+            if (m_viewtype != SuiteViewType.Hexadecimal) m_viewtype = SuiteViewType.Hexadecimal;
             else m_viewtype = m_previousviewtype;
             ShowTable(m_TableWidth, m_issixteenbit);
         }
@@ -3744,7 +3722,7 @@ namespace Trionic5Controls
                                 try
                                 {
                                     int value = 0;
-                                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         value += (int)Math.Round(_workvalue);
@@ -3767,7 +3745,7 @@ namespace Trionic5Controls
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -3783,7 +3761,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal3Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -3815,7 +3793,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal35Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -3847,7 +3825,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal4Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -3879,7 +3857,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal5Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -3911,7 +3889,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -3937,7 +3915,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy3Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -3978,7 +3956,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy35Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4019,7 +3997,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy4Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4060,7 +4038,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy5Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4114,7 +4092,7 @@ namespace Trionic5Controls
                                 try
                                 {
                                     int value = 0;
-                                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         value *= (int)(100 * _workvalue); // was (int)Math.Round(_workvalue)
@@ -4138,7 +4116,7 @@ namespace Trionic5Controls
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)(100 * _workvalue); // was (int)Math.Round(_workvalue)
@@ -4155,7 +4133,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal3Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)(100 * _workvalue); // was (int)Math.Round(_workvalue)
@@ -4188,7 +4166,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal35Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)(100 * _workvalue); // was (int)Math.Round(_workvalue)
@@ -4221,7 +4199,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal4Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)(100 * _workvalue); // was (int)Math.Round(_workvalue)
@@ -4254,7 +4232,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal5Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)(100 * _workvalue); // was (int)Math.Round(_workvalue)
@@ -4287,7 +4265,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4313,7 +4291,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy3Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4354,7 +4332,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy35Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4395,7 +4373,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy4Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4436,7 +4414,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy5Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4492,7 +4470,7 @@ namespace Trionic5Controls
                                 try
                                 {
                                     int value = 0;
-                                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         if (_workvalue != 0)
@@ -4522,7 +4500,7 @@ namespace Trionic5Controls
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -4543,7 +4521,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal3Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -4580,7 +4558,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal35Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -4617,7 +4595,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal4Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -4654,7 +4632,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal5Bar)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -4691,7 +4669,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4720,7 +4698,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy3Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4764,7 +4742,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy35Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4808,7 +4786,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy4Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4852,7 +4830,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy5Bar)
                                     {
                                         double dvalue = ConvertToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString());
                                         dvalue *= correction_factor;
@@ -4909,7 +4887,7 @@ namespace Trionic5Controls
                                 try
                                 {
                                     double value = _workvalue;
-                                    if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         if (m_issixteenbit)
                                         {
@@ -4931,7 +4909,7 @@ namespace Trionic5Controls
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString("X2"));
                                         }
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         if (m_issixteenbit)
                                         {
@@ -4946,7 +4924,7 @@ namespace Trionic5Controls
                                         int dvalue = (int)value;
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal3Bar)
                                     {
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
@@ -4977,7 +4955,7 @@ namespace Trionic5Controls
                                         int dvalue = (int)value;
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
-                                        else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar)
+                                        else if (m_viewtype == SuiteViewType.Decimal35Bar)
                                     {
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
@@ -5008,7 +4986,7 @@ namespace Trionic5Controls
                                         int dvalue = (int)value;
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal4Bar)
                                     {
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
@@ -5039,7 +5017,7 @@ namespace Trionic5Controls
                                         int dvalue = (int)value;
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar)
+                                    else if (m_viewtype == SuiteViewType.Decimal5Bar)
                                     {
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
@@ -5070,7 +5048,7 @@ namespace Trionic5Controls
                                         int dvalue = (int)value;
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -5092,7 +5070,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, decvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy3Bar)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -5130,7 +5108,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, decvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy35Bar)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -5168,7 +5146,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, decvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy4Bar)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -5206,7 +5184,7 @@ namespace Trionic5Controls
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, decvalue.ToString());
                                     }
-                                    else if (m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                                    else if (m_viewtype == SuiteViewType.Easy5Bar)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -5464,7 +5442,7 @@ namespace Trionic5Controls
             // refresh the mapviewer with the values like selected
             if (m_prohibit_viewchange) return;
             
-            m_viewtype = (Trionic5Tools.ViewType)toolStripComboBox3.SelectedIndex;
+            m_viewtype = (SuiteViewType)toolStripComboBox3.SelectedIndex;
             ReShowTable();
             CastViewTypeChangedEvent();
         }
@@ -5487,7 +5465,7 @@ namespace Trionic5Controls
         {
             if (m_issixteenbit)
             {
-                if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     try
                     {
@@ -5512,13 +5490,13 @@ namespace Trionic5Controls
                     /*value = 0xFFFF;
                      e.Value = value.ToString("X4");*/
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                else if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                 {
                     try
                     {
                         double dvalue = Convert.ToDouble(e.Value);
                         int value = 0;
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                        if (m_viewtype == SuiteViewType.Easy3Bar)
                         {
                             if (gridView1.ActiveEditor != null)
                             {
@@ -5587,13 +5565,13 @@ namespace Trionic5Controls
                     /*value = 78643;
                 e.Value = value;*/
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                 {
                     try
                     {
                         double dvalue = Convert.ToDouble(e.Value);
                         int value = 0;
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                        if (m_viewtype == SuiteViewType.Easy35Bar)
                         {
                             if (gridView1.ActiveEditor != null)
                             {
@@ -5662,13 +5640,13 @@ namespace Trionic5Controls
                     /*value = 78643;
                 e.Value = value;*/
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                 {
                     try
                     {
                         double dvalue = Convert.ToDouble(e.Value);
                         int value = 0;
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                        if (m_viewtype == SuiteViewType.Easy4Bar)
                         {
                             if (gridView1.ActiveEditor != null)
                             {
@@ -5737,13 +5715,13 @@ namespace Trionic5Controls
                     /*value = 78643;
                 e.Value = value;*/
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                 {
                     try
                     {
                         double dvalue = Convert.ToDouble(e.Value);
                         int value = 0;
-                        if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                        if (m_viewtype == SuiteViewType.Easy4Bar)
                         {
                             if (gridView1.ActiveEditor != null)
                             {
@@ -5816,7 +5794,7 @@ namespace Trionic5Controls
                 {
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == Trionic5Tools.ViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Easy)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -5865,7 +5843,7 @@ namespace Trionic5Controls
             }
             else
             {
-                if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     try
                     {
@@ -5888,12 +5866,12 @@ namespace Trionic5Controls
                         e.ErrorText = hE.Message;
                     }
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal3Bar || m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                else if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                 {
                     //int value = Convert.ToInt32(Convert.ToString(e.Value));
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == Trionic5Tools.ViewType.Easy3Bar)
+                    if (m_viewtype == SuiteViewType.Easy3Bar)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -5955,12 +5933,12 @@ namespace Trionic5Controls
                         }
                     }
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal35Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
                 {
                     //int value = Convert.ToInt32(Convert.ToString(e.Value));
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == Trionic5Tools.ViewType.Easy35Bar)
+                    if (m_viewtype == SuiteViewType.Easy35Bar)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -6022,12 +6000,12 @@ namespace Trionic5Controls
                         }
                     }
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal4Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
                 {
                     //int value = Convert.ToInt32(Convert.ToString(e.Value));
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                    if (m_viewtype == SuiteViewType.Easy4Bar)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -6089,12 +6067,12 @@ namespace Trionic5Controls
                         }
                     }
                 }
-                else if (m_viewtype == Trionic5Tools.ViewType.Decimal5Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                 {
                     //int value = Convert.ToInt32(Convert.ToString(e.Value));
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == Trionic5Tools.ViewType.Easy4Bar)
+                    if (m_viewtype == SuiteViewType.Easy4Bar)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -6160,7 +6138,7 @@ namespace Trionic5Controls
                 {
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == Trionic5Tools.ViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Easy)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -6212,7 +6190,7 @@ namespace Trionic5Controls
         private float ConvertToEasyValue(float editorvalue)
         {
             float retval = editorvalue;
-            if (m_viewtype == Trionic5Tools.ViewType.Easy || m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+            if (m_viewtype == SuiteViewType.Easy || m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Easy5Bar)
             {
                 retval = (float)((float)editorvalue * (float)correction_factor) + (float)correction_offset;
             }
@@ -6238,7 +6216,7 @@ namespace Trionic5Controls
             */
             try
             {
-                if (m_viewtype == Trionic5Tools.ViewType.Easy || m_viewtype == Trionic5Tools.ViewType.Easy3Bar || m_viewtype == Trionic5Tools.ViewType.Easy35Bar || m_viewtype == Trionic5Tools.ViewType.Easy4Bar || m_viewtype == Trionic5Tools.ViewType.Easy5Bar)
+                if (m_viewtype == SuiteViewType.Easy || m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Easy5Bar)
                 {
                     gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
                     Console.WriteLine("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
@@ -6437,7 +6415,7 @@ namespace Trionic5Controls
 
         private void smoothSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (m_viewtype == Trionic5Tools.ViewType.Hexadecimal)
+            if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 MessageBox.Show("Smoothing cannot be done in Hex view!");
                 return;
@@ -6733,7 +6711,7 @@ namespace Trionic5Controls
             m_trionic_file = trionic_file;
             //Set correctly
             this.IsUpsideDown = true; // always?
-            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
+            foreach (Trionic5Tools.SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
             {
                 if (sh.Varname == symbolname)
                 {
@@ -6757,7 +6735,7 @@ namespace Trionic5Controls
                     this.correction_offset = m_trionic_file.GetOffsetForMap(symbolname);
                     //Set correctly
                     this.SetViewSize(ViewSize.NormalView);
-                    //this.Viewtype = Trionic5Tools.ViewType.Easy;
+                    //this.Viewtype = SuiteViewType.Easy;
                     // set axis information
                     SymbolAxesTranslator sat = new SymbolAxesTranslator();
                     sat.GetXaxisSymbol(symbolname);
@@ -6789,7 +6767,7 @@ namespace Trionic5Controls
             m_trionic_file = trionic_file;
             m_trionic_file.LibraryPath = Application.StartupPath + "\\Binaries";
             this.IsUpsideDown = true; // always?
-            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
+            foreach (Trionic5Tools.SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
             {
                 if (sh.Varname == symbolname)
                 {
@@ -6811,7 +6789,7 @@ namespace Trionic5Controls
                     this.Correction_factor = m_trionic_file.GetCorrectionFactorForMap(symbolname);
                     this.correction_offset = m_trionic_file.GetOffsetForMap(symbolname);
                     this.SetViewSize(ViewSize.NormalView);
-                    //this.Viewtype = Trionic5Tools.ViewType.Easy;
+                    //this.Viewtype = SuiteViewType.Easy;
                     // set axis information
                     SymbolAxesTranslator sat = new SymbolAxesTranslator();
                     sat.GetXaxisSymbol(symbolname);

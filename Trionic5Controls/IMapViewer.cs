@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Trionic5Tools;
 using System.Data;
+using CommonSuite;
 
 namespace Trionic5Controls
 {
@@ -35,13 +36,13 @@ namespace Trionic5Controls
             set;
         }
 
-        public abstract SymbolCollection mapSymbolCollection
+        public abstract Trionic5Tools.SymbolCollection mapSymbolCollection
         {
             get;
             set;
         }
 
-        public abstract ViewType Viewtype
+        public abstract SuiteViewType Viewtype
         {
             get;
             set;
@@ -494,16 +495,16 @@ namespace Trionic5Controls
                 set { _mapname = value; }
             }
 
-            private ViewType _view;
+            private SuiteViewType _view;
 
-            public ViewType View
+            public SuiteViewType View
             {
                 get { return _view; }
                 set { _view = value; }
             }
 
 
-            public ViewTypeChangedEventArgs(ViewType view, string mapname)
+            public ViewTypeChangedEventArgs(SuiteViewType view, string mapname)
             {
                 this._view = view;
                 this._mapname = mapname;

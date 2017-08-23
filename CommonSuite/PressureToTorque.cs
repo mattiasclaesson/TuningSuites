@@ -5,19 +5,6 @@ using NLog;
 
 namespace CommonSuite
 {
-    public enum TurboType : int
-    {
-        Stock,
-        GT17,
-        TD0415T,
-        TD0419T,
-        GT28BB,
-        GT28RS,
-        GT3071R,
-        HX35w,
-        HX40w
-    }
-
     public class PressureToTorque
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
@@ -68,7 +55,7 @@ namespace CommonSuite
                                                250, 300, 340, 390, 440, 480, 520, 570, 610, 650,
                                                250, 300, 340, 390, 440, 480, 520, 570, 610, 650};
             }
-            else if (turbo == TurboType.HX40w)
+            else if (turbo == TurboType.HX40w || turbo == TurboType.S400SX371)
             {
                 matrix = new double[30] {      270, 320, 360, 410, 460, 500, 540, 580, 620, 670,
                                                270, 320, 360, 410, 460, 500, 540, 580, 620, 670,
@@ -103,7 +90,7 @@ namespace CommonSuite
             {
                 x_axis = new double[10] { 250, 300, 340, 390, 440, 480, 520, 570, 610, 650 };
             }
-            else if (turbo == TurboType.HX40w)
+            else if (turbo == TurboType.HX40w || turbo == TurboType.S400SX371)
             {
                 x_axis = new double[10] { 270, 320, 360, 410, 460, 500, 540, 580, 620, 670 };
             }
