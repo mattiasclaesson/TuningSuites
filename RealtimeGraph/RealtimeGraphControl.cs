@@ -219,13 +219,17 @@ namespace RealtimeGraph
             // paint the graphs in the control
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-//            Console.WriteLine("this: " + this.Bounds.ToString() + " cliprect: " + e.ClipRectangle.ToString() + " client: " + this.ClientRectangle.ToString());
-
+            //Console.WriteLine("this: " + this.Bounds.ToString() + " cliprect: " + e.ClipRectangle.ToString() + " client: " + this.ClientRectangle.ToString());
             this.DrawBackground(this.ClientRectangle, e.Graphics);
             this.DrawYScale(this.ClientRectangle, e.Graphics);
             this.DrawYLines(this.ClientRectangle, e.Graphics);
             this.DrawXScale(this.ClientRectangle, e.Graphics);
+            //this.DrawKnockWindows(this.ClientRectangle, e.Graphics);
+            // draw indicators for knock, idle, closed loop and warmup conditions
+            this.DrawWindows(this.ClientRectangle, e.Graphics, "KnockInfo");
+            this.DrawWindows(this.ClientRectangle, e.Graphics, "Idle");
+            this.DrawWindows(this.ClientRectangle, e.Graphics, "ClosedLoop");
+            this.DrawWindows(this.ClientRectangle, e.Graphics, "Warmup");
             this.DrawLines(this.ClientRectangle, e.Graphics);
             this.DrawLabels(this.ClientRectangle, e.Graphics);
             this.DrawInfo(this.ClientRectangle, e.Graphics);
@@ -437,6 +441,44 @@ namespace RealtimeGraph
 
         private void DrawInfo(Rectangle r, Graphics graphics)
         {
+            // on bottom of the screen draw 4 rectangles in the correct color and add the description to it
+            // idle
+            // closed loop
+            // knock
+            // warmup
+            Font f = new Font(FontFamily.GenericSansSerif, 8, FontStyle.Regular);
+
+            float y1 = r.Height - 65;
+            float y2 = r.Height - 45;
+            Color cKnock = Color.FromArgb(alpha, Color.LightBlue);
+            Color cWarmup = Color.FromArgb(alpha, Color.Red);
+            Color cClosedLoop = Color.FromArgb(alpha, Color.Purple);
+            Color cIdle = Color.FromArgb(alpha, Color.LightGreen);
+            SolidBrush bKnock = new SolidBrush(cKnock);
+            graphics.FillRectangle(bKnock, 110, y1, 30, y2 - y1);
+
+            // and draw string
+            graphics.DrawString("Knock", f, Brushes.Wheat, new PointF(145, y1 + 5));
+            SolidBrush bWarmup = new SolidBrush(cWarmup);
+            graphics.FillRectangle(bWarmup, 210, y1, 30, y2 - y1);
+            graphics.DrawString("Warmup", f, Brushes.Wheat, new PointF(245, y1 + 5));
+
+
+            y1 = r.Height - 40;
+            y2 = r.Height - 20;
+            SolidBrush bClosedLoop = new SolidBrush(cClosedLoop);
+            graphics.FillRectangle(bClosedLoop, 110, y1, 30, y2 - y1);
+            graphics.DrawString("Closed loop", f, Brushes.Wheat, new PointF(145, y1 + 5));
+
+            SolidBrush bIdle = new SolidBrush(cIdle);
+            graphics.FillRectangle(bIdle, 210, y1, 30, y2 - y1);
+            graphics.DrawString("Idle", f, Brushes.Wheat, new PointF(245, y1 + 5));
+
+            bKnock.Dispose();
+            bWarmup.Dispose();
+            bIdle.Dispose();
+            bClosedLoop.Dispose();
+            f.Dispose();
 
         }
 
@@ -527,6 +569,174 @@ namespace RealtimeGraph
             return selcoll;
         }
 
+        private void DrawWindows(Rectangle r, Graphics graphics, string ChannelName)
+        {
+            
+            GraphLineCollection displaylines = GetLinesInSelection();
+            Color c = Color.FromArgb(alpha, Color.LightBlue);
+            if (ChannelName == "Warmup") c = Color.FromArgb(alpha, Color.Red);
+            else if (ChannelName == "ClosedLoop") c = Color.FromArgb(alpha, Color.Purple);
+            else if (ChannelName == "Idle") c = Color.FromArgb(alpha, Color.LightGreen);
+            SolidBrush b = new SolidBrush(c);
+            float x1ori = 0;
+            float x2ori = 0;
+            float y1 = 0;
+            float y_height = r.Height - 100;
+
+            float y2 = y_height / 4;
+            //if (x1ori == 0) x1ori = x1;
+            if (ChannelName == "Warmup")
+            {
+                y1 = y_height / 4;
+                y2 = (y_height / 4) * 2;
+
+            }
+            else if (ChannelName == "ClosedLoop")
+            {
+                y1 = (y_height / 4) * 2;
+                y2 = (y_height / 4) * 3;
+
+            }
+            else if (ChannelName == "Idle")
+            {
+                y1 = (y_height / 4) * 3;
+                y2 = (y_height / 4) * 4;
+            }
+            //Console.WriteLine(ChannelName + " y1: " + y1.ToString("F0") + " y2: " + y2.ToString("F0") + " y_height: " + y_height.ToString("F0"));
+            foreach (GraphLine line in displaylines)
+            {
+                if (line.ChannelName == ChannelName)
+                {
+                    // dan blokken tekenen
+                    int cnt = 0;
+                    foreach (GraphMeasurement measurement in line.Measurements)
+                    {
+                        float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                        //float x1 = (float)(cnt - 1) * sectionwidth + 100;
+                        //float x2 = (float)cnt * sectionwidth + 100;
+                        float totalticks = _maxdt.Ticks - _mindt.Ticks;
+                        float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                        float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                        
+
+                        if (cnt > 0)
+                        {
+                            if (measurement.Value > 0)
+                            {
+                                // knock aan
+                                if (x1ori == 0) x1ori = x1;
+                                if (x2ori == 0) x2ori = x2;
+                                if (cnt < line.Measurements.Count)
+                                {
+                                    if (line.Measurements[cnt + 1].Value > 0)
+                                    {
+                                        // next is still knock
+                                        //x1ori = (float)(cnt - 1) * sectionwidth + 100;
+                                        x2ori = ((line.Measurements[cnt + 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;//(float)(cnt + 1) * sectionwidth + 100;
+
+                                    }
+                                    else
+                                    {
+                                        graphics.FillRectangle(b, x1ori, y1, x2ori - x1ori, y2-y1);
+                                    }
+                                }
+                                else
+                                {
+                                    // laatste blokje
+                                    graphics.FillRectangle(b, x1, y1, x2 - x1, y2 - y1);
+                                }
+
+                            }
+                            else
+                            {
+                                // no longer in knock
+                                x1ori = 0;
+                                x2ori = 0;
+                            }
+                            //                            float y1 = (r.Height - 100) - (line.Measurements[cnt - 1].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
+                            //                            float y2 = (r.Height - 100) - (line.Measurements[cnt].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
+
+
+                        }
+                        cnt++;
+                    }
+                }
+            }
+            b.Dispose();
+        }
+
+        
+
+        private void DrawKnockWindows(Rectangle r, Graphics graphics)
+        {
+            GraphLineCollection displaylines = GetLinesInSelection();
+            Color c = Color.FromArgb(100, Color.LightBlue);
+            SolidBrush b = new SolidBrush(c);
+            float x1ori = 0;
+            float x2ori = 0;
+            foreach (GraphLine line in displaylines)
+            {
+                if (line.ChannelName == "KnockInfo")
+                {
+                    // dan blokken tekenen
+                    int cnt = 0;
+                    foreach (GraphMeasurement measurement in line.Measurements)
+                    {
+                        float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                        //float x1 = (float)(cnt - 1) * sectionwidth + 100;
+                        //float x2 = (float)cnt * sectionwidth + 100;
+                        float totalticks = _maxdt.Ticks - _mindt.Ticks;
+                        float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                        float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+
+                        //if (x1ori == 0) x1ori = x1;
+                        
+                        if(cnt > 0)
+                        {
+                            if (measurement.Value > 0)
+                            {
+                                // knock aan
+                                if (x1ori == 0) x1ori = x1;
+                                if (x2ori == 0) x2ori = x2;
+                                if (cnt < line.Measurements.Count)
+                                {
+                                    if (line.Measurements[cnt + 1].Value > 0)
+                                    {
+                                        // next is still knock
+                                        //x1ori = (float)(cnt - 1) * sectionwidth + 100;
+                                        x2ori = ((line.Measurements[cnt + 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;//(float)(cnt + 1) * sectionwidth + 100;
+
+                                    }
+                                    else
+                                    {
+                                        graphics.FillRectangle(b, x1ori, 0, x2ori - x1ori, r.Height - 100);
+                                    }
+                                }
+                                else
+                                {
+                                    // laatste blokje
+                                    graphics.FillRectangle(b, x1, 0, x2 - x1, r.Height - 100);
+                                }
+
+                            }
+                            else
+                            {
+                                // no longer in knock
+                                x1ori = 0;
+                                x2ori = 0;
+                            }
+//                            float y1 = (r.Height - 100) - (line.Measurements[cnt - 1].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
+//                            float y2 = (r.Height - 100) - (line.Measurements[cnt].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
+
+
+                        }
+                        cnt++;
+                    }
+                }
+            }
+            b.Dispose();
+        }
+
 
         private void DrawLines(Rectangle r, Graphics graphics)
         {
@@ -535,7 +745,7 @@ namespace RealtimeGraph
             GraphLineCollection displaylines = GetLinesInSelection();
             foreach (GraphLine line in /*_lines*/ displaylines)
             {
-                if (line.LineVisible)
+                if (line.LineVisible && line.ChannelName != "KnockInfo" && line.ChannelName != "Warmup" && line.ChannelName != "Idle" && line.ChannelName != "ClosedLoop")
                 {
                     //Console.WriteLine("Visible line: " + line.ChannelName);
                     if (line.Maxrange == 0) line.Maxrange = 1;
@@ -856,7 +1066,41 @@ namespace RealtimeGraph
         {
             string retval = symbolname;
             symbolname = symbolname.ToUpper();
-            if (symbolname == "IN.V_VEHICLE") retval = "Speed";
+			// T5
+            if (symbolname == "BIL_HAST") retval = "Speed";
+            else if (symbolname == "P_MANIFOLD") retval = "Boost";
+            else if (symbolname == "P_MANIFOLD10") retval = "Boost";
+            else if (symbolname == "LUFTTEMP") retval = "IAT";
+            else if (symbolname == "KYL_TEMP") retval = "Coolant";
+            else if (symbolname == "AD_SOND") retval = "Lambda A/D";
+            else if (symbolname == "RPM") retval = "Rpm";
+            else if (symbolname == "INSPTID_MS10") retval = "Inj.dur";
+            else if (symbolname == "GEAR") retval = "Gear";
+            else if (symbolname == "APC_DECRESE") retval = "APCD";
+            else if (symbolname == "IGN_ANGLE") retval = "Ign.angle";
+            else if (symbolname == "P_FAK") retval = "P factor";
+            else if (symbolname == "I_FAK") retval = "I factor";
+            else if (symbolname == "D_FAK") retval = "D factor";
+            else if (symbolname == "REGL_TRYCK") retval = "Target boost";
+            else if (symbolname == "MAX_TRYCK") retval = "Max boost";
+            else if (symbolname == "PWM_UT10") retval = "APC PWM";
+            else if (symbolname == "REG_KON_APC") retval = "Reg. value";
+            else if (symbolname == "MEDELTROT") retval = "TPS";
+            else if (symbolname == "TROT_MIN") retval = "TPS offset";
+            else if (symbolname == "KNOCK_MAP_OFFSET") retval = "Map offset";
+            else if (symbolname == "KNOCK_OFFSET1234") retval = "Offset1234";
+            else if (symbolname == "KNOCK_AVERAGE") retval = "Average";
+            else if (symbolname == "KNOCK_AVERAGE_LIMIT") retval = "Average limit";
+            else if (symbolname == "KNOCK_LEVEL") retval = "Level";
+            else if (symbolname == "KNOCK_MAP_LIM") retval = "Ign.map limit";
+            else if (symbolname == "KNOCK_LIM") retval = "Map limit";
+            else if (symbolname == "KNOCK_REF_LEVEL") retval = "Ref. level";
+            else if (symbolname == "LKNOCK_OREF_LEVEL") retval = "ORef level";
+            else if (symbolname == "SPIK_COUNT") retval = "Spik";
+            else if (symbolname == "KNOCK_DIAG_LEVEL") retval = "Diag level";// (groter maken)
+            else if (symbolname == "KNOCK_ANG_DEC!") retval = "Ign. decrease";
+			// T7
+            else if (symbolname == "IN.V_VEHICLE") retval = "Speed";
             else if (symbolname == "ACTUALIN.N_ENGINE") retval = "Rpm";
             else if (symbolname == "IN.P_AIRINLET") retval = "Boost";
             else if (symbolname == "ACTUALIN.T_ENGINE") retval = "Coolant";
@@ -871,8 +1115,8 @@ namespace RealtimeGraph
             else if (symbolname == "OUT.X_ACCPEDAL") retval = "TPS";
             else if (symbolname == "MAF.M_AIRINLET") retval = "Airmass";
             else if (symbolname == "EXHAUST.T_CALC") retval = "EGT";
-            else if (symbolname == "DisplProt.LambdaScanner") retval = "WBLambda";
-            else if (symbolname == "Lambda.LambdaInt") retval = "NBLambda";
+            else if (symbolname == "DISPLPROT.LAMBDASCANNER") retval = "WBLambda";
+            else if (symbolname == "LAMBDA.LAMBDAINT") retval = "NBLambda";
             return retval;
         }
 
@@ -920,13 +1164,13 @@ namespace RealtimeGraph
                 _lines.Clear();
                 _zoomfactor = 1;
                 FileInfo fi = new FileInfo(filename);
-                long bytesread = 0;
                 string[] alllines = File.ReadAllLines(filename);
+                long bytesread = 0;
                 //using (StreamReader sr = new StreamReader(filename))
                 {
                     //string line = string.Empty;
                     //while ((line = sr.ReadLine()) != null)
-                    foreach(string line in alllines)
+                    foreach (string line in alllines)
                     {
                         bytesread += line.Length + 2;
                         progress.SetProgressPercentage((int)(bytesread * 100 / fi.Length));
@@ -940,7 +1184,7 @@ namespace RealtimeGraph
                             //10/03/2009 07:33:06.187|P_Manifold10=-0.64|Lufttemp=8.00|Rpm=1660.00|Bil_hast=15.20|Ign_angle=28.50|AD_EGR=127.00|AFR=17.86|InjectorDC=2.49|Power=0.00|Torque=0.00|
                             // fetch all values from the line including the timestamp
                             string[] values = line.Split(sep);
-                            if (values.Length > 1)
+                            if (values.Length > 1 && CheckValuesAgainstFilters(values))
                             {
                                 try
                                 {
@@ -1005,6 +1249,56 @@ namespace RealtimeGraph
             
         }
 
+        LogFilterCollection _filters = new LogFilterCollection();
+
+        public void SetFilters(LogFilterCollection filters)
+        {
+            _filters = filters;
+        }
+
+        private bool CheckValuesAgainstFilters(string[] values)
+        {
+            bool retval = true;
+            if (_filters == null) return true;
+            if (_filters.Count == 0) return true;
+            char[] sep2 = new char[1];
+            sep2.SetValue('=', 0);
+
+            for (int t = 1; t < values.Length; t++)
+            {
+                string subvalue = (string)values.GetValue(t);
+                string[] subvals = subvalue.Split(sep2);
+                if (subvals.Length == 2)
+                {
+                    string varname = (string)subvals.GetValue(0);
+                    foreach (LogFilter filter in _filters)
+                    {
+                        if (filter.Symbol == varname && filter.Active)
+                        {
+                            if ((varname != "Pgm_mod!") && (varname != "Pgm_status"))
+                            {
+                                float value = (float)ConvertToDouble((string)subvals.GetValue(1));
+                                if (filter.Type == LogFilter.MathType.Equals)
+                                {
+                                    if (value != filter.Value) retval = false;
+                                }
+                                else if (filter.Type == LogFilter.MathType.GreaterThan)
+                                {
+                                    if (value < filter.Value) retval = false;
+                                }
+                                else if (filter.Type == LogFilter.MathType.SmallerThan)
+                                {
+                                    if (value > filter.Value) retval = false;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            return retval;
+        }
+
         private LogSectionCollection AnalyseFile(string filename)
         {
             LogSectionCollection lsc = new LogSectionCollection();
@@ -1016,7 +1310,7 @@ namespace RealtimeGraph
             {
                 //string line = string.Empty;
                 //while ((line = sr.ReadLine()) != null)
-                foreach(string line in alllines)
+                foreach (string line in alllines)
                 {
                     char[] sep = new char[1];
                     sep.SetValue('|', 0);
@@ -1106,6 +1400,62 @@ namespace RealtimeGraph
         {
             _line.Maxrange = _max * 1.05F;
             _line.Minrange = _min * 1.05F;
+			// T5
+            switch (_line.Symbol.ToUpper())
+            {
+                case "RPM":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 7000;
+                    break;
+                case "BIL_HAST":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 300;
+                    break;
+                case "P_MANIFOLD":
+                case "P_MANIFOLD10":
+                case "REGL_TRYCK":
+                case "MAX_TRYCK":
+                    _line.Minrange = -1;
+                    _line.Maxrange = 2;
+                    break;
+                case "LUFTTEMP":
+                    _line.Minrange = -30;
+                    _line.Maxrange = 120;
+                    break;
+                case "KYL_TEMP":
+                    _line.Minrange = -30;
+                    _line.Maxrange = 120;
+                    break;
+                case "INSPTID_MS10":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 50;
+                    break;
+                case "GEAR":
+                    _line.Minrange = -1;
+                    _line.Maxrange = 5;
+                    break;
+                case "APC_DECRESE":
+                case "APC_DECREASE":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 200;
+                    break;
+                case "IGN_ANGLE":
+                    _line.Minrange = -10;
+                    _line.Maxrange = 50;
+                    break;
+                case "PWM_UT10":
+                case "REG_KON_APC":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 100;
+                    break;
+                case "MODELTROT":
+                case "TROT_MIN":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 255;
+                    break;
+			}
+
+			// T7
             switch (_line.ChannelName)
             {
                 case "DisplProt.LambdaScanner": // AFR through wideband?
@@ -1149,10 +1499,10 @@ namespace RealtimeGraph
             }
         }
 
-        private string DetermineGraphNameByLinesPosition(Rectangle r, float x, float y,out DateTime measurementdt, out float value, out bool _valid)
+        private string DetermineGraphNameByLinesPosition(Rectangle r, float x, float y,out DateTime measurementdt, out float value, out bool _valid, out Color lineColor)
         {
-            
             float _max_dev = 3;
+            lineColor = Color.Green;
             _valid = false;
             measurementdt = DateTime.Now;
             value = 0;
@@ -1181,6 +1531,7 @@ namespace RealtimeGraph
 
                                 value = line.Measurements[cnt - 1].Value;
                                 measurementdt = line.Measurements[cnt - 1].Timestamp;
+                                lineColor = line.LineColor;
                                 //Console.WriteLine("Match: " + value.ToString() + " dt: " + measurementdt.ToString("dd/MM HH:mm:ss") + " x1: " + x1.ToString() + " y1: " + y1.ToString() + " x2: " + x2.ToString() + " y2: " + y2.ToString());
                                 _valid = true;
                                 return line.Symbol;
@@ -1189,6 +1540,7 @@ namespace RealtimeGraph
                             {
                                 value = measurement.Value;
                                 measurementdt = measurement.Timestamp;
+                                lineColor = line.LineColor;
                                 _valid = true;
                                 //Console.WriteLine("Match: " + value.ToString() + " dt: " + measurementdt.ToString("dd/MM HH:mm:ss") + " x1: " + x1.ToString() + " y1: " + y1.ToString() + " x2: " + x2.ToString() + " y2: " + y2.ToString());
                                 return line.Symbol;
@@ -1274,15 +1626,16 @@ namespace RealtimeGraph
                 //Console.WriteLine("Delta: " + deltaX.ToString() + " " + milliSecondsToShift.ToString() + " ms");
                 _centerDateTime = _centerDateTime.AddMilliseconds(milliSecondsToShift);
 
-                int deltaY = _MouseY - e.Y;
+                /*int deltaY = _MouseY - e.Y;
                 if (Math.Abs(deltaY) > 30)
                 {
                     _MouseY = e.Y;
                     _zoomfactor += deltaY/10;
                     if (_zoomfactor < 1) _zoomfactor = 1;
                     if (_zoomfactor > _maxZoomFactor) _zoomfactor = _maxZoomFactor;
-                }
-                
+                }*/
+
+
 
                 Invalidate();
             }
@@ -1292,7 +1645,8 @@ namespace RealtimeGraph
                 float value = 0;
                 bool _valid = false;
                 //Point p = PointToClient(e.Location);
-                _selectedSymbol = DetermineGraphNameByLinesPosition(this.Bounds, (float)e.X, (float)e.Y, out measurement, out value, out _valid);
+                Color _color = Color.Green;
+                _selectedSymbol = DetermineGraphNameByLinesPosition(this.Bounds, (float)e.X, (float)e.Y, out measurement, out value, out _valid, out _color);
                 // only redraw the yaxis
                 this.DrawYScale(this.ClientRectangle, this.CreateGraphics());
                 if (_selectedSymbol != string.Empty && _valid)
@@ -1300,6 +1654,7 @@ namespace RealtimeGraph
 
                     //toolTip1.Show(_selectedSymbol + "=" + value.ToString("F2") + " at " + measurement.ToString("dd/MM/yyyy HH:mm:ss"), this);
                     // update the labels that reflect the current values for all lines
+                    label1.ForeColor = _color;
                     label1.Text = _selectedSymbol + "=" + value.ToString("F2") + " at " + measurement.ToString("dd/MM/yyyy HH:mm:ss:fff");
                 }
                 else

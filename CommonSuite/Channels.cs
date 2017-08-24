@@ -67,10 +67,20 @@ namespace CommonSuite
             int numberOfDecimals = 0;
             switch (symbolname)
             {
+                    //T7
                 case "In.p_AirInlet":
-                case "InjectorDC":
                 case "Out.fi_Ignition":
+                    //T5
+                case "P_Manifold10":
+                case "Boost":
+                case "Ign_angle":
+                case "Boost request":
+                case "Target boost":
+                case "Boost error":
+                case "Boost reduction":
+                    //Common?
                 case "AFR":
+                case "InjectorDC":
                     numberOfDecimals = 2;
                     break;
 

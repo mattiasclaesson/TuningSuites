@@ -9859,7 +9859,7 @@ namespace T5Suite2
             dp.Size = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width, dockSymbols.Height);
             dp.Hide();
             dp.Text = "CANBus logfile: " + Path.GetFileName(filename);
-            RealtimeGraphControl lfv = new RealtimeGraphControl();
+            RealtimeGraphControl lfv = new RealtimeGraphControl(suiteRegistry);
             CommonSuite.LogFilters lfhelper = new CommonSuite.LogFilters(suiteRegistry);
             lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
             dp.Controls.Add(lfv);
@@ -11834,7 +11834,6 @@ namespace T5Suite2
 
                 // Show the preview dialog.
                 preview.ShowDialog();
-
             }
         }
 
@@ -11847,7 +11846,7 @@ namespace T5Suite2
             dp.FloatSize = new Size(dockManager1.Form.ClientSize.Width - dockSymbols.Width - 20, dockSymbols.Height - 10);
             dp.Hide();
             dp.Text = "CANBus logfile: " + Path.GetFileName(filename);
-            RealtimeGraphControl lfv = new RealtimeGraphControl();
+            RealtimeGraphControl lfv = new RealtimeGraphControl(suiteRegistry);
             dp.Controls.Add(lfv);
             lfv.ImportT5Logfile(filename);
             lfv.Dock = DockStyle.Fill;

@@ -132,10 +132,17 @@ namespace RealtimeGraph
             set { m_allowconfig = value; }
         }
 
-        public RealtimeGraphControl()
+        SuiteRegistry _suiteRegistry;
+        SymbolColors _symbolColors;
+        Channels _channels;
+
+        public RealtimeGraphControl(SuiteRegistry suiteRegistry)
         {
             InitializeComponent();
             this.MouseWheel += new MouseEventHandler(RealtimeGraphControl_MouseWheel);
+            _suiteRegistry = suiteRegistry;
+            _symbolColors = new SymbolColors(suiteRegistry);
+            _channels = new Channels(suiteRegistry);
         }
 
         void RealtimeGraphControl_MouseWheel(object sender, MouseEventArgs e)
@@ -182,7 +189,7 @@ namespace RealtimeGraph
             {
                 GraphLine _newline = new GraphLine();
                 _newline.Symbol = SymbolName;
-                _newline.NumberOfDecimals = GetChannelResolution(SymbolName);
+                _newline.NumberOfDecimals = _channels.GetChannelResolution(SymbolName);
                 _newline.ChannelName = Graphname;
                 _newline.Clear();
                 _lines.Add(_newline);
@@ -190,42 +197,12 @@ namespace RealtimeGraph
 //                if (value > maxrange) maxrange = value;
                 _newline.AddPoint(value, Timestamp, minrange, maxrange, linecolor);
                 // set visible or invisible according to registry setting
-                _newline.LineVisible = GetRegistryValue(Graphname);
+                _newline.LineVisible = _channels.GetChannelFromRegistry(Graphname);
                 if (_newline.ChannelName == "KnockInfo") _newline.LineVisible = false;
                 if (_newline.ChannelName == "Idle") _newline.LineVisible = false;
                 if (_newline.ChannelName == "ClosedLoop") _newline.LineVisible = false;
                 if (_newline.ChannelName == "Warmup") _newline.LineVisible = false;
             }
-        }
-
-        private bool GetRegistryValue(string key)
-        {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-            bool retval = true;
-
-            using (RegistryKey Settings = TempKey.CreateSubKey("T5Suite\\Channels"))
-            {
-                if (Settings != null)
-                {
-                    string[] vals = Settings.GetValueNames();
-                    foreach (string a in vals)
-                    {
-                        try
-                        {
-                            if (a == key.ToUpper())
-                            {
-                                retval = Convert.ToBoolean(Settings.GetValue(a).ToString());
-                            }
-                        }
-                        catch (Exception E)
-                        {
-                            Console.WriteLine(E.Message);
-                        }
-                    }
-                }
-            }
-            return retval;
         }
 
         public void ForceRepaint()
@@ -237,53 +214,25 @@ namespace RealtimeGraph
             this.Invalidate();
         }
 
-        Stopwatch sw = new Stopwatch();
-
-        private void DumpTiming(string descr, bool resetWatch, bool useMeasurement)
-        {
-            sw.Stop();
-            if (useMeasurement)
-            {
-                Console.WriteLine(descr + " took " + sw.ElapsedMilliseconds.ToString() + " ms");
-            }
-            if (resetWatch)
-            {
-                sw.Reset();
-                sw.Start();
-            }
-        }
-
         private void RealtimeGraphControl_Paint(object sender, PaintEventArgs e)
         {
             // paint the graphs in the control
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             //Console.WriteLine("this: " + this.Bounds.ToString() + " cliprect: " + e.ClipRectangle.ToString() + " client: " + this.ClientRectangle.ToString());
-            DumpTiming("", true, false);
             this.DrawBackground(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawBackground", true, true);
             this.DrawYScale(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawYScale", true, true);
             this.DrawYLines(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawYLines", true, true);
             this.DrawXScale(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawXScale", true, true);
             //this.DrawKnockWindows(this.ClientRectangle, e.Graphics);
             // draw indicators for knock, idle, closed loop and warmup conditions
             this.DrawWindows(this.ClientRectangle, e.Graphics, "KnockInfo");
-            DumpTiming("DrawWindows - KnockInfo", true, true);
             this.DrawWindows(this.ClientRectangle, e.Graphics, "Idle");
-            DumpTiming("DrawWindows - Idle", true, true);
             this.DrawWindows(this.ClientRectangle, e.Graphics, "ClosedLoop");
-            DumpTiming("DrawWindows - ClosedLoop", true, true);
             this.DrawWindows(this.ClientRectangle, e.Graphics, "Warmup");
-            DumpTiming("DrawWindows - Warmup", true, true);
             this.DrawLines(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawLines", true, true);
             this.DrawLabels(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawLabels", true, true);
             this.DrawInfo(this.ClientRectangle, e.Graphics);
-            DumpTiming("DrawInfo", false, true);
             // e.Clipractangle
             if (onGraphPainted != null)
             {
@@ -580,35 +529,13 @@ namespace RealtimeGraph
             {
                 GraphLine _newline = new GraphLine();
                 _newline.Symbol = SymbolName;
-                _newline.NumberOfDecimals = GetChannelResolution(SymbolName);
+                _newline.NumberOfDecimals = _channels.GetChannelResolution(SymbolName);
                 _newline.ChannelName = Graphname;
                 _newline.Clear();
                 coll.Add(_newline);
                 _newline.AddPoint(value, Timestamp, minrange, maxrange, linecolor);
-                _newline.LineVisible = GetRegistryValue(Graphname);
+                _newline.LineVisible = _channels.GetChannelFromRegistry(Graphname);
             }
-        }
-
-        private int GetChannelResolution(string symbolname)
-        {
-            int numberOfDecimals = 0;
-            switch (symbolname)
-            {
-                case "P_Manifold10":
-                case "Boost":
-                case "InjectorDC":
-                case "Ign_angle":
-                case "AFR":
-                case "Boost request":
-                case "Target boost":
-                case "Boost error":
-                case "Boost reduction":
-                    numberOfDecimals = 2;
-                    break;
-
-            }
-            //Console.WriteLine(symbolname);
-            return numberOfDecimals;
         }
 
         GraphLineCollection selcoll = new GraphLineCollection();
@@ -640,14 +567,12 @@ namespace RealtimeGraph
             }
             _selectionDetermined = true;
             return selcoll;
-
         }
 
         private void DrawWindows(Rectangle r, Graphics graphics, string ChannelName)
         {
             
             GraphLineCollection displaylines = GetLinesInSelection();
-            DumpTiming("GetLinesInSelection", true, true);
             Color c = Color.FromArgb(alpha, Color.LightBlue);
             if (ChannelName == "Warmup") c = Color.FromArgb(alpha, Color.Red);
             else if (ChannelName == "ClosedLoop") c = Color.FromArgb(alpha, Color.Purple);
@@ -865,11 +790,6 @@ namespace RealtimeGraph
             sbback.Dispose();
         }
 
-        private void RealtimeGraphControl_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void DumpLineVisiblity()
         {
             foreach (GraphLine line in _lines)
@@ -918,21 +838,9 @@ namespace RealtimeGraph
         {
             foreach (GraphLine line in _lines)
             {
-                SaveRegistrySetting(line.ChannelName, line.LineVisible);
+                _channels.SaveChannelToRegistry(line.ChannelName, line.LineVisible);
             }
         }
-
-        private void SaveRegistrySetting(string key, bool value)
-        {
-            RegistryKey TempKey = null;
-            TempKey = Registry.CurrentUser.CreateSubKey("Software");
-
-            using (RegistryKey saveSettings = TempKey.CreateSubKey("T5Suite\\Channels"))
-            {
-                saveSettings.SetValue(key.ToUpper(), value);
-            }
-        }
-
 
         private void RealtimeGraphControl_MouseClick(object sender, MouseEventArgs e)
         {
@@ -1145,40 +1053,12 @@ namespace RealtimeGraph
 
         private Color GetGraphColor(string symbolname)
         {
-            Color retval = Color.White;
-            //symbolname = symbolname.ToUpper();
-            if (symbolname == "Speed") retval = Color.LightGreen;
-            else if (symbolname == "Boost") retval = Color.Red;
-            else if (symbolname == "IAT" ) retval = Color.LightBlue;
-            else if (symbolname == "Coolant") retval = Color.LightGray;
-            else if (symbolname == "Lambda A/D") retval = Color.Yellow;
-            else if (symbolname == "AFR") retval = Color.GreenYellow;
-            else if (symbolname == "Rpm") retval = Color.Gold;
-            else if (symbolname == "Inj.dur") retval = Color.Firebrick;
-            else if (symbolname == "Gear") retval = Color.Purple;
-            else if (symbolname == "Boost reduction") retval = Color.LightPink;
-            else if (symbolname == "Ign.angle") retval = Color.LightSeaGreen;
-            else if (symbolname == "P factor") retval = Color.LightYellow;
-            else if (symbolname == "I factor") retval = Color.LightSteelBlue;
-            else if (symbolname == "D factor") retval = Color.AntiqueWhite;
-            else if (symbolname == "Target boost") retval = Color.RosyBrown;
-            else if (symbolname == "Max boost") retval = Color.Pink;
-            else if (symbolname == "APC PWM") retval = Color.PaleGreen;
-            else if (symbolname == "Reg. value") retval = Color.PapayaWhip;
-            else if (symbolname == "TPS") retval = Color.SpringGreen;
-            else if (symbolname == "TPS offset") retval = Color.Silver;
-            else if (symbolname == "Map offset") retval = Color.DarkTurquoise;
-            else if (symbolname == "Offset1234") retval = Color.Aqua;
-            else if (symbolname == "Average") retval = Color.Orange;
-            else if (symbolname == "Average limit") retval = Color.OliveDrab;
-            else if (symbolname == "Level") retval = Color.OrangeRed;
-            else if (symbolname == "Ign.map limit") retval = Color.Navy;
-            else if (symbolname == "Map limit") retval = Color.Moccasin;
-            else if (symbolname == "Ref. level") retval = Color.SeaShell;
-            else if (symbolname == "ORef level") retval = Color.MistyRose;
-            else if (symbolname == "Spik") retval = Color.Brown;
-            else if (symbolname == "Diag level" ) retval = Color.Chartreuse;// (groter maken)
-            else if (symbolname == "Ign. decrease!") retval = Color.DarkGoldenrod;
+            Color retval = _symbolColors.GetColorFromRegistry(symbolname);
+            if (retval == Color.Black)
+            {
+                retval = Color.White;
+            }
+
             return retval;
         }
 
@@ -1186,6 +1066,7 @@ namespace RealtimeGraph
         {
             string retval = symbolname;
             symbolname = symbolname.ToUpper();
+			// T5
             if (symbolname == "BIL_HAST") retval = "Speed";
             else if (symbolname == "P_MANIFOLD") retval = "Boost";
             else if (symbolname == "P_MANIFOLD10") retval = "Boost";
@@ -1218,6 +1099,24 @@ namespace RealtimeGraph
             else if (symbolname == "SPIK_COUNT") retval = "Spik";
             else if (symbolname == "KNOCK_DIAG_LEVEL") retval = "Diag level";// (groter maken)
             else if (symbolname == "KNOCK_ANG_DEC!") retval = "Ign. decrease";
+			// T7
+            else if (symbolname == "IN.V_VEHICLE") retval = "Speed";
+            else if (symbolname == "ACTUALIN.N_ENGINE") retval = "Rpm";
+            else if (symbolname == "IN.P_AIRINLET") retval = "Boost";
+            else if (symbolname == "ACTUALIN.T_ENGINE") retval = "Coolant";
+            else if (symbolname == "ACTUALIN.T_AIRINLET") retval = "IAT";
+            else if (symbolname == "ECMSTAT.ST_ACTIVEAIRDEM") retval = "LIMITER";
+            else if (symbolname == "IGNPROT.FI_OFFSET") retval = "IOFF";
+            else if (symbolname == "M_REQUEST") retval = "Request";
+            else if (symbolname == "OUT.M_ENGINE") retval = "Torque";
+            else if (symbolname == "ECMSTAT.P_ENGINE") retval = "Power";
+            else if (symbolname == "OUT.PWM_BOOSTCNTRL") retval = "APC PWM";
+            else if (symbolname == "OUT.FI_IGNITION") retval = "Ign.angle";
+            else if (symbolname == "OUT.X_ACCPEDAL") retval = "TPS";
+            else if (symbolname == "MAF.M_AIRINLET") retval = "Airmass";
+            else if (symbolname == "EXHAUST.T_CALC") retval = "EGT";
+            else if (symbolname == "DISPLPROT.LAMBDASCANNER") retval = "WBLambda";
+            else if (symbolname == "LAMBDA.LAMBDAINT") retval = "NBLambda";
             return retval;
         }
 
@@ -1271,7 +1170,7 @@ namespace RealtimeGraph
                 {
                     //string line = string.Empty;
                     //while ((line = sr.ReadLine()) != null)
-                    foreach (string line in alllines) 
+                    foreach (string line in alllines)
                     {
                         bytesread += line.Length + 2;
                         progress.SetProgressPercentage((int)(bytesread * 100 / fi.Length));
@@ -1411,7 +1310,7 @@ namespace RealtimeGraph
             {
                 //string line = string.Empty;
                 //while ((line = sr.ReadLine()) != null)
-                foreach (string line in alllines) 
+                foreach (string line in alllines)
                 {
                     char[] sep = new char[1];
                     sep.SetValue('|', 0);
@@ -1501,6 +1400,7 @@ namespace RealtimeGraph
         {
             _line.Maxrange = _max * 1.05F;
             _line.Minrange = _min * 1.05F;
+			// T5
             switch (_line.Symbol.ToUpper())
             {
                 case "RPM":
@@ -1553,12 +1453,54 @@ namespace RealtimeGraph
                     _line.Minrange = 0;
                     _line.Maxrange = 255;
                     break;
+			}
+
+			// T7
+            switch (_line.ChannelName)
+            {
+                case "DisplProt.LambdaScanner": // AFR through wideband?
+                case "Lambda.LambdaInt": // AFR through narrowband?
+                    _line.Minrange = 0.5F;
+                    _line.Maxrange = 1.5F;
+                    break;
+                case "ActualIn.n_Engine":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 7000;
+                    break;
+                case "In.v_Vehicle":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 300;
+                    break;
+                case "In.p_AirInlet":
+                    _line.Minrange = -1;
+                    _line.Maxrange = 2;
+                    break;
+                case "ActualIn.T_AirInlet":
+                    _line.Minrange = -30;
+                    _line.Maxrange = 120;
+                    break;
+                case "ActualIn.T_Engine":
+                    _line.Minrange = -30;
+                    _line.Maxrange = 120;
+                    break;
+                case "Out.fi_Ignition":
+                    _line.Minrange = -10;
+                    _line.Maxrange = 50;
+                    break;
+                case "Out.PWM_BoostCntrl":
+                case "REG_KON_APC":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 100;
+                    break;
+                case "Out.X_AccPedal":
+                    _line.Minrange = 0;
+                    _line.Maxrange = 100;
+                    break;
             }
         }
 
         private string DetermineGraphNameByLinesPosition(Rectangle r, float x, float y,out DateTime measurementdt, out float value, out bool _valid, out Color lineColor)
         {
-
             float _max_dev = 3;
             lineColor = Color.Green;
             _valid = false;
@@ -1817,16 +1759,6 @@ namespace RealtimeGraph
         {
             _panning = false;
             Cursor = Cursors.Default;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            PanToLeft();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            PanToRight();
         }
 
         private void RealtimeGraphControl_KeyDown(object sender, KeyEventArgs e)

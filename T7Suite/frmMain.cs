@@ -15008,8 +15008,8 @@ If boost regulation reports errors you can increase the difference between boost
             dp.Hide();
             dp.Text = "CANBus logfile: " + Path.GetFileName(filename);
             RealtimeGraphControl lfv = new RealtimeGraphControl(suiteRegistry);
-            //LogFilters lfhelper = new LogFilters();
-            //lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
+            LogFilters lfhelper = new LogFilters(suiteRegistry);
+            lfv.SetFilters(lfhelper.GetFiltersFromRegistry());
             dp.Controls.Add(lfv);
             lfv.ImportT5Logfile(filename);
             lfv.Dock = DockStyle.Fill;

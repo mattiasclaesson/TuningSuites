@@ -74,6 +74,40 @@ namespace CommonSuite
             if (GetValueFromRegistry("In.v_Vehicle") == 0) SaveColorToRegistry("In.v_Vehicle", Color.Green);
             if (GetValueFromRegistry("Exhaust.T_Calc") == 0) SaveColorToRegistry("Exhaust.T_Calc", Color.Goldenrod);
             if (GetValueFromRegistry("BFuelProt.CurrentFuelCon") == 0) SaveColorToRegistry("BFuelProt.CurrentFuelCon", Color.White);
+
+            // T5
+            if (GetValueFromRegistry("Speed") == 0) SaveColorToRegistry("Speed", Color.LightGreen);
+            if (GetValueFromRegistry("Boost") == 0) SaveColorToRegistry("Boost", Color.Red);
+            if (GetValueFromRegistry("IAT") == 0) SaveColorToRegistry("IAT", Color.LightBlue);
+            if (GetValueFromRegistry("Coolant") == 0) SaveColorToRegistry("Coolant", Color.LightGray);
+            if (GetValueFromRegistry("Lambda A/D") == 0) SaveColorToRegistry("Lambda A/D", Color.Yellow);
+            if (GetValueFromRegistry("AFR") == 0) SaveColorToRegistry("AFR", Color.GreenYellow);
+            if (GetValueFromRegistry("Rpm") == 0) SaveColorToRegistry("Rpm", Color.Gold);
+            if (GetValueFromRegistry("Inj.dur") == 0) SaveColorToRegistry("Inj.dur", Color.Firebrick);
+            if (GetValueFromRegistry("Gear") == 0) SaveColorToRegistry("Gear", Color.Purple);
+            if (GetValueFromRegistry("Boost reduction") == 0) SaveColorToRegistry("Boost reduction", Color.LightPink);
+            if (GetValueFromRegistry("Ign.angle") == 0) SaveColorToRegistry("Ign.angle", Color.LightSeaGreen);
+            if (GetValueFromRegistry("P factor") == 0) SaveColorToRegistry("P factor", Color.LightYellow);
+            if (GetValueFromRegistry("I factor") == 0) SaveColorToRegistry("I factor", Color.LightSteelBlue);
+            if (GetValueFromRegistry("D factor") == 0) SaveColorToRegistry("D factor", Color.AntiqueWhite);
+            if (GetValueFromRegistry("Target boost") == 0) SaveColorToRegistry("Target boost", Color.RosyBrown);
+            if (GetValueFromRegistry("Max boost") == 0) SaveColorToRegistry("Max boost", Color.Pink);
+            if (GetValueFromRegistry("APC PWM") == 0) SaveColorToRegistry("APC PWM", Color.PaleGreen);
+            if (GetValueFromRegistry("Reg. value") == 0) SaveColorToRegistry("Reg. value", Color.PapayaWhip);
+            if (GetValueFromRegistry("TPS") == 0) SaveColorToRegistry("TPS", Color.SpringGreen);
+            if (GetValueFromRegistry("TPS offset") == 0) SaveColorToRegistry("TPS offset", Color.Silver);
+            if (GetValueFromRegistry("Map offset") == 0) SaveColorToRegistry("Map offset", Color.DarkTurquoise);
+            if (GetValueFromRegistry("Offset1234") == 0) SaveColorToRegistry("Offset1234", Color.Aqua);
+            if (GetValueFromRegistry("Average") == 0) SaveColorToRegistry("Average", Color.Orange);
+            if (GetValueFromRegistry("Average limit") == 0) SaveColorToRegistry("Average limit", Color.OliveDrab);
+            if (GetValueFromRegistry("Level") == 0) SaveColorToRegistry("Level", Color.OrangeRed);
+            if (GetValueFromRegistry("Ign.map limit") == 0) SaveColorToRegistry("Ign.map limit", Color.Navy);
+            if (GetValueFromRegistry("Map limit") == 0) SaveColorToRegistry("Map limit", Color.Moccasin);
+            if (GetValueFromRegistry("Ref. level") == 0) SaveColorToRegistry("Ref. level", Color.SeaShell);
+            if (GetValueFromRegistry("ORef level") == 0) SaveColorToRegistry("ORef level", Color.MistyRose);
+            if (GetValueFromRegistry("Spik") == 0) SaveColorToRegistry("Spik", Color.Brown);
+            if (GetValueFromRegistry("Diag level") == 0) SaveColorToRegistry("Diag level", Color.Chartreuse);
+            if (GetValueFromRegistry("Ign. decrease!") == 0) SaveColorToRegistry("Ign. decrease!", Color.DarkGoldenrod);
         }
 
         private void SaveRegistrySetting(string key, int value)
