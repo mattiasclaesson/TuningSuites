@@ -2387,7 +2387,7 @@ namespace T5Suite2
             this.gridViewSymbols.GroupCount = 2;
             this.gridViewSymbols.GroupFooterShowMode = DevExpress.XtraGrid.Views.Grid.GroupFooterShowMode.Hidden;
             this.gridViewSymbols.GroupSummary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
-            new DevExpress.XtraGrid.GridGroupSummaryItem(DevExpress.Data.SummaryItemType.Count, "Category", null, " ({0})")});
+            new DevExpress.XtraGrid.GridGroupSummaryItem(DevExpress.Data.SummaryItemType.Count, "XdfCategory", null, " ({0})")});
             this.gridViewSymbols.Name = "gridViewSymbols";
             this.gridViewSymbols.OptionsBehavior.AllowIncrementalSearch = true;
             this.gridViewSymbols.OptionsBehavior.Editable = false;
@@ -2423,14 +2423,14 @@ namespace T5Suite2
             // gcSymbolCategory
             // 
             this.gcSymbolCategory.Caption = "Category";
-            this.gcSymbolCategory.FieldName = "Category";
+            this.gcSymbolCategory.FieldName = "XdfCategory";
             this.gcSymbolCategory.GroupFormat.FormatString = "{0}: [#image]{1} {2}";
             this.gcSymbolCategory.Name = "gcSymbolCategory";
             // 
             // gcSymbolSubcategory
             // 
             this.gcSymbolSubcategory.Caption = "Subcategory";
-            this.gcSymbolSubcategory.FieldName = "Subcategory";
+            this.gcSymbolSubcategory.FieldName = "XdfSubcategory";
             this.gcSymbolSubcategory.GroupFormat.FormatString = "{0}: [#image]{1} {2}";
             this.gcSymbolSubcategory.Name = "gcSymbolSubcategory";
             // 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CommonSuite;
 
 namespace Trionic5Tools
 {
@@ -71,7 +72,7 @@ namespace Trionic5Tools
         {
             foreach (SymbolHelper sh in m_SymbolCollection)
             {
-                if (sh.Varname == symbolname) return sh.Start_address;
+                if (sh.Varname == symbolname) return (int)sh.Start_address;
             }
             return 0;
         }
@@ -80,7 +81,7 @@ namespace Trionic5Tools
         {
             foreach (SymbolHelper sh in m_SymbolCollection)
             {
-                if (sh.Varname == symbolname) return sh.Flash_start_address;
+                if (sh.Varname == symbolname) return (int)sh.Flash_start_address;
             }
             return 0;
         }
@@ -727,7 +728,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == symbolname)
                 {
-                    return sh.Category;
+                    return sh.XdfCategory;
                 }
             }
             return XDFCategories.Undocumented;
@@ -739,7 +740,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == symbolname)
                 {
-                    return sh.Subcategory;
+                    return sh.XdfSubcategory;
                 }
             }
             return XDFSubCategory.Undocumented;

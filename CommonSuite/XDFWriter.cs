@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Data;
 
-namespace Trionic5Tools
+namespace CommonSuite
 {
     public enum XDFCategories : int
     {

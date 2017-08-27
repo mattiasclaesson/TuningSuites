@@ -412,7 +412,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RealtimeValue.cs" />
-    <Compile Include="SortableCollectionBase.cs" />
     <Compile Include="SRAMCompareResults.cs">
       <SubType>UserControl</SubType>
     </Compile>

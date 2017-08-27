@@ -806,7 +806,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == "Pgm_mod!")
                 {
-                    int fileoffset = sh.Flash_start_address;
+                    int fileoffset = (int)sh.Flash_start_address;
                     //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                     byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -827,7 +827,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == "Pgm_mod!")
                 {
-                    int fileoffset = sh.Flash_start_address;
+                    int fileoffset = (int)sh.Flash_start_address;
                     //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                     byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -856,7 +856,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == "Pgm_mod!")
                 {
-                    int fileoffset = sh.Flash_start_address;
+                    int fileoffset = (int)sh.Flash_start_address;
                     //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                     byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -877,7 +877,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == "Pgm_mod!")
                 {
-                    int fileoffset = sh.Flash_start_address;
+                    int fileoffset = (int)sh.Flash_start_address;
                     //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                     byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -1250,7 +1250,7 @@ namespace Trionic5Tools
                 {
                     if (sh.Varname == "Pgm_mod!")
                     {
-                        int fileoffset = sh.Flash_start_address;
+                        int fileoffset = (int)sh.Flash_start_address;
                         //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                         byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -1278,7 +1278,7 @@ namespace Trionic5Tools
                 {
                     if (sh.Varname == "Pgm_mod!")
                     {
-                        int fileoffset = sh.Flash_start_address;
+                        int fileoffset = (int)sh.Flash_start_address;
                         //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                         byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -1313,7 +1313,7 @@ namespace Trionic5Tools
                 {
                     if (sh.Length == 6)
                     {
-                        int fileoffset = sh.Flash_start_address;
+                        int fileoffset = (int)sh.Flash_start_address;
                         //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
                         byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
 
@@ -1338,7 +1338,7 @@ namespace Trionic5Tools
                 {
                     if (sh.Length == 6)
                     {
-                        int fileoffset = sh.Flash_start_address;
+                        int fileoffset = (int)sh.Flash_start_address;
                         //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
                         byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
 
@@ -1362,7 +1362,7 @@ namespace Trionic5Tools
                     if (sh.Length == 6)
                     {
 
-                        int fileoffset = sh.Flash_start_address;
+                        int fileoffset = (int)sh.Flash_start_address;
                         //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                         byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -1392,7 +1392,7 @@ namespace Trionic5Tools
                     if (sh.Length == 6)
                     {
 
-                        int fileoffset = sh.Flash_start_address;
+                        int fileoffset = (int)sh.Flash_start_address;
                         //while (fileoffset > m_fileInfo.Filelength) fileoffset -= m_fileInfo.Filelength;
 
                         byte[] vssdata = readdatafromfile(m_currentFile, fileoffset, sh.Length);
@@ -2696,8 +2696,8 @@ namespace Trionic5Tools
             {
                 st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out subcat);
                 sh.Helptext = helptext;
-                sh.Category = cat;
-                sh.Subcategory = subcat;
+                sh.XdfCategory = cat;
+                sh.XdfSubcategory = subcat;
                 if (sh.Varname.StartsWith("Knock_count_cyl")) sh.Length = 2;
             }
             TryToLoadTemperatureConversionTables();
@@ -3110,7 +3110,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == symbolname)
                 {
-                    retval = sh.Flash_start_address - m_fileInfo.Filelength;
+                    retval = (int)sh.Flash_start_address - m_fileInfo.Filelength;
                     while (retval > m_fileInfo.Filelength) retval -= m_fileInfo.Filelength;
                 }
             }

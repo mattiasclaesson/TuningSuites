@@ -6,6 +6,7 @@ using System.Data;
 using System.IO;
 using System.Globalization;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace T5Suite2
 {

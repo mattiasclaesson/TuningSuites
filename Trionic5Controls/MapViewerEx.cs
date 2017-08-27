@@ -140,9 +140,9 @@ namespace Trionic5Controls
             set { m_DirectSRAMWriteOnSymbolChange = value; }
         }
 
-        private Trionic5Tools.SymbolCollection m_SymbolCollection = new Trionic5Tools.SymbolCollection();
+        private SymbolCollection m_SymbolCollection = new SymbolCollection();
 
-        public override Trionic5Tools.SymbolCollection mapSymbolCollection
+        public override SymbolCollection mapSymbolCollection
         {
             get { return m_SymbolCollection; }
             set { m_SymbolCollection = value; }
@@ -9106,7 +9106,7 @@ namespace Trionic5Controls
             m_trionic_file = trionic_file;
             //Set correctly
             this.IsUpsideDown = true; // always?
-            foreach (Trionic5Tools.SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
+            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
             {
                 if (sh.Varname == symbolname)
                 {
@@ -9161,7 +9161,7 @@ namespace Trionic5Controls
             // autonomous
             m_trionic_file = trionic_file;
             this.IsUpsideDown = true; // always?
-            foreach (Trionic5Tools.SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
+            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
             {
                 if (sh.Varname == symbolname)
                 {

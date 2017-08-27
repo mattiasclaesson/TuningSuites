@@ -954,7 +954,7 @@ namespace Trionic5Tools
             {
                 if (sh.Varname == symbolname)
                 {
-                    retval = sh.Flash_start_address - m_fileInformation.Filelength;
+                    retval = (int)sh.Flash_start_address - m_fileInformation.Filelength;
                     while (retval > m_fileInformation.Filelength) retval -= m_fileInformation.Filelength;
                 }
             }

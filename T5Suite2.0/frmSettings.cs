@@ -891,9 +891,9 @@ namespace T5Suite2
             DialogResult = DialogResult.None;
         }
 
-        private Trionic5Tools.SymbolCollection m_symbols;
+        private SymbolCollection m_symbols;
 
-        public Trionic5Tools.SymbolCollection Symbols
+        public SymbolCollection Symbols
         {
             get { return m_symbols; }
             set { m_symbols = value; }

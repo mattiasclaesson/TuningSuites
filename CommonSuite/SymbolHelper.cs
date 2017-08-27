@@ -44,13 +44,6 @@ namespace CommonSuite
             set { varname = value; }
         }
 
-        private int _bitMask = 0x00000;
-        public int BitMask
-        {
-            get { return _bitMask; }
-            set { _bitMask = value; }
-        }
-
         private byte[] _currentdata;
         public byte[] Currentdata
         {
@@ -86,7 +79,6 @@ namespace CommonSuite
             set { symbol_type = value; }
         }
 
-
         int internal_address = 0x00000;
         public int Internal_address
         {
@@ -100,7 +92,6 @@ namespace CommonSuite
             get { return _userdescription; }
             set { _userdescription = value; }
         }
-
 
         string _description = string.Empty;
         public string Description
@@ -148,6 +139,71 @@ namespace CommonSuite
                     logger.Error(cE);
                 }
             }
+        }
+
+        // T8
+        private int _bitMask = 0x00000;
+        public int BitMask
+        {
+            get { return _bitMask; }
+            set { _bitMask = value; }
+        }
+
+		// T5
+		private bool _isSystemSymbol = false;
+        public bool IsSystemSymbol
+        {
+            get { return _isSystemSymbol; }
+            set { _isSystemSymbol = value; }
+        }
+
+        private XDFCategories m_category = XDFCategories.Undocumented;
+        public XDFCategories XdfCategory
+        {
+            get { return m_category; }
+            set { m_category = value; }
+        }
+
+        private XDFSubCategory m_subcategory = XDFSubCategory.Undocumented;
+        public XDFSubCategory XdfSubcategory
+        {
+            get { return m_subcategory; }
+            set { m_subcategory = value; }
+        }
+
+        private string m_helptext = string.Empty;
+        public string Helptext
+        {
+            get { return m_helptext; }
+            set { m_helptext = value; }
+        }
+
+        private string m_filename = string.Empty;
+        public string Filename
+        {
+            get { return m_filename; }
+            set { m_filename = value; }
+        }
+
+        private double _userCorrectionFactor = 1;
+        public double UserCorrectionFactor
+        {
+            get { return _userCorrectionFactor; }
+            set { _userCorrectionFactor = value; }
+        }
+
+        private double _userCorrectionOffset = 0;
+        public double UserCorrectionOffset
+        {
+            get { return _userCorrectionOffset; }
+            set { _userCorrectionOffset = value; }
+        }
+
+        private bool _useUserCorrection = false;
+        public bool UseUserCorrection
+        {
+            get { return _useUserCorrection; }
+            set { _useUserCorrection = value; }
         }
     }
 }

@@ -146,7 +146,6 @@
     <Compile Include="TransactionEntry.cs" />
     <Compile Include="TurboType.cs" />
     <Compile Include="ViewEnums.cs" />
-    <Compile Include="zipmsiupdater.cs" />
     <Compile Include="DTCDescription.cs" />
     <Compile Include="Forms\frmChangeNote.cs">
       <SubType>Form</SubType>
@@ -292,6 +291,7 @@
       <DependentUpon>ctrlMeasurement.cs</DependentUpon>
     </Compile>
     <Compile Include="VINDecoder.cs" />
+    <Compile Include="XDFWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmChangeNote.resx">

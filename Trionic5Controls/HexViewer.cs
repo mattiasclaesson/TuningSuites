@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using System.IO;
 using Be.Windows.Forms;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace Trionic5Controls
 {
@@ -411,10 +412,10 @@ namespace Trionic5Controls
             string retval = "No symbol";
             foreach (SymbolHelper sh in m_symbolcollection)
             {
-                int address = sh.Flash_start_address;
+                int address = (int)sh.Flash_start_address;
                 if (m_issramviewer)
                 {
-                    address = sh.Start_address;
+                    address = (int)sh.Start_address;
                 }
                 int internal_length = sh.Length;
                 if (address > 0)
@@ -425,11 +426,11 @@ namespace Trionic5Controls
                         retval = sh.Varname;
                         if (m_issramviewer)
                         {
-                            offset = sh.Start_address;
+                            offset = (int)sh.Start_address;
                         }
                         else
                         {
-                            offset = sh.Flash_start_address;
+                            offset = (int)sh.Flash_start_address;
                             while (offset > m_currentfile_size) offset -= m_currentfile_size;
                         }
                         length = sh.Length;
@@ -446,10 +447,10 @@ namespace Trionic5Controls
             string retval = "No symbol";
             foreach (SymbolHelper sh in m_symbolcollection)
             {
-                int address = sh.Flash_start_address;
+                int address = (int)sh.Flash_start_address;
                 if (m_issramviewer)
                 {
-                    address = sh.Start_address;
+                    address = (int)sh.Start_address;
                 }
                 int length = sh.Length;
                 if (address > 0)
@@ -509,10 +510,10 @@ namespace Trionic5Controls
                 {
                     if (sh.Varname == toolStripButton1.Text)
                     {
-                        int address = sh.Flash_start_address;
+                        int address = (int)sh.Flash_start_address;
                         if (m_issramviewer)
                         {
-                            address = sh.Start_address;
+                            address = (int)sh.Start_address;
                         }
 
                         int length = sh.Length;

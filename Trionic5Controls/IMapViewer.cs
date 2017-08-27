@@ -36,7 +36,7 @@ namespace Trionic5Controls
             set;
         }
 
-        public abstract Trionic5Tools.SymbolCollection mapSymbolCollection
+        public abstract SymbolCollection mapSymbolCollection
         {
             get;
             set;

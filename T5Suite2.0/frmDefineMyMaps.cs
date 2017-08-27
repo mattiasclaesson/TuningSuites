@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using System.IO;
 using System.Xml;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace T5Suite2
 {

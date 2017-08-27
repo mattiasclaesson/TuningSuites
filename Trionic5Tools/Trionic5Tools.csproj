@@ -98,8 +98,6 @@
     <Compile Include="AFRMaps.cs" />
     <Compile Include="AFRMeasurement.cs" />
     <Compile Include="AFRMeasurementCollection.cs" />
-    <Compile Include="SortableCollectionBase.cs" />
-    <Compile Include="SymbolCollection.cs" />
     <Compile Include="T5AppSettings.cs" />
     <Compile Include="CombiAdapterMonitor.cs" />
     <Compile Include="Engine.cs" />
@@ -125,7 +123,6 @@
     <Compile Include="PartNumberConverter.cs" />
     <Compile Include="ProgramModeSettings.cs" />
     <Compile Include="SymbolAxesTranslator.cs" />
-    <Compile Include="SymbolHelper.cs" />
     <Compile Include="SymbolTranslator.cs" />
     <Compile Include="Trionic5Immo.cs" />
     <Compile Include="Trionic5Anomalies.cs" />
@@ -140,7 +137,6 @@
     <Compile Include="Trionic5SymbolInformation.cs" />
     <Compile Include="TuningReferenceMaps.cs" />
     <Compile Include="VINDecoder.cs" />
-    <Compile Include="XDFWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

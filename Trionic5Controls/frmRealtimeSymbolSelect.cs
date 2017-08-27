@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using CommonSuite;
 
 namespace Trionic5Controls
 {
@@ -82,7 +83,7 @@ namespace Trionic5Controls
         }
 
 
-        internal void SetCollection(Trionic5Tools.SymbolCollection m_RealtimeSymbolCollection)
+        internal void SetCollection(SymbolCollection m_RealtimeSymbolCollection)
         {
             lookUpEdit1.Properties.DataSource = m_RealtimeSymbolCollection;
         }

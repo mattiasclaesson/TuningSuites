@@ -43,7 +43,7 @@ namespace CommonSuite
             if (e.Data is System.Windows.Forms.DataObject)
             {
 
-                object o = e.Data.GetData("CommonSuite.SymbolHelper");
+                object o = e.Data.GetData("SymbolHelper");
                 if (o is SymbolHelper)
                 {
                     e.Effect = DragDropEffects.Copy;
@@ -59,7 +59,7 @@ namespace CommonSuite
             if (e.Data is System.Windows.Forms.DataObject)
             {
 
-                object o = e.Data.GetData("CommonSuite.SymbolHelper");
+                object o = e.Data.GetData("SymbolHelper");
                 if (o is SymbolHelper)
                 {
                     SymbolHelper sh = (SymbolHelper)o;

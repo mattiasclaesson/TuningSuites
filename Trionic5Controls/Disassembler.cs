@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace Trionic5Controls
 {
@@ -2199,7 +2200,7 @@ int find_symbol(string symbol, long caddr)  // TEST SEQUENCE FOR READING BINARY 
             //Console.WriteLine("Sorting data");
             CastProgressEvent("Sorting mnemonics", 0, ProgressType.SortingData);
             mnemonics.SortColumn = "Address";
-            mnemonics.SortingOrder = Trionic5Controls.GenericComparer.SortOrder.Ascending;
+            mnemonics.SortingOrder = GenericComparer.SortOrder.Ascending;
             mnemonics.Sort();
             CastProgressEvent("Sorting mnemonics", 100, ProgressType.SortingData);
             return true;

@@ -10,6 +10,7 @@ using ICSharpCode.TextEditor.Document;
 using ICSharpCode.TextEditor;
 using System.IO;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace Trionic5Controls
 {

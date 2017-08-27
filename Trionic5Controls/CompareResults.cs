@@ -9,6 +9,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using Trionic5Tools;
+using CommonSuite;
 
 namespace Trionic5Controls
 {
@@ -251,7 +252,7 @@ namespace Trionic5Controls
         {
             if (e.Column.Name == gridColumn6.Name)
             {
-                object o = gridView1.GetRowCellValue(e.RowHandle, "CATEGORY");
+                object o = gridView1.GetRowCellValue(e.RowHandle, "XDFCATEGORY");
                 Color c = Color.White;
                 if (o != DBNull.Value)
                 {
