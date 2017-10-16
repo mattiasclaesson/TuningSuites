@@ -284,8 +284,8 @@ namespace T5CanFlasher
                                 "ERROR",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Stop);
+                            OkToUpgrade = false;
                         }
-                        OkToUpgrade = false;
                         break;
                     case ECUType.T55ECU:
                         switch (fi.Length)
