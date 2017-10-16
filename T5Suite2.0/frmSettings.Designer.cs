@@ -310,7 +310,7 @@ namespace T5Suite2
             toolTipTitleItem1.Text = "Auto detect mapsensor type";
             toolTipItem1.LeftIndent = 6;
             toolTipItem1.Text = "If checked, T5Suite 2.0 will try to determine the used mapsensor type in the file" +
-                " by examining certain maps.";
+    " by examining certain maps.";
             superToolTip1.Items.Add(toolTipTitleItem1);
             superToolTip1.Items.Add(toolTipItem1);
             this.checkEdit28.SuperTip = superToolTip1;
@@ -326,8 +326,8 @@ namespace T5Suite2
             toolTipTitleItem2.Text = "Show easy options screen";
             toolTipItem2.LeftIndent = 6;
             toolTipItem2.Text = "If checked, T5Suite 2.0 will use the easy method for displaying trionic options, " +
-                "using checkboxes. If not checked it will display the options using a properties " +
-                "panel.";
+    "using checkboxes. If not checked it will display the options using a properties " +
+    "panel.";
             superToolTip2.Items.Add(toolTipTitleItem2);
             superToolTip2.Items.Add(toolTipItem2);
             this.checkEdit27.SuperTip = superToolTip2;
@@ -342,7 +342,7 @@ namespace T5Suite2
             toolTipTitleItem3.Text = "Request a note on changes";
             toolTipItem3.LeftIndent = 6;
             toolTipItem3.Text = "Determines, whether T5Suite should prompt for a note when a change is made to a s" +
-                "ymbol while working in a project";
+    "ymbol while working in a project";
             superToolTip3.Items.Add(toolTipTitleItem3);
             superToolTip3.Items.Add(toolTipItem3);
             this.checkEdit26.SuperTip = superToolTip3;
@@ -357,7 +357,7 @@ namespace T5Suite2
             toolTipTitleItem4.Text = "Show additional symbol information";
             toolTipItem4.LeftIndent = 6;
             toolTipItem4.Text = "When checked additional information about the selected symbol will be shown in th" +
-                "e bottom part of the symbollist.";
+    "e bottom part of the symbollist.";
             superToolTip4.Items.Add(toolTipTitleItem4);
             superToolTip4.Items.Add(toolTipItem4);
             this.checkEdit17.SuperTip = superToolTip4;
@@ -372,7 +372,7 @@ namespace T5Suite2
             toolTipTitleItem5.Text = "Auto highlight selected map";
             toolTipItem5.LeftIndent = 6;
             toolTipItem5.Text = "When checked the symbollist will be scrolled to and the opened map and this symbo" +
-                "l will also be selected (and thus highlighted)";
+    "l will also be selected (and thus highlighted)";
             superToolTip5.Items.Add(toolTipTitleItem5);
             superToolTip5.Items.Add(toolTipItem5);
             this.checkEdit13.SuperTip = superToolTip5;
@@ -387,7 +387,7 @@ namespace T5Suite2
             toolTipTitleItem6.Text = "Advanced mode enabled";
             toolTipItem6.LeftIndent = 6;
             toolTipItem6.Text = "If checked, all advanced topics will be visible. If you are not sure whether you " +
-                "need this, leave it unchecked.";
+    "need this, leave it unchecked.";
             superToolTip6.Items.Add(toolTipTitleItem6);
             superToolTip6.Items.Add(toolTipItem6);
             this.checkEdit11.SuperTip = superToolTip6;
@@ -402,7 +402,7 @@ namespace T5Suite2
             toolTipTitleItem7.Text = "Show graphs in mapviewer";
             toolTipItem7.LeftIndent = 6;
             toolTipItem7.Text = "When checked the graphical representation of the selected map will also be displa" +
-                "yed. This consumes more system memory en cpu time.";
+    "yed. This consumes more system memory en cpu time.";
             superToolTip7.Items.Add(toolTipTitleItem7);
             superToolTip7.Items.Add(toolTipItem7);
             this.checkEdit24.SuperTip = superToolTip7;
@@ -418,8 +418,8 @@ namespace T5Suite2
             toolTipTitleItem8.Text = "Auto update checksum";
             toolTipItem8.LeftIndent = 6;
             toolTipItem8.Text = "If checked, the application will make sure that the checksum in the opened file w" +
-                "ill be updated when needed. If not checked the user is responsible for updating " +
-                "the checksum manually.";
+    "ill be updated when needed. If not checked the user is responsible for updating " +
+    "the checksum manually.";
             superToolTip8.Items.Add(toolTipTitleItem8);
             superToolTip8.Items.Add(toolTipItem8);
             this.checkEdit3.SuperTip = superToolTip8;
@@ -435,7 +435,7 @@ namespace T5Suite2
             toolTipTitleItem9.Text = "Show temperatures in Fahrenheit";
             toolTipItem9.LeftIndent = 6;
             toolTipItem9.Text = "If checked, temperature related information will be displayed in Fahrenheit in st" +
-                "ead of Celcius.";
+    "ead of Celcius.";
             superToolTip9.Items.Add(toolTipTitleItem9);
             superToolTip9.Items.Add(toolTipItem9);
             this.checkEdit22.SuperTip = superToolTip9;
@@ -451,7 +451,7 @@ namespace T5Suite2
             toolTipTitleItem10.Text = "Fancy docking";
             toolTipItem10.LeftIndent = 6;
             toolTipItem10.Text = "Lets you decide whether docking (dragging windows) will be shown in a fancy manne" +
-                "r or not.";
+    "r or not.";
             superToolTip10.Items.Add(toolTipTitleItem10);
             superToolTip10.Items.Add(toolTipItem10);
             this.checkEdit16.SuperTip = superToolTip10;
@@ -490,7 +490,7 @@ namespace T5Suite2
             toolTipTitleItem11.Text = "Synchronize mapviewers";
             toolTipItem11.LeftIndent = 6;
             toolTipItem11.Text = "When checked, all the mapviewers will react to changes made in one of the viewers" +
-                ". E.g. changing viewtype";
+    ". E.g. changing viewtype";
             superToolTip11.Items.Add(toolTipTitleItem11);
             superToolTip11.Items.Add(toolTipItem11);
             this.checkEdit15.SuperTip = superToolTip11;
@@ -529,7 +529,7 @@ namespace T5Suite2
             toolTipTitleItem12.Text = "Auto load last file on startup";
             toolTipItem12.LeftIndent = 6;
             toolTipItem12.Text = "Lets you decide whether or not the last used file should be automatically loaded " +
-                "when the program starts up.";
+    "when the program starts up.";
             superToolTip12.Items.Add(toolTipTitleItem12);
             superToolTip12.Items.Add(toolTipItem12);
             this.checkEdit14.SuperTip = superToolTip12;
@@ -544,7 +544,7 @@ namespace T5Suite2
             toolTipTitleItem13.Text = "New panels are floating";
             toolTipItem13.LeftIndent = 6;
             toolTipItem13.Text = "When checked makes new viewer float inside the application window in stead of doc" +
-                "king them to the right side of the screen.";
+    "king them to the right side of the screen.";
             superToolTip13.Items.Add(toolTipTitleItem13);
             superToolTip13.Items.Add(toolTipItem13);
             this.checkEdit12.SuperTip = superToolTip13;
@@ -559,7 +559,7 @@ namespace T5Suite2
             toolTipTitleItem14.Text = "Auto dock maps with same name";
             toolTipItem14.LeftIndent = 6;
             toolTipItem14.Text = "When checked T5Suite will dock newly started mapviewers to eachother whenever the" +
-                "y display the same symbol.";
+    "y display the same symbol.";
             superToolTip14.Items.Add(toolTipTitleItem14);
             superToolTip14.Items.Add(toolTipItem14);
             this.checkEdit10.SuperTip = superToolTip14;
@@ -574,7 +574,7 @@ namespace T5Suite2
             toolTipTitleItem15.Text = "Auto dock maps from same file";
             toolTipItem15.LeftIndent = 6;
             toolTipItem15.Text = "When checked T5Suite will dock newly started mapviewers to eachother whenever the" +
-                "y are from the same binary file.";
+    "y are from the same binary file.";
             superToolTip15.Items.Add(toolTipTitleItem15);
             superToolTip15.Items.Add(toolTipItem15);
             this.checkEdit9.SuperTip = superToolTip15;
@@ -590,7 +590,7 @@ namespace T5Suite2
             toolTipTitleItem16.Text = "Don\'t display colors in mapviewer";
             toolTipItem16.LeftIndent = 6;
             toolTipItem16.Text = "To improve performance you can check this item and coloring of the mapviewer cell" +
-                "s will be disabled.";
+    "s will be disabled.";
             superToolTip16.Items.Add(toolTipTitleItem16);
             superToolTip16.Items.Add(toolTipItem16);
             this.checkEdit8.SuperTip = superToolTip16;
@@ -620,7 +620,7 @@ namespace T5Suite2
             toolTipTitleItem18.Text = "Hide symbol window";
             toolTipItem18.LeftIndent = 6;
             toolTipItem18.Text = "To save display space you can hide the symbollist and select the symbols you want" +
-                " to view from the dropdownl list in the system menu.";
+    " to view from the dropdownl list in the system menu.";
             superToolTip18.Items.Add(toolTipTitleItem18);
             superToolTip18.Items.Add(toolTipItem18);
             this.checkEdit6.SuperTip = superToolTip18;
@@ -635,7 +635,7 @@ namespace T5Suite2
             toolTipTitleItem19.Text = "Show graphs in mapviewer";
             toolTipItem19.LeftIndent = 6;
             toolTipItem19.Text = "When checked the graphical representation of the selected map will also be displa" +
-                "yed. This consumes more system memory en cpu time.";
+    "yed. This consumes more system memory en cpu time.";
             superToolTip19.Items.Add(toolTipTitleItem19);
             superToolTip19.Items.Add(toolTipItem19);
             this.checkEdit5.SuperTip = superToolTip19;
@@ -651,7 +651,7 @@ namespace T5Suite2
             toolTipTitleItem20.Text = "View tables in hexadecimal values";
             toolTipItem20.LeftIndent = 6;
             toolTipItem20.Text = "When checked, tables will be shown in hexadecimal values as default. \r\nOtherwise " +
-                "maps will  be displayed in easy mode when they are opened.";
+    "maps will  be displayed in easy mode when they are opened.";
             superToolTip20.Items.Add(toolTipTitleItem20);
             superToolTip20.Items.Add(toolTipItem20);
             this.checkEdit4.SuperTip = superToolTip20;
@@ -667,7 +667,7 @@ namespace T5Suite2
             toolTipTitleItem21.Text = "Use red and white maps";
             toolTipItem21.LeftIndent = 6;
             toolTipItem21.Text = "When checked, displays maps in red and transparent only. Normally green is used t" +
-                "o display low values and red for higher values.";
+    "o display low values and red for higher values.";
             superToolTip21.Items.Add(toolTipTitleItem21);
             superToolTip21.Items.Add(toolTipItem21);
             this.checkEdit2.SuperTip = superToolTip21;
@@ -819,7 +819,7 @@ namespace T5Suite2
             toolTipTitleItem23.Text = "Enable canbus logging";
             toolTipItem23.LeftIndent = 6;
             toolTipItem23.Text = "If checked, a detailed log of the communication with the ECU will be written. Thi" +
-                "s downgrades performance and should only be used for debugging.";
+    "s downgrades performance and should only be used for debugging.";
             superToolTip23.Items.Add(toolTipTitleItem23);
             superToolTip23.Items.Add(toolTipItem23);
             this.checkEdit25.SuperTip = superToolTip23;
@@ -844,7 +844,8 @@ namespace T5Suite2
             "Lawicel",
             "DIY",
             "CombiAdapter",
-            "Just4Trionic"});
+            "Just4Trionic",
+            "Kvaser"});
             this.comboBoxEdit4.Size = new System.Drawing.Size(203, 20);
             toolTipTitleItem24.Text = "CAN USB device";
             toolTipItem24.LeftIndent = 6;
@@ -954,7 +955,7 @@ namespace T5Suite2
             toolTipTitleItem25.Text = "Use wideband lambda through symbol";
             toolTipItem25.LeftIndent = 6;
             toolTipItem25.Text = "Lets you select which symbol to read from the ECUs memory that should be used as " +
-                "wideband lambda values.";
+    "wideband lambda values.";
             superToolTip25.Items.Add(toolTipTitleItem25);
             superToolTip25.Items.Add(toolTipItem25);
             this.checkEdit23.SuperTip = superToolTip25;
@@ -970,7 +971,7 @@ namespace T5Suite2
             toolTipTitleItem26.Text = "Directly write to ECU on changing maps";
             toolTipItem26.LeftIndent = 6;
             toolTipItem26.Text = "If checked, changes made to maps while connected to the ECU are directly written " +
-                "into memory.";
+    "into memory.";
             superToolTip26.Items.Add(toolTipTitleItem26);
             superToolTip26.Items.Add(toolTipItem26);
             this.checkEdit21.SuperTip = superToolTip26;
@@ -985,7 +986,7 @@ namespace T5Suite2
             toolTipTitleItem27.Text = "Interpolate timescale for LogWorks";
             toolTipItem27.LeftIndent = 6;
             toolTipItem27.Text = "If checked, T5Suite will interpolate the measurements from the canbus to match th" +
-                "e 0.125 second interval that LogWorks uses.";
+    "e 0.125 second interval that LogWorks uses.";
             superToolTip27.Items.Add(toolTipTitleItem27);
             superToolTip27.Items.Add(toolTipItem27);
             this.checkEdit19.SuperTip = superToolTip27;
@@ -1001,7 +1002,7 @@ namespace T5Suite2
             toolTipTitleItem28.Text = "Auto generate LogWorks file after session";
             toolTipItem28.LeftIndent = 6;
             toolTipItem28.Text = "If checked, T5Suite will automatically generate a LogWorks file after a logging s" +
-                "ession and start LogWorks with this file.";
+    "ession and start LogWorks with this file.";
             superToolTip28.Items.Add(toolTipTitleItem28);
             superToolTip28.Items.Add(toolTipItem28);
             this.checkEdit18.SuperTip = superToolTip28;

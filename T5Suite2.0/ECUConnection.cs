@@ -788,6 +788,10 @@ namespace T5Suite2
                         {
                             _usbcandevice = new T5CANLib.CAN.Just4TrionicDevice();
                         }
+                        else if (_canusbDevice == "Kvaser")
+                        {
+                            _usbcandevice = new T5CANLib.CAN.KvaserCANDevice();
+                        }
                         else // default = Lawicel
                         {
                             _usbcandevice = new T5CANLib.CAN.CANUSBDevice();
