@@ -145,6 +145,7 @@ namespace T5CanFlasher
             // comboInterface
             // 
             this.comboInterface.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboInterface.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboInterface.FormattingEnabled = true;
             this.comboInterface.Items.AddRange(new object[] {
             "Lawicel CANUSB",
