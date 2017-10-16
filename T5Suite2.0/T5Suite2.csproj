@@ -550,6 +550,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <Content Include="canlib32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -580,13 +583,13 @@
       <Project>{2C512854-EF74-49E7-A152-7413EF161E7A}</Project>
       <Name>MouseGestures</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RealtimeGraph\RealtimeGraph.csproj">
+      <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>
+      <Name>RealtimeGraph</Name>
+    </ProjectReference>
     <ProjectReference Include="..\T5CANLib\T5CANLib.csproj">
       <Project>{5DB5BB8D-7EA1-456F-928F-7B047AB2EA28}</Project>
       <Name>T5CANLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\T5RealtimeGraph\RealtimeGraph.csproj">
-      <Project>{FFB5F5BC-D457-495B-B1B2-7722DF0BF59D}</Project>
-      <Name>RealtimeGraph</Name>
     </ProjectReference>
     <ProjectReference Include="..\Trionic5Controls\Trionic5Controls.csproj">
       <Project>{4D0225D3-8C62-4BB5-A769-F8BE77A93ECB}</Project>

@@ -14,7 +14,6 @@ namespace T5Suite2._
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            DevExpress.UserSkins.OfficeSkins.Register();
             DevExpress.UserSkins.BonusSkins.Register();
 
             Application.Run(new Form1(args));
