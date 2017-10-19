@@ -99,7 +99,6 @@
     <Compile Include="AFRMeasurement.cs" />
     <Compile Include="AFRMeasurementCollection.cs" />
     <Compile Include="T5AppSettings.cs" />
-    <Compile Include="CombiAdapterMonitor.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="frmTuningSettings.cs">
       <SubType>Form</SubType>
@@ -107,7 +106,6 @@
     <Compile Include="frmTuningSettings.Designer.cs">
       <DependentUpon>frmTuningSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FTDIAdapterMonitor.cs" />
     <Compile Include="FuelMap.cs" />
     <Compile Include="FuelMapInformation.cs" />
     <Compile Include="HWID.cs" />

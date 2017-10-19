@@ -243,8 +243,6 @@ namespace T5Suite2
         Trionic5Properties props = new Trionic5Properties();
         bool m_startFromCommandLine = false;
         string m_commandLineFile = string.Empty;
-        private CombiAdapterMonitor _adapterMonitor; 
-        private FTDIAdapterMonitor _ftdiAdapterMonitor;
         private IECUFileInformation m_trionicFileInformation = new Trionic5FileInformation();
         ECUConnection _ecuConnection = new ECUConnection();
         OperationMode _APPmode = OperationMode.ModeOffline; // always start in offline mode
@@ -368,56 +366,7 @@ namespace T5Suite2
                     m_commandLineFile = args[0].ToUpper();
                 }
             }
-            try
-            {
-                _adapterMonitor = new CombiAdapterMonitor();
-                _adapterMonitor.onAdapterPresent += new CombiAdapterMonitor.AdapterPresent(_adapterMonitor_onAdapterPresent);
-                _adapterMonitor.Start();
-                _ftdiAdapterMonitor = new FTDIAdapterMonitor();
-                _ftdiAdapterMonitor.onAdapterPresent += new FTDIAdapterMonitor.AdapterPresent(_ftdiAdapterMonitor_onAdapterPresent);
-                _ftdiAdapterMonitor.Start();
-            }
-            catch (Exception E)
-            {
-                logger.Debug("Failed to instantiate the combiadapter monitor: " + E.Message);
-            }
         }
-
-        void _ftdiAdapterMonitor_onAdapterPresent(object sender, FTDIAdapterMonitor.AdapterEventArgs e)
-        {
-            if (e.Present)
-            {
-                //logger.Debug(e.Type.ToString() + " connected");
-                barItemCombiAdapter.Caption = e.Type.ToString() + " connected";
-                if (e.Type == AdapterType.LAWICEL && m_appSettings.CanDevice != "Lawicel")
-                {
-                    frmInfoBox info = new frmInfoBox("You have connected a Lawicel CANUSB adapter but the settings show that this is not the currently selected canusb device!");
-                }
-            }
-            else
-            {
-                barItemCombiAdapter.Caption = "";
-            }
-            Application.DoEvents();
-        }
-
-        void _adapterMonitor_onAdapterPresent(object sender, CombiAdapterMonitor.AdapterEventArgs e)
-        {
-            if (e.Present)
-            {
-                barItemCombiAdapter.Caption = "CombiAdapter connected";
-                if (m_appSettings.CanDevice != "Multiadapter" && m_appSettings.CanDevice != "CombiAdapter")
-                {
-                    frmInfoBox info = new frmInfoBox("You have connected a CombiAdapter but the settings show that this is not the currently selected canusb device!");
-                }
-            }
-            else
-            {
-                barItemCombiAdapter.Caption = "";
-            }
-            Application.DoEvents();
-        }
-
 
         private void CreateECUConnection()
         {
@@ -4428,8 +4377,6 @@ namespace T5Suite2
                 }
             }
             SaveUserDefinedRealtimeSymbols();
-            if (_adapterMonitor != null) _adapterMonitor.Stop();
-            if (_ftdiAdapterMonitor != null) _ftdiAdapterMonitor.Stop();
             // close all open viewers
             bool pnlavailable = true;
             while (pnlavailable)
