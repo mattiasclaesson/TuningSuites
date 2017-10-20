@@ -1,5 +1,5 @@
 @echo off
-set T5SuiteII.version=2.0.14
+set T5SuiteII.version=2.0.15
 set Owf.Controls.DigitalDisplayControl.version=1.0.1.0
 set SuiteLauncher.version=2.0.3.0
 set CommonSuite.version=1.0.7.0
