@@ -4,8 +4,9 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using Nevron.Chart;
-using Nevron.Chart.WinForm;
 using Nevron.GraphicsCore;
+using Nevron.Chart.WinForm;
+using Nevron.Chart.Windows;
 using NLog;
 
 namespace T7

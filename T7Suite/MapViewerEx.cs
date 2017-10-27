@@ -12,6 +12,7 @@ using Nevron.Chart.WinForm;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using CommonSuite;
 using NLog;
+using Nevron.Chart.Windows;
 
 namespace T7
 {
