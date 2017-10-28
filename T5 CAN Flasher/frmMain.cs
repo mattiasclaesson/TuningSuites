@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using T5CANLib;
 using System.IO;
-using System.Threading;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Win32;
@@ -19,11 +14,10 @@ namespace T5CanFlasher
     {
         T5CAN t5can;
         T5CANLib.CAN.ICANDevice device;
-        Stopwatch stopwatch = new Stopwatch();
+        readonly Stopwatch stopwatch = new Stopwatch();
         ECUType ECU_type = ECUType.Unknown;
-        string commlogFilename = Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\commlog.txt";
-
-        private T5CanFlasher.Properties.Settings set = new T5CanFlasher.Properties.Settings();
+        readonly string commlogFilename = Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\commlog.txt";
+        private readonly T5CanFlasher.Properties.Settings set = new T5CanFlasher.Properties.Settings();
 
         public frmMain(string[] argv)
         {
@@ -88,22 +82,12 @@ namespace T5CanFlasher
         {
             //device.EnableLogging(Application.StartupPath);
             manageControls(programMode.notconnected);
-            AddToLog("T5 CAN Flasher version: " + Application.ProductVersion.ToString());
+            AddToLog("T5 CAN Flasher version: " + Application.ProductVersion);
             t5can = new T5CAN();
             t5can.onWriteProgress += new T5CAN.WriteProgress(t5can_onWriteProgress);
             t5can.onCanInfo += new T5CAN.CanInfo(t5can_onCanInfo);
             t5can.onBytesTransmitted += new T5CAN.BytesTransmitted(t5can_onBytesTransmitted);
-            Application.DoEvents();
-            // Wait for the Main form to load (before trying to connect to an ECU)
-            Application.Idle += new EventHandler(frmMain_Loaded);
             //device.DisableLogging();
-        }
-
-        // Try to connect to ECU once the main form has loaded
-        private void frmMain_Loaded(object sender, EventArgs e)
-        {
-            Application.Idle -= new EventHandler(frmMain_Loaded);
-            Connect();
         }
 
         private void LoadRegistrySettings()
@@ -145,7 +129,7 @@ namespace T5CanFlasher
             }
         }
 
-        private void SaveRegistrySetting(string key, bool value)
+        private static void SaveRegistrySetting(string key, bool value)
         {
             RegistryKey TempKey = Registry.CurrentUser.CreateSubKey("Software");
             using (RegistryKey saveSettings = TempKey.CreateSubKey("T5CANFlasher"))
@@ -248,7 +232,10 @@ namespace T5CanFlasher
                 SaveRegistrySetting("AdapterType", comboInterface.SelectedItem.ToString());
                 SaveRegistrySetting("EnableLogging", cboxEnLog.Checked);
             }
-            catch (Exception) { }
+            catch (Exception E)
+            {
+                Console.WriteLine(E.Message);
+            }
             try
             {
                 t5can.Cleanup();
@@ -425,12 +412,6 @@ namespace T5CanFlasher
         // Try to connect to an ECU
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            Connect();
-        }
-
-        // Try to connect to an ECU
-        private void Connect()
-        {
             if (cboxEnLog.Checked)
             {
                 device.EnableLogging(Application.StartupPath);
@@ -602,38 +583,39 @@ namespace T5CanFlasher
             {
                 case 0:     // useLawicel
                     device = new T5CANLib.CAN.CANUSBDevice();
-                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [Lawicel Adapter]";
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion + " [Lawicel Adapter]";
                     break;
                 case 1:     // useCombiadapter
                     device = new T5CANLib.CAN.LPCCANDevice_T5();
-                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [Combi Adapter]";
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion + " [Combi Adapter]";
                     break;
                 case 2:     // useDIYadapter
                     device = new T5CANLib.CAN.MctCanDevice();
-                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [DIY Adapter]";
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion + " [DIY Adapter]";
                     break;
                 case 3:     // useJust4Trionic
                     device = new T5CANLib.CAN.Just4TrionicDevice();
-                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [Just4Trionic Adapter]";
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion + " [Just4Trionic Adapter]";
                     break;
                 case 4:     // useKvaser
                     device = new T5CANLib.CAN.KvaserCANDevice();
-                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [Kvaser Adapter]";
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion + " [Kvaser Adapter]";
                     break;
                 default:
                     device = null;
-                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion.ToString() + " [!!! No Adapter Selected !!!]";
+                    this.Text = "Trionic 5 CAN Flasher v" + Application.ProductVersion + " [!!! No Adapter Selected !!!]";
                     break;
             }
-            //Connect();
         }
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
             // show the about screen
-            frmAbout about = new frmAbout();
-            about.SetVersion(Application.ProductVersion.ToString());
-            about.ShowDialog();
+            using (frmAbout about = new frmAbout())
+            {
+                about.SetVersion(Application.ProductVersion);
+                about.ShowDialog();
+            }
         }
 
         private void manageControls(programMode mode)
