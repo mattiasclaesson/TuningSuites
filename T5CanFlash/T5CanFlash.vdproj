@@ -100,25 +100,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6F02BEDF1307854FA9244445EA548A40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C02199FF02E694C985DFE0E2C2DADCF5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D4C875CBA67B7858CAC00D43F265E031"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_515611065216FAA2F7833AE12FE26668"
+        "OwnerKey" = "8:_2F5D2C3055418B803C8CFE8741A60174"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,7 +112,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2F5D2C3055418B803C8CFE8741A60174"
+        "OwnerKey" = "8:_515611065216FAA2F7833AE12FE26668"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D4C875CBA67B7858CAC00D43F265E031"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C02199FF02E694C985DFE0E2C2DADCF5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6F02BEDF1307854FA9244445EA548A40"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -245,11 +245,6 @@
             "AssemblyAsmDisplayName" = "8:canlibCLSNET, Version=8.20.814.1, Culture=neutral, PublicKeyToken=bb7f2cd46200de24, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_2F5D2C3055418B803C8CFE8741A60174"
-                    {
-                    "Name" = "8:canlibCLSNET.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:canlibCLSNET.dll"
             "TargetName" = "8:"
@@ -276,11 +271,6 @@
             "AssemblyAsmDisplayName" = "8:FTD2XX_NET, Version=1.0.10.0, Culture=neutral, PublicKeyToken=61a8105588f51b1f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3357F27CF3A9E74F73748113FF871803"
-                    {
-                    "Name" = "8:FTD2XX_NET.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:FTD2XX_NET.dll"
             "TargetName" = "8:"
@@ -327,11 +317,6 @@
             "AssemblyAsmDisplayName" = "8:LibUsbDotNet, Version=2.2.8.104, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_515611065216FAA2F7833AE12FE26668"
-                    {
-                    "Name" = "8:LibUsbDotNet.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:LibUsbDotNet.dll"
             "TargetName" = "8:"
@@ -358,11 +343,6 @@
             "AssemblyAsmDisplayName" = "8:T5CANLib, Version=2.0.3.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_6F02BEDF1307854FA9244445EA548A40"
-                    {
-                    "Name" = "8:T5CANLib.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:T5CANLib.dll"
             "TargetName" = "8:"
@@ -389,11 +369,6 @@
             "AssemblyAsmDisplayName" = "8:NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C02199FF02E694C985DFE0E2C2DADCF5"
-                    {
-                    "Name" = "8:NLog.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:NLog.dll"
             "TargetName" = "8:"
@@ -420,11 +395,6 @@
             "AssemblyAsmDisplayName" = "8:combilib-net, Version=1.0.5571.38176, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_D4C875CBA67B7858CAC00D43F265E031"
-                    {
-                    "Name" = "8:combilib-net.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:combilib-net.dll"
             "TargetName" = "8:"
@@ -500,15 +470,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T5CanFlash"
-        "ProductCode" = "8:{E4DBEE32-166E-4A50-B876-9AFA2AFA1352}"
-        "PackageCode" = "8:{22CE2F6A-31B2-46D1-A469-07DD186D4A74}"
+        "ProductCode" = "8:{4FF6C253-5ECC-4448-B111-D2C7081E738B}"
+        "PackageCode" = "8:{80D905B2-D5D3-483F-BAB2-6410E54D3617}"
         "UpgradeCode" = "8:{C22C7FE8-6A40-483D-86FD-7D9D001659AE}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.7"
+        "ProductVersion" = "8:2.0.8"
         "Manufacturer" = "8:Dilemma"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"
