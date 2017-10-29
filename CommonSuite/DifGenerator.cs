@@ -147,23 +147,6 @@ namespace CommonSuite
 
         }
 
-        /*private double ConvertToWidebandLambda(double value)
-        {
-            double retval = value;
-            //if (_useWidebandInput)
-            {
-                
-                // convert to AFR value using wideband lambda sensor settings
-                // ranges 0 - 255 will be default for 0-5 volt
-                double voltage = (value * 5) / 1023;
-                if (voltage < m_appSettings.WidebandLowVoltage) voltage = m_appSettings.WidebandLowVoltage;
-                if (voltage > m_appSettings.WidebandHighVoltage) voltage = _maximumVoltageWideband;
-                double steepness = (_highAFR - _lowAFR) / (_maximumVoltageWideband - _minimumVoltageWideband);
-                retval = _lowAFR + (steepness * (voltage - _minimumVoltageWideband));
-            }
-            return retval;
-        }*/
-
         LogFilterCollection _filters = new LogFilterCollection();
 
         public void SetFilters(LogFilterCollection filters)
