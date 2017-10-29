@@ -250,11 +250,24 @@ namespace T8SuitePro
 
         static public bool ValidateTrionic8File(string filename)
         {
+            if (filename == string.Empty)
+            {
+                return false;
+            }
+            FileInfo fi = new FileInfo(filename);
+            if (fi.Length != TrionicCANLib.Firmware.FileT8.Length)
+            {
+                MessageBox.Show("File has incorrect length: " + Path.GetFileName(filename));
+                return false;
+            }
+
             byte[] testdata = readdatafromfile(filename, 0, 0x10);
             if (testdata[0] == 0x00 && (testdata[1] == 0x10 || testdata[1] == 0x00) && testdata[2] == 0x0C && testdata[3] == 0x00)
             {
                 return true;
             }
+            MessageBox.Show("File does not seem to be a Trionic 8 file: " + Path.GetFileName(filename));
+
             return false;
         }
 
@@ -1223,7 +1236,7 @@ namespace T8SuitePro
             return retval;
         }
 
-        static public bool TryToExtractPackedBinary(string filename, int filename_size, out SymbolCollection symbol_collection)
+        static public bool TryToExtractPackedBinary(string filename, out SymbolCollection symbol_collection)
         {
             bool retval = true;
             byte[] compressedSymbolTable;
@@ -1258,7 +1271,7 @@ namespace T8SuitePro
             {
                 fsread.Seek(symboltableoffset, SeekOrigin.Begin);
                 int adr_state = 0;
-                while ((fsread.Position < filename_size) && (AddressTableOffset == 0))
+                while ((fsread.Position < TrionicCANLib.Firmware.FileT8.Length) && (AddressTableOffset == 0))
                 {
                     byte adrb = br.ReadByte();
                     switch (adr_state)
@@ -1466,22 +1479,8 @@ namespace T8SuitePro
                     SymbolHelper sh = symbol_collection[(i)];
                     sh.Varname = allSymbolNames[i + 1].Trim(); // Skip first in array since its "SymbolNames"
                     logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
-                    SymbolTranslator translator = new SymbolTranslator();
-                    string help = string.Empty;
-                    XDFCategories category = XDFCategories.Undocumented;
-                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                    sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat);
-                    if (sh.Varname.Contains("."))
-                    {
-                        try
-                        {
-                            sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                        }
-                        catch (Exception cE)
-                        {
-                            logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
-                        }
-                    }
+                    sh.Description = SymbolTranslator.ToDescription(sh.Varname);
+                    sh.createAndUpdateCategory(sh.Varname);
                 }
                 catch (Exception E)
                 {
@@ -1490,15 +1489,13 @@ namespace T8SuitePro
             }
         }
 
-        static private void ImportSymbols(System.Data.DataTable dt, SymbolCollection coll2load)
+        static private void ImportSymbols(System.Data.DataTable dt, SymbolCollection collection)
         {
-            SymbolTranslator st = new SymbolTranslator();
-            int numSym = coll2load.Count;
-            int cnt = 0;
-            foreach (SymbolHelper sh in coll2load)
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            CastProgressEvent("Importing symbols", 90);
+            foreach (SymbolHelper sh in collection)
             {
-                cnt = cnt + 1;
-                CastProgressEvent("Importing symbols: ", (int)(((float)cnt / (float)numSym) * 100));
                 foreach (DataRow dr in dt.Rows)
                 {
                     try
@@ -1508,7 +1505,7 @@ namespace T8SuitePro
                             if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
                             {
                                 // Swap varname and userdescription
-                                if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
+                                if (sh.Varname.StartsWith("Symbolnumber "))
                                 {
                                     sh.Userdescription = sh.Varname;
                                     sh.Varname = dr["DESCRIPTION"].ToString();
@@ -1517,15 +1514,9 @@ namespace T8SuitePro
                                 {
                                     sh.Userdescription = dr["DESCRIPTION"].ToString();
                                 }
-                                string helptext = string.Empty;
-                                XDFCategories cat = XDFCategories.Undocumented;
-                                XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub);
 
-                                if (sh.Category == "Undocumented" || sh.Category == "")
-                                {
-                                    sh.createAndUpdateCategory(sh.Varname);
-                                }
+                                sh.Description = SymbolTranslator.ToDescription(sh.Varname);
+                                sh.createAndUpdateCategory(sh.Varname);
                                 break;
                             }
                         }
@@ -1536,10 +1527,12 @@ namespace T8SuitePro
                     }
                 }
             }
+            sw.Stop();
+            logger.Debug("Stopped " + sw.ElapsedMilliseconds);
             CastProgressEvent("Completed", 0);
         }
 
-        static public bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection coll2load)
+        static public bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection collection)
         {
             if (File.Exists(filename))
             {
@@ -1552,14 +1545,14 @@ namespace T8SuitePro
                     dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
                     dt.Columns.Add("DESCRIPTION");
                     dt.ReadXml(filename);
-                    ImportSymbols(dt, coll2load);
+                    ImportSymbols(dt, collection);
                     return true;
                 }
             }
             return false;
         }
 
-        static public bool TryToLoadAdditionalBinSymbols(string filename, SymbolCollection coll2load)
+        static public bool TryToLoadAdditionalBinSymbols(string filename, SymbolCollection collection)
         {
             // Look for a complete xml file first
             T8Header fh = new T8Header();
@@ -1570,13 +1563,13 @@ namespace T8SuitePro
                 string filenameWithoutExtension = Path.GetFileNameWithoutExtension(symbolFile);
                 if (fh.SoftwareVersion.Trim().StartsWith(filenameWithoutExtension, StringComparison.OrdinalIgnoreCase))
                 {
-                    return TryToLoadAdditionalXMLSymbols(symbolFile, coll2load);
+                    return TryToLoadAdditionalXMLSymbols(symbolFile, collection);
                 }
             }
 
             // Secondly load the .xml file with same path and filename as the .bin file. 
             string xmlfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".xml");
-            return TryToLoadAdditionalXMLSymbols(xmlfile, coll2load);
+            return TryToLoadAdditionalXMLSymbols(xmlfile, collection);
         }
     }
 }

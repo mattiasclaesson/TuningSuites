@@ -1378,29 +1378,19 @@ namespace T8SuitePro
 
         private void simpleButton3_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Binary files|*.bin";
+            OpenFileDialog ofd = new OpenFileDialog() { Filter = "Binary files|*.bin" };
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 m_current_comparefilename = ofd.FileName;
-                SymbolTranslator translator = new SymbolTranslator();
-                string help = string.Empty;
-                FileInfo fi = new FileInfo(m_current_comparefilename);
-                fi.IsReadOnly = false;
-                if (fi.Length != 0x100000)
-                {
-                    m_currentfile = string.Empty;
-                    MessageBox.Show("File has incorrect length: " + Path.GetFileName(m_current_comparefilename));
-                    return;
-                }
                 Compare_symbol_collection = new SymbolCollection();
+
                 if (!Trionic8File.ValidateTrionic8File(m_current_comparefilename))
                 {
-                    MessageBox.Show("File does not seem to be a Trionic 8 file: " + Path.GetFileName(m_current_comparefilename));
+                    m_current_comparefilename = string.Empty;
                     return;
                 }
 
-                Trionic8File.TryToExtractPackedBinary(m_current_comparefilename, (int)fi.Length, out Compare_symbol_collection);
+                Trionic8File.TryToExtractPackedBinary(m_current_comparefilename, out Compare_symbol_collection);
                 // try to load additional symboltranslations that the user entered
                 Trionic8File.TryToLoadAdditionalBinSymbols(m_current_comparefilename, Compare_symbol_collection);
 

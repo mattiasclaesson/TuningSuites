@@ -516,89 +516,22 @@ namespace T8SuitePro
             }
         }
 
-        private void TryToByteFlipFile(string filename)
+        private bool TryToOpenFile(string filename, out SymbolCollection symbol_collection)
         {
-            // read the first few bytes and decide!
-            // normally 00 10 0C 00... if it is 10 00 00 0C flip the file
-            byte b1 = 0;
-            byte b2 = 0;
-            byte b3 = 0;
-            byte b4 = 0;
-            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fs))
-            {
-                b1 = br.ReadByte();
-                b2 = br.ReadByte();
-                b3 = br.ReadByte();
-                b4 = br.ReadByte();
-            }
-            fs.Close();
-            if (b1 == 0x10 && b2 == 0x00 && b3 == 0x00 && b4 == 0x0C)
-            {
-                logger.Debug("Flipping file");
-                string filenamenew = filename + ".tmp";
-                FileStream fromfile = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                FileStream tofile = new FileStream(filenamenew, FileMode.CreateNew);
-                using (BinaryReader brori = new BinaryReader(fromfile))
-                {
-                    using (BinaryWriter brnew = new BinaryWriter(tofile))
-                    {
-                        for (int t = 0; t < 0x100000; t += 2)
-                        {
-                            byte bfirst = brori.ReadByte();
-                            byte bsecond = brori.ReadByte();
-                            brnew.Write(bsecond);
-                            brnew.Write(bfirst);
-                        }
-                    }
-                }
-                fromfile.Close();
-                tofile.Close();
-                CreateBinaryBackup(filename, false);
-                File.Delete(filename);
-                File.Copy(filenamenew, filename);
-                File.Delete(filenamenew);
-            }
-        }
-
-        private void TryToOpenFile(string filename, out SymbolCollection symbol_collection, int filename_size)
-        {
-            SymbolTranslator translator = new SymbolTranslator();
-            string help = string.Empty;
             bool symbolsLoaded = false;
             m_currentsramfile = string.Empty; // geen sramfile erbij
             barStaticItem1.Caption = "";
             barFilenameText.Caption = "";
-            //bool _hideRealtime = false;
-            //XDFCategories category = XDFCategories.Undocumented;
-            //XDFSubCategory subcat = XDFSubCategory.Undocumented;
             symbol_collection = new SymbolCollection();
-            // check file for real only attributes
-            if (filename == string.Empty) return;
-            FileInfo fi = new FileInfo(filename);
-            fi.IsReadOnly = false;
-            if (fi.Length != 0x100000)
-            {
-                m_currentfile = string.Empty;
-                MessageBox.Show("File has incorrect length: " + Path.GetFileName(filename));
-                return;
-            }
+
             if (!Trionic8File.ValidateTrionic8File(filename))
             {
-                TryToByteFlipFile(filename);
-                if (!Trionic8File.ValidateTrionic8File(filename))
-                {
-                    m_currentfile = string.Empty;
-                    MessageBox.Show("File does not seem to be a Trionic 8 file: " + Path.GetFileName(filename));
-                    return;
-                }
+                m_currentfile = string.Empty;
+                return false;
             }
 
             try
             {
-                //TODO: if the file is byte-swapped, fix that first!
-                TryToByteFlipFile(filename);
-
                 SetProgress("Opening " + Path.GetFileName(filename));
                 SetProgressPercentage(0);
 
@@ -608,7 +541,7 @@ namespace T8SuitePro
                 {
                     if (File.Exists(filename))
                     {
-                        Trionic8File.TryToExtractPackedBinary(filename, filename_size, out symbol_collection);
+                        Trionic8File.TryToExtractPackedBinary(filename, out symbol_collection);
                     }
                     // try to load additional symboltranslations that the user entered
                     symbolsLoaded = Trionic8File.TryToLoadAdditionalBinSymbols(filename, symbol_collection);
@@ -619,14 +552,7 @@ namespace T8SuitePro
             {
                 logger.Debug("TryOpenFile failed: " + filename + " err: " + E.Message);
             }
-            int cnt = 0;
-            SetProgress("Updating symbol category... ");
-            foreach (SymbolHelper sh in symbol_collection)
-            {
-                cnt = cnt + 1;
-                SetProgressPercentage((int)(((float)cnt / (float)symbol_collection.Count) * 100));
-                sh.createAndUpdateCategory(sh.Varname);
-            }
+
             try
             {
                 if (m_appSettings.MapDetectionActive && !symbolsLoaded)
@@ -678,6 +604,8 @@ namespace T8SuitePro
             {
                 LoadRealtimeTable(Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt"));
             }
+
+            return true;
         }
 
         private void SetProgressIdle()
@@ -1410,7 +1338,7 @@ namespace T8SuitePro
         {
             CloseProject();
             m_currentfile = filename;
-            TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
+            TryToOpenFile(m_currentfile, out m_symbols);
 
             Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
             barFilenameText.Caption = Path.GetFileName(m_currentfile);
@@ -1669,16 +1597,12 @@ namespace T8SuitePro
             double returnvalue = 1;
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
-                string helptext = string.Empty;
-                XDFCategories cat = XDFCategories.Undocumented;
-                XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                string text = st.TranslateSymbolToHelpText(symbolname, out helptext, out cat, out subcat);
-                if (helptext.Contains("Resolution is"))
+                string text = SymbolTranslator.ToDescription(symbolname);
+                if (text.Contains("Resolution is"))
                 {
-                    int idx = helptext.IndexOf("Resolution is");
+                    int idx = text.IndexOf("Resolution is");
                     idx += 14;
-                    string value = helptext.Substring(idx).Trim();
+                    string value = text.Substring(idx).Trim();
                     if (value.Contains(" "))
                     {
                         int idx2 = value.IndexOf(" ");
@@ -2806,7 +2730,7 @@ namespace T8SuitePro
                 if (File.Exists(m_commandLineFile))
                 {
                     m_currentfile = m_commandLineFile;
-                    TryToOpenFile(m_commandLineFile, out m_symbols, m_currentfile_size);
+                    TryToOpenFile(m_commandLineFile, out m_symbols);
 
                     Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                     barFilenameText.Caption = Path.GetFileName(m_currentfile);
@@ -2827,7 +2751,7 @@ namespace T8SuitePro
                         if (File.Exists(m_appSettings.Lastfilename))
                         {
                             m_currentfile = m_appSettings.Lastfilename;
-                            TryToOpenFile(m_appSettings.Lastfilename, out m_symbols, m_currentfile_size);
+                            TryToOpenFile(m_appSettings.Lastfilename, out m_symbols);
 
                             Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                             barFilenameText.Caption = Path.GetFileName(m_currentfile);
@@ -3436,9 +3360,9 @@ namespace T8SuitePro
 
 
                         SymbolCollection compare_symbols = new SymbolCollection();
-                        FileInfo fi = new FileInfo(filename);
+
                         logger.Debug("Opening compare file");
-                        TryToOpenFile(filename, out compare_symbols, (int)fi.Length);
+                        TryToOpenFile(filename, out compare_symbols);
                         System.Windows.Forms.Application.DoEvents();
                         logger.Debug("Start compare");
                         SetProgress("Start comparing symbols in files");
@@ -3464,21 +3388,17 @@ namespace T8SuitePro
                         dt.Columns.Add("MissingInOriFile", Type.GetType("System.Boolean"));
                         dt.Columns.Add("MissingInCompareFile", Type.GetType("System.Boolean"));
 
-                        string ht = string.Empty;
                         double diffperc = 0;
                         int diffabs = 0;
                         double diffavg = 0;
                         int percentageDone = 0;
                         int symNumber = 0;
 
-                        XDFCategories cat = XDFCategories.Undocumented;
-                        XDFSubCategory subcat = XDFSubCategory.Undocumented;
                         if (compare_symbols.Count > 0)
                         {
                             CompareResults cr = new CompareResults();
                             cr.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
                             cr.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                            SymbolTranslator st = new SymbolTranslator();
 
                             foreach (SymbolHelper sh_compare in compare_symbols)
                             {
@@ -3510,7 +3430,7 @@ namespace T8SuitePro
                                                 if (!CompareSymbolToCurrentFile(compareName, (int)sh_compare.Flash_start_address, sh_compare.Length, filename, out diffperc, out diffabs, out diffavg))
                                                 {
                                                     sh_org.createAndUpdateCategory(sh_org.SmartVarname);
-                                                    dt.Rows.Add(originalName, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(compareName, out ht, out cat, out subcat), false, 0, diffperc, diffabs, diffavg, sh_org.Category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription);
+                                                    dt.Rows.Add(originalName, sh_compare.Start_address, sh_compare.Flash_start_address, sh_compare.Length, sh_compare.Length, SymbolTranslator.ToDescription(compareName), false, 0, diffperc, diffabs, diffavg, sh_org.Category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription);
                                                     break;
                                                 }
                                             }
@@ -3552,7 +3472,7 @@ namespace T8SuitePro
                                     if (!_foundSymbol)
                                     {
                                         // add this symbol to the MissingInOriCollection
-                                        dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat), false, 0, 0, 0, 0, "Missing in original", "", 0, shtest.Symbol_number, shtest.Userdescription, true, false);
+                                        dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, SymbolTranslator.ToDescription(varnamecomp), false, 0, 0, 0, 0, "Missing in original", "", 0, shtest.Symbol_number, shtest.Userdescription, true, false);
                                     }
                                 }
                             }
@@ -3589,7 +3509,7 @@ namespace T8SuitePro
                                     if (!_foundSymbol)
                                     {
                                         // add this symbol to the MissingInCompCollection
-                                        dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat), false, 0, 0, 0, 0, "Missing in compare", "", 0, shtest.Symbol_number, shtest.Userdescription, false, true);
+                                        dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, SymbolTranslator.ToDescription(varnamecomp), false, 0, 0, 0, 0, "Missing in compare", "", 0, shtest.Symbol_number, shtest.Userdescription, false, true);
                                     }
                                 }
                             }
@@ -5885,7 +5805,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         dockManager1.BeginUpdate();
                         try
                         {
-                            SymbolTranslator st = new SymbolTranslator();
                             DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                             CompareResults tabdet = new CompareResults();
                             tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
@@ -5926,15 +5845,10 @@ So, 0x101 byte buffer with first byte ignored (convention)
                             dt.Columns.Add("SUBCATEGORYNAME");
                             dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
                             dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                            string ht = string.Empty;
-                            //double diffperc = 0;
-                            //int diffabs = 0;
-                            //double diffavg = 0;
-                            XDFCategories cat = XDFCategories.Undocumented;
-                            XDFSubCategory subcat = XDFSubCategory.Undocumented;
+
                             foreach (SymbolHelper shfound in result_Collection)
                             {
-                                string helptext = st.TranslateSymbolToHelpText(shfound.Varname, out ht, out cat, out subcat);
+                                string helptext = SymbolTranslator.ToDescription(shfound.Varname);
                                 shfound.createAndUpdateCategory(shfound.SmartVarname);
                                 dt.Rows.Add(shfound.SmartVarname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
                             }
@@ -6190,7 +6104,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     m_currentfile = sfd.FileName;
                     CloseProject();
                     m_currentfile = sfd.FileName;
-                    TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
+                    TryToOpenFile(m_currentfile, out m_symbols);
 
 
                     Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
@@ -6270,9 +6184,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     //listView1.Items.Clear();
                     SetStatusText("Start symbol parsing");
 
-
-                    FileInfo fi = new FileInfo(filename);
-                    TryToOpenFile(filename, out curSymbolCollection, (int)fi.Length);
+                    TryToOpenFile(filename, out curSymbolCollection);
 
                     curSymbolCollection.SortColumn = "Flash_start_address";
                     curSymbolCollection.SortingOrder = GenericComparer.SortOrder.Ascending;
@@ -8382,7 +8294,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 logger.Debug("Handling: " + Path.GetFileName(file));
                 m_currentfile = file;
-                TryToOpenFile(m_currentfile, out m_symbols, m_currentfile_size);
+                TryToOpenFile(m_currentfile, out m_symbols);
                 // now get the details
                 if (m_currentfile != "")
                 {
@@ -9752,7 +9664,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     m_currentfile = projectprops.Rows[0]["BINFILE"].ToString();//Application.StartupPath + "\\55559437  81f.bin";
 
-                    TryToOpenFile(projectprops.Rows[0]["BINFILE"].ToString(), out m_symbols, m_currentfile_size);
+                    TryToOpenFile(projectprops.Rows[0]["BINFILE"].ToString(), out m_symbols);
 
                     Text = String.Format("T8SuitePro v{0} [ {1} ]", System.Windows.Forms.Application.ProductVersion, Path.GetFileName(m_currentfile));
                     barFilenameText.Caption = Path.GetFileName(m_currentfile);
@@ -14279,15 +14191,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                FileInfo fi = new FileInfo(ofd.FileName);
-                if (fi.Length == 0x100000)
+                string filename = ofd.FileName;
+                if (Trionic8File.ValidateTrionic8File(filename))
                 {
                     // Read the entire base file into a temporary RAM buffer
-                    byte[] binFile = File.ReadAllBytes(ofd.FileName);
+                    byte[] binFile = File.ReadAllBytes(filename);
                     // Create another temporary buffer in RAM for the new T8 BIN file
-                    byte[] newFile = new byte[0x100000];
+                    byte[] newFile = new byte[TrionicCANLib.Firmware.FileT8.Length];
                     // Initialise all addresses to 0xff
-                    for (int i = 0; i < 0x100000; i++)
+                    for (int i = 0; i < TrionicCANLib.Firmware.FileT8.Length; i++)
                     {
                         newFile[i] = 0xFF;
                     }
@@ -14347,14 +14259,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             File.WriteAllBytes(sfd.FileName, newFile);
-                            frmInfoBox info = new frmInfoBox("New file created");
+                            using (frmInfoBox info = new frmInfoBox("New file created"))
+                            {
+                            }
                         }
                     }
 
-                }
-                else
-                {
-                    frmInfoBox info = new frmInfoBox("You did not choose a valid T8 file as basefile");
                 }
             }
 
@@ -14538,7 +14448,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // 56;AreaCal.A_MaxAdap;;;
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
                 char[] sep = new char[1];
                 sep.SetValue(';', 0);
                 string[] fileContent = File.ReadAllLines(filename);
@@ -14554,14 +14463,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             if (sh.Symbol_number == symbolnumber)
                             {
                                 sh.Userdescription = varname;
-                                string helptext = string.Empty;
-                                XDFCategories cat = XDFCategories.Undocumented;
-                                XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub);
-                                if (sh.Category == "Undocumented" || sh.Category == "")
-                                {
-                                    sh.createAndUpdateCategory(sh.Userdescription);
-                                }
+                                sh.Description = SymbolTranslator.ToDescription(sh.Userdescription);
+                                sh.createAndUpdateCategory(sh.Userdescription);
                             }
                         }
                     }
@@ -14593,7 +14496,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
                 string[] fileContent = File.ReadAllLines(filename);
                 int symbolnumber = 0;
                 foreach (string line in fileContent)
@@ -14614,15 +14516,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 if (idxSymTab == symbolnumber)
                                 {
                                     sh.Userdescription = varname;
-                                    string helptext = string.Empty;
-                                    XDFCategories cat = XDFCategories.Undocumented;
-                                    XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    sh.Description = st.TranslateSymbolToHelpText(varname, out helptext, out cat, out sub);
-                                    
-                                    if (sh.Category == "Undocumented" || sh.Category == "")
-                                    {
-                                        sh.createAndUpdateCategory(sh.Userdescription);
-                                    }
+                                    sh.Description = SymbolTranslator.ToDescription(varname);
+                                    sh.createAndUpdateCategory(sh.Userdescription);
                                     break;
                                 }
                             }
@@ -14663,7 +14558,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
                 OpenFileDialog ofd = new OpenFileDialog();
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {

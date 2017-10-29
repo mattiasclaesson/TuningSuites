@@ -48,10 +48,6 @@ namespace T8SuitePro
             dt.Columns.Add("YAXISDESCRIPTION");
             SymbolAxesTranslator sat = new SymbolAxesTranslator();
 
-            SymbolTranslator symtrans = new SymbolTranslator();
-            string helptext = string.Empty;
-            XDFCategories cat = XDFCategories.Undocumented;
-            XDFSubCategory subcat = XDFSubCategory.Undocumented;
             string xaxis = string.Empty;
             string yaxis = string.Empty;
             string xaxisdescr = "";
@@ -61,15 +57,15 @@ namespace T8SuitePro
             {
                 string name = sh.SmartVarname;
                 sat.GetAxisSymbols(name, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                String symboldescr = symtrans.TranslateSymbolToHelpText(name, out helptext, out cat, out subcat);
+                String symboldescr = SymbolTranslator.ToDescription(name);
                 
                 if (xaxis != "")
                 {
-                    xaxisdescr = symtrans.TranslateSymbolToHelpText(xaxis, out helptext, out cat, out subcat);
+                    xaxisdescr = SymbolTranslator.ToDescription(xaxis);
                 }
                 if (yaxis != "")
                 {
-                    yaxisdescr = symtrans.TranslateSymbolToHelpText(yaxis, out helptext, out cat, out subcat);
+                    yaxisdescr = SymbolTranslator.ToDescription(yaxis);
                 }
                 if (xaxis != "" || yaxis != "")
                 {

@@ -552,18 +552,11 @@ KnkDetCal.fi_knkWinSizeMAP	6374
                     SetMapNameByIndex(sc, symIndex + 8, 6, "TrqLimCal.CompressorNoiseXSP");
                     SetMapNameByIndex(sc, symIndex + 9, 72, "TrqLimCal.Trq_CompressorNoiseRedLimMAP");
                 }
-                SymbolTranslator st = new SymbolTranslator();
+
                 foreach (SymbolHelper sh in sc)
                 {
-                    string helptext = string.Empty;
-                    XDFCategories cat = XDFCategories.Undocumented;
-                    XDFSubCategory sub = XDFSubCategory.Undocumented;
-                    sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub);
-
-                    if (sh.Category == "Undocumented" || sh.Category == "")
-                    {
-                        sh.createAndUpdateCategory(sh.Userdescription);
-                    }
+                    sh.Description = SymbolTranslator.ToDescription(sh.Userdescription);
+                    sh.createAndUpdateCategory(sh.Userdescription);
                 }
             }
             return retval;
