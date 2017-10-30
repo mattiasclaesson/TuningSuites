@@ -105,10 +105,6 @@ namespace T7
             {
                 m_sidcollection = value;
 
-                SymbolTranslator strans = new SymbolTranslator();
-                string ht = string.Empty;
-                XDFCategories cat = XDFCategories.Undocumented;
-                XDFSubCategory subcat = XDFSubCategory.Undocumented;
                 // try to fill in the empty spaces first
                 foreach (SIDIHelper sh in m_sidcollection)
                 {
@@ -117,7 +113,7 @@ namespace T7
                     {
                         sh.T7Symbol = sh.FoundT7Symbol;
                         // and get the info
-                        sh.Info = strans.TranslateSymbolToHelpText(sh.T7Symbol, out ht, out cat, out subcat, m_ApplicationLanguage);
+                        sh.Info = SymbolTranslator.ToHelpText(sh.T7Symbol, m_ApplicationLanguage);
                     }
                 }
 

@@ -375,18 +375,6 @@ namespace T7
             m_fileName = filename;
             FileInfo fi = new FileInfo(filename);
             m_Filelength = (int)fi.Length;
-            SymbolTranslator translator = new SymbolTranslator();
-            XDFCategories category = XDFCategories.Undocumented;
-            XDFSubCategory subcat = XDFSubCategory.Undocumented;
-            string help = string.Empty;
-            try
-            {
-                fi.IsReadOnly = false;
-            }
-            catch (Exception E)
-            {
-                logger.Debug(String.Format("Failed to clear read-only flag: {0}", E.Message));
-            }
             symbol_collection = new SymbolCollection();
             try
             {
@@ -423,7 +411,7 @@ namespace T7
                                                         endoftable = true;
                                                         break;
                                                     case 0x00:              // 0x00 end of Symbol name string
-                                                        SymbolHelper sh = new SymbolHelper() { Varname = symbolname, Description = translator.TranslateSymbolToHelpText(symbolname, out help, out category, out subcat, languageID) };
+                                                        SymbolHelper sh = new SymbolHelper() { Varname = symbolname, Description = SymbolTranslator.ToHelpText(symbolname, languageID) };
                                                         if (sh.Varname.Contains("."))
                                                         {
                                                             try
@@ -715,26 +703,9 @@ namespace T7
                             {
                                 sh.Userdescription = dr["DESCRIPTION"].ToString();
                             }
-                            string helptext = string.Empty;
-                            XDFCategories cat = XDFCategories.Undocumented;
-                            XDFSubCategory sub = XDFSubCategory.Undocumented;
-                            SymbolTranslator st = new SymbolTranslator();
-                            sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub, LanguageID);
-                            if (sh.Category == "Undocumented" || sh.Category == "")
-                            {
-                                if (sh.Varname.Contains("."))
-                                {
-                                    try
-                                    {
-                                        sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                                        //logger.Debug(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
-                                    }
-                                }
-                            }
+
+                            sh.Description = SymbolTranslator.ToHelpText(sh.Varname, LanguageID);
+                            sh.createAndUpdateCategory(sh.Varname);
                         }
                     }
                 }
@@ -1122,24 +1093,8 @@ namespace T7
                 {
                     SymbolHelper sh = symbol_collection[(i)];
                     sh.Varname = allSymbolNames[i].Trim();
-                    //logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, symbol));
-                    SymbolTranslator translator = new SymbolTranslator();
-                    string help = string.Empty;
-                    XDFCategories category = XDFCategories.Undocumented;
-                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                    sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out category, out subcat, LanguageID);
-
-                    if (sh.Varname.Contains("."))
-                    {
-                        try
-                        {
-                            sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                        }
-                        catch (Exception cE)
-                        {
-                            logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Varname, cE.Message));
-                        }
-                    }
+                    sh.Description = SymbolTranslator.ToHelpText(sh.Varname, LanguageID);
+                    sh.createAndUpdateCategory(sh.Varname);
                 }
                 catch (Exception E)
                 {

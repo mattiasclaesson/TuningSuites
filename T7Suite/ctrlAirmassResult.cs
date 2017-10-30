@@ -1563,10 +1563,6 @@ namespace T7
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 m_current_comparefilename = ofd.FileName;
-                SymbolTranslator translator = new SymbolTranslator();
-                string help = string.Empty;
-                FileInfo fi = new FileInfo(m_current_comparefilename);
-                fi.IsReadOnly = false;
 
                 try
                 {

@@ -854,7 +854,6 @@ namespace T7
 
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
                 string[] fileContent = File.ReadAllLines(filename);
                 int symbolnumber = 0;
                 foreach (string line in fileContent)
@@ -875,15 +874,8 @@ namespace T7
                                 if (idxSymTab == symbolnumber)
                                 {
                                     sh.Userdescription = varname;
-                                    string helptext = string.Empty;
-                                    XDFCategories cat = XDFCategories.Undocumented;
-                                    XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub, m_appSettings.ApplicationLanguage);
-
-                                    if (sh.Category == "Undocumented" || sh.Category == "")
-                                    {
-                                        sh.createAndUpdateCategory(sh.Userdescription);
-                                    }
+                                    sh.Description = SymbolTranslator.ToHelpText(sh.Userdescription, m_appSettings.ApplicationLanguage);
+                                    sh.createAndUpdateCategory(sh.Userdescription);
                                     break;
                                 }
                             }
@@ -1926,15 +1918,11 @@ namespace T7
                     tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
                     dockPanel.Controls.Add(tabdet);
                     dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
-                    //dockPanel
                     dockPanel.DockTo(DockingStyle.Left, 1);
-
                     dockPanel.Width = 700;
 
-
                     SymbolCollection compare_symbols = new SymbolCollection();
-                    FileInfo fi = new FileInfo(filename);
-                    Trionic7File compareFile = TryToOpenFileUsingClass(filename, out compare_symbols, (int)fi.Length, false);
+                    Trionic7File compareFile = TryToOpenFileUsingClass(filename, out compare_symbols, false);
                     barProgress.EditValue = 60;
                     barProgress.Caption = "Loading header";
                     System.Windows.Forms.Application.DoEvents();
@@ -1973,20 +1961,16 @@ namespace T7
                     dt.Columns.Add("MissingInOriFile", Type.GetType("System.Boolean"));
                     dt.Columns.Add("MissingInCompareFile", Type.GetType("System.Boolean"));
                     string category = "";
-                    string ht = string.Empty;
                     double diffperc = 0;
                     int diffabs = 0;
                     double diffavg = 0;
                     int percentageDone = 0;
                     int symNumber = 0;
-                    XDFCategories cat = XDFCategories.Undocumented;
-                    XDFSubCategory subcat = XDFSubCategory.Undocumented;
                     if (compare_symbols.Count > 0)
                     {
                         CompareResults cr = new CompareResults();
                         cr.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
                         cr.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                        SymbolTranslator st = new SymbolTranslator();
                         Int64 compareStartAddress = 0;
                         Int64 orgStartAddress = 0;
                         foreach (SymbolHelper sh_compare in compare_symbols)
@@ -2057,7 +2041,7 @@ namespace T7
                                                     }
                                                 }
 
-                                                dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, compareStartAddress, sh_compare.Length, sh_compare.Length, st.TranslateSymbolToHelpText(sh_compare.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription, false, false);
+                                                dt.Rows.Add(sh_compare.Varname, sh_compare.Start_address, compareStartAddress, sh_compare.Length, sh_compare.Length, SymbolTranslator.ToHelpText(sh_compare.Varname, m_appSettings.ApplicationLanguage), false, 0, diffperc, diffabs, diffavg, category, "", sh_org.Symbol_number, sh_compare.Symbol_number, sh_org.Userdescription, false, false);
                                             }
                                         }
                                     }
@@ -2104,7 +2088,7 @@ namespace T7
                                 if (!_foundSymbol)
                                 {
                                     // add this symbol to the MissingInOriCollection
-                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in original", "", 0, shtest.Symbol_number, shtest.Userdescription, true, false);
+                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, SymbolTranslator.ToHelpText(varnamecomp, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in original", "", 0, shtest.Symbol_number, shtest.Userdescription, true, false);
                                 }
                             }
                         }
@@ -2144,7 +2128,7 @@ namespace T7
                                 if (!_foundSymbol)
                                 {
                                     // add this symbol to the MissingInCompCollection
-                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, st.TranslateSymbolToHelpText(varnamecomp, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in compare", "", 0, shtest.Symbol_number, shtest.Userdescription, false, true);
+                                    dt.Rows.Add(varnamecomp, shtest.Start_address, shtest.Flash_start_address, shtest.Length, shtest.Length, SymbolTranslator.ToHelpText(varnamecomp, m_appSettings.ApplicationLanguage), false, 0, 0, 0, 0, "Missing in compare", "", 0, shtest.Symbol_number, shtest.Userdescription, false, true);
                                 }
                             }
                         }
@@ -3079,14 +3063,10 @@ namespace T7
                     File.Copy(filename, Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin", true);
                     AddToResumeTable("Backup file created (" + Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + DateTime.Now.ToString("yyyyMMddHHmmss") + "beforetransferringmaps.bin)");
                     AddToResumeTable("Transferring data from " + Path.GetFileName(m_currentfile) + " to " + filename);
-                    //bool m_fileparsed = false;
 
-                    //listView1.Items.Clear();
                     SetStatusText("Start symbol parsing");
 
-
-                    FileInfo fi = new FileInfo(filename);
-                    Trionic7File transferToFile = TryToOpenFileUsingClass(filename, out curSymbolCollection, (int)fi.Length, false);
+                    Trionic7File transferToFile = TryToOpenFileUsingClass(filename, out curSymbolCollection, false);
                     T7FileHeader t7fh = new T7FileHeader();
                     t7fh.init(filename, false);
                     int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
@@ -4007,7 +3987,6 @@ namespace T7
                         dockManager1.BeginUpdate();
                         try
                         {
-                            SymbolTranslator st = new SymbolTranslator();
                             DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                             CompareResults tabdet = new CompareResults();
                             tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
@@ -4019,7 +3998,6 @@ namespace T7
                             dockPanel.Controls.Add(tabdet);
                             dockPanel.Text = "Search results: " + Path.GetFileName(m_currentfile);
                             dockPanel.DockTo(DockingStyle.Left, 1);
-
                             dockPanel.Width = 700;
 
                             System.Data.DataTable dt = new System.Data.DataTable();
@@ -4038,27 +4016,11 @@ namespace T7
                             dt.Columns.Add("SUBCATEGORYNAME");
                             dt.Columns.Add("SymbolNumber1", Type.GetType("System.Int32"));
                             dt.Columns.Add("SymbolNumber2", Type.GetType("System.Int32"));
-                            //string category = "";
-                            string ht = string.Empty;
-                            //double diffperc = 0;
-                            //int diffabs = 0;
-                            //double diffavg = 0;
-                            XDFCategories cat = XDFCategories.Undocumented;
-                            XDFSubCategory subcat = XDFSubCategory.Undocumented;
+
                             foreach (SymbolHelper shfound in result_Collection)
                             {
-                                string helptext = st.TranslateSymbolToHelpText(shfound.Varname, out ht, out cat, out subcat, m_appSettings.ApplicationLanguage);
-                                if (shfound.Varname.Contains("."))
-                                {
-                                    try
-                                    {
-                                        shfound.Category = shfound.Varname.Substring(0, shfound.Varname.IndexOf("."));
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        logger.Debug("Failed to assign category to symbol: " + shfound.Varname + " err: " + cE.Message);
-                                    }
-                                }
+                                string helptext = SymbolTranslator.ToHelpText(shfound.Varname, m_appSettings.ApplicationLanguage);
+                                shfound.createAndUpdateCategory(shfound.Varname);
                                 dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
                             }
                             tabdet.CompareSymbolCollection = result_Collection;
@@ -4124,7 +4086,6 @@ namespace T7
                                 sidh.FoundT7Symbol = sh.Varname;
                                 if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
                                 {
-                                    // <GS-12102010>
                                     sidh.FoundT7Symbol = sh.Userdescription;
                                 }
                                 break;
@@ -4133,7 +4094,6 @@ namespace T7
 
                         currentsidcollection.Add(sidh);
                     }
-                    //logger.Debug("ALL: " + t7SidEdit.getDataArrayAll()[i]);
                 }
                 if (t7SidEdit.getFileType() == 1)
                 {
@@ -4161,19 +4121,17 @@ namespace T7
                                     sidh.FoundT7Symbol = sh.Varname;
                                     if (sidh.FoundT7Symbol.StartsWith("Symbolnumber") && sh.Userdescription != "")
                                     {
-                                        // <GS-12102010>
                                         sidh.FoundT7Symbol = sh.Userdescription;
                                     }
                                     break;
                                 }
                             }
 
-                            sidh.Mode = mode;//Convert.ToInt32(sh.Value);
+                            sidh.Mode = mode;
                             modcount++;
                             if ((modcount % 12) == 0) mode++;
                             currentsidcollection.Add(sidh);
                         }
-                        //logger.Debug("NEW: " + t7SidEdit.getDataArrayNew()[j]);
                     }
                 }
                 frmSIDInformation frmsid = new frmSIDInformation();
@@ -4193,7 +4151,7 @@ namespace T7
                         {
                             outputarray.SetValue(sh.Symbol, cnt++);
                             outputarray.SetValue(sh.AddressSRAM.ToString("X6"), cnt++);
-                            outputarray.SetValue(sh.Value.ToString(), cnt++);
+                            outputarray.SetValue(sh.Value, cnt++);
                         }
                     }
                     t7SidEdit.setDataArrayAll(outputarray);
@@ -4207,188 +4165,15 @@ namespace T7
                             {
                                 outputarray.SetValue(sh.Symbol, cnt++);
                                 outputarray.SetValue(sh.AddressSRAM.ToString("X6"), cnt++);
-                                outputarray.SetValue(sh.Value.ToString(), cnt++);
+                                outputarray.SetValue(sh.Value, cnt++);
                             }
                         }
                         t7SidEdit.setDataArrayNew(outputarray);
                     }
                     t7SidEdit.saveFile();
                     UpdateChecksum(m_currentfile);
-                    //SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
                 }
             }
-
-            /*
-                        SIDICollection currentsidcollection = GetSidCollectionFromBinary(m_currentfile);
-                        //logger.Debug("Fetched: " + currentsidcollection.Count.ToString() + " SIDI symbols");
-                        int mode = 0;
-                        int modcount = 0;
-            
-                        foreach (SIDIHelper sh in currentsidcollection)
-                        {
-                            //logger.Debug("Found: " + sh.Symbol + " at " + sh.AddressSRAM.ToString("X6") + " type " + sh.Value);
-                            //Console.Write(Environment.NewLine); 
-                            for (int t = 0; t < sh.Symbol.Length; t++)
-                            {
-                                byte b = (byte)sh.Symbol[t];
-                                Console.Write(b.ToString("X2") + " " );
-                            }
-                            Console.Write(Environment.NewLine);
-                            sidtrans.GetSidDescription(sh);
-                            sh.Mode = mode;//Convert.ToInt32(sh.Value);
-                            modcount++;
-                            if ((modcount % 12) == 0) mode++;
-                        }
-                        frmSIDInformation frmsid = new frmSIDInformation();
-                        frmsid.Sidcollection = currentsidcollection;
-                        frmsid.Entiresidcollection = entiresidcollection;
-                        if (frmsid.ShowDialog() == DialogResult.OK)
-                        {
-                            SaveSidCollectionToBinary(m_currentfile, frmsid.Sidcollection);
-                        }*/
-        }
-
-        private void SaveSidCollectionToBinary(string m_currentfile, SIDICollection sidicoll)
-        {
-            FileStream stream = null;
-            //long num = 0x80000L;
-            byte[] array = new byte[7];
-            byte[] buffer = new byte[3];
-            byte[] buffer3 = new byte[2];
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.ReadWrite);
-            stream.Position = 0L;
-            long num2 = 0L;
-            bool flag = false;
-            byte[] buffer2search = new byte[] { 0x41, 100, 0x70, 0x4e, 0, 0, 0 };
-            do
-            {
-                if (((byte)stream.ReadByte()) == buffer2search[0])
-                {
-                    long position = stream.Position;
-                    if (((byte)stream.ReadByte()) == buffer2search[1])
-                    {
-                        if ((((((byte)stream.ReadByte()) == buffer2search[2]) && (((byte)stream.ReadByte()) == buffer2search[3])) && ((((byte)stream.ReadByte()) == buffer2search[4]) && (((byte)stream.ReadByte()) == buffer2search[5]))) && (((byte)stream.ReadByte()) == buffer2search[6]))
-                        {
-                            flag = true;
-                            num2 = stream.Position - 7L;
-                        }
-                    }
-                    else
-                    {
-                        stream.Position = position;
-                    }
-                }
-            }
-            while (!flag && (stream.Position != 0x80000));
-            if (!flag)
-            {
-                return;
-            }
-            stream.Position -= 7L;
-            foreach (SIDIHelper sh in sidicoll)
-            {
-                array = encoding.GetBytes(sh.Symbol);
-                Array.Resize<byte>(ref array, 7);
-                stream.Write(array, 0, 7);
-                buffer = ToByteArray(sh.AddressSRAM.ToString("X6"));
-                stream.Write(buffer, 0, 3);
-                buffer3 = ToByteArray(sh.Value);
-                Array.Resize<byte>(ref buffer3, 2);
-                stream.Write(buffer3, 0, 2);
-            }
-            if (stream != null)
-            {
-                stream.Close();
-            }
-            UpdateChecksum(m_currentfile);
-        }
-
-        public static byte[] ToByteArray(string HexString)
-        {
-            int length = HexString.Length;
-            byte[] buffer = new byte[length / 2];
-            for (int i = 0; i < length; i += 2)
-            {
-                buffer[i / 2] = Convert.ToByte(HexString.Substring(i, 2), 0x10);
-            }
-            return buffer;
-        }
-
-        private static SIDICollection GetSidCollectionFromBinary(string m_currentfile)
-        {
-            SIDICollection m_sidcollection = new SIDICollection();
-            FileStream stream = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
-            stream.Position = 0L;
-            long num2 = 0L;
-            bool flag = false;
-            byte[] buffer = new byte[] { 0x41, 100, 0x70, 0x4e, 0, 0, 0 };
-            do
-            {
-                if (((byte)stream.ReadByte()) == buffer[0])
-                {
-                    long position = stream.Position;
-                    if (((byte)stream.ReadByte()) == buffer[1])
-                    {
-                        if ((((((byte)stream.ReadByte()) == buffer[2]) && (((byte)stream.ReadByte()) == buffer[3])) && ((((byte)stream.ReadByte()) == buffer[4]) && (((byte)stream.ReadByte()) == buffer[5]))) && (((byte)stream.ReadByte()) == buffer[6]))
-                        {
-                            flag = true;
-                            num2 = stream.Position - 7L;
-                        }
-                    }
-                    else
-                    {
-                        stream.Position = position;
-                    }
-                }
-            }
-            while (!flag && (stream.Position != 0x80000));
-            if (!flag)
-            {
-                frmInfoBox info = new frmInfoBox("This T7 file is not compatible with the SIDI function in T7Suite!");
-                return m_sidcollection;
-            }
-            stream.Position -= 7L;
-
-            long start_pos = stream.Position;
-            byte[] bytes = new byte[12];
-            uint num4 = 0x53;           //?? fixed length?
-            //int num5 = 0;
-            for (int i = 0; i <= num4; i++)
-            {
-                //logger.Debug("*****" + i.ToString());
-                /*if (i == 65)
-                {
-                    logger.Debug("65");
-                }*/
-                for (int j = 0; j <= 3; j++)
-                {
-                    bytes[j] = (byte)stream.ReadByte();
-                }
-                // set text
-                SIDIHelper sidihelper = new SIDIHelper();
-                sidihelper.Symbol = Encoding.Default.GetString(bytes, 0, 4);
-                sidihelper.Symbol = sidihelper.Symbol.Replace((char)0x00, (char)0x20);
-                //logger.Debug(i.ToString() + " = " + Encoding.Default.GetString(bytes, 0, 4));
-                stream.Position += 3L;
-                for (int k = 0; k <= 2; k++)
-                {
-                    bytes[k] = (byte)stream.ReadByte();
-                }
-                sidihelper.AddressSRAM = Convert.ToInt32(BitConverter.ToString(bytes, 0, 3).Replace("-", ""), 16);
-                for (int m = 0; m <= 0; m++)
-                {
-                    bytes[m] = (byte)stream.ReadByte();
-                }
-                sidihelper.Value = BitConverter.ToString(bytes, 0, 1).Replace("-", "");
-                m_sidcollection.Add(sidihelper);
-                stream.Position += 1L; // skip one
-            }
-            if (stream != null)
-            {
-                stream.Close();
-            }
-            return m_sidcollection;
         }
 
         private void Actions_LimiterCheck_ItemClick(object sender, ItemClickEventArgs e)
@@ -5821,13 +5606,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
         private Trionic7File t7file;
 
-        private Trionic7File TryToOpenFileUsingClass(string filename, out SymbolCollection symbol_collection, int filename_size, bool isWorkingFile)
+        private Trionic7File TryToOpenFileUsingClass(string filename, out SymbolCollection symbol_collection, bool isWorkingFile)
         {
             Trionic7File retval = new Trionic7File();
 
             retval.onProgress += retval_onProgress;
-            SymbolTranslator translator = new SymbolTranslator();
-            string help = string.Empty;
             _softwareIsOpen = false;
             _softwareIsOpenDetermined = false;
             m_currentsramfile = string.Empty; // geen sramfile erbij
@@ -5835,14 +5618,12 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             barFilenameText.Caption = "";
 
             FileInfo fi = new FileInfo(filename);
-            try
+            if (!fi.IsReadOnly)
             {
-                fi.IsReadOnly = false;
                 btnReadOnly.Caption = "File access OK";
             }
-            catch (Exception E)
+            else
             {
-                logger.Debug("Failed to remove read only flag: " + E.Message);
                 btnReadOnly.Caption = "File is READ ONLY";
             }
 
@@ -5902,14 +5683,14 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         sh.Varname = "BFuelCal.E85Map";
                         XDFCategories cat = XDFCategories.Undocumented;
                         XDFSubCategory sub = XDFSubCategory.Undocumented;
-                        sh.Description = translator.TranslateSymbolToHelpText(sh.Varname, out help, out cat, out sub, m_appSettings.ApplicationLanguage);
+                        sh.Description = SymbolTranslator.ToHelpText(sh.Varname, m_appSettings.ApplicationLanguage);
                     }
                     if (sh.Userdescription == "BFuelCal.StartMap")
                     {
                         sh.Userdescription = "BFuelCal.E85Map";
                         XDFCategories cat = XDFCategories.Undocumented;
                         XDFSubCategory sub = XDFSubCategory.Undocumented;
-                        sh.Description = translator.TranslateSymbolToHelpText(sh.Userdescription, out help, out cat, out sub, m_appSettings.ApplicationLanguage);
+                        sh.Description = SymbolTranslator.ToHelpText(sh.Userdescription, m_appSettings.ApplicationLanguage);
                     }
                 }
             }
@@ -6012,11 +5793,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                                     {
                                         sh.Userdescription = dr["DESCRIPTION"].ToString();
                                     }
-                                    string helptext = string.Empty;
-                                    XDFCategories cat = XDFCategories.Undocumented;
-                                    XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                    SymbolTranslator st = new SymbolTranslator();
-                                    sh.Description = st.TranslateSymbolToHelpText(sh.Varname, out helptext, out cat, out sub, m_appSettings.ApplicationLanguage);
+                                    sh.Description = SymbolTranslator.ToHelpText(sh.Varname, m_appSettings.ApplicationLanguage);
                                     if (sh.Category == "Undocumented" || sh.Category == "")
                                     {
                                         if (sh.Varname.Contains("."))
@@ -6593,23 +6370,12 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 }
             }
 
-            FileInfo fi = new FileInfo(filename);
-            try
-            {
-                fi.IsReadOnly = false;
-            }
-            catch (Exception E)
-            {
-                logger.Debug("Failed to clear readonly flag: " + E.Message);
-                // failed 
-            }
-
             m_currentfile = filename;
             m_appSettings.Lastfilename = m_currentfile;
             if (ValidateFile())
             {
                 m_symbols = new SymbolCollection();
-                t7file = TryToOpenFileUsingClass(m_currentfile, out m_symbols, m_currentfile_size, true);
+                t7file = TryToOpenFileUsingClass(m_currentfile, out m_symbols, true);
                 SetProgressPercentage(70);
                 SetProgress("Sorting data");
                 System.Windows.Forms.Application.DoEvents();
@@ -7283,16 +7049,12 @@ TorqueCal.M_IgnInflTroqMap 8*/
             double returnvalue = 1;
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
-                string helptext = string.Empty;
-                XDFCategories cat = XDFCategories.Undocumented;
-                XDFSubCategory subcat = XDFSubCategory.Undocumented;
-                string text = st.TranslateSymbolToHelpText(symbolname, out helptext, out cat, out subcat, m_appSettings.ApplicationLanguage);
-                if (helptext.Contains("Resolution is"))
+                string text = SymbolTranslator.ToHelpText(symbolname, m_appSettings.ApplicationLanguage);
+                if (text.Contains("Resolution is"))
                 {
-                    int idx = helptext.IndexOf("Resolution is");
+                    int idx = text.IndexOf("Resolution is");
                     idx += 14;
-                    string value = helptext.Substring(idx).Trim();
+                    string value = text.Substring(idx).Trim();
                     if (value.Contains(" "))
                     {
                         int idx2 = value.IndexOf(" ");
@@ -18039,7 +17801,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             // 56;AreaCal.A_MaxAdap;;;
             try
             {
-                SymbolTranslator st = new SymbolTranslator();
                 char[] sep = new char[1];
                 sep.SetValue(';', 0);
                 string[] fileContent = File.ReadAllLines(filename);
@@ -18055,27 +17816,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             if (sh.Symbol_number == symbolnumber)
                             {
                                 sh.Userdescription = varname;
-                                string helptext = string.Empty;
-                                XDFCategories cat = XDFCategories.Undocumented;
-                                XDFSubCategory sub = XDFSubCategory.Undocumented;
-                                sh.Description = st.TranslateSymbolToHelpText(sh.Userdescription, out helptext, out cat, out sub, m_appSettings.ApplicationLanguage);
-                                //if(sh.Category == 
-                                if (sh.Category == "Undocumented" || sh.Category == "")
-                                {
-                                    if (sh.Userdescription.Contains("."))
-                                    {
-                                        try
-                                        {
-                                            sh.Category = sh.Userdescription.Substring(0, sh.Userdescription.IndexOf("."));
-                                            //logger.Debug("Set cat to " + sh.Category + " for " + sh.Userdescription);
-                                        }
-                                        catch (Exception cE)
-                                        {
-                                            logger.Debug("Failed to assign category to symbol: " + sh.Userdescription + " err: " + cE.Message);
-                                        }
-                                    }
-
-                                }
+                                sh.Description = SymbolTranslator.ToHelpText(sh.Userdescription, m_appSettings.ApplicationLanguage);
+                                sh.createAndUpdateCategory(sh.Userdescription);
                             }
                         }
                     }

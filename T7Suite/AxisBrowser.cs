@@ -57,10 +57,6 @@ namespace T7
             dt.Columns.Add("YAXISDESCRIPTION");
             SymbolAxesTranslator sat = new SymbolAxesTranslator();
 
-            SymbolTranslator symtrans = new SymbolTranslator();
-            string helptext = string.Empty;
-            XDFCategories cat = XDFCategories.Undocumented;
-            XDFSubCategory subcat = XDFSubCategory.Undocumented;
             string xaxis = string.Empty;
             string yaxis = string.Empty;
             string xaxisdescr = "";
@@ -75,14 +71,14 @@ namespace T7
                 }
 
                 sat.GetAxisSymbols(name, out xaxis, out yaxis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                string symboldescr = symtrans.TranslateSymbolToHelpText(name, out helptext, out cat, out subcat, m_ApplicationLanguage);    
+                string symboldescr = SymbolTranslator.ToHelpText(name, m_ApplicationLanguage);    
                 if (xaxis != "")
                 {
-                    xaxisdescr = symtrans.TranslateSymbolToHelpText(xaxis, out helptext, out cat, out subcat, m_ApplicationLanguage);
+                    xaxisdescr = SymbolTranslator.ToHelpText(xaxis, m_ApplicationLanguage);
                 }
                 if (yaxis != "")
                 {
-                    yaxisdescr = symtrans.TranslateSymbolToHelpText(yaxis, out helptext, out cat, out subcat, m_ApplicationLanguage);
+                    yaxisdescr = SymbolTranslator.ToHelpText(yaxis, m_ApplicationLanguage);
                 }
                 if (xaxis != "" || yaxis != "")
                 {

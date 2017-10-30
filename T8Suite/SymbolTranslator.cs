@@ -7,10 +7,6 @@ namespace T8SuitePro
     {
         public static string ToDescription(string symbolname)
         {
-            if (symbolname.EndsWith("!"))
-            {
-                symbolname = symbolname.Substring(0, symbolname.Length - 1);
-            }
             string description = SymbolDictionary.GetSymbolDescription(symbolname);
 
             return description;
