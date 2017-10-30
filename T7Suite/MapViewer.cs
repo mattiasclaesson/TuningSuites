@@ -640,7 +640,7 @@ namespace T7
             bool retval = false;
             if (simpleButton2.Enabled)
             {
-                simpleButton2_Click(this, EventArgs.Empty);
+                saveToFile_Click(this, EventArgs.Empty);
                 retval = true;
             }
             return retval;
@@ -1522,7 +1522,7 @@ namespace T7
             //simpleButton3.Enabled = false;
         }
 
-        private void simpleButton2_Click(object sender, EventArgs e)
+        private void saveToFile_Click(object sender, EventArgs e)
         {
             //if (m_isRAMViewer) return;
             //else
