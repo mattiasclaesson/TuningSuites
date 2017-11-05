@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
 using System.Runtime.InteropServices;
+using NLog;
 
 namespace Trionic5Controls
 {
@@ -15,6 +16,7 @@ namespace Trionic5Controls
     {
         [DllImport("user32.dll", EntryPoint = "CreateIconIndirect")]
         private static extern IntPtr CreateIconIndirect(IntPtr iconInfo);
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private struct IconInfo
         {
@@ -28,25 +30,7 @@ namespace Trionic5Controls
         Surface3DRenderer sr;
         private bool m_IsDragging = false;
         private Point m_p = new Point();
-/*        private int pov_x = -20;
-        private int pov_y = 35;
-        private int pov_z = 40;
-        private int pan_x = 0;
-        private int pan_y = 0;*/
         PointF m_lastMouseHoverPoint = new PointF();
-
-        private bool m_ShowinBlue = false;
-
-        public bool ShowinBlue
-        {
-            get { return m_ShowinBlue; }
-            set
-            {
-                m_ShowinBlue = value;
-                sr.ShowinBlue = value;
-            }
-        }
-
         private int pov_x = 30;
 
         public int Pov_x
@@ -118,6 +102,18 @@ namespace Trionic5Controls
             set
             {
                 m_map_name = value;
+            }
+        }
+
+        private bool m_ShowinBlue = false;
+
+        public bool ShowinBlue
+        {
+            get { return m_ShowinBlue; }
+            set
+            {
+                m_ShowinBlue = value;
+                sr.ShowinBlue = value;
             }
         }
 
@@ -231,7 +227,6 @@ namespace Trionic5Controls
 
             }
         }
-
 
         private bool m_isUpsideDown = false;
 
@@ -361,6 +356,7 @@ namespace Trionic5Controls
             m_mapdata = new DataTable();
             m_mapcomparedata = new DataTable();
             m_maporiginaldata = new DataTable();
+
             for (int i = 0; i < m_numberOfColumns; i++)
             {
                 m_mapdata.Columns.Add(i.ToString(), Type.GetType("System.Double"));
@@ -407,7 +403,7 @@ namespace Trionic5Controls
                         }
                         catch (Exception E)
                         {
-                            Console.WriteLine(E.Message);
+                            logger.Debug(E.Message);
                         }
                     }
                 }
@@ -477,7 +473,7 @@ namespace Trionic5Controls
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -535,7 +531,7 @@ namespace Trionic5Controls
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -723,26 +719,6 @@ namespace Trionic5Controls
 
         private void frm3DSurfaceGraphViewer_MouseDown(object sender, MouseEventArgs e)
         {
-            /*if (e.Button == MouseButtons.Left)
-            {
-                // rotate
-                this.Cursor = GenerateCursor("Turn");
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                // pan
-                this.Cursor = GenerateCursor("Pan");
-            }
-            m_IsDragging = true;
-            m_p = e.Location;
-            //Invalidate();*/
-            double d = 0.0;
-            PointF p = new PointF();
-            bool b = sr.GetMousePoint(e.X, e.Y, out p, out d);
-            string s = b.ToString() + " | " + p.ToString() + " | " + d.ToString();
-
-            // if (b) System.Diagnostics.Debug.Write("\nMouseDown: " + s + "\n");
-
             if (e.Button == MouseButtons.Left)
             {
                 // rotate
@@ -780,11 +756,6 @@ namespace Trionic5Controls
                     //int deltaz = m_p.Y - e.Location.Y;
                     pov_z -= deltax / 2;
                 }
-               // else if (e.Button == MouseButtons.Right)
-                //{
-                    //int deltaz = m_p.Y - e.Location.Y;
-                    //pov_z -= deltaz / 2;
-                //}
                 else if (e.Button == MouseButtons.Right)
                 {
                     int deltax = m_p.X - e.Location.X;

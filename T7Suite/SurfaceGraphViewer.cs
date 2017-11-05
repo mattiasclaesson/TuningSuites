@@ -31,11 +31,6 @@ namespace T7
         Surface3DRenderer sr;
         private bool m_IsDragging = false;
         private Point m_p = new Point();
-/*        private int pov_x = -20;
-        private int pov_y = 35;
-        private int pov_z = 40;
-        private int pan_x = 0;
-        private int pan_y = 0;*/
         PointF m_lastMouseHoverPoint = new PointF();
         private int pov_x = 30;
 
@@ -287,6 +282,7 @@ namespace T7
                     if (valtot > maxvalue) maxvalue = valtot;
                 }
             }
+
             byteoffset = 0;
             if (m_map_compare_content != null)
             {
@@ -359,6 +355,7 @@ namespace T7
                     }
                 }
             }
+
             byteoffset = 0;
             if (maxvalue == 0) maxvalue = 256;
             float percentagetoscale = (float)((double)m_numberOfColumns / (double)maxvalue);
@@ -749,7 +746,6 @@ namespace T7
             }
             m_IsDragging = true;
             m_p = e.Location;
-            //Invalidate();
         }
 
         private void frm3DSurfaceGraphViewer_MouseUp(object sender, MouseEventArgs e)
@@ -775,11 +771,6 @@ namespace T7
                     //int deltaz = m_p.Y - e.Location.Y;
                     pov_z -= deltax / 2;
                 }
-               /* else if (e.Button == MouseButtons.Right)
-                {
-                    int deltaz = m_p.Y - e.Location.Y;
-                    pov_z -= deltaz / 2;
-                }*/
                 else if (e.Button == MouseButtons.Right)
                 {
                     int deltax = m_p.X - e.Location.X;

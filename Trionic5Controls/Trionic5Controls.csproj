@@ -106,6 +106,10 @@
     <Reference Include="Nevron.GraphicsGL, Version=9.5.11.12, Culture=neutral, PublicKeyToken=2f17c6a71f852d32" />
     <Reference Include="Nevron.Presentation, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6656c5d1103e75cc" />
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\reference files\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

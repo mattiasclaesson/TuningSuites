@@ -31,11 +31,6 @@ namespace T8SuitePro
         Surface3DRenderer sr;
         private bool m_IsDragging = false;
         private Point m_p = new Point();
-/*        private int pov_x = -20;
-        private int pov_y = 35;
-        private int pov_z = 40;
-        private int pan_x = 0;
-        private int pan_y = 0;*/
         PointF m_lastMouseHoverPoint = new PointF();
         private int pov_x = 30;
 
@@ -700,7 +695,7 @@ namespace T8SuitePro
             sr = new Surface3DRenderer(pov_x, pov_y, pov_z, pan_x, pan_y, ClientRectangle.Width, ClientRectangle.Height, pov_d, 0, 0);
             BackColor = Color.White;
             sr.ColorSchema = new ColorSchema(0);
-            sr.Density = 1; 
+            sr.Density = 1;
             ResizeRedraw = true;
             DoubleBuffered = true;
         }
@@ -747,7 +742,6 @@ namespace T8SuitePro
             }
             m_IsDragging = true;
             m_p = e.Location;
-            //Invalidate();
         }
 
         private void frm3DSurfaceGraphViewer_MouseUp(object sender, MouseEventArgs e)
@@ -773,11 +767,6 @@ namespace T8SuitePro
                     //int deltaz = m_p.Y - e.Location.Y;
                     pov_z -= deltax / 2;
                 }
-               /* else if (e.Button == MouseButtons.Right)
-                {
-                    int deltaz = m_p.Y - e.Location.Y;
-                    pov_z -= deltaz / 2;
-                }*/
                 else if (e.Button == MouseButtons.Right)
                 {
                     int deltax = m_p.X - e.Location.X;
