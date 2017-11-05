@@ -533,7 +533,7 @@ namespace Trionic5Controls
             pointSeriesLabel1.LineVisible = true;
             series1.Label = pointSeriesLabel1;
             pointOptions1.PointView = DevExpress.XtraCharts.PointView.ArgumentAndValues;
-            series1.PointOptions = pointOptions1;
+            series1.Label.PointOptions = pointOptions1;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1};
             this.chartControl1.SeriesTemplate.View = lineSeriesView2;
