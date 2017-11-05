@@ -250,7 +250,7 @@ namespace T8SuitePro
 
         static public bool ValidateTrionic8File(string filename)
         {
-            if (filename == string.Empty)
+            if (!File.Exists(filename))
             {
                 return false;
             }

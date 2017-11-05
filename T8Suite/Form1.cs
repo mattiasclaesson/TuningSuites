@@ -530,6 +530,16 @@ namespace T8SuitePro
                 return false;
             }
 
+            FileInfo fi = new FileInfo(filename);
+            if (!fi.IsReadOnly)
+            {
+                btnReadOnly.Caption = "File access OK";
+            }
+            else
+            {
+                btnReadOnly.Caption = "File is READ ONLY";
+            }
+
             try
             {
                 SetProgress("Opening " + Path.GetFileName(filename));
@@ -537,16 +547,9 @@ namespace T8SuitePro
 
                 System.Windows.Forms.Application.DoEvents();
 
-                if (filename != string.Empty)
-                {
-                    if (File.Exists(filename))
-                    {
-                        Trionic8File.TryToExtractPackedBinary(filename, out symbol_collection);
-                    }
-                    // try to load additional symboltranslations that the user entered
-                    symbolsLoaded = Trionic8File.TryToLoadAdditionalBinSymbols(filename, symbol_collection);
-
-                }
+                Trionic8File.TryToExtractPackedBinary(filename, out symbol_collection);
+                // try to load additional symboltranslations that the user entered
+                symbolsLoaded = Trionic8File.TryToLoadAdditionalBinSymbols(filename, symbol_collection);
             }
             catch (Exception E)
             {
