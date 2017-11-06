@@ -892,19 +892,15 @@ namespace T5Suite2
 
                 m_trionicFile.SetAutoUpdateChecksum(m_appSettings.AutoChecksum);
 
-                FileInfo fi = new FileInfo(filename); //<GS-07102010> remove read only flag if possible
-                try
+                FileInfo fi = new FileInfo(filename);
+                if(fi.IsReadOnly)
                 {
-                    fi.IsReadOnly = false;
-                    btnReadOnly.Caption = "File access OK";
-                }
-                catch (Exception E)
-                {
-                    logger.Debug("Failed to remove read only flag: " + E.Message);
                     btnReadOnly.Caption = "File is READ ONLY";
                 }
-
-
+                else
+                {
+                    btnReadOnly.Caption = "File access OK";
+                }
 
                 m_trionicFile.onDecodeProgress += new IECUFile.DecodeProgress(m_trionicFile_onDecodeProgress);
                 m_trionicFile.onTransactionLogChanged += new IECUFile.TransactionLogChanged(m_trionicFile_onTransactionLogChanged);

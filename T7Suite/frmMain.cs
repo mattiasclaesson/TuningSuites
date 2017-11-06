@@ -5618,13 +5618,13 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             barFilenameText.Caption = "";
 
             FileInfo fi = new FileInfo(filename);
-            if (!fi.IsReadOnly)
+            if (fi.IsReadOnly)
             {
-                btnReadOnly.Caption = "File access OK";
+                btnReadOnly.Caption = "File is READ ONLY";
             }
             else
             {
-                btnReadOnly.Caption = "File is READ ONLY";
+                btnReadOnly.Caption = "File access OK";
             }
 
             try
