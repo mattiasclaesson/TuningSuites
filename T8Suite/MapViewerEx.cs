@@ -286,6 +286,12 @@ namespace T8SuitePro
             set { m_isUpsideDown = value; }
         }
 
+        public override bool IsReadOnly
+        {
+            get { return gridView1.OptionsBehavior.ReadOnly; }
+            set { gridView1.OptionsBehavior.ReadOnly = value; }
+        }
+
         private double correction_factor = 1;
 
         public override double Correction_factor

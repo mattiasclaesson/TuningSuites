@@ -2948,6 +2948,7 @@ namespace T8SuitePro
                         dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
 
                         IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
+                        tabdet.IsReadOnly = true;
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
                         tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -3128,6 +3129,7 @@ namespace T8SuitePro
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
                     IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
+                    tabdet.IsReadOnly = true;
                     tabdet.Filename = Filename;
                     tabdet.Map_name = SymbolName;
                     //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
