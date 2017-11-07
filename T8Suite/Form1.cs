@@ -3353,11 +3353,11 @@ namespace T8SuitePro
                     try
                     {
                         DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        CompareResults tabdet = new CompareResults();
-                        tabdet.Dock = DockStyle.Fill;
-                        tabdet.Filename = filename;
-                        tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
-                        dockPanel.Controls.Add(tabdet);
+                        CompareResults compareResults = new CompareResults();
+                        compareResults.Dock = DockStyle.Fill;
+                        compareResults.Filename = filename;
+                        compareResults.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
+                        dockPanel.Controls.Add(compareResults);
                         dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
                         dockPanel.DockTo(DockingStyle.Left, 1);
 
@@ -3519,12 +3519,12 @@ namespace T8SuitePro
                                 }
                             }
 
-                            tabdet.OriginalSymbolCollection = m_symbols;
-                            tabdet.OriginalFilename = m_currentfile;
-                            tabdet.CompareFilename = filename;
-                            tabdet.CompareSymbolCollection = compare_symbols;
-                            tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-                            tabdet.gridControl1.DataSource = dt.Copy();
+                            compareResults.OriginalSymbolCollection = m_symbols;
+                            compareResults.OriginalFilename = m_currentfile;
+                            compareResults.CompareFilename = filename;
+                            compareResults.CompareSymbolCollection = compare_symbols;
+                            compareResults.OpenGridViewGroups(compareResults.gridControl1, 1);
+                            compareResults.gridControl1.DataSource = dt.Copy();
                             SetProgressIdle();
                         }
                     }

@@ -4966,10 +4966,10 @@ namespace T5Suite2
                     // bekijk het verschil voor alle geselecteerde bestanden en laat dit zien in een
                     // symbolcompareselector
                     DevExpress.XtraBars.Docking.DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                    CompareResultSelector tabdet = new CompareResultSelector();
-                    tabdet.onFileSelect += new CompareResultSelector.NotifySelectFile(tabdet_onFileSelect);
-                    tabdet.Dock = DockStyle.Fill;
-                    dockPanel.Controls.Add(tabdet);
+                    CompareResultSelector compareResults = new CompareResultSelector();
+                    compareResults.onFileSelect += new CompareResultSelector.NotifySelectFile(tabdet_onFileSelect);
+                    compareResults.Dock = DockStyle.Fill;
+                    dockPanel.Controls.Add(compareResults);
                     System.Data.DataTable dt = new System.Data.DataTable();
                     dt.Columns.Add("FILENAME");
                     dt.Columns.Add("PARTNUMBER");
@@ -4986,7 +4986,7 @@ namespace T5Suite2
                         CompareSymbolTableToFile(filename, compSymbols, compAddressLookup, out numberofsymbols);
                         dt.Rows.Add(Path.GetFileName(filename), "", "", numberofsymbols, filename);
                     }
-                    tabdet.SetData(dt);
+                    compareResults.SetData(dt);
 
                     dockPanel.Text = "Compare list: " + Path.GetFileName(m_trionicFileInformation.Filename);
                     bool isDocked = false;
