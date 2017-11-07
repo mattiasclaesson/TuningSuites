@@ -1910,13 +1910,13 @@ namespace T7
                 try
                 {
                     DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                    CompareResults tabdet = new CompareResults();
-                    tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-                    tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                    tabdet.Dock = DockStyle.Fill;
-                    tabdet.Filename = filename;
-                    tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
-                    dockPanel.Controls.Add(tabdet);
+                    CompareResults compareResults = new CompareResults();
+                    compareResults.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+                    compareResults.SetFilterMode(m_appSettings.ShowAddressesInHex);
+                    compareResults.Dock = DockStyle.Fill;
+                    compareResults.Filename = filename;
+                    compareResults.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelect);
+                    dockPanel.Controls.Add(compareResults);
                     dockPanel.Text = "Compare results: " + Path.GetFileName(filename);
                     dockPanel.DockTo(DockingStyle.Left, 1);
                     dockPanel.Width = 700;
@@ -2132,12 +2132,12 @@ namespace T7
                                 }
                             }
                         }
-                        tabdet.CompareSymbolCollection = compare_symbols;
-                        tabdet.OriginalSymbolCollection = m_symbols;
-                        tabdet.OriginalFilename = m_currentfile;
-                        tabdet.CompareFilename = filename;
-                        tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-                        tabdet.gridControl1.DataSource = dt.Copy();
+                        compareResults.CompareSymbolCollection = compare_symbols;
+                        compareResults.OriginalSymbolCollection = m_symbols;
+                        compareResults.OriginalFilename = m_currentfile;
+                        compareResults.CompareFilename = filename;
+                        compareResults.OpenGridViewGroups(compareResults.gridControl1, 1);
+                        compareResults.gridControl1.DataSource = dt.Copy();
                         barProgress.Visibility = BarItemVisibility.Never;
                         barProgress.Caption = "Done";
 
@@ -2187,8 +2187,9 @@ namespace T7
                     try
                     {
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
+                        dockPanel.Tag = Filename;
                         IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
+                        tabdet.IsReadOnly = true;
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
                         tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -2759,12 +2760,12 @@ namespace T7
                     try
                     {
                         DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        SRAMCompareResults tabdet = new SRAMCompareResults();
-                        tabdet.Dock = DockStyle.Fill;
-                        tabdet.Filename1 = filename_1;
-                        tabdet.Filename2 = filename_2;
-                        tabdet.onSRAMSymbolSelect += new SRAMCompareResults.NotifySRAMSelectSymbol(tabdet_onSRAMSymbolSelect);
-                        dockPanel.Controls.Add(tabdet);
+                        SRAMCompareResults sramCompareResults = new SRAMCompareResults();
+                        sramCompareResults.Dock = DockStyle.Fill;
+                        sramCompareResults.Filename1 = filename_1;
+                        sramCompareResults.Filename2 = filename_2;
+                        sramCompareResults.onSRAMSymbolSelect += new SRAMCompareResults.NotifySRAMSelectSymbol(tabdet_onSRAMSymbolSelect);
+                        dockPanel.Controls.Add(sramCompareResults);
                         //dockPanel.DockAsTab(dockPanel1);
                         dockPanel.Text = "SRAM compare results: " + Path.GetFileName(filename_1) + " " + Path.GetFileName(filename_2);
                         bool isDocked = false;
@@ -2783,10 +2784,10 @@ namespace T7
                             dockPanel.Width = 700;
                         }
                         //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
-                        tabdet.gridControl1.DataSource = dt;
+                        sramCompareResults.gridControl1.DataSource = dt;
                         //tabdet.CompareTrionic5Tools.SymbolCollection = compSymbols;
                         //tabdet.CompareAddressLookupCollection = compAddressLookup;
-                        tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
+                        sramCompareResults.OpenGridViewGroups(sramCompareResults.gridControl1, 1);
                     }
                     catch (Exception E)
                     {
@@ -2839,6 +2840,7 @@ namespace T7
                     dockPanel.Tag = filename1;
 
                     IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
+                    tabdet.IsReadOnly = true;
                     tabdet.IsCompareViewer = true;
                     tabdet.Filename = filename1;
                     tabdet.Map_name = symbolname;
@@ -8409,6 +8411,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
                     IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
+                    tabdet.IsReadOnly = true;
                     tabdet.Filename = Filename;
                     tabdet.Map_name = SymbolName;
                     //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
