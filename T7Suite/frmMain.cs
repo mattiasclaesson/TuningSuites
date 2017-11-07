@@ -8650,7 +8650,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 if (showinterface)
                 {
-                    frmInfoBox info = new frmInfoBox("Current file does not exsist, please re-open the file.");
+                    frmInfoBox info = new frmInfoBox("Current file does not exist, please re-open the file.");
                 }
             }
             return m_checksums_ok;
