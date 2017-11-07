@@ -13421,7 +13421,6 @@ If boost regulation reports errors you can increase the difference between boost
                             tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
                             tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
 
-                            /** NEW 12/11/2008 **/
                             if (!m_appSettings.NewPanelsFloating)
                             {
                                 dockPanel = dockManager1.AddPanel(DockingStyle.Right);
@@ -13549,8 +13548,6 @@ If boost regulation reports errors you can increase the difference between boost
                                 dockPanel.FloatLocation = floatpoint;
 
                             }
-                            /** end NEW 12/11/2008 */
-
 
                             // z, y and z axis to do
                             /*string xdescr = string.Empty;

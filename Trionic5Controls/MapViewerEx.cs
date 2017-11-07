@@ -287,12 +287,6 @@ namespace Trionic5Controls
             set { m_isUpsideDown = value; }
         }
 
-        public override bool IsReadOnly
-        {
-            get { return gridView1.OptionsBehavior.ReadOnly; }
-            set { gridView1.OptionsBehavior.ReadOnly = value; }
-        }
-
         private double correction_factor = 1;
 
         public override double Correction_factor
@@ -325,12 +319,6 @@ namespace Trionic5Controls
             get { return m_isRedWhite; }
             set { m_isRedWhite = value; }
         }
-
-        /*public bool IsHexMode
-        {
-            get { return m_isHexMode; }
-            set { m_isHexMode = value; }
-        }*/
 
         public override string Filename
         {

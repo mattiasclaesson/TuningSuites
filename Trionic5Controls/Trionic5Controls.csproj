@@ -217,6 +217,7 @@
     <Compile Include="frmUserLibrary.Designer.cs">
       <DependentUpon>frmUserLibrary.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapViewerFactory.cs" />
     <Compile Include="PictureTracker.cs">
       <SubType>UserControl</SubType>
     </Compile>

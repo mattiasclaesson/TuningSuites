@@ -1160,90 +1160,17 @@ namespace T5Suite2
             // have this work in online mode as well, this should enable the user to work in online mode in the SRAM 
             //itself when it is connected.
             
-            if (!SRAMPanelExists(symbolname, sramfile)/* true*/)
+            if (!SRAMPanelExists(symbolname, sramfile))
             {
-
                 dockManager1.BeginUpdate();
                 DockPanel dp = dockManager1.AddPanel(DockingStyle.Right);
                 dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                 dp.Tag = sramfile;
-                IMapViewer mv;
-                if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                {
-                    mv = new MapViewerEx();
-                }
-                else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                {
-                    mv = new MapViewer();
-                }
-                else
-                {
-                    mv = new SimpleMapViewer();
-                }
-                mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                mv.GraphVisible = m_appSettings.ShowGraphs;
-
-                mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
-
-                if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal3Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy3Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal35Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy35Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal4Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy4Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal5Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy5Bar;
-                    }
-                }
-                //mv.LoadSymbol(symbolname, m_trionicFile);
-                mv.LoadSymbol(symbolname, m_trionicFile, sramfile);
-                //mv.Map_content = m_trionicFile.ReadDataFromFile(sramfile, (uint)m_trionicFileInformation.GetSymbolAddressSRAM(symbolname), (uint)m_trionicFileInformation.GetSymbolLength(symbolname));
+                IMapViewer mv = MapViewerFactory.Get(m_appSettings, m_trionicFile);
+                
                 mv.OnlineMode = true;
+
+                mv.LoadSymbol(symbolname, m_trionicFile, sramfile);
                 int cols = 1;
                 int rows = 1;
                 m_trionicFile.GetMapMatrixWitdhByName(symbolname, out cols, out rows);
@@ -1453,79 +1380,9 @@ namespace T5Suite2
                 DockPanel dp = dockManager1.AddPanel(DockingStyle.Right);
                 dp.Tag = m_trionicFileInformation.Filename;
                 dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
-                //IMapViewer mv = new MapViewerEx();
-                IMapViewer mv;
-                if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                {
-                    mv = new MapViewerEx();
-                }
-                else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                {
-                    mv = new MapViewer();
-                }
-                else
-                {
-                    mv = new SimpleMapViewer();
-                } 
-                mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                mv.GraphVisible = m_appSettings.ShowGraphs;
-                // set viewsize
-                mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
-                if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal3Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy3Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal35Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy35Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal4Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy4Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal5Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy5Bar;
-                    }
-                }
+                
+                IMapViewer mv = MapViewerFactory.Get(m_appSettings, m_trionicFile);
+                
                 mv.LoadSymbol(symbolname, m_trionicFile);
                 if (_ecuConnection.Opened && _ECUmode == OperationMode.ModeOnline)
                 {
@@ -1802,78 +1659,9 @@ namespace T5Suite2
                 DockPanel dp = dockManager1.AddPanel(floatpoint);
                 dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                 dp.Tag = m_trionicFileInformation.Filename;
-                //IMapViewer mv = new MapViewerEx();
-                IMapViewer mv;
-                if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                {
-                    mv = new MapViewerEx();
-                }
-                else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                {
-                    mv = new MapViewer();
-                }
-                else
-                {
-                    mv = new SimpleMapViewer();
-                }
-                mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                mv.GraphVisible = m_appSettings.ShowGraphs;
-                mv.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
-                if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal3Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy3Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal35Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy35Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal4Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy4Bar;
-                    }
-                }
-                else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                {
-                    if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                    {
-                        mv.Viewtype = SuiteViewType.Decimal5Bar;
-                    }
-                    else
-                    {
-                        mv.Viewtype = SuiteViewType.Easy5Bar;
-                    }
-                }
+                
+                IMapViewer mv = MapViewerFactory.Get(m_appSettings, m_trionicFile);
+
                 mv.LoadSymbol(symbolname, m_trionicFile);
 
                 if (_ecuConnection.Opened && _ECUmode == OperationMode.ModeOnline)
@@ -1892,10 +1680,7 @@ namespace T5Suite2
                 int cols = 1;
                 int rows = 1;
                 m_trionicFile.GetMapMatrixWitdhByName(symbolname, out cols, out rows);
-               /* if (m_trionicFile.GetMapSensorType() == MapSensorType.MapSensor30)
-                {
-                    mv.Viewtype = SuiteViewType.Easy3Bar;
-                }*/
+
                 mv.ShowTable(cols, m_trionicFile.IsTableSixteenBits(symbolname));
                 mv.Dock = DockStyle.Fill;
                 mv.onClose += new IMapViewer.ViewerClose(OnCloseMapViewer);
@@ -5235,91 +5020,14 @@ namespace T5Suite2
                 {
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
-                    //IMapViewer tabdet = new MapViewerEx();
-                    IMapViewer tabdet;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        tabdet = new MapViewer();
-                    }
-                    else
-                    {
-                        tabdet = new SimpleMapViewer();
-                    }
-                    tabdet.IsReadOnly = true;
-                    tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, curFile);
+                    
                     tabdet.IsCompareViewer = true;
-                    //TryTpShowTouchScreenInput();
-
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
-                    //tabdet.IsHexMode = true; // always in hexmode!
-                    if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy;
-                        }
-                    }
-                    else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                        }
-                    }
-                    else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                        }
-                    }
-                    else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                        }
-                    }
 
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Filename = Filename;
                     tabdet.Map_name = SymbolName;
-
                     tabdet.Map_descr = m_trionicFileInformation.GetSymbolDescription(tabdet.Map_name);
                     tabdet.Map_cat = m_trionicFileInformation.GetSymbolCategory(tabdet.Map_name);
                     tabdet.X_axisvalues = curFile.GetMapXaxisValues(tabdet.Map_name);
@@ -5642,94 +5350,13 @@ namespace T5Suite2
                     try
                     {
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        dockPanel.Tag = Filename;// m_trionicFile.GetFileInfo().Filename; changed 24/01/2008
-                        //IMapViewer tabdet = new MapViewerEx();
-                        IMapViewer tabdet;
-                        
-                        if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                        {
-                            tabdet = new MapViewerEx();
-                        }
-                        else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                        {
-                            tabdet = new MapViewer();
-                        }
-                        else
-                        {
-                            tabdet = new SimpleMapViewer();
-                        }
-                        tabdet.IsReadOnly = true;
-                        tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                        tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                       // TryTpShowTouchScreenInput();
+                        dockPanel.Tag = Filename;
 
-                        //tabdet.DirectSRAMWriteOnSymbolChange = m_appSettings.DirectSRAMWriteOnSymbolChange;
-                       // tabdet.SetViewSize(m_appSettings.DefaultViewSize);
+                        IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, curFile);
+                        tabdet.IsCompareViewer = true;
 
-                        //tabdet.IsHexMode = barViewInHex.Checked;
-                        tabdet.Viewtype = (SuiteViewType)m_appSettings.DefaultViewType;
-                        if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                        {
-                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                            {
-                                tabdet.Viewtype = SuiteViewType.Decimal;
-                            }
-                            else
-                            {
-                                tabdet.Viewtype = SuiteViewType.Easy;
-                            }
-                        }
-                        else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                        {
-                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                            {
-                                tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                            }
-                            else
-                            {
-                                tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                            }
-                        }
-                        else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                        {
-                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                            {
-                                tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                            }
-                            else
-                            {
-                                tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                            }
-                        }
-                        else if (curFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                        {
-                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                            {
-                                tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                            }
-                            else
-                            {
-                                tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                            }
-                        }
-                        else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                        {
-                            if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                            {
-                                tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                            }
-                            else
-                            {
-                                tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                            }
-                        }
-                        //tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                        //tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                        //tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                        //tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
-
                         tabdet.Map_descr = m_trionicFileInformation.GetSymbolDescription(tabdet.Map_name);
                         tabdet.Map_cat = m_trionicFileInformation.GetSymbolCategory(tabdet.Map_name);
                         tabdet.X_axisvalues = curFile.GetMapXaxisValues(tabdet.Map_name);
@@ -5776,9 +5403,6 @@ namespace T5Suite2
                             //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
                             //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
                             
-                            tabdet.SetViewSize((ViewSize)m_appSettings.DefaultViewSize);
-                            //dockPanel.DockAsTab(dockPanel1);
-                            //dockPanel.Text = "Symbol: " + SymbolName + " [" + Filename + "]";
                             dockPanel.Text = Path.GetFileName(Filename) + " [" + SymbolName + "]"; 
 
                             bool isDocked = false;
@@ -6330,86 +5954,10 @@ namespace T5Suite2
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = filename1;
 
-                    //IMapViewer tabdet = new MapViewerEx();
-                    IMapViewer tabdet;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        tabdet = new MapViewer();
-                    }
-                    else
-                    {
-                        tabdet = new SimpleMapViewer();
-                    }
-                    tabdet.IsReadOnly = true;
-                    tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, m_trionicFile);
                     tabdet.IsCompareViewer = true;
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
-
-                    //tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                    if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                        }
-                    }
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                    
                     tabdet.Filename = filename1;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = m_trionicFileInformation.GetSymbolDescription(tabdet.Map_name);
@@ -6890,50 +6438,29 @@ namespace T5Suite2
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = sramfilename;
 
-                    //IMapViewer mv = new MapViewerEx();
-                    IMapViewer mv;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        mv = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        mv = new MapViewer();
-                    }
-                    else
-                    {
-                        mv = new SimpleMapViewer();
-                    }
-                    mv.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    mv.IsCompareViewer = true;
-                    mv.GraphVisible = m_appSettings.ShowGraphs;
-                    //TryTpShowTouchScreenInput();
-
-                    mv.DirectSRAMWriteOnSymbolChange = false;
-
-                    mv.Viewtype = SuiteViewType.Decimal;
-                    mv.DisableColors = m_appSettings.DisableMapviewerColors;
-                    mv.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    mv.GraphVisible = m_appSettings.ShowGraphs;
-                    mv.IsRedWhite = m_appSettings.ShowRedWhite;
-                    mv.Filename = sramfilename;
-                    mv.Map_name = symbolname;
-                    mv.Map_descr = m_trionicFileInformation.GetSymbolDescription(mv.Map_name);
-                    mv.Map_cat = m_trionicFileInformation.GetSymbolCategory(mv.Map_name);
-                    mv.X_axisvalues = m_trionicFile.GetMapXaxisValues(mv.Map_name);
-                    mv.Y_axisvalues = m_trionicFile.GetMapYaxisValues(mv.Map_name);
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
+                    tabdet.IsCompareViewer = true; 
+                    tabdet.DirectSRAMWriteOnSymbolChange = false;
+                    tabdet.Viewtype = SuiteViewType.Decimal; // mattias: why?
+                    
+                    tabdet.Filename = sramfilename;
+                    tabdet.Map_name = symbolname;
+                    tabdet.Map_descr = m_trionicFileInformation.GetSymbolDescription(tabdet.Map_name);
+                    tabdet.Map_cat = m_trionicFileInformation.GetSymbolCategory(tabdet.Map_name);
+                    tabdet.X_axisvalues = m_trionicFile.GetMapXaxisValues(tabdet.Map_name);
+                    tabdet.Y_axisvalues = m_trionicFile.GetMapYaxisValues(tabdet.Map_name);
                     string xdescr = string.Empty;
                     string ydescr = string.Empty;
                     string zdescr = string.Empty;
-                    m_trionicFile.GetMapAxisDescriptions(mv.Map_name, out xdescr, out ydescr, out zdescr);
-                    mv.X_axis_name = xdescr;
-                    mv.Y_axis_name = ydescr;
-                    mv.Z_axis_name = zdescr;
+                    m_trionicFile.GetMapAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                    tabdet.X_axis_name = xdescr;
+                    tabdet.Y_axis_name = ydescr;
+                    tabdet.Z_axis_name = zdescr;
 
                     //mv.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
                     int columns = 8;
                     int rows = 8;
-                    m_trionicFile.GetMapMatrixWitdhByName(mv.Map_name, out columns, out rows);
+                    m_trionicFile.GetMapMatrixWitdhByName(tabdet.Map_name, out columns, out rows);
                     int tablewidth = columns;
                     //int tablewidth = m_trionicFileInformation.GetTab.GetTableGetTableMatrixWitdhByName(m_trionicFileInformation.Filename, mv.Map_name, out columns, out rows);
                     //int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, mv.Map_name, out columns, out rows);
@@ -6941,13 +6468,13 @@ namespace T5Suite2
                     if (address != 0)
                     {
                         while (address > m_trionicFileInformation.Filelength) address -= m_trionicFileInformation.Filelength;
-                        mv.Map_address = address;
-                        mv.Map_length = length;
+                        tabdet.Map_address = address;
+                        tabdet.Map_length = length;
                         byte[] mapdata = m_trionicFile.ReadDataFromFile(sramfilename, (uint)sramaddress, (uint)length);
                         byte[] mapdata2 = m_trionicFile.ReadDataFromFile(flashfilename, (uint)flashaddress, (uint)length);
                         byte[] mapdataOri = m_trionicFile.ReadDataFromFile(sramfilename, (uint)sramaddress, (uint)length);
-                        mv.Map_original_content = mapdata;
-                        mv.Map_compare_content = mapdata2;
+                        tabdet.Map_original_content = mapdata;
+                        tabdet.Map_compare_content = mapdata2;
 
                         if (mapdata.Length == mapdata2.Length)
                         {
@@ -6974,23 +6501,23 @@ namespace T5Suite2
                                 }
                             }
 
-                            mv.Map_content = mapdataOri;
-                            TryToAddOpenLoopTables(mv);
+                            tabdet.Map_content = mapdataOri;
+                            TryToAddOpenLoopTables(tabdet);
                             // ori and changed
 
-                            mv.Correction_factor = m_trionicFile.GetCorrectionFactorForMap(mv.Map_name);
-                            mv.Correction_offset = m_trionicFile.GetOffsetForMap(mv.Map_name);
-                            mv.IsUpsideDown = true;// GetMapUpsideDown(mv.Map_name);
-                            mv.ShowTable(columns, m_trionicFile.IsTableSixteenBits(symbolname));
-                            mv.Dock = DockStyle.Fill;
+                            tabdet.Correction_factor = m_trionicFile.GetCorrectionFactorForMap(tabdet.Map_name);
+                            tabdet.Correction_offset = m_trionicFile.GetOffsetForMap(tabdet.Map_name);
+                            tabdet.IsUpsideDown = true;// GetMapUpsideDown(mv.Map_name);
+                            tabdet.ShowTable(columns, m_trionicFile.IsTableSixteenBits(symbolname));
+                            tabdet.Dock = DockStyle.Fill;
                             //mv.onSymbolSave += new MapViewer.NotifySaveSymbol(mv_onSymbolSave);
-                            mv.onClose += new IMapViewer.ViewerClose(OnCloseMapViewer);
-                            mv.onAxisEditorRequested += new IMapViewer.AxisEditorRequested(mv_onAxisEditorRequested);
+                            tabdet.onClose += new IMapViewer.ViewerClose(OnCloseMapViewer);
+                            tabdet.onAxisEditorRequested += new IMapViewer.AxisEditorRequested(mv_onAxisEditorRequested);
                             //mv.onAxisLock += new MapViewer.NotifyAxisLock(mv_onAxisLock);
                             //mv.onSliderMove += new MapViewer.NotifySliderMove(mv_onSliderMove);
-                            mv.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                            mv.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                            mv.onCellLocked += new IMapViewer.CellLocked(mv_onCellLocked);
+                            tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
+                            tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
+                            tabdet.onCellLocked += new IMapViewer.CellLocked(mv_onCellLocked);
 
                             //mv.onSplitterMoved += new MapViewer.SplitterMoved(mv_onSplitterMoved);
                             //mv.onSurfaceGraphViewChanged += new MapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
@@ -7035,9 +6562,9 @@ namespace T5Suite2
                                 dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
-                                    if (mv.X_axisvalues.Length > 0)
+                                    if (tabdet.X_axisvalues.Length > 0)
                                     {
-                                        dockPanel.Width = 30 + ((mv.X_axisvalues.Length + 1) * 35);
+                                        dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
                                     }
                                     else
                                     {
@@ -7049,7 +6576,7 @@ namespace T5Suite2
 
                                 //                    dockPanel.Width = 400;
                             }
-                            dockPanel.Controls.Add(mv);
+                            dockPanel.Controls.Add(tabdet);
 
                         }
                         else
@@ -8034,95 +7561,12 @@ namespace T5Suite2
                 dockManager1.BeginUpdate();
                 try
                 {
-                    IMapViewer tabdet;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        tabdet = new MapViewer();
-                    }
-                    else
-                    {
-                        tabdet = new SimpleMapViewer();
-                    }
-
-                    tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    //TryTpShowTouchScreenInput();
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, m_trionicFile);
 
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
-                    //tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                     tabdet.Visible = false;
                     tabdet.Filename = m_trionicFile.GetFileInfo().Filename;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                        }
-                    }
-                   /* if (barViewInHex.Checked)
-                    {
-                        tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                    }*/
-                    /*else
-                    {
-                        tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
-                    }*/
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+                    
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = "Target AFR map for use with wideband lambda sensor";
                     if (mapname == "FeedbackAFR") tabdet.Map_descr = "Feedback AFR map from wideband lambda sensor";
@@ -8336,95 +7780,12 @@ namespace T5Suite2
                 dockManager1.BeginUpdate();
                 try
                 {
-                    IMapViewer tabdet;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        tabdet = new MapViewer();
-                    }
-                    else
-                    {
-                        tabdet = new SimpleMapViewer();
-                    }
-
-                    tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    //TryTpShowTouchScreenInput();
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, m_trionicFile);
 
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
-                    //tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                     tabdet.Visible = false;
+
                     tabdet.Filename = m_trionicFile.GetFileInfo().Filename;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                        }
-                    }
-                    /* if (barViewInHex.Checked)
-                     {
-                         tabdet.Viewtype = SuiteViewType.Hexadecimal;
-                     }*/
-                    /*else
-                    {
-                        tabdet.Viewtype = m_appSettings.DefaultViewType;//ViewType.Easy;
-                    }*/
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = "Target Idle AFR map for use with wideband lambda sensor";
                     if (mapname == "IdleFeedbackAFR") tabdet.Map_descr = "Feedback Idle AFR map from wideband lambda sensor";
@@ -12666,89 +12027,13 @@ namespace T5Suite2
                 dockManager1.BeginUpdate();
                 try
                 {
-                    IMapViewer tabdet;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        tabdet = new MapViewer();
-                    }
-                    else
-                    {
-                        tabdet = new SimpleMapViewer();
-                    }
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, m_trionicFile);
                     
                     if (fileToCompare != string.Empty) tabdet.IsCompareViewer = true;
-
-                    tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    //TryTpShowTouchScreenInput();
-
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
-                    //tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                     tabdet.Visible = false;
-                    tabdet.Filename = m_trionicFile.GetFileInfo().Filename;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                        }
-                    }
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
+
+                    tabdet.Filename = m_trionicFile.GetFileInfo().Filename;                   
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = "Knock counter snapshot";
                     tabdet.Map_cat = XDFCategories.Sensor;
@@ -13242,87 +12527,11 @@ namespace T5Suite2
                 dockManager1.BeginUpdate();
                 try
                 {
-                    IMapViewer tabdet;
-                    if (m_appSettings.MapViewerType == MapviewerType.Fancy)
-                    {
-                        tabdet = new MapViewerEx();
-                    }
-                    else if (m_appSettings.MapViewerType == MapviewerType.Normal)
-                    {
-                        tabdet = new MapViewer();
-                    }
-                    else
-                    {
-                        tabdet = new SimpleMapViewer();
-                    }
-
-                    tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    //TryTpShowTouchScreenInput();
-
+                    IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, m_trionicFile);
                     tabdet.DirectSRAMWriteOnSymbolChange = false;
-                    //tabdet.SetViewSize(m_appSettings.DefaultViewSize);
                     tabdet.Visible = false;
+
                     tabdet.Filename = m_trionicFile.GetFileInfo().Filename;
-                    tabdet.GraphVisible = m_appSettings.ShowGraphs;
-                    if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor25)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor30)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal3Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy3Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor35)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal35Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy35Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor40)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal4Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy4Bar;
-                        }
-                    }
-                    else if (m_trionicFile.GetMapSensorType(m_appSettings.AutoDetectMapsensorType) == MapSensorType.MapSensor50)
-                    {
-                        if (m_appSettings.DefaultViewType == SuiteViewType.Decimal)
-                        {
-                            tabdet.Viewtype = SuiteViewType.Decimal5Bar;
-                        }
-                        else
-                        {
-                            tabdet.Viewtype = SuiteViewType.Easy5Bar;
-                        }
-                    }
-                    tabdet.DisableColors = m_appSettings.DisableMapviewerColors;
-                    tabdet.AutoSizeColumns = m_appSettings.AutoSizeColumnsInWindows;
-                    tabdet.IsRedWhite = m_appSettings.ShowRedWhite;
                     tabdet.Map_name = symbolname;
                     tabdet.Map_descr = "Ignition locked map";
                     tabdet.Map_cat = XDFCategories.Sensor;
