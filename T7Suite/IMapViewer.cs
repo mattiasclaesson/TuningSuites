@@ -119,12 +119,6 @@ namespace T7
             set;
         }
 
-        public abstract bool IsReadOnly
-        {
-            get;
-            set;
-        }
-
         public abstract double Correction_factor
         {
             get;

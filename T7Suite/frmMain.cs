@@ -2189,7 +2189,8 @@ namespace T7
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         dockPanel.Tag = Filename;
                         IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
-                        tabdet.IsReadOnly = true;
+                        tabdet.IsCompareViewer = true;
+
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
                         tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -2839,7 +2840,6 @@ namespace T7
                     dockPanel.Tag = filename1;
 
                     IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
-                    tabdet.IsReadOnly = true;
                     tabdet.IsCompareViewer = true;
                     tabdet.Filename = filename1;
                     tabdet.Map_name = symbolname;
@@ -8410,7 +8410,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
                     IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
-                    tabdet.IsReadOnly = true;
+                    tabdet.IsCompareViewer = true;
+
                     tabdet.Filename = Filename;
                     tabdet.Map_name = SymbolName;
                     //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
