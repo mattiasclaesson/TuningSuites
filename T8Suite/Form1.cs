@@ -2948,7 +2948,8 @@ namespace T8SuitePro
                         dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
 
                         IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
-                        tabdet.IsReadOnly = true;
+                        tabdet.IsCompareViewer = true;
+
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
                         tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
@@ -3129,11 +3130,10 @@ namespace T8SuitePro
                     dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                     dockPanel.Tag = Filename;
                     IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
-                    tabdet.IsReadOnly = true;
+                    tabdet.IsCompareViewer = true;
+
                     tabdet.Filename = Filename;
                     tabdet.Map_name = SymbolName;
-                    //tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
-                    //tabdet.Map_cat = TranslateSymbolNameToCategory(tabdet.Map_name);
                     tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
                     tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
                     string xdescr = string.Empty;
@@ -3144,7 +3144,6 @@ namespace T8SuitePro
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;
 
-                    //tabdet.Map_sramaddress = GetSymbolAddressSRAM(SymbolName);
                     int columns = 8;
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
@@ -3289,7 +3288,6 @@ namespace T8SuitePro
             }
             else
             {
-                // show difference map
                 StartCompareDifferenceViewer(e.SymbolName, e.Filename, e.SymbolAddress, e.SymbolLength);
             }
         }

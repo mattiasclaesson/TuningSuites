@@ -128,12 +128,6 @@ namespace T8SuitePro
             set;
         }
 
-        public abstract bool IsReadOnly
-        {
-            get;
-            set;
-        }
-
         public abstract double Correction_factor
         {
             get;
