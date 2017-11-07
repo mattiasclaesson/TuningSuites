@@ -274,6 +274,12 @@ namespace Trionic5Controls
             get { return m_isUpsideDown; }
             set { m_isUpsideDown = value; }
         }
+        
+        public override bool IsReadOnly
+        {
+            get { return gridView1.OptionsBehavior.ReadOnly; }
+            set { gridView1.OptionsBehavior.ReadOnly = value; }
+        }
 
         private double correction_factor = 1;
 

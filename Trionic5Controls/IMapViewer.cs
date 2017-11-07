@@ -101,6 +101,12 @@ namespace Trionic5Controls
             set;
         }
 
+        public abstract bool IsReadOnly
+        {
+            get;
+            set;
+        }
+
         public abstract double Correction_factor
         {
             get;

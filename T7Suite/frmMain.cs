@@ -2812,7 +2812,6 @@ namespace T7
             }
             else
             {
-                //Implement this viewer type in 2.0
                 StartSRAMCompareDifferenceViewer(e.SymbolName, e.Filename1, e.Filename2, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), "");
             }
         }
@@ -3990,14 +3989,14 @@ namespace T7
                         try
                         {
                             DockPanel dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                            CompareResults tabdet = new CompareResults();
-                            tabdet.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
-                            tabdet.SetFilterMode(m_appSettings.ShowAddressesInHex);
-                            tabdet.Dock = DockStyle.Fill;
-                            tabdet.UseForFind = true;
-                            tabdet.Filename = m_currentfile;
-                            tabdet.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectForFind);
-                            dockPanel.Controls.Add(tabdet);
+                            CompareResults compareResults = new CompareResults();
+                            compareResults.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+                            compareResults.SetFilterMode(m_appSettings.ShowAddressesInHex);
+                            compareResults.Dock = DockStyle.Fill;
+                            compareResults.UseForFind = true;
+                            compareResults.Filename = m_currentfile;
+                            compareResults.onSymbolSelect += new CompareResults.NotifySelectSymbol(tabdet_onSymbolSelectForFind);
+                            dockPanel.Controls.Add(compareResults);
                             dockPanel.Text = "Search results: " + Path.GetFileName(m_currentfile);
                             dockPanel.DockTo(DockingStyle.Left, 1);
                             dockPanel.Width = 700;
@@ -4025,9 +4024,9 @@ namespace T7
                                 shfound.createAndUpdateCategory(shfound.Varname);
                                 dt.Rows.Add(shfound.Varname, shfound.Start_address, shfound.Flash_start_address, shfound.Length, shfound.Length, helptext, false, 0, 0, 0, 0, shfound.Category, "", shfound.Symbol_number, shfound.Symbol_number);
                             }
-                            tabdet.CompareSymbolCollection = result_Collection;
-                            tabdet.OpenGridViewGroups(tabdet.gridControl1, 1);
-                            tabdet.gridControl1.DataSource = dt.Copy();
+                            compareResults.CompareSymbolCollection = result_Collection;
+                            compareResults.OpenGridViewGroups(compareResults.gridControl1, 1);
+                            compareResults.gridControl1.DataSource = dt.Copy();
 
                         }
                         catch (Exception E)

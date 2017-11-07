@@ -5248,7 +5248,8 @@ namespace T5Suite2
                     else
                     {
                         tabdet = new SimpleMapViewer();
-                    } 
+                    }
+                    tabdet.IsReadOnly = true;
                     tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     tabdet.IsCompareViewer = true;
@@ -5657,6 +5658,7 @@ namespace T5Suite2
                         {
                             tabdet = new SimpleMapViewer();
                         }
+                        tabdet.IsReadOnly = true;
                         tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                         tabdet.GraphVisible = m_appSettings.ShowGraphs;
                        // TryTpShowTouchScreenInput();
@@ -6302,7 +6304,6 @@ namespace T5Suite2
             }
             else
             {
-                //Implement this viewer type in 2.0
                 StartSRAMCompareDifferenceViewer(e.SymbolName, e.Filename1, e.Filename2, e.SymbolLength, m_trionicFileInformation.GetSymbolAddressSRAM(e.SymbolName));
             }
         }
@@ -6343,6 +6344,7 @@ namespace T5Suite2
                     {
                         tabdet = new SimpleMapViewer();
                     }
+                    tabdet.IsReadOnly = true;
                     tabdet.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                     tabdet.GraphVisible = m_appSettings.ShowGraphs;
                     tabdet.IsCompareViewer = true;
