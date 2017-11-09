@@ -4901,7 +4901,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Be.Windows.Forms.HexBox, Version=1.3.0.28132, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Be.Windows.Forms.HexBox, Version=1.3.0.35851, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_896DB444F353136FE929D5FAEAD1AE42"
@@ -7302,15 +7302,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T5SuiteII"
-        "ProductCode" = "8:{C0FCFC81-6F08-4D68-8993-C79188A48D42}"
-        "PackageCode" = "8:{8A6E1C0D-88BA-4F11-9E7C-22DB0E1F75E6}"
+        "ProductCode" = "8:{83C0860C-A85C-480A-80F1-7F1E897109D6}"
+        "PackageCode" = "8:{1A4DEC78-AE9B-4B7F-86F3-EF80F021B7CE}"
         "UpgradeCode" = "8:{85094B92-5F73-4D18-A5DD-994336DF4031}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.16"
+        "ProductVersion" = "8:2.0.17"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"

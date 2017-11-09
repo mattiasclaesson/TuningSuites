@@ -42,7 +42,7 @@ namespace Trionic5Controls
             inputStream.Close();
 
             // create temporary cursor file
-            String tmpFileName = System.IO.Path.GetRandomFileName();
+            String tmpFileName = Path.Combine(Path.GetTempPath(), System.IO.Path.GetRandomFileName());
             FileInfo tempFileInfo = new FileInfo(tmpFileName);
             FileStream outputStream = tempFileInfo.Create();
             outputStream.Write(buffer, 0, buffer.Length);
