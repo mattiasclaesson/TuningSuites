@@ -2,7 +2,7 @@ call SetupT7Suite\version.bat
 devenv T7.sln /Rebuild Release /project SetupT7Suite
 
 pushd SetupT7Suite\Release\
-"C:\Program Files (x86)\hashutils-1.3.0-redist\bin.x86-32\md5sum.exe" T7Suite.msi >> T7Suite.md5
+"C:\md5sum.exe" T7Suite.msi >> T7Suite.md5
 "C:\Program Files\7-Zip\7z.exe" a -tzip T7Suite.zip T7Suite.* setup.exe
 popd
 
