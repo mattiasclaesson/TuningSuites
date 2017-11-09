@@ -3573,26 +3573,6 @@ namespace T8SuitePro
 
         }
 
-        private Int64 GetInt64FromFile(string filename, int offset)
-        {
-            Int64 retval = 0;
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                fsread.Seek(offset, SeekOrigin.Begin);
-                retval = Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256 * 256 * 256 * 256;
-                retval += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256 * 256 * 256;
-                retval += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256 * 256;
-                retval += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256;
-                retval += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
-                retval += Convert.ToInt64(br.ReadByte()) * 256 * 256;
-                retval += Convert.ToInt64(br.ReadByte()) * 256;
-                retval += Convert.ToInt64(br.ReadByte());
-            }
-            fsread.Close();
-            return retval;
-        }
-
         private int GetChecksumAreaOffset(string filename)
         {
             int retval = 0;
@@ -3607,86 +3587,6 @@ namespace T8SuitePro
                 retval += (int)br.ReadByte();
             }
             fsread.Close();
-            return retval;
-        }
-
-        int GetChecksumLong(string filename, int offset)
-        {
-            int retval = 0;
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            fsread.Seek(offset, SeekOrigin.Begin);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                retval = (int)br.ReadByte() * 256 * 256 * 256;
-                retval += (int)br.ReadByte() * 256 * 256;
-                retval += (int)br.ReadByte() * 256;
-                retval += (int)br.ReadByte();
-            }
-            fsread.Close();
-            return retval;
-        }
-
-        int GetChecksumShort(string filename, int offset)
-        {
-            int retval = 0;
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            fsread.Seek(offset, SeekOrigin.Begin);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                retval = (int)br.ReadByte() * 256;
-                retval += (int)br.ReadByte();
-            }
-            fsread.Close();
-            return retval;
-        }
-
-        private int CalculateChecksumSmall(string filename, int start, int end)
-        {
-            int retval = 0;
-
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            fsread.Seek(start, SeekOrigin.Begin);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                for (int i = start; i <= end; i += 2)
-                {
-                    if (i == end)
-                    {
-                        int tempvalue = (int)br.ReadByte();
-                        retval += tempvalue;
-                    }
-                    else
-                    {
-                        int tempvalue = (int)br.ReadByte() * 256;
-                        tempvalue += (int)br.ReadByte();
-                        retval += tempvalue;
-                    }
-                }
-            }
-            fsread.Close();
-            //  logger.Debug("Checksum 2 byte from " + start.ToString("X6") + " to " + end.ToString("X6") + " = " + retval.ToString("X4"));
-            return retval;
-        }
-
-        private int CalculateChecksum(string filename, int start, int end)
-        {
-            int retval = 0;
-
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            fsread.Seek(start, SeekOrigin.Begin);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                for (int i = start; i <= end; i += 4)
-                {
-                    int tempvalue = (int)br.ReadByte() * 256 * 256 * 256;
-                    tempvalue += (int)br.ReadByte() * 256 * 256;
-                    tempvalue += (int)br.ReadByte() * 256;
-                    tempvalue += (int)br.ReadByte();
-                    retval += tempvalue;
-                }
-            }
-            fsread.Close();
-            // logger.Debug("Checksum 4 byte from " + start.ToString("X6") + " to " + end.ToString("X6") + " = " + retval.ToString("X8"));
             return retval;
         }
 
@@ -3741,36 +3641,6 @@ namespace T8SuitePro
 
         }
 
-        private Int64 CalculateLayer1Checksum(string filename, int OffsetLayer1)
-        {
-            Int64 chkLayer1 = 0;
-            //20000 to B5058 (?)
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            int byteCount = OffsetLayer1 - 0x20000;
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                fsread.Seek(0x20000, SeekOrigin.Begin);
-                // addition
-                Int64 _tempValue = 0;
-                for (int tel = 0; tel < byteCount; tel += 8)
-                {
-                    _tempValue = 0;
-                    _tempValue = Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256 * 256 * 256 * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256 * 256 * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256 * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256 * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte()) * 256 * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte()) * 256;
-                    _tempValue += Convert.ToInt64(br.ReadByte());
-                    chkLayer1 += _tempValue;
-                }
-            }
-            fsread.Close();
-
-            return chkLayer1;
-        }
-
         private bool CompareByteArray(byte[] arr1, byte[] arr2)
         {
             bool retval = true;
@@ -3785,7 +3655,7 @@ namespace T8SuitePro
             return retval;
         }
 
-        private bool CalculateLayer2Checksum(string filename, int OffsetLayer2, bool forceSilent)
+        private bool CalculateLayer2Checksum(string filename, int OffsetLayer2, bool autocorrect)
         {
             bool Layer2ChecksumValid = false;
             uint checksum0 = 0;
@@ -3847,7 +3717,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         if (checksum0 != sum0)
                         {
                             //MessageBox.Show("Layer 2 checksum was invalid, should be updated!");
-                            if (m_appSettings.AutoChecksum || forceSilent)
+                            if (autocorrect)
                             {
                                 byte[] checksum_to_file = new byte[4];
                                 checksum_to_file[0] = Convert.ToByte((checksum0 >> 24) & 0x000000FF);
@@ -3953,26 +3823,24 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
 
 
-        private void UpdateChecksum(string filename, bool forceSilent)
+        private void UpdateChecksum(string filename, bool autocorrect)
         {
-
             int m_ChecksumAreaOffset = GetChecksumAreaOffset(filename);
             if (m_ChecksumAreaOffset > m_currentfile_size) return;
+
             bool do_layer2 = true;
             bool _layer1Valid = false;
             bool _layer2Valid = false;
             barChecksumInfo.Caption = "Checksum: validating...";
             System.Windows.Forms.Application.DoEvents();
 
-            //logger.Debug("Checksum area offset: " + m_ChecksumAreaOffset.ToString("X8"));
-            byte[] hash = CalculateLayer1ChecksumMD5(filename, m_ChecksumAreaOffset, forceSilent);
+            logger.Debug("Checksum area offset: " + m_ChecksumAreaOffset.ToString("X8"));
+            byte[] hash = CalculateLayer1ChecksumMD5(filename, m_ChecksumAreaOffset, autocorrect);
             // compare hash to bytes after checksumareaoffset
             byte[] layer1checksuminfile = readdatafromfile(filename, m_ChecksumAreaOffset + 2, 16);
             if (!CompareByteArray(hash, layer1checksuminfile))
             {
-                //CreateBinaryBackup();
-                //savedatatobinary(m_ChecksumAreaOffset + 2, 16, hash, filename);
-                if (m_appSettings.AutoChecksum || forceSilent)
+                if (autocorrect)
                 {
                     savedatatobinary(m_ChecksumAreaOffset + 2, 16, hash, filename, false);
                     _layer1Valid = true;
@@ -4009,7 +3877,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             if (do_layer2)
             {
-                if (CalculateLayer2Checksum(filename, m_ChecksumAreaOffset, forceSilent))
+                if (CalculateLayer2Checksum(filename, m_ChecksumAreaOffset, autocorrect))
                 {
                     _layer2Valid = true;
                 }
