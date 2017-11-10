@@ -4989,14 +4989,12 @@ namespace Trionic5Tools
         private bool verifychecksum(string m_currentfile)
         {
             bool retval = false;
-            byte[] firstpattern = new byte[4] { 0x4E, 0xFA, 0xFB, 0xCC };
-            byte[] secondpattern = new byte[4] { 0x13, 0xFC, 0x00, 0xFF };
             uint checksum = 0;
 
             FileInfo m_fileInfo = new FileInfo(m_currentfile);
             int m_currentfile_size = (int)m_fileInfo.Length;
 
-            int indexoffirstmarking = ReadEndMarker(m_currentfile, 0xFE) - 3;// IndexOf(filebytes, firstpattern);
+            int indexoffirstmarking = ReadEndMarker(m_currentfile, 0xFE) - 3;
             if (indexoffirstmarking > 0)
             {
                 FileStream fsi1 = File.OpenRead(m_currentfile);
@@ -5025,13 +5023,11 @@ namespace Trionic5Tools
         {
             if (FileInLibrary()) return true;
             bool retval = false;
-            byte[] firstpattern = new byte[4] { 0x4E, 0xFA, 0xFB, 0xCC };
-            byte[] secondpattern = new byte[4] { 0x13, 0xFC, 0x00, 0xFF };
             uint checksum = 0;
             int filesize = 0x40000;
             FileInfo finfo = new FileInfo(filename);
             filesize = (int)finfo.Length;
-            int indexoffirstmarking = ReadEndMarker(filename, 0xFE) - 3;//IndexOf(filebytes, firstpattern);
+            int indexoffirstmarking = ReadEndMarker(filename, 0xFE) - 3;
             if (indexoffirstmarking > 0)
             {
                 FileStream fsi1 = File.OpenRead(filename);
