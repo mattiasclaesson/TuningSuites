@@ -2586,7 +2586,7 @@ namespace T8SuitePro
                 else
                 {
                     savedatatobinary((int)sh.Flash_start_address, 2, bdata, m_currentfile, true);
-                    if (m_appSettings.AutoChecksum) UpdateChecksum(m_currentfile, true);
+                    UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
                 }
             }
         }
@@ -2945,7 +2945,7 @@ namespace T8SuitePro
                     try
                     {
                         dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                        dockPanel.Tag = Filename;// m_currentfile; changed 24/01/2008
+                        dockPanel.Tag = Filename;
 
                         IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
                         tabdet.IsCompareViewer = true;
@@ -3754,18 +3754,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                                     //CreateBinaryBackup();
                                     savedatatobinary(index + OffsetLayer2 + 1, 4, checksum_to_file, filename, true);
                                     Layer2ChecksumValid = true;
-                                    coded_buffer[index/* + 1*/] = Convert.ToByte((checksum0 >> 24) & 0x000000FF);
-                                    coded_buffer[index/* + 2*/] = Convert.ToByte((checksum0 >> 16) & 0x000000FF);
-                                    coded_buffer[index/* + 3*/] = Convert.ToByte((checksum0 >> 8) & 0x000000FF);
-                                    coded_buffer[index/* + 4*/] = Convert.ToByte((checksum0) & 0x000000FF);
-
-                                    for (int i = 0; i < 4; i++)
-                                    {
-                                        //TODO: Actually update the file!!!
-                                        //complete_file[i + index + OffsetLayer2] = Convert.ToByte((coded_buffer[index + i] ^ 0x21) - 0xD6);
-                                    }
-                                    // checksum is ready
-
                                 }
                                 else
                                 {

@@ -330,77 +330,8 @@ namespace T8SuitePro
             return retval;
 
         }
-        /// <summary>
-        /// Check is identifier 0x9B is present in the footer. If this is the case, the file is packed!
-        /// </summary>
-        /// <param name="m_currentfile"></param>
-        /// <returns></returns>
-        static private bool IsBinaryPackedVersion(string m_currentfile, int filelength)
-        {
-            int len = 0;
-            string val = "";
-            int ival = 0;
-            int value = ReadMarkerAddress(m_currentfile, 0x9B, filelength, out len, out val);
-            value = ReadMarkerAddressContent(m_currentfile, 0x9B, filelength, out len, out ival);
-            if (value > 0 && ival < filelength && ival > 0) return true;
-            return false;
-        }
 
-        static private int GetSymbolListOffSet(string m_currentfile, int filelength)
-        {
-            int retval = 0;
-            FileStream fsread = new FileStream(m_currentfile, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                //byte[] filebytes = br.ReadBytes((int)fsread.Length);
-
-                int state = 0;
-                int zerocount = 0;
-                //for (int t = 0; t < filebytes.Length; t++)
-                //{
-                //if (retval != 0) break;
-                while ((fsread.Position < filelength) && retval == 0)
-                {
-                    byte b = br.ReadByte();
-                    //byte b = filebytes[t];
-                    switch (state)
-                    {
-                        case 0:
-                            if (b == 0x00)
-                            {
-                                zerocount = 0;
-                                state++;
-                            }
-                            break;
-                        case 1:
-                            if (b == 0x00)
-                            {
-                                zerocount++;
-                                if (zerocount >= 15) state++;
-                            }
-                            else
-                            {
-                                state = 0;
-                            }
-                            break;
-                        case 2:
-                            if (b != 0x00)
-                            {
-                                retval = (int)fsread.Position;
-                                //retval = t+1;
-
-                            }
-                            break;
-                    }
-                }
-            }
-            fsread.Close();
-            fsread.Dispose();
-            retval -= 2;
-            return retval;
-        }
-
-        private int m_Filelength = 0x80000; // T7
+        private int m_Filelength = 0x100000;
 
         public int Filelength
         {
