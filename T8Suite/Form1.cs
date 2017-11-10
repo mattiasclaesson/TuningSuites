@@ -103,6 +103,8 @@ namespace T8SuitePro
 
     public partial class Form1 : Form
     {
+        const int m_currentfile_size = 0x100000;
+
         private string m_CurrentWorkingProject = string.Empty;
         private TrionicProjectLog m_ProjectLog = new TrionicProjectLog();
         public DelegateUpdateRealTimeValue m_DelegateUpdateRealTimeValue;
@@ -157,20 +159,19 @@ namespace T8SuitePro
 
             if (args.Length > 0)
             {
-                if (args[0].ToString().ToUpper().EndsWith(".BIN"))
+                if (args[0].ToUpper().EndsWith(".BIN"))
                 {
-                    if (File.Exists(args[0].ToString()))
+                    if (File.Exists(args[0]))
                     {
                         m_startFromCommandLine = true;
-                        m_commandLineFile = args[0].ToString();
+                        m_commandLineFile = args[0];
                     }
                 }
             }
             try
             {
-                m_DelegateStartReleaseNotePanel = new DelegateStartReleaseNotePanel(this.StartReleaseNotesViewer);
-                m_DelegateUpdateRealTimeValue = new DelegateUpdateRealTimeValue(this.UpdateRealtimeInformationValue);
-
+                m_DelegateStartReleaseNotePanel = this.StartReleaseNotesViewer;
+                m_DelegateUpdateRealTimeValue = this.UpdateRealtimeInformationValue;
             }
             catch (Exception E)
             {
@@ -180,10 +181,10 @@ namespace T8SuitePro
             try
             {
                 sndplayer = new System.Media.SoundPlayer();
-                t8can.onReadProgress += new ITrionic.ReadProgress(t8can_onReadProgress);
-                t8can.onWriteProgress += new ITrionic.WriteProgress(t8can_onWriteProgress);
-                t8can.onCanInfo += new ITrionic.CanInfo(t8can_onCanInfo);
-                Trionic8File.onProgress += new Trionic8File.Progress(trionic8file_onProgress);
+                t8can.onReadProgress += t8can_onReadProgress;
+                t8can.onWriteProgress += t8can_onWriteProgress;
+                t8can.onCanInfo += t8can_onCanInfo;
+                Trionic8File.onProgress += trionic8file_onProgress;
             }
             catch (Exception E)
             {
@@ -369,6 +370,8 @@ namespace T8SuitePro
                     //label1.Text = value.ToString("F1") + " fps";
                     dockRealtime.Text = "Realtime panel [" + value.ToString("F1") + " fps]";
                     break;
+                default :
+                    break;
             }
             System.Windows.Forms.Application.DoEvents();
         }
@@ -429,7 +432,7 @@ namespace T8SuitePro
         {
             dockManager1.BeginUpdate();
             DockPanel dp = dockManager1.AddPanel(DockingStyle.Right);
-            dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+            dp.ClosedPanel += dockPanel_ClosedPanel;
             dp.Tag = xmlfilename;
             ctrlReleaseNotes mv = new ctrlReleaseNotes();
             mv.LoadXML(xmlfilename);
@@ -453,7 +456,6 @@ namespace T8SuitePro
                     {
                         HexViewer vwr = (HexViewer)c;
                         vwr.CloseFile();
-                        //UpdateChecksum(m_currentfile);
                     }
                     else if (c is DockPanel)
                     {
@@ -464,7 +466,6 @@ namespace T8SuitePro
                             {
                                 HexViewer vwr2 = (HexViewer)c2;
                                 vwr2.CloseFile();
-                                //UpdateChecksum(m_currentfile);
                             }
                         }
                     }
@@ -477,7 +478,6 @@ namespace T8SuitePro
                             {
                                 HexViewer vwr3 = (HexViewer)c3;
                                 vwr3.CloseFile();
-                                //UpdateChecksum(m_currentfile);
                             }
                         }
                     }
@@ -561,7 +561,7 @@ namespace T8SuitePro
                 if (m_appSettings.MapDetectionActive && !symbolsLoaded)
                 {
                     SymbolFiller sf = new SymbolFiller();
-                    sf.CheckAndFillCollection(/*m_symbols*/ symbol_collection);
+                    sf.CheckAndFillCollection(symbol_collection);
                 }
 
             }
@@ -570,39 +570,13 @@ namespace T8SuitePro
                 logger.Debug(E.Message);
             }
 
-            //_hideRealtime = false;
-
-            //if (_hideRealtime)
-            //{
-            //    btnToggleRealtime.Enabled = false;
-            //    btnSRAMSnapshot.Enabled = false;
-            //    btnGetECUInfo.Enabled = false;
-            //    btnGetFlashContent.Enabled = false;
-            //    btnWriteLogMarker.Enabled = false;
-            //}
-            //else
-            //{
-            //    btnToggleRealtime.Enabled = true;
-            //    btnSRAMSnapshot.Enabled = true;
-            //    btnGetECUInfo.Enabled = true;
-            //    btnGetFlashContent.Enabled = true;
-            //    btnWriteLogMarker.Enabled = true;
-            //}
             SetProgress("Loading data into view... ");
             SetProgressPercentage(95);
             System.Windows.Forms.Application.DoEvents();
 
-            //this.Text = "T8Suite Professional [" + Path.GetFileName(m_currentfile) + "]";
-            //barFilenameText.Caption = Path.GetFileName(m_currentfile);
-            //gridControlSymbols.DataSource = m_symbols;
-            //m_appSettings.Lastfilename = m_currentfile;
-
-            //gridViewSymbols.BestFitColumns();
-
             SetDefaultFilters();
-
             SetProgressIdle();
-            //UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
+            
             if (m_currentfile != string.Empty)
             {
                 LoadRealtimeTable(Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt"));
@@ -668,8 +642,6 @@ namespace T8SuitePro
             logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
         }
-
-        int m_currentfile_size = 0x100000;
 
         private int GetStartOfAddressTableOffset(string filename)
         {
@@ -5496,7 +5468,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                 try
                 {
                     DockPanel dockPanel;
-                    //= dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
                     if (!m_appSettings.NewPanelsFloating)
                     {
                         dockPanel = dockManager1.AddPanel(DockingStyle.Right);
@@ -5513,7 +5484,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     hv.Dock = DockStyle.Fill;
                     dockPanel.Width = 580;
                     hv.LoadDataFromFile(m_currentfile, m_symbols);
-                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.ClosedPanel += dockPanel_ClosedPanel;
                     dockPanel.Controls.Add(hv);
                 }
                 catch (Exception E)
@@ -7772,7 +7743,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             if (CheckAllTablesAvailable())
             {
-                //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                 dockManager1.BeginUpdate();
                 try
                 {
@@ -7780,11 +7750,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     airmassResult.Dock = DockStyle.Fill;
                     dockPanel = dockManager1.AddPanel(DockingStyle.Right);
                     dockPanel.Tag = m_currentfile;
-                    dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
+                    dockPanel.ClosedPanel += dockPanel_ClosedPanel;
                     dockPanel.Text = "Airmass result viewer: " + Path.GetFileName(m_currentfile);
                     dockPanel.Width = 800;
-                    airmassResult.onStartTableViewer += new ctrlAirmassResult.StartTableViewer(airmassResult_onStartTableViewer);
-                    airmassResult.onClose += new ctrlAirmassResult.ViewerClose(airmassResult_onClose);
+                    airmassResult.onStartTableViewer += airmassResult_onStartTableViewer;
+                    airmassResult.onClose += airmassResult_onClose;
                     airmassResult.Currentfile = m_currentfile;
                     airmassResult.Symbols = m_symbols;
                     airmassResult.Calculate();
@@ -7796,19 +7766,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 dockManager1.EndUpdate();
             }
-            /*System.Windows.Forms.Application.DoEvents();
-            if (CheckAllTablesAvailable())
-            {
-                // build a table that shows the maximum allowed airmass depending on the current limiters
-                // table show be the same size as the pedalrequest map
-                frmAirmassResult airmassresult = new frmAirmassResult();
-                airmassresult.onStartTableViewer += new frmAirmassResult.StartTableViewer(airmassresult_onStartTableViewer);
-                airmassresult.Currentfile = m_currentfile;
-                airmassresult.Symbols = m_symbols;
-                airmassresult.Calculate();
-                airmassresult.Show(); // not dialog?
-            }
-            */
         }
 
         void airmassResult_onClose(object sender, EventArgs e)
@@ -8177,19 +8134,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         logger.Debug("File already existed: " + newFilename);
                     }
-                    /*frminfo.ProgrammerName = t8header.ProgrammerName;
-                    frminfo.ProgrammingDevice = t8header.ProgrammerDevice;
-                    frminfo.PartNumber = t8header.PartNumber;
-                    frminfo.ReleaseDate = t8header.ReleaseDate;
-                    frminfo.SoftwareID = t8header.SoftwareVersion;
-                    frminfo.ChassisID = t8header.ChassisID;
-                    frminfo.EngineType = t8header.CarDescription;
-                    frminfo.ImmoID = t8header.ImmobilizerID;
-                    frminfo.HardwareID = t8header.HardwareID;
-                    frminfo.HardwareType = t8header.DeviceType;
-                    frminfo.ECUDescription = t8header.EcuDescription;
-                    frminfo.InterfaceDevice = t8header.InterfaceDevice;
-                    frminfo.NumberOfFlashBlocks = t8header.NumberOfFlashBlocks.ToString();*/
                 }
             }
             logger.Debug("All done");
@@ -9192,10 +9136,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
                     tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
 
-                    /** new 12/11/2008 **/
                     if (!m_appSettings.NewPanelsFloating)
                     {
-                        // dockPanel = dockManager1.AddPanel(DevExpress.XtraBars.Docking.DockingStyle.Right);
                         if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                         {
                             int dw = 650;
@@ -9264,9 +9206,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
                     int address = (int)GetSymbolAddress(m_symbols, symbolname);
-                    //int sramaddress = sramaddress;
-
-                    // while (address > m_currentfile_size) address -= m_currentfile_size;
+                    
                     tabdet.Map_address = address;
                     tabdet.Map_sramaddress = (int)GetSymbolAddressSRAM(m_symbols, symbolname);
                     tabdet.Map_length = data.Length;
@@ -9521,7 +9461,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // valid project, add it to the list
                 if (projectprops.Rows.Count > 0)
                 {
-                    m_currentfile = projectprops.Rows[0]["BINFILE"].ToString();//Application.StartupPath + "\\55559437  81f.bin";
+                    m_currentfile = projectprops.Rows[0]["BINFILE"].ToString();
 
                     TryToOpenFile(projectprops.Rows[0]["BINFILE"].ToString(), out m_symbols);
 
@@ -9852,8 +9792,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         private void RollBack(TransactionEntry entry)
         {
             int addressToWrite = entry.SymbolAddress;
-            while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
-            //m_trionicFile.WriteDataNoLog(entry.DataBefore, (uint)addressToWrite);
+            while (addressToWrite > m_currentfile_size)
+                addressToWrite -= m_currentfile_size;
+
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataBefore, m_currentfile, false);
             UpdateChecksum(m_currentfile, true);
             m_ProjectTransactionLog.SetEntryRolledBack(entry.TransactionNumber);
@@ -10594,8 +10535,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 measurement.BorderStyle = BorderStyle.Fixed3D;
             }
-            //measurement.BackColor = backColor;
-            //measurement.ForeColor = foreColor;
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -10943,28 +10882,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 if (e.KeyCode == Keys.Up)
                 {
-                    /***
-                dt.Columns.Add("SymbolName");
-                dt.Columns.Add("Description");
-                dt.Columns.Add("Symbolnumber", Type.GetType("System.Int32"));
-                dt.Columns.Add("Value", Type.GetType("System.Double"));
-                dt.Columns.Add("Offset", Type.GetType("System.Double"));
-                dt.Columns.Add("Correction", Type.GetType("System.Double"));
-                dt.Columns.Add("Peak", Type.GetType("System.Double"));
-                dt.Columns.Add("Minimum", Type.GetType("System.Double"));
-                dt.Columns.Add("Maximum", Type.GetType("System.Double"));
-                dt.Columns.Add("ConvertedSymbolnumber", Type.GetType("System.Int32"));
-                dt.Columns.Add("SRAMAddress", Type.GetType("System.Int32"));
-                dt.Columns.Add("Length", Type.GetType("System.Int32"));
-                dt.Columns.Add("UserDefined", Type.GetType("System.Int32"));
-                dt.Columns.Add("Delay", Type.GetType("System.Int32"));
-                dt.Columns.Add("Reload", Type.GetType("System.Int32"));                     * */
                     // move current row up
                     if (ViewRealtime.FocusedRowHandle >= 1)
                     {
                         DataRow dr1 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle);
                         DataRow dr2 = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle - 1);
-                        //DataRow drtemp = ViewRealtime.GetDataRow(ViewRealtime.FocusedRowHandle - 1);
                         string descr = dr2["Description"].ToString();
                         string symbolname = dr2["SymbolName"].ToString();
                         int symbolnumber = Convert.ToInt32(dr2["Symbolnumber"]);
@@ -11255,19 +11177,14 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         t8can.StallKeepAlive = true;
                         GetSRAMVarsFromTable();
 
-                        //<GS-23052011> change to engine temp > 0 in stead of > 70
-                        if (/*_currentEngineStatus.CurrentEngineTemp >= 0 &&*/ m_appSettings.UseWidebandLambda || m_appSettings.UseDigitalWidebandLambda)
+                        if (m_appSettings.UseWidebandLambda || m_appSettings.UseDigitalWidebandLambda)
                         {
                             // autotune enabled
-                            if (btnAutoTune.Text != "Wait...") // if we are waiting... don't enable because of engine temperature
+                            if (btnAutoTune.Text != "Wait...")
                             {
                                 btnAutoTune.Enabled = true;
                             }
                         }
-                        /*else if (m_appSettings.DebugMode)
-                        {
-                            btnAutoTune.Enabled = true;
-                        }*/
                         else
                         {
                             btnAutoTune.Enabled = false;
@@ -12571,10 +12488,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
                     int address = flashaddress;
-                    //int sramaddress = sramaddress;
                     if (sramaddress != 0)
                     {
-                        // while (address > m_currentfile_size) address -= m_currentfile_size;
                         tabdet.Map_address = address;
                         tabdet.Map_sramaddress = sramaddress;
                         tabdet.Map_length = length;
@@ -12604,8 +12519,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
                         tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
 
-
-                        //dockPanel.DockAsTab(dockPanel1);
                         dockPanel.Text = "SRAM Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(filename) + "]";
                         bool isDocked = false;
                         if (m_appSettings.AutoDockSameSymbol)
@@ -12782,7 +12695,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if (m_RealtimeConnectedToECU)
                     {
                         writepossible = true;
-                        //T5 byte[] resulttemp = tcan.readRAM((ushort)GetSymbolAddressSRAM(m_symbols, e.Mapname), (uint)GetSymbolLength(m_symbols, e.Mapname) + 1);
                         int symbolindex = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, e.Mapname), e.Mapname);
                         if (symbolindex >= 0)
                         {
@@ -12988,7 +12900,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
                             tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
 
-                            /** NEW 12/11/2008 **/
                             if (!m_appSettings.NewPanelsFloating)
                             {
                                 dockPanel = dockManager1.AddPanel(DockingStyle.Right);
@@ -13116,17 +13027,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 dockPanel.FloatLocation = floatpoint;
 
                             }
-                            /** end NEW 12/11/2008 */
 
-
-                            // z, y and z axis to do
-                            /*string xdescr = string.Empty;
-                            string ydescr = string.Empty;
-                            string zdescr = string.Empty;
-                            GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
-                            tabdet.X_axis_name = xdescr;
-                            tabdet.Y_axis_name = ydescr;
-                            tabdet.Z_axis_name = zdescr;*/
                             SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
                             string x_axis = string.Empty;
                             string y_axis = string.Empty;
@@ -13158,7 +13059,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             int sramaddress = (int)sh.Start_address;
                             if (sramaddress != 0)
                             {
-                                //while (address > m_currentfile_size) address -= m_currentfile_size;
                                 tabdet.Map_address = address;
                                 tabdet.Map_sramaddress = sramaddress;
                                 int length = sh.Length;
