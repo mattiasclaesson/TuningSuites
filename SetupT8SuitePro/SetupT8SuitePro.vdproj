@@ -3388,7 +3388,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RealtimeGraph, Version=1.8.7.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:RealtimeGraph, Version=3.0.0.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_ACB00F69DAE1CE3B242F62EE4F67B9C9"
@@ -3676,7 +3676,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.7.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.8.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_D4AF68394D3E45DABB581102F7081066"
@@ -4038,15 +4038,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{F9E2C452-124D-48AA-9AB0-0C6F5409FFDC}"
-        "PackageCode" = "8:{ED513150-6AB4-4766-9BB8-9503F0C49E16}"
+        "ProductCode" = "8:{649D106E-F92A-4FD7-AED1-AD6CF56C0168}"
+        "PackageCode" = "8:{E5BE6741-5CED-4762-9DAA-94AAF3BDF2A1}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.37"
+        "ProductVersion" = "8:0.1.38"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.trionictuning.com"
