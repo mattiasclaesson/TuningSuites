@@ -285,12 +285,6 @@
     <Compile Include="frmBitmaskViewer.Designer.cs">
       <DependentUpon>frmBitmaskViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmChecksum.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmChecksum.Designer.cs">
-      <DependentUpon>frmChecksum.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmDefineMyMaps.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -593,10 +587,6 @@
     <EmbeddedResource Include="frmBitmaskViewer.resx">
       <DependentUpon>frmBitmaskViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmChecksum.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmChecksum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefineMyMaps.nl.resx">
       <DependentUpon>frmDefineMyMaps.cs</DependentUpon>

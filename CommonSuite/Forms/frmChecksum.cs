@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace T8SuitePro
+namespace CommonSuite
 {
     public partial class frmChecksum : DevExpress.XtraEditors.XtraForm
     {
