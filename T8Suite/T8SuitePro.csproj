@@ -163,7 +163,7 @@
     <Reference Include="Nevron.Presentation, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6656c5d1103e75cc, processorArchitecture=MSIL" />
     <Reference Include="Nevron.System, Version=9.5.11.12, Culture=neutral, PublicKeyToken=6a987feae5e496fd, processorArchitecture=MSIL" />
     <Reference Include="NLog">
-      <HintPath>..\T8Libs\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.12\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Owf.Controls.DigitalDisplayControl">
       <HintPath>..\T8Libs\Owf.Controls.DigitalDisplayControl.dll</HintPath>
