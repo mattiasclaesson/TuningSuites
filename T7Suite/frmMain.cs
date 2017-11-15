@@ -613,7 +613,7 @@ namespace T7
         {
             if (m_currentfile != string.Empty)
             {
-                verifychecksum(false);
+                verifychecksum(false, m_appSettings.AutoFixFooter);
 
                 if (File.Exists(m_currentfile))
                 {
@@ -1467,7 +1467,7 @@ namespace T7
             int addressToWrite = entry.SymbolAddress;
             while (addressToWrite > fi.Length) addressToWrite -= (int)fi.Length;
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, file2Rollback, false);
-            verifychecksum(false);
+            verifychecksum(false, m_appSettings.AutoFixFooter);
         }
 
         private void Projects_btnOpenProject_ItemClick(object sender, ItemClickEventArgs e)
@@ -1648,7 +1648,7 @@ namespace T7
             int addressToWrite = entry.SymbolAddress;
             while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, m_currentfile, false);
-            verifychecksum(false);
+            verifychecksum(false, m_appSettings.AutoFixFooter);
             //m_trionicFile.WriteDataNoLog(entry.DataAfter, (uint)addressToWrite);
             m_ProjectTransactionLog.SetEntryRolledForward(entry.TransactionNumber);
             if (m_CurrentWorkingProject != string.Empty)
@@ -1690,7 +1690,7 @@ namespace T7
             while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
             //m_trionicFile.WriteDataNoLog(entry.DataBefore, (uint)addressToWrite);
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataBefore, m_currentfile, false);
-            verifychecksum(false);
+            verifychecksum(false, m_appSettings.AutoFixFooter);
             m_ProjectTransactionLog.SetEntryRolledBack(entry.TransactionNumber);
             if (m_CurrentWorkingProject != string.Empty)
             {
@@ -3131,7 +3131,7 @@ namespace T7
                     System.Windows.Forms.Application.DoEvents();
 
                     UpdateChecksum(filename);
-                    verifychecksum(false);
+                    verifychecksum(false, m_appSettings.AutoFixFooter);
                     SetStatusText("Idle.");
                     barProgress.EditValue = 0;
                     barProgress.Caption = "Done";
@@ -3612,7 +3612,7 @@ namespace T7
                     }
                 }
                 savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), symbollength, data, m_currentfile, true);
-                verifychecksum(false);
+                verifychecksum(false, m_appSettings.AutoFixFooter);
             }
 
 
@@ -8571,7 +8571,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private bool verifychecksum(bool showinterface)
+        private bool verifychecksum(bool showinterface, bool autofixFooter)
         {
             //Verify checksums and show result
 
@@ -8580,7 +8580,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 T7FileHeader t7InfoHeader = null;
                 t7InfoHeader = new T7FileHeader();
-                t7InfoHeader.init(m_currentfile, m_appSettings.AutoFixFooter);
+                t7InfoHeader.init(m_currentfile, autofixFooter);
 
                 ChecksumHandler csHandler = new ChecksumHandler();
                 csHandler.SramOffset = m_currentSramOffsett;
@@ -8659,7 +8659,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private void barButtonItem12_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //Verify checksums and show result
-            verifychecksum(true);
+            verifychecksum(true, m_appSettings.AutoFixFooter);
         }
 
         private bool IsBinaryBiopower()
@@ -14050,8 +14050,8 @@ If boost regulation reports errors you can increase the difference between boost
                 {
                     if (File.Exists(m_appSettings.Write_ecubatchfile))
                     {
-                        
-                        if (!verifychecksum(false))
+
+                        if (!verifychecksum(false, m_appSettings.AutoFixFooter))
                         {
                             frmChecksumIncorrect check = new frmChecksumIncorrect();
                             if (m_appSettings.AutoChecksum)
