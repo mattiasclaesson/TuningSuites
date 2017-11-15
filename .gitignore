@@ -214,3 +214,25 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+
+#############
+## NuGet
+#############
+# Ignore NuGet Packages
+*.nupkg
+
+# Ignore the packages folder
+**/packages/*
+
+# Include packages/build/, which is used as an MSBuild target
+!**/packages/build/
+
+# Uncomment if necessary; generally it's regenerated when needed
+!**/packages/repositories.config
+
+# Ignore other intermediate files that NuGet might create. project.lock.json is used in conjunction
+# with project.json; project.assets.json is used in conjunction with the PackageReference format.
+project.lock.json
+project.assets.json
+*.nuget.props
