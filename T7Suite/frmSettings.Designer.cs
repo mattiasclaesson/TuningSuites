@@ -834,7 +834,8 @@ namespace T7
             "CombiAdapter",
             "ELM327 v1.3 or higher",
             "Just4Trionic",
-            "Kvaser"});
+            "Kvaser",
+            "J2534"});
             this.cbAdapterType.Size = new System.Drawing.Size(121, 20);
             this.cbAdapterType.TabIndex = 23;
             this.cbAdapterType.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);

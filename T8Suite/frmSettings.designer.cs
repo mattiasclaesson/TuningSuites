@@ -110,6 +110,7 @@ namespace T8SuitePro
             this.buttonEdit1 = new DevExpress.XtraEditors.ButtonEdit();
             this.checkEdit31 = new DevExpress.XtraEditors.CheckEdit();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
             this.checkEdit4 = new DevExpress.XtraEditors.CheckEdit();
             this.ceLegionBootloader = new DevExpress.XtraEditors.CheckEdit();
             this.cbAdapter = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -128,7 +129,6 @@ namespace T8SuitePro
             this.btnAdapterConfiguration = new DevExpress.XtraEditors.SimpleButton();
             this.cbAdapterType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
-            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
@@ -602,6 +602,14 @@ namespace T8SuitePro
             this.groupControl2.TabIndex = 1;
             this.groupControl2.Text = "Realtime settings";
             // 
+            // labelControl8
+            // 
+            this.labelControl8.Location = new System.Drawing.Point(593, 86);
+            this.labelControl8.Name = "labelControl8";
+            this.labelControl8.Size = new System.Drawing.Size(39, 13);
+            this.labelControl8.TabIndex = 45;
+            this.labelControl8.Text = "seconds";
+            // 
             // checkEdit4
             // 
             this.checkEdit4.Location = new System.Drawing.Point(250, 83);
@@ -767,7 +775,8 @@ namespace T8SuitePro
             "CombiAdapter",
             "ELM327 v1.3 or higher",
             "Just4Trionic",
-            "Kvaser"});
+            "Kvaser",
+            "J2534"});
             this.cbAdapterType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbAdapterType.Size = new System.Drawing.Size(121, 20);
             this.cbAdapterType.TabIndex = 26;
@@ -796,14 +805,6 @@ namespace T8SuitePro
             0});
             this.spinEdit1.Size = new System.Drawing.Size(100, 20);
             this.spinEdit1.TabIndex = 44;
-            // 
-            // labelControl8
-            // 
-            this.labelControl8.Location = new System.Drawing.Point(593, 86);
-            this.labelControl8.Name = "labelControl8";
-            this.labelControl8.Size = new System.Drawing.Size(39, 13);
-            this.labelControl8.TabIndex = 45;
-            this.labelControl8.Text = "seconds";
             // 
             // frmSettings
             // 

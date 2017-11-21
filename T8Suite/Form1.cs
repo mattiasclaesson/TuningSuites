@@ -15406,6 +15406,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 t8can.setCANDevice(CANBusAdapter.KVASER);
             }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.J2534))
+            {
+                t8can.setCANDevice(CANBusAdapter.J2534);
+            }
 
             if (m_appSettings.Adapter != string.Empty)
             {
