@@ -8,6 +8,7 @@ using System.IO;
 using DevExpress.XtraCharts;
 using CommonSuite;
 using NLog;
+using TrionicCANLib.Checksum;
 
 namespace T7
 {

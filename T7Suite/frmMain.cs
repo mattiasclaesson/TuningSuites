@@ -86,25 +86,27 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
-using DevExpress.XtraBars;
-using Microsoft.Win32;
 using System.Data.OleDb;
 using System.Globalization;
 using System.Threading;
 using System.Runtime.InteropServices;
-using T7.Parser;
-using DevExpress.XtraBars.Docking;
-using Microsoft.Office.Interop.Excel;
-using RealtimeGraph;
-using DevExpress.XtraGrid;
+using System.Text.RegularExpressions;
 using System.Xml;
 using DevExpress.Skins;
+using DevExpress.XtraBars;
+using DevExpress.XtraBars.Docking;
+using DevExpress.XtraGrid;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
 using PSTaskDialog;
+using RealtimeGraph;
 using CommonSuite;
 using TrionicCANLib.API;
+using TrionicCANLib.Checksum;
 using WidebandSupport;
 using NLog;
-using System.Text.RegularExpressions;
+using T7.Parser;
+
 
 namespace T7
 {
@@ -198,6 +200,8 @@ namespace T7
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
         private DirectoryInfo configurationFilesPath = Directory.GetParent(System.Windows.Forms.Application.UserAppDataPath);
 
+        public ChecksumDelegate.ChecksumUpdate m_ShouldUpdateChecksum;
+
         public frmMain(string[] args)
         {
             m_appSettings = new AppSettings(suiteRegistry);
@@ -245,6 +249,8 @@ namespace T7
             trionic7.onWriteProgress += trionicCan_onWriteProgress;
             trionic7.onCanInfo += trionicCan_onCanInfo;
             trionic7.onCanFrame += trionicCan_onCanFrame;
+
+            m_ShouldUpdateChecksum = ShouldUpdateChecksum;
 
             try
             {
@@ -613,7 +619,7 @@ namespace T7
         {
             if (m_currentfile != string.Empty)
             {
-                verifychecksum(false, m_appSettings.AutoFixFooter);
+                VerifyChecksum(false);
 
                 if (File.Exists(m_currentfile))
                 {
@@ -1467,7 +1473,7 @@ namespace T7
             int addressToWrite = entry.SymbolAddress;
             while (addressToWrite > fi.Length) addressToWrite -= (int)fi.Length;
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, file2Rollback, false);
-            verifychecksum(false, m_appSettings.AutoFixFooter);
+            VerifyChecksum(false);
         }
 
         private void Projects_btnOpenProject_ItemClick(object sender, ItemClickEventArgs e)
@@ -1648,7 +1654,7 @@ namespace T7
             int addressToWrite = entry.SymbolAddress;
             while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataAfter, m_currentfile, false);
-            verifychecksum(false, m_appSettings.AutoFixFooter);
+            VerifyChecksum(false);
             //m_trionicFile.WriteDataNoLog(entry.DataAfter, (uint)addressToWrite);
             m_ProjectTransactionLog.SetEntryRolledForward(entry.TransactionNumber);
             if (m_CurrentWorkingProject != string.Empty)
@@ -1690,7 +1696,7 @@ namespace T7
             while (addressToWrite > m_currentfile_size) addressToWrite -= m_currentfile_size;
             //m_trionicFile.WriteDataNoLog(entry.DataBefore, (uint)addressToWrite);
             savedatatobinary(addressToWrite, entry.SymbolLength, entry.DataBefore, m_currentfile, false);
-            verifychecksum(false, m_appSettings.AutoFixFooter);
+            VerifyChecksum(false);
             m_ProjectTransactionLog.SetEntryRolledBack(entry.TransactionNumber);
             if (m_CurrentWorkingProject != string.Empty)
             {
@@ -1929,7 +1935,7 @@ namespace T7
 
                     T7FileHeader t7fh = new T7FileHeader();
                     t7fh.init(filename, false);
-                    int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
+                    int m_sramOffset = t7fh.getSramOffset();
                     if (m_sramOffset == 0) m_sramOffset = compareFile.SramOffsetForOpenFile;
                     if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
                     barProgress.EditValue = 90;
@@ -3070,7 +3076,7 @@ namespace T7
                     Trionic7File transferToFile = TryToOpenFileUsingClass(filename, out curSymbolCollection, false);
                     T7FileHeader t7fh = new T7FileHeader();
                     t7fh.init(filename, false);
-                    int m_sramOffset = ReverseInt(t7fh.Unknown_9cvalue);
+                    int m_sramOffset = t7fh.getSramOffset();
                     if (m_sramOffset == 0) m_sramOffset = transferToFile.SramOffsetForOpenFile;
                     if (m_sramOffset == 0) m_sramOffset = 0xEFFC04;
                     curSymbolCollection.SortColumn = "Flash_start_address";
@@ -3131,7 +3137,7 @@ namespace T7
                     System.Windows.Forms.Application.DoEvents();
 
                     UpdateChecksum(filename);
-                    verifychecksum(false, m_appSettings.AutoFixFooter);
+                    VerifyChecksum(false);
                     SetStatusText("Idle.");
                     barProgress.EditValue = 0;
                     barProgress.Caption = "Done";
@@ -3612,7 +3618,7 @@ namespace T7
                     }
                 }
                 savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), symbollength, data, m_currentfile, true);
-                verifychecksum(false, m_appSettings.AutoFixFooter);
+                VerifyChecksum(false);
             }
 
 
@@ -5636,7 +5642,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     if (t7InfoHeader.init(filename, m_appSettings.AutoFixFooter))
                     {
                         m_current_softwareversion = t7InfoHeader.getSoftwareVersion();
-                        m_currentSramOffsett = ReverseInt(t7InfoHeader.Unknown_9cvalue);
+                        m_currentSramOffsett = t7InfoHeader.getSramOffset();
                     }
                     else
                     {
@@ -5682,15 +5688,11 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     if (sh.Varname == "BFuelCal.StartMap")
                     {
                         sh.Varname = "BFuelCal.E85Map";
-                        XDFCategories cat = XDFCategories.Undocumented;
-                        XDFSubCategory sub = XDFSubCategory.Undocumented;
                         sh.Description = SymbolTranslator.ToHelpText(sh.Varname, m_appSettings.ApplicationLanguage);
                     }
                     if (sh.Userdescription == "BFuelCal.StartMap")
                     {
                         sh.Userdescription = "BFuelCal.E85Map";
-                        XDFCategories cat = XDFCategories.Undocumented;
-                        XDFSubCategory sub = XDFSubCategory.Undocumented;
                         sh.Description = SymbolTranslator.ToHelpText(sh.Userdescription, m_appSettings.ApplicationLanguage);
                     }
                 }
@@ -5712,22 +5714,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 barProgress.Visibility = BarItemVisibility.Never;
             }
             System.Windows.Forms.Application.DoEvents();
-        }
-
-        private static int ReverseInt(int value)
-        {
-            // input            0x34FCEF00
-            // desired output   0x00EFFC34; 
-            int retval = 0;
-            retval = (int)((value & 0xFF000000) >> 24);
-            retval += (int)(((value & 0x00FF0000) >> 16) << 8);
-            retval += (int)(((value & 0x0000FF00) >> 8) << 16);
-            retval += (int)(((value & 0x000000FF)) << 24);
-
-            //logger.Debug("ReverseInt: " + value.ToString("X8") + " = " + retval.ToString("X8"));
-
-            return retval;
-
         }
 
         private static string GetFileDescriptionFromFile(string file)
@@ -8202,22 +8188,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
 
         private void UpdateChecksum(string m_fileName)
         {
-            T7FileHeader t7InfoHeader = null;
-            t7InfoHeader = new T7FileHeader();
-            t7InfoHeader.init(m_fileName, m_appSettings.AutoFixFooter);
-
-            ChecksumHandler csHandler = new ChecksumHandler();
-            csHandler.SramOffset = m_currentSramOffsett;
-            int fwLength = t7InfoHeader.getFWLength();
-            int calculatedFWChecksum = csHandler.calculateFWChecksum(m_fileName);
-            logger.Debug("FW Checksum: " + calculatedFWChecksum.ToString("X8"));
-            csHandler.setFWChecksum(m_fileName, calculatedFWChecksum);
-
-            uint calculatedF2Checksum = csHandler.calculateF2Checksum(m_fileName, 0, fwLength);
-            int calculatedFBChecksum = csHandler.calculateFBChecksum(m_fileName, 0, fwLength);
-            t7InfoHeader.setChecksumF2((int)calculatedF2Checksum);
-            t7InfoHeader.setChecksumFB(calculatedFBChecksum);
-            t7InfoHeader.save(m_fileName);
+            ChecksumT7.UpdateChecksum(m_fileName, m_appSettings.AutoFixFooter);
         }
 
         private void RefreshTableViewers()
@@ -8571,95 +8542,42 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
         }
 
-        private bool verifychecksum(bool showinterface, bool autofixFooter)
+        private void barButtonItem12_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            //Verify checksums and show result
+            VerifyChecksum(true);
+        }
 
-            bool m_checksums_ok = true;
-            if (File.Exists(m_currentfile))
+        private bool VerifyChecksum(bool showinterface)
+        {
+            ChecksumResult result = ChecksumT7.VerifyChecksum(m_currentfile, m_appSettings.AutoChecksum, m_appSettings.AutoFixFooter, m_ShouldUpdateChecksum);
+            if (result == ChecksumResult.Ok)
             {
-                T7FileHeader t7InfoHeader = null;
-                t7InfoHeader = new T7FileHeader();
-                t7InfoHeader.init(m_currentfile, autofixFooter);
-
-                ChecksumHandler csHandler = new ChecksumHandler();
-                csHandler.SramOffset = m_currentSramOffsett;
-                int fwLength = t7InfoHeader.getFWLength();
-                int calculatedFWChecksum = csHandler.calculateFWChecksum(m_currentfile);
-
-                uint calculatedF2Checksum = csHandler.calculateF2Checksum(m_currentfile, 0, fwLength);
-                int calculatedFBChecksum = csHandler.calculateFBChecksum(m_currentfile, 0, fwLength);
-
-                int readF2checksum = t7InfoHeader.getChecksumF2();
-                int readFBchecksum = t7InfoHeader.getChecksumFB();
-
-                if (readF2checksum != 0)
+                if (showinterface)
                 {
-                    if (t7InfoHeader.getChecksumF2() != (int)calculatedF2Checksum)
-                    {
-                        m_checksums_ok = false;
-                    }
+                    MessageBox.Show("Checksums verified and all matched!");
                 }
-
-                if (t7InfoHeader.getChecksumFB() != calculatedFBChecksum)
-                {
-                    m_checksums_ok = false;
-                }
-                if (csHandler.getFWChecksum(m_currentfile) != calculatedFWChecksum)
-                {
-                    m_checksums_ok = false;
-                }
-                if (m_checksums_ok)
-                {
-                    if (showinterface)
-                    {
-                        frmInfoBox info = new frmInfoBox("Checksums verified and all matched!");
-                    }
-                }
-                else
-                {
-                    if (m_appSettings.AutoChecksum)
-                    {
-                        logger.Debug("calculatedF2Checksum = " + calculatedF2Checksum.ToString("X8") + " readF2checksum = " + readF2checksum.ToString("X8"));
-                        logger.Debug("calculatedFBChecksum = " + calculatedFBChecksum.ToString("X8") + " readFBchecksum = " + readFBchecksum.ToString("X8"));
-                        logger.Debug("calculatedFWChecksum = " + calculatedFWChecksum.ToString("X8") + " csHandler.getFWChecksum(m_currentfile) = " + csHandler.getFWChecksum(m_currentfile).ToString("X8"));
-                        
-                        csHandler.setFWChecksum(m_currentfile, calculatedFWChecksum);
-                        t7InfoHeader.setChecksumF2((int)calculatedF2Checksum);
-                        t7InfoHeader.setChecksumFB(calculatedFBChecksum);
-                        t7InfoHeader.save(m_currentfile);
-                        if (showinterface)
-                        {
-                            frmInfoBox info = new frmInfoBox("Checksums did not verify ok, but were recalculated.");
-                        }
-
-                    }
-                    else
-                    {
-                        if (MessageBox.Show("Checksums did not verify ok, do you want to recalculate and update the checksums?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            csHandler.setFWChecksum(m_currentfile, calculatedFWChecksum);
-                            t7InfoHeader.setChecksumF2((int)calculatedF2Checksum);
-                            t7InfoHeader.setChecksumFB(calculatedFBChecksum);
-                            t7InfoHeader.save(m_currentfile);
-                        }
-                    }
-                }
+                return true;
             }
             else
             {
                 if (showinterface)
                 {
-                    frmInfoBox info = new frmInfoBox("Current file does not exist, please re-open the file.");
+                    MessageBox.Show("Checksums did not verify ok!");
                 }
+                return false;
             }
-            return m_checksums_ok;
         }
 
-        private void barButtonItem12_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private bool ShouldUpdateChecksum(string layer, string filechecksum, string realchecksum)
         {
-            //Verify checksums and show result
-            verifychecksum(true, m_appSettings.AutoFixFooter);
+            if (MessageBox.Show("Checksums did not verify ok, do you want to recalculate and update the checksums?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private bool IsBinaryBiopower()
@@ -14051,7 +13969,7 @@ If boost regulation reports errors you can increase the difference between boost
                     if (File.Exists(m_appSettings.Write_ecubatchfile))
                     {
 
-                        if (!verifychecksum(false, m_appSettings.AutoFixFooter))
+                        if (!VerifyChecksum(false))
                         {
                             frmChecksumIncorrect check = new frmChecksumIncorrect();
                             if (m_appSettings.AutoChecksum)

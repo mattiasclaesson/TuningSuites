@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using TrionicCANLib.Checksum;
 
 namespace T7
 {

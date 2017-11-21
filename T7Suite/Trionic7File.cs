@@ -6,6 +6,7 @@ using System.IO;
 using System.Data;
 using CommonSuite;
 using NLog;
+using TrionicCANLib.Checksum;
 
 namespace T7
 {

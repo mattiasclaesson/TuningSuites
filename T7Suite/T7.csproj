@@ -166,7 +166,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrionicCANLib">
+    <Reference Include="TrionicCANLib, Version=0.1.45.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\T7Libs\TrionicCANLib.dll</HintPath>
     </Reference>
     <Reference Include="WidebandSupport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -190,7 +191,6 @@
     <Compile Include="AxisBrowser.designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChecksumHandler.cs" />
     <Compile Include="frmTcmLimit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -513,10 +513,6 @@
       <DependentUpon>SurfaceGraphViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="XtraForm1.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>XtraForm1.cs</DependentUpon>
-    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -578,17 +574,8 @@
     <Compile Include="SymbolMapParser.cs" />
     <Compile Include="SymbolTranslator.cs" />
     <Compile Include="T7EspEdit.cs" />
-    <Compile Include="T7FileHeader.cs" />
-    <Compile Include="T7FileParser.cs" />
-    <Compile Include="T7Parser.cs" />
     <Compile Include="T7SidEdit.cs" />
     <Compile Include="Trionic7File.cs" />
-    <Compile Include="XtraForm1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XtraForm1.Designer.cs">
-      <DependentUpon>XtraForm1.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AxisBrowser.resx">
