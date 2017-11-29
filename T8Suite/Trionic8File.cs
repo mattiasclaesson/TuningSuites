@@ -9,6 +9,9 @@ using System.Data;
 using CommonSuite;
 using NLog;
 using System.Windows.Forms;
+using BlowFishCS;
+using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Core;
 
 namespace T8SuitePro
 {
@@ -271,99 +274,6 @@ namespace T8SuitePro
             return false;
         }
 
-        static private int ReadMarkerAddressContent(string filename, int value, int filelength, out int length, out int val)
-        {
-            int retval = 0;
-            length = 0;
-            val = 0;
-            if (filename != string.Empty)
-            {
-                if (File.Exists(filename))
-                {
-                    
-                    // read the file footer
-                    //3ff00 - 0x3ffff
-                    FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    BinaryReader br = new BinaryReader(fs);
-                    int fileoffset = filelength - 0x90;
-                    try
-                    {
-
-                        fs.Seek(/*0x3FF00*/fileoffset, SeekOrigin.Begin);
-                        byte[] inb = br.ReadBytes(0x8F);
-                        //int offset = 0;
-                        for (int t = 0; t < 0xFF; t++)
-                        {
-                            if (((byte)inb.GetValue(t) == (byte)value) && ((byte)inb.GetValue(t + 1) < 0x30))
-                            {
-                                // marker gevonden
-                                // lees 6 terug
-                                retval = /*0x3FF00*/ fileoffset + t;
-                                length = (byte)inb.GetValue(t + 1);
-                                break;
-                            }
-                        }
-                        fs.Seek((retval - length), SeekOrigin.Begin);
-                        byte[] info = br.ReadBytes(length);
-                        for (int bc = info.Length - 1; bc >= 0; bc--)
-                        {
-                            int temp = Convert.ToInt32(info.GetValue(bc));
-                            for (int mt = 0; mt < (3 - bc); mt++)
-                            {
-                                temp *= 256;
-                            }
-                            val += temp;
-                        }
-                    }
-                    catch (Exception E)
-                    {
-                        logger.Debug(E.Message);
-                        retval = 0;
-                    }
-                    fs.Flush();
-                    fs.Close();
-                    fs.Dispose();
-
-                }
-            }
-
-            return retval;
-
-        }
-
-        private int m_Filelength = 0x100000;
-
-        public int Filelength
-        {
-            get { return m_Filelength; }
-            set { m_Filelength = value; }
-        }
-
-        private string m_fileName = string.Empty;
-
-        public string FileName
-        {
-            get { return m_fileName; }
-            set { m_fileName = value; }
-        }
-
-        private SymbolCollection symbol_collection;
-
-        public SymbolCollection Symbol_collection
-        {
-            get { return symbol_collection; }
-            set { symbol_collection = value; }
-        }
-
-        static private void DumpBytesToConsole(byte[] bytes)
-        {
-            foreach (byte b in bytes)
-            {
-                Console.Write(b.ToString("X2") + " ");
-            }
-            Console.WriteLine();
-        }
-
         static private string GetFileDescriptionFromFile(string file)
         {
             string retval = string.Empty;
@@ -377,7 +287,6 @@ namespace T8SuitePro
                     name = name.Trim();
                     name = name.Replace("<", "");
                     name = name.Replace(">", "");
-                    //name = name.Replace("x0020", " ");
                     name = name.Replace("_x0020_", " ");
                     for (int i = 0; i <= 9; i++)
                     {
@@ -388,7 +297,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             return retval;
         }
@@ -406,18 +315,13 @@ namespace T8SuitePro
             searchsequence.SetValue((byte)0x00, 7);
             searchsequence.SetValue((byte)0x20, 8);
             int symboltableoffset = 0x30000;
-            int AddressTableOffset = 0;//GetAddressTableOffset(searchsequence);
+            int AddressTableOffset = 0;
             FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
             using (BinaryReader br = new BinaryReader(fsread))
             {
 
                 fsread.Seek(symboltableoffset, SeekOrigin.Begin);
                 int adr_state = 0;
-                // byte[] filebytes = br.ReadBytes((int)fsread.Length);
-                //for (int t = 0; t < filebytes.Length; t++)
-                //{
-                //if (AddressTableOffset != 0) break;
-                //  byte adrb = filebytes[t];
                 while ((fsread.Position < 0x80000) && (AddressTableOffset == 0))
                 {
                     byte adrb = br.ReadByte();
@@ -436,7 +340,6 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 1;
-                                //t -= 1;
                             }
                             break;
                         case 2:
@@ -445,7 +348,6 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 2;
-                                //t -= 2;
                             }
                             break;
                         case 3:
@@ -454,7 +356,6 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 3;
-                                //t -= 3;
                             }
                             break;
                         case 4:
@@ -463,7 +364,6 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 4;
-                                // t -= 4;
                             }
                             break;
                         case 5:
@@ -472,7 +372,6 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 5;
-                                // t -= 5;
                             }
                             break;
                         case 6:
@@ -481,7 +380,6 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 6;
-                                //t -= 6;
                             }
                             break;
                         case 7:
@@ -490,26 +388,18 @@ namespace T8SuitePro
                             {
                                 adr_state = 0;
                                 fsread.Position -= 7;
-                                //t -= 7;
                             }
                             break;
                         case 8:
-                            /*if (fsread.Position > 0x5f900)
-                            {
-                                logger.Debug("Hola");
-                            }
-                            */
                             if (adrb == (byte)searchsequence.GetValue(8))
                             {
                                 // found it
-                                //AddressTableOffset = t;
                                 AddressTableOffset = (int)fsread.Position - 1;
                             }
                             else
                             {
                                 adr_state = 0;
                                 fsread.Position -= 8;
-                                //t -= 8;
                             }
                             break;
                     }
@@ -577,171 +467,16 @@ namespace T8SuitePro
             return retval;
         }
 
-        private bool UnpackFileUsingDecode(string filename, int filelength, out int symboltableoffset)
-        {
-            symboltableoffset = 0;
-            int len = 0;
-            int val = 0;
-            //int idx = ReadEndMarker(0x9B);
-            try
-            {
-                int idx = ReadMarkerAddressContent(filename, 0x9B, filelength, out len, out val);
-
-               /* if (idx == 0)
-                {
-                    // try to fetch the packed table another way
-                    int temp_addressTableOffset = GetStartOfAddressTableOffset(filename);
-                    int temp_packTableStart = temp_addressTableOffset - 18; 
-
-                }*/
-
-
-                //if (idx > 0)
-                {
-                    /* if (val > m_currentfile_size)
-                     {
-                         // try to find the addresstable offset
-                         int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                         //TODO: Finish for abused packed files!
-                     }*/
-                    // FAILSAFE for some files that seem to have protection!
-                    int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                    int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
-                    m_sramOffsetForOpenFile = GetAddressFromOffset(addrtaboffset - 0x18, filename);
-                    int symbtablength = GetLengthFromOffset(addrtaboffset - 0x0E, filename);
-                    if (symbtablength < 0x1000) return false; // NO SYMBOLTABLE IN FILE
-                    symbtaboffset -= 2;
-                    if (symbtaboffset > 0 && symbtaboffset < 0x70000)
-                    {
-                        val = symbtaboffset;
-
-                    }
-                    symboltableoffset = val;
-                    // MessageBox.Show("Packed table index: " + idx.ToString("X6") + " " + val.ToString("X6"));
-                    int state = 0;
-                    FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    using (BinaryReader br = new BinaryReader(fsread))
-                    {
-
-                        //byte[] filebytes = br.ReadBytes((int)fsread.Length);
-                        fsread.Seek(val, SeekOrigin.Begin);
-                        //int t = val + 2;
-                        //if (filebytes[t - 2] == 0xFF) return false;
-                        //for (t = val + 2; t < filebytes.Length; t++)
-                        //{
-
-                        //  if (state >= 5) break;
-                        //byte b = filebytes[t];
-                        //if(filebytes[t] == 
-                        if (br.ReadByte() == 0xFF) return false;
-                        br.ReadByte(); // dummy
-
-                        // how many bytes are the compressed part in the binary?
-                        // assume it ends with 00 00 04 00 00 
-                        int bytesread = 0;
-                        while (state < 5 && bytesread < 0x20000)
-                        {
-                            byte testbyte = br.ReadByte();
-                            //byte testbyte = filebytes[t];
-                            bytesread++;
-                            switch (state)
-                            {
-                                case 0:
-                                    if (testbyte == 0x00) state++;
-                                    break;
-                                case 1:
-                                    if (testbyte == 0x00) state++;
-                                    else state = 0;
-                                    break;
-                                case 2:
-                                    if (testbyte == 0x04) state++;
-                                    else
-                                    {
-                                        state = 0;
-                                        // set filepointer back
-                                    }
-                                    break;
-                                case 3:
-                                    if (testbyte == 0x00) state++;
-                                    else
-                                    {
-                                        state = 0;
-                                        // set filepointer back
-                                    }
-                                    break;
-                                case 4:
-                                    if (testbyte == 0x00) state++;
-                                    else
-                                    {
-                                        state = 0;
-                                        // set filepointer back
-                                    }
-                                    break;
-
-                            }
-                        }
-                        if (state == 5)
-                        {
-                            // now read the length of the compressed table
-                            fsread.Seek(-7, SeekOrigin.Current);
-                            //t -= 6;
-                            byte b1 = br.ReadByte();
-                            //byte b1 = filebytes[t++];
-                            byte b2 = br.ReadByte();
-                            //byte b2 = filebytes[t++];
-                            int symboltablelength = (b1 * 256) + b2;
-                            bool nodummies = false;
-                            fsread.Seek(val + 2, SeekOrigin.Begin);
-                            //t = val + 2;
-                            if (br.ReadByte() == 0x01 && br.ReadByte() == 0x00) nodummies = true;
-                            //if (filebytes[t++] == 0x01 && filebytes[t++] == 0x00) nodummies = true;
-                            // if the thrid byte = 01 and the fourth = 00 then no dummy byte should be read
-
-                            //t = val;
-                            fsread.Seek(val, SeekOrigin.Begin);
-                            if (!nodummies)
-                            {
-                                br.ReadByte(); // dummy
-                                br.ReadByte(); // dummy
-                                //t += 2;
-                            }
-                            FileStream fswrite = new FileStream(System.Windows.Forms.Application.StartupPath + "\\COMPR", FileMode.Create);
-                            using (BinaryWriter bw = new BinaryWriter(fswrite))
-                            {
-                                for (int bc = 0; bc < /*bytesread-10*/ symboltablelength; bc++)
-                                {
-                                    bw.Write(br.ReadByte()/* filebytes[t++]*/);
-                                }
-                            }
-                            fswrite.Close();
-                            fswrite.Dispose();
-                        }
-                    }
-                    fsread.Close();
-                    fsread.Dispose();
-                }
-                return true;
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-            return false;
-        }
-
         static private int GetAddrTableOffset(string filename)
         {
             int addrtaboffset = GetStartOfAddressTableOffset(filename);
             logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
-            //int NqNqNqOffset = GetNqNqNqStringFromOffset(addrtaboffset - 0x100, filename);
             int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
             logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
 
             int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
             logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
-            //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
-            //                    symbtaboffset = NqNqNqOffset;
-            int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
+            int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4, filename);
             int retval = NqNqNqOffset + 21;
             logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
@@ -751,15 +486,12 @@ namespace T8SuitePro
         {
             int addrtaboffset = GetEndOfSymbolTable(filename);
             logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
-            //int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
             int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
             logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
 
             int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
             logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
-            //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
-            //                    symbtaboffset = NqNqNqOffset;
-            int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
+            int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4, filename);
             int retval = NqNqNqOffset + 21;
             logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
@@ -889,91 +621,135 @@ namespace T8SuitePro
             return retval;
         }
 
-        static private bool extractCompressedSymbolTable(string filename, out int symboltableoffset, out byte[] bytes)
+        static private bool extractSymbolTable(string filename, out int symboltableoffset, out string[] allSymbolNames)
         {
-            bytes = null;
-            Int64 UnpackedLength = 0;
+            allSymbolNames = null;
             symboltableoffset = 0;
-            //int len = 0;
+
             int val = 0;
-            Boolean retval = false;
-            //int idx = ReadEndMarker(0x9B);
+            bool retval = false;
+            
             try
             {
-                //int idx = ReadMarkerAddressContent(filename, 0x9B, out len, out val);
-                //if (idx > 0)
+                int addrtaboffset = GetEndOfSymbolTable(filename);
+                logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
+                int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
+                logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
+
+                int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
+                logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
+                int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4, filename);
+                logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
+                if (symbtablength < 0x1000)
                 {
-                    /* if (val > m_currentfile_size)
-                     {
-                         // try to find the addresstable offset
-                         int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                         //TODO: Finish for abused packed files!
-                     }*/
-                    // FAILSAFE for some files that seem to have protection!
-                    /*int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                    logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
-                    //int NqNqNqOffset = GetNqNqNqStringFromOffset(addrtaboffset - 0x100, filename);
-                    int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
-                    logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));*/
+                    logger.Error("No symboltable found!");
+                    return false;
+                }
 
-                    //<GS-22032010>
-                    int addrtaboffset = GetEndOfSymbolTable(filename);
-                    logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
-                    int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
-                    logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
-                    //<GS-22032010>
-
-                    int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-                    logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
-                    //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
-                    //                    symbtaboffset = NqNqNqOffset;
-                    int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
-                    logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
-                    if (symbtablength < 0x1000) return false; // NO SYMBOLTABLE IN FILE
-                    //symbtaboffset -= 2;
-                    if (symbtaboffset > 0 && symbtaboffset < 0xF0000)
+                if (symbtaboffset > 0 && symbtaboffset < 0xF0000)
+                {
+                    val = symbtaboffset;
+                }
+                symboltableoffset = val;
+                FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                using (BinaryReader br = new BinaryReader(fsread))
+                {
+                    fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+                    if (br.ReadByte() == 0xF1 && br.ReadByte() == 0x1A && br.ReadByte() == 0x06 && br.ReadByte() == 0x5B &&
+                        br.ReadByte() == 0xA2 && br.ReadByte() == 0x6B && br.ReadByte() == 0xCC && br.ReadByte() == 0x6F)
                     {
-                        val = symbtaboffset;
-
-                    }
-                    symboltableoffset = val;
-                    // MessageBox.Show("Packed table index: " + idx.ToString("X6") + " " + val.ToString("X6"));
-                    FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    using (BinaryReader br = new BinaryReader(fsread))
-                    {
-                        fsread.Seek(symboltableoffset, SeekOrigin.Begin);
-                        if (br.ReadByte() == 0xF1 && br.ReadByte() == 0x1A && br.ReadByte() == 0x06 && br.ReadByte() == 0x5B &&
-                            br.ReadByte() == 0xA2 && br.ReadByte() == 0x6B && br.ReadByte() == 0xCC && br.ReadByte() == 0x6F)
+                        BlowFish b = new BlowFish(SymbolnamesDictionary.GetHeader()) { NonStandard = true };
+                        byte[] header = br.ReadBytes(16);
+                        byte[] headerDecrypted = b.Decrypt_ECB(header);
+                        string id = System.Text.Encoding.UTF8.GetString(headerDecrypted).Substring(0, 9).TrimEnd('\0');
+                        logger.Debug("Header id: " + id);
+                            
+                        fsread.Seek(symboltableoffset+24, SeekOrigin.Begin);
+                        byte[] unencrypted = br.ReadBytes(symbtablength);
+                        byte[] value;
+                        if (SymbolnamesDictionary.TryGetValue(id, out value))
                         {
-                            logger.Debug("New style symbolnames");
+                            BlowFish b0 = new BlowFish(value) { NonStandard = true };
+                            byte[] decrypted = b0.Decrypt_ECB(unencrypted);
+
+                            Stream stream = new MemoryStream(decrypted);
+                            byte[] bytes = UnpackSymbolnames(stream);
+
+                            string complete = System.Text.Encoding.UTF8.GetString(bytes);
+                            allSymbolNames = complete.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                            retval = true;
                         }
                         else
                         {
-                            fsread.Seek(symboltableoffset, SeekOrigin.Begin);
-                            UnpackedLength = Convert.ToInt64(br.ReadByte());
-                            UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256;
-                            UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256;
-                            UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
-                            logger.Debug("UnpackedLength: " + UnpackedLength.ToString("X8"));
-                            if (UnpackedLength <= 0x00FFFFFF)
-                            {
-                                retval = true;
-                            }
+                            logger.Error("Failed to find id: " + id);
                         }
-
-                        // fill the byte array with the compressed symbol table
-                        fsread.Seek(symboltableoffset, SeekOrigin.Begin);
-                        bytes = br.ReadBytes(symbtablength);
                     }
-                    fsread.Close();
-                    fsread.Dispose();
+                    else
+                    {
+                        fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+                        Int64 UnpackedLength = Convert.ToInt64(br.ReadByte());
+                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256;
+                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256;
+                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
+                        logger.Debug("UnpackedLength: " + UnpackedLength.ToString("X8"));
+                        if (UnpackedLength <= 0x00FFFFFF)
+                        {
+                            // fill the byte array with the compressed symbol table
+                            fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+                            byte[] bytes = br.ReadBytes(symbtablength);
+
+                            logger.Debug("Decoding packed symbol table");
+                            TrionicSymbolDecompressor.ExpandComprStream(bytes, out allSymbolNames);
+                            retval = true;
+                        }
+                    }
                 }
+                fsread.Close();
+                fsread.Dispose();
             }
             catch (Exception E)
             {
-                logger.Debug("Error 1: " + E.Message);
+                logger.Debug(E);
             }
+
             return retval;
+        }
+
+        private static byte[] UnpackSymbolnames(Stream stream)
+        {
+            byte[] bytes = null;
+            using (ZipInputStream s = new ZipInputStream(stream))
+            {
+                s.Password = "yii4uXXwser8";
+                ZipEntry theEntry;
+                int size = 0;
+                byte[] buffer = new byte[2048];
+                bytes = new byte[0];
+
+                theEntry = s.GetNextEntry();
+                if (theEntry != null)
+                {
+                    if (theEntry.IsFile)
+                    {
+                        while (true)
+                        {
+                            size = s.Read(buffer, 0, buffer.Length);
+                            if (size > 0)
+                            {
+                                byte[] bigger = new byte[bytes.Length + size];
+                                System.Buffer.BlockCopy(bytes, 0, bigger, 0, bytes.Length);
+                                System.Buffer.BlockCopy(buffer, 0, bigger, bytes.Length, size);
+                                bytes = bigger;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return bytes;
         }
 
         static private int GetEndOfSymbolTable(string filename)
@@ -1167,24 +943,46 @@ namespace T8SuitePro
             return retval;
         }
 
-        static public bool TryToExtractPackedBinary(string filename, out SymbolCollection symbol_collection)
+        static public bool TryToExtractPackedBinary(string filename, out SymbolCollection symbolCollection)
         {
-            bool retval = true;
-            byte[] compressedSymbolTable;
-            //Test 15092009
-            //int RealAddressTableOffset = GetAddrTableOffset(filename) + 7; // was 17
-            int RealAddressTableOffset = GetAddrTableOffsetBySymbolTable(filename) + 7; // was 17 // <GS-22032010>
+            symbolCollection = null;
+            string[] allSymbolNames;
+            int symboltableoffset;
 
-            //Test 15092009
-            logger.Debug("Real symboltable offset: " + RealAddressTableOffset.ToString("X8"));
+            int realAddressTableOffset = GetAddrTableOffsetBySymbolTable(filename) + 7;
+            logger.Debug("Real address table offset: " + realAddressTableOffset.ToString("X8"));
 
-            int symboltableoffset = 0;
-            symbol_collection = new SymbolCollection();
-            CastProgressEvent("Unpacking file... ",5);
+            if (!extractSymbolTable(filename, out symboltableoffset, out allSymbolNames))
+            {
+                logger.Debug("Could not extract symboltable!");
+            }
+            
+            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            using (BinaryReader br = new BinaryReader(fsread))
+            {
+                logger.Debug("Find address table offset");
+                if(!FindAddressTableOffset(symboltableoffset, fsread, br))
+                {
+                    MessageBox.Show("Could not find address table offset!");
+                    return false;
+                }
 
-            bool compr_created = extractCompressedSymbolTable(filename, out symboltableoffset, out compressedSymbolTable);
-            CastProgressEvent("Finding address table... ",15);
+                logger.Debug("Read address table");
+                if (!ReadAddressTable(out symbolCollection, realAddressTableOffset, fsread, br))
+                {
+                    return false;
+                }
+            }
 
+            AddNamesToSymbols(symbolCollection, allSymbolNames);
+
+            CastProgressEvent("Idle", 0);
+            return true;
+        }
+
+        private static bool FindAddressTableOffset(int symboltableoffset, FileStream fsread, BinaryReader br)
+        {
+            int addressTableOffset = 0;
             byte[] searchsequence = new byte[9];
             searchsequence.SetValue((byte)0x00, 0);
             searchsequence.SetValue((byte)0x00, 1);
@@ -1195,228 +993,196 @@ namespace T8SuitePro
             searchsequence.SetValue((byte)0x00, 6);
             searchsequence.SetValue((byte)0x00, 7);
             searchsequence.SetValue((byte)0x20, 8);
-            int AddressTableOffset = 0;//GetAddressTableOffset(searchsequence);
 
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
+            fsread.Seek(symboltableoffset, SeekOrigin.Begin);
+            int adr_state = 0;
+            while ((fsread.Position < TrionicCANLib.Firmware.FileT8.Length) && (addressTableOffset == 0))
             {
-                fsread.Seek(symboltableoffset, SeekOrigin.Begin);
-                int adr_state = 0;
-                while ((fsread.Position < TrionicCANLib.Firmware.FileT8.Length) && (AddressTableOffset == 0))
+                byte adrb = br.ReadByte();
+                switch (adr_state)
                 {
-                    byte adrb = br.ReadByte();
-                    switch (adr_state)
-                    {
-                        case 0:
-                            if (adrb == (byte)searchsequence.GetValue(0))
-                            {
-
-                                adr_state++;
-                            }
-                            break;
-                        case 1:
-                            if (adrb == (byte)searchsequence.GetValue(1)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 1;
-                            }
-                            break;
-                        case 2:
-                            if (adrb == (byte)searchsequence.GetValue(2)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 2;
-                            }
-                            break;
-                        case 3:
-                            if (adrb == (byte)searchsequence.GetValue(3)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 3;
-                            }
-                            break;
-                        case 4:
-                            if (adrb == (byte)searchsequence.GetValue(4)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 4;
-                            }
-                            break;
-                        case 5:
-                            if (adrb == (byte)searchsequence.GetValue(5)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 5;
-                            }
-                            break;
-                        case 6:
-                            if (adrb == (byte)searchsequence.GetValue(6)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 6;
-                            }
-                            break;
-                        case 7:
-                            if (adrb == (byte)searchsequence.GetValue(7)) adr_state++;
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 7;
-                            }
-                            break;
-                        case 8:
-                            if (adrb == (byte)searchsequence.GetValue(8))
-                            {
-                                // found it
-                                AddressTableOffset = (int)fsread.Position - 1;
-                            }
-                            else
-                            {
-                                adr_state = 0;
-                                fsread.Position -= 8;
-                            }
-                            break;
-                    }
-                }
-
-                if (AddressTableOffset > 0)
-                {
-                    AddressTableOffset = RealAddressTableOffset; // TEST 15092009
-                    CastProgressEvent("Reading address table... ", 25);
-
-                    fsread.Seek(AddressTableOffset - 17, SeekOrigin.Begin);
-                    bool endoftable = false;
-                    Int64 internal_address = 0;
-                    //int sramaddress = 0;
-                    int symbollength = 0;
-                    int bitmask = 0;
-                    int symb_count = 0;
-                    symbol_collection = new SymbolCollection();
-                    while (!endoftable)
-                    {
-                        // steeds 10 karaketers
-                        try
+                    case 0:
+                        if (adrb == (byte)searchsequence.GetValue(0))
                         {
-                            byte[] bytes = br.ReadBytes(10);
-                            if (bytes.Length == 10)
+
+                            adr_state++;
+                        }
+                        break;
+                    case 1:
+                        if (adrb == (byte)searchsequence.GetValue(1)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 1;
+                        }
+                        break;
+                    case 2:
+                        if (adrb == (byte)searchsequence.GetValue(2)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 2;
+                        }
+                        break;
+                    case 3:
+                        if (adrb == (byte)searchsequence.GetValue(3)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 3;
+                        }
+                        break;
+                    case 4:
+                        if (adrb == (byte)searchsequence.GetValue(4)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 4;
+                        }
+                        break;
+                    case 5:
+                        if (adrb == (byte)searchsequence.GetValue(5)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 5;
+                        }
+                        break;
+                    case 6:
+                        if (adrb == (byte)searchsequence.GetValue(6)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 6;
+                        }
+                        break;
+                    case 7:
+                        if (adrb == (byte)searchsequence.GetValue(7)) adr_state++;
+                        else
+                        {
+                            adr_state = 0;
+                            fsread.Position -= 7;
+                        }
+                        break;
+                    case 8:
+                        if (adrb == (byte)searchsequence.GetValue(8))
+                        {
+                            // found it
+                            addressTableOffset = (int)fsread.Position - 1;
+
+                            if (addressTableOffset > 0)
                             {
-                                // DumpBytesToConsole(bytes);
-                                if ((Convert.ToInt32(bytes.GetValue(9)) != 0x00) /*|| (Convert.ToInt32(bytes.GetValue(6)) != 0x00)*/)
-                                {
-                                    endoftable = true;
-                                    //MessageBox.Show("EOT: " + fsread.Position.ToString("X6"));
-                                    logger.Debug("EOT: " + fsread.Position.ToString("X6"));
-                                }
-                                else
-                                {
-                                    //DumpBytesToConsole(bytes);
-
-                                    internal_address = Convert.ToInt64(bytes.GetValue(0)) * 256 * 256;
-                                    internal_address += Convert.ToInt64(bytes.GetValue(1)) * 256;
-                                    internal_address += Convert.ToInt64(bytes.GetValue(2));
-
-                                    /* if (bytes[1] == 0x7A && bytes[2] == 0xEE)
-                                     {
-                                         logger.Debug("suspicious");
-
-                                         if (internal_address == 0x7AEE)
-                                         {
-                                             logger.Debug("break: " + fsread.Position.ToString("X8"));
-                                         }
-                                     }*/
-                                    symbollength = Convert.ToInt32(bytes.GetValue(3)) * 256;
-                                    symbollength += Convert.ToInt32(bytes.GetValue(4));
-
-                                    bitmask = Convert.ToInt32(bytes.GetValue(5)) * 256;
-                                    bitmask += Convert.ToInt32(bytes.GetValue(6));
-
-
-                                    //                                                sramaddress = Convert.ToInt32(bytes.GetValue(7)) * 256 * 256;
-                                    //                                                sramaddress += Convert.ToInt32(bytes.GetValue(8)) * 256;
-                                    //                                                sramaddress += Convert.ToInt32(bytes.GetValue(9));
-                                    SymbolHelper sh = new SymbolHelper();
-                                    sh.Symbol_type = Convert.ToInt32(bytes.GetValue(7));
-                                    sh.Varname = "Symbolnumber " + symbol_collection.Count.ToString();
-                                    sh.Symbol_number = symbol_collection.Count;
-                                    sh.Symbol_number_ECU = symbol_collection.Count;
-                                    sh.Flash_start_address = internal_address;
-                                    sh.Start_address = internal_address;
-                                    sh.Length = symbollength;
-                                    sh.BitMask = bitmask;
-                                    /*if (internal_address == 0x0AE956)
-                                    {
-                                        DumpBytesToConsole(bytes);
-                                    }*/
-                                    //DumpToSymbolFile(sh.Varname + " : " + sh.Flash_start_address.ToString("X6"));
-
-                                    symbol_collection.Add(sh);
-                                    symb_count++;
-                                    if (symb_count % 500 == 0)
-                                    {
-                                        CastProgressEvent("Symbol: " + sh.Varname, 5);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                endoftable = true;
+                                return true;
                             }
                         }
-                        catch (Exception E)
+                        else
                         {
-                            logger.Debug(E.Message);
-                            retval = false;
+                            adr_state = 0;
+                            fsread.Position -= 8;
                         }
+                        break;
+                }
+            }
+            return false;
+        }
 
-                    }
-                    if (compr_created)
+        private static bool ReadAddressTable(out SymbolCollection symbolCollection, int realAddressTableOffset, FileStream fsread, BinaryReader br)
+        {
+            bool retval = true;
+            bool endoftable = false;
+            Int64 internal_address = 0;
+            int symbollength = 0;
+            int bitmask = 0;
+            int symb_count = 0;
+
+            fsread.Seek(realAddressTableOffset - 17, SeekOrigin.Begin);
+
+            symbolCollection = new SymbolCollection();
+            while (!endoftable)
+            {
+                try
+                {
+                    byte[] bytes = br.ReadBytes(10);
+                    if (bytes.Length == 10)
                     {
-                        CastProgressEvent("Decoding packed symbol table",30);
+                        if ((Convert.ToInt32(bytes.GetValue(9)) != 0x00))
+                        {
+                            endoftable = true;
+                            logger.Debug("EOT: " + fsread.Position.ToString("X6"));
+                        }
+                        else
+                        {
+                            internal_address = Convert.ToInt64(bytes.GetValue(0)) * 256 * 256;
+                            internal_address += Convert.ToInt64(bytes.GetValue(1)) * 256;
+                            internal_address += Convert.ToInt64(bytes.GetValue(2));
 
-                        string[] allSymbolNames;
-                        // Decompress the symbol table
-                        TrionicSymbolDecompressor.ExpandComprStream(compressedSymbolTable, out allSymbolNames);
-                        AddNamesToSymbols(symbol_collection, allSymbolNames);
-                        CastProgressEvent("Idle", 0);
+                            symbollength = Convert.ToInt32(bytes.GetValue(3)) * 256;
+                            symbollength += Convert.ToInt32(bytes.GetValue(4));
+
+                            bitmask = Convert.ToInt32(bytes.GetValue(5)) * 256;
+                            bitmask += Convert.ToInt32(bytes.GetValue(6));
+
+                            SymbolHelper sh = new SymbolHelper();
+                            sh.Symbol_type = Convert.ToInt32(bytes.GetValue(7));
+                            sh.Varname = "Symbolnumber " + symbolCollection.Count.ToString();
+                            sh.Symbol_number = symbolCollection.Count;
+                            sh.Symbol_number_ECU = symbolCollection.Count;
+                            sh.Flash_start_address = internal_address;
+                            sh.Start_address = internal_address;
+                            sh.Length = symbollength;
+                            sh.BitMask = bitmask;
+
+                            symbolCollection.Add(sh);
+                            symb_count++;
+                            if (symb_count % 500 == 0)
+                            {
+                                CastProgressEvent("Symbol: " + sh.Varname, 5);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        endoftable = true;
                     }
                 }
-                else
+                catch (Exception E)
                 {
-                    MessageBox.Show("Could not find address table!");
+                    logger.Debug(E);
                     retval = false;
                 }
             }
+
             return retval;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="symbol_collection"></param>
+        /// <param name="symbolCollection"></param>
         /// <param name="allSymbolNames"></param>
-        private static void AddNamesToSymbols(SymbolCollection symbol_collection, string[] allSymbolNames)
+        private static void AddNamesToSymbols(SymbolCollection symbolCollection, string[] allSymbolNames)
         {
-            for (int i = 0; i < allSymbolNames.Length - 1; i++)
+            try
             {
-                try
+                if (allSymbolNames != null)
                 {
-                    CastProgressEvent("Adding symbol names: ", (int)(((float)i / (float)allSymbolNames.Length) * 100));
-                    SymbolHelper sh = symbol_collection[(i)];
-                    sh.Varname = allSymbolNames[i + 1].Trim(); // Skip first in array since its "SymbolNames"
-                    logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
-                    sh.Description = SymbolTranslator.ToDescription(sh.Varname);
-                    sh.createAndUpdateCategory(sh.Varname);
+                    for (int i = 0; i < allSymbolNames.Length - 1; i++)
+                    {
+                        if (i % 500 == 0)
+                        {
+                            CastProgressEvent("Adding symbol names: ", (int)(((float)i / (float)allSymbolNames.Length) * 100));
+                        }
+                        SymbolHelper sh = symbolCollection[(i)];
+                        sh.Varname = allSymbolNames[i + 1].Trim(); // Skip first in array since its "SymbolNames"
+                        logger.Debug(String.Format("Set symbolnumber: {0} to be {1}", sh.Symbol_number, sh.Varname));
+                        sh.Description = SymbolTranslator.ToDescription(sh.Varname);
+                        sh.createAndUpdateCategory(sh.Varname);
+                    }
                 }
-                catch (Exception E)
-                {
-                    logger.Debug("Failed to add symbolnames: " + E.Message);
-                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to add symbolnames");
             }
         }
 
@@ -1425,11 +1191,12 @@ namespace T8SuitePro
             Stopwatch sw = new Stopwatch();
             sw.Start();
             CastProgressEvent("Importing symbols", 90);
-            foreach (SymbolHelper sh in collection)
+
+            try
             {
-                foreach (DataRow dr in dt.Rows)
+                foreach (SymbolHelper sh in collection)
                 {
-                    try
+                    foreach (DataRow dr in dt.Rows)
                     {
                         if (dr["SYMBOLNAME"].ToString() == sh.Varname)
                         {
@@ -1452,11 +1219,11 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    catch (Exception E)
-                    {
-                        logger.Debug(E.Message);
-                    }
                 }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E);
             }
             sw.Stop();
             logger.Debug("Stopped " + sw.ElapsedMilliseconds);

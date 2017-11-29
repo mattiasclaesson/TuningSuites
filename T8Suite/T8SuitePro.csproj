@@ -199,6 +199,8 @@
     <Compile Include="AxisBrowser.Designer.cs">
       <DependentUpon>AxisBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="blowfish.cs" />
+    <Compile Include="SymbolnamesDictionary.cs" />
     <Compile Include="ctrlAirmassResult.cs">
       <SubType>UserControl</SubType>
     </Compile>
