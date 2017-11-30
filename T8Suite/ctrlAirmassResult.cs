@@ -286,7 +286,7 @@ namespace T8SuitePro
             // first convert airmass to torque
             TrqLimiter = LimitType.None;
             int LimitedAirMass = requestedairmass;
-            int torque = Convert.ToInt32(GetInterpolatedTableValue(nominalTorqueMap, nominalTorqueMap_Xaxis, nominalTorqueMap_Yaxis, rpm, requestedairmass));
+            int torque = 400;
 
             if (E85)
             {
@@ -355,7 +355,16 @@ namespace T8SuitePro
                 if (torque > torquelimitAutomatic)
                 {
                     logger.Debug("Automatic gear torque limited from " + torque.ToString() + " to " + torquelimitAutomatic.ToString() + " at " + rpm.ToString() + " rpm");
-                    torque = torquelimitAutomatic;
+                    //2017-11-30: Adding a check to the TCM 350NM limiter
+                    if (torquelimitAutomatic < 350)
+                    {
+                        torque = torquelimitAutomatic;
+                    }
+                    else
+                    {
+                        torque = 350;
+                    }
+                    
                     TrqLimiter = LimitType.TorqueLimiterGear;
                 }
             }
