@@ -4750,7 +4750,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             StartTableViewer("PedalMapCal.Trq_RequestMap");
         }
 
-        private void btnMBTAirmass_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnAirmassFuelcut_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartTableViewer("FCutCal.m_AirInletLimit");
         }
