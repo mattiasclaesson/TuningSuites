@@ -2797,9 +2797,9 @@ namespace T8SuitePro
                         }
                         else
                         {
-                            this.btnMaxAirmassMapManual.Caption = "Max airmass map #1";
+                            this.btnMaxAirmassMapManual.Caption = "Max air Petrol";
                             this.btnMaxAirmassMapManual.Tag = CalibrationType.New;
-                            this.btnMaxAirmassMapAuto.Caption = "Max airmass map #2";
+                            this.btnMaxAirmassMapAuto.Caption = "Max air E85";
                             this.btnMaxAirmassMapAuto.Tag = CalibrationType.New;
                             // this.btnAirInletLimit.Caption = "AirLim Fuelcut";
                             // this.btnAirInletLimit.Tag = CalibrationType.New;
@@ -4732,11 +4732,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
             StartTableViewer("BstKnkCal.MaxAirmass");
         }
 
-    /*    private void btnAirInletLimit_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartTableViewer("FCutCal.m_AirInletLimit");
-        }
-        */
         private void btnMaxAirmassMapAuto_ItemClick(object sender, ItemClickEventArgs e)
         {
             if ((CalibrationType)this.btnMaxAirmassMapAuto.Tag == CalibrationType.Old)
@@ -4757,7 +4752,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void btnMBTAirmass_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartTableViewer("AirMassMastCal.m_AirMBTMAP");
+            StartTableViewer("FCutCal.m_AirInletLimit");
         }
 
         private void btnFuelCorrectionMap_ItemClick(object sender, ItemClickEventArgs e)
