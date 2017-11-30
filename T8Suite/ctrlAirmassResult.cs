@@ -286,7 +286,7 @@ namespace T8SuitePro
             // first convert airmass to torque
             TrqLimiter = LimitType.None;
             int LimitedAirMass = requestedairmass;
-            int torque = 400;
+            int torque = 4000;
 
             if (E85)
             {
@@ -352,19 +352,16 @@ namespace T8SuitePro
             else
             {
                 int torquelimitAutomatic = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimAuto, xdummy, airTorqueMap_Yaxis, rpm, 0));
+                if (torquelimitAutomatic > 3500)
+                {
+                    torquelimitAutomatic = 3500;
+                }
                 if (torque > torquelimitAutomatic)
                 {
                     logger.Debug("Automatic gear torque limited from " + torque.ToString() + " to " + torquelimitAutomatic.ToString() + " at " + rpm.ToString() + " rpm");
                     //2017-11-30: Adding a check to the TCM 350NM limiter
-                    if (torquelimitAutomatic < 350)
-                    {
-                        torque = torquelimitAutomatic;
-                    }
-                    else
-                    {
-                        torque = 350;
-                    }
-                    
+                    torque = torquelimitAutomatic;
+                                        
                     TrqLimiter = LimitType.TorqueLimiterGear;
                 }
             }
@@ -1163,6 +1160,10 @@ namespace T8SuitePro
                 if (SymbolExists("BstKnkCal.MaxAirmassAu", symbols))
                 {
                     bstknkMaxAirmassAuMap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(symbols, "BstKnkCal.MaxAirmassAu"));
+                }
+                else 
+                {
+                    bstknkMaxAirmassAuMap = readIntdatafromfile(m_currentfile, (int)GetSymbolAddress(symbols, "BstKnkCal.MaxAirmass"), GetSymbolLength(symbols, "BstKnkCal.MaxAirmassAu"));
                 }
 
                 nominalTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TrqMastCal.Trq_NominalMap"), GetSymbolLength(symbols, "TrqMastCal.Trq_NominalMap"));
