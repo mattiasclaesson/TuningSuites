@@ -5409,7 +5409,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to export to excel: " + E.Message);
+                logger.Debug(E, "Failed to export to excel");
             }
 
         }
@@ -6200,7 +6200,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
                     // set to max
                     //int maxtorqueforcell = PowerToTorque(peakHP, rpm, false);
                     //int maxairmassforcell = TorqueToAirmass(maxtorqueforcell, E85);
-                    //logger.Debug("Setting " + valueincell.ToString() + " to " + maxairmassforcell.ToString() + " at " + rpm.ToString() + " rpm");
+                    //logger.Debug("Setting " + valueincell + " to " + maxairmassforcell + " at " + rpm + " rpm");
                     //valueincell *= 10; // T8 has 10 factor
                     //valueincell = valueincell;
                     //}

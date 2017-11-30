@@ -187,6 +187,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AirmassLimitType.cs" />
     <Compile Include="AsmViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -771,6 +771,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_89F3C7C309BBF393DF6D70FBCA346876"
+        "OwnerKey" = "8:_D4AF68394D3E45DABB581102F7081066"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89F3C7C309BBF393DF6D70FBCA346876"
+        "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_89F3C7C309BBF393DF6D70FBCA346876"
+        "OwnerKey" = "8:_51B46569C1E556903DD7884DE1ECAC3D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8AA799BCD451F112C72FD35301AC6B38"
         "OwnerKey" = "8:_D4AF68394D3E45DABB581102F7081066"
         "MsmSig" = "8:_UNDEFINED"
@@ -809,24 +827,6 @@
         {
         "MsmKey" = "8:_8AB74E5227E16BEA1D7AC2763AA2B49D"
         "OwnerKey" = "8:_974D2F50FAC06BAADB6B921186055D3A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8B197BA44AA0DE8CAA11506F6F89B9EC"
-        "OwnerKey" = "8:_D4AF68394D3E45DABB581102F7081066"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8B197BA44AA0DE8CAA11506F6F89B9EC"
-        "OwnerKey" = "8:_51B46569C1E556903DD7884DE1ECAC3D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8B197BA44AA0DE8CAA11506F6F89B9EC"
-        "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1522,13 +1522,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BFDA850D1E9CCA0FB19AADD812DC4E58"
+        "OwnerKey" = "8:_89F3C7C309BBF393DF6D70FBCA346876"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8B197BA44AA0DE8CAA11506F6F89B9EC"
+        "OwnerKey" = "8:_BFDA850D1E9CCA0FB19AADD812DC4E58"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2338,7 +2338,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.41.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.45.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_51B46569C1E556903DD7884DE1ECAC3D"
@@ -2890,6 +2890,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_89F3C7C309BBF393DF6D70FBCA346876"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_89F3C7C309BBF393DF6D70FBCA346876"
+                    {
+                    "Name" = "8:NLog.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:NLog.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8AA799BCD451F112C72FD35301AC6B38"
             {
             "AssemblyRegister" = "3:1"
@@ -2935,37 +2966,6 @@
                     }
                 }
             "SourcePath" = "8:Nevron.System.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8B197BA44AA0DE8CAA11506F6F89B9EC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_8B197BA44AA0DE8CAA11506F6F89B9EC"
-                    {
-                    "Name" = "8:NLog.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:NLog.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_7137F44697BC42C2ABF987D8A5C6E914"
@@ -3326,7 +3326,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:J2534DotNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:J2534DotNet, Version=1.0.1.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_9ED542715C9FC01236C9B24194BAA395"
@@ -4039,7 +4039,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
         "ProductCode" = "8:{649D106E-F92A-4FD7-AED1-AD6CF56C0168}"
-        "PackageCode" = "8:{E5BE6741-5CED-4762-9DAA-94AAF3BDF2A1}"
+        "PackageCode" = "8:{7886C15B-2220-4ECF-B206-28F5801FCEEC}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
