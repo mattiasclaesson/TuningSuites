@@ -2801,6 +2801,8 @@ namespace T8SuitePro
                             this.btnMaxAirmassMapManual.Tag = CalibrationType.New;
                             this.btnMaxAirmassMapAuto.Caption = "Max airmass map #2";
                             this.btnMaxAirmassMapAuto.Tag = CalibrationType.New;
+                            // this.btnAirInletLimit.Caption = "AirLim Fuelcut";
+                            // this.btnAirInletLimit.Tag = CalibrationType.New;
                             this.barButtonItem13.Caption = "Trq limit 175/200hp";
                             this.barButtonItem13.Tag = CalibrationType.New;
                             this.barButtonItem14.Caption = "Trq limit 150hp";
@@ -4730,6 +4732,11 @@ So, 0x101 byte buffer with first byte ignored (convention)
             StartTableViewer("BstKnkCal.MaxAirmass");
         }
 
+    /*    private void btnAirInletLimit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("FCutCal.m_AirInletLimit");
+        }
+        */
         private void btnMaxAirmassMapAuto_ItemClick(object sender, ItemClickEventArgs e)
         {
             if ((CalibrationType)this.btnMaxAirmassMapAuto.Tag == CalibrationType.Old)
