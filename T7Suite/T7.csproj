@@ -179,6 +179,7 @@
     <Compile Include="AFRMap.cs" />
     <Compile Include="AFRMeasurement.cs" />
     <Compile Include="AFRMeasurementCollection.cs" />
+    <Compile Include="AirmassLimitType.cs" />
     <Compile Include="AsmViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
