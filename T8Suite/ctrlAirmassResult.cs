@@ -1717,11 +1717,11 @@ namespace T8SuitePro
                         {
                             // convert airmass to torque
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
-                            int torque = AirmassToTorque(m_symbols, m_currentfilename, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
+                            int torque;
                             if (displayTorqueInLBFT.Checked)
-                            {
-                                torque = TorqueToTorqueLbft(torque);
-                            }
+                                torque = TorqueToTorqueLbft(AirmassToTorque(m_symbols, m_currentfilename, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked));
+                            else
+                                torque = AirmassToTorque(m_symbols, m_currentfilename, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
                             e.DisplayText = torque.ToString();
                         }
                         else if (cbTableSelectionEdit.SelectedIndex == 2)
@@ -1729,11 +1729,11 @@ namespace T8SuitePro
                             //convert airmass to horsepower
                             int rpm = Convert.ToInt32(pedal_Xaxis.GetValue(e.Column.AbsoluteIndex));
                             int torque = AirmassToTorque(m_symbols, m_currentfilename, Convert.ToInt32(e.CellValue), rpm, useTrionicCalculationForTorque.Checked);
-                            int horsepower = TorqueToPower(torque, rpm);
+                            int horsepower;
                             if (displayPowerInkW.Checked)
-                            {
                                 horsepower = TorqueToPowerkW(torque, rpm);
-                            }
+                            else
+                                horsepower = TorqueToPower(torque, rpm);
                             e.DisplayText = horsepower.ToString();
                         }
                         else if (cbTableSelectionEdit.SelectedIndex == 3) //injector DC
