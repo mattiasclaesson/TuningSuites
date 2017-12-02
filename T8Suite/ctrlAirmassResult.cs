@@ -252,13 +252,10 @@ namespace T8SuitePro
             return false;
         }
 
-        private int CalculateMaxAirmassforcell(int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool OverboostEnabled, out AirmassLimitType limiterType, bool HighOutput)
+        private int CalculateMaxAirmassforcell(int rpm, int requestairmass, bool autogearbox, bool E85, bool OverboostEnabled, out AirmassLimitType limiterType, bool HighOutput)
         {
-            // calculate the restricted airmass for the current point
             int restrictedairmass = requestairmass;
             limiterType = AirmassLimitType.None;
-
-            logger.Debug(String.Format("Pedalpos: {0} Rpm: {1} requests: {2} mg/c", pedalposition, rpm, requestairmass));
 
             // first check against torquelimiters
             AirmassLimitType TrqLimiterType = AirmassLimitType.None;
@@ -1290,12 +1287,11 @@ namespace T8SuitePro
                     {
                         // get the current value from the request map
                         int rpm = (int)pedal_Xaxis.GetValue(rowcount);
-                        int pedalpos = ((int)pedal_Yaxis.GetValue(colcount) / 10);
                         int requestedtorque = (int)pedalrequestmap.GetValue((colcount * pedal_Rows) + rowcount);
                         int airmassrequestforcell = TorqueToAirmass(requestedtorque, rpm, false);
 
                         AirmassLimitType limiterType = AirmassLimitType.None;
-                        int resultingAirMass = CalculateMaxAirmassforcell(pedalpos, rpm, airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isOverboostActive.Checked, out limiterType, isCarHighOutput.Checked);
+                        int resultingAirMass = CalculateMaxAirmassforcell(rpm, airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isOverboostActive.Checked, out limiterType, isCarHighOutput.Checked);
                         resulttable.SetValue(resultingAirMass, (colcount * pedal_Rows) + rowcount);
                         limitResult.SetValue(limiterType, (colcount * pedal_Rows) + rowcount);
                     }

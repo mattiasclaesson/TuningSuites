@@ -14,8 +14,8 @@ namespace T7
 {
     public partial class ctrlAirmassResult : DevExpress.XtraEditors.XtraUserControl
     {
-        private const int TORQUE_LIMIT_350NM = 3500;
-        private const int TORQUE_LIMIT_400NM = 4000;
+        private const int TORQUE_LIMIT_350NM = 350;
+        private const int TORQUE_LIMIT_400NM = 400;
 
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -186,22 +186,7 @@ namespace T7
             set { m_currentfile_size = value; }
         }
 
-        private Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
-        {
-            foreach (SymbolHelper sh in curSymbolCollection)
-            {
-                if (sh.SmartVarname == symbolname)
-                {
-                    if (IsSoftwareOpen() /*&& sh.Length >= 0x02 */&& sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
-                    {
-                        return sh.Flash_start_address - GetOpenFileOffset();
-                    }
-                    return sh.Flash_start_address;
-                }
-            }
-            return 0;
-        }
-        private int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
+        private static int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
@@ -213,8 +198,26 @@ namespace T7
             return 0;
         }
 
-        private byte[] readdatafromfile(string filename, int address, int length)
+        private byte[] readdatafromfile(SymbolCollection curSymbolCollection, string tablename)
         {
+            int address = 0;
+            int length = 0;
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == tablename)
+                {
+                    if (IsSoftwareOpen() && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
+                    {
+                        address = (int)sh.Flash_start_address - GetOpenFileOffset();
+                    }
+                    else
+                    {
+                        address = (int)sh.Flash_start_address;
+                    }
+                    length = sh.Length;
+                }
+            }
+
             byte[] retval = new byte[length];
             try
             {
@@ -230,8 +233,27 @@ namespace T7
             return retval;
         }
 
-        private int[] readIntdatafromfile(string filename, int address, int length)
+        private int[] readIntdatafromfile(SymbolCollection curSymbolCollection, string tablename)
         {
+            int address = 0;
+            int length = 0;
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == tablename)
+                {
+                    if (IsSoftwareOpen() && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
+                    {
+                        address = (int)sh.Flash_start_address - GetOpenFileOffset();
+                    }
+                    else
+                    {
+                        address = (int)sh.Flash_start_address;
+                    }
+                    length = sh.Length;
+                    break;
+                }
+            }
+
             int[] retval = new int[length / 2];
             try
             {
@@ -251,7 +273,7 @@ namespace T7
             return retval;
         }
 
-        private bool IsOverboostEnabled(string filename, SymbolCollection symbols)
+        private bool IsOverboostEnabled(SymbolCollection symbols)
         {
             bool retval = false;
             foreach (SymbolHelper sh in symbols)
@@ -259,7 +281,7 @@ namespace T7
                 if (sh.SmartVarname == "TorqueCal.EnableOverBoost")
                 {
                     // read data from file and verify if the value is > 0
-                    byte[] overboostenable = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.EnableOverBoost"), (int)GetSymbolLength(symbols, "TorqueCal.EnableOverBoost"));
+                    byte[] overboostenable = readdatafromfile(symbols, "TorqueCal.EnableOverBoost");
                     foreach (byte b in overboostenable)
                     {
                         if (b != 0x00) retval = true;
@@ -344,9 +366,6 @@ namespace T7
         private int CalculateMaxAirmassforcell(int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, bool TorqueLimitEnabled, bool Gear1stLimitAvailable, out AirmassLimitType limiterType)
         {
             int restrictedairmass = requestairmass;
-            //logger.Debug("Pedalpos: " + pedalposition + " Rpm: " + rpm + " requests: " + requestairmass + " mg/c");
-            //calculate the restricted airmass for the current point
-            
             limiterType = AirmassLimitType.None;
 
             if (TorqueLimitEnabled)
@@ -375,14 +394,13 @@ namespace T7
             return restrictedairmass;
         }
 
-        private bool HasBinaryTorqueLimiterEnabled(SymbolCollection symbols, string filename)
+        private bool HasBinaryTorqueLimiterEnabled(SymbolCollection symbols)
         {
             foreach (SymbolHelper sh in symbols)
             {
                 if (sh.SmartVarname == "TorqueCal.ST_Loop")
                 {
-
-                    byte[] torquelimdata = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.ST_Loop"), sh.Length);
+                    byte[] torquelimdata = readdatafromfile(symbols, "TorqueCal.ST_Loop");
                     if (sh.Length == 1)
                     {
                         if ((byte)torquelimdata.GetValue(0) == 0x00)
@@ -835,7 +853,6 @@ namespace T7
             else if (rpm >= 1260) correction = 1.00;
             else correction = 1.00;
             return correction;
-
         }
         
         private int AirmassToTorque(int airmass, int rpm, bool TrionicStyle)
@@ -1302,7 +1319,7 @@ namespace T7
 		            isCarConvertible.Checked = false;
 		            isCarConvertible.Enabled = false;
 		        }
-		        if (IsOverboostEnabled(filename, symbols))
+		        if (IsOverboostEnabled(symbols))
 		        {
 		            isOverboostActive.Enabled = true;
 		        }
@@ -1313,46 +1330,46 @@ namespace T7
 
 		        bool e85automatic = IsBinaryBiopowerAuto(symbols);
 
-                bool torqueLimitEnabled = HasBinaryTorqueLimiterEnabled(symbols, filename);
+                bool torqueLimitEnabled = HasBinaryTorqueLimiterEnabled(symbols);
 
                 bool gear1stLimitAvailable = Has1stGearLimit(symbols);
 			
 				xdummy.SetValue(0, 0);
-		        int[] pedalrequestmap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(symbols, "PedalMapCal.m_RequestMap"));
+		        int[] pedalrequestmap = readIntdatafromfile(symbols, "PedalMapCal.m_RequestMap");
 		        limitResult = new AirmassLimitType[pedalrequestmap.Length];
 		        int[] resulttable = new int[pedalrequestmap.Length]; // result 
 		        pedal_Rows = GetSymbolLength(symbols, "PedalMapCal.n_EngineMap") / 2;
 		        pedal_Columns = GetSymbolLength(symbols, "PedalMapCal.X_PedalMap") / 2;
-		        pedal_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.n_EngineMap"), GetSymbolLength(symbols, "PedalMapCal.n_EngineMap"));
-		        pedal_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "PedalMapCal.X_PedalMap"), GetSymbolLength(symbols, "PedalMapCal.X_PedalMap"));
+		        pedal_Xaxis = readIntdatafromfile(symbols, "PedalMapCal.n_EngineMap");
+		        pedal_Yaxis = readIntdatafromfile(symbols, "PedalMapCal.X_PedalMap");
 
-                airTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirTorqMap"), GetSymbolLength(symbols, "TorqueCal.m_AirTorqMap"));
-                airTorqueMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngXSP"), GetSymbolLength(symbols, "TorqueCal.M_EngXSP"));
-                airTorqueMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
+                airTorqueMap = readIntdatafromfile(symbols, "TorqueCal.m_AirTorqMap");
+                airTorqueMap_Xaxis = readIntdatafromfile(symbols, "TorqueCal.M_EngXSP");
+                airTorqueMap_Yaxis = readIntdatafromfile(symbols, "TorqueCal.n_EngYSP");
 
-                bstknkMaxAirmassMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BstKnkCal.MaxAirmass"), GetSymbolLength(symbols, "BstKnkCal.MaxAirmass"));
-                bstknkMaxAirmassMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BstKnkCal.OffsetXSP"), GetSymbolLength(symbols, "BstKnkCal.OffsetXSP"));
+                bstknkMaxAirmassMap = readIntdatafromfile(symbols, "BstKnkCal.MaxAirmass");
+                bstknkMaxAirmassMap_Xaxis = readIntdatafromfile(symbols, "BstKnkCal.OffsetXSP");
                 for (int a = 0; a < bstknkMaxAirmassMap_Xaxis.Length; a++)
                 {
                     int val = (int)bstknkMaxAirmassMap_Xaxis.GetValue(a);
                     if (val > 32000) val = -(65536 - val);
                     bstknkMaxAirmassMap_Xaxis.SetValue(val, a);
                 }
-                bstknkMaxAirmassMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BstKnkCal.n_EngYSP"), GetSymbolLength(symbols, "BstKnkCal.n_EngYSP"));
+                bstknkMaxAirmassMap_Yaxis = readIntdatafromfile(symbols, "BstKnkCal.n_EngYSP");
 
                 if (SymbolExists("BstKnkCal.MaxAirmassAu", symbols))
                 {
-                    bstknkMaxAirmassAuMap = readIntdatafromfile(m_currentfilename, (int)GetSymbolAddress(symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(symbols, "BstKnkCal.MaxAirmassAu"));
+                    bstknkMaxAirmassAuMap = readIntdatafromfile(symbols, "BstKnkCal.MaxAirmassAu");
                 }
 
-                turbospeed = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.TurboSpeedTab"), GetSymbolLength(symbols, "LimEngCal.TurboSpeedTab"));
-                turbospeed_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.p_AirSP"), GetSymbolLength(symbols, "LimEngCal.p_AirSP"));
-                turbospeed2 = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.TurboSpeedTab2"), GetSymbolLength(symbols, "LimEngCal.TurboSpeedTab2"));
-                turbospeed2_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LimEngCal.n_EngSP"), GetSymbolLength(symbols, "LimEngCal.n_EngSP"));
+                turbospeed = readIntdatafromfile(symbols, "LimEngCal.TurboSpeedTab");
+                turbospeed_Yaxis = readIntdatafromfile(symbols, "LimEngCal.p_AirSP");
+                turbospeed2 = readIntdatafromfile(symbols, "LimEngCal.TurboSpeedTab2");
+                turbospeed2_Yaxis = readIntdatafromfile(symbols, "LimEngCal.n_EngSP");
 
-                nominalTorqueMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(symbols, "TorqueCal.M_NominalMap"));
-                nominalTorqueMap_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.m_AirXSP"), GetSymbolLength(symbols, "TorqueCal.m_AirXSP"));
-                nominalTorqueMap_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
+                nominalTorqueMap = readIntdatafromfile(symbols, "TorqueCal.M_NominalMap");
+                nominalTorqueMap_Xaxis = readIntdatafromfile(symbols, "TorqueCal.m_AirXSP");
+                nominalTorqueMap_Yaxis = readIntdatafromfile(symbols, "TorqueCal.n_EngYSP");
                 for (int a = 0; a < nominalTorqueMap.Length; a++)
                 {
                     int val = (int)nominalTorqueMap.GetValue(a);
@@ -1360,43 +1377,42 @@ namespace T7
                     nominalTorqueMap.SetValue(val, a);
                 }
 
-                fuelcutAirInletLimit = Convert.ToInt32(readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(symbols, "FCutCal.m_AirInletLimit")).GetValue(0));
+                fuelcutAirInletLimit = Convert.ToInt32(readIntdatafromfile(symbols, "FCutCal.m_AirInletLimit").GetValue(0));
 
-                enginetorquelim = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxTab"));
-                enginetorquelimE85Auto = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85TabAut"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85TabAut"));
-                enginetorquelimAuto = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxAutTab"));
-                enginetorquelimE85 = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(symbols, "TorqueCal.M_EngMaxE85Tab"));
-                enginetorque_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngYSP"), GetSymbolLength(symbols, "TorqueCal.n_EngYSP"));
-                enginetorquelimConvertible = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_CabGearLim"), GetSymbolLength(symbols, "TorqueCal.M_CabGearLim"));
-                enginetorquelimGear = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ManGearLim"), GetSymbolLength(symbols, "TorqueCal.M_ManGearLim"));
-                enginetorquelim5th = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(symbols, "TorqueCal.M_5GearLimTab"));
-                enginetorquelim5th_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng5GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng5GearSP"));
-                enginetorquelimReverse = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_ReverseTab"), GetSymbolLength(symbols, "TorqueCal.M_ReverseTab"));
-                enginetorquelimReverse_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_EngSP"), GetSymbolLength(symbols, "TorqueCal.n_EngSP"));
-                enginetorquelim1st = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_1GearTab"), GetSymbolLength(symbols, "TorqueCal.M_1GearTab"));
-                enginetorquelim1st_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.n_Eng1GearSP"), GetSymbolLength(symbols, "TorqueCal.n_Eng1GearSP"));
-                enginetorquelimOverboost = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "TorqueCal.M_OverBoostTab"), GetSymbolLength(symbols, "TorqueCal.M_OverBoostTab"));
+                enginetorquelim = readIntdatafromfile(symbols, "TorqueCal.M_EngMaxTab");
+                enginetorquelimE85Auto = readIntdatafromfile(symbols, "TorqueCal.M_EngMaxE85TabAut");
+                enginetorquelimAuto = readIntdatafromfile(symbols, "TorqueCal.M_EngMaxAutTab");
+                enginetorquelimE85 = readIntdatafromfile(symbols, "TorqueCal.M_EngMaxE85Tab");
+                enginetorque_Yaxis = readIntdatafromfile(symbols, "TorqueCal.n_EngYSP");
+                enginetorquelimConvertible = readIntdatafromfile(symbols, "TorqueCal.M_CabGearLim");
+                enginetorquelimGear = readIntdatafromfile(symbols, "TorqueCal.M_ManGearLim");
+                enginetorquelim5th = readIntdatafromfile(symbols, "TorqueCal.M_5GearLimTab");
+                enginetorquelim5th_Yaxis = readIntdatafromfile(symbols, "TorqueCal.n_Eng5GearSP");
+                enginetorquelimReverse = readIntdatafromfile(symbols, "TorqueCal.M_ReverseTab");
+                enginetorquelimReverse_Yaxis = readIntdatafromfile(symbols, "TorqueCal.n_EngSP");
+                enginetorquelim1st = readIntdatafromfile(symbols, "TorqueCal.M_1GearTab");
+                enginetorquelim1st_Yaxis = readIntdatafromfile(symbols, "TorqueCal.n_Eng1GearSP");
+                enginetorquelimOverboost = readIntdatafromfile(symbols, "TorqueCal.M_OverBoostTab");
 
                 try
                 {
-                    int[] injConstant = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.InjectorConst"), GetSymbolLength(symbols, "InjCorrCal.InjectorConst"));
+                    int[] injConstant = readIntdatafromfile(symbols, "InjCorrCal.InjectorConst");
                     injectorConstant = Convert.ToInt32(injConstant.GetValue(0));
-                    injectorBatteryCorrection = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrTab"), GetSymbolLength(symbols, "InjCorrCal.BattCorrTab"));
-                    injectorBatteryCorrection_axis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "InjCorrCal.BattCorrSP"), GetSymbolLength(symbols, "InjCorrCal.BattCorrSP"));
-                    fuelVEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.Map"), GetSymbolLength(symbols, "BFuelCal.Map"));
-                    E85VEMap = readdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.E85Map"), GetSymbolLength(symbols, "BFuelCal.E85Map"));
-                    fuelVE_Xaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.AirXSP"), GetSymbolLength(symbols, "BFuelCal.AirXSP"));
-                    fuelVE_Yaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "BFuelCal.RpmYSP"), GetSymbolLength(symbols, "BFuelCal.RpmYSP"));
-                    open_loop = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.MaxLoadNormTab"), GetSymbolLength(symbols, "LambdaCal.MaxLoadNormTab"));
+                    injectorBatteryCorrection = readIntdatafromfile(symbols, "InjCorrCal.BattCorrTab");
+                    injectorBatteryCorrection_axis = readIntdatafromfile(symbols, "InjCorrCal.BattCorrSP");
+                    fuelVEMap = readdatafromfile(symbols, "BFuelCal.Map");
+                    E85VEMap = readdatafromfile(symbols, "BFuelCal.E85Map");
+                    fuelVE_Xaxis = readIntdatafromfile(symbols, "BFuelCal.AirXSP");
+                    fuelVE_Yaxis = readIntdatafromfile(symbols, "BFuelCal.RpmYSP");
                     if (isFuelE85.Checked)
-                    {
-                        open_loop = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.MaxLoadE85Tab"), GetSymbolLength(symbols, "LambdaCal.MaxLoadE85Tab"));//
-                    }
-                    open_loopyaxis = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "LambdaCal.RpmSp"), GetSymbolLength(symbols, "LambdaCal.RpmSp"));
+                        open_loop = readIntdatafromfile(symbols, "LambdaCal.MaxLoadE85Tab");
+                    else
+                        open_loop = readIntdatafromfile(symbols, "LambdaCal.MaxLoadNormTab");
+                    open_loopyaxis = readIntdatafromfile(symbols, "LambdaCal.RpmSp");
 
                     if (SymbolExists("ExhaustCal.T_Lambda1Map", symbols))
                     {
-                        EGTMap = readIntdatafromfile(filename, (int)GetSymbolAddress(symbols, "ExhaustCal.T_Lambda1Map"), GetSymbolLength(symbols, "ExhaustCal.T_Lambda1Map"));
+                        EGTMap = readIntdatafromfile(symbols, "ExhaustCal.T_Lambda1Map");
                     }
                 }
                 catch (Exception E)
@@ -1411,7 +1427,6 @@ namespace T7
                     {
                         // get the current value from the request map
                         int rpm = (int)pedal_Xaxis.GetValue(rowcount);
-                        int pedalpos = ((int)pedal_Yaxis.GetValue(colcount) / 10);
                         int airmassrequestforcell = (int)pedalrequestmap.GetValue((colcount * pedal_Rows) + rowcount);
                         logger.Debug(String.Format("Current request = {0} mg/c", airmassrequestforcell));
                         AirmassLimitType limiterType = AirmassLimitType.None;
@@ -1442,9 +1457,9 @@ namespace T7
                 }
                 return dt;
             }
-            catch (Exception)
+            catch (Exception E)
             {
-                logger.Debug("Failed to calculate for file : " + filename);
+                logger.Debug(E, "Failed to calculate for file : " + filename);
             }
             return null;
         }
