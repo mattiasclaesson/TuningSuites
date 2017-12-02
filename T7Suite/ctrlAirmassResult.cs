@@ -14,6 +14,9 @@ namespace T7
 {
     public partial class ctrlAirmassResult : DevExpress.XtraEditors.XtraUserControl
     {
+        private const int TORQUE_LIMIT_350NM = 3500;
+        private const int TORQUE_LIMIT_400NM = 4000;
+
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private int pedal_Rows;
@@ -51,6 +54,8 @@ namespace T7
         private int[] nominalTorqueMap;
         private int[] nominalTorqueMap_Xaxis;
         private int[] nominalTorqueMap_Yaxis;
+
+        private byte[] entirefile;
 
         private int fuelcutAirInletLimit;
 
@@ -213,23 +218,14 @@ namespace T7
             byte[] retval = new byte[length];
             try
             {
-                FileStream fsi1 = File.OpenRead(filename);
-                while (address > fsi1.Length) address -= (int)fsi1.Length;
-                BinaryReader br1 = new BinaryReader(fsi1);
-                fsi1.Position = address;
-                string temp = string.Empty;
                 for (int i = 0; i < length; i++)
                 {
-                    retval.SetValue(br1.ReadByte(), i);
+                    retval.SetValue(entirefile[address + i], i);
                 }
-                fsi1.Flush();
-                br1.Close();
-                fsi1.Close();
-                fsi1.Dispose();
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             return retval;
         }
@@ -239,27 +235,18 @@ namespace T7
             int[] retval = new int[length / 2];
             try
             {
-                FileStream fsi1 = File.OpenRead(filename);
-                while (address > fsi1.Length) address -= (int)fsi1.Length;
-                BinaryReader br1 = new BinaryReader(fsi1);
-                fsi1.Position = address;
-                string temp = string.Empty;
                 int j = 0;
                 for (int i = 0; i < length; i += 2)
                 {
-                    byte b1 = br1.ReadByte();
-                    byte b2 = br1.ReadByte();
+                    byte b1 = entirefile[address + i];
+                    byte b2 = entirefile[address + i + 1];
                     int value = Convert.ToInt32(b1) * 256 + Convert.ToInt32(b2);
                     retval.SetValue(value, j++);
                 }
-                fsi1.Flush();
-                br1.Close();
-                fsi1.Close();
-                fsi1.Dispose();
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             return retval;
         }
@@ -354,7 +341,7 @@ namespace T7
             return false;
         }
 
-        private int CalculateMaxAirmassforcell(SymbolCollection symbols, string filename, int pedalposition, int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, bool TorqueLimitEnabled, bool Gear1stLimitAvailable, out AirmassLimitType limiterType)
+        private int CalculateMaxAirmassforcell(int rpm, int requestairmass, bool autogearbox, bool E85, bool Convertable, bool OverboostEnabled, bool E85Automatic, bool TorqueLimitEnabled, bool Gear1stLimitAvailable, out AirmassLimitType limiterType)
         {
             int restrictedairmass = requestairmass;
             //logger.Debug("Pedalpos: " + pedalposition + " Rpm: " + rpm + " requests: " + requestairmass + " mg/c");
@@ -365,7 +352,7 @@ namespace T7
             if (TorqueLimitEnabled)
             {
                 AirmassLimitType TrqLimiterType = AirmassLimitType.None;
-                restrictedairmass = CheckAgainstTorqueLimiters(symbols, filename, rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, Gear1stLimitAvailable, out TrqLimiterType);
+                restrictedairmass = CheckAgainstTorqueLimiters(rpm, requestairmass, E85, Convertable, autogearbox, OverboostEnabled, E85Automatic, Gear1stLimitAvailable, out TrqLimiterType);
                 if (restrictedairmass < requestairmass)
                 {
                     limiterType = TrqLimiterType;
@@ -408,11 +395,11 @@ namespace T7
             return true;
         }
 
-        private int CheckAgainstTorqueLimiters(SymbolCollection symbols, string filename, int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, bool Gear1stLimitAvailable, out AirmassLimitType TrqLimiter)
+        private int CheckAgainstTorqueLimiters(int rpm, int requestedairmass, bool E85, bool Convertable, bool Automatic, bool OverboostEnabled, bool E85Automatic, bool Gear1stLimitAvailable, out AirmassLimitType TrqLimiter)
         {
             TrqLimiter = AirmassLimitType.None;
             int LimitedAirMass = requestedairmass;
-            int torque = AirmassToTorque(requestedairmass, rpm, useTrionicCalculationForTorque.Checked);
+            int torque = TORQUE_LIMIT_400NM; // Basefile hardcoded limiter
                 
             if (E85Automatic && E85 && Automatic)
             {
@@ -446,11 +433,11 @@ namespace T7
             }
             else
             {
-                int torquelimitOverboost = 0;
+                int torquelimitOverboost;
                 if (OverboostEnabled)
-                {
                     torquelimitOverboost = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimOverboost, xdummy, airTorqueMap_Yaxis, rpm, 0));
-                }
+                else
+                    torquelimitOverboost = 0;
 
                 int torquelimitPetrol = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, airTorqueMap_Yaxis, rpm, 0));
                 if (OverboostEnabled && torque > torquelimitOverboost)
@@ -483,7 +470,6 @@ namespace T7
                 gears.SetValue(4, 4);
                 gears.SetValue(5, 5);
 
-
                 if (Convertable)
                 {
                     int torquelimitConvertable = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimConvertible, xdummy, gears, comboBoxEdit1.SelectedIndex, 0));
@@ -491,7 +477,7 @@ namespace T7
                     {
                         torque = torquelimitConvertable;
                         TrqLimiter = AirmassLimitType.TorqueLimiterGear;
-                        //logger.Debug("Convertable gear torque limit hit");
+                        logger.Debug("Convertable gear torque limit hit");
                     }
                 }
                 
@@ -499,50 +485,29 @@ namespace T7
                 if (torque > torquelimitManual)
                 {
                     torque = torquelimitManual;
+                    logger.Debug(String.Format("Manual gear torque limited from {0} to {1} at {2} rpm", torque, torquelimitManual, rpm));
                     TrqLimiter = AirmassLimitType.TorqueLimiterGear;
-                    //logger.Debug("Manual gear torque limit hit");
                 }
                 
                 // and check 5th gear limiter as well!!! (if checkbox is 5)
                 if (comboBoxEdit1.SelectedIndex == 5)
                 {
-                    //logger.Debug("Checking fifth gear!");
                     int torquelimit5th = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim5th, xdummy, enginetorquelim5th_Yaxis, rpm, 0));
                     if (torque > torquelimit5th)
                     {
                         torque = torquelimit5th;
                         TrqLimiter = AirmassLimitType.TorqueLimiterGear;
-                        //logger.Debug("Fifth gear torque limit hit");
+                        logger.Debug("Fifth gear torque limit hit");
                     }
                 }
             }
             else
             {
-                // automatic!
-                if (comboBoxEdit1.SelectedIndex == 0)
+                if (torque > TORQUE_LIMIT_350NM)
                 {
-                    //logger.Debug("Checking reverse gear!");
-                    int torquelimitreverse = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimReverse, xdummy, enginetorquelimReverse_Yaxis, rpm, 0));
-                    if (torque > torquelimitreverse)
-                    {
-                        torque = torquelimitreverse;
-                        TrqLimiter = AirmassLimitType.TorqueLimiterGear;
-                        //logger.Debug("Reverse gear torque limit hit");
-                    }
-                }
-                else if (comboBoxEdit1.SelectedIndex == 1)
-                {
-                    //logger.Debug("Checking first gear!");
-                    if (Gear1stLimitAvailable)
-                        {
-                        int torquelimit1st = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim1st, xdummy, enginetorquelim1st_Yaxis, rpm, 0));
-                        if (torque > torquelimit1st)
-                        {
-                            torque = torquelimit1st;
-                            TrqLimiter = AirmassLimitType.TorqueLimiterGear;
-                            //logger.Debug("First gear torque limit hit");
-                        }
-                    }
+                    logger.Debug(String.Format("Automatic gear torque limited from {0} to {1} at {2} rpm", torque, TORQUE_LIMIT_350NM, rpm));
+                    torque = TORQUE_LIMIT_350NM;
+                    TrqLimiter = AirmassLimitType.TorqueLimiterGear;
                 }
             }
             
@@ -854,23 +819,18 @@ namespace T7
         private static double GetCorrectionFactorForRpm(int rpm)
         {
             double correction = 1;
-            /*if (rpm >= 6000) correction = 0.97;
-            else if (rpm > 5800) correction = 0.98;
-            else if (rpm > 5400) correction = 0.985;
-            else if (rpm > 5000) correction = 0.99;
-            else if (rpm > 4600) correction = 0.995;*/
             if (rpm >= 6000) correction = 0.85;
             else if (rpm >= 5820) correction = 0.94;
             else if (rpm >= 5440) correction = 0.95;
             else if (rpm >= 5060) correction = 0.99;
-            else if (rpm >= 4680) correction = 1.00;//1.03;
-            else if (rpm >= 4300) correction = 1.00;//1.05;
-            else if (rpm >= 3920) correction = 1.00;//1.06;
-            else if (rpm >= 3540) correction = 1.00;//1.06;
-            else if (rpm >= 3160) correction = 1.00;//1.07;
-            else if (rpm >= 2780) correction = 1.00;//1.07;
-            else if (rpm >= 2400) correction = 1.00;//1.07;
-            else if (rpm >= 2020) correction = 1.00;//1.06;
+            else if (rpm >= 4680) correction = 1.00;
+            else if (rpm >= 4300) correction = 1.00;
+            else if (rpm >= 3920) correction = 1.00;
+            else if (rpm >= 3540) correction = 1.00;
+            else if (rpm >= 3160) correction = 1.00;
+            else if (rpm >= 2780) correction = 1.00;
+            else if (rpm >= 2400) correction = 1.00;
+            else if (rpm >= 2020) correction = 1.00;
             else if (rpm >= 1640) correction = 1.00;
             else if (rpm >= 1260) correction = 1.00;
             else correction = 1.00;
@@ -980,13 +940,19 @@ namespace T7
                 // get only the WOT cells, the last 16 integers
                 // and the columns which hold the rpm stages
                 chartControl1.Series.Clear();
-                string powerLabel = "Power (bhp)";
-                if (displayPowerInkW.Checked) powerLabel = "Power (kW)";
-                string torqueLabel = "Torque (Nm)";
-                if (displayTorqueInLBFT.Checked) torqueLabel = "Torque (lbft)";
+                string powerLabel;
+                if (displayPowerInkW.Checked)
+                    powerLabel = "Power (kW)";
+                else
+                    powerLabel = "Power (bhp)";
+                string torqueLabel;
+                if (displayTorqueInLBFT.Checked)
+                    torqueLabel = "Torque (lbft)";
+                else
+                    torqueLabel = "Torque (Nm)";
 
-                string injectorDCLabel = "Injector DC (%)";
-                string targetLambdaLabel = "Target lambda (*100)";
+                const string injectorDCLabel = "Injector DC (%)";
+                const string targetLambdaLabel = "Target lambda (*100)";
 
                 powerSeries = chartControl1.Series.Add(powerLabel, DevExpress.XtraCharts.ViewType.Spline);
                 torqueSeries = chartControl1.Series.Add(torqueLabel, DevExpress.XtraCharts.ViewType.Spline);
@@ -1209,12 +1175,12 @@ namespace T7
         {
             int retval = 0;
             // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
-            double fuelToInjectPerCycle = (double)airmass / (14.65F * 1000); // mg/c *1000 = g/c
+            double fuelToInjectPerCycle; // mg/c *1000 = g/c
             if (isFuelE85.Checked)
-            {
                 // running E85, different target lambda
                 fuelToInjectPerCycle = (double)airmass / (9.84F * 1000); // mg/c *1000 = g/c
-            }
+            else
+                fuelToInjectPerCycle = (double)airmass / (14.65F * 1000);
 
             double dtarget = (double)lambda;
             dtarget /= 100;
@@ -1315,6 +1281,7 @@ namespace T7
         {
             limitResult = null;
             // do the math!
+            entirefile = File.ReadAllBytes(filename);
 			try 
 			{
 		        if (IsBinaryBiopower(symbols))
@@ -1449,7 +1416,7 @@ namespace T7
                         logger.Debug(String.Format("Current request = {0} mg/c", airmassrequestforcell));
                         AirmassLimitType limiterType = AirmassLimitType.None;
 
-                        int resultingAirMass = CalculateMaxAirmassforcell(symbols, filename, pedalpos, rpm, airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, torqueLimitEnabled, gear1stLimitAvailable, out limiterType);
+                        int resultingAirMass = CalculateMaxAirmassforcell(rpm, airmassrequestforcell, isCarAutomatic.Checked, isFuelE85.Checked, isCarConvertible.Checked, isOverboostActive.Checked, e85automatic, torqueLimitEnabled, gear1stLimitAvailable, out limiterType);
                         resulttable.SetValue(resultingAirMass, (colcount * pedal_Rows) + rowcount);
                         limitResult.SetValue(limiterType, (colcount * pedal_Rows) + rowcount);
                     }

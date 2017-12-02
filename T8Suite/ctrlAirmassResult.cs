@@ -302,11 +302,11 @@ namespace T8SuitePro
             }
             else
             {
-                int torquelimitOverboost = 0;
+                int torquelimitOverboost;
                 if (OverboostEnabled)
-                {
                     torquelimitOverboost = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelimOverboost, xdummy, airTorqueMap_Yaxis, rpm, 0));
-                }
+                else
+                    torquelimitOverboost = 0;
 
                 int torquelimitPetrol = Convert.ToInt32(GetInterpolatedTableValue(enginetorquelim, xdummy, airTorqueMap_Yaxis, rpm, 0));
                 if (OverboostEnabled && torque > torquelimitOverboost)
@@ -329,7 +329,6 @@ namespace T8SuitePro
                 }
             }
 
-            // Trq_ManGear = only manual gearbox
             if (!isCarAutomatic.Checked)
             {
                 // Gear values have the same meaning as in ECMStat.ManualGear
@@ -348,6 +347,7 @@ namespace T8SuitePro
                 if (torque > torquelimitManual)
                 {
                     logger.Debug(String.Format("Manual gear torque limited from {0} to {1} at {2} rpm", torque, torquelimitManual, rpm));
+                    torque = torquelimitManual;
                     TrqLimiter = AirmassLimitType.TorqueLimiterGear;
                 }
             }
@@ -362,7 +362,6 @@ namespace T8SuitePro
                 {
                     logger.Debug(String.Format("Automatic gear torque limited from {0} to {1} at {2} rpm", torque, torquelimitAutomatic, rpm));
                     torque = torquelimitAutomatic;
-                                        
                     TrqLimiter = AirmassLimitType.TorqueLimiterGear;
                 }
             }
@@ -661,23 +660,18 @@ namespace T8SuitePro
         private static double GetCorrectionFactorForRpm(int rpm)
         {
             double correction = 1;
-            /*if (rpm >= 6000) correction = 0.97;
-            else if (rpm > 5800) correction = 0.98;
-            else if (rpm > 5400) correction = 0.985;
-            else if (rpm > 5000) correction = 0.99;
-            else if (rpm > 4600) correction = 0.995;*/
             if (rpm >= 6000) correction = 0.85;
             else if (rpm >= 5820) correction = 0.94;
             else if (rpm >= 5440) correction = 0.95;
             else if (rpm >= 5060) correction = 0.99;
-            else if (rpm >= 4680) correction = 1.00;//1.03;
-            else if (rpm >= 4300) correction = 1.00;//1.05;
-            else if (rpm >= 3920) correction = 1.00;//1.06;
-            else if (rpm >= 3540) correction = 1.00;//1.06;
-            else if (rpm >= 3160) correction = 1.00;//1.07;
-            else if (rpm >= 2780) correction = 1.00;//1.07;
-            else if (rpm >= 2400) correction = 1.00;//1.07;
-            else if (rpm >= 2020) correction = 1.00;//1.06;
+            else if (rpm >= 4680) correction = 1.00;
+            else if (rpm >= 4300) correction = 1.00;
+            else if (rpm >= 3920) correction = 1.00;
+            else if (rpm >= 3540) correction = 1.00;
+            else if (rpm >= 3160) correction = 1.00;
+            else if (rpm >= 2780) correction = 1.00;
+            else if (rpm >= 2400) correction = 1.00;
+            else if (rpm >= 2020) correction = 1.00;
             else if (rpm >= 1640) correction = 1.00;
             else if (rpm >= 1260) correction = 1.00;
             else correction = 1.00;
@@ -994,12 +988,12 @@ namespace T8SuitePro
         {
             int retval = 0;
             // First we calculate how much fuel needs to be injected. Milligram is converted to gram.
-            double fuelToInjectPerCycle = (double)airmass / (14.65F * 1000); // mg/c *1000 = g/c
+            double fuelToInjectPerCycle; // mg/c *1000 = g/c
             if (isFuelE85.Checked)
-            {
                 // running E85, different target lambda
                 fuelToInjectPerCycle = (double)airmass / (9.84F * 1000); // mg/c *1000 = g/c
-            }
+            else
+                fuelToInjectPerCycle = (double)airmass / (14.65F * 1000);
 
             double dtarget = (double)lambda;
             dtarget /= 100;
