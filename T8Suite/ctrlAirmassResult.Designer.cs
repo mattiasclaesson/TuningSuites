@@ -57,6 +57,7 @@ namespace T8SuitePro
             this.tabCompressormap = new DevExpress.XtraTab.XtraTabPage();
             this.ctrlCompressorMap1 = new T8SuitePro.ctrlCompressorMap();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.isCarHighOutput = new DevExpress.XtraEditors.CheckEdit();
             this.useTrionicCalculationForTorque = new DevExpress.XtraEditors.CheckEdit();
             this.displayTorqueInLBFT = new DevExpress.XtraEditors.CheckEdit();
             this.displayPowerInkW = new DevExpress.XtraEditors.CheckEdit();
@@ -77,13 +78,12 @@ namespace T8SuitePro
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.cbTableSelectionEdit = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.cbGearSelectionEdit = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbGearSelection = new DevExpress.XtraEditors.ComboBoxEdit();
             this.isFuelE85 = new DevExpress.XtraEditors.CheckEdit();
             this.isCarAutomatic = new DevExpress.XtraEditors.CheckEdit();
             this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
-            this.isCarHighOutput = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
             this.xtraTabControl1.SuspendLayout();
             this.xtraTabPage1.SuspendLayout();
@@ -110,16 +110,16 @@ namespace T8SuitePro
             this.tabCompressormap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.isCarHighOutput.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbTableSelectionEdit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbGearSelectionEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbGearSelection.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarAutomatic.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.isCarHighOutput.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControl1
@@ -142,7 +142,7 @@ namespace T8SuitePro
             // 
             this.xtraTabPage1.Controls.Add(this.gridControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(797, 353);
+            this.xtraTabPage1.Size = new System.Drawing.Size(793, 350);
             this.xtraTabPage1.Text = "Table view";
             // 
             // gridControl1
@@ -154,7 +154,7 @@ namespace T8SuitePro
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(797, 353);
+            this.gridControl1.Size = new System.Drawing.Size(793, 350);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -183,7 +183,7 @@ namespace T8SuitePro
             this.xtraTabPage2.Controls.Add(this.checkEdit8);
             this.xtraTabPage2.Controls.Add(this.chartControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(797, 353);
+            this.xtraTabPage2.Size = new System.Drawing.Size(793, 350);
             this.xtraTabPage2.Text = "Dyno graph view";
             // 
             // showFuelFlow
@@ -309,7 +309,7 @@ namespace T8SuitePro
             // 
             this.tabCompressormap.Controls.Add(this.ctrlCompressorMap1);
             this.tabCompressormap.Name = "tabCompressormap";
-            this.tabCompressormap.Size = new System.Drawing.Size(797, 353);
+            this.tabCompressormap.Size = new System.Drawing.Size(793, 350);
             this.tabCompressormap.Text = "Compressor map";
             // 
             // ctrlCompressorMap1
@@ -354,7 +354,7 @@ namespace T8SuitePro
         5500,
         6000,
         6500};
-            this.ctrlCompressorMap1.Size = new System.Drawing.Size(797, 353);
+            this.ctrlCompressorMap1.Size = new System.Drawing.Size(793, 350);
             this.ctrlCompressorMap1.TabIndex = 0;
             this.ctrlCompressorMap1.onRefreshData += new T8SuitePro.ctrlCompressorMap.RefreshData(this.ctrlCompressorMap1_onRefreshData);
             // 
@@ -383,7 +383,7 @@ namespace T8SuitePro
             this.groupControl2.Controls.Add(this.labelControl2);
             this.groupControl2.Controls.Add(this.labelControl1);
             this.groupControl2.Controls.Add(this.cbTableSelectionEdit);
-            this.groupControl2.Controls.Add(this.cbGearSelectionEdit);
+            this.groupControl2.Controls.Add(this.cbGearSelection);
             this.groupControl2.Controls.Add(this.isFuelE85);
             this.groupControl2.Controls.Add(this.isCarAutomatic);
             this.groupControl2.Location = new System.Drawing.Point(8, 390);
@@ -391,6 +391,16 @@ namespace T8SuitePro
             this.groupControl2.Size = new System.Drawing.Size(799, 156);
             this.groupControl2.TabIndex = 3;
             this.groupControl2.Text = "Options";
+            // 
+            // isCarHighOutput
+            // 
+            this.isCarHighOutput.EditValue = true;
+            this.isCarHighOutput.Location = new System.Drawing.Point(14, 74);
+            this.isCarHighOutput.Name = "isCarHighOutput";
+            this.isCarHighOutput.Properties.Caption = "Car is high output (175/210 hp)";
+            this.isCarHighOutput.Size = new System.Drawing.Size(177, 19);
+            this.isCarHighOutput.TabIndex = 27;
+            this.isCarHighOutput.CheckedChanged += new System.EventHandler(this.isCarHighOutput_CheckedChanged);
             // 
             // useTrionicCalculationForTorque
             // 
@@ -609,11 +619,11 @@ namespace T8SuitePro
             this.labelControl1.Text = "Airmass limiter";
             this.labelControl1.DoubleClick += new System.EventHandler(this.labelControl1_DoubleClick);
             // 
-            // comboBoxEdit2
+            // cbTableSelectionEdit
             // 
             this.cbTableSelectionEdit.EditValue = "Show airmass";
             this.cbTableSelectionEdit.Location = new System.Drawing.Point(254, 76);
-            this.cbTableSelectionEdit.Name = "comboBoxEdit2";
+            this.cbTableSelectionEdit.Name = "cbTableSelectionEdit";
             this.cbTableSelectionEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cbTableSelectionEdit.Properties.Items.AddRange(new object[] {
@@ -629,14 +639,14 @@ namespace T8SuitePro
             this.cbTableSelectionEdit.TabIndex = 4;
             this.cbTableSelectionEdit.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit2_SelectedIndexChanged);
             // 
-            // comboBoxEdit1
+            // cbGearSelection
             // 
-            this.cbGearSelectionEdit.EditValue = "Fifth gear";
-            this.cbGearSelectionEdit.Location = new System.Drawing.Point(254, 104);
-            this.cbGearSelectionEdit.Name = "comboBoxEdit1";
-            this.cbGearSelectionEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.cbGearSelection.EditValue = "Fifth gear";
+            this.cbGearSelection.Location = new System.Drawing.Point(254, 104);
+            this.cbGearSelection.Name = "cbGearSelection";
+            this.cbGearSelection.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbGearSelectionEdit.Properties.Items.AddRange(new object[] {
+            this.cbGearSelection.Properties.Items.AddRange(new object[] {
             "Undefined gear",
             "First gear",
             "Second gear",
@@ -645,9 +655,9 @@ namespace T8SuitePro
             "Fifth gear",
             "Sixth gear",
             "Reverse gear"});
-            this.cbGearSelectionEdit.Size = new System.Drawing.Size(195, 20);
-            this.cbGearSelectionEdit.TabIndex = 3;
-            this.cbGearSelectionEdit.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);
+            this.cbGearSelection.Size = new System.Drawing.Size(195, 20);
+            this.cbGearSelection.TabIndex = 3;
+            this.cbGearSelection.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);
             // 
             // isFuelE85
             // 
@@ -697,16 +707,6 @@ namespace T8SuitePro
             this.simpleButton1.Text = "Close";
             this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
             // 
-            // isCarHighOutput
-            // 
-            this.isCarHighOutput.EditValue = true;
-            this.isCarHighOutput.Location = new System.Drawing.Point(14, 74);
-            this.isCarHighOutput.Name = "isCarHighOutput";
-            this.isCarHighOutput.Properties.Caption = "Car is high output (175/210 hp)";
-            this.isCarHighOutput.Size = new System.Drawing.Size(177, 19);
-            this.isCarHighOutput.TabIndex = 27;
-            this.isCarHighOutput.CheckedChanged += new System.EventHandler(this.isCarHighOutput_CheckedChanged);
-            // 
             // ctrlAirmassResult
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -745,16 +745,16 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
             this.groupControl2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.isCarHighOutput.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbTableSelectionEdit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbGearSelectionEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbGearSelection.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarAutomatic.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.isCarHighOutput.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -795,7 +795,7 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.ComboBoxEdit cbTableSelectionEdit;
-        private DevExpress.XtraEditors.ComboBoxEdit cbGearSelectionEdit;
+        private DevExpress.XtraEditors.ComboBoxEdit cbGearSelection;
         private DevExpress.XtraEditors.CheckEdit isFuelE85;
         private DevExpress.XtraEditors.CheckEdit isCarAutomatic;
         private DevExpress.XtraEditors.SimpleButton simpleButton3;

@@ -81,7 +81,7 @@ namespace T7
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.cbTableSelectionEdit = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbGearSelection = new DevExpress.XtraEditors.ComboBoxEdit();
             this.isCarConvertible = new DevExpress.XtraEditors.CheckEdit();
             this.isFuelE85 = new DevExpress.XtraEditors.CheckEdit();
             this.isCarAutomatic = new DevExpress.XtraEditors.CheckEdit();
@@ -120,7 +120,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbTableSelectionEdit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbGearSelection.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarConvertible.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarAutomatic.Properties)).BeginInit();
@@ -146,7 +146,7 @@ namespace T7
             // 
             this.xtraTabPage1.Controls.Add(this.gridControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(797, 353);
+            this.xtraTabPage1.Size = new System.Drawing.Size(793, 350);
             this.xtraTabPage1.Text = "Table view";
             // 
             // gridControl1
@@ -158,7 +158,7 @@ namespace T7
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(797, 353);
+            this.gridControl1.Size = new System.Drawing.Size(793, 350);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -390,7 +390,7 @@ namespace T7
             this.groupControl2.Controls.Add(this.labelControl2);
             this.groupControl2.Controls.Add(this.labelControl1);
             this.groupControl2.Controls.Add(this.cbTableSelectionEdit);
-            this.groupControl2.Controls.Add(this.comboBoxEdit1);
+            this.groupControl2.Controls.Add(this.cbGearSelection);
             this.groupControl2.Controls.Add(this.isCarConvertible);
             this.groupControl2.Controls.Add(this.isFuelE85);
             this.groupControl2.Controls.Add(this.isCarAutomatic);
@@ -683,23 +683,23 @@ namespace T7
             this.cbTableSelectionEdit.TabIndex = 4;
             this.cbTableSelectionEdit.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit2_SelectedIndexChanged);
             // 
-            // comboBoxEdit1
+            // cbGearSelection
             // 
-            this.comboBoxEdit1.EditValue = "Fifth gear";
-            this.comboBoxEdit1.Location = new System.Drawing.Point(254, 104);
-            this.comboBoxEdit1.Name = "comboBoxEdit1";
-            this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.cbGearSelection.EditValue = "Fifth gear";
+            this.cbGearSelection.Location = new System.Drawing.Point(254, 104);
+            this.cbGearSelection.Name = "cbGearSelection";
+            this.cbGearSelection.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.comboBoxEdit1.Properties.Items.AddRange(new object[] {
+            this.cbGearSelection.Properties.Items.AddRange(new object[] {
             "Reverse",
             "First gear",
             "Second gear",
             "Third gear",
             "Fourth gear",
             "Fifth gear"});
-            this.comboBoxEdit1.Size = new System.Drawing.Size(195, 20);
-            this.comboBoxEdit1.TabIndex = 3;
-            this.comboBoxEdit1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit1_SelectedIndexChanged);
+            this.cbGearSelection.Size = new System.Drawing.Size(195, 20);
+            this.cbGearSelection.TabIndex = 3;
+            this.cbGearSelection.SelectedIndexChanged += new System.EventHandler(this.cbGearSelection_SelectedIndexChanged);
             // 
             // isCarConvertible
             // 
@@ -717,7 +717,7 @@ namespace T7
             this.isFuelE85.Properties.Caption = "Car runs E85";
             this.isFuelE85.Size = new System.Drawing.Size(150, 19);
             this.isFuelE85.TabIndex = 1;
-            this.isFuelE85.CheckedChanged += new System.EventHandler(this.checkEdit2_CheckedChanged);
+            this.isFuelE85.CheckedChanged += new System.EventHandler(this.isFuelE85_CheckedChanged);
             // 
             // isCarAutomatic
             // 
@@ -802,7 +802,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.isOverboostActive.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbTableSelectionEdit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbGearSelection.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarConvertible.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isFuelE85.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarAutomatic.Properties)).EndInit();
@@ -848,7 +848,7 @@ namespace T7
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.ComboBoxEdit cbTableSelectionEdit;
-        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit1;
+        private DevExpress.XtraEditors.ComboBoxEdit cbGearSelection;
         private DevExpress.XtraEditors.CheckEdit isCarConvertible;
         private DevExpress.XtraEditors.CheckEdit isFuelE85;
         private DevExpress.XtraEditors.CheckEdit isCarAutomatic;
