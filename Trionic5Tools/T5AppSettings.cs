@@ -2624,7 +2624,7 @@ namespace Trionic5Tools
             }
             catch (Exception E)
             {
-
+                Console.WriteLine("error retrieving registry settings: " + E.Message);
             }
 
             using (RegistryKey Settings = TempKey.CreateSubKey("T5Suite2"))

@@ -3080,7 +3080,7 @@ namespace Trionic5Tools
             }
             catch (Exception E)
             {
-                //Console.WriteLine(E.Message);
+                Console.WriteLine(E.Message);
             }
             /*System.Windows.Forms.Application.DoEvents();
             System.Threading.Thread.Sleep(5);

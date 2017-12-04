@@ -581,7 +581,6 @@ namespace T5CANLib.CAN
             CANMessage canMessage = new CANMessage();
 
             string line = string.Empty;
-            int readResult = 0;
             int nrOfWait = 0;
             while (nrOfWait < timeout)
             {
@@ -653,7 +652,6 @@ namespace T5CANLib.CAN
 
             string line = string.Empty;
 
-            int readResult = 0;
             int nrOfWait = 0;
             while (nrOfWait < timeout)
             {

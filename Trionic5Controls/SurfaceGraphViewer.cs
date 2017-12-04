@@ -672,7 +672,7 @@ namespace Trionic5Controls
         private void SurfaceGraphMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             int delta = e.Delta;
-            if(e.Delta > 0xff000000) delta = (int)(0x100000000- (long)delta);
+            //if(e.Delta > 0xff000000) delta = (int)(0x100000000- (long)delta);
             pov_d += (delta * 0.0001);
             sr.ReCalculateTransformationsCoeficients(pov_x, pov_y, pov_z, pan_x, pan_y, ClientRectangle.Width, ClientRectangle.Height, pov_d, 0, 0);
             CastGraphChangedEvent();

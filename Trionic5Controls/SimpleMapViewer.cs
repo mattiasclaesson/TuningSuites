@@ -26,12 +26,9 @@ namespace Trionic5Controls
         private bool m_datasourceMutated = false;
         private int m_MaxValueInTable = 0;
         private bool m_prohibitcellchange = false;
-        private bool m_prohibitsplitchange = false;
-        private bool m_prohibitgraphchange = false;
         private SuiteViewType m_viewtype = SuiteViewType.Hexadecimal;
         private SuiteViewType m_previousviewtype = SuiteViewType.Easy;
         private bool m_prohibit_viewchange = false;
-        private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
         private bool m_OnlineMode = false;
 
@@ -180,13 +177,9 @@ namespace Trionic5Controls
         }
 
         private string m_filename;
-        //private bool m_isHexMode = true;
         private bool m_isRedWhite = false;
         private int m_textheight = 12;
         private string m_xformatstringforhex = "X4";
-        private bool m_isDragging = false;
-        private int _mouse_drag_x = 0;
-        private int _mouse_drag_y = 0;
         private bool m_prohibitlock_change = false;
 
         private bool m_tableVisible = false;
@@ -1084,8 +1077,6 @@ namespace Trionic5Controls
                 }
                 if (maxxval <= 255) m_xformatstringforhex = "X2";
             }
-            m_trackbarBlocked = false;
-
         }
 
     
@@ -3257,11 +3248,6 @@ namespace Trionic5Controls
         {
 
         }
-
-       
-
-        private SeriesPoint _sp_dragging;
-
         
         private void timer1_Tick(object sender, EventArgs e)
         {

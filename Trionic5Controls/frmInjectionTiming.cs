@@ -330,7 +330,6 @@ namespace Trionic5Controls
                         // fill table
                         DataTable dt = new DataTable();
                         object[] vals = new object[fuel_map_x_axis.Length];
-                        int idx = 0;
                         foreach (int pressure in fuel_map_x_axis)
                         {
                             dt.Columns.Add(pressure.ToString());
@@ -431,7 +430,6 @@ namespace Trionic5Controls
                         // fill table
                         DataTable dt = new DataTable();
                         object[] vals = new object[fuel_knock_map_x_axis.Length];
-                        int idx = 0;
                         foreach (int pressure in fuel_knock_map_x_axis)
                         {
                             dt.Columns.Add(pressure.ToString());
@@ -527,7 +525,6 @@ namespace Trionic5Controls
                         // fill table
                         DataTable dt = new DataTable();
                         object[] vals = new object[idle_fuel_x_axis.Length];
-                        int idx = 0;
                         foreach (int pressure in idle_fuel_x_axis)
                         {
                             dt.Columns.Add(pressure.ToString());
@@ -642,7 +639,6 @@ namespace Trionic5Controls
         private int Handle_temp_tables(int AD_value, int[] tab, int[] steg)
         {
             int steg_index = 0;
-            int steg_value;
             int ret_value;
 
 
@@ -686,10 +682,6 @@ namespace Trionic5Controls
             byte tmp3, vx, vy;
             byte x_indx;
             byte y_indx;
-            int y_delta;
-            byte x_delta;
-            byte x_interpol;
-            byte y_interpol;
 
             /*find y-index*/
             y_indx = 0;

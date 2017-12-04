@@ -10,6 +10,7 @@ using Trionic5Controls;
 using Nevron.Chart;
 using Nevron.Chart.WinForm;
 using Nevron.GraphicsCore;
+using NLog;
 
 
 //TODO: rewrite control so it can use the new "mapviewer" as well.
@@ -19,6 +20,7 @@ namespace T5Suite2
 
     public partial class frmMatrixResult : DevExpress.XtraEditors.XtraForm
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private NChartControl nChartControl1 = null;
         public frmMatrixResult()
         {
@@ -129,7 +131,7 @@ namespace T5Suite2
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to convert to integer value: " + value.ToString());
+                        logger.Debug(E, "Failed to convert to integer value: " + value.ToString());
                     }
                     byte b1 = 0;
                     byte b2 = 0;
@@ -140,7 +142,7 @@ namespace T5Suite2
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine("Failed to convert to byte value + " + ivalue.ToString());
+                        logger.Debug(E, "Failed to convert to byte value + " + ivalue.ToString());
                     }
                     
                     m_map_content[idx++] = b1;
@@ -439,7 +441,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                // nothing
+                logger.Debug(E);
             }
         }
 

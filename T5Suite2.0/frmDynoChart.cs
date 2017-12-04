@@ -394,7 +394,6 @@ namespace T5Suite2
         private int Handle_temp_tables(int AD_value, int[] tab, int[] steg)
         {
             int steg_index = 0;
-            int steg_value;
             int ret_value;
 
 
@@ -452,10 +451,6 @@ namespace T5Suite2
             byte tmp3, vx, vy;
             byte x_indx;
             byte y_indx;
-            int y_delta;
-            byte x_delta;
-            byte x_interpol;
-            byte y_interpol;
 
             /*find y-index*/
             y_indx = 0;

@@ -924,9 +924,6 @@ namespace OnlineGraph
                     _line.Minrange = 7;
                     _line.Maxrange = 23;
                     break;
-                    _line.Minrange = 0;
-                    _line.Maxrange = 255;
-                    break;
             }
         }
 

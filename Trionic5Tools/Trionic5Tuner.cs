@@ -300,7 +300,6 @@ namespace Trionic5Tools
         private void SetInjectorBatteryCorrectionMap(IECUFile m_file, InjectorType injectorType)
         {
             byte[] batt_korr_tab = new byte[22]; // 11 values, first one is for 15 volt
-            float tempvalue = 0;
             switch (injectorType)
             {
                 case InjectorType.Stock:

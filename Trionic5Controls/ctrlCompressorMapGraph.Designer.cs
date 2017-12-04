@@ -275,8 +275,10 @@ namespace Trionic5Controls
             xyDiagram1.DefaultPane.ScrollBarOptions.XAxisScrollBarVisible = false;
             xyDiagram1.DefaultPane.ScrollBarOptions.YAxisScrollBarVisible = false;
             xyDiagram1.PaneDistance = 0;
-            xyDiagram1.EnableZooming = true;
-            xyDiagram1.EnableScrolling = true;
+            xyDiagram1.EnableAxisXScrolling = true;
+            xyDiagram1.EnableAxisYScrolling = true;
+            xyDiagram1.EnableAxisXZooming = true;
+            xyDiagram1.EnableAxisYZooming = true;
             this.chartControl1.Diagram = xyDiagram1;
             this.chartControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chartControl1.Legend.Visible = false;

@@ -4786,7 +4786,7 @@ namespace T5Suite2
                     }
                     if (!isDocked)
                     {
-                        dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                        dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
                         dockPanel.Width = 700;
                     }
 
@@ -5171,7 +5171,7 @@ namespace T5Suite2
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -5302,7 +5302,7 @@ namespace T5Suite2
                 }
                 if (!isDocked)
                 {
-                    dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                    dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
                     dockPanel.Width = 400;
                 }
                 Trionic5FileInformation m_FileInformation = new Trionic5FileInformation();
@@ -5436,7 +5436,7 @@ namespace T5Suite2
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -5894,7 +5894,7 @@ namespace T5Suite2
                         }
                         if (!isDocked)
                         {
-                            dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                            dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
                             dockPanel.Width = 700;
                         }
                         //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
@@ -6071,7 +6071,7 @@ namespace T5Suite2
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -6350,7 +6350,7 @@ namespace T5Suite2
                 dockPanel.Controls.Add(tabdet);
                 //dockPanel.DockAsTab(dockPanel1);
                 dockPanel.Text = "SRAM <> BIN Compare results: " + Path.GetFileName(sramfilename);
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
                 dockPanel.Width = 700;
                 //CompareSymbolTable(filename, compSymbols, compAddressLookup, tabdet.gridControl1);
                 tabdet.CompareSymbolCollection = scdiff;
@@ -6558,7 +6558,7 @@ namespace T5Suite2
                             }
                             if (!isDocked)
                             {
-                                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
+                                dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
                                 if (m_appSettings.AutoSizeNewWindows)
                                 {
                                     if (tabdet.X_axisvalues.Length > 0)
@@ -7381,7 +7381,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
         }
 
@@ -8289,7 +8289,6 @@ namespace T5Suite2
         {
             try
             {
-                string str;
                 int percentage = 0;
                 int max_bytes = 0x40000;
                 switch (_globalECUType)
@@ -9480,7 +9479,7 @@ namespace T5Suite2
                             }
                             catch (Exception E)
                             {
-                                logger.Debug("Failed to convert to integer value: " + value.ToString());
+                                logger.Debug(E, "Failed to convert to integer value: " + value.ToString());
                             }
                             byte b1 = 0;
                             byte b2 = 0;
@@ -9491,7 +9490,7 @@ namespace T5Suite2
                             }
                             catch (Exception E)
                             {
-                                logger.Debug("Failed to convert to byte value + " + ivalue.ToString());
+                                logger.Debug(E, "Failed to convert to byte value + " + ivalue.ToString());
                             }
 
                             m_map_content[idx++] = b1;
@@ -9548,8 +9547,6 @@ namespace T5Suite2
             mv.ShowTable(16, true);
             mv.SetDataTable(dtdata);
             
-            int cols = 16;
-            int rows = 16;
             TryToAddOpenLoopTables(mv);
             mv.InitEditValues();
 
@@ -9561,8 +9558,6 @@ namespace T5Suite2
             dp.Text = "Matrix [" + xname + " : " + yname + " : " + zname + "]";
             //if (_ecuConnection.Opened && _ECUmode == OperationMode.ModeOnline) dp.Text += " Online";
             dp.Controls.Add(mv);
-
-            bool isDocked = false;
             
             dockManager1.EndUpdate();
         }
@@ -10065,7 +10060,7 @@ namespace T5Suite2
             }
             if (!isDocked)
             {
-                dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
+                dockPanel.DockTo(DevExpress.XtraBars.Docking.DockingStyle.Left, 1);
                 dockPanel.Width = 700;
             }
         }
@@ -12617,7 +12612,6 @@ namespace T5Suite2
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;
                     int columns = 18;
-                    int rows = 16;
                     //m_trionicFile.GetMapMatrixWitdhByName(m_trionicFileInformation.GetIgnitionMap(), out columns, out rows);
 
                     tabdet.Map_address = 0;
