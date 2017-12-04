@@ -1167,10 +1167,9 @@ namespace T5Suite2
                 dp.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
                 dp.Tag = sramfile;
                 IMapViewer mv = MapViewerFactory.Get(m_appSettings, m_trionicFile);
-                
+                mv.LoadSymbol(symbolname, m_trionicFile, sramfile);
                 mv.OnlineMode = true;
 
-                mv.LoadSymbol(symbolname, m_trionicFile, sramfile);
                 int cols = 1;
                 int rows = 1;
                 m_trionicFile.GetMapMatrixWitdhByName(symbolname, out cols, out rows);
