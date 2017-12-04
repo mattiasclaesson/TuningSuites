@@ -1,5 +1,5 @@
 call T5SuiteII\version.bat
-devenv T5SuiteII.sln /Rebuild Release /project T5SuiteII
+devenv T5SuiteII.sln /Rebuild Release /project SetupT5SuiteII
 
 pushd T5SuiteII\Release\
 "C:\md5sum.exe" T5SuiteII.msi >> T5SuiteII.md5
