@@ -274,6 +274,8 @@ namespace T5Suite2
 
         private SymbolColors symbolColors;
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
+        private DirectoryInfo configurationFilesPath = Directory.GetParent(System.Windows.Forms.Application.UserAppDataPath);
+
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private SuiteRegistry suiteRegistry = new T5SuiteRegistry();
 
@@ -314,7 +316,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             _splash.SetProgressText("Loading settings...");
 
@@ -4178,7 +4180,7 @@ namespace T5Suite2
 
         private void LoadUserDefinedRealtimeSymbols()
         {
-            string savePath = Path.Combine(Application.LocalUserAppDataPath, "rtsymbols.txt");
+            string savePath = Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt");
             if (File.Exists(savePath))
             {
                 m_RealtimeUserSymbols = new SymbolCollection(); // first empty
@@ -4216,9 +4218,7 @@ namespace T5Suite2
 
         private void SaveUserDefinedRealtimeSymbols()
         {
-            //Assembly currentAssembly = Assembly.GetExecutingAssembly();
-
-            string savePath = Path.Combine(Application.LocalUserAppDataPath, "rtsymbols.txt");
+            string savePath = Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt");
             using (StreamWriter sw = new StreamWriter(savePath, false))
             {
                 foreach (SymbolHelper sh in m_RealtimeUserSymbols)
@@ -12941,16 +12941,14 @@ namespace T5Suite2
                 btnset.ItemClick += new ItemClickEventHandler(MyMapDefine_ItemClick);
                 rpgset.ItemLinks.Add(btnset);
                 page_maps.Groups.Add(rpgset);
+                string filename = Path.Combine(configurationFilesPath.FullName, "mymaps.xml");
 
-                if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml"))
+                if (File.Exists(filename))
                 {
                     try
                     {
                         System.Xml.XmlDocument mymaps = new System.Xml.XmlDocument();
-                        mymaps.Load(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml");
-
-
-
+                        mymaps.Load(filename);
 
                         foreach (System.Xml.XmlNode category in mymaps.SelectNodes("categories/category"))
                         {
@@ -12974,9 +12972,9 @@ namespace T5Suite2
                 }
                 ribbonControl1.Pages.Insert(3, page_maps);
             }
-            catch (Exception myMapsE)
+            catch (Exception E)
             {
-                logger.Debug("Failed to create myMaps menu: " + myMapsE.Message);
+                logger.Debug(E, "Failed to create myMaps menu");
             }
         }
 
@@ -12984,13 +12982,14 @@ namespace T5Suite2
         {
             // define myMaps!
             frmDefineMyMaps mymapsdef = new frmDefineMyMaps();
-            if (File.Exists(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml"))
+            string filename = Path.Combine(configurationFilesPath.FullName, "mymaps.xml");
+            if (File.Exists(filename))
             {
-                mymapsdef.Filename = System.Windows.Forms.Application.StartupPath + "\\mymaps.xml";
+                mymapsdef.Filename = filename;
             }
             else
             {
-                mymapsdef.CreateNewFile(System.Windows.Forms.Application.StartupPath + "\\mymaps.xml");
+                mymapsdef.CreateNewFile(filename);
             }
             if (mymapsdef.ShowDialog() == DialogResult.OK)
             {
@@ -13001,7 +13000,6 @@ namespace T5Suite2
                 }
                 LoadMyMaps();
             }
-
         }
 
         void MyMapItems_ItemClick(object sender, ItemClickEventArgs e)
@@ -13019,10 +13017,10 @@ namespace T5Suite2
                 else
                     StartTableViewer(e.Item.Tag.ToString().Trim());
             }
-            catch { }
+            catch (Exception E)
+            {
+                logger.Debug(E);
+            }
         }
-
-
-
     }
 }

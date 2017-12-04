@@ -18975,9 +18975,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
                 ribbonControl1.Pages.Insert(3, page_maps);
             }
-            catch (Exception myMapsE)
+            catch (Exception E)
             {
-                logger.Debug("Failed to create myMaps menu: " + myMapsE.Message);
+                logger.Debug(E, "Failed to create myMaps menu");
             }
         }
 
@@ -19003,7 +19003,6 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 }
                 LoadMyMaps();
             }
-
         }
 
         void MyMapItems_ItemClick(object sender, ItemClickEventArgs e)
@@ -19021,7 +19020,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 else
                     StartTableViewer(e.Item.Tag.ToString().Trim());
             }
-            catch { }
+            catch (Exception E)
+            {
+                logger.Debug(E);
+            }
         }
 
         private void btnConnectDisconnect_ItemClick(object sender, ItemClickEventArgs e)
