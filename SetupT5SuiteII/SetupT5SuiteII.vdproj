@@ -3819,7 +3819,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Be.Windows.Forms.HexBox, Version=1.3.0.105, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Be.Windows.Forms.HexBox, Version=1.3.0.1357, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_4349D0A687E39E959A40618B2903AC80"
@@ -6496,7 +6496,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Trionic5Controls, Version=2.0.4.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Trionic5Controls, Version=2.0.5.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_DCF3B37D1A2D4936AC3578100921C7BC"
@@ -7308,15 +7308,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T5SuiteII"
-        "ProductCode" = "8:{3510FC0B-EAFC-4DA3-A52E-E56112192195}"
-        "PackageCode" = "8:{0FF25568-1E77-4D2E-8DA5-1AF8031D3D58}"
+        "ProductCode" = "8:{DEC094D2-720A-46FC-81DA-8138C79D4E8D}"
+        "PackageCode" = "8:{AC80CF37-F54B-4178-924E-BAA4C46E63AA}"
         "UpgradeCode" = "8:{85094B92-5F73-4D18-A5DD-994336DF4031}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.20"
+        "ProductVersion" = "8:2.0.21"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"
