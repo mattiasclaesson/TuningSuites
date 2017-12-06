@@ -37,7 +37,7 @@ namespace Trionic5Tools
 
                 #region 9000 B204E
 
-                case "4660833-A5EZK6BL.17A":
+                case "4660833":
                     returnvalue.SoftwareID = "A5EZK6BL.17A";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = false;
@@ -59,7 +59,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4660841-A5EZV1JL.17B": // B204E LPT 1997
+                case "4660841": // B204E LPT 1997
                     returnvalue.SoftwareID = "A5EZV1JL.17B";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = false;
@@ -81,7 +81,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301933-A53!V04L.12A": // B204S 2.0 LPT
+                case "4301933": // B204S 2.0 LPT
                     returnvalue.SoftwareID = "A53!V04L.12A";
                     returnvalue.Enginetype = EngineType.B204S;
                     returnvalue.Isaero = false;
@@ -103,7 +103,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4300331-A53OF4LL.12A": // B204S 1994
+                case "4300331": // B204S 1994
                     returnvalue.SoftwareID = "A53OF4LL.12A";
                     returnvalue.Enginetype = EngineType.B204S;
                     returnvalue.Isaero = false;
@@ -125,7 +125,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4661146-A53!K5DL.12B": // B204S auto 1995
+                case "4661146": // B204S auto 1995
                     returnvalue.SoftwareID = "A53!K5DL.12B";
                     returnvalue.Enginetype = EngineType.B204S;
                     returnvalue.Isaero = false;
@@ -150,7 +150,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region 9000 B204L
-                case "4300844-A53OF4OL.14C": // B204L 1994
+                case "4300844": // B204L 1994
                     returnvalue.SoftwareID = "A53OF4OL.14C";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -173,7 +173,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301941-A5DOK5VL.14C": // B204L 1995-1998
+                case "4301941": // B204L 1995-1998
                     returnvalue.SoftwareID = "A5DOK5VL.14C";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -196,7 +196,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4661260-A5EOK6DL.14E": // B204L VSS 1996-1998
+                case "4661260": // B204L VSS 1996-1998
                     returnvalue.SoftwareID = "A5EOK6DL.14E";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -224,7 +224,7 @@ namespace Trionic5Tools
                 #region 9000 B234R
 
                 #region T5.2
-                case "4300810-A45LT21M.36A": // T5.2 B234R
+                case "4300810": // T5.2 B234R
                     returnvalue.Ecutype = "T5.2";
                     returnvalue.SoftwareID = "A45LT21M.36A";
                     returnvalue.Enginetype = EngineType.B234R;
@@ -247,7 +247,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "9136516-A45LT22M.36B": // T5.2 91 36 516 88 28 196 1993 9000 B234R/TCS 
+                case "9136516": // T5.2 91 36 516 88 28 196 1993 9000 B234R/TCS 
                     returnvalue.Ecutype = "T5.2";
                     returnvalue.SoftwareID = "A45LT22M.36B";
                     returnvalue.Enginetype = EngineType.B234R;
@@ -273,7 +273,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region T5.5
-                case "4780268-A54QL56L.36M": //47 80 268 47 80 268 1997 9000 B234R 
+                case "4780268": //47 80 268 47 80 268 1997 9000 B234R 
                     returnvalue.SoftwareID = "A54QL56L.36M";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -379,7 +379,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4300422-A54ML43L.36F": //43 00 422 43 00 422 1996 9000 B234R 
+                case "4300422": //43 00 422 43 00 422 1996 9000 B234R 
                     returnvalue.SoftwareID = "A54ML43L.36F";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -401,7 +401,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781886-A54UK9AL.36O":
+                case "4781886":
                     returnvalue.SoftwareID = "A54UK9AL.36O";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -423,7 +423,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4300414-A53OF7XL.36C": //43 00 414 43 00 414 1994 9000 B234R/TCS 
+                case "4300414": //43 00 414 43 00 414 1994 9000 B234R/TCS 
                     returnvalue.SoftwareID = "A53OF7XL.36C";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -466,7 +466,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US";
                     returnvalue.HighAltitude = true;
                     break;
-                case "4660338-A53OP3IL.36E": //46 60 338 46 60 338 1995 9000 B234R (No TCS) 
+                case "4660338": //46 60 338 46 60 338 1995 9000 B234R (No TCS) 
                     returnvalue.SoftwareID = "A53OP3IL.36E";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -488,7 +488,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301974-A5COP48L.36C": //43 01 974 43 01 974 1995 9000 B234R/TCS Aero M/T 
+                case "4301974": //43 01 974 43 01 974 1995 9000 B234R/TCS Aero M/T 
                     returnvalue.SoftwareID = "A5COP48L.36C";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -510,7 +510,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302998-A5EZK75L.36L":
+                case "4302998":
                     returnvalue.SoftwareID = "A5EZK75L.36L";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -532,7 +532,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4300851-A53KB6GC.36E": //43 00 851 43 00 851 1994 9000 B234R (No TCS) 
+                case "4300851": //43 00 851 43 00 851 1994 9000 B234R (No TCS) 
                     returnvalue.SoftwareID = "A53KB6GC.36E";
                     returnvalue.Enginetype = EngineType.B234R;
                     returnvalue.Isaero = true;
@@ -559,7 +559,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region 9000 B234E
-                case "4780243-A54QL54L.33G": //47 80 243 47 80 243 1997 9000 B234E 
+                case "4780243": //47 80 243 47 80 243 1997 9000 B234E 
                     returnvalue.SoftwareID = "A54QL54L.33G";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -605,7 +605,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US";
                     returnvalue.HighAltitude = true;
                     break;
-                case "4300364-A54KL36L.33B": //43 00 364 43 00 364 1996 9000 B234E 
+                case "4300364": //43 00 364 43 00 364 1996 9000 B234E 
                     returnvalue.SoftwareID = "A54KL36L.33B";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -628,7 +628,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301909-A5COP46L.33A": //43 01 909 43 01 909 1995 9000 B234E 
+                case "4301909": //43 01 909 43 01 909 1995 9000 B234E 
                     returnvalue.SoftwareID = "A5COP46L.33A";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -674,7 +674,7 @@ namespace Trionic5Tools
                     returnvalue.HighAltitude = true;
                     break;
 
-                case "4781845-A5BUK96L.33L":
+                case "4781845":
                     returnvalue.SoftwareID = "A5BUK96L.33L";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -698,7 +698,7 @@ namespace Trionic5Tools
                     returnvalue.HighAltitude = false;
                     break;
 
-                case "4300877-A53OT0FL.33A":
+                case "4300877":
                     returnvalue.SoftwareID = "A53OT0FL.33A";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -721,7 +721,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302972-A5EZK73L.33F":
+                case "4302972":
                     returnvalue.SoftwareID = "A5EZK73L.33F";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -744,7 +744,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781456-A5EZP5JL.33H": // B234E 1997
+                case "4781456": // B234E 1997
                     returnvalue.SoftwareID = "A5EZP5JL.33H";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -767,7 +767,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781464-A5IZP5JL.33J": // B234E VSS 1997
+                case "4781464": // B234E VSS 1997
                     returnvalue.SoftwareID = "A5IZP5JL.33J";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -790,7 +790,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781852-A54UK95L.33K": // B234E 1997-1998
+                case "4781852": // B234E 1997-1998
                     returnvalue.SoftwareID = "A54UK95L.33K";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -813,7 +813,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302303-A5DZK7AL.33C": // B234E 1996
+                case "4302303": // B234E 1996
                     returnvalue.SoftwareID = "A5DZK7AL.33C";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -842,7 +842,7 @@ namespace Trionic5Tools
                 #region 9000 B234L
 
                 #region T5.2
-                case "9136474-A45XT2CM.35E": // T5.2 ECU B234L 1993
+                case "9136474": // T5.2 ECU B234L 1993
                     returnvalue.Ecutype = "T5.2";
                     returnvalue.SoftwareID = "A45XT2CM.35E";
                     returnvalue.Enginetype = EngineType.B234L;
@@ -866,7 +866,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "9136490-A45JT1QM.35F": // T5.2 B234L, TCS, ASR 
+                case "9136490": // T5.2 B234L, TCS, ASR 
                     returnvalue.Ecutype = "T5.2";
                     returnvalue.SoftwareID = "A45JT1QM.35F";
                     returnvalue.Enginetype = EngineType.B234L;
@@ -895,7 +895,7 @@ namespace Trionic5Tools
 
                 #region T5.5
 
-                case "4300828-A53KB6EL.35G": //43 00 828 43 00 828 1994 9000 B234L 
+                case "4300828": //43 00 828 43 00 828 1994 9000 B234L 
                     returnvalue.SoftwareID = "A53KB6EL.35G";
                     returnvalue.Isfpt = true;
                     returnvalue.Is2point3liter = true;
@@ -917,7 +917,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4903902-A5FO903L.35G": //49 03 902 49 03 902 1994-1995 9000 B234L 
+                case "4903902": //49 03 902 49 03 902 1994-1995 9000 B234L 
                     returnvalue.SoftwareID = "A5FO903L.35G";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -940,7 +940,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US";
                     returnvalue.HighAltitude = true;
                     break;
-                case "4301917-A53OF8ZL.35G": //43 01 917 43 01 917 1995 9000 B234L & Aero A/T 
+                case "4301917": //43 01 917 43 01 917 1995 9000 B234L & Aero A/T 
                     returnvalue.SoftwareID = "A53OF8ZL.35G";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -1007,7 +1007,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781860-A54UK98L.35S": // B234L VSS 1997-1998
+                case "4781860": // B234L VSS 1997-1998
                     returnvalue.SoftwareID = "A54UK98L.35S";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -1030,7 +1030,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302329-A5EZK71L.35L": // B234L 1996-1997
+                case "4302329": // B234L 1996-1997
                     returnvalue.SoftwareID = "A5EZK71L.35L";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -1097,7 +1097,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4300836-A54KL37L.35I": //43 00 836 43 00 836 1996 9000 B234L/R A/T 
+                case "4300836": //43 00 836 43 00 836 1996 9000 B234L/R A/T 
                     returnvalue.SoftwareID = "A54KL37L.35I";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -1120,7 +1120,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4780250-A5AQL56L.35P": //47 80 250 47 80 250 1997 9000 B234L 
+                case "4780250": //47 80 250 47 80 250 1997 9000 B234L 
                     returnvalue.SoftwareID = "A5AQL56L.35P";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -1143,7 +1143,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302980-A5IZV1LL.35O":
+                case "4302980":
                     returnvalue.SoftwareID = "A5IZV1LL.35O";
                     returnvalue.Isaero = false;
                     returnvalue.Isfpt = true;
@@ -1193,7 +1193,7 @@ namespace Trionic5Tools
                     returnvalue.HighAltitude = false;
                     break;
 
-                case "4301891-A5CPK5NL.30H":
+                case "4301891":
                     returnvalue.SoftwareID = "A5CPK5NL.30H";
                     returnvalue.Enginetype = EngineType.B204I; // i, non turbo
                     returnvalue.Isaero = false;
@@ -1215,7 +1215,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4300349-A53PW8XL.10A":
+                case "4300349":
                     returnvalue.SoftwareID = "A53PW8XL.10A";
                     returnvalue.Enginetype = EngineType.B204I; // i, non turbo
                     returnvalue.Isaero = false;
@@ -1237,7 +1237,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301925-A5EPK65L.10A": // B204i 1995
+                case "4301925": // B204i 1995
                     returnvalue.SoftwareID = "A5EPK65L.10A";
                     // NON TURBO CAR
                     returnvalue.Enginetype = EngineType.B204I; // i, non turbo
@@ -1264,7 +1264,7 @@ namespace Trionic5Tools
                     // hirsch tuned file, invalid for tuning
                     break;
                 //case "4301891":
-                case "4300356-A53PW8VL.30H":
+                case "4300356":
                     returnvalue.SoftwareID = "A53PW8VL.30H";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -1286,7 +1286,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301313-A53OW8QL.30K":
+                case "4301313":
                     returnvalue.SoftwareID = "A53OW8QL.30K";
                     returnvalue.Isaero = false;
                     returnvalue.Is2point3liter = true;
@@ -1308,7 +1308,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4301966-A53PW8YL.30K":
+                case "4301966":
                     //43 00 356 43 00 356 1994 9000 B234I 
                     returnvalue.SoftwareID = "A53PW8YL.30K";
                     returnvalue.Isaero = false;
@@ -1339,7 +1339,7 @@ namespace Trionic5Tools
 
                 #region 93 B204E
 
-                case "4782546-A5DUX24L.17C":
+                case "4782546":
                     returnvalue.SoftwareID = "A5DUX24L.17C";
                     returnvalue.Bhp = 150;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1362,7 +1362,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5165212-A554Y26L.17D":
+                case "5165212":
                     returnvalue.SoftwareID = "A554Y26L.17D";
                     returnvalue.Bhp = 150;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1407,7 +1407,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "Sweden";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171434-A5EU90UL.17C":
+                case "5171434":
                     returnvalue.SoftwareID = "A5EU90UL.17C";
                     returnvalue.Bhp = 150;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1430,7 +1430,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171459-A55790VL.17D":
+                case "5171459":
                     returnvalue.SoftwareID = "A55790VL.17D";
                     returnvalue.Bhp = 150;
                     returnvalue.Carmodel = CarModel.Saab93;
@@ -1479,7 +1479,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region 93 B204L
-                case "4782280-A553L60L.15R": //51 69 982	51 69 982	2002	9-3 B205L
+                case "4782280": //51 69 982	51 69 982	2002	9-3 B205L
                     returnvalue.SoftwareID = "A553L60L.15R";
                     returnvalue.Isaero = false;
                     //returnvalue.Isviggen = true;
@@ -1547,7 +1547,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4782298-A553L61L.15S": // 9-3 B204L A/T
+                case "4782298": // 9-3 B204L A/T
                     returnvalue.SoftwareID = "A553L61L.15S";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1570,7 +1570,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4782512-A554X24L.15S":
+                case "4782512":
                     returnvalue.SoftwareID = "A554X24L.15S";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1593,7 +1593,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4782314-A5CUK92L.15Z":
+                case "4782314":
                     returnvalue.SoftwareID = "A5CUK92L.15Z";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1616,7 +1616,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4782504-A5DUX24L.15Z":
+                case "4782504":
                     returnvalue.SoftwareID = "A5DUX24L.15Z";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1639,7 +1639,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171160-A55790QL.15S":
+                case "5171160":
                     returnvalue.SoftwareID = "A55790QL.15S";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1662,7 +1662,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171418-A5EU90TL.15Z":
+                case "5171418":
                     returnvalue.SoftwareID = "A5EU90TL.15Z";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1685,7 +1685,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171848-A558913L.15S":
+                case "5171848":
                     returnvalue.SoftwareID = "A558913L.15S";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1708,7 +1708,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4782496-A554X24L.15R": //9-3 B204L M/T
+                case "4782496": //9-3 B204L M/T
                     returnvalue.SoftwareID = "A554X24L.15R";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1731,7 +1731,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4782306-A5CUK94L.15X":// 9-3 B204L M/T
+                case "4782306":// 9-3 B204L M/T
                     returnvalue.SoftwareID = "A5CUK94L.15X";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1777,7 +1777,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171152-A55790PL.15R":
+                case "5171152":
                     returnvalue.SoftwareID = "A55790PL.15R";
                     returnvalue.Isaero = false;
                     returnvalue.Isturbo = true;
@@ -1848,7 +1848,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region 93 B204R
-                case "5171699-A557912L.18B":
+                case "5171699":
                     returnvalue.SoftwareID = "A557912L.18B";
                     returnvalue.Isaero = true;
                     returnvalue.Isturbo = true;
@@ -1870,7 +1870,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4780656-A554X24L.18B": // 9-3 B204R M/T Stock = 1 bar boost pressure
+                case "4780656": // 9-3 B204R M/T Stock = 1 bar boost pressure
                     returnvalue.SoftwareID = "A554X24L.18B";
                     returnvalue.Isaero = true;
                     returnvalue.Isturbo = true;
@@ -1913,7 +1913,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781035-A554X24L.18C": // 9-3 B204R M/T
+                case "4781035": // 9-3 B204R M/T
                     returnvalue.SoftwareID = "A554X24L.18C";
                     returnvalue.Isaero = true;
                     returnvalue.Isturbo = true;
@@ -1935,7 +1935,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "5171491-A55790YL.18C": // 9-3 B204R M/T
+                case "5171491": // 9-3 B204R M/T
                     returnvalue.SoftwareID = "A55790YL.18C";
                     returnvalue.Isaero = true;
                     returnvalue.Isturbo = true;
@@ -2072,7 +2072,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region 900SE B204L AUT
-                case "4781050-A552L5AL.15S": //	1998	B204L A/T
+                case "4781050": //	1998	B204L A/T
                     returnvalue.SoftwareID = "A552L5AL.15S";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2097,7 +2097,7 @@ namespace Trionic5Tools
                     returnvalue.HighAltitude = false;
                     break;
 
-                case "4239919-A54ML3FL.15I": //42 39 919	47 80 284	1996	B204L A/T
+                case "4239919": //42 39 919	47 80 284	1996	B204L A/T
                     returnvalue.SoftwareID = "A54ML3FL.15I";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2121,7 +2121,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4780284-A5BUL53L.15P": //47 80 284	47 80 284	1997	B204L A/T
+                case "4780284": //47 80 284	47 80 284	1997	B204L A/T
                     returnvalue.SoftwareID = "A5BUL53L.15P";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2145,7 +2145,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4662177-A5DZK60L.15G": // 1996 900NG 2.0T B204 A/T
+                case "4662177": // 1996 900NG 2.0T B204 A/T
                     // stock = 0.8 bar boost
                     returnvalue.SoftwareID = "A5DZK60L.15G";
                     returnvalue.Bhp = 185;
@@ -2170,7 +2170,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781787-A5BUK92L.15Z":
+                case "4781787":
                     returnvalue.SoftwareID = "A5BUK92L.15Z";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2194,7 +2194,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781795-A54UK91L.15Y":
+                case "4781795":
                     // stock = 0.8 bar boost
                     returnvalue.SoftwareID = "A54UK91L.15Y";
                     returnvalue.Bhp = 185;
@@ -2289,7 +2289,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302733-A5EZK6FL.15K":
+                case "4302733":
                     returnvalue.SoftwareID = "A5EZK6FL.15K";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2359,7 +2359,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781225-A5EZK7FL.15K":
+                case "4781225":
                     // stock = 0.8 bar boost
                     returnvalue.SoftwareID = "A5EZK7FL.15K";
                     returnvalue.Bhp = 185;
@@ -2387,7 +2387,7 @@ namespace Trionic5Tools
                 #endregion
 
                 #region 900SE B204L Manual
-                case "9132671-A53UF7UL.15A": // 91 32 671	91 32 671	1994	B204L M/T
+                case "9132671": // 91 32 671	91 32 671	1994	B204L M/T
                     returnvalue.SoftwareID = "A53UF7UL.15A";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2410,7 +2410,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4445318-A5CZK5GL.15A": //44 45 318	44 45 318	1995	B204L M/T
+                case "4445318": //44 45 318	44 45 318	1995	B204L M/T
                     returnvalue.SoftwareID = "A5CZK5GL.15A";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2455,7 +2455,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4662565-A54ML40L.15L": //46 62 565 2)	47 80 276	1996	B204L M/T
+                case "4662565": //46 62 565 2)	47 80 276	1996	B204L M/T
                     returnvalue.SoftwareID = "A54ML40L.15L";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2478,7 +2478,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4780276-A5AQL54L.15O": //47 80 276	47 80 276	1997	B204L M/T
+                case "4780276": //47 80 276	47 80 276	1997	B204L M/T
                     returnvalue.SoftwareID = "A5AQL54L.15O";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2501,7 +2501,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781779-A5AUK93L.15V": //47 81 779	47 81 779	1998	B204L M/T
+                case "4781779": //47 81 779	47 81 779	1998	B204L M/T
                     returnvalue.SoftwareID = "A5AUK93L.15V";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2524,7 +2524,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4781761-A5AUK94L.15X": // B204L manual
+                case "4781761": // B204L manual
                     returnvalue.SoftwareID = "A5AUK94L.15X";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2547,7 +2547,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All, except US";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4239273-A53UP22L.15E":
+                case "4239273":
                     returnvalue.SoftwareID = "A53UP22L.15E";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2570,7 +2570,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4239281-A5DZK5TL.15F":
+                case "4239281":
                     returnvalue.SoftwareID = "A5DZK5TL.15F";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2593,7 +2593,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "All";
                     returnvalue.HighAltitude = false;
                     break;
-                case "4302725-A5EZK6EL.15J":
+                case "4302725":
                     returnvalue.SoftwareID = "A5EZK6EL.15J";
                     returnvalue.Bhp = 185;
                     returnvalue.Carmodel = CarModel.Saab900SE;
@@ -2683,7 +2683,7 @@ namespace Trionic5Tools
                     returnvalue.Region = "US, CA";
                     returnvalue.HighAltitude = false; 
                     break;
-                case "5171657-A557911L.15R":
+                case "5171657":
                     // stock = 0.72 bar boost
                     returnvalue.SoftwareID = "A557911L.15R";
                     returnvalue.Bhp = 185;
@@ -2948,8 +2948,5 @@ namespace Trionic5Tools
             get { return _HighAltitude; }
             set { _HighAltitude = value; }
         }
-
-
-
     }
 }

@@ -178,7 +178,6 @@ namespace T5Suite2
             if (rows.Length > 0)
             {
                 m_selectedpartnumber = (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "Partnumber");
-                m_selectedpartnumber += "-" + (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "SoftwareVersion");
                 if (m_selectedpartnumber != null)
                 {
                     if (m_selectedpartnumber != string.Empty)
@@ -196,7 +195,6 @@ namespace T5Suite2
             if (rows.Length > 0)
             {
                 m_selectedpartnumber = (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "Partnumber");
-                m_selectedpartnumber += "-" + (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "SoftwareVersion");
             }
             this.Close();
         }
