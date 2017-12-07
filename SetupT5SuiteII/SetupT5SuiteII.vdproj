@@ -6596,7 +6596,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Trionic5Controls, Version=2.0.5.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Trionic5Controls, Version=2.0.6.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_DCF3B37D1A2D4936AC3578100921C7BC"
@@ -7308,15 +7308,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T5SuiteII"
-        "ProductCode" = "8:{37E69762-3BDF-4BCF-800E-B96BB7706160}"
-        "PackageCode" = "8:{A7A79B50-BF87-4F3D-A513-903A0D85B22D}"
+        "ProductCode" = "8:{7ACB2AEA-CE01-492A-A314-8BA99CB0ABA0}"
+        "PackageCode" = "8:{964B9859-F988-4C87-8340-FB710B4AEABA}"
         "UpgradeCode" = "8:{85094B92-5F73-4D18-A5DD-994336DF4031}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.23"
+        "ProductVersion" = "8:2.0.24"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.txsuite.org"
@@ -7836,7 +7836,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8621F5C971964C2097B515B96AC70E18"
             {
-            "SourcePath" = "8:..\\T5Suite2.0\\obj\\x86\\Debug\\T5Suite2.0.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1463CF7BEC194251859C3D8699CDB556"
