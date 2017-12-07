@@ -60,6 +60,12 @@ namespace Trionic5Controls
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
+            this.lblMYs = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
+            this.lblRegion = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
+            this.checkEdit6 = new DevExpress.XtraEditors.CheckEdit();
+            this.lblEcuType = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.buttonEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
@@ -68,6 +74,7 @@ namespace Trionic5Controls
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonEdit1
@@ -78,18 +85,8 @@ namespace Trionic5Controls
             this.buttonEdit1.Name = "buttonEdit1";
             this.buttonEdit1.Properties.AccessibleDescription = null;
             this.buttonEdit1.Properties.AccessibleName = null;
-            this.buttonEdit1.Properties.AutoHeight = ((bool)(resources.GetObject("buttonEdit1.Properties.AutoHeight")));
             this.buttonEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(((DevExpress.XtraEditors.Controls.ButtonPredefines)(resources.GetObject("buttonEdit1.Properties.Buttons"))), ((System.Drawing.Image)(resources.GetObject("buttonEdit1.Properties.Buttons1"))), null)});
-            this.buttonEdit1.Properties.Mask.AutoComplete = ((DevExpress.XtraEditors.Mask.AutoCompleteType)(resources.GetObject("buttonEdit1.Properties.Mask.AutoComplete")));
-            this.buttonEdit1.Properties.Mask.BeepOnError = ((bool)(resources.GetObject("buttonEdit1.Properties.Mask.BeepOnError")));
-            this.buttonEdit1.Properties.Mask.EditMask = resources.GetString("buttonEdit1.Properties.Mask.EditMask");
-            this.buttonEdit1.Properties.Mask.IgnoreMaskBlank = ((bool)(resources.GetObject("buttonEdit1.Properties.Mask.IgnoreMaskBlank")));
-            this.buttonEdit1.Properties.Mask.MaskType = ((DevExpress.XtraEditors.Mask.MaskType)(resources.GetObject("buttonEdit1.Properties.Mask.MaskType")));
-            this.buttonEdit1.Properties.Mask.PlaceHolder = ((char)(resources.GetObject("buttonEdit1.Properties.Mask.PlaceHolder")));
-            this.buttonEdit1.Properties.Mask.SaveLiteral = ((bool)(resources.GetObject("buttonEdit1.Properties.Mask.SaveLiteral")));
-            this.buttonEdit1.Properties.Mask.ShowPlaceHolders = ((bool)(resources.GetObject("buttonEdit1.Properties.Mask.ShowPlaceHolders")));
-            this.buttonEdit1.Properties.Mask.UseMaskAsDisplayFormat = ((bool)(resources.GetObject("buttonEdit1.Properties.Mask.UseMaskAsDisplayFormat")));
             this.buttonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.buttonEdit1_ButtonClick);
             this.buttonEdit1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buttonEdit1_KeyDown);
             // 
@@ -97,7 +94,12 @@ namespace Trionic5Controls
             // 
             this.groupControl1.AccessibleDescription = null;
             this.groupControl1.AccessibleName = null;
-            resources.ApplyResources(this.groupControl1, "groupControl1");
+            this.groupControl1.Controls.Add(this.lblEcuType);
+            this.groupControl1.Controls.Add(this.checkEdit6);
+            this.groupControl1.Controls.Add(this.lblRegion);
+            this.groupControl1.Controls.Add(this.labelControl15);
+            this.groupControl1.Controls.Add(this.lblMYs);
+            this.groupControl1.Controls.Add(this.labelControl13);
             this.groupControl1.Controls.Add(this.lblStageIII);
             this.groupControl1.Controls.Add(this.lblStageII);
             this.groupControl1.Controls.Add(this.lblStageI);
@@ -123,6 +125,7 @@ namespace Trionic5Controls
             this.groupControl1.Controls.Add(this.checkEdit3);
             this.groupControl1.Controls.Add(this.checkEdit2);
             this.groupControl1.Controls.Add(this.checkEdit1);
+            resources.ApplyResources(this.groupControl1, "groupControl1");
             this.groupControl1.Name = "groupControl1";
             // 
             // lblStageIII
@@ -278,7 +281,6 @@ namespace Trionic5Controls
             this.checkEdit5.Name = "checkEdit5";
             this.checkEdit5.Properties.AccessibleDescription = null;
             this.checkEdit5.Properties.AccessibleName = null;
-            this.checkEdit5.Properties.AutoHeight = ((bool)(resources.GetObject("checkEdit5.Properties.AutoHeight")));
             this.checkEdit5.Properties.Caption = resources.GetString("checkEdit5.Properties.Caption");
             // 
             // labelControl3
@@ -302,7 +304,6 @@ namespace Trionic5Controls
             this.checkEdit4.Name = "checkEdit4";
             this.checkEdit4.Properties.AccessibleDescription = null;
             this.checkEdit4.Properties.AccessibleName = null;
-            this.checkEdit4.Properties.AutoHeight = ((bool)(resources.GetObject("checkEdit4.Properties.AutoHeight")));
             this.checkEdit4.Properties.Caption = resources.GetString("checkEdit4.Properties.Caption");
             // 
             // checkEdit3
@@ -312,7 +313,6 @@ namespace Trionic5Controls
             this.checkEdit3.Name = "checkEdit3";
             this.checkEdit3.Properties.AccessibleDescription = null;
             this.checkEdit3.Properties.AccessibleName = null;
-            this.checkEdit3.Properties.AutoHeight = ((bool)(resources.GetObject("checkEdit3.Properties.AutoHeight")));
             this.checkEdit3.Properties.Caption = resources.GetString("checkEdit3.Properties.Caption");
             // 
             // checkEdit2
@@ -322,7 +322,6 @@ namespace Trionic5Controls
             this.checkEdit2.Name = "checkEdit2";
             this.checkEdit2.Properties.AccessibleDescription = null;
             this.checkEdit2.Properties.AccessibleName = null;
-            this.checkEdit2.Properties.AutoHeight = ((bool)(resources.GetObject("checkEdit2.Properties.AutoHeight")));
             this.checkEdit2.Properties.Caption = resources.GetString("checkEdit2.Properties.Caption");
             // 
             // checkEdit1
@@ -332,7 +331,6 @@ namespace Trionic5Controls
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.AccessibleDescription = null;
             this.checkEdit1.Properties.AccessibleName = null;
-            this.checkEdit1.Properties.AutoHeight = ((bool)(resources.GetObject("checkEdit1.Properties.AutoHeight")));
             this.checkEdit1.Properties.Caption = resources.GetString("checkEdit1.Properties.Caption");
             // 
             // labelControl1
@@ -369,6 +367,43 @@ namespace Trionic5Controls
             this.simpleButton3.Name = "simpleButton3";
             this.simpleButton3.Click += new System.EventHandler(this.simpleButton3_Click);
             // 
+            // lblMYs
+            // 
+            this.lblMYs.Appearance.ForeColor = System.Drawing.Color.Blue;
+            this.lblMYs.Appearance.Options.UseForeColor = true;
+            resources.ApplyResources(this.lblMYs, "lblMYs");
+            this.lblMYs.Name = "lblMYs";
+            // 
+            // labelControl13
+            // 
+            resources.ApplyResources(this.labelControl13, "labelControl13");
+            this.labelControl13.Name = "labelControl13";
+            // 
+            // lblRegion
+            // 
+            this.lblRegion.Appearance.ForeColor = System.Drawing.Color.Blue;
+            this.lblRegion.Appearance.Options.UseForeColor = true;
+            resources.ApplyResources(this.lblRegion, "lblRegion");
+            this.lblRegion.Name = "lblRegion";
+            // 
+            // labelControl15
+            // 
+            resources.ApplyResources(this.labelControl15, "labelControl15");
+            this.labelControl15.Name = "labelControl15";
+            // 
+            // checkEdit6
+            // 
+            resources.ApplyResources(this.checkEdit6, "checkEdit6");
+            this.checkEdit6.Name = "checkEdit6";
+            this.checkEdit6.Properties.Caption = resources.GetString("checkEdit6.Properties.Caption");
+            // 
+            // lblEcuType
+            // 
+            this.lblEcuType.Appearance.ForeColor = System.Drawing.Color.Red;
+            this.lblEcuType.Appearance.Options.UseForeColor = true;
+            resources.ApplyResources(this.lblEcuType, "lblEcuType");
+            this.lblEcuType.Name = "lblEcuType";
+            // 
             // frmPartnumberLookup
             // 
             this.AccessibleDescription = null;
@@ -394,6 +429,7 @@ namespace Trionic5Controls
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit3.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit6.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -432,5 +468,11 @@ namespace Trionic5Controls
         private DevExpress.XtraEditors.LabelControl lblCarModel;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
         private DevExpress.XtraEditors.SimpleButton simpleButton3;
+        private DevExpress.XtraEditors.CheckEdit checkEdit6;
+        private DevExpress.XtraEditors.LabelControl lblRegion;
+        private DevExpress.XtraEditors.LabelControl labelControl15;
+        private DevExpress.XtraEditors.LabelControl lblMYs;
+        private DevExpress.XtraEditors.LabelControl labelControl13;
+        private DevExpress.XtraEditors.LabelControl lblEcuType;
     }
 }

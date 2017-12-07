@@ -53,6 +53,11 @@ namespace Trionic5Controls
             checkEdit3.Checked = false;
             checkEdit4.Checked = false;
             checkEdit5.Checked = false;
+            checkEdit6.Checked = false;
+            lblRegion.Text = "---";
+            lblMYs.Text = "---";
+            lblEcuType.Visible = false;
+            lblEcuType.Text = "---";
 
             if (ecuinfo.Valid)
             {
@@ -65,6 +70,19 @@ namespace Trionic5Controls
                 lblStageI.Text = ecuinfo.Stage1boost.ToString() + " bar";
                 lblStageII.Text = ecuinfo.Stage2boost.ToString() + " bar";
                 lblStageIII.Text = ecuinfo.Stage3boost.ToString() + " bar";
+                lblEcuType.Text = ecuinfo.Ecutype;
+                if (lblEcuType.Text == "T5.2") lblEcuType.Visible = true;
+                if (ecuinfo.MakeYearFrom != ecuinfo.MakeYearUpto)
+                {
+                    lblMYs.Text = ecuinfo.MakeYearFrom.ToString() + "-" + ecuinfo.MakeYearUpto.ToString();
+                }
+                else
+                {
+                    lblMYs.Text = ecuinfo.MakeYearFrom.ToString();
+                }
+                lblRegion.Text = ecuinfo.Region;
+                checkEdit6.Checked = ecuinfo.HighAltitude;
+                
                 if (ecuinfo.Is2point3liter)
                 {
                     checkEdit1.Checked = false;
@@ -108,7 +126,6 @@ namespace Trionic5Controls
 
         private void buttonEdit1_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
         {
-            //ConvertPartNumber();
             frmPartNumberList pnl = new frmPartNumberList();
             pnl.ShowDialog();
             if (pnl.Selectedpartnumber != null)
@@ -172,6 +189,13 @@ namespace Trionic5Controls
         {
             m_compare_File = true;
             this.Close();
+        }
+
+        public void DisableOpenButtons()
+        {
+            // for lookup only
+            simpleButton2.Visible = false;
+            simpleButton3.Visible = false;
         }
     }
 }

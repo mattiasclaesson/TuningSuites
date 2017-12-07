@@ -13,7 +13,6 @@ namespace Trionic5Controls
 {
     public partial class frmPartNumberList : DevExpress.XtraEditors.XtraForm
     {
-        
         private string m_selectedpartnumber = "";
         private DataTable partnumbers = new DataTable();
         public string Selectedpartnumber
@@ -33,14 +32,13 @@ namespace Trionic5Controls
             partnumbers.Columns.Add("STAGE");
             partnumbers.Columns.Add("INFO");
             partnumbers.Columns.Add("SPEED");
-            //backgroundWorker1.RunWorkerAsync();
+            partnumbers.Columns.Add("SOFTWAREVERSION");
         }
 
         private void LoadPartNumbersFromFiles()
         {
             if (Directory.Exists(Application.StartupPath + "\\Binaries"))
             {
-
                 string[] binfiles = Directory.GetFiles(Application.StartupPath + "\\Binaries", "*.BIN");
                 foreach (string binfile in binfiles)
                 {
@@ -54,6 +52,8 @@ namespace Trionic5Controls
                     string tuner = "";
                     string stage = "";
                     string additionalinfo = "";
+                    string softwareid = "";
+
                     if (binfilename.Contains("-"))
                     {
                         char[] sep = new char[1];
@@ -63,14 +63,21 @@ namespace Trionic5Controls
                         {
                             // assume partnumber
                             partnumber = (string)binfilename;
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
+                        }
+                        else if (values.Length == 2)
+                        {
+                            // assume partnumber-softwareid
+                            partnumber = (string)values.GetValue(0);
+                            softwareid = (string)values.GetValue(1);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length == 3)
                         {
                             cartype = (string)values.GetValue(0);
                             enginetype = (string)values.GetValue(1);
                             partnumber = (string)values.GetValue(2);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length == 4)
                         {
@@ -78,7 +85,7 @@ namespace Trionic5Controls
                             enginetype = (string)values.GetValue(1);
                             partnumber = (string)values.GetValue(2);
                             tuner = (string)values.GetValue(3);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length == 5)
                         {
@@ -87,7 +94,7 @@ namespace Trionic5Controls
                             partnumber = (string)values.GetValue(2);
                             tuner = (string)values.GetValue(3);
                             stage = (string)values.GetValue(4);
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                         else if (values.Length > 5)
                         {
@@ -100,50 +107,26 @@ namespace Trionic5Controls
                             {
                                 additionalinfo += (string)values.GetValue(tel) + " ";
                             }
-                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                            partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                         }
                     }
                     else
                     {
                         // assume partnumber
                         partnumber = (string)binfilename;
-                        partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed);
+                        partnumbers.Rows.Add(binfile, partnumber, enginetype, cartype, tuner, stage, additionalinfo, speed, softwareid);
                     }
-                   // backgroundWorker1.ReportProgress(0);
                     Application.DoEvents();
                 }
             }
-            
         }
 
         private void frmPartNumberList_Load(object sender, EventArgs e)
         {
             PartnumberCollection pnc = new PartnumberCollection();
             DataTable dt = pnc.GeneratePartNumberCollection();
-            //dt.Columns.Add("Filename");
-            //dt.Columns.Add("Tuner");
-            //dt.Columns.Add("Stage");
-            //dt.Columns.Add("Info");
 
             LoadPartNumbersFromFiles();
-
-            /*foreach (DataRow dr in dt.Rows)
-            {
-                foreach (DataRow pdr in partnumbers.Rows)
-                {
-                    if(dr["Partnumber"] != DBNull.Value && pdr["PARTNUMBER"] != DBNull.Value)
-                    {
-                        if (dr["Partnumber"].ToString() == pdr["PARTNUMBER"].ToString())
-                        {
-                            dr["Filename"] = pdr["FILENAME"];
-                            dr["Tuner"] = pdr["TUNER"];
-                            dr["Stage"] = pdr["STAGE"];
-                            dr["Info"] = pdr["INFO"];
-                        }
-                    }
-                }
-            }*/
-
 
             gridControl1.DataSource = dt;
             gridView1.Columns["Carmodel"].Group();
@@ -154,7 +137,7 @@ namespace Trionic5Controls
         private void gridView1_DoubleClick(object sender, EventArgs e)
         {
             int[] rows = gridView1.GetSelectedRows();
-            if(rows.Length > 0)
+            if (rows.Length > 0)
             {
                 m_selectedpartnumber = (string)gridView1.GetRowCellValue((int)rows.GetValue(0), "Partnumber");
                 if (m_selectedpartnumber != null)
@@ -178,7 +161,7 @@ namespace Trionic5Controls
             this.Close();
         }
 
-        private int CheckInAvailableLibrary(string partnumber)
+        private int CheckPartnumberAvailableInLibrary(string partnumber)
         {
             int retval = 0;
             foreach (DataRow dr in partnumbers.Rows)
@@ -207,7 +190,7 @@ namespace Trionic5Controls
                 {
                     if (e.CellValue != DBNull.Value)
                     {
-                        int type = CheckInAvailableLibrary(e.CellValue.ToString());
+                        int type = CheckPartnumberAvailableInLibrary(e.CellValue.ToString());
                         if (type == 1)
                         {
                             e.Graphics.FillRectangle(Brushes.YellowGreen, e.Bounds);
@@ -225,20 +208,16 @@ namespace Trionic5Controls
         {
             bool retval = false;
             FileInfo fi = new FileInfo(filename);
-            using (FileStream a_fileStream = new FileStream(filename, FileMode.Open))
+            using (FileStream a_fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read))
             {
                 byte[] sequence = new byte[32] {0x02, 0x39, 0x00, 0xBF, 0x00, 0xFF, 0xFA, 0x04,
                                             0x00, 0x39, 0x00, 0x80, 0x00, 0xFF, 0xFA, 0x04,
                                             0x02, 0x39, 0x00, 0xC0, 0x00, 0xFF, 0xFA, 0x04,
                                             0x00, 0x39, 0x00, 0x13, 0x00, 0xFF, 0xFA, 0x04};
-                /*byte[] seq_mask = new byte[32] {1, 1, 1, 1, 1, 1, 1, 1,
-                                            0, 0, 1, 1, 1, 0, 0, 0,   
-                                            1, 1, 1, 1, 0, 0, 1, 1,
-                                            1, 1, 1, 1, 0, 0, 1, 1};*/
                 byte data;
                 int i;
                 i = 0;
-                while (a_fileStream.Position < fi.Length -1)
+                while (a_fileStream.Position < fi.Length - 1)
                 {
                     data = (byte)a_fileStream.ReadByte();
                     if (data == sequence[i])
@@ -261,17 +240,14 @@ namespace Trionic5Controls
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
         }
     }
 }

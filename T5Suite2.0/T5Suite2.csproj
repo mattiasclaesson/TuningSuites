@@ -267,18 +267,6 @@
     <Compile Include="frmNotifications.designer.cs">
       <DependentUpon>frmNotifications.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPartNumberList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPartNumberList.Designer.cs">
-      <DependentUpon>frmPartNumberList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmPartnumberLookup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPartnumberLookup.Designer.cs">
-      <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmPeMicroParameters.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -468,22 +456,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmNotifications.resx">
       <DependentUpon>frmNotifications.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPartNumberList.nl.resx">
-      <DependentUpon>frmPartNumberList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPartNumberList.resx">
-      <DependentUpon>frmPartNumberList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPartnumberLookup.nl.resx">
-      <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPartnumberLookup.resx">
-      <DependentUpon>frmPartnumberLookup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPeMicroParameters.nl.resx">

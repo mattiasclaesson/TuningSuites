@@ -59,6 +59,7 @@ namespace Trionic5Controls
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsView.ShowGroupedColumns = true;
+            this.gridView1.OptionsView.ShowIndicator = false;
             this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
             this.gridView1.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gridView1_CustomDrawCell);
             // 
@@ -109,6 +110,7 @@ namespace Trionic5Controls
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.groupControl1);
             this.Name = "frmPartNumberList";
+            this.ShowIcon = false;
             this.Load += new System.EventHandler(this.frmPartNumberList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
