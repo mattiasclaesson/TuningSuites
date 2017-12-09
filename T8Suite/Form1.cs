@@ -8542,8 +8542,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 {
                                     if (lHead[i].Length > 0)
                                     {
-                                            bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
-                                     }
+                                        bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
+                                    }
                                     else
                                     {
                                         bHead = new byte[] { };
