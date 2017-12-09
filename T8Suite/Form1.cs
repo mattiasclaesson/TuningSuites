@@ -8384,7 +8384,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 else
                 {
                     string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
-                    //creates a temporary collection list for the seacrch strings.
+                    //creates a temporary collection list for the search strings.
                     List<string> newsearchString = new List<string>();
                     foreach (string searchpart in searchString)
                     {
@@ -8417,8 +8417,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         }
                     }
                     //converts newreplacestring to an array and replaces replaceString with it
-                        searchString = newsearchString.ToArray();
-                 //MY CHANGES STOP HERE
+                    searchString = newsearchString.ToArray();
                     bSearch = new byte[searchString.Length];
                     for (int i = 0; i < searchString.Length; i++)
                     {
