@@ -8386,7 +8386,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
                     //creates a temporary collection list for the seacrch strings.
                     List<string> newsearchString = new List<string>();
-
                     foreach (string searchpart in searchString)
                     {
                         //Check to see if the part of the replace statement is a symbol (begins  with *)
@@ -8406,11 +8405,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     foreach (string bajt in tempindBytes)
                                     {
                                         newsearchString.Add("0x" + bajt);
-                                        
                                     }
                                     break;
-
-
                                 }
                             }
                         }
@@ -8456,11 +8452,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 foreach (string bajt in tempindBytes)
                                 {
                                     newreplaceString.Add("0x" + bajt);
-
                                 }
                                 break;
-
-
                             }
                         }
                     }
@@ -8472,7 +8465,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 }
                 //converts newreplacestring to an array and replaces replaceString with it.
                 replaceString = newreplaceString.ToArray();
-
                 bReplace = new byte[replaceString.Length];
                 for (int i = 0; i < replaceString.Length; i++)
                 {
@@ -8550,11 +8542,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 {
                                     if (lHead[i].Length > 0)
                                     {
-                                        
-                                        
                                             bHead[i] = Convert.ToByte(lHead[i].Trim(), 16);
-                                        
-                                    }
+                                     }
                                     else
                                     {
                                         bHead = new byte[] { };
@@ -8589,8 +8578,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 {
                                     if (lTail[i].Length > 0)
                                     {
-                                         bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
-                                        
+                                        bTail[i] = Convert.ToByte(lTail[i].Trim(), 16);
                                     }
                                     else
                                     {
