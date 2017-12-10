@@ -8420,7 +8420,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 else
                 {
                     string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
-                    //creates a temporary collection list for the search strings.
                     replaceSymbolsWithBytes(ref searchString);
                     bSearch = new byte[searchString.Length];
                     for (int i = 0; i < searchString.Length; i++)
@@ -8434,8 +8433,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 foundS1 = inputStr.IndexOf('{') + 1;
                 foundS2 = inputStr.IndexOf('}');
                 string [] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
-                List<string> newreplaceString = new List<string>();
-                //creates a temporary collection list for the replace strings.
                 replaceSymbolsWithBytes(ref replaceString);
                 bReplace = new byte[replaceString.Length];
                 for (int i = 0; i < replaceString.Length; i++)
