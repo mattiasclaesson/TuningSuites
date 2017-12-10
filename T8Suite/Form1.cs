@@ -8290,6 +8290,42 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             string _name;
             public SearchReplacePattern srp; // byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail
+            private static void replaceSymbolsWithBytes(ref string[] workString) //works through the referenced string[] replacing symbols with corresponding bytes
+            {
+                List<string> newsearchString = new List<string>();
+                foreach (string searchpart in workString)
+                {
+                    //Check to see if the part of the  statement is a symbol (begins  with *)
+                    if (searchpart[0] == '*')
+                    {
+                        string searchedSymbol = searchpart.Substring(1);
+                        foreach (SymbolHelper cfsh in m_symbols)
+                        {
+                            if (cfsh.SmartVarname == searchedSymbol)
+                            {
+                                byte[] bSymSearch = { };
+                                bSymSearch = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                Array.Reverse(bSymSearch);
+                                //break the address up in bytes, add each byte to newsearchString.
+                                string tempBytes = BitConverter.ToString(bSymSearch);
+                                string[] tempindBytes = tempBytes.Substring(0, tempBytes.Length).Split('-');
+                                foreach (string bajt in tempindBytes)
+                                {
+                                    newsearchString.Add("0x" + bajt);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if not a a symbol, add it verbatim to the new string
+                        newsearchString.Add(searchpart);
+                    }
+                }
+                //converts newreplacestring to an array and replaces referenced string[] with it
+                workString = newsearchString.ToArray();
+            }
             public SearchReplaceTuningPackage(string searchReplace)
             {
                 type = FileTuningPackType.SearchAndReplace;
@@ -8385,39 +8421,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 {
                     string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
                     //creates a temporary collection list for the search strings.
-                    List<string> newsearchString = new List<string>();
-                    foreach (string searchpart in searchString)
-                    {
-                        //Check to see if the part of the replace statement is a symbol (begins  with *)
-                        if (searchpart[0] == '*')
-                        {
-                            string searchedSymbol = searchpart.Substring(1);
-                            foreach (SymbolHelper cfsh in m_symbols)
-                            {
-                                if (cfsh.SmartVarname == searchedSymbol)
-                                {
-                                    byte[] bSymSearch = { };
-                                    bSymSearch = BitConverter.GetBytes((int)cfsh.Flash_start_address);
-                                    Array.Reverse(bSymSearch);
-                                    //break the address up in bytes, add each byte to newsearchString.
-                                    string tempBytes = BitConverter.ToString(bSymSearch);
-                                    string[] tempindBytes = tempBytes.Substring(0,tempBytes.Length).Split('-');
-                                    foreach (string bajt in tempindBytes)
-                                    {
-                                        newsearchString.Add("0x" + bajt);
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //if not a a symbol, add it verbatim to the new string
-                            newsearchString.Add(searchpart);
-                        }
-                    }
-                    //converts newreplacestring to an array and replaces replaceString with it
-                    searchString = newsearchString.ToArray();
+                    replaceSymbolsWithBytes(ref searchString);
                     bSearch = new byte[searchString.Length];
                     for (int i = 0; i < searchString.Length; i++)
                     {
@@ -8432,38 +8436,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 string [] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
                 List<string> newreplaceString = new List<string>();
                 //creates a temporary collection list for the replace strings.
-                foreach (string replacepart in replaceString)
-                {
-                    //Check to see if the part of the replace statement is a symbol (begins  with *) 
-                    if (replacepart[0] == '*')
-                    {
-                        string replacedSymbol = replacepart.Substring(1);
-                        foreach (SymbolHelper cfsh in m_symbols)
-                        {
-                            if (cfsh.SmartVarname == replacedSymbol)
-                            {
-                                byte[] bSymReplace = { };
-                                bSymReplace = BitConverter.GetBytes((int)cfsh.Flash_start_address);
-                                Array.Reverse(bSymReplace);
-                                //break the address up in bytes, add each byte to newreplaceString
-                                string tempBytes = BitConverter.ToString(bSymReplace);
-                                string[] tempindBytes = tempBytes.Substring(0, tempBytes.Length).Split('-');
-                                foreach (string bajt in tempindBytes)
-                                {
-                                    newreplaceString.Add("0x" + bajt);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //if not a a symbol, add it verbatim to the new string
-                        newreplaceString.Add(replacepart);
-                    }
-                }
-                //converts newreplacestring to an array and replaces replaceString with it.
-                replaceString = newreplaceString.ToArray();
+                replaceSymbolsWithBytes(ref replaceString);
                 bReplace = new byte[replaceString.Length];
                 for (int i = 0; i < replaceString.Length; i++)
                 {
