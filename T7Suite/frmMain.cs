@@ -1,4 +1,4 @@
-/*
+﻿/*
  * PREBUILD EVENT: "C:\Program Files\RustemSoft\Skater .NET Obfuscator Light Edition\go.bat"
  * DONE: Save and reload realtime list items added by user (like T5Suite 2.0)
  * DONE: make Realtime panel available offline
@@ -15122,6 +15122,42 @@ If boost regulation reports errors you can increase the difference between boost
         {
             string _name;
             public SearchReplacePattern srp; // byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail
+            private static void replaceSymbolsWithBytes(ref string[] inputs) //works through the referenced string[] replacing symbols with corresponding bytes
+            {
+                List<string> newsearchString = new List<string>();
+                foreach (string searchpart in inputs)
+                {
+                    //Check to see if the part of the  statement is a symbol (begins  with *)
+                    if (searchpart[0] == '*')
+                    {
+                        string searchedSymbol = searchpart.Substring(1);
+                        foreach (SymbolHelper cfsh in m_symbols)
+                        {
+                            if (cfsh.SmartVarname == searchedSymbol)
+                            {
+                                byte[] bSymSearch = { };
+                                bSymSearch = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                Array.Reverse(bSymSearch);
+                                //break the address up in bytes, add each byte to newsearchString.
+                                string tempBytes = BitConverter.ToString(bSymSearch);
+                                string[] tempindBytes = tempBytes.Substring(0, tempBytes.Length).Split('-');
+                                foreach (string bajt in tempindBytes)
+                                {
+                                    newsearchString.Add("0x" + bajt);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if not a a symbol, add it verbatim to the new string
+                        newsearchString.Add(searchpart);
+                    }
+                }
+                //converts newreplacestring to an array and replaces referenced string[] with it
+                inputs = newsearchString.ToArray();
+            }
             public SearchReplaceTuningPackage(string searchReplace)
             {
                 type = FileTuningPackType.SearchAndReplace;
@@ -15216,6 +15252,8 @@ If boost regulation reports errors you can increase the difference between boost
                 else
                 {
                     string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                    //creates a temporary collection list for the search strings.
+                    replaceSymbolsWithBytes(ref searchString);
                     bSearch = new byte[searchString.Length];
                     for (int i = 0; i < searchString.Length; i++)
                     {
@@ -15228,6 +15266,8 @@ If boost regulation reports errors you can increase the difference between boost
                 foundS1 = inputStr.IndexOf('{') + 1;
                 foundS2 = inputStr.IndexOf('}');
                 string[] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                //creates a temporary collection list for the replace strings.
+                replaceSymbolsWithBytes(ref replaceString);
                 bReplace = new byte[replaceString.Length];
                 for (int i = 0; i < replaceString.Length; i++)
                 {
