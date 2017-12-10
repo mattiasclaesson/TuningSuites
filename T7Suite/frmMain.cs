@@ -1,4 +1,4 @@
-/*
+﻿/*
  * PREBUILD EVENT: "C:\Program Files\RustemSoft\Skater .NET Obfuscator Light Edition\go.bat"
  * DONE: Save and reload realtime list items added by user (like T5Suite 2.0)
  * DONE: make Realtime panel available offline
@@ -15122,10 +15122,10 @@ If boost regulation reports errors you can increase the difference between boost
         {
             string _name;
             public SearchReplacePattern srp; // byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail
-            private static void replaceSymbolsWithBytes(ref string[] workString) //works through the referenced string[] replacing symbols with corresponding bytes
+            private static void replaceSymbolsWithBytes(ref string[] inputs) //works through the referenced string[] replacing symbols with corresponding bytes
             {
                 List<string> newsearchString = new List<string>();
-                foreach (string searchpart in workString)
+                foreach (string searchpart in inputs)
                 {
                     //Check to see if the part of the  statement is a symbol (begins  with *)
                     if (searchpart[0] == '*')
@@ -15156,7 +15156,7 @@ If boost regulation reports errors you can increase the difference between boost
                     }
                 }
                 //converts newreplacestring to an array and replaces referenced string[] with it
-                workString = newsearchString.ToArray();
+                inputs = newsearchString.ToArray();
             }
             public SearchReplaceTuningPackage(string searchReplace)
             {
