@@ -1,4 +1,4 @@
-f/*
+/*
  * PREBUILD EVENT: "C:\Program Files\RustemSoft\Skater .NET Obfuscator Light Edition\go.bat"
  * DONE: Save and reload realtime list items added by user (like T5Suite 2.0)
  * DONE: make Realtime panel available offline
