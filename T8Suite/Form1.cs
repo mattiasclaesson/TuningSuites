@@ -8290,6 +8290,45 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             string _name;
             public SearchReplacePattern srp; // byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail
+
+            //works through the referenced string[] replacing symbols with corresponding bytes
+            private static void replaceSymbolsWithBytes(ref string[] inputs)
+            {
+                List<string> outputs = new List<string>();
+                foreach (string searchpart in inputs)
+                {
+                    //Check to see if the part of the  statement is a symbol (begins  with *)
+                    if (searchpart[0] == '*')
+                    {
+                        string searchedSymbol = searchpart.Substring(1);
+                        foreach (SymbolHelper cfsh in m_symbols)
+                        {
+                            if (cfsh.SmartVarname == searchedSymbol)
+                            {
+                                byte[] symbolBytes = { };
+                                symbolBytes = BitConverter.GetBytes((int)cfsh.Flash_start_address);
+                                Array.Reverse(symbolBytes);
+                                //break the address up in bytes, add each byte to newsearch.
+                                string tempBytes = BitConverter.ToString(symbolBytes);
+                                string[] tempindBytes = tempBytes.Substring(0, tempBytes.Length).Split('-');
+                                foreach (string oneByte in tempindBytes)
+                                {
+                                    outputs.Add("0x" + oneByte);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if not a a symbol, add it verbatim to the new string
+                        outputs.Add(searchpart);
+                    }
+                }
+
+                inputs = outputs.ToArray();
+            }
+
             public SearchReplaceTuningPackage(string searchReplace)
             {
                 type = FileTuningPackType.SearchAndReplace;
@@ -8384,6 +8423,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 else
                 {
                     string[] searchString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                    replaceSymbolsWithBytes(ref searchString);
+
                     bSearch = new byte[searchString.Length];
                     for (int i = 0; i < searchString.Length; i++)
                     {
@@ -8396,6 +8437,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 foundS1 = inputStr.IndexOf('{') + 1;
                 foundS2 = inputStr.IndexOf('}');
                 string [] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                replaceSymbolsWithBytes(ref replaceString);
+
                 bReplace = new byte[replaceString.Length];
                 for (int i = 0; i < replaceString.Length; i++)
                 {
