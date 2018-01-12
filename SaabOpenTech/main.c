@@ -1,9 +1,9 @@
 /*
   Name: SaabOpenTech
   Copyright: Freeware, use as you please
-  Author: Tomi Liljemark (firstname.surname@gmail.com)
+  Author: Tomi Liljemark (firstname.surname@gmail.com) enhanced by Mattias Claesson (SPA/Twice)
   Created: 2007-08-19
-  Modified: 2007-09-01
+  Modified: 20018-01-12
   Compiler: Dev-C++ v4.9.9.2 (shouldn't matter)
             Uses libraries canusbdrv.lib and FTD2XX.lib
   Description: Freeware Saab maintenance terminal
@@ -17,8 +17,8 @@
 #include "info_texts.h"
 #include "kwp2000.h"
 
-#define RELEASE_VERSION "0.40"
-#define RELEASE_DATE    "2007-09-01"
+#define RELEASE_VERSION "0.41"
+#define RELEASE_DATE    "2018-01-12"
 
 #define AUDIO   0
 #define SID     1
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     unsigned char rsplen;
 
     printf("SaabOpenTech v%s - Freeware Saab maintenance terminal\r\n"
-           "by Tomi Liljemark %s\r\n\r\n", RELEASE_VERSION, RELEASE_DATE);
+           "by Tomi Liljemark & Mattias Claesson %s\r\n\r\n", RELEASE_VERSION, RELEASE_DATE);
 
 /*
     struct messageKWP kwpmsg;
@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
                "              L = Trunk locking delay (-,0,1..254 sec)\n"
                "              R = Trunk re-locking delay (-,0,1...254 sec)\n"
                "              V = Trunk speed locking (0,2,4,6,8,10,12,14)\n"
+			   "              Z = Alarm level (0,1,2)\n"
                "              I = System information\n"
                "              T = SID display test\n"
                "              M = Read Trionic information\n"
@@ -389,6 +390,52 @@ int main(int argc, char *argv[])
                     else if( buf[33] == 0x01 ) printf("IMMEDIATE\n");
                     else printf("%d sec\n", buf[33]-1);
                 }
+            }
+        }
+		else if( *argv[1] == 'z' || *argv[1] == 'Z' )
+        {
+            printf("\nTWICE - Alarm level\n\n");
+        
+            // Send initializaton
+            init_connection( h, TWICE);
+    
+            // Check setting
+            i = query_data( h, TWICE, 0x02, buf );
+            if( i >= 2 )
+            {
+                printf("Alarm level ");
+                if( buf[2] == 0xE6 ) printf("NO ALARM\n");
+                else if( buf[2] == 0xF7 ) printf("GLASS BREAK SENSOR\n");
+                else printf("GLASS BREAK AND TILT SENSORS\n");
+            }
+        
+            if( argc > 2 )
+            {
+				i = atoi( argv[2] );
+                if( i == 0 || i == 1 || i == 2)
+                {
+					sleep( 500 );
+					
+					// Set locking delay
+					buf[0] = 0x20;
+					if(i == 0) buf[1] = 0xE6;
+					else if(i == 1) buf[1] = 0xF7;
+					else buf[1] = 0xFF;
+					
+					change_setting( h, TWICE, buf, 2 );
+
+					sleep( 500 );
+			
+					// Check setting
+					i = query_data( h, TWICE, 0x02, buf );
+					if( i >= 2 )
+					{
+						printf("Alarm level ");
+						if( buf[2] == 0xE6 ) printf("NO ALARM\n");
+						else if( buf[2] == 0xF7 ) printf("GLASS BREAK SENSOR\n");
+						else printf("GLASS BREAK AND TILT SENSORS\n");
+					}
+				}
             }
         }
         else if( *argv[1] == 'i' || *argv[1] == 'I' )

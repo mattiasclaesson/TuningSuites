@@ -18947,6 +18947,26 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             SpawnSaabOpenTech("P", false);
         }
 
+        private void btnGetAlarmLevel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SpawnSaabOpenTech("Z", false);
+        }
+
+        private void btnSetAlarmLevelNone_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SpawnSaabOpenTech("Z 0", false);
+        }
+
+        private void btnSetAlarmLevelGlass_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SpawnSaabOpenTech("Z 1", false);
+        }
+
+        private void btnSetAlarmLevelGlassTilt_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SpawnSaabOpenTech("Z 2", false);
+        }
+
         private void ViewRealtime_KeyDown(object sender, KeyEventArgs e)
         {
             // control arrow UP = move UP
