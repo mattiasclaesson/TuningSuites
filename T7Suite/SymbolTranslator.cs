@@ -28069,6 +28069,10 @@ namespace T7
                     case "IgnNormCal.Map":
                         description = "Normal ignition map. Resolution is 0.1 °.";
 
+                        break;
+                    case "IgnNormCal2.Map":
+                        description = "Second ignition map. Resolution is 0.1 °.";
+
 
                         break;
                     case "IgnE85Cal.fi_AbsMap":
