@@ -973,9 +973,16 @@ namespace T5Suite2
                 m_appSettings.Lastfilename = filename;
                 ctrlRealtime1.Currentfile = filename;
 
-                if (m_AFRMaps != null)
+                try
                 {
-                    m_AFRMaps.SaveMaps(); // first save changes that might have been done
+                    if (m_AFRMaps != null)
+                    {
+                        m_AFRMaps.SaveMaps(); // first save changes that might have been done
+                    }
+                }
+                catch (Exception E)
+                {
+                    logger.Debug(E, "Failed to save AFRMaps");
                 }
 
                 m_AFRMaps = null;
@@ -4127,10 +4134,17 @@ namespace T5Suite2
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (m_AFRMaps != null)
+            try
             {
-                m_AFRMaps.SaveMaps();
-                m_AFRMaps.SaveIdleMaps(); // <GS-28102010>
+                if (m_AFRMaps != null)
+                {
+                    m_AFRMaps.SaveMaps();
+                    m_AFRMaps.SaveIdleMaps(); // <GS-28102010>
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to save AFRMaps");
             }
 
             try
