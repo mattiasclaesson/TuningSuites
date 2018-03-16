@@ -333,6 +333,7 @@
     <Compile Include="frmVectorlist.designer.cs">
       <DependentUpon>frmVectorlist.cs</DependentUpon>
     </Compile>
+    <Compile Include="IdaProIdcFile.cs" />
     <Compile Include="msiupdater.cs" />
     <Compile Include="ProfColorTable.cs" />
     <Compile Include="Program.cs" />

@@ -13030,5 +13030,13 @@ namespace T5Suite2
                 logger.Debug(E);
             }
         }
+
+        private void barIdcGenerate_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (File.Exists(m_appSettings.Lastfilename))
+            {
+                IdaProIdcFile.create(m_appSettings.Lastfilename, m_trionicFileInformation, m_trionicFile);
+            }
+        }
     }
 }
