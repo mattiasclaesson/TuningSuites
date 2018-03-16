@@ -182,6 +182,7 @@ namespace T5Suite2
             this.btnReleaseNotes = new DevExpress.XtraBars.BarButtonItem();
             this.barItemCombiAdapter = new DevExpress.XtraBars.BarStaticItem();
             this.btnHardcodedRPMLimit = new DevExpress.XtraBars.BarButtonItem();
+            this.barIdcGenerate = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonFile = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup11 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -317,9 +318,6 @@ namespace T5Suite2
             // 
             this.ribbonControl1.ApplicationCaption = "T5Suite 2.0";
             this.ribbonControl1.AutoSizeItems = true;
-            // 
-            // 
-            // 
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.ExpandCollapseItem.Name = "";
             this.ribbonControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -474,9 +472,10 @@ namespace T5Suite2
             this.btnReleaseNotes,
             this.barItemCombiAdapter,
             this.btnHardcodedRPMLimit,
-            this.barButtonItem12});
+            this.barButtonItem12,
+            this.barIdcGenerate});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 155;
+            this.ribbonControl1.MaxItemId = 156;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonFile,
@@ -596,7 +595,7 @@ namespace T5Suite2
             this.btnDownloadFlash.Caption = "Download flash from ECU";
             this.btnDownloadFlash.Glyph = ((System.Drawing.Image)(resources.GetObject("btnDownloadFlash.Glyph")));
             this.btnDownloadFlash.Hint = "Download the flash content from the ECU through CANUSB. NOTE: Clears all adaption" +
-                " data in the ECU";
+    " data in the ECU";
             this.btnDownloadFlash.Id = 12;
             this.btnDownloadFlash.Name = "btnDownloadFlash";
             this.btnDownloadFlash.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDownloadFlash_ItemClick);
@@ -606,7 +605,7 @@ namespace T5Suite2
             this.btnUploadFlash.Caption = "Upload flash to ECU";
             this.btnUploadFlash.Glyph = ((System.Drawing.Image)(resources.GetObject("btnUploadFlash.Glyph")));
             this.btnUploadFlash.Hint = "Uploads a new flash to the ECU through CANUSB. NOTE: Clears all adaption data in " +
-                "the ECU";
+    "the ECU";
             this.btnUploadFlash.Id = 13;
             this.btnUploadFlash.Name = "btnUploadFlash";
             this.btnUploadFlash.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnUploadFlash_ItemClick);
@@ -832,7 +831,7 @@ namespace T5Suite2
             this.barButtonItem7.Caption = "Export T5Suite logfile to LogWorks";
             this.barButtonItem7.Glyph = ((System.Drawing.Image)(resources.GetObject("barButtonItem7.Glyph")));
             this.barButtonItem7.Hint = "Exports a T5Suite logfile to the external application LogWorks and opens LogWorks" +
-                " to view the data";
+    " to view the data";
             this.barButtonItem7.Id = 39;
             this.barButtonItem7.Name = "barButtonItem7";
             this.barButtonItem7.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnExportToLogWorks_ItemClick);
@@ -898,7 +897,7 @@ namespace T5Suite2
             // 
             this.btnKnockSensitivityMap.Caption = "Knock sensitivity map";
             this.btnKnockSensitivityMap.Hint = "Opens the knock sensitivity map. Higher values means more sensitive knock detecti" +
-                "on";
+    "on";
             this.btnKnockSensitivityMap.Id = 47;
             this.btnKnockSensitivityMap.Name = "btnKnockSensitivityMap";
             this.btnKnockSensitivityMap.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnKnockSensitivityMap_ItemClick);
@@ -915,7 +914,7 @@ namespace T5Suite2
             // 
             this.btnBoostReductionMap.Caption = "Boost reduction map";
             this.btnBoostReductionMap.Hint = "Opens the boost reduction map. This determines how much boost is reduced when kno" +
-                "ck is detected";
+    "ck is detected";
             this.btnBoostReductionMap.Id = 49;
             this.btnBoostReductionMap.Name = "btnBoostReductionMap";
             this.btnBoostReductionMap.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBoostReductionMap_ItemClick);
@@ -979,7 +978,7 @@ namespace T5Suite2
             this.btnBinaryCompare.Caption = "Binary compare files";
             this.btnBinaryCompare.Glyph = ((System.Drawing.Image)(resources.GetObject("btnBinaryCompare.Glyph")));
             this.btnBinaryCompare.Hint = "Lets you compare two binary files on a more detailed level. All binary difference" +
-                "s will be shown";
+    "s will be shown";
             this.btnBinaryCompare.Id = 56;
             this.btnBinaryCompare.Name = "btnBinaryCompare";
             this.btnBinaryCompare.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBinaryCompare_ItemClick);
@@ -998,7 +997,7 @@ namespace T5Suite2
             this.btnCompareSRAMSnapshots.Caption = "Compare SRAM snapshots";
             this.btnCompareSRAMSnapshots.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCompareSRAMSnapshots.Glyph")));
             this.btnCompareSRAMSnapshots.Hint = "Lets you compare the maps of two snapshots taken from the working memory of an EC" +
-                "U";
+    "U";
             this.btnCompareSRAMSnapshots.Id = 58;
             this.btnCompareSRAMSnapshots.Name = "btnCompareSRAMSnapshots";
             this.btnCompareSRAMSnapshots.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCompareSRAMSnapshots_ItemClick);
@@ -1017,7 +1016,7 @@ namespace T5Suite2
             this.btnCompareSRAMtoBinary.Caption = "Compare SRAM snapshot to binary";
             this.btnCompareSRAMtoBinary.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCompareSRAMtoBinary.Glyph")));
             this.btnCompareSRAMtoBinary.Hint = "Lets you compare a snapshot of the ECUs working memory to the maps in the binary " +
-                "file";
+    "file";
             this.btnCompareSRAMtoBinary.Id = 60;
             this.btnCompareSRAMtoBinary.Name = "btnCompareSRAMtoBinary";
             this.btnCompareSRAMtoBinary.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCompareSRAMtoBinary_ItemClick);
@@ -1027,7 +1026,7 @@ namespace T5Suite2
             this.btnBinaryCompareSRAMsnapshots.Caption = "Binary compare SRAM snapshots";
             this.btnBinaryCompareSRAMsnapshots.Glyph = ((System.Drawing.Image)(resources.GetObject("btnBinaryCompareSRAMsnapshots.Glyph")));
             this.btnBinaryCompareSRAMsnapshots.Hint = "Lets you have a closer look at differences in two snapshots of the ECUs working m" +
-                "emory. All differences will be shown";
+    "emory. All differences will be shown";
             this.btnBinaryCompareSRAMsnapshots.Id = 61;
             this.btnBinaryCompareSRAMsnapshots.Name = "btnBinaryCompareSRAMsnapshots";
             this.btnBinaryCompareSRAMsnapshots.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBinaryCompareSRAMsnapshots_ItemClick);
@@ -1147,7 +1146,7 @@ namespace T5Suite2
             this.btnCreateProject.Caption = "Create a project";
             this.btnCreateProject.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCreateProject.Glyph")));
             this.btnCreateProject.Hint = "Creates a new project. If a binary files is opened it will create a project based" +
-                " on that binary file";
+    " on that binary file";
             this.btnCreateProject.Id = 75;
             this.btnCreateProject.Name = "btnCreateProject";
             this.btnCreateProject.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCreateProject_ItemClick);
@@ -1240,7 +1239,7 @@ namespace T5Suite2
             this.btnTuneToStageX.Enabled = false;
             this.btnTuneToStageX.Glyph = ((System.Drawing.Image)(resources.GetObject("btnTuneToStageX.Glyph")));
             this.btnTuneToStageX.Hint = "Allows you to manually set the tuning parameters for the tuning wizard before exe" +
-                "cuting";
+    "cuting";
             this.btnTuneToStageX.Id = 85;
             this.btnTuneToStageX.Name = "btnTuneToStageX";
             this.btnTuneToStageX.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
@@ -1380,7 +1379,7 @@ namespace T5Suite2
             this.btnPeMicroProgramIntel.Caption = "Program ECU [Intel]";
             this.btnPeMicroProgramIntel.Glyph = ((System.Drawing.Image)(resources.GetObject("btnPeMicroProgramIntel.Glyph")));
             this.btnPeMicroProgramIntel.Hint = "Executes the program sequence through the P&E micro BDM for ECUs with Intel chips" +
-                "";
+    "";
             this.btnPeMicroProgramIntel.Id = 101;
             this.btnPeMicroProgramIntel.Name = "btnPeMicroProgramIntel";
             this.btnPeMicroProgramIntel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPeMicroProgramIntel_ItemClick);
@@ -1390,7 +1389,7 @@ namespace T5Suite2
             this.btnPeMicroProgramAtmel.Caption = "Program ECU [Atmel]";
             this.btnPeMicroProgramAtmel.Glyph = ((System.Drawing.Image)(resources.GetObject("btnPeMicroProgramAtmel.Glyph")));
             this.btnPeMicroProgramAtmel.Hint = "Executes the program sequence through the P&E micro BDM for ECUs with Atmel chips" +
-                "";
+    "";
             this.btnPeMicroProgramAtmel.Id = 102;
             this.btnPeMicroProgramAtmel.Name = "btnPeMicroProgramAtmel";
             this.btnPeMicroProgramAtmel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPeMicroProgramAtmel_ItemClick);
@@ -1435,7 +1434,7 @@ namespace T5Suite2
             this.btnCompareToOriginalFile.Caption = "Compare to original file";
             this.btnCompareToOriginalFile.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCompareToOriginalFile.Glyph")));
             this.btnCompareToOriginalFile.Hint = "Directly compares the maps of the currently opened binary to the original binary " +
-                "file";
+    "file";
             this.btnCompareToOriginalFile.Id = 107;
             this.btnCompareToOriginalFile.Name = "btnCompareToOriginalFile";
             this.btnCompareToOriginalFile.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCompareToOriginalFile_ItemClick);
@@ -1477,8 +1476,8 @@ namespace T5Suite2
             this.btnRollForward.Glyph = ((System.Drawing.Image)(resources.GetObject("btnRollForward.Glyph")));
             this.btnRollForward.Hint = "Rolls the last rolled back transaction forward again (redo)";
             this.btnRollForward.Id = 111;
-            this.btnRollForward.ItemShortcut = new DevExpress.XtraBars.BarShortcut(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                            | System.Windows.Forms.Keys.Z));
+            this.btnRollForward.ItemShortcut = new DevExpress.XtraBars.BarShortcut(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+                | System.Windows.Forms.Keys.Z));
             this.btnRollForward.Name = "btnRollForward";
             this.btnRollForward.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnRollForward_ItemClick);
             // 
@@ -1528,7 +1527,7 @@ namespace T5Suite2
             this.btnProduceBinaryFromProject.Enabled = false;
             this.btnProduceBinaryFromProject.Glyph = ((System.Drawing.Image)(resources.GetObject("btnProduceBinaryFromProject.Glyph")));
             this.btnProduceBinaryFromProject.Hint = "Produces the last possible binary file from the currently opened project and lets" +
-                " you save it on your harddrive";
+    " you save it on your harddrive";
             this.btnProduceBinaryFromProject.Id = 117;
             this.btnProduceBinaryFromProject.Name = "btnProduceBinaryFromProject";
             this.btnProduceBinaryFromProject.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnProduceBinaryFromProject_ItemClick);
@@ -1565,7 +1564,7 @@ namespace T5Suite2
             this.btnWriteLogMarker.Caption = "Write log marker [F6]";
             this.btnWriteLogMarker.Glyph = ((System.Drawing.Image)(resources.GetObject("btnWriteLogMarker.Glyph")));
             this.btnWriteLogMarker.Hint = "Writes a marker in the logfile (when logging i active) to be able to find the cur" +
-                "rent position in the log later on";
+    "rent position in the log later on";
             this.btnWriteLogMarker.Id = 122;
             this.btnWriteLogMarker.ItemShortcut = new DevExpress.XtraBars.BarShortcut(System.Windows.Forms.Keys.F6);
             this.btnWriteLogMarker.Name = "btnWriteLogMarker";
@@ -1653,7 +1652,7 @@ namespace T5Suite2
             this.btnCompareECUWithBinary.Caption = "Compare ECU with binary";
             this.btnCompareECUWithBinary.Glyph = ((System.Drawing.Image)(resources.GetObject("btnCompareECUWithBinary.Glyph")));
             this.btnCompareECUWithBinary.Hint = "Compares the currently opened binary file to the content in the ECUs working memo" +
-                "ry";
+    "ry";
             this.btnCompareECUWithBinary.Id = 131;
             this.btnCompareECUWithBinary.Name = "btnCompareECUWithBinary";
             this.btnCompareECUWithBinary.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCompareECUWithBinary_ItemClick);
@@ -1680,7 +1679,7 @@ namespace T5Suite2
             this.btnBinExaminor.Caption = "Examine binary";
             this.btnBinExaminor.Glyph = ((System.Drawing.Image)(resources.GetObject("btnBinExaminor.Glyph")));
             this.btnBinExaminor.Hint = "Shows a examination report of the currently opened binary. T5Suite 2.0 will try t" +
-                "o autodetect the settings and correct hardware that should support this binary";
+    "o autodetect the settings and correct hardware that should support this binary";
             this.btnBinExaminor.Id = 134;
             this.btnBinExaminor.Name = "btnBinExaminor";
             this.btnBinExaminor.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBinExaminor_ItemClick);
@@ -1826,6 +1825,13 @@ namespace T5Suite2
             this.btnHardcodedRPMLimit.Name = "btnHardcodedRPMLimit";
             this.btnHardcodedRPMLimit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnHardcodedRPMLimit_ItemClick);
             // 
+            // barIdcGenerate
+            // 
+            this.barIdcGenerate.Caption = "Generate Idc file";
+            this.barIdcGenerate.Id = 155;
+            this.barIdcGenerate.Name = "barIdcGenerate";
+            this.barIdcGenerate.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barIdcGenerate_ItemClick);
+            // 
             // ribbonFile
             // 
             this.ribbonFile.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -1848,6 +1854,7 @@ namespace T5Suite2
             this.ribbonPageGroup1.ItemLinks.Add(this.btnExit);
             this.ribbonPageGroup1.ItemLinks.Add(this.btnScanForBinaries);
             this.ribbonPageGroup1.ItemLinks.Add(this.btnShowKnockCounterMaps);
+            this.ribbonPageGroup1.ItemLinks.Add(this.barIdcGenerate);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "File actions";
             // 
@@ -2240,9 +2247,9 @@ namespace T5Suite2
             this.ctrlRealtime1.AreaCorrectionPercentage = 0;
             this.ctrlRealtime1.AutoLoggingEnabled = false;
             this.ctrlRealtime1.AutoLogStartSign = 0;
-            this.ctrlRealtime1.AutoLogStartValue = 0;
+            this.ctrlRealtime1.AutoLogStartValue = 0D;
             this.ctrlRealtime1.AutoLogStopSign = 0;
-            this.ctrlRealtime1.AutoLogStopValue = 0;
+            this.ctrlRealtime1.AutoLogStopValue = 0D;
             this.ctrlRealtime1.AutoLogTriggerStartSymbol = "";
             this.ctrlRealtime1.AutoLogTriggerStopSymbol = "";
             this.ctrlRealtime1.AutoUpdateFuelMap = false;
@@ -2271,15 +2278,15 @@ namespace T5Suite2
             this.ctrlRealtime1.TabIndex = 0;
             this.ctrlRealtime1.WideBandAFRSymbol = "";
             this.ctrlRealtime1.onLoggingStarted += new Trionic5Controls.ctrlRealtime.LoggingStarted(this.ctrlRealtime1_onLoggingStarted);
-            this.ctrlRealtime1.onSwitchIgnitionTuningOnOff += new Trionic5Controls.ctrlRealtime.SwitchIgnitionTuningOnOff(this.ctrlRealtime1_onSwitchIgnitionTuningOnOff);
-            this.ctrlRealtime1.onRemoveSymbolFromMonitorList += new Trionic5Controls.ctrlRealtime.AddSymbolToMonitorList(this.ctrlRealtime1_onRemoveSymbolFromMonitorList);
             this.ctrlRealtime1.onProgramModeChange += new Trionic5Controls.ctrlRealtime.ProgramModeChange(this.ctrlRealtime1_onProgramModeChange);
-            this.ctrlRealtime1.onOpenLogFileRequest += new Trionic5Controls.ctrlRealtime.OpenLogFileRequest(this.ctrlRealtime1_onOpenLogFileRequest);
             this.ctrlRealtime1.onMonitorTypeChanged += new Trionic5Controls.ctrlRealtime.MonitorTypeChanged(this.ctrlRealtime1_onMonitorTypeChanged);
-            this.ctrlRealtime1.onSwitchClosedLoopOnOff += new Trionic5Controls.ctrlRealtime.SwitchClosedLoopOnOff(this.ctrlRealtime1_onSwitchClosedLoopOnOff);
             this.ctrlRealtime1.onMapDisplayRequested += new Trionic5Controls.ctrlRealtime.MapDisplayRequested(this.ctrlRealtime1_onMapDisplayRequested);
-            this.ctrlRealtime1.onAutoTuneStateChanged += new Trionic5Controls.ctrlRealtime.AutoTuneStateChanged(this.ctrlRealtime1_onAutoTuneStateChanged);
             this.ctrlRealtime1.onAddSymbolToMonitorList += new Trionic5Controls.ctrlRealtime.AddSymbolToMonitorList(this.ctrlRealtime1_onAddSymbolToMonitorList);
+            this.ctrlRealtime1.onRemoveSymbolFromMonitorList += new Trionic5Controls.ctrlRealtime.AddSymbolToMonitorList(this.ctrlRealtime1_onRemoveSymbolFromMonitorList);
+            this.ctrlRealtime1.onOpenLogFileRequest += new Trionic5Controls.ctrlRealtime.OpenLogFileRequest(this.ctrlRealtime1_onOpenLogFileRequest);
+            this.ctrlRealtime1.onAutoTuneStateChanged += new Trionic5Controls.ctrlRealtime.AutoTuneStateChanged(this.ctrlRealtime1_onAutoTuneStateChanged);
+            this.ctrlRealtime1.onSwitchClosedLoopOnOff += new Trionic5Controls.ctrlRealtime.SwitchClosedLoopOnOff(this.ctrlRealtime1_onSwitchClosedLoopOnOff);
+            this.ctrlRealtime1.onSwitchIgnitionTuningOnOff += new Trionic5Controls.ctrlRealtime.SwitchIgnitionTuningOnOff(this.ctrlRealtime1_onSwitchIgnitionTuningOnOff);
             // 
             // dockSymbols
             // 
@@ -2344,27 +2351,27 @@ namespace T5Suite2
             this.showAxisInformationToolStripMenuItem,
             this.addToRealtimeUserMapsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(214, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // viewFromSRAMFileToolStripMenuItem
             // 
             this.viewFromSRAMFileToolStripMenuItem.Name = "viewFromSRAMFileToolStripMenuItem";
-            this.viewFromSRAMFileToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.viewFromSRAMFileToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.viewFromSRAMFileToolStripMenuItem.Text = "View from SRAM file";
             this.viewFromSRAMFileToolStripMenuItem.Click += new System.EventHandler(this.viewFromSRAMFileToolStripMenuItem_Click);
             // 
             // showAxisInformationToolStripMenuItem
             // 
             this.showAxisInformationToolStripMenuItem.Name = "showAxisInformationToolStripMenuItem";
-            this.showAxisInformationToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.showAxisInformationToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.showAxisInformationToolStripMenuItem.Text = "Show axis information";
             this.showAxisInformationToolStripMenuItem.Click += new System.EventHandler(this.showAxisInformationToolStripMenuItem_Click);
             // 
             // addToRealtimeUserMapsToolStripMenuItem
             // 
             this.addToRealtimeUserMapsToolStripMenuItem.Name = "addToRealtimeUserMapsToolStripMenuItem";
-            this.addToRealtimeUserMapsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.addToRealtimeUserMapsToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.addToRealtimeUserMapsToolStripMenuItem.Text = "Add to realtime user maps";
             this.addToRealtimeUserMapsToolStripMenuItem.Click += new System.EventHandler(this.addToRealtimeUserMapsToolStripMenuItem_Click);
             // 
@@ -2406,9 +2413,9 @@ namespace T5Suite2
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcSymbolSubcategory, DevExpress.Data.ColumnSortOrder.Ascending),
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcSymbolHelptext, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridViewSymbols.ViewCaption = "Symbols";
+            this.gridViewSymbols.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gridViewSymbols_CustomDrawCell);
             this.gridViewSymbols.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gridViewSymbols_FocusedRowChanged);
             this.gridViewSymbols.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gridViewSymbols_KeyDown);
-            this.gridViewSymbols.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gridViewSymbols_CustomDrawCell);
             this.gridViewSymbols.DoubleClick += new System.EventHandler(this.gridViewSymbols_DoubleClick);
             // 
             // gcSymbolname
@@ -2560,7 +2567,7 @@ namespace T5Suite2
             // mainIgnitionMapToolStripMenuItem
             // 
             this.mainIgnitionMapToolStripMenuItem.Name = "mainIgnitionMapToolStripMenuItem";
-            this.mainIgnitionMapToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.mainIgnitionMapToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.mainIgnitionMapToolStripMenuItem.Tag = "Ign_map_0!";
             this.mainIgnitionMapToolStripMenuItem.Text = "Main ignition map";
             this.mainIgnitionMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2568,7 +2575,7 @@ namespace T5Suite2
             // knockIgnitionPullMapToolStripMenuItem
             // 
             this.knockIgnitionPullMapToolStripMenuItem.Name = "knockIgnitionPullMapToolStripMenuItem";
-            this.knockIgnitionPullMapToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.knockIgnitionPullMapToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.knockIgnitionPullMapToolStripMenuItem.Tag = "Ign_map_2!";
             this.knockIgnitionPullMapToolStripMenuItem.Text = "Knock ignition pull map";
             this.knockIgnitionPullMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2592,14 +2599,14 @@ namespace T5Suite2
             this.dFactorsToolStripMenuItem,
             this.boostLimitIn1stGearToolStripMenuItem});
             this.automaticGearboxToolStripMenuItem.Name = "automaticGearboxToolStripMenuItem";
-            this.automaticGearboxToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.automaticGearboxToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.automaticGearboxToolStripMenuItem.Text = "Automatic gearbox";
             this.automaticGearboxToolStripMenuItem.DropDownOpening += new System.EventHandler(this.automaticGearboxToolStripMenuItem_DropDownOpening);
             // 
             // boostRequestMapToolStripMenuItem1
             // 
             this.boostRequestMapToolStripMenuItem1.Name = "boostRequestMapToolStripMenuItem1";
-            this.boostRequestMapToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
+            this.boostRequestMapToolStripMenuItem1.Size = new System.Drawing.Size(188, 22);
             this.boostRequestMapToolStripMenuItem1.Tag = "Tryck_mat_a!";
             this.boostRequestMapToolStripMenuItem1.Text = "Boost request map";
             this.boostRequestMapToolStripMenuItem1.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2607,7 +2614,7 @@ namespace T5Suite2
             // boostControlBiasToolStripMenuItem1
             // 
             this.boostControlBiasToolStripMenuItem1.Name = "boostControlBiasToolStripMenuItem1";
-            this.boostControlBiasToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
+            this.boostControlBiasToolStripMenuItem1.Size = new System.Drawing.Size(188, 22);
             this.boostControlBiasToolStripMenuItem1.Tag = "Reg_kon_mat_a!";
             this.boostControlBiasToolStripMenuItem1.Text = "Boost control bias";
             this.boostControlBiasToolStripMenuItem1.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2615,7 +2622,7 @@ namespace T5Suite2
             // pFactorsToolStripMenuItem
             // 
             this.pFactorsToolStripMenuItem.Name = "pFactorsToolStripMenuItem";
-            this.pFactorsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.pFactorsToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.pFactorsToolStripMenuItem.Tag = "P_fors_a!";
             this.pFactorsToolStripMenuItem.Text = "P factors";
             this.pFactorsToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2623,7 +2630,7 @@ namespace T5Suite2
             // iFactorsToolStripMenuItem
             // 
             this.iFactorsToolStripMenuItem.Name = "iFactorsToolStripMenuItem";
-            this.iFactorsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.iFactorsToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.iFactorsToolStripMenuItem.Tag = "I_fors_a!";
             this.iFactorsToolStripMenuItem.Text = "I factors";
             this.iFactorsToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2631,7 +2638,7 @@ namespace T5Suite2
             // dFactorsToolStripMenuItem
             // 
             this.dFactorsToolStripMenuItem.Name = "dFactorsToolStripMenuItem";
-            this.dFactorsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.dFactorsToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.dFactorsToolStripMenuItem.Tag = "D_fors_a!";
             this.dFactorsToolStripMenuItem.Text = "D factors";
             this.dFactorsToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2639,7 +2646,7 @@ namespace T5Suite2
             // boostLimitIn1stGearToolStripMenuItem
             // 
             this.boostLimitIn1stGearToolStripMenuItem.Name = "boostLimitIn1stGearToolStripMenuItem";
-            this.boostLimitIn1stGearToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.boostLimitIn1stGearToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.boostLimitIn1stGearToolStripMenuItem.Tag = "Regl_tryck_fgaut!";
             this.boostLimitIn1stGearToolStripMenuItem.Text = "Boost limit in 1st gear";
             this.boostLimitIn1stGearToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2655,14 +2662,14 @@ namespace T5Suite2
             this.boostLimitIn1stGearToolStripMenuItem1,
             this.boostLimitIn2ndGearToolStripMenuItem});
             this.manualGearboxToolStripMenuItem.Name = "manualGearboxToolStripMenuItem";
-            this.manualGearboxToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.manualGearboxToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.manualGearboxToolStripMenuItem.Text = "Manual gearbox";
             this.manualGearboxToolStripMenuItem.DropDownOpening += new System.EventHandler(this.manualGearboxToolStripMenuItem_DropDownOpening);
             // 
             // boostRequestMapToolStripMenuItem2
             // 
             this.boostRequestMapToolStripMenuItem2.Name = "boostRequestMapToolStripMenuItem2";
-            this.boostRequestMapToolStripMenuItem2.Size = new System.Drawing.Size(190, 22);
+            this.boostRequestMapToolStripMenuItem2.Size = new System.Drawing.Size(193, 22);
             this.boostRequestMapToolStripMenuItem2.Tag = "Tryck_mat!";
             this.boostRequestMapToolStripMenuItem2.Text = "Boost request map";
             this.boostRequestMapToolStripMenuItem2.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2670,7 +2677,7 @@ namespace T5Suite2
             // boostControlBiasToolStripMenuItem2
             // 
             this.boostControlBiasToolStripMenuItem2.Name = "boostControlBiasToolStripMenuItem2";
-            this.boostControlBiasToolStripMenuItem2.Size = new System.Drawing.Size(190, 22);
+            this.boostControlBiasToolStripMenuItem2.Size = new System.Drawing.Size(193, 22);
             this.boostControlBiasToolStripMenuItem2.Tag = "Reg_kon_mat!";
             this.boostControlBiasToolStripMenuItem2.Text = "Boost control bias";
             this.boostControlBiasToolStripMenuItem2.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2678,7 +2685,7 @@ namespace T5Suite2
             // pFactorsToolStripMenuItem1
             // 
             this.pFactorsToolStripMenuItem1.Name = "pFactorsToolStripMenuItem1";
-            this.pFactorsToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
+            this.pFactorsToolStripMenuItem1.Size = new System.Drawing.Size(193, 22);
             this.pFactorsToolStripMenuItem1.Tag = "P_fors!";
             this.pFactorsToolStripMenuItem1.Text = "P factors";
             this.pFactorsToolStripMenuItem1.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2686,7 +2693,7 @@ namespace T5Suite2
             // iFactorsToolStripMenuItem1
             // 
             this.iFactorsToolStripMenuItem1.Name = "iFactorsToolStripMenuItem1";
-            this.iFactorsToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
+            this.iFactorsToolStripMenuItem1.Size = new System.Drawing.Size(193, 22);
             this.iFactorsToolStripMenuItem1.Tag = "I_fors!";
             this.iFactorsToolStripMenuItem1.Text = "I factors";
             this.iFactorsToolStripMenuItem1.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2694,7 +2701,7 @@ namespace T5Suite2
             // dFactorsToolStripMenuItem1
             // 
             this.dFactorsToolStripMenuItem1.Name = "dFactorsToolStripMenuItem1";
-            this.dFactorsToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
+            this.dFactorsToolStripMenuItem1.Size = new System.Drawing.Size(193, 22);
             this.dFactorsToolStripMenuItem1.Tag = "D_fors!";
             this.dFactorsToolStripMenuItem1.Text = "D factors";
             this.dFactorsToolStripMenuItem1.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2702,7 +2709,7 @@ namespace T5Suite2
             // boostLimitIn1stGearToolStripMenuItem1
             // 
             this.boostLimitIn1stGearToolStripMenuItem1.Name = "boostLimitIn1stGearToolStripMenuItem1";
-            this.boostLimitIn1stGearToolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
+            this.boostLimitIn1stGearToolStripMenuItem1.Size = new System.Drawing.Size(193, 22);
             this.boostLimitIn1stGearToolStripMenuItem1.Tag = "Regl_tryck_fgm!";
             this.boostLimitIn1stGearToolStripMenuItem1.Text = "Boost limit in 1st gear";
             this.boostLimitIn1stGearToolStripMenuItem1.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2710,7 +2717,7 @@ namespace T5Suite2
             // boostLimitIn2ndGearToolStripMenuItem
             // 
             this.boostLimitIn2ndGearToolStripMenuItem.Name = "boostLimitIn2ndGearToolStripMenuItem";
-            this.boostLimitIn2ndGearToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.boostLimitIn2ndGearToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.boostLimitIn2ndGearToolStripMenuItem.Tag = "Regl_tryck_sgm!";
             this.boostLimitIn2ndGearToolStripMenuItem.Text = "Boost limit in 2nd gear";
             this.boostLimitIn2ndGearToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2728,7 +2735,7 @@ namespace T5Suite2
             // beforeStartInjectionToolStripMenuItem
             // 
             this.beforeStartInjectionToolStripMenuItem.Name = "beforeStartInjectionToolStripMenuItem";
-            this.beforeStartInjectionToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.beforeStartInjectionToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.beforeStartInjectionToolStripMenuItem.Tag = "Before_start!";
             this.beforeStartInjectionToolStripMenuItem.Text = "Before start injection";
             this.beforeStartInjectionToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2736,7 +2743,7 @@ namespace T5Suite2
             // baseAmountOfFuelWhileCrankingToolStripMenuItem
             // 
             this.baseAmountOfFuelWhileCrankingToolStripMenuItem.Name = "baseAmountOfFuelWhileCrankingToolStripMenuItem";
-            this.baseAmountOfFuelWhileCrankingToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.baseAmountOfFuelWhileCrankingToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.baseAmountOfFuelWhileCrankingToolStripMenuItem.Tag = "Start_insp!";
             this.baseAmountOfFuelWhileCrankingToolStripMenuItem.Text = "Base amount of fuel while cranking";
             this.baseAmountOfFuelWhileCrankingToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2744,7 +2751,7 @@ namespace T5Suite2
             // enrichmentFactorsWhileCrankingToolStripMenuItem
             // 
             this.enrichmentFactorsWhileCrankingToolStripMenuItem.Name = "enrichmentFactorsWhileCrankingToolStripMenuItem";
-            this.enrichmentFactorsWhileCrankingToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.enrichmentFactorsWhileCrankingToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.enrichmentFactorsWhileCrankingToolStripMenuItem.Tag = "Startvev_fak!";
             this.enrichmentFactorsWhileCrankingToolStripMenuItem.Text = "Enrichment factors while cranking";
             this.enrichmentFactorsWhileCrankingToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2761,7 +2768,7 @@ namespace T5Suite2
             // firstAfterstartEnrichmentFactorsToolStripMenuItem
             // 
             this.firstAfterstartEnrichmentFactorsToolStripMenuItem.Name = "firstAfterstartEnrichmentFactorsToolStripMenuItem";
-            this.firstAfterstartEnrichmentFactorsToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.firstAfterstartEnrichmentFactorsToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.firstAfterstartEnrichmentFactorsToolStripMenuItem.Tag = "Eftersta_fak!";
             this.firstAfterstartEnrichmentFactorsToolStripMenuItem.Text = "First afterstart enrichment factors";
             this.firstAfterstartEnrichmentFactorsToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2769,7 +2776,7 @@ namespace T5Suite2
             // secondAfterstartEnrichmentFactorsToolStripMenuItem
             // 
             this.secondAfterstartEnrichmentFactorsToolStripMenuItem.Name = "secondAfterstartEnrichmentFactorsToolStripMenuItem";
-            this.secondAfterstartEnrichmentFactorsToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.secondAfterstartEnrichmentFactorsToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.secondAfterstartEnrichmentFactorsToolStripMenuItem.Tag = "Eftersta_fak2!";
             this.secondAfterstartEnrichmentFactorsToolStripMenuItem.Text = "Second afterstart enrichment factors";
             this.secondAfterstartEnrichmentFactorsToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2790,13 +2797,13 @@ namespace T5Suite2
             this.throttlePlateBasedToolStripMenuItem,
             this.loadChangeBasedToolStripMenuItem});
             this.accelerationEnrichmentToolStripMenuItem.Name = "accelerationEnrichmentToolStripMenuItem";
-            this.accelerationEnrichmentToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.accelerationEnrichmentToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.accelerationEnrichmentToolStripMenuItem.Text = "Acceleration enrichment";
             // 
             // throttlePlateBasedToolStripMenuItem
             // 
             this.throttlePlateBasedToolStripMenuItem.Name = "throttlePlateBasedToolStripMenuItem";
-            this.throttlePlateBasedToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.throttlePlateBasedToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.throttlePlateBasedToolStripMenuItem.Tag = "Accel_konst!";
             this.throttlePlateBasedToolStripMenuItem.Text = "When throttle plate moves";
             this.throttlePlateBasedToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2804,7 +2811,7 @@ namespace T5Suite2
             // loadChangeBasedToolStripMenuItem
             // 
             this.loadChangeBasedToolStripMenuItem.Name = "loadChangeBasedToolStripMenuItem";
-            this.loadChangeBasedToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.loadChangeBasedToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.loadChangeBasedToolStripMenuItem.Tag = "Lacc_konst!";
             this.loadChangeBasedToolStripMenuItem.Text = "When load changes";
             this.loadChangeBasedToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2815,13 +2822,13 @@ namespace T5Suite2
             this.whenThrottlePlateMovesToolStripMenuItem,
             this.whenLoadChangesToolStripMenuItem});
             this.decelerationEnleanmentToolStripMenuItem.Name = "decelerationEnleanmentToolStripMenuItem";
-            this.decelerationEnleanmentToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.decelerationEnleanmentToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.decelerationEnleanmentToolStripMenuItem.Text = "Deceleration enleanment";
             // 
             // whenThrottlePlateMovesToolStripMenuItem
             // 
             this.whenThrottlePlateMovesToolStripMenuItem.Name = "whenThrottlePlateMovesToolStripMenuItem";
-            this.whenThrottlePlateMovesToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.whenThrottlePlateMovesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.whenThrottlePlateMovesToolStripMenuItem.Tag = "Retard_konst!";
             this.whenThrottlePlateMovesToolStripMenuItem.Text = "When throttle plate moves";
             this.whenThrottlePlateMovesToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2829,7 +2836,7 @@ namespace T5Suite2
             // whenLoadChangesToolStripMenuItem
             // 
             this.whenLoadChangesToolStripMenuItem.Name = "whenLoadChangesToolStripMenuItem";
-            this.whenLoadChangesToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.whenLoadChangesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.whenLoadChangesToolStripMenuItem.Tag = "Lret_konst!";
             this.whenLoadChangesToolStripMenuItem.Text = "When load changes";
             this.whenLoadChangesToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2840,13 +2847,13 @@ namespace T5Suite2
             this.activationMapToolStripMenuItem,
             this.enrichmentMapToolStripMenuItem});
             this.wideOpenThrottleEnrichmentToolStripMenuItem.Name = "wideOpenThrottleEnrichmentToolStripMenuItem";
-            this.wideOpenThrottleEnrichmentToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.wideOpenThrottleEnrichmentToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.wideOpenThrottleEnrichmentToolStripMenuItem.Text = "Wide open throttle enrichment";
             // 
             // activationMapToolStripMenuItem
             // 
             this.activationMapToolStripMenuItem.Name = "activationMapToolStripMenuItem";
-            this.activationMapToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.activationMapToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
             this.activationMapToolStripMenuItem.Tag = "Fload_throt_tab!";
             this.activationMapToolStripMenuItem.Text = "Throttle position activation map";
             this.activationMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2854,7 +2861,7 @@ namespace T5Suite2
             // enrichmentMapToolStripMenuItem
             // 
             this.enrichmentMapToolStripMenuItem.Name = "enrichmentMapToolStripMenuItem";
-            this.enrichmentMapToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.enrichmentMapToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
             this.enrichmentMapToolStripMenuItem.Tag = "Fload_tab!";
             this.enrichmentMapToolStripMenuItem.Text = "Enrichment map";
             this.enrichmentMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2873,7 +2880,7 @@ namespace T5Suite2
             // idleTargetRPMMapToolStripMenuItem
             // 
             this.idleTargetRPMMapToolStripMenuItem.Name = "idleTargetRPMMapToolStripMenuItem";
-            this.idleTargetRPMMapToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.idleTargetRPMMapToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.idleTargetRPMMapToolStripMenuItem.Tag = "Idle_rpm_tab!";
             this.idleTargetRPMMapToolStripMenuItem.Text = "Idle target engine speed map";
             this.idleTargetRPMMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2881,7 +2888,7 @@ namespace T5Suite2
             // idleFuelMapToolStripMenuItem
             // 
             this.idleFuelMapToolStripMenuItem.Name = "idleFuelMapToolStripMenuItem";
-            this.idleFuelMapToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.idleFuelMapToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.idleFuelMapToolStripMenuItem.Tag = "Idle_fuel_korr!";
             this.idleFuelMapToolStripMenuItem.Text = "Idle fuel map";
             this.idleFuelMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2889,7 +2896,7 @@ namespace T5Suite2
             // idleTargetIgnitionAngleToolStripMenuItem
             // 
             this.idleTargetIgnitionAngleToolStripMenuItem.Name = "idleTargetIgnitionAngleToolStripMenuItem";
-            this.idleTargetIgnitionAngleToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.idleTargetIgnitionAngleToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.idleTargetIgnitionAngleToolStripMenuItem.Tag = "Ign_idle_angle!";
             this.idleTargetIgnitionAngleToolStripMenuItem.Text = "Idle target ignition angle";
             this.idleTargetIgnitionAngleToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2897,7 +2904,7 @@ namespace T5Suite2
             // idleIgnitionCorrectionMapToolStripMenuItem
             // 
             this.idleIgnitionCorrectionMapToolStripMenuItem.Name = "idleIgnitionCorrectionMapToolStripMenuItem";
-            this.idleIgnitionCorrectionMapToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.idleIgnitionCorrectionMapToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.idleIgnitionCorrectionMapToolStripMenuItem.Tag = "Ign_map_1!";
             this.idleIgnitionCorrectionMapToolStripMenuItem.Text = "Idle ignition correction map";
             this.idleIgnitionCorrectionMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2913,7 +2920,7 @@ namespace T5Suite2
             // openLoopLoadLimitsToolStripMenuItem
             // 
             this.openLoopLoadLimitsToolStripMenuItem.Name = "openLoopLoadLimitsToolStripMenuItem";
-            this.openLoopLoadLimitsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.openLoopLoadLimitsToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.openLoopLoadLimitsToolStripMenuItem.Tag = "Open_loop!";
             this.openLoopLoadLimitsToolStripMenuItem.Text = "Open loop load limits";
             this.openLoopLoadLimitsToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
@@ -2935,42 +2942,42 @@ namespace T5Suite2
             // knockSensitivityMapToolStripMenuItem
             // 
             this.knockSensitivityMapToolStripMenuItem.Name = "knockSensitivityMapToolStripMenuItem";
-            this.knockSensitivityMapToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.knockSensitivityMapToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
             this.knockSensitivityMapToolStripMenuItem.Text = "Knock sensitivity map";
             this.knockSensitivityMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
             // boostReductionMapToolStripMenuItem
             // 
             this.boostReductionMapToolStripMenuItem.Name = "boostReductionMapToolStripMenuItem";
-            this.boostReductionMapToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.boostReductionMapToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
             this.boostReductionMapToolStripMenuItem.Text = "Boost reduction map";
             this.boostReductionMapToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
             // ignitionRetardLimitToolStripMenuItem
             // 
             this.ignitionRetardLimitToolStripMenuItem.Name = "ignitionRetardLimitToolStripMenuItem";
-            this.ignitionRetardLimitToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.ignitionRetardLimitToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
             this.ignitionRetardLimitToolStripMenuItem.Text = "Ignition retard limit";
             this.ignitionRetardLimitToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
             // knockIndicationLoadLimitToolStripMenuItem
             // 
             this.knockIndicationLoadLimitToolStripMenuItem.Name = "knockIndicationLoadLimitToolStripMenuItem";
-            this.knockIndicationLoadLimitToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.knockIndicationLoadLimitToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
             this.knockIndicationLoadLimitToolStripMenuItem.Text = "Knock indication load limit";
             this.knockIndicationLoadLimitToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
             // knockRegulationLoadLimitToolStripMenuItem
             // 
             this.knockRegulationLoadLimitToolStripMenuItem.Name = "knockRegulationLoadLimitToolStripMenuItem";
-            this.knockRegulationLoadLimitToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.knockRegulationLoadLimitToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
             this.knockRegulationLoadLimitToolStripMenuItem.Text = "Knock regulation load limit";
             this.knockRegulationLoadLimitToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
             // timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem
             // 
             this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Name = "timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem";
-            this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Size = new System.Drawing.Size(319, 22);
+            this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
             this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Text = "Time to stay in knock mode after knock detection";
             this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
@@ -2989,10 +2996,10 @@ namespace T5Suite2
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "T5Suite Professional 2.0";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.DoubleClick += new System.EventHandler(this.Form1_DoubleClick);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
@@ -3280,6 +3287,7 @@ namespace T5Suite2
         private DevExpress.XtraBars.BarStaticItem barItemCombiAdapter;
         private DevExpress.XtraBars.BarButtonItem btnHardcodedRPMLimit;
         private DevExpress.XtraBars.BarButtonItem barButtonItem12;
+        private DevExpress.XtraBars.BarButtonItem barIdcGenerate;
     }
 }
 
