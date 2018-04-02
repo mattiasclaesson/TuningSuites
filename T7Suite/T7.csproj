@@ -84,9 +84,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="Be.Windows.Forms.HexBox, Version=1.2.0.14173, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\T7Libs\Be.Windows.Forms.HexBox.dll</HintPath>
+    <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="canlibCLSNET">
       <HintPath>..\T7Libs\canlibCLSNET.dll</HintPath>

@@ -30,8 +30,8 @@ namespace Trionic5Controls
             get { return _fileName; }
             set { _fileName = value; }
         }
-        readonly FormFind _formFind = new FormFind();
-        FormFindCancel _formFindCancel;
+        readonly frmFind _formFind = new frmFind();
+        frmFindCancel _formFindCancel;
         FindOptions findOptions;
         SymbolCollection m_symbolcollection= new SymbolCollection();
 
@@ -307,7 +307,7 @@ namespace Trionic5Controls
             }
 
             // show cancel dialog
-            _formFindCancel = new FormFindCancel();
+            _formFindCancel = new frmFindCancel();
             _formFindCancel.SetHexBox(hexBox1);
             _formFindCancel.Closed += new EventHandler(FormFindCancel_Closed);
             _formFindCancel.Show();

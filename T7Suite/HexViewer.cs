@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using System.IO;
 using Be.Windows.Forms;
 using CommonSuite;
@@ -14,11 +9,8 @@ namespace T7
 {
     public partial class HexViewer : DevExpress.XtraEditors.XtraUserControl
     {
-        public delegate void ViewerClose(object sender, EventArgs e);
-        public event HexViewer.ViewerClose onClose;
         public delegate void SelectionChanged(object sender, SelectionChangedEventArgs e);
         public event HexViewer.SelectionChanged onSelectionChanged;
-
 
         private string _fileName = string.Empty;
         private string _lastFilename = string.Empty;
@@ -36,10 +28,9 @@ namespace T7
             get { return _fileName; }
             set { _fileName = value; }
         }
-        frmFind _formFind = new frmFind();
+        readonly frmFind _formFind = new frmFind();
         frmFindCancel _formFindCancel;
-        frmGoTo _formGoto = new frmGoTo();
-        byte[] _findBuffer = new byte[0];
+        FindOptions findOptions;
         SymbolCollection m_symbolcollection= new SymbolCollection();
 
         private bool m_issramviewer = false;
@@ -52,15 +43,11 @@ namespace T7
 
         public HexViewer()
         {
-            InitializeComponent();
-            
+            InitializeComponent();   
         }
 
         public void SelectText(string symbolname, int fileoffset, int length)
         {
-           /* richTextBox1.SelectionStart = fileoffset;
-            richTextBox1.SelectionLength = length;
-            richTextBox1.ScrollToCaret();*/
             hexBox1.SelectionStart = fileoffset;
             hexBox1.SelectionLength = length;
             hexBox1.ScrollByteIntoView(fileoffset + length + 64); // scroll 4 lines extra for viewing purposes
@@ -158,7 +145,6 @@ namespace T7
 
         void CleanUp()
         {
-            
             if (hexBox1.ByteProvider != null)
             {
                 IDisposable byteProvider = hexBox1.ByteProvider as IDisposable;
@@ -167,8 +153,6 @@ namespace T7
                 hexBox1.ByteProvider = null;
             }
             _fileName = null;
-            CastCloseEvent();
-            //DisplayText(null);
         }
 
 
@@ -189,11 +173,10 @@ namespace T7
             try
             {
                 FileByteProvider fileByteProvider = new FileByteProvider(fileName);
-                fileByteProvider.Changed += new EventHandler(byteProvider_Changed);
+                fileByteProvider.Changed += byteProvider_Changed;
                 hexBox1.ByteProvider = fileByteProvider;
                 _fileName = fileName;
                 _lastFilename = _fileName;
-               // DisplayText(fileName);
             }
             catch (Exception ex1)
             {
@@ -229,7 +212,6 @@ namespace T7
 
                 miFind.Enabled = true;
                 miFindNext.Enabled = true;
-                //miGoTo.Enabled = true;
             }
 
             ManageAbilityForCopyAndPaste();
@@ -253,63 +235,20 @@ namespace T7
             FileInfo fi = new FileInfo(filename);
             m_currentfile_size = (int)fi.Length;
             OpenFile(filename);
-            
-            // ??? 
-//            CloseFile();
-
-            /*
-            FileInfo fi = new FileInfo(filename);
-            long numberoflines = fi.Length/16;
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sbascii = new StringBuilder();
-            using (BinaryReader br = new BinaryReader(new FileStream(filename, FileMode.Open)))
-            {
-                int current_address = 0;
-                for (int lcount = 0; lcount < numberoflines; lcount++)
-                {
-                    byte[] readbytes = br.ReadBytes(16);
-                    string line = current_address.ToString("X6") + " ";
-                    for (int bcount = 0; bcount < readbytes.Length; bcount++)
-                    {
-                        byte b = (byte)readbytes.GetValue(bcount);
-                        line += b.ToString("X2") + " ";
-                    }
-                    string line_ascii = string.Empty;
-                    for (int bcount = 0; bcount < readbytes.Length; bcount++)
-                    {
-                        byte b = (byte)readbytes.GetValue(bcount);
-                        if (b >= 0x20 && b <= 0x7f)
-                        {
-                            line_ascii += Convert.ToChar( b);
-                        }
-                        else
-                        {
-                            line_ascii += ".";
-                        }
-                    }
-                    sb.AppendLine(line);
-                    sbascii.AppendLine(line_ascii);
-                    current_address += 16;
-                }
-            }
-            richTextBox1.Text = sb.ToString();
-            richTextBox2.Text = sbascii.ToString();
-           
-            //MessageBox.Show(richTextBox1.Find("ox1_filt_coef").ToString());*/
         }
 
         void Find()
         {
             if (_formFind.ShowDialog() == DialogResult.OK)
             {
-                _findBuffer = _formFind.GetFindBytes();
+                findOptions = _formFind.GetFindOptions();
                 FindNext();
             }
         }
 
         void FindNext()
         {
-            if (_findBuffer.Length == 0)
+            if (findOptions == null)
             {
                 Find();
                 return;
@@ -318,19 +257,13 @@ namespace T7
             // show cancel dialog
             _formFindCancel = new frmFindCancel();
             _formFindCancel.SetHexBox(hexBox1);
-            _formFindCancel.Closed += new EventHandler(FormFindCancel_Closed);
+            _formFindCancel.Closed += FormFindCancel_Closed;
             _formFindCancel.Show();
 
-            // block activation of main form
-            //Activated += new EventHandler(FocusToFormFindCancel);
-
             // start find process
-            long res = hexBox1.Find(_findBuffer, hexBox1.SelectionStart + hexBox1.SelectionLength);
+            long res = hexBox1.Find(findOptions);
 
             _formFindCancel.Dispose();
-
-            // unblock activation of main form
-            //Activated -= new EventHandler(FocusToFormFindCancel);
 
             if (res == -1) // -1 = no match
             {
@@ -394,14 +327,6 @@ namespace T7
         private void miClose_Click(object sender, EventArgs e)
         {
             CloseFile();
-            //CastCloseEvent();
-        }
-        private void CastCloseEvent()
-        {
-            if (onClose != null)
-            {
-                onClose(this, EventArgs.Empty);
-            }
         }
 
         private string GetSymbolNameOffSetAndLength(long index, out int offset, out int length)
@@ -438,7 +363,6 @@ namespace T7
                 }
             }
             return retval;
-
         }
 
         private string GetSymbolName(long index)
@@ -481,7 +405,6 @@ namespace T7
             {
                 OpenFile(fileNames[0]);
             }
-
         }
 
         private void hexBox1_SelectionLengthChanged(object sender, EventArgs e)
@@ -522,7 +445,6 @@ namespace T7
                     }
                 }
             }
-
         }
 
         private void miFindNext_Click(object sender, EventArgs e)
@@ -536,7 +458,6 @@ namespace T7
             {
                 onSelectionChanged(this, new SelectionChangedEventArgs(offset, length));
             }
-
         }
 
         private void hexBox1_DoubleClick(object sender, EventArgs e)
@@ -555,25 +476,14 @@ namespace T7
 
     public class SelectionChangedEventArgs : System.EventArgs
     {
-        private int _offset;
-        private int _length;
+        public int Length { get; set; }
 
-        public int Length
-        {
-            get { return _length; }
-            set { _length = value; }
-        }
-
-        public int Offset
-        {
-            get { return _offset; }
-            set { _offset = value; }
-        }
+        public int Offset { get; set; }
 
         public SelectionChangedEventArgs(int offset, int length)
         {
-            this._offset = offset;
-            this._length = length;
+            Offset = offset;
+            Length = length;
         }
     }
 }

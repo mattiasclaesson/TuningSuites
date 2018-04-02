@@ -38,8 +38,7 @@ namespace T8SuitePro
         }
         frmFind _formFind = new frmFind();
         frmFindCancel _formFindCancel;
-        frmGoTo _formGoto = new frmGoTo();
-        byte[] _findBuffer = new byte[0];
+        FindOptions findOptions;
         SymbolCollection m_symbolcollection = new SymbolCollection();
 
         private bool m_issramviewer = false;
@@ -229,7 +228,6 @@ namespace T8SuitePro
 
                 miFind.Enabled = true;
                 miFindNext.Enabled = true;
-                //miGoTo.Enabled = true;
             }
 
             ManageAbilityForCopyAndPaste();
@@ -302,14 +300,14 @@ namespace T8SuitePro
         {
             if (_formFind.ShowDialog() == DialogResult.OK)
             {
-                _findBuffer = _formFind.GetFindBytes();
+                findOptions = _formFind.GetFindOptions();
                 FindNext();
             }
         }
 
         void FindNext()
         {
-            if (_findBuffer.Length == 0)
+            if (findOptions == null)
             {
                 Find();
                 return;
@@ -325,7 +323,7 @@ namespace T8SuitePro
             //Activated += new EventHandler(FocusToFormFindCancel);
 
             // start find process
-            long res = hexBox1.Find(_findBuffer, hexBox1.SelectionStart + hexBox1.SelectionLength);
+            long res = hexBox1.Find(findOptions);
 
             _formFindCancel.Dispose();
 

@@ -337,15 +337,6 @@
     <Compile Include="ctrlRealtime.Designer.cs">
       <DependentUpon>ctrlRealtime.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFind.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormFindCancel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormGoTo.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmBinCompare.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -554,30 +545,6 @@
     <EmbeddedResource Include="ctrlRealtime.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ctrlRealtime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFind.nl.resx">
-      <DependentUpon>FormFind.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFind.resx">
-      <DependentUpon>FormFind.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFindCancel.nl.resx">
-      <DependentUpon>FormFindCancel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFindCancel.resx">
-      <DependentUpon>FormFindCancel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormGoTo.nl.resx">
-      <DependentUpon>FormGoTo.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormGoTo.resx">
-      <DependentUpon>FormGoTo.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmBinCompare.nl.resx">
       <DependentUpon>frmBinCompare.cs</DependentUpon>

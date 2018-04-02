@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 using Be.Windows.Forms;
 
@@ -39,7 +40,7 @@ namespace CommonSuite
 //			rbString.Enter += new EventHandler(rbString_Enter);
 //			rbHex.Enter += new EventHandler(rbHex_Enter);
 
-			hexBox.ByteProvider = new DynamicByteProvider(new ByteCollection());
+			hexBox.ByteProvider = new DynamicByteProvider(new List<byte>());
 		}
 
 		/// <summary>
@@ -81,7 +82,6 @@ namespace CommonSuite
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.hexBox.Enabled = false;
             this.hexBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hexBox.LineInfoForeColor = System.Drawing.Color.Empty;
             this.hexBox.Location = new System.Drawing.Point(16, 104);
             this.hexBox.Name = "hexBox";
             this.hexBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
@@ -186,18 +186,20 @@ namespace CommonSuite
 		}
 		#endregion
 
-		public byte[] GetFindBytes()
-		{
-			if(rbString.Checked)
-			{
-				byte[] res = System.Text.ASCIIEncoding.ASCII.GetBytes(txtString.Text);
-				return res;
-			}
-			else
-			{
-				return ((DynamicByteProvider)hexBox.ByteProvider).Bytes.GetBytes();
-			}
-		}
+        public FindOptions GetFindOptions()
+        {
+            FindOptions findOptions;
+            if (rbString.Checked)
+            {
+                findOptions = new FindOptions() { Type = FindType.Text, Text = txtString.Text };
+            }
+            else
+            {
+                findOptions = new FindOptions() { Type = FindType.Hex, Hex = ((DynamicByteProvider)hexBox.ByteProvider).Bytes.ToArray() };
+            }
+
+            return findOptions;
+        }
 
 		private void rb_CheckedChanged(object sender, System.EventArgs e)
 		{
