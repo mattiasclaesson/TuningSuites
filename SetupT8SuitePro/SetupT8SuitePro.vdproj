@@ -4065,7 +4065,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
         "ProductCode" = "8:{E0FEA6D2-2F45-43AA-BB1A-275CECF2CF82}"
-        "PackageCode" = "8:{E78FDB58-43C0-487C-98D0-50547F142CC7}"
+        "PackageCode" = "8:{381D4F93-2843-4FBB-A826-E6E89E526CCD}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
