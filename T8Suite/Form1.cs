@@ -175,7 +175,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
 
             try
@@ -188,7 +188,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             
             splash.Close();
@@ -1596,6 +1596,7 @@ namespace T8SuitePro
             {
                 logger.Debug(E.Message);
             }
+
             if (returnvalue == 0) returnvalue = 1;
             if (symbolname == "KnkSoundRedCal.fi_OffsMa") returnvalue = 0.1;
             else if (symbolname == "IgnE85Cal.fi_AbsMap") returnvalue = 0.1;
@@ -1910,6 +1911,7 @@ namespace T8SuitePro
                 catch (Exception E)
                 {
                     frmInfoBox info = new frmInfoBox("Failed to write to binary. Is it read-only? Details: " + E.Message);
+                    logger.Error(E, "Failed to write to binary");
                 }
             }
         }
@@ -1969,6 +1971,7 @@ namespace T8SuitePro
                 catch (Exception E)
                 {
                     frmInfoBox info = new frmInfoBox("Failed to write to binary. Is it read-only? Details: " + E.Message);
+                    logger.Error(E, "Failed to write to binary");
                 }
             }
         }
