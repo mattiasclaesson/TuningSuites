@@ -223,7 +223,6 @@ namespace Trionic5Controls
             this.hexBox1.BackColor = System.Drawing.Color.AntiqueWhite;
             this.hexBox1.BackgroundImage = null;
             this.hexBox1.ForeColor = System.Drawing.Color.Black;
-            this.hexBox1.LineInfoForeColor = System.Drawing.Color.DarkGray;
             this.hexBox1.LineInfoVisible = true;
             this.hexBox1.Name = "hexBox1";
             this.hexBox1.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));

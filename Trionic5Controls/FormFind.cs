@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 using Be.Windows.Forms;
 
@@ -39,7 +40,7 @@ namespace Trionic5Controls
 //			rbString.Enter += new EventHandler(rbString_Enter);
 //			rbHex.Enter += new EventHandler(rbHex_Enter);
 
-			hexBox.ByteProvider = new DynamicByteProvider(new ByteCollection());
+            hexBox.ByteProvider = new DynamicByteProvider(new List<byte>());
 		}
 
 		/// <summary>
@@ -81,7 +82,6 @@ namespace Trionic5Controls
             this.hexBox.AccessibleName = null;
             resources.ApplyResources(this.hexBox, "hexBox");
             this.hexBox.BackgroundImage = null;
-            this.hexBox.LineInfoForeColor = System.Drawing.Color.Empty;
             this.hexBox.Name = "hexBox";
             this.hexBox.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
             // 
@@ -194,9 +194,24 @@ namespace Trionic5Controls
 			}
 			else
 			{
-				return ((DynamicByteProvider)hexBox.ByteProvider).Bytes.GetBytes();
+                return ((DynamicByteProvider)hexBox.ByteProvider).Bytes.ToArray();
 			}
 		}
+
+        public FindOptions GetFindOptions()
+        {
+            FindOptions findOptions;
+            if (rbString.Checked)
+            {
+                findOptions = new FindOptions() { Type = FindType.Text, Text = txtString.Text };
+            }
+            else
+            {
+                findOptions = new FindOptions() { Type = FindType.Hex, Hex = ((DynamicByteProvider)hexBox.ByteProvider).Bytes.ToArray() };
+            }
+
+            return findOptions;
+        }
 
 		private void rb_CheckedChanged(object sender, System.EventArgs e)
 		{

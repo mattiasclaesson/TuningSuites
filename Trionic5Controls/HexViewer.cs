@@ -1,14 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using System.IO;
 using Be.Windows.Forms;
-using Trionic5Tools;
 using CommonSuite;
 
 namespace Trionic5Controls
@@ -19,7 +13,6 @@ namespace Trionic5Controls
         public event HexViewer.ViewerClose onClose;
         public delegate void SelectionChanged(object sender, SelectionChangedEventArgs e);
         public event HexViewer.SelectionChanged onSelectionChanged;
-
 
         private string _fileName = string.Empty;
         private string _lastFilename = string.Empty;
@@ -37,10 +30,9 @@ namespace Trionic5Controls
             get { return _fileName; }
             set { _fileName = value; }
         }
-        FormFind _formFind = new FormFind();
+        readonly FormFind _formFind = new FormFind();
         FormFindCancel _formFindCancel;
-        FormGoTo _formGoto = new FormGoTo();
-        byte[] _findBuffer = new byte[0];
+        FindOptions findOptions;
         SymbolCollection m_symbolcollection= new SymbolCollection();
 
         private bool m_issramviewer = false;
@@ -147,8 +139,7 @@ namespace Trionic5Controls
             }
             catch (Exception ex1)
             {
-                MessageBox.Show(ex1.Message, "T5Suite 2.0", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show(ex1.Message, "T5Suite 2.0", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -230,7 +221,6 @@ namespace Trionic5Controls
 
                 miFind.Enabled = true;
                 miFindNext.Enabled = true;
-                //miGoTo.Enabled = true;
             }
 
             ManageAbilityForCopyAndPaste();
@@ -303,14 +293,14 @@ namespace Trionic5Controls
         {
             if (_formFind.ShowDialog() == DialogResult.OK)
             {
-                _findBuffer = _formFind.GetFindBytes();
+                findOptions = _formFind.GetFindOptions();
                 FindNext();
             }
         }
 
         void FindNext()
         {
-            if (_findBuffer.Length == 0)
+            if (findOptions == null)
             {
                 Find();
                 return;
@@ -326,7 +316,7 @@ namespace Trionic5Controls
             //Activated += new EventHandler(FocusToFormFindCancel);
 
             // start find process
-            long res = hexBox1.Find(_findBuffer, hexBox1.SelectionStart + hexBox1.SelectionLength);
+            long res = hexBox1.Find(findOptions);
 
             _formFindCancel.Dispose();
 
@@ -335,8 +325,7 @@ namespace Trionic5Controls
 
             if (res == -1) // -1 = no match
             {
-                MessageBox.Show("Find reached end of file", "T5Suite 2.0",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Find reached end of file", "T5Suite 2.0", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (res == -2) // -2 = find was aborted
             {
