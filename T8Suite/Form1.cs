@@ -8645,7 +8645,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 res.ShowDialog();
                 RefreshTableViewers();
             }
-    
         }
 
         private List<FileTuningPackage> ReadTuningPackageFile(bool encoded, string tpFile, out string binSwType, out string whitelist, out string blacklist, out string code)
