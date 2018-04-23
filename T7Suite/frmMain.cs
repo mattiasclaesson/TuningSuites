@@ -15448,8 +15448,6 @@ If boost regulation reports errors you can increase the difference between boost
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Trionic 7 packages|*.t7p";
             ofd.Multiselect = false;
-            char[] sep = new char[1];
-            sep.SetValue(',', 0);
 
             SymbolCollection scToImport = new SymbolCollection();
             System.Data.DataTable dt = new System.Data.DataTable();
@@ -15458,70 +15456,25 @@ If boost regulation reports errors you can increase the difference between boost
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                //TODO: create a list of maps to import .. maybe?
-                using (StreamReader sr = new StreamReader(ofd.FileName))
-                {
-                    string line = string.Empty;
-                    SymbolHelper sh_Import = new SymbolHelper();
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        if (line.StartsWith("symbol="))
-                        {
-                            //
-                            sh_Import = new SymbolHelper();
-                            sh_Import.Varname = line.Replace("symbol=", "");
-                        }
-                        else if (line.StartsWith("length="))
-                        {
-                            sh_Import.Length = Convert.ToInt32(line.Replace("length=", ""));
-                        }
-                        else if (line.StartsWith("data="))
-                        {
-                            //
-                            try
-                            {
-                                string dataBytes = line.Replace("data=", "");
-                                // split using ','
-                                string[] bytesInStrings = dataBytes.Split(sep);
-                                byte[] dataToInsert = new byte[sh_Import.Length];
-                                for (int t = 0; t < sh_Import.Length; t++)
-                                {
-                                    byte b = Convert.ToByte(bytesInStrings[t], 16);
-                                    dataToInsert.SetValue(b, t);
-                                }
-                                int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
-                                if (addressInFile > 0)
-                                {
-                                    if (_softwareIsOpen && sh_Import.Varname == "MapChkCal.ST_Enable")
-                                    {
-                                        dt.Rows.Add(sh_Import.Varname, "Skipped");
-                                    }
-                                    else
-                                    {
-                                        savedatatobinary(addressInFile, sh_Import.Length, dataToInsert, m_currentfile, true);
-                                        // add successful
-                                        dt.Rows.Add(sh_Import.Varname, "Success");
-                                    }
-                                }
-                                else
-                                {
-                                    // add failure
-                                    dt.Rows.Add(sh_Import.Varname, "Fail");
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                // add failure
-                                dt.Rows.Add(sh_Import.Varname, "Fail");
-                                logger.Debug(E.Message);
-                            }
-                        }
-                    }
-                }
+                List<FileTuningPackage> tuningPackages;
+                string binType = string.Empty;
+                string whitelist = string.Empty;  // Not used in t7p
+                string blacklist = string.Empty;  // Not used in t7p
+                string code = string.Empty;       // Not used in t7p
+                tuningPackages = ReadTuningPackageFile(false, ofd.FileName, out binType, out whitelist, out blacklist, out code);
+
+                ApplyTuningPackage(tuningPackages);
+                foreach (FileTuningPackage tp in tuningPackages)
+                    if (tp.succesful)
+                        dt.Rows.Add(tp.GetNameTPAction(), "Success");
+                    else
+                        dt.Rows.Add(tp.GetNameTPAction(), "Fail");
+
                 UpdateChecksum(m_currentfile);
                 frmImportResults res = new frmImportResults();
                 res.SetDataTable(dt);
                 res.ShowDialog();
+                RefreshTableViewers();
             }
         }
 
@@ -15629,8 +15582,16 @@ If boost regulation reports errors you can increase the difference between boost
                             int addressInFile = (int)GetSymbolAddress(m_symbols, sh_Import.Varname);
                             if (addressInFile != 0)
                             {
-                                FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, true);
-                                lstTp.Add(fileTP);
+                                if (_softwareIsOpen && sh_Import.Varname == "MapChkCal.ST_Enable")
+                                {
+                                    FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, false);
+                                    lstTp.Add(fileTP);
+                                }
+                                else
+                                {
+                                    FileTuningPackage fileTP = new SymbolFileTuningPackage(sh_Import, addressInFile, dataToInsert, true);
+                                    lstTp.Add(fileTP);
+                                }
                             }
                             else
                             {
