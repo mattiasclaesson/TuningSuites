@@ -95,6 +95,7 @@ using TrionicCANLib.API;
 using NLog;
 using CommonSuite;
 using System.Xml;
+using TrionicCANLib.Checksum;
 
 namespace T8SuitePro
 {
@@ -142,6 +143,7 @@ namespace T8SuitePro
         private DirectoryInfo configurationFilesPath = Directory.GetParent(System.Windows.Forms.Application.UserAppDataPath);
 
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
+        public ChecksumDelegate.ChecksumUpdate m_ShouldUpdateChecksum;
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private enum CalibrationType { Old, New };
@@ -172,6 +174,7 @@ namespace T8SuitePro
             {
                 m_DelegateStartReleaseNotePanel = this.StartReleaseNotesViewer;
                 m_DelegateUpdateRealTimeValue = this.UpdateRealtimeInformationValue;
+                m_ShouldUpdateChecksum = ShouldUpdateChecksum;
             }
             catch (Exception E)
             {
@@ -218,6 +221,18 @@ namespace T8SuitePro
         {
             SetProgress(e.Info);
             SetProgressPercentage(e.Percentage);
+        }
+
+        private bool ShouldUpdateChecksum(string layer, string filechecksum, string realchecksum)
+        {
+            logger.Debug(layer);
+            logger.Debug("File Checksum: " + filechecksum);
+            logger.Debug("Real Checksum: " + realchecksum);
+
+            using (frmChecksum frm = new frmChecksum() { Layer = layer, FileChecksum = filechecksum, RealChecksum = realchecksum })
+            {
+                return frm.ShowDialog() == DialogResult.OK ? true : false;
+            }
         }
 
         private void UpdateRealtimeInformationValue(string symbolname, float value)
@@ -1139,6 +1154,7 @@ namespace T8SuitePro
             m_appSettings.Lastfilename = m_currentfile;
             gridViewSymbols.BestFitColumns();
             UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
+
             DynamicTuningMenu();
             m_appSettings.LastOpenedType = 0;
         }
@@ -3368,385 +3384,20 @@ namespace T8SuitePro
 
         }
 
-        private int GetChecksumAreaOffset(string filename)
-        {
-            int retval = 0;
-            if (filename == "") return retval;
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                fsread.Seek(0x20140, SeekOrigin.Begin);
-                retval = (int)br.ReadByte() * 256 * 256 * 256;
-                retval += (int)br.ReadByte() * 256 * 256;
-                retval += (int)br.ReadByte() * 256;
-                retval += (int)br.ReadByte();
-            }
-            fsread.Close();
-            return retval;
-        }
-
-        private byte[] CalculateLayer1ChecksumMD5(string filename, int OffsetLayer1, bool forceSilent)
-        {
-            /*
-1.	calculate checksum pointer
-2.	Checksum is 2 level based on Message Digest 5 algorithm
-3.	Pointer = @ 0x20140 and is a 4 byte pointer
-4.	Use MD5 to make 16 bytes digest from any string
-5.	name checksum pointer CHPTR
-6.	checksum area 1 ranges from 20000h to CHPTR – 20000h- 1
-7.	Create an MD5 hash from this string (20000h – (CHPTR – 20000h – 1))
-    a.	MD5Init(Context)
-    b.	MD5Update(Context, buffer, size)
-    c.	MD5Final(Context, Md5Seed)
-    d.	sMd5Seed = MD5Print(Md5Seed)
-    e.	sMd5Seed = 16 bytes hex, so 32 bytes.
-    f.	Now crypt sMd5Seed: xor every byte with 21h, then substract D6h (minus)
-    g.	These 16 bytes are from CHPTR + 2 in the bin!!!! This is checksum level 1 !!
-             * */
-            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-
-            int len = OffsetLayer1 - 0x20000;//- 1;
-            md5.Initialize();
-            int end = 0x20000 + len;
-            logger.Debug("Calculating from 0x20000 upto " + end.ToString("X8"));
-
-            byte[] data = readdatafromfile(filename, 0x20000, len);
-            byte[] hash = md5.ComputeHash(data);
-            /*            foreach (byte b in hash)
-                        {
-                            byte bcalc = b;
-                            Console.Write(" " + b.ToString("X2"));
-                        }
-                        logger.Debug("");*/
-            byte[] finalhash = new byte[hash.Length];
-
-            for (int i = 0; i < hash.Length; i++)
-            {
-                byte bcalc = hash[i];
-                bcalc ^= 0x21;
-                bcalc -= 0xD6;
-                finalhash[i] = bcalc;
-            }
-
-            /*foreach (byte b in finalhash)
-            {
-                Console.Write(" " + b.ToString("X2"));
-            }*/
-            return finalhash;
-
-        }
-
-        private bool CompareByteArray(byte[] arr1, byte[] arr2)
-        {
-            bool retval = true;
-            if (arr1.Length != arr2.Length) retval = false;
-            else
-            {
-                for (int t = 0; t < arr1.Length; t++)
-                {
-                    if (arr1[t] != arr2[t]) retval = false;
-                }
-            }
-            return retval;
-        }
-
-        private bool CalculateLayer2Checksum(string filename, int OffsetLayer2, bool autocorrect)
-        {
-            bool Layer2ChecksumValid = false;
-            uint checksum0 = 0;
-            uint checksum1 = 0;
-            uint sum0 = 0;
-            uint matrix_dimension = 0;
-            uint partial_address = 0;
-            uint x = 0;
-            /*
-Get 0x100 byte buffer from CHPTR – CHPTR + 0xFF
-Because level 1 is in that area level1 must be correct first
-Prepare coded_buffer (0x100 buffer from chptr) with loop: coded_buffer(x) = (buffer (x) + 0xD6) xor 0x21 
-(add 0xd6 to every byte of buffer, then xor it by 0x21)
-[ 1 indexed, not 0 indexed ]
-So, 0x101 byte buffer with first byte ignored (convention)
-             * */
-            byte[] coded_buffer = readdatafromfile(filename, OffsetLayer2, 0x100);
-
-            for (int i = 0; i < coded_buffer.Length; i++)
-            {
-                byte b = coded_buffer[i];
-                b += 0xD6;
-                b ^= 0x21;
-                coded_buffer[i] = b;
-                //Console.Write(b.ToString("X2") + " ");
-            }
-            //logger.Debug("");
-            byte[] complete_file = readdatafromfile(filename, 0, m_currentfile_size);
-            int index = 0;
-            bool chk_found = false;
-            while (index < 0x100 && !chk_found)
-            {
-                if ((coded_buffer[index] == 0xFB) && (coded_buffer[index + 6] == 0xFC) && (coded_buffer[index + 0x0C] == 0xFD))
-                {
-                    sum0 = ((uint)coded_buffer[index + 1] * 0x01000000 + (uint)coded_buffer[index + 2] * 0x010000 + (uint)coded_buffer[index + 3] * 0x100 + (uint)coded_buffer[index + 4]);
-                    matrix_dimension = (uint)coded_buffer[index + 7] * 0x01000000 + (uint)coded_buffer[index + 8] * 0x010000 + (uint)coded_buffer[index + 9] * 0x100 + (uint)coded_buffer[index + 10];
-                    partial_address = (uint)coded_buffer[index + 0x0d] * 0x01000000 + (uint)coded_buffer[index + 0x0e] * 0x010000 + (uint)coded_buffer[index + 0x0F] * 0x100 + (uint)coded_buffer[index + 0x10];
-                    if (matrix_dimension >= 0x020000)
-                    {
-                        checksum0 = 0;
-                        x = partial_address /*+ 1*/;
-                        while (x < (matrix_dimension - 4))
-                        {
-                            checksum0 = checksum0 + (uint)complete_file[x];
-                            x++;
-                        }
-                        checksum0 = checksum0 + (uint)complete_file[matrix_dimension - 1];
-                        checksum1 = 0;
-                        x = partial_address /*+ 1*/;
-                        while (x < (matrix_dimension - 4))
-                        {
-                            checksum1 = checksum1 + (uint)complete_file[x] * 0x01000000 + (uint)complete_file[x + 1] * 0x10000 + (uint)complete_file[x + 2] * 0x100 + (uint)complete_file[x + 3];
-                            x = x + 4;
-                        }
-                        if ((checksum0 & 0xFFF00000) != (sum0 & 0xFFF00000))
-                        {
-                            checksum0 = checksum1;
-                        }
-                        if (checksum0 != sum0)
-                        {
-                            //MessageBox.Show("Layer 2 checksum was invalid, should be updated!");
-                            if (autocorrect)
-                            {
-                                byte[] checksum_to_file = new byte[4];
-                                checksum_to_file[0] = Convert.ToByte((checksum0 >> 24) & 0x000000FF);
-                                checksum_to_file[1] = Convert.ToByte((checksum0 >> 16) & 0x000000FF);
-                                checksum_to_file[2] = Convert.ToByte((checksum0 >> 8) & 0x000000FF);
-                                checksum_to_file[3] = Convert.ToByte((checksum0) & 0x000000FF);
-                                checksum_to_file[0] = Convert.ToByte(((checksum_to_file[0] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                checksum_to_file[1] = Convert.ToByte(((checksum_to_file[1] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                checksum_to_file[2] = Convert.ToByte(((checksum_to_file[2] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                checksum_to_file[3] = Convert.ToByte(((checksum_to_file[3] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                //CreateBinaryBackup();
-                                savedatatobinary(index + OffsetLayer2 + 1, 4, checksum_to_file, filename, false);
-                                Layer2ChecksumValid = true;
-                            }
-                            else
-                            {
-                                frmChecksum frmchecksum = new frmChecksum();
-                                frmchecksum.Layer = "Checksum validation Layer 2";
-                                string layer2file = sum0.ToString("X8");
-                                string layer2calc = checksum0.ToString("X8");
-                                frmchecksum.FileChecksum = layer2file;
-                                frmchecksum.RealChecksum = layer2calc;
-                                if (frmchecksum.ShowDialog() == DialogResult.OK)
-                                {
-                                    byte[] checksum_to_file = new byte[4];
-                                    checksum_to_file[0] = Convert.ToByte((checksum0 >> 24) & 0x000000FF);
-                                    checksum_to_file[1] = Convert.ToByte((checksum0 >> 16) & 0x000000FF);
-                                    checksum_to_file[2] = Convert.ToByte((checksum0 >> 8) & 0x000000FF);
-                                    checksum_to_file[3] = Convert.ToByte((checksum0) & 0x000000FF);
-                                    checksum_to_file[0] = Convert.ToByte(((checksum_to_file[0] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                    checksum_to_file[1] = Convert.ToByte(((checksum_to_file[1] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                    checksum_to_file[2] = Convert.ToByte(((checksum_to_file[2] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                    checksum_to_file[3] = Convert.ToByte(((checksum_to_file[3] ^ 0x21) - (byte)0xD6) & 0x000000FF);
-                                    //CreateBinaryBackup();
-                                    savedatatobinary(index + OffsetLayer2 + 1, 4, checksum_to_file, filename, true);
-                                    Layer2ChecksumValid = true;
-                                }
-                                else
-                                {
-                                    Layer2ChecksumValid = false;
-                                }
-                            }
-
-                        }
-                        else
-                        {
-                            Layer2ChecksumValid = true;
-                        }
-                        chk_found = true;
-                    }
-                }
-                index++;
-            }
-            if (!chk_found)
-            {
-                //MessageBox.Show("Layer 2 checksum could not be calculated [ file incompatible ]");
-            }
-            return Layer2ChecksumValid;
-        }
-
-        private int GetEmptySpaceStartFrom(string filename, int offset)
-        {
-            int retval = 0;
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                fsread.Seek(offset, SeekOrigin.Begin);
-                bool found = false;
-                while (!found && fsread.Position < offset + 0x1000)
-                {
-                    retval = (int)fsread.Position;
-                    byte b1 = br.ReadByte();
-                    if (b1 == 0xFF)
-                    {
-                        byte b2 = br.ReadByte();
-                        if (b2 == 0xFF)
-                        {
-                            byte b3 = br.ReadByte();
-                            if (b3 == 0xFF) found = true;
-                        }
-                    }
-                }
-            }
-            fsread.Close();
-            return retval;
-        }
-
-
-
         private void UpdateChecksum(string filename, bool autocorrect)
         {
-            int m_ChecksumAreaOffset = GetChecksumAreaOffset(filename);
-            if (m_ChecksumAreaOffset > m_currentfile_size) return;
-
-            bool do_layer2 = true;
-            bool _layer1Valid = false;
-            bool _layer2Valid = false;
-            barChecksumInfo.Caption = "Checksum: validating...";
-            System.Windows.Forms.Application.DoEvents();
-
-            logger.Debug("Checksum area offset: " + m_ChecksumAreaOffset.ToString("X8"));
-            byte[] hash = CalculateLayer1ChecksumMD5(filename, m_ChecksumAreaOffset, autocorrect);
-            // compare hash to bytes after checksumareaoffset
-            byte[] layer1checksuminfile = readdatafromfile(filename, m_ChecksumAreaOffset + 2, 16);
-            if (!CompareByteArray(hash, layer1checksuminfile))
-            {
-                if (autocorrect)
-                {
-                    savedatatobinary(m_ChecksumAreaOffset + 2, 16, hash, filename, false);
-                    _layer1Valid = true;
-                    do_layer2 = true;
-                }
-                else
-                {
-                    frmChecksum frmchecksum = new frmChecksum();
-                    frmchecksum.Layer = "Checksum validation Layer 1";
-                    string layer1file = string.Empty;
-                    string layer1calc = string.Empty;
-                    for (int i = 0; i < layer1checksuminfile.Length; i++)
-                    {
-                        layer1file += layer1checksuminfile[i].ToString("X2") + " ";
-                        layer1calc += hash[i].ToString("X2") + " ";
-                    }
-                    frmchecksum.FileChecksum = layer1file;
-                    frmchecksum.RealChecksum = layer1calc;
-                    if (frmchecksum.ShowDialog() == DialogResult.OK)
-                    {
-                        savedatatobinary(m_ChecksumAreaOffset + 2, 16, hash, filename, false);
-                        _layer1Valid = true;
-                        do_layer2 = true;
-                    }
-                    else
-                    {
-                        do_layer2 = false;
-                    }
-                }
-            }
-            else
-            {
-                _layer1Valid = true;
-            }
-            if (do_layer2)
-            {
-                if (CalculateLayer2Checksum(filename, m_ChecksumAreaOffset, autocorrect))
-                {
-                    _layer2Valid = true;
-                }
-                else
-                {
-                    _layer2Valid = false;
-                }
-            }
-            // show result in statusbar
-            if (_layer1Valid && _layer2Valid)
+            ChecksumResult checksum = ChecksumT8.VerifyChecksum(filename, autocorrect, m_ShouldUpdateChecksum);
+            if (checksum == ChecksumResult.Ok)
             {
                 barChecksumInfo.Caption = "Checksum: OK";
             }
-            else if (!_layer1Valid)
+            else if (checksum == ChecksumResult.Layer1Failed)
             {
                 barChecksumInfo.Caption = "Checksum: Layer 1 invalid";
             }
-            else if (!_layer2Valid)
+            else if (checksum == ChecksumResult.Layer2Failed)
             {
                 barChecksumInfo.Caption = "Checksum: Layer 2 invalid";
-            }
-
-
-        }
-
-        private byte[] ReadChecksumHeader(string filename, int checksumAreaOffset)
-        {
-            byte[] retval = new byte[1];
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            fsread.Seek(checksumAreaOffset, SeekOrigin.Begin);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                retval = br.ReadBytes(0x100);
-            }
-            fsread.Close();
-            return retval;
-        }
-
-        private bool ChecksumPresentInChecksumField(string filename, int checksum, int length, int checksumAreaOffset)
-        {
-            bool retval = false;
-            byte[] checksumarea = ReadChecksumHeader(filename, checksumAreaOffset);
-            if (length == 2)
-            {
-                checksum &= 0x0000FFFF;
-                for (int i = 0; i < checksumarea.Length; i += 2)
-                {
-                    byte checksumbyte1 = (byte)((checksum & 0x0000FF00) >> 8);
-                    byte checksumbyte2 = (byte)(checksum & 0x000000FF);
-                    if (checksumarea[i] == checksumbyte1 && checksumarea[i + 1] == checksumbyte2)
-                    {
-                        retval = true;
-                        break;
-                    }
-                }
-
-            }
-            else if (length == 4)
-            {
-                for (int i = 0; i < checksumarea.Length - 4; i++)
-                {
-                    byte checksumbyte1 = (byte)((checksum & 0xFF000000) >> 24);
-                    byte checksumbyte2 = (byte)((checksum & 0x00FF0000) >> 16);
-                    byte checksumbyte3 = (byte)((checksum & 0x0000FF00) >> 8);
-                    byte checksumbyte4 = (byte)(checksum & 0x000000FF);
-                    if (checksumarea[i] == checksumbyte1 && checksumarea[i + 1] == checksumbyte2 && checksumarea[i + 2] == checksumbyte3 && checksumarea[i + 4] == checksumbyte4)
-                    {
-                        retval = true;
-                        break;
-                    }
-                }
-            }
-            return retval;
-        }
-
-        private void DumpFilePart(string filename, int start, int end, string newfilename)
-        {
-            byte[] bytes;
-            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
-            {
-                fs.Position = start;
-                BinaryReader br = new BinaryReader(fs);
-                bytes = br.ReadBytes(end - start);
-                br.Close();
-            }
-            using (FileStream fw = new FileStream(newfilename, FileMode.CreateNew))
-            {
-                BinaryWriter bw = new BinaryWriter(fw);
-                bw.Write(bytes);
-                bw.Close();
             }
         }
 
@@ -14656,15 +14307,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 string programmer_name = string.Empty;
                 string programming_date = string.Empty;
                 if (p.m_currentfile == "") return -1;
-                int m_ChecksumAreaOffset = p.GetChecksumAreaOffset(p.m_currentfile);
-                int m_EndOfPIArea = p.GetEmptySpaceStartFrom(p.m_currentfile, m_ChecksumAreaOffset);
+                int checksumAreaOffset = ChecksumT8.GetChecksumAreaOffset(p.m_currentfile);
+                int endOfPIArea = T8Header.GetEmptySpaceStartFrom(p.m_currentfile, checksumAreaOffset);
                 int name_pos = 0;
                 int name_len = 0;
                 int date_pos = 0;
                 int date_len = 0;
                 int t = 0;
 
-                byte[] piarea = p.readdatafromfile(p.m_currentfile, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
+                byte[] piarea = p.readdatafromfile(p.m_currentfile, checksumAreaOffset, endOfPIArea - checksumAreaOffset + 1);
                 do
                 {
                     // Name (0x1D) e.g. "Staffan Mossberg"
@@ -14698,7 +14349,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     for (int x = 0; x < new_name.Length; x++)
                         new_name[x] = (byte)((byte)(new_name[x] ^ 0x21) - 0xD6);
 
-                    p.savedatatobinary(m_ChecksumAreaOffset + name_pos, name_len, new_name, p.m_currentfile, false);
+                    p.savedatatobinary(checksumAreaOffset + name_pos, name_len, new_name, p.m_currentfile, false);
 
                 }
 
@@ -14710,7 +14361,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         for (int x = 0; x < now.Length; x++)
                             now[x] = (byte)((byte)(now[x] ^ 0x21) - 0xD6);
 
-                        p.savedatatobinary(m_ChecksumAreaOffset + date_pos, date_len, now, p.m_currentfile, false);
+                        p.savedatatobinary(checksumAreaOffset + date_pos, date_len, now, p.m_currentfile, false);
                     }
                 }
                 return 0;

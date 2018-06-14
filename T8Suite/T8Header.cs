@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
 using NLog;
+using TrionicCANLib.Checksum;
 
 namespace T8SuitePro
 {
@@ -129,25 +130,7 @@ namespace T8SuitePro
             public byte[] m_data = new byte[255];
         }
 
-        private int GetChecksumAreaOffset(string filename)
-        {
-
-            int retval = 0;
-            if (filename == "") return retval;
-            FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-            using (BinaryReader br = new BinaryReader(fsread))
-            {
-                fsread.Seek(0x20140, SeekOrigin.Begin);
-                retval = (int)br.ReadByte() * 256 * 256 * 256;
-                retval += (int)br.ReadByte() * 256 * 256;
-                retval += (int)br.ReadByte() * 256;
-                retval += (int)br.ReadByte();
-            }
-            fsread.Close();
-            return retval;
-        }
-
-        private int GetEmptySpaceStartFrom(string filename, int offset)
+        public static int GetEmptySpaceStartFrom(string filename, int offset)
         {
             int retval = 0;
             if (filename == "") return retval;
@@ -170,10 +153,6 @@ namespace T8SuitePro
                         }
                     }
                 }
-                /*retval = (int)br.ReadByte() * 256 * 256 * 256;
-                retval += (int)br.ReadByte() * 256 * 256;
-                retval += (int)br.ReadByte() * 256;
-                retval += (int)br.ReadByte();*/
             }
             fsread.Close();
             return retval;
@@ -200,7 +179,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             return retval;
         }
@@ -208,11 +187,11 @@ namespace T8SuitePro
         private void DecodeInfo(string filename)
         {
             if (filename == "") return;
-            int m_ChecksumAreaOffset = GetChecksumAreaOffset(filename);
-            int m_EndOfPIArea = GetEmptySpaceStartFrom(filename, m_ChecksumAreaOffset);
+            int checksumAreaOffset = ChecksumT8.GetChecksumAreaOffset(filename);
+            int endOfPIArea = GetEmptySpaceStartFrom(filename, checksumAreaOffset);
 
-            //logger.Debug("Area: " + m_ChecksumAreaOffset.ToString("X8") + " - " + m_EndOfPIArea.ToString("X8"));
-            byte[] piarea = readdatafromfile(filename, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
+            //logger.Debug("Area: " + checksumAreaOffset.ToString("X8") + " - " + endOfPIArea.ToString("X8"));
+            byte[] piarea = readdatafromfile(filename, checksumAreaOffset, endOfPIArea - checksumAreaOffset + 1);
             //logger.Debug("Size: " + piarea.Length.ToString());
             for (int t = 0; t < piarea.Length; t++)
             {
@@ -805,11 +784,11 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
         internal void UpdatePIarea()
         {
             if (m_fileName == "") return;
-            int m_ChecksumAreaOffset = GetChecksumAreaOffset(m_fileName);
-            int m_EndOfPIArea = GetEmptySpaceStartFrom(m_fileName, m_ChecksumAreaOffset);
+            int checksumAreaOffset = ChecksumT8.GetChecksumAreaOffset(m_fileName);
+            int endOfPIArea = GetEmptySpaceStartFrom(m_fileName, checksumAreaOffset);
 
-            //Console.WriteLine("Area: " + m_ChecksumAreaOffset.ToString("X8") + " - " + m_EndOfPIArea.ToString("X8"));
-            byte[] piarea = readdatafromfile(m_fileName, m_ChecksumAreaOffset, m_EndOfPIArea - m_ChecksumAreaOffset + 1);
+            //Console.WriteLine("Area: " + checksumAreaOffset.ToString("X8") + " - " + endOfPIArea.ToString("X8"));
+            byte[] piarea = readdatafromfile(m_fileName, checksumAreaOffset, endOfPIArea - checksumAreaOffset + 1);
             //Console.WriteLine("Size: " + piarea.Length.ToString());
             for (int t = 0; t < piarea.Length; t++)
             {
@@ -868,7 +847,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                 piarea[t] -= 0xD6;
             }
 
-            savedatatobinary(m_ChecksumAreaOffset, piarea.Length, piarea, m_fileName);
+            savedatatobinary(checksumAreaOffset, piarea.Length, piarea, m_fileName);
         }
     }
 }
