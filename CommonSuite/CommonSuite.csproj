@@ -83,9 +83,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NLog.4.4.12\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="Owf.Controls.DigitalDisplayControl">
-      <HintPath>Libs\Owf.Controls.DigitalDisplayControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -423,6 +420,10 @@
     <ProjectReference Include="..\ICSharpCode.TextEditor\ICSharpCode.TextEditor.csproj">
       <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
       <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Owf.Controls.DigitalDisplayControl\Owf.Controls.DigitalDisplayControl.csproj">
+      <Project>{5D082F88-4290-4049-9984-FCB126A7BD4E}</Project>
+      <Name>Owf.Controls.DigitalDisplayControl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

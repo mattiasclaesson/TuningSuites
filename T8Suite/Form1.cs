@@ -1127,188 +1127,6 @@ namespace T8SuitePro
             return retval;
         }
 
-        private bool extractCompressedSymbolTable(string filename, out int symboltableoffset, out byte[] bytes)
-        {
-            bytes = null;
-            Int64 UnpackedLength = 0;
-            symboltableoffset = 0;
-            //int len = 0;
-            int val = 0;
-            //int idx = ReadEndMarker(0x9B);
-            try
-            {
-                //int idx = ReadMarkerAddressContent(filename, 0x9B, out len, out val);
-                //if (idx > 0)
-                {
-                    /* if (val > m_currentfile_size)
-                     {
-                         // try to find the addresstable offset
-                         int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                         //TODO: Finish for abused packed files!
-                     }*/
-                    // FAILSAFE for some files that seem to have protection!
-                    /*int addrtaboffset = GetStartOfAddressTableOffset(filename);
-                    logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
-                    //int NqNqNqOffset = GetNqNqNqStringFromOffset(addrtaboffset - 0x100, filename);
-                    int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
-                    logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));*/
-
-                    //<GS-22032010>
-                    int addrtaboffset = GetEndOfSymbolTable(filename);
-                    logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
-                    int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
-                    logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
-                    //<GS-22032010>
-
-                    int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-                    logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
-                    //int symbtaboffset = GetAddressFromOffset(addrtaboffset - 0x12, filename);
-                    //                    symbtaboffset = NqNqNqOffset;
-                    int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4 /*addrtaboffset - 0x0E*/, filename);
-                    logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
-                    if (symbtablength < 0x1000) return false; // NO SYMBOLTABLE IN FILE
-                    //symbtaboffset -= 2;
-                    if (symbtaboffset > 0 && symbtaboffset < 0xF0000)
-                    {
-                        val = symbtaboffset;
-
-                    }
-                    symboltableoffset = val;
-                    // MessageBox.Show("Packed table index: " + idx.ToString("X6") + " " + val.ToString("X6"));
-                    FileStream fsread = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    using (BinaryReader br = new BinaryReader(fsread))
-                    {
-
-                        fsread.Seek(val, SeekOrigin.Begin);
-
-                        UnpackedLength = Convert.ToInt64(br.ReadByte());
-                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256;
-                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256;
-                        UnpackedLength += Convert.ToInt64(br.ReadByte()) * 256 * 256 * 256;
-                        logger.Debug("UnpackedLength: " + UnpackedLength.ToString("X8"));
-                        fsread.Seek(val, SeekOrigin.Begin);
-
-                        // fill the byte array with the compressed symbol table
-                        fsread.Seek(symboltableoffset, SeekOrigin.Begin);
-                        bytes = br.ReadBytes(symbtablength);
-                    }
-                    fsread.Close();
-                    fsread.Dispose();
-                }
-                if (UnpackedLength > 0x00FFFFFF) return false;
-                return true;
-            }
-            catch (Exception E)
-            {
-                logger.Debug("Error 1: " + E.Message);
-            }
-            return false;
-        }
-
-        private int ReadMarkerAddressContent(string filename, int value, out int length, out int val)
-        {
-            int retval = 0;
-            length = 0;
-            val = 0;
-            if (filename != string.Empty)
-            {
-                if (File.Exists(filename))
-                {
-                    // read the file footer
-                    //3ff00 - 0x3ffff
-                    FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    BinaryReader br = new BinaryReader(fs);
-                    int fileoffset = m_currentfile_size - 0x90;
-                    try
-                    {
-
-                        fs.Seek(/*0x3FF00*/fileoffset, SeekOrigin.Begin);
-                        byte[] inb = br.ReadBytes(0x8F);
-                        //int offset = 0;
-                        for (int t = 0; t < 0xFF; t++)
-                        {
-                            if (((byte)inb.GetValue(t) == (byte)value) && ((byte)inb.GetValue(t + 1) < 0x30))
-                            {
-                                // marker gevonden
-                                // lees 6 terug
-                                retval = /*0x3FF00*/ fileoffset + t;
-                                length = (byte)inb.GetValue(t + 1);
-                                break;
-                            }
-                        }
-                        fs.Seek((retval - length), SeekOrigin.Begin);
-                        byte[] info = br.ReadBytes(length);
-                        for (int bc = info.Length - 1; bc >= 0; bc--)
-                        {
-                            int temp = Convert.ToInt32(info.GetValue(bc));
-                            for (int mt = 0; mt < (3 - bc); mt++)
-                            {
-                                temp *= 256;
-                            }
-                            val += temp;
-                        }
-                    }
-                    catch (Exception E)
-                    {
-                        logger.Debug("Error 2: " + E.Message);
-                        retval = 0;
-                    }
-                    fs.Flush();
-                    fs.Close();
-                    fs.Dispose();
-
-                }
-            }
-
-            return retval;
-
-        }
-
-        private int ReadMarkerAddress(string filename, int value, out int length, out string val)
-        {
-            int retval = 0;
-            length = 0;
-            val = string.Empty;
-            if (filename != string.Empty)
-            {
-                if (File.Exists(filename))
-                {
-                    // read the file footer
-                    //3ff00 - 0x3ffff
-                    FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                    BinaryReader br = new BinaryReader(fs);
-                    int fileoffset = m_currentfile_size - 0x100;
-
-                    fs.Seek(/*0x3FF00*/fileoffset, SeekOrigin.Begin);
-                    byte[] inb = br.ReadBytes(0xFF);
-                    //int offset = 0;
-                    for (int t = 0; t < 0xFF; t++)
-                    {
-                        if (((byte)inb.GetValue(t) == (byte)value) && ((byte)inb.GetValue(t + 1) < 0x30))
-                        {
-                            // marker gevonden
-                            // lees 6 terug
-                            retval = /*0x3FF00*/ fileoffset + t;
-                            length = (byte)inb.GetValue(t + 1);
-                            break;
-                        }
-                    }
-                    fs.Seek((retval - length), SeekOrigin.Begin);
-                    byte[] info = br.ReadBytes(length);
-                    for (int bc = info.Length - 1; bc >= 0; bc--)
-                    {
-                        val += Convert.ToChar(info.GetValue(bc));
-                    }
-                    fs.Flush();
-                    fs.Close();
-                    fs.Dispose();
-
-                }
-            }
-
-            return retval;
-        }
-
         private void OpenFile(string filename)
         {
             CloseProject();
@@ -3777,10 +3595,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
                         }
                     }
                 }
-                /*retval = (int)br.ReadByte() * 256 * 256 * 256;
-                retval += (int)br.ReadByte() * 256 * 256;
-                retval += (int)br.ReadByte() * 256;
-                retval += (int)br.ReadByte();*/
             }
             fsread.Close();
             return retval;
@@ -4159,7 +3973,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             return retval;
         }
@@ -4208,7 +4022,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E2)
             {
-                logger.Debug(E2.Message);
+                logger.Debug(E2);
             }
         }
 
@@ -4228,7 +4042,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E2)
             {
-                logger.Debug(E2.Message);
+                logger.Debug(E2);
             }
         }
 
@@ -4244,7 +4058,7 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
 
         }
@@ -4275,11 +4089,6 @@ So, 0x101 byte buffer with first byte ignored (convention)
 
         private void SetToolstripTheme()
         {
-            //logger.Debug("Rendermode was: " + ToolStripManager.RenderMode.ToString());
-            //logger.Debug("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
-            //logger.Debug("Skinname: " + appSettings.SkinName);
-            //logger.Debug("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
-            //logger.Debug("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
             try
             {
                 Skin currentSkin = CommonSkins.GetSkin(defaultLookAndFeel1.LookAndFeel);
@@ -4293,34 +4102,20 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
 
         }
 
         void InitSkins()
         {
-            /*
             ribbonControl1.ForceInitialize();
-            BarButtonItem item;
 
-            DevExpress.Skins.SkinManager.Default.RegisterAssembly(typeof(DevExpress.UserSkins.BonusSkins).Assembly);
-            DevExpress.Skins.SkinManager.Default.RegisterAssembly(typeof(DevExpress.UserSkins.OfficeSkins).Assembly);
-
-            foreach (DevExpress.Skins.SkinContainer cnt in DevExpress.Skins.SkinManager.Default.Skins)
-            {
-                item = new BarButtonItem();
-                item.Caption = cnt.SkinName;
-                //iPaintStyle.AddItem(item);
-                ribbonPageGroup13.ItemLinks.Add(item);
-                item.ItemClick += new ItemClickEventHandler(OnSkinClick);
-            }*/
-
-            ribbonControl1.ForceInitialize();
             BarButtonItem item;
             int skinCount = 0;
             DevExpress.Skins.SkinManager.Default.RegisterAssembly(typeof(DevExpress.UserSkins.BonusSkins).Assembly);
             DevExpress.Skins.SkinManager.Default.RegisterAssembly(typeof(DevExpress.UserSkins.OfficeSkins).Assembly);
+            
             SymbolCollection symcol = new SymbolCollection();
             foreach (DevExpress.Skins.SkinContainer cnt in DevExpress.Skins.SkinManager.Default.Skins)
             {
@@ -4342,28 +4137,14 @@ So, 0x101 byte buffer with first byte ignored (convention)
             }
             try
             {
-                if (IsChristmasTime())
-                {
-                    // set chrismas skin
-                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Xmas 2008 Blue"); // don't save
-                }
-                else if (IsHalloweenTime())
-                {
-                    // set Halloween skin
-                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Pumpkin"); // don't save
-                }
-                else if (IsValetineTime())
-                {
-                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Valentine"); // don't save
-                }
-                else
+                if (m_appSettings.Skinname != string.Empty)
                 {
                     DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(m_appSettings.Skinname);
                 }
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             SetToolstripTheme();
         }

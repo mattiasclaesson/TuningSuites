@@ -9835,7 +9835,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
         }
 
@@ -9847,7 +9847,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
         }
 
@@ -9903,7 +9903,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to load realtime symbol table: " + E.Message);
+                logger.Debug(E, "Failed to load realtime symbol table");
             }
         }
 
@@ -9929,7 +9929,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to write realtime datatable: " + E.Message);
+                logger.Debug(E, "Failed to write realtime datatable");
             }
         }
 
@@ -9951,7 +9951,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception stargetE)
             {
-                logger.Debug(stargetE.Message);
+                logger.Debug(stargetE);
             }
         }
 
@@ -10030,7 +10030,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
 
         }
@@ -10051,7 +10051,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E2)
             {
-                logger.Debug(E2.Message);
+                logger.Debug(E2);
             }
         }
 
@@ -10070,45 +10070,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E2)
             {
-                logger.Debug(E2.Message);
+                logger.Debug(E2);
             }
 
-        }
-
-        private void ShowChristmasWish()
-        {
-            int newyear = DateTime.Now.Year + 1;
-            frmInfoBox info = new frmInfoBox("Merry christmas and a happy " + newyear.ToString("D4") + "\rDilemma");
-        }
-
-        private bool IsChristmasTime()
-        {
-            // test, return true
-            if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20 && DateTime.Now.Day <= 26)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsHalloweenTime()
-        {
-            // test, return true
-            if (DateTime.Now.Month == 10 && DateTime.Now.Day >= 30 && DateTime.Now.Day <= 31)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsValetineTime()
-        {
-            // test, return true
-            if (DateTime.Now.Month == 2 && DateTime.Now.Day >= 13 && DateTime.Now.Day <= 14)
-            {
-                return true;
-            }
-            return false;
         }
 
         private void frmMain_Shown(object sender, EventArgs e)
@@ -10123,11 +10087,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
-            }
-            if (IsChristmasTime())
-            {
-                ShowChristmasWish();
+                logger.Debug(E);
             }
             if (m_appSettings.HideSymbolTable)
             {
@@ -10365,7 +10325,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             }
                             catch (Exception E)
                             {
-                                logger.Debug("Refresh viewer with SRAM data error: " + E.Message);
+                                logger.Debug(E, "Refresh viewer with SRAM data error");
                             }
 
                         }
@@ -11303,11 +11263,6 @@ If boost regulation reports errors you can increase the difference between boost
 
         private void SetToolstripTheme()
         {
-            //logger.Debug("Rendermode was: " + ToolStripManager.RenderMode.ToString());
-            //logger.Debug("Visual styles: " + ToolStripManager.VisualStylesEnabled.ToString());
-            //logger.Debug("Skinname: " + appSettings.SkinName);
-            //logger.Debug("Backcolor: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor.ToString());
-            //logger.Debug("Backcolor2: " + defaultLookAndFeel1.LookAndFeel.Painter.Button.DefaultAppearance.BackColor2.ToString());
             try
             {
                 Skin currentSkin = CommonSkins.GetSkin(defaultLookAndFeel1.LookAndFeel);
@@ -11321,7 +11276,7 @@ If boost regulation reports errors you can increase the difference between boost
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
 
         }
@@ -11329,7 +11284,6 @@ If boost regulation reports errors you can increase the difference between boost
         void InitSkins()
         {
             ribbonControl1.ForceInitialize();
-            //barManager1.ForceInitialize();
             BarButtonItem item;
 
             DevExpress.Skins.SkinManager.Default.RegisterAssembly(typeof(DevExpress.UserSkins.BonusSkins).Assembly);
@@ -11339,35 +11293,20 @@ If boost regulation reports errors you can increase the difference between boost
             {
                 item = new BarButtonItem();
                 item.Caption = cnt.SkinName;
-                //iPaintStyle.AddItem(item);
                 ribbonPageGroup16.ItemLinks.Add(item);
                 item.ItemClick += new ItemClickEventHandler(OnSkinClick);
             }
             
             try
             {
-                if (IsChristmasTime())
-                {
-                    // set chrismas skin
-                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Xmas 2008 Blue"); // don't save
-                }
-                else if (IsHalloweenTime())
-                {
-                    // set Halloween skin
-                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Pumpkin"); // don't save
-                }
-                else if (IsValetineTime())
-                {
-                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Valentine"); // don't save
-                }
-                else
+                if (m_appSettings.Skinname != string.Empty)
                 {
                     DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(m_appSettings.Skinname);
                 }
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             SetToolstripTheme();
         }

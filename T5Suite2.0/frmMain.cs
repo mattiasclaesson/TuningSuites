@@ -3656,11 +3656,7 @@ namespace T5Suite2
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to get initial update: " + E.Message);
-            }
-            if (IsChristmasTime())
-            {
-                ShowChristmasWish();
+                logger.Debug(E, "Failed to get initial update");
             }
         }
 
@@ -3673,9 +3669,6 @@ namespace T5Suite2
         {
             logger.Debug("m_msiUpdater_onDataPump: " + e.Data + " " + e.XMLFile);
             SetStatusText(e.Data);
-
-            
-
 
             if (e.UpdateAvailable)
             {
@@ -10700,70 +10693,15 @@ namespace T5Suite2
             {
                 if (m_appSettings.Skinname != string.Empty)
                 {
-                    if (IsChristmasTime())
-                    {
-                        // set chrismas skin
-                        DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Xmas 2008 Blue"); // don't save
-                    }
-                    else if (IsHalloweenTime())
-                    {
-                        // set Halloween skin
-                        DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Pumpkin"); // don't save
-                    }
-                    else if (IsValetineTime())
-                    {
-                        DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle("Valentine"); // don't save
-                    }
-                    else
-                    {
-                        DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(m_appSettings.Skinname);
-                    }
+                    DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(m_appSettings.Skinname);
                 }
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
             SetToolstripTheme();
         }
-
-        private void ShowChristmasWish()
-        {
-            int newyear = DateTime.Now.Year + 1;
-            frmInfoBox info = new frmInfoBox("Merry christmas and a happy " + newyear.ToString("D4") + "\rDilemma");
-        }
-
-        private bool IsChristmasTime()
-        {
-            // test, return true
-            if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20 && DateTime.Now.Day <= 26)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsHalloweenTime()
-        {
-            // test, return true
-            if (DateTime.Now.Month == 10 && DateTime.Now.Day >= 30 && DateTime.Now.Day <= 31)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsValetineTime()
-        {
-            // test, return true
-            if (DateTime.Now.Month == 2 && DateTime.Now.Day >= 13 && DateTime.Now.Day <= 14)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        
 
         /// <summary>
         /// OnSkinClick: Als er een skin gekozen wordt door de gebruiker voer deze

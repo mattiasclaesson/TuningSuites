@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuiteLauncher", "SuiteLaunc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T8SuiteTest", "SuiteTest\T8SuiteTest.csproj", "{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owf.Controls.DigitalDisplayControl", "Owf.Controls.DigitalDisplayControl\Owf.Controls.DigitalDisplayControl.csproj", "{5D082F88-4290-4049-9984-FCB126A7BD4E}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = T81.vsmdi
@@ -152,6 +154,14 @@ Global
 		{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}.Release|x86.ActiveCfg = Release|x86
 		{EF70B008-BDF2-4E77-BF9F-DE97C7377FF8}.Release|x86.Build.0 = Release|x86
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Debug|x86.ActiveCfg = Debug|x86
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Debug|x86.Build.0 = Debug|x86
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Release|x86.ActiveCfg = Release|x86
+		{5D082F88-4290-4049-9984-FCB126A7BD4E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
