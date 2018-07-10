@@ -7745,7 +7745,11 @@ namespace Trionic5Controls
             float retval = editorvalue;
             if (m_viewtype == SuiteViewType.Easy || m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Easy5Bar)
             {
-                retval = (float)((float)editorvalue * (float)correction_factor) + (float)correction_offset;
+                retval = editorvalue * (float)correction_factor;
+                if (!_isCompareViewer)
+                {
+                    retval += (float)correction_offset;
+                }
             }
             return retval;
         }
