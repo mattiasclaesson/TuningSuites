@@ -1,10 +1,10 @@
 @echo off
-set T5SuiteII.version=2.0.27
+set T5SuiteII.version=2.0.28
 set Owf.Controls.DigitalDisplayControl.version=1.0.1.0
 set SuiteLauncher.version=2.0.3.0
 set CommonSuite.version=1.0.9.0
 set T5CanLib.version=2.0.5.0
-set Trionic5Controls=2.0.7.0
+set Trionic5Controls=2.0.8.0
 set Trionic5Tools=2.0.4.0
 set RealtimeGraph.version=3.0.0.0
 set SuiteLauncher.version=3.0.1.0
