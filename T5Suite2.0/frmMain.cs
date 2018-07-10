@@ -5359,8 +5359,6 @@ namespace T5Suite2
                         dockPanel.Tag = Filename;
 
                         IMapViewer tabdet = MapViewerFactory.Get(m_appSettings, curFile);
-                        tabdet.IsCompareViewer = true;
-
                         tabdet.Filename = Filename;
                         tabdet.Map_name = SymbolName;
                         tabdet.Map_descr = m_trionicFileInformation.GetSymbolDescription(tabdet.Map_name);
