@@ -15,7 +15,7 @@ namespace T7
 {
     public partial class CompareResults : DevExpress.XtraEditors.XtraUserControl
     {
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public delegate void NotifySelectSymbol(object sender, SelectSymbolEventArgs e);
         public event CompareResults.NotifySelectSymbol onSymbolSelect;
@@ -50,6 +50,21 @@ namespace T7
         {
             get { return m_compareSymbolCollection; }
             set { m_compareSymbolCollection = value; }
+        }
+
+        private int m_OriginalAddressOffset = 0;
+
+        public int OriginalAddressOffset
+        {
+            get { return m_OriginalAddressOffset; }
+            set { m_OriginalAddressOffset = value; }
+        }
+        private int m_CompareAddressOffset = 0;
+
+        public int CompareAddressOffset
+        {
+            get { return m_CompareAddressOffset; }
+            set { m_CompareAddressOffset = value; }
         }
 
         private bool m_UseForFind = false;
@@ -505,10 +520,18 @@ namespace T7
                         {
                             if (frmSelection.UseOriginalFile)
                             {
+                                if (Trionic7File.IsSoftwareOpen(m_originalSymbolCollection))
+                                {
+                                    pe.AddressOffset = m_OriginalAddressOffset;
+                                }
                                 pe.ExportPackage(scSelected, m_OriginalFilename, sfd.FileName);
                             }
                             else
                             {
+                                if (Trionic7File.IsSoftwareOpen(m_compareSymbolCollection))
+                                {
+                                    pe.AddressOffset = m_CompareAddressOffset;
+                                }
                                 pe.ExportPackage(scSelected, m_filename, sfd.FileName);
                             }
                         }

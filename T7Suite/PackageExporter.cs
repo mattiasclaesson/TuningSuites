@@ -12,7 +12,7 @@ namespace T7
 {
     class PackageExporter
     {
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private byte[] readdatafromfile(string filename, int address, int length)
         {
@@ -79,8 +79,6 @@ namespace T7
             {
                 if (sh.Flash_start_address - m_AddressOffset > 0 && sh.Flash_start_address - m_AddressOffset < 0x80000)
                 {
-                    
-
                     byte[] data = readdatafromfile(filename, (int)sh.Flash_start_address - m_AddressOffset, sh.Length);
                     // if the symbol contains data... use that
                     if (sh.Currentdata != null)
@@ -91,8 +89,6 @@ namespace T7
                 }
                 else if (sh.Flash_start_address  > 0 && sh.Flash_start_address  < 0x80000)
                 {
-
-
                     byte[] data = readdatafromfile(filename, (int)sh.Flash_start_address , sh.Length);
                     // if the symbol contains data... use that
                     if (sh.Currentdata != null)

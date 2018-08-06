@@ -135,23 +135,11 @@ namespace T7
 
         private bool IsSoftwareOpen()
         {
-            bool retval = false;
             if (_softwareIsOpenDetermined) return _softwareIsOpen;
 
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                if (sh.Flash_start_address > m_currentfile_size && sh.Length > 0x100 && sh.Length < 0x400)
-                {
-                    if (sh.SmartVarname == "BFuelCal.Map" || sh.SmartVarname == "IgnNormCal.Map" || sh.SmartVarname == "AirCtrlCal.map"
-                        || sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map")
-                    {
-                        retval = true; // found maps > 0x100 in size in sram
-                        _softwareIsOpen = true;
-                    }
-                }
-            }
+            _softwareIsOpen = Trionic7File.IsSoftwareOpen(m_symbols);
             _softwareIsOpenDetermined = true;
-            return retval;
+            return _softwareIsOpen;
         }
 
         private int m_currentSramOffsett = 0;

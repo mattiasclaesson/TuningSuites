@@ -144,7 +144,7 @@ namespace T7
         AppSettings m_appSettings;
         int m_currentfile_size = 0x80000;
         string m_current_softwareversion = "";
-        int m_currentSramOffsett = 0;
+        int m_currentSramOffset = 0;
         string m_currentfile = string.Empty;
         private AFRMap m_AFRMap;
         public DelegateStartReleaseNotePanel m_DelegateStartReleaseNotePanel;
@@ -655,7 +655,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
-                    IsSoftwareOpen();
+                    IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
                 {
@@ -689,7 +689,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
-                    IsSoftwareOpen();
+                    IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
                 {
@@ -723,7 +723,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
-                    IsSoftwareOpen();
+                    IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
                 {
@@ -2000,7 +2000,7 @@ namespace T7
                             if (compareName.StartsWith("Symbolnumber")) compareName = sh_compare.Userdescription;
 
                             compareStartAddress = sh_compare.Flash_start_address;
-                            if (IsSoftwareOpen(compare_symbols))
+                            if (Trionic7File.IsSoftwareOpen(compare_symbols))
                             {
                                 // get address
                                 if (IsSymbolCalibration(compareName) && sh_compare.Length < 0x400 && sh_compare.Flash_start_address > m_currentfile_size)
@@ -2140,8 +2140,10 @@ namespace T7
                         }
                         compareResults.CompareSymbolCollection = compare_symbols;
                         compareResults.OriginalSymbolCollection = m_symbols;
-                        compareResults.OriginalFilename = m_currentfile;
                         compareResults.CompareFilename = filename;
+                        compareResults.OriginalFilename = m_currentfile;
+                        compareResults.CompareAddressOffset = m_sramOffset;
+                        compareResults.OriginalAddressOffset = m_currentSramOffset;
                         compareResults.OpenGridViewGroups(compareResults.gridControl1, 1);
                         compareResults.gridControl1.DataSource = dt.Copy();
                         barProgress.Visibility = BarItemVisibility.Never;
@@ -2368,7 +2370,7 @@ namespace T7
                     if (IsSymbolCalibration(symbolname))
                     {
                         int address = (int)sh.Flash_start_address;
-                        if (IsSoftwareOpen()/*length > 0x10*/)
+                        if (IsSoftwareOpenAndUpdateCaption()/*length > 0x10*/)
                         {
                             address = address - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
                             //tabdet.Map_address = address;
@@ -3092,7 +3094,7 @@ namespace T7
                     {
                         currentFlashAddress = sh.Flash_start_address;
                         //TODO: Keep open bins in mind which have sram addresses in stead of normal addresses
-                        if (IsSoftwareOpen(curSymbolCollection))
+                        if (Trionic7File.IsSoftwareOpen(curSymbolCollection))
                         {
                             // get address
                             if (IsSymbolCalibration(sh.Varname) && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
@@ -4205,7 +4207,7 @@ namespace T7
                     airmassResult.onClose += new ctrlAirmassResult.ViewerClose(airmassResult_onClose);
                     airmassResult.Currentfile = m_currentfile;
                     airmassResult.Symbols = m_symbols;
-                    airmassResult.CurrentSramOffsett = m_currentSramOffsett;
+                    airmassResult.CurrentSramOffsett = m_currentSramOffset;
                     airmassResult.Currentfile_size = m_currentfile_size;
                     airmassResult.Calculate();
                     dockPanel.Controls.Add(airmassResult);
@@ -5514,25 +5516,13 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private bool _softwareIsOpen = false;
         private bool _softwareIsOpenDetermined = false;
 
-        private bool IsSoftwareOpen()
+        private bool IsSoftwareOpenAndUpdateCaption()
         {
-            bool retval = false;
             if (_softwareIsOpenDetermined) return _softwareIsOpen;
 
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                if (sh.Flash_start_address > m_currentfile_size && sh.Length > 0x100 && sh.Length < 0x400)
-                {
-                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
-                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
-                    {
-                        retval = true; // found maps > 0x100 in size in sram
-                        _softwareIsOpen = true;
-                        //                        logger.Debug("Software is open because of symbol: " + sh.Varname);
-                    }
-                }
-            }
+            _softwareIsOpen = Trionic7File.IsSoftwareOpen(m_symbols);
             _softwareIsOpenDetermined = true;
+
             if (_softwareIsOpen)
             {
                 barStaticOpenClosed.Caption = "Open/dev binary";
@@ -5543,24 +5533,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 barStaticOpenClosed.Caption = "Normal binary";
                 btnAutoTune.Visible = false;
             }
-            return retval;
-        }
-
-        private bool IsSoftwareOpen(SymbolCollection symbols)
-        {
-            bool retval = false;
-            foreach (SymbolHelper sh in symbols)
-            {
-                if (sh.Flash_start_address > m_currentfile_size && sh.Length > 0x100 && sh.Length < 0x400)
-                {
-                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
-                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
-                    {
-                        retval = true; // found maps > 0x100 in size in sram
-                    }
-                }
-            }
-            return retval;
+            return _softwareIsOpen;
         }
 
         private bool ValidateFile()
@@ -5642,7 +5615,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     if (t7InfoHeader.init(filename, m_appSettings.AutoFixFooter))
                     {
                         m_current_softwareversion = t7InfoHeader.getSoftwareVersion();
-                        m_currentSramOffsett = t7InfoHeader.getSramOffset();
+                        m_currentSramOffset = t7InfoHeader.getSramOffset();
                     }
                     else
                     {
@@ -5662,16 +5635,16 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             System.Windows.Forms.Application.DoEvents();
             if (isWorkingFile)
             {
-                if (m_currentSramOffsett == 0)
+                if (m_currentSramOffset == 0)
                 {
-                    m_currentSramOffsett = retval.SramOffsetForOpenFile;
-                    logger.Debug("Overrules m_currentSramOffsett with value from t7file: " + m_currentSramOffsett.ToString("X8"));
+                    m_currentSramOffset = retval.SramOffsetForOpenFile;
+                    logger.Debug("Overrules m_currentSramOffset with value from t7file: " + m_currentSramOffset.ToString("X8"));
                 }
 
                 // <GS-27042010> now we need to check if there is a symbol information XML file present.
                 try
                 {
-                    IsSoftwareOpen();
+                    IsSoftwareOpenAndUpdateCaption();
                     // fill in the rest of the parameters
                     barFilenameText.Caption = Path.GetFileNameWithoutExtension(filename);
                 }
@@ -6498,7 +6471,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private void SetDefaultFilters()
         {
             gridViewSymbols.ActiveFilter.Clear(); // clear filter
-            if (!IsSoftwareOpen())
+            if (!IsSoftwareOpenAndUpdateCaption())
             {
                 /*** set filter ***/
                 //DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo(@"([Flash_start_address] > 0 AND [Flash_start_address] < 524288)", "Only symbols within binary");
@@ -6526,7 +6499,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         if (sh == null)
                             return;
 
-                        if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash instead of sram
+                        if (IsSoftwareOpenAndUpdateCaption()) // <GS-09082010> if it is open software, get data from flash instead of sram
                         {   
                             // Should we start a viewer in realtime mode or in offline mode?
                             if (m_RealtimeConnectedToECU)
@@ -6818,7 +6791,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 if (sh.SmartVarname == symbolname)
                 {
-                    if (IsSoftwareOpen() && IsSymbolCalibration(symbolname) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
+                    if (IsSoftwareOpenAndUpdateCaption() && IsSymbolCalibration(symbolname) /*&& sh.Length > 0x02*/ && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size) // <GS-09082010>
                     {
                         return sh.Flash_start_address - GetOpenFileOffset();
                     }
@@ -7363,7 +7336,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     }
                                     else
                                     {
-                                        if (IsSoftwareOpen()/*length > 0x10*/)
+                                        if (IsSoftwareOpenAndUpdateCaption()/*length > 0x10*/)
                                         {
                                             address = address - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
                                             tabdet.Map_address = address;
@@ -7793,10 +7766,10 @@ TorqueCal.M_IgnInflTroqMap 8*/
         private int GetOpenFileOffset()
         {
             // try to find a KNOWN table (which is always more or less similar
-            if (m_currentSramOffsett > 0)
+            if (m_currentSramOffset > 0)
             {
                 //logger.Debug("Working with: " + m_currentSramOffsett.ToString("X8"));
-                return m_currentSramOffsett;
+                return m_currentSramOffset;
             }
             //     34FCEF00
             // 48 bytes ernaast (0x30)
@@ -8234,7 +8207,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
 
-                            if (IsSoftwareOpen()) // <GS-09082010> if it is open software, get data from flash instead of sram
+                            if (IsSoftwareOpenAndUpdateCaption()) // <GS-09082010> if it is open software, get data from flash instead of sram
                             {
                                 if (m_RealtimeConnectedToECU)
                                 {
@@ -15000,7 +14973,7 @@ If boost regulation reports errors you can increase the difference between boost
                             }
 
                             PackageExporter pe = new PackageExporter();
-                            if (IsSoftwareOpen())
+                            if (IsSoftwareOpenAndUpdateCaption())
                             {
                                 pe.AddressOffset = GetOpenFileOffset();
                             }
@@ -16336,7 +16309,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "MaxSpdCal.n_EngLimAir");
                 AddToSymbolCollection(scToExport, "MaxVehicCal.v_MaxSpeed");
                 PackageExporter pe = new PackageExporter();
-                if (IsSoftwareOpen())
+                if (IsSoftwareOpenAndUpdateCaption())
                 {
                     pe.AddressOffset = GetOpenFileOffset();
                 }
@@ -16843,7 +16816,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
                         }
                         PackageExporter pe = new PackageExporter();
-                        if (IsSoftwareOpen())
+                        if (IsSoftwareOpenAndUpdateCaption())
                         {
                             pe.AddressOffset = GetOpenFileOffset();
                         }
@@ -16903,7 +16876,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                             logger.Debug("Symbol dragging: " + sh.Varname);
                             sh.Currentdata = readdatafromfile(m_currentfile, (int)sh.Flash_start_address, sh.Length);
-                            if (IsSoftwareOpen())
+                            if (IsSoftwareOpenAndUpdateCaption())
                             {
                                 sh.Currentdata = readdatafromfile(m_currentfile, (int)sh.Flash_start_address - GetOpenFileOffset(), sh.Length);
                             }
@@ -18457,7 +18430,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             if (sh.Varname == m_appSettings.AutoTuneFuelMap || sh.Userdescription == m_appSettings.AutoTuneFuelMap)
                             {
                                 //<GS-28012011>
-                                if (IsSoftwareOpen())
+                                if (IsSoftwareOpenAndUpdateCaption())
                                 {
                                     int symbolnumber = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, sh.Varname), sh.Varname);
                                     sh.Symbol_number = symbolnumber;

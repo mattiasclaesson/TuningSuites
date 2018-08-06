@@ -12,7 +12,7 @@ namespace T7
 {
     public class Trionic7File
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly static Logger logger = LogManager.GetCurrentClassLogger();
 
         public enum VectorType : int
         {
@@ -340,13 +340,7 @@ namespace T7
             return retval;
         }
 
-        private int m_Filelength = 0x80000;
-
-        public int Filelength
-        {
-            get { return m_Filelength; }
-            set { m_Filelength = value; }
-        }
+        private static int m_Filelength = 0x80000;
 
         private string m_fileName = string.Empty;
 
@@ -565,6 +559,23 @@ namespace T7
 
             }
             return symbol_collection;
+        }
+
+        public static bool IsSoftwareOpen(SymbolCollection symbols)
+        {
+            bool retval = false;
+            foreach (SymbolHelper sh in symbols)
+            {
+                if (sh.Flash_start_address > m_Filelength && sh.Length > 0x100 && sh.Length < 0x400)
+                {
+                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
+                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
+                    {
+                        retval = true; // found maps > 0x100 in size in sram
+                    }
+                }
+            }
+            return retval;
         }
 
         /// <summary>
