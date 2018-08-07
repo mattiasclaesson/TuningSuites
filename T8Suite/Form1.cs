@@ -7394,52 +7394,16 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             return retval;
         }
 
-
-        private void SaveAdditionalSymbols()
-        {
-            System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(m_currentfile));
-            dt.Columns.Add("SYMBOLNAME");
-            dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-            dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-            dt.Columns.Add("DESCRIPTION");
-
-            string xmlfilename = Path.Combine(Path.GetDirectoryName(m_currentfile), Path.GetFileNameWithoutExtension(m_currentfile) + ".xml");
-            if (File.Exists(xmlfilename))
-            {
-                File.Delete(xmlfilename);
-            }
-
-            foreach (SymbolHelper sh in m_symbols)
-            {
-                if (sh.Userdescription != "")
-                {
-                    if (sh.Userdescription == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                    {
-                        dt.Rows.Add(sh.Userdescription, sh.Symbol_number, sh.Flash_start_address, sh.Varname);
-                    }
-                    else
-                    {
-                        dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
-                    }
-                }
-            }
-            dt.WriteXml(xmlfilename);
-        }
-
         private void btnImportXML_ItemClick(object sender, ItemClickEventArgs e)
         {
             ImportXMLDescriptorFile();
         }
 
-
-
         private void gridViewSymbols_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
             if (e.Column.Name == gcSymbolsUserDescription.Name)
             {
-                // save a new repository item
-                SaveAdditionalSymbols();
-
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
             }
         }
 
@@ -13644,7 +13608,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
-                SaveAdditionalSymbols();
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
             }
         }
 
@@ -13664,8 +13628,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
 
             }
         }
@@ -13676,8 +13639,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             gridControlSymbols.DataSource = m_symbols;
             SetDefaultFilters();
             gridControlSymbols.RefreshDataSource();
-            // and save the data to the repository
-            SaveAdditionalSymbols();
+            SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
         }
 
         private void TryToLoadAdditionalCSVSymbols(string filename)
@@ -13785,8 +13747,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
 
             }
         }

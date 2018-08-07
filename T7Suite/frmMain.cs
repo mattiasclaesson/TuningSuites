@@ -250,6 +250,8 @@ namespace T7
             trionic7.onCanInfo += trionicCan_onCanInfo;
             trionic7.onCanFrame += trionicCan_onCanFrame;
 
+            Trionic7File.onProgress += trionic7file_onProgress;
+
             m_ShouldUpdateChecksum = ShouldUpdateChecksum;
 
             try
@@ -646,20 +648,20 @@ namespace T7
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                TryToLoadAdditionalSymbols(ofd.FileName);
+                Trionic7File.TryToLoadAdditionalXMLSymbols(ofd.FileName, m_symbols, m_appSettings.ApplicationLanguage);
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
+
                 try
                 {
                     _softwareIsOpenDetermined = false;
                     IsSoftwareOpenAndUpdateCaption();
                 }
-                catch (Exception E3)
+                catch (Exception E)
                 {
-                    logger.Debug(E3.Message);
+                    logger.Debug(E);
                 }
             }
         }
@@ -684,8 +686,8 @@ namespace T7
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
+
                 try
                 {
                     _softwareIsOpenDetermined = false;
@@ -718,8 +720,8 @@ namespace T7
                 gridControlSymbols.DataSource = m_symbols;
                 SetDefaultFilters();
                 gridControlSymbols.RefreshDataSource();
-                // and save the data to the repository
-                SaveAdditionalSymbols();
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
+
                 try
                 {
                     _softwareIsOpenDetermined = false;
@@ -5589,8 +5591,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         private Trionic7File TryToOpenFileUsingClass(string filename, out SymbolCollection symbol_collection, bool isWorkingFile)
         {
             Trionic7File retval = new Trionic7File();
-
-            retval.onProgress += retval_onProgress;
             _softwareIsOpen = false;
             _softwareIsOpenDetermined = false;
             m_currentsramfile = string.Empty; // geen sramfile erbij
@@ -5625,7 +5625,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             }
             catch (Exception E2)
             {
-                logger.Debug(E2.Message);
+                logger.Debug(E2);
             }
             AddFileToMRUList(filename);
             symbol_collection = retval.ExtractFile(filename, m_appSettings.ApplicationLanguage, m_current_softwareversion);
@@ -5673,7 +5673,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             return retval;
         }
 
-        void retval_onProgress(object sender, Trionic7File.ProgressEventArgs e)
+        void trionic7file_onProgress(object sender, Trionic7File.ProgressEventArgs e)
         {
             if (e.Percentage < 100)
             {
@@ -5687,98 +5687,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 barProgress.Visibility = BarItemVisibility.Never;
             }
             System.Windows.Forms.Application.DoEvents();
-        }
-
-        private static string GetFileDescriptionFromFile(string file)
-        {
-            string retval = string.Empty;
-            try
-            {
-                using (StreamReader sr = new StreamReader(file))
-                {
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    string name = sr.ReadLine();
-                    name = name.Trim();
-                    name = name.Replace("<", "");
-                    name = name.Replace(">", "");
-                    //name = name.Replace("x0020", " ");
-                    name = name.Replace("_x0020_", " ");
-                    for (int i = 0; i <= 9; i++)
-                    {
-                        name = name.Replace("_x003"+i.ToString()+"_", i.ToString());
-                    }
-                    retval = name;
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-            return retval;
-        }
-
-        private void TryToLoadAdditionalSymbols(string filename)
-        {
-            System.Data.DataTable dt;
-            string binname = GetFileDescriptionFromFile(filename);
-            if (binname != string.Empty)
-            {
-                dt = new System.Data.DataTable(binname);
-                dt.Columns.Add("SYMBOLNAME");
-                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                dt.Columns.Add("DESCRIPTION");
-                if (File.Exists(filename))
-                {
-                    dt.ReadXml(filename);
-                }
-                foreach (SymbolHelper sh in m_symbols)
-                {
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        try
-                        {
-                            //SymbolHelper sh = m_symbols[Convert.ToInt32(dr["SYMBOLNUMBER"])];
-                            if (dr["SYMBOLNAME"].ToString() == sh.Varname)
-                            {
-                                if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
-                                {
-                                    if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                                    {
-                                        sh.Userdescription = sh.Varname;
-                                        sh.Varname = dr["DESCRIPTION"].ToString();
-                                    }
-                                    else
-                                    {
-                                        sh.Userdescription = dr["DESCRIPTION"].ToString();
-                                    }
-                                    sh.Description = SymbolTranslator.ToHelpText(sh.Varname, m_appSettings.ApplicationLanguage);
-                                    if (sh.Category == "Undocumented" || sh.Category == "")
-                                    {
-                                        if (sh.Varname.Contains("."))
-                                        {
-                                            try
-                                            {
-                                                sh.Category = sh.Varname.Substring(0, sh.Varname.IndexOf("."));
-                                                //logger.Debug(String.Format("Set cat to {0} for {1}", sh.Category, sh.Userdescription));
-                                            }
-                                            catch (Exception cE)
-                                            {
-                                                logger.Debug(String.Format("Failed to assign category to symbol: {0} err: {1}", sh.Userdescription, cE.Message));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception E)
-                        {
-                            logger.Debug(E.Message);
-                        }
-                    }
-                }
-            }
         }
 
         private void InitMruSystem()
@@ -14044,49 +13952,7 @@ If boost regulation reports errors you can increase the difference between boost
         {
             if (e.Column.Name == gcSymbolsUserDescription.Name)
             {
-                // save a new repository item
-                SaveAdditionalSymbols();
-            }
-        }
-
-        private void SaveAdditionalSymbols()
-        {
-            using (System.Data.DataTable dt = new System.Data.DataTable(Path.GetFileNameWithoutExtension(m_currentfile)))
-            {
-                dt.Columns.Add("SYMBOLNAME");
-                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                dt.Columns.Add("DESCRIPTION");
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(m_currentfile, false);
-                string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
-                string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", System.Windows.Forms.Application.StartupPath, Path.GetFileNameWithoutExtension(m_currentfile), File.GetCreationTime(m_currentfile), checkstring);
-                if (Directory.Exists(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath)))
-                {
-                    if (File.Exists(xmlfilename))
-                    {
-                        File.Delete(xmlfilename);
-                    }
-                }
-                else
-                {
-                    Directory.CreateDirectory(String.Format("{0}\\repository", System.Windows.Forms.Application.StartupPath));
-                }
-                foreach (SymbolHelper sh in m_symbols)
-                {
-                    if (sh.Userdescription != "")
-                    {
-                        if (sh.Userdescription == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                        {
-                            dt.Rows.Add(sh.Userdescription, sh.Symbol_number, sh.Flash_start_address, sh.Varname);
-                        }
-                        else
-                        {
-                            dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
-                        }
-                    }
-                }
-                dt.WriteXml(xmlfilename);
+                SymbolXMLFile.SaveAdditionalSymbols(m_currentfile, m_symbols);
             }
         }
 

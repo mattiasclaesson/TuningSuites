@@ -17,7 +17,7 @@ namespace T8SuitePro
 {
     public class Trionic8File
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly static Logger logger = LogManager.GetCurrentClassLogger();
 
         public enum VectorType : int
         {
@@ -272,34 +272,6 @@ namespace T8SuitePro
             MessageBox.Show("File does not seem to be a Trionic 8 file: " + Path.GetFileName(filename));
 
             return false;
-        }
-
-        static private string GetFileDescriptionFromFile(string file)
-        {
-            string retval = string.Empty;
-            try
-            {
-                using (StreamReader sr = new StreamReader(file))
-                {
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    string name = sr.ReadLine();
-                    name = name.Trim();
-                    name = name.Replace("<", "");
-                    name = name.Replace(">", "");
-                    name = name.Replace("_x0020_", " ");
-                    for (int i = 0; i <= 9; i++)
-                    {
-                        name = name.Replace("_x003" + i.ToString() + "_", i.ToString());
-                    }
-                    retval = name;
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E);
-            }
-            return retval;
         }
 
         static private int GetStartOfAddressTableOffset(string filename)
@@ -1234,7 +1206,7 @@ namespace T8SuitePro
         {
             if (File.Exists(filename))
             {
-                string binname = GetFileDescriptionFromFile(filename);
+                string binname = SymbolXMLFile.GetFileDescriptionFromFile(filename);
                 if (binname != string.Empty)
                 {
                     System.Data.DataTable dt = new System.Data.DataTable(binname);

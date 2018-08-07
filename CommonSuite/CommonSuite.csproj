@@ -146,6 +146,7 @@
     <Compile Include="SuiteRegistry.cs" />
     <Compile Include="SymbolCollection.cs" />
     <Compile Include="SymbolHelper.cs" />
+    <Compile Include="SymbolXMLFile.cs" />
     <Compile Include="SystemFileAssociation.cs" />
     <Compile Include="TransactionEntry.cs" />
     <Compile Include="TurboType.cs" />

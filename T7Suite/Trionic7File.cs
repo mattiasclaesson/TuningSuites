@@ -7,6 +7,7 @@ using System.Data;
 using CommonSuite;
 using NLog;
 using TrionicCANLib.Checksum;
+using System.Diagnostics;
 
 namespace T7
 {
@@ -90,11 +91,11 @@ namespace T7
             set { m_sramOffsetForOpenFile = value; }
         }
 
-        private void CastProgressEvent(string info, int percentage)
+        private static void CastProgressEvent(string info, int percentage)
         {
             if (onProgress != null)
             {
-                onProgress(this, new ProgressEventArgs(info, percentage));
+                onProgress(typeof(Trionic7File), new ProgressEventArgs(info, percentage));
             }
         }
 
@@ -113,7 +114,7 @@ namespace T7
         }
 
         public delegate void Progress(object sender, ProgressEventArgs e);
-        public event Trionic7File.Progress onProgress;
+        public static event Trionic7File.Progress onProgress;
 
         /// <summary>
         /// 
@@ -578,60 +579,91 @@ namespace T7
             return retval;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        private static string GetFileDescriptionFromFile(string file)
+        static private void ImportSymbols(System.Data.DataTable dt, SymbolCollection collection, int LanguageID)
         {
-            string retval = string.Empty;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            CastProgressEvent("Importing symbols", 90);
+
             try
             {
-                using (StreamReader sr = new StreamReader(file))
+                foreach (SymbolHelper sh in collection)
                 {
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    string name = sr.ReadLine();
-                    name = name.Trim();
-                    name = name.Replace("<", "");
-                    name = name.Replace(">", "");
-                    //name = name.Replace("x0020", " ");
-                    name = name.Replace("_x0020_", " ");
-                    for (int i = 0; i <= 9; i++)
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        name = name.Replace(String.Format("_x003{0}_", i), i.ToString());
+                        if (dr["SYMBOLNAME"].ToString() == sh.Varname)
+                        {
+                            if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
+                            {
+                                // Swap varname and userdescription
+                                if (sh.Varname.StartsWith("Symbolnumber "))
+                                {
+                                    sh.Userdescription = sh.Varname;
+                                    sh.Varname = dr["DESCRIPTION"].ToString();
+                                }
+                                else
+                                {
+                                    sh.Userdescription = dr["DESCRIPTION"].ToString();
+                                }
+
+                                sh.Description = SymbolTranslator.ToHelpText(sh.Varname, LanguageID);
+                                sh.createAndUpdateCategory(sh.Varname);
+                                break;
+                            }
+                        }
                     }
-                    retval = name;
                 }
             }
             catch (Exception E)
             {
-                logger.Debug(E.Message);
+                logger.Debug(E);
             }
-            return retval;
+            sw.Stop();
+            logger.Debug("Import completed " + sw.ElapsedMilliseconds + " ms");
+            CastProgressEvent("Completed", 0);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="m_symbols"></param>
-        /// <param name="LanguageID"></param>
-        private static void TryToLoadAdditionalSymbols(string filename, SymbolCollection m_symbols, int LanguageID)
+        static public bool TryToLoadAdditionalXMLSymbols(string filename, SymbolCollection collection, int LanguageID)
+        {
+            if (File.Exists(filename))
+            {
+                string binname = SymbolXMLFile.GetFileDescriptionFromFile(filename);
+                if (binname != string.Empty)
+                {
+                    System.Data.DataTable dt = new System.Data.DataTable(binname);
+                    dt.Columns.Add("SYMBOLNAME");
+                    dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
+                    dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
+                    dt.Columns.Add("DESCRIPTION");
+                    dt.ReadXml(filename);
+                    ImportSymbols(dt, collection, LanguageID);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void TryToLoadAdditionalSymbols(string filename, SymbolCollection m_symbols, int LanguageID)
         {
             DataTable dt = new DataTable(Path.GetFileNameWithoutExtension(filename));
             dt.Columns.Add("SYMBOLNAME");
             dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
             dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
             dt.Columns.Add("DESCRIPTION");
+            
             T7FileHeader fh = new T7FileHeader();
             fh.init(filename, false);
             string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
-            string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", Application.StartupPath, Path.GetFileNameWithoutExtension(filename), File.GetCreationTime(filename), checkstring);
-            if (File.Exists(xmlfilename))
+            string repositoryfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", Application.StartupPath, Path.GetFileNameWithoutExtension(filename), File.GetCreationTime(filename), checkstring);
+            string exactxmlfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".xml");
+            
+            if (File.Exists(exactxmlfile))
             {
-                dt.ReadXml(xmlfilename);
+                dt.ReadXml(exactxmlfile);
+            }
+            else if (File.Exists(repositoryfilename))
+            {
+                dt.ReadXml(repositoryfilename);
             }
             else
             {
@@ -647,8 +679,8 @@ namespace T7
                     }
                 }
             }
+
             // auto add symbols for 55P / 46T files only if no other sources of additional symbols can be found
-            bool createRepositoryFile = false;
             if (dt.Rows.Count == 0)
             {
                 if (fh.getSoftwareVersion().Trim().StartsWith("EU0AF01C", StringComparison.OrdinalIgnoreCase) ||
@@ -660,7 +692,7 @@ namespace T7
                         string BioPowerXmlFile = String.Format("{0}\\EU0AF01C.xml", Application.StartupPath);
                         if (File.Exists(BioPowerXmlFile))
                         {
-                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            string binname = SymbolXMLFile.GetFileDescriptionFromFile(BioPowerXmlFile);
                             if (binname != string.Empty)
                             {
                                 dt = new DataTable(binname);
@@ -669,7 +701,6 @@ namespace T7
                                 dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
                                 dt.Columns.Add("DESCRIPTION");
                                 dt.ReadXml(BioPowerXmlFile);
-                                createRepositoryFile = true;
                             }
                         }
                     }
@@ -682,7 +713,7 @@ namespace T7
                         string BioPowerXmlFile = String.Format("{0}\\EU09F01C.xml", Application.StartupPath);
                         if (File.Exists(BioPowerXmlFile))
                         {
-                            string binname = GetFileDescriptionFromFile(BioPowerXmlFile);
+                            string binname = SymbolXMLFile.GetFileDescriptionFromFile(BioPowerXmlFile);
                             if (binname != string.Empty)
                             {
                                 dt = new DataTable(binname);
@@ -691,48 +722,23 @@ namespace T7
                                 dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
                                 dt.Columns.Add("DESCRIPTION");
                                 dt.ReadXml(BioPowerXmlFile);
-                                createRepositoryFile = true;
                             }
                         }
                     }
                 }
             }
-            foreach (DataRow dr in dt.Rows)
-            {
-                try
-                {
-                    SymbolHelper sh = m_symbols[Convert.ToInt32(dr["SYMBOLNUMBER"])];
-                    if (dr["SYMBOLNAME"].ToString() == sh.Varname)
-                    {
-                        if (sh.Flash_start_address == Convert.ToInt32(dr["FLASHADDRESS"]))
-                        {
-                            if (sh.Varname == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                            {
-                                sh.Userdescription = sh.Varname;
-                                sh.Varname = dr["DESCRIPTION"].ToString();
-                            }
-                            else
-                            {
-                                sh.Userdescription = dr["DESCRIPTION"].ToString();
-                            }
+            ImportSymbols(dt, m_symbols, LanguageID);
+            SymbolXMLFile.SaveAdditionalSymbols(filename, m_symbols);
+            FixXAccPedal(m_symbols);
+            dt.Dispose();
+        }
 
-                            sh.Description = SymbolTranslator.ToHelpText(sh.Varname, LanguageID);
-                            sh.createAndUpdateCategory(sh.Varname);
-                        }
-                    }
-                }
-                catch (Exception E)
-                {
-                    logger.Debug(E.Message);
-                }
-            }
-            if (createRepositoryFile)
-            {
-                SaveAdditionalSymbols(filename, m_symbols);
-            }
+        private static void FixXAccPedal(SymbolCollection m_symbols)
+        {
             foreach (SymbolHelper sh in m_symbols)
             {
-                if (sh.Varname == "X_AccPedalManSP" || sh.Varname == "X_AccPedalAutTAB" || sh.Varname == "X_AccPedalAutSP" || sh.Varname == "X_AccPedalManTAB" || sh.Userdescription == "X_AccPedalManSP" || sh.Userdescription == "X_AccPedalAutTAB" || sh.Userdescription == "X_AccPedalAutSP" || sh.Userdescription == "X_AccPedalManTAB")
+                if (sh.Varname == "X_AccPedalManSP" || sh.Varname == "X_AccPedalAutTAB" || sh.Varname == "X_AccPedalAutSP" || sh.Varname == "X_AccPedalManTAB" ||
+                    sh.Userdescription == "X_AccPedalManSP" || sh.Userdescription == "X_AccPedalAutTAB" || sh.Userdescription == "X_AccPedalAutSP" || sh.Userdescription == "X_AccPedalManTAB")
                 {
                     if (sh.Length == 4)
                     {
@@ -740,48 +746,6 @@ namespace T7
                         sh.Length = 0x0C;
                     }
                 }
-            }
-            dt.Dispose();
-        }
-
-        private static void SaveAdditionalSymbols(string filename, SymbolCollection m_symbols)
-        {
-            using (DataTable dt = new DataTable(Path.GetFileNameWithoutExtension(filename)))
-            {
-                dt.Columns.Add("SYMBOLNAME");
-                dt.Columns.Add("SYMBOLNUMBER", Type.GetType("System.Int32"));
-                dt.Columns.Add("FLASHADDRESS", Type.GetType("System.Int32"));
-                dt.Columns.Add("DESCRIPTION");
-                T7FileHeader fh = new T7FileHeader();
-                fh.init(filename, false);
-                string checkstring = fh.getPartNumber() + fh.getSoftwareVersion();
-                string xmlfilename = String.Format("{0}\\repository\\{1}{2:yyyyMMddHHmmss}{3}.xml", Application.StartupPath, Path.GetFileNameWithoutExtension(filename), File.GetCreationTime(filename), checkstring);
-                if (Directory.Exists(String.Format("{0}\\repository", Application.StartupPath)))
-                {
-                    if (File.Exists(xmlfilename))
-                    {
-                        File.Delete(xmlfilename);
-                    }
-                }
-                else
-                {
-                    Directory.CreateDirectory(String.Format("{0}\\repository", Application.StartupPath));
-                }
-                foreach (SymbolHelper sh in m_symbols)
-                {
-                    if (sh.Userdescription != "")
-                    {
-                        if (sh.Userdescription == String.Format("Symbolnumber {0}", sh.Symbol_number))
-                        {
-                            dt.Rows.Add(sh.Userdescription, sh.Symbol_number, sh.Flash_start_address, sh.Varname);
-                        }
-                        else
-                        {
-                            dt.Rows.Add(sh.Varname, sh.Symbol_number, sh.Flash_start_address, sh.Userdescription);
-                        }
-                    }
-                }
-                dt.WriteXml(xmlfilename);
             }
         }
 
