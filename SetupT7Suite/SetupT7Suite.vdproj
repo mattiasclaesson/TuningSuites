@@ -2186,7 +2186,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.9.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.10.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_273F2C7C5995C92AE57BDA16B1CFE68B"
@@ -2855,7 +2855,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6765.40413, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6793.33599, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_85C0DB1690F344AE0900C5E3B2107B36"
@@ -4043,15 +4043,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{F0E8F502-918E-4DC3-8DF9-31D7FCA58209}"
-        "PackageCode" = "8:{A1EAA0E1-B10C-454A-A129-C41A4443988D}"
+        "ProductCode" = "8:{A737E2E2-431F-47BE-A162-5F40C00E40AB}"
+        "PackageCode" = "8:{5CE177BE-F361-4360-93FD-B9EECDD4B2C1}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.46"
+        "ProductVersion" = "8:0.1.47"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.trionictuning.com"
