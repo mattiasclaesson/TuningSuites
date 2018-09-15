@@ -829,13 +829,6 @@ namespace T7
             this.cbAdapterType.Name = "cbAdapterType";
             this.cbAdapterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbAdapterType.Properties.Items.AddRange(new object[] {
-            "Lawicel CANUSB",
-            "CombiAdapter",
-            "ELM327 v1.3 or higher",
-            "Just4Trionic",
-            "Kvaser",
-            "J2534"});
             this.cbAdapterType.Size = new System.Drawing.Size(121, 20);
             this.cbAdapterType.TabIndex = 23;
             this.cbAdapterType.SelectedIndexChanged += new System.EventHandler(this.comboBoxEdit3_SelectedIndexChanged);

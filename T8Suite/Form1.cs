@@ -12624,8 +12624,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 info.SetECUBuildDate(t8can.GetBuildDate());
                 info.SetECUSerialNumber(t8can.GetSerialNumber());
                 info.SetECUSAABPartnumber(t8can.GetSaabPartnumber());
-                info.SetECUBasemodel(t8can.GetInt64FromID(0xCC));
-                info.SetECUEndmodel(t8can.GetInt64FromID(0xCB));
+                info.SetECUBasemodel(t8can.GetInt64FromIdAsString(0xCC));
+                info.SetECUEndmodel(t8can.GetInt64FromIdAsString(0xCB));
                 info.SetCalibrationSet(t8can.GetCalibrationSet());
                 info.SetCodefileVersion(t8can.GetCodefileVersion());
                 info.SetSoftwareVersion(t8can.GetSoftwareVersion());

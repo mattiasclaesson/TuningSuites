@@ -770,13 +770,6 @@ namespace T8SuitePro
             this.cbAdapterType.Name = "cbAdapterType";
             this.cbAdapterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbAdapterType.Properties.Items.AddRange(new object[] {
-            "Lawicel CANUSB",
-            "CombiAdapter",
-            "ELM327 v1.3 or higher",
-            "Just4Trionic",
-            "Kvaser",
-            "J2534"});
             this.cbAdapterType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbAdapterType.Size = new System.Drawing.Size(121, 20);
             this.cbAdapterType.TabIndex = 26;

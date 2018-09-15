@@ -10,11 +10,14 @@ using CommonSuite;
 using System.IO.Ports;
 using TrionicCANLib.API;
 using DevExpress.XtraEditors.Controls;
+using NLog;
 
 namespace T8SuitePro
 {
     public partial class frmSettings : DevExpress.XtraEditors.XtraForm
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public frmSettings()
         {
             InitializeComponent();
@@ -27,6 +30,21 @@ namespace T8SuitePro
                 }
             }
             cbWidebandComPort.SelectedIndex = 0;
+
+            // Fetch adapter types from TrionicCANLib.API
+            cbAdapterType.Properties.Items.Clear();
+            foreach (var AdapterType in Enum.GetValues(typeof(CANBusAdapter)))
+            {
+                try
+                {
+                    cbAdapterType.Properties.Items.Add(((DescriptionAttribute)AdapterType.GetType().GetField(AdapterType.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false)[0]).Description.ToString());
+                    cbAdapterType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+                }
+                catch (Exception ex)
+                {
+                    logger.Debug(ex.Message);
+                }
+            }
         }
 
         private void groupControl1_Paint(object sender, PaintEventArgs e)
