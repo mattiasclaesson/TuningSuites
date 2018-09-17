@@ -117,4 +117,36 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="checkEdit7.ToolTip" xml:space="preserve">
+    <value>Checked --&gt; unchecked
+LambdaCal.ST_AdapEnable: 1 --&gt; 0
+O2HeatPostCal.I_LowLim: 230 --&gt; 0
+
+function: 
+4.1: second lambda sensor will not be used for fuel adaption
+4.2: current limit of heater of second lambda sensor will be disabled by lowering the current limit to 0. 
+
+useful if you install a special downpipe without mounting possibility for second lambda sensor</value>
+  </data>
+  <data name="checkEdit10.ToolTip" xml:space="preserve">
+    <value>Emission control idle will be raised in certain conditions (after cold start) and ignition will be retarded for faster catalyst heat up
+checked --&gt;unchecked
+IdleCal.ST_EnableLOffRpm: 1--&gt; 0
+IgnLOffCal.ST_Enable: 1 --&gt; 0</value>
+  </data>
+  <data name="checkEdit15.ToolTip" xml:space="preserve">
+    <value>unchecked --&gt; checked
+E85Cal.St_EthanolSensor: 3 --&gt; 0
+
+For Development saab had used a ethanol sensor which used the same pin as the speed signal in No TCS cars
+so if you set E85Cal.ST_EthanolSensor to 0 then the bin Works for a no TCS car.</value>
+  </data>
+  <data name="checkEdit14.ToolTip" xml:space="preserve">
+    <value>Disable effect of the emission limitation function introduced in "newer" biopower firmware. Code checks for software version EU0AF01C.
+Created by Pavel Angelov.
+address 0x13837
+Limited=0x03
+Unlimited=0x02
+To understand the modification its best to look at the disassember output before and after.</value>
+  </data>
 </root>

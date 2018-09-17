@@ -28,6 +28,7 @@ namespace T7
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFirmwareInformation));
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.textEdit4 = new DevExpress.XtraEditors.TextEdit();
             this.labelControl9 = new DevExpress.XtraEditors.LabelControl();
@@ -333,6 +334,7 @@ namespace T7
             this.checkEdit9.Properties.Caption = "Fast throttle response";
             this.checkEdit9.Size = new System.Drawing.Size(179, 19);
             this.checkEdit9.TabIndex = 20;
+            this.checkEdit9.ToolTip = "unchecked --> checked\r\nEngTipCal.ST_EnableTipin: 1 --> 0";
             this.checkEdit9.CheckedChanged += new System.EventHandler(this.checkEdit9_CheckedChanged);
             // 
             // checkEdit8
@@ -342,6 +344,8 @@ namespace T7
             this.checkEdit8.Properties.Caption = "OBDII functions enabled";
             this.checkEdit8.Size = new System.Drawing.Size(179, 19);
             this.checkEdit8.TabIndex = 19;
+            this.checkEdit8.ToolTip = "checked --> unchecked\r\nOBDCal.EOBDEnabled: 1 --> 0\r\n\r\nfunction: \r\nenhanced monito" +
+    "ring required for MY 00 -> ";
             // 
             // checkEdit7
             // 
@@ -350,6 +354,7 @@ namespace T7
             this.checkEdit7.Properties.Caption = "Second lambda sonde enabled";
             this.checkEdit7.Size = new System.Drawing.Size(179, 19);
             this.checkEdit7.TabIndex = 18;
+            this.checkEdit7.ToolTip = resources.GetString("checkEdit7.ToolTip");
             // 
             // checkEdit6
             // 
@@ -358,6 +363,7 @@ namespace T7
             this.checkEdit6.Properties.Caption = "Torque limiters enabled";
             this.checkEdit6.Size = new System.Drawing.Size(162, 19);
             this.checkEdit6.TabIndex = 17;
+            this.checkEdit6.ToolTip = "checked -->unchecked\r\nTorqueCal.ST_Loop: 2 --> 0";
             // 
             // checkEdit2
             // 
@@ -367,6 +373,7 @@ namespace T7
             this.checkEdit2.Properties.Caption = "Biopower enabled";
             this.checkEdit2.Size = new System.Drawing.Size(162, 19);
             this.checkEdit2.TabIndex = 9;
+            this.checkEdit2.ToolTip = "Read only field that show if the binary is biopower capable";
             // 
             // checkEdit1
             // 
@@ -375,6 +382,7 @@ namespace T7
             this.checkEdit1.Properties.Caption = "Open SID info";
             this.checkEdit1.Size = new System.Drawing.Size(162, 19);
             this.checkEdit1.TabIndex = 8;
+            this.checkEdit1.ToolTip = "Function to show engine data on the SID display";
             this.checkEdit1.CheckedChanged += new System.EventHandler(this.checkEdit1_CheckedChanged);
             // 
             // simpleButton1
@@ -394,6 +402,7 @@ namespace T7
             this.checkEdit10.Properties.Caption = "Catalyst lightoff";
             this.checkEdit10.Size = new System.Drawing.Size(162, 19);
             this.checkEdit10.TabIndex = 25;
+            this.checkEdit10.ToolTip = resources.GetString("checkEdit10.ToolTip");
             // 
             // checkEdit11
             // 
@@ -402,6 +411,8 @@ namespace T7
             this.checkEdit11.Properties.Caption = "Extra fast throttle reponse";
             this.checkEdit11.Size = new System.Drawing.Size(179, 19);
             this.checkEdit11.TabIndex = 26;
+            this.checkEdit11.ToolTip = "unchecked --> checked\r\nEngTipCal.ST_EnableTipin: 1 --> 0\r\nEngTipCal.St_EnableActG" +
+    "2: 1--> 0";
             this.checkEdit11.CheckedChanged += new System.EventHandler(this.checkEdit11_CheckedChanged);
             // 
             // groupControl2
@@ -429,6 +440,7 @@ namespace T7
             this.checkEdit15.Properties.Caption = "No TCS";
             this.checkEdit15.Size = new System.Drawing.Size(162, 19);
             this.checkEdit15.TabIndex = 28;
+            this.checkEdit15.ToolTip = resources.GetString("checkEdit15.ToolTip");
             // 
             // checkEdit14
             // 
@@ -437,6 +449,7 @@ namespace T7
             this.checkEdit14.Properties.Caption = "Disable emission limiting function";
             this.checkEdit14.Size = new System.Drawing.Size(179, 19);
             this.checkEdit14.TabIndex = 27;
+            this.checkEdit14.ToolTip = resources.GetString("checkEdit14.ToolTip");
             // 
             // simpleButton2
             // 
@@ -466,6 +479,7 @@ namespace T7
             this.checkEdit13.Properties.Caption = "Disable adaption messages";
             this.checkEdit13.Size = new System.Drawing.Size(162, 19);
             this.checkEdit13.TabIndex = 27;
+            this.checkEdit13.ToolTip = "Firmware modification that disable adaptation messages in Open SID";
             // 
             // checkEdit12
             // 
@@ -474,6 +488,7 @@ namespace T7
             this.checkEdit12.Properties.Caption = "Disable startscreen";
             this.checkEdit12.Size = new System.Drawing.Size(162, 19);
             this.checkEdit12.TabIndex = 26;
+            this.checkEdit12.ToolTip = "Firmware modification to disable the Open SID startscreen";
             // 
             // frmFirmwareInformation
             // 
