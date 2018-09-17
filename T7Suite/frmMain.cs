@@ -3107,7 +3107,7 @@ namespace T7
                     barProgress.EditValue = 80;
                     System.Windows.Forms.Application.DoEvents();
 
-                    UpdateChecksum(filename);
+                    ChecksumT7.UpdateChecksum(filename, m_appSettings.AutoFixFooter);
                     VerifyChecksum(false);
                     SetStatusText("Idle.");
                     barProgress.EditValue = 0;
@@ -3773,7 +3773,6 @@ namespace T7
                     {
                         HexViewer vwr = (HexViewer)c;
                         vwr.CloseFile();
-                        //UpdateChecksum(m_currentfile);
                     }
                     else if (c is DockPanel)
                     {
@@ -3784,7 +3783,6 @@ namespace T7
                             {
                                 HexViewer vwr2 = (HexViewer)c2;
                                 vwr2.CloseFile();
-                                //UpdateChecksum(m_currentfile);
                             }
                         }
                     }
@@ -3797,7 +3795,6 @@ namespace T7
                             {
                                 HexViewer vwr3 = (HexViewer)c3;
                                 vwr3.CloseFile();
-                                //UpdateChecksum(m_currentfile);
                             }
                         }
                     }
@@ -4149,7 +4146,7 @@ namespace T7
                         t7SidEdit.setDataArrayNew(outputarray);
                     }
                     t7SidEdit.saveFile();
-                    UpdateChecksum(m_currentfile);
+                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 }
             }
         }
@@ -4454,7 +4451,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 {
                     t7EspEdit.setEspValue(frmEsp.Esp);
                     t7EspEdit.saveFile();
-                    UpdateChecksum(m_currentfile);
+                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 }
             }
         }
@@ -4515,7 +4512,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             tcmLimit[1] = Convert.ToByte(torque - (int)tcmLimit[0] * 256);
                             savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), (int)GetSymbolLength(m_symbols, symbolname), tcmLimit, m_currentfile, true, "TCM Limit modification VIOSCal.M_TCMOffset");
                         }
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
             }
@@ -4572,7 +4569,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                     }
                 }
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BFuelCal.Map"), (int)GetSymbolLength(m_symbols, "BFuelCal.Map"), fuelmap, m_currentfile, true, "Imported AFR feedback data");
-                UpdateChecksum(m_currentfile);
+                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 ClearAFRFeedbackMap();
                 UpdateViewersWithName("BFuelCal.Map");
                 //UpdateOpenViewers();  update BFuelCal.Map
@@ -5165,7 +5162,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                             }
                         }
 
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
             }
@@ -7599,7 +7596,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
 
                 savedatatobinary(e.SymbolAddress, e.SymbolLength, e.SymbolDate, e.Filename, true, note);
-                UpdateChecksum(e.Filename);
+                ChecksumT7.UpdateChecksum(e.Filename, m_appSettings.AutoFixFooter);
                 if (!tabdet.IsRAMViewer && m_RealtimeConnectedToECU) // <GS-12102010> don't refresh from binary when in online mode
                 {
                     tabdet.Map_content = readdatafromfile(e.Filename, e.SymbolAddress, e.SymbolLength);
@@ -7738,11 +7735,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 }
             }
             return false;
-        }
-
-        private void UpdateChecksum(string m_fileName)
-        {
-            ChecksumT7.UpdateChecksum(m_fileName, m_appSettings.AutoFixFooter);
         }
 
         private void RefreshTableViewers()
@@ -8250,7 +8242,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 torquelimdata.SetValue((byte)0x02, 0);
                                 savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                             }
                         }
                         else if ((byte)torquelimdata.GetValue(0) != 0x00)
@@ -8259,7 +8251,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 torquelimdata.SetValue((byte)0x00, 0);
                                 savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                             }
                         }
                     }
@@ -8325,7 +8317,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 torquelimdata.SetValue((byte)0x01, 0);
                                 savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                             }
                         }
                         else if ((byte)torquelimdata.GetValue(0) != 0x00)
@@ -8334,7 +8326,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             {
                                 torquelimdata.SetValue((byte)0x00, 0);
                                 savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                             }
                         }
                     }
@@ -8350,14 +8342,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             Ilowlim.SetValue((byte)0, 0);
                             Ilowlim.SetValue((byte)230, 1);
                             savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, Ilowlim, m_currentfile, true);
-                            UpdateChecksum(m_currentfile);
+                            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                         }
                         else
                         {
                             Ilowlim.SetValue((byte)0, 0);
                             Ilowlim.SetValue((byte)0, 1);
                             savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, Ilowlim, m_currentfile, true);
-                            UpdateChecksum(m_currentfile);
+                            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                         }
 
                     }
@@ -8443,14 +8435,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
             }
@@ -8467,14 +8459,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
             }
@@ -8491,14 +8483,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 else if (sh.Varname == "IgnLOffCal.ST_Enable" || sh.Userdescription == "IgnLOffCal.ST_Enable")
@@ -8508,14 +8500,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 
@@ -8558,14 +8550,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 else if (sh.Varname == "EngTipCal.ST_EnableActG2" || sh.Userdescription == "EngTipCal.ST_EnableActG2")
@@ -8574,7 +8566,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     byte[] data = new byte[1];
                     data.SetValue((byte)0x01, 0);
                     savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                    UpdateChecksum(m_currentfile);
+                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 }
                 else if (sh.Varname == "EngTipCal.ST_EnableTipou" || sh.Userdescription == "EngTipCal.ST_EnableTipou")
                 {
@@ -8583,14 +8575,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 /*else if (sh.Varname == "AngleLimCal.AD_GradLow" || sh.Userdescription == "AngleLimCal.AD_GradLow")
@@ -8602,7 +8594,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         data.SetValue((byte)0x01, 0);
                         data.SetValue((byte)0xC2, 1);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
@@ -8611,7 +8603,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         data.SetValue((byte)0x02, 0);
                         data.SetValue((byte)0xA8, 1);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }*/
             }
@@ -8629,14 +8621,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
             }
@@ -8653,14 +8645,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 else if (sh.Varname == "EngTipCal.ST_EnableActG2" || sh.Userdescription == "EngTipCal.ST_EnableActG2")
@@ -8670,14 +8662,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 else if (sh.Varname == "EngTipCal.ST_EnableTipou" || sh.Userdescription == "EngTipCal.ST_EnableTipou")
@@ -8687,14 +8679,14 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x00, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
                         byte[] data = new byte[1];
                         data.SetValue((byte)0x01, 0);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }
                 /*else if (sh.Varname == "AngleLimCal.AD_GradLow" || sh.Userdescription == "AngleLimCal.AD_GradLow")
@@ -8706,7 +8698,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         data.SetValue((byte)0x01, 0);
                         data.SetValue((byte)0xC2, 1);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
@@ -8715,7 +8707,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         data.SetValue((byte)0x02, 0);
                         data.SetValue((byte)0xA8, 1);
                         savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, data, m_currentfile, true);
-                        UpdateChecksum(m_currentfile);
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                 }*/
             }
@@ -8829,7 +8821,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 {
                                     torquelimdata.SetValue((byte)0x01, 0);
                                     savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                    UpdateChecksum(m_currentfile);
+                                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                 }
                             }
                             else if ((byte)torquelimdata.GetValue(0) != 0x00)
@@ -8838,7 +8830,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 {
                                     torquelimdata.SetValue((byte)0x00, 0);
                                     savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                    UpdateChecksum(m_currentfile);
+                                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                 }
                             }
                         }
@@ -8871,7 +8863,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         {
                                             torquelimdata.SetValue((byte)0x01, 0);
                                             savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                            UpdateChecksum(m_currentfile);
+                                            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                         }
                                     }
                                     else if ((byte)torquelimdata.GetValue(0) != 0x00)
@@ -8880,7 +8872,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         {
                                             torquelimdata.SetValue((byte)0x00, 0);
                                             savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                            UpdateChecksum(m_currentfile);
+                                            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                         }
                                     }
                                 }
@@ -8902,7 +8894,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         {
                                             torquelimdata.SetValue((byte)0x01, 0);
                                             savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                            UpdateChecksum(m_currentfile);
+                                            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                         }
                                     }
                                     else if ((byte)torquelimdata.GetValue(0) != 0x00)
@@ -8911,7 +8903,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         {
                                             torquelimdata.SetValue((byte)0x00, 0);
                                             savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                            UpdateChecksum(m_currentfile);
+                                            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                         }
                                     }
                                 }
@@ -8932,7 +8924,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 {
                                     torquelimdata.SetValue((byte)0x00, 0);
                                     savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), (int)sh.Length, torquelimdata, m_currentfile, true);
-                                    UpdateChecksum(m_currentfile);
+                                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                 }
                             }
                         }
@@ -10197,7 +10189,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     nodata.SetValue((byte)'o', 1);
                     nodata.SetValue((byte)'.', 2);
                     savedatatobinary(offset, 3, nodata, m_currentfile, true);
-                    UpdateChecksum(m_currentfile);
+                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 }
             }
         }
@@ -10216,7 +10208,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     yesdata.SetValue((byte)'s', 2);
 
                     savedatatobinary(offset, 3, yesdata, m_currentfile, true);
-                    UpdateChecksum(m_currentfile);
+                    ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 }
             }
         }
@@ -10307,7 +10299,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngXSP") + 6, GetSymbolLength(m_symbols, "TorqueCal.M_EngXSP") - 6, TorqCal, m_currentfile, true);
                 AddToResumeTable("Tuned x axis for torque calibration map (TorqueCal.M_EngXSP)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             /* maximum allowable airmass per rpm site to protect turbine (overrev protection) */
             progress.SetProgress("Tuning LimEngCal.TurboSpeedTab...");
@@ -10319,7 +10311,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "LimEngCal.TurboSpeedTab"), GetSymbolLength(m_symbols, "LimEngCal.TurboSpeedTab"), TorqCal, m_currentfile, true);
                 AddToResumeTable("Tuned turbo speed limiter (LimEngCal.TurboSpeedTab)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             progress.SetProgress("Tuning LimEngCal.TurboSpeedTab2...");
             if ((int)GetSymbolAddress(m_symbols, "LimEngCal.TurboSpeedTab2") > 0)
@@ -10329,7 +10321,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "LimEngCal.TurboSpeedTab2"), GetSymbolLength(m_symbols, "LimEngCal.TurboSpeedTab2"), TorqCal, m_currentfile, true);
                 AddToResumeTable("Tuned turbo speed limiter correction factors (LimEngCal.TurboSpeedTab2)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             /* APC error trigger airmass maximum */
             progress.SetProgress("Tuning BoosDiagCal.ErrMaxMReq...");
@@ -10341,7 +10333,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BoosDiagCal.ErrMaxMReq"), GetSymbolLength(m_symbols, "BoosDiagCal.ErrMaxMReq"), TorqCal, m_currentfile, true);
                 AddToResumeTable("Tuned APC error triggered maximum airmass (BoosDiagCal.ErrMaxMReq)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             //BoosDiagCal.p_BefLimit = 2.00 bar (absolute pressure) [ 2000 ]
             //BoosDiagCal.p_BefOkLimit = 1.60bar (absolute pressure) [ 1600 ]
@@ -10357,7 +10349,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "AirCtrlCal.m_MaxAirTab"), GetSymbolLength(m_symbols, "AirCtrlCal.m_MaxAirTab"), TorqCal, m_currentfile, true);
                 AddToResumeTable("Tuned I factor airmass limiter (AirCtrlCal.m_MaxAirTab)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             /*
             progress.SetProgress("Tuning X_AccPedalAutSP...");
@@ -10367,7 +10359,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "X_AccPedalAutSP"), GetSymbolLength(m_symbols, "X_AccPedalAutSP"), TorqCal, m_currentfile);
                 AddToResumeTable("Tuned x axis for accelerator pedal map (AUT) (X_AccPedalAutSP)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             */
 
             //step 1a) Alter x axis for TorqueCal.M_NominalMap (=TorqueCal.m_AirXSP) so that the airmass 
@@ -10382,7 +10374,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.m_AirXSP") + 6, GetSymbolLength(m_symbols, "TorqueCal.m_AirXSP") - 6, TorqCal, m_currentfile, true);
                 AddToResumeTable("Tuned x axis for nominal torquemap (TorqueCal.m_AirXSP)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             /*** TorqueCal.M_NominalMap ***/
             /*** Data-matrix for nominal Torque. Engine speed and airmass are used as support points. 
@@ -10397,7 +10389,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BoostCal.RegMap"), GetSymbolLength(m_symbols, "BoostCal.RegMap"), BoostMap, m_currentfile, true);
                 AddToResumeTable("Tuned boost calibration map (BoostCal.RegMap)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             // now also do BoostCal.SetLoadXSP (!!!) mg/c 8 values
             // run from 500 upto maxairmass
             if ((int)GetSymbolAddress(m_symbols, "BoostCal.SetLoadXSP") > 0)
@@ -10406,7 +10398,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BoostCal.SetLoadXSP"), GetSymbolLength(m_symbols, "BoostCal.SetLoadXSP"), BoostMap, m_currentfile, true);
                 AddToResumeTable("Tuned nominal torque map x axis (BoostCal.SetLoadXSP)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_NominalMap") > 0)
             {
@@ -10426,7 +10418,7 @@ If boost regulation reports errors you can increase the difference between boost
                 //savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_NominalMap"), GetSymbolLength(m_symbols, "TorqueCal.M_NominalMap"), nominalMap, m_currentfile, true);
                 AddToResumeTable("Tuned nominal torque map (TorqueCal.M_NominalMap)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             // step 1b) Alter TorqueCal.m_AirTorqMap so that the maximum torquecolumn requests the desired airmass.
             /*** TorqueCal.m_AirTorqMap ***/
@@ -10453,7 +10445,7 @@ If boost regulation reports errors you can increase the difference between boost
                 AddToResumeTable("Tuned nominal airmass map (TorqueCal.m_AirTorqMap)");
             }
             // update the checksum
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.m_PedYSP...");
             //TODO: PedelMap Y axis with fixed data!
             // step 1c) Alter the pedal request Y axis to meet the airmass request. TorqueCal.m_PedYSP
@@ -10506,7 +10498,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.m_PedYSP"), GetSymbolLength(m_symbols, "TorqueCal.m_PedYSP"), pedalmapysp, m_currentfile, true);
                 AddToResumeTable("Tuned airmass pedalmap y axis (TorqueCal.m_PedYSP)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning PedalMapCal.m_RequestMap...");
 
 
@@ -10518,7 +10510,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "PedalMapCal.m_RequestMap"), GetSymbolLength(m_symbols, "PedalMapCal.m_RequestMap"), ReferencePedalMap, m_currentfile, true);
                 AddToResumeTable("Tuned airmass request map (PedalMapCal.m_RequestMap)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning BstKnkCal.MaxAirmass...");
 
             // step 2) Increase the airmass limit table to allow for more airmass in the desired areas. BstKnkCal.MaxAirmass.
@@ -10529,7 +10521,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmass"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmass"), AirmassLimiter, m_currentfile, true);
                 AddToResumeTable("Tuned airmass limiter for manual transmission (BstKnkCal.MaxAirmass)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning BstKnkCal.MaxAirmassAu...");
             if ((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmassAu") > 0)
             {
@@ -10538,7 +10530,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BstKnkCal.MaxAirmassAu"), GetSymbolLength(m_symbols, "BstKnkCal.MaxAirmassAu"), AirmassLimiter, m_currentfile, true);
                 AddToResumeTable("Tuned airmass limiter for automatic transmission (BstKnkCal.MaxAirmassAu)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.M_EngMaxAutTab...");
 
             // step 3 – Increasing engine torque limiters. Up the engine limiters so that the limiter 
@@ -10570,7 +10562,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxAutTab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxAutTab"), maxtorqueaut, m_currentfile, true);
                 AddToResumeTable("Tuned torque limiter for automatic transmission (TorqueCal.M_EngMaxAutTab)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.M_EngMaxTab...");
             /********** TorqueCal.M_EngMaxTab ***********/
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxTab") > 0)
@@ -10599,7 +10591,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxTab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxTab"), maxtorquetab, m_currentfile, true);
                 AddToResumeTable("Tuned torque limiter for manual transmission (TorqueCal.M_EngMaxTab)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.M_EngMaxE85Tab...");
             /********** TorqueCal.M_EndMaxE85Tab ***********/
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxE85Tab") > 0)
@@ -10628,7 +10620,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_EngMaxE85Tab"), GetSymbolLength(m_symbols, "TorqueCal.M_EngMaxE85Tab"), maxtorquetab, m_currentfile, true);
                 AddToResumeTable("Tuned torque limiter for manual transmission on E85 fuel (TorqueCal.M_EngMaxE85Tab)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.M_ManGearLim...");
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_ManGearLim") > 0)
             {
@@ -10664,7 +10656,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_ManGearLim"), GetSymbolLength(m_symbols, "TorqueCal.M_ManGearLim"), maxtorquemangear, m_currentfile, true);
                 AddToResumeTable("Tuned torque limiter for manual transmission gears (TorqueCal.M_ManGearLim)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.M_CabGearLim...");
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_CabGearLim") > 0)
             {
@@ -10700,7 +10692,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_CabGearLim"), GetSymbolLength(m_symbols, "TorqueCal.M_CabGearLim"), maxtorquemangear, m_currentfile, true);
                 AddToResumeTable("Tuned torque limiter for cabrialet cars (TorqueCal.M_CabGearLim)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             progress.SetProgress("Tuning TorqueCal.M_5GearLimTab...");
 
             if ((int)GetSymbolAddress(m_symbols, "TorqueCal.M_5GearLimTab") > 0)
@@ -10730,7 +10722,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "TorqueCal.M_5GearLimTab"), GetSymbolLength(m_symbols, "TorqueCal.M_5GearLimTab"), maxtorquemangear, m_currentfile, true);
                 AddToResumeTable("Tuned torque limiter for manual transmission in 5th gear (TorqueCal.M_5GearLimTab)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             // step 4 – Adapt fuel delivery.
             // step 4a) You should make sure the fuel supply is good in all ranges by recalibrating BFuelCal.Map. Altering the maximum allowed airmass will also require more fuel. Check this with a wideband O2 sensor.
@@ -10760,7 +10752,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "FCutCal.m_AirInletLimit"), GetSymbolLength(m_symbols, "FCutCal.m_AirInletLimit"), fuelcutmap, m_currentfile, true);
                 AddToResumeTable("Tuned fuelcut limiter (FCutCal.m_AirInletLimit)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             //Boost regulation error supression
             //If boost regulation reports errors you can increase the difference between boost pressure and requested pressure above which a fault report is generated. BoostDiagCal.m_FaultDiff. Set to 200 in stead of 100 for example.         
@@ -10777,7 +10769,7 @@ If boost regulation reports errors you can increase the difference between boost
                 savedatatobinary((int)GetSymbolAddress(m_symbols, "BoosDiagCal.m_FaultDiff"), GetSymbolLength(m_symbols, "BoosDiagCal.m_FaultDiff"), fuelcutmap, m_currentfile, true);
                 AddToResumeTable("Tuned boost fault indication level (BoosDiagCal.m_FaultDiff)");
             }
-            UpdateChecksum(m_currentfile);
+            ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
 
             // mark binary as tuned to stage I
 
@@ -13471,7 +13463,7 @@ If boost regulation reports errors you can increase the difference between boost
                             frmChecksumIncorrect check = new frmChecksumIncorrect();
                             if (m_appSettings.AutoChecksum)
                             {
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                 if (m_fileiss19)
                                 {
                                     // automatisch terugschrijven
@@ -13483,7 +13475,7 @@ If boost regulation reports errors you can increase the difference between boost
                             //else if (MessageBox.Show("Checksum invalid, auto correct?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             else if (check.ShowDialog() == DialogResult.Yes)
                             {
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                                 if (m_fileiss19)
                                 {
                                     // automatisch terugschrijven
@@ -14921,7 +14913,7 @@ If boost regulation reports errors you can increase the difference between boost
                     else
                         dt.Rows.Add(tp.GetNameTPAction(), "Fail");
 
-                UpdateChecksum(m_currentfile);
+                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                 frmImportResults res = new frmImportResults();
                 res.SetDataTable(dt);
                 res.ShowDialog();
@@ -15113,7 +15105,7 @@ If boost regulation reports errors you can increase the difference between boost
                         log.WriteLine("Applied searchandreplace: " + fTP.GetNameTPAction());
                     }
                 }
-                UpdateChecksum(m_currentfile);
+                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             }
         }
 
@@ -17251,8 +17243,9 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                             }
                             symCnt++;
                         }
-                        if (progress != null) progress.Close();
-                        UpdateChecksum(m_currentfile);
+                        if (progress != null)
+                            progress.Close();
+                        ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                     }
                     else
                     {
@@ -17977,7 +17970,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
 
                                 byte[] mapdata = ReadMapFromSRAM(sh, true);
                                 savedatatobinary((int)GetSymbolAddress(m_symbols, sh.Varname), sh.Length, mapdata, m_currentfile, false);
-                                UpdateChecksum(m_currentfile);
+                                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
                             }
                         }
                     }
@@ -18146,7 +18139,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 int fuelMapAddressFlash = (int)GetSymbolAddress(m_symbols, m_appSettings.AutoTuneFuelMap);
                 fuelMapAddressFlash += (y * 18) + e.X;
                 savedatatobinary(fuelMapAddressFlash, 1, data2Write, m_currentfile, false);
-                UpdateChecksum(m_currentfile);
+                ChecksumT7.UpdateChecksum(m_currentfile, m_appSettings.AutoFixFooter);
             }
         }
 

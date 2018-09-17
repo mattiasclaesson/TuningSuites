@@ -380,10 +380,7 @@ namespace CommonSuite
         {
             entry.TransactionNumber = _transCollection.Count + 1;
             _transCollection.Add(entry);
-            //SaveTransactionLog();
             AddTransactionToFile(entry, true);
-            //UpdateNumberOfTransActions();
-            //UpdateChecksum();
         }
 
 
