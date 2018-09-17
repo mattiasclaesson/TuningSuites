@@ -111,26 +111,12 @@ using T7.Parser;
 namespace T7
 {
     public delegate void DelegateStartReleaseNotePanel(string filename, string version);
-
-    public delegate void FIOCallback(int value);
-    internal delegate void FIOInvokeDelegate();
-
-    public delegate void DelegateUpdateBDMProgress(uint bytes);
     public delegate void DelegateUpdateRealTimeValue(string symbolname, float value);
     public delegate void DelegateUpdateMapViewer(IMapViewer viewer, int tabwidth, bool sixteenbits);
 
     public delegate void DelegateUpdateStatus(ITrionic.CanInfoEventArgs e);
     public delegate void DelegateProgressStatus(int percentage);
     public delegate void DelegateCanFrame(ITrionic.CanFrameEventArgs e);
-
-    public enum ecu_t : int
-    {
-        Trionic52,
-        Trionic55,
-        Trionic5529,
-        Trionic7,
-        None
-    }
 
     public partial class frmMain : Form
     {
@@ -164,12 +150,8 @@ namespace T7
         private bool m_RealtimeConnectedToECU = false;
         private bool m_enableRealtimeTimer = false;
         msiupdater m_msiUpdater;
-        public DelegateUpdateBDMProgress m_DelegateUpdateBDMProgress;
         public DelegateUpdateRealTimeValue m_DelegateUpdateRealTimeValue;
 
-        private ecu_t _globalECUType = ecu_t.None;
-        private bool _globalBDMOpened = false;
-        private ushort BDMversion = 0;
         private string m_CurrentWorkingProject = string.Empty;
         private TrionicProjectLog m_ProjectLog = new TrionicProjectLog();
 
@@ -238,7 +220,6 @@ namespace T7
             }
 
             m_DelegateUpdateRealTimeValue = UpdateRealtimeInformationValue;
-            m_DelegateUpdateBDMProgress = ReportBDMProgress;
             m_DelegateUpdateMapViewer = UpdateMapViewer;
 
             m_DelegateUpdateStatus = updateStatusInBox;
@@ -253,20 +234,6 @@ namespace T7
             Trionic7File.onProgress += trionic7file_onProgress;
 
             m_ShouldUpdateChecksum = ShouldUpdateChecksum;
-
-            try
-            {
-                // should be done only once!
-                this.fio_callback = this.on_fio;
-                BdmAdapter_SetFIOCallback(this.fio_callback);
-                logger.Debug("BDM adapter callback set!");
-                // should be done only once!
-
-            }
-            catch (Exception BDMException)
-            {
-                logger.Debug("BDM init failed: " + BDMException.Message);
-            }
 
             try
             {
@@ -5232,289 +5199,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         }
         #endregion
 
-        #region BDM
-
-        private uint fio_bytes;
-        private FIOCallback fio_callback = null;
-
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Break();
-        [DllImport("usb_bdm.dll")]
-        public static extern void BdmAdapter_Close();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_DumpECU(string file_name, ecu_t ecu);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_EraseECU(ecu_t ecu);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_FlashECU(string file_name, ecu_t ecu);
-        [DllImport("usb_bdm.dll")]
-        public static extern string BdmAdapter_GetLastErrorStr();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_GetVerifyFlash();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_GetVersion(ref ushort version);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Open();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Reset();
-        [DllImport("usb_bdm.dll")]
-        public static extern void BdmAdapter_SetFIOCallback(FIOCallback func);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_SetVerifyFlash(bool verify);
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_Stop();
-        [DllImport("usb_bdm.dll")]
-        public static extern bool BdmAdapter_UpdateFirmware(string file_name);
-
-
-        //======================================================
-        //Recreate all executable resources
-        //======================================================
-        private void mRecreateAllScriptResources(string path)
-        {
-            // Get Current Assembly refrence
-            Assembly currentAssembly = Assembly.GetExecutingAssembly();
-            // Get all imbedded resources
-            string[] arrResources = currentAssembly.GetManifestResourceNames();
-
-            foreach (string resourceName in arrResources)
-            {
-                if (resourceName.EndsWith(".do") || resourceName.EndsWith(".msg") || resourceName.EndsWith(".d32"))
-                { //or other extension desired
-                    //Name of the file saved on disk
-                    string saveAsName = resourceName;
-                    saveAsName = saveAsName.Replace("T7.scripts.", "");
-                    if (!Directory.Exists(Path.Combine(path, "scripts")))
-                    {
-                        Directory.CreateDirectory(Path.Combine(path, "scripts"));
-                    }
-                    FileInfo fileInfoOutputFile = new FileInfo(path + "\\scripts\\" + saveAsName);
-                    //CHECK IF FILE EXISTS AND DO SOMETHING DEPENDING ON YOUR NEEDS
-                    logger.Debug("Extracting: " + fileInfoOutputFile.FullName);
-                    if (fileInfoOutputFile.Exists)
-                    {
-                        //overwrite if desired  (depending on your needs)
-                        //fileInfoOutputFile.Delete();
-                    }
-                    //OPEN NEWLY CREATING FILE FOR WRITTING
-                    FileStream streamToOutputFile = fileInfoOutputFile.OpenWrite();
-                    //GET THE STREAM TO THE RESOURCES
-                    Stream streamToResourceFile =
-                                        currentAssembly.GetManifestResourceStream(resourceName);
-
-                    //---------------------------------
-                    //SAVE TO DISK OPERATION
-                    //---------------------------------
-                    const int size = 4096;
-                    byte[] bytes = new byte[4096];
-                    int numBytes;
-                    while ((numBytes = streamToResourceFile.Read(bytes, 0, size)) > 0)
-                    {
-                        streamToOutputFile.Write(bytes, 0, numBytes);
-                    }
-
-                    streamToOutputFile.Close();
-                    streamToResourceFile.Close();
-                }//end_if
-
-            }//end_foreach
-        }//end_mRecreateAllExecutableResources 
-
-        private void DeleteScripts(string path)
-        {
-            // remove the entire folder
-            path += "\\scripts";
-            logger.Debug("Deleting scripts folder: " + path);
-            Directory.Delete(path, true);
-        }
-
-        private void on_fio(int bytes)
-        {
-
-            this.fio_bytes += (uint)bytes;
-            //logger.Debug("on_fio: " + this.fio_bytes.ToString());
-            if (!this.IsDisposed)
-            {
-                try
-                {
-                    this.Invoke(m_DelegateUpdateBDMProgress, this.fio_bytes);
-                }
-                catch (Exception E)
-                {
-                    logger.Debug(E.Message);
-                }
-            }
-            //this.fio_invoke();
-        }
-
-        private void ReportBDMProgress(uint bytes)
-        {
-            try
-            {
-                //string str;
-                int percentage = 0;
-                int max_bytes = 0x80000;
-                switch (_globalECUType)
-                {
-                    case ecu_t.Trionic52:
-                        max_bytes = 0x20000;
-                        break;
-                    case ecu_t.Trionic55:
-                        max_bytes = 0x40000;
-                        break;
-                    case ecu_t.Trionic5529:
-                        max_bytes = 0x40000;
-                        break;
-                    case ecu_t.Trionic7:
-                        max_bytes = 0x80000;
-                        break;
-                }
-                percentage = ((int)this.fio_bytes * 100) / max_bytes;
-                if (Convert.ToInt32(barProgress.EditValue) != percentage)
-                {
-                    // need to calculate the percentage
-                    barProgress.EditValue = percentage;
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug("fio_invoke: " + E.Message);
-            }
-        }
-
-        private void barButtonItem81_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // read ECU
-            bool _continue = true;
-            try
-            {
-                if (!_globalBDMOpened)
-                {
-                    if (!BdmAdapter_Open())
-                    {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
-                        _continue = false;
-                    }
-                }
-                if (_continue)
-                {
-                    _globalBDMOpened = true;
-                    if (BDMversion == 0)
-                    {
-                        if (!BdmAdapter_GetVersion(ref BDMversion))
-                        {
-                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
-                            _continue = false;
-                        }
-                    }
-                    if (_continue)
-                    {
-                        // adapter opened and version is compatible
-                        //BdmAdapter_GetVerifyFlash();
-                        // read ECU through USB BDM
-
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "Binary files|*.bin";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-
-                            mRecreateAllScriptResources(Path.GetDirectoryName(sfd.FileName));
-                            barProgress.Visibility = BarItemVisibility.Always;
-                            barProgress.EditValue = 0;
-                            barProgress.Caption = "Dumping ECU";
-                            System.Windows.Forms.Application.DoEvents();
-
-                            _globalECUType = ecu_t.Trionic7;
-                            fio_bytes = 0;
-                            if (!BdmAdapter_DumpECU(sfd.FileName, ecu_t.Trionic7))
-                            {
-                                frmInfoBox info = new frmInfoBox("Failed to dump ECU");
-                            }
-                            DeleteScripts(Path.GetDirectoryName(sfd.FileName));
-                        }
-
-                    }
-                }
-                barProgress.Caption = "Dumping ECU";
-                barProgress.EditValue = 0;
-                barProgress.Visibility = BarItemVisibility.Never;
-                System.Windows.Forms.Application.DoEvents();
-            }
-            catch (Exception BDMException)
-            {
-                logger.Debug("Failed to dump ECU: " + BDMException.Message);
-                frmInfoBox info = new frmInfoBox("Failed to download firmware from ECU: " + BDMException.Message);
-            }
-        }
-
-        private void barButtonItem82_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // flash ECU
-            bool _continue = true;
-            try
-            {
-                if (!_globalBDMOpened)
-                {
-                    if (!BdmAdapter_Open())
-                    {
-                        frmInfoBox info = new frmInfoBox("Could not connect to the BDM adapter");
-                        _continue = false;
-                    }
-                }
-                if (_continue)
-                {
-                    _globalBDMOpened = true;
-                    if (BDMversion == 0)
-                    {
-                        if (!BdmAdapter_GetVersion(ref BDMversion))
-                        {
-                            frmInfoBox info = new frmInfoBox("BDM adapter is not compatible");
-                            _continue = false;
-                        }
-                    }
-                    if (_continue)
-                    {
-                        // adapter opened and version is compatible
-                        BdmAdapter_GetVerifyFlash();
-                        // program ECU through USB BDM
-                        OpenFileDialog ofd = new OpenFileDialog();
-                        ofd.Filter = "Binary files|*.bin";
-                        ofd.Multiselect = false;
-                        if (ofd.ShowDialog() == DialogResult.OK)
-                        {
-                            mRecreateAllScriptResources(Path.GetDirectoryName(ofd.FileName));
-                            fio_bytes = 0;
-                            barProgress.Visibility = BarItemVisibility.Always;
-                            barProgress.Caption = "Erasing ECU";
-                            System.Windows.Forms.Application.DoEvents();
-                            _globalECUType = ecu_t.Trionic7;
-                            BdmAdapter_EraseECU(ecu_t.Trionic7);
-                            barProgress.Caption = "Flashing ECU";
-                            System.Windows.Forms.Application.DoEvents();
-                            Thread.Sleep(100);
-                            BdmAdapter_FlashECU(ofd.FileName, ecu_t.Trionic7);
-                            barProgress.Caption = "Resetting ECU";
-                            System.Windows.Forms.Application.DoEvents();
-                            Thread.Sleep(100);
-                            DeleteScripts(Path.GetDirectoryName(ofd.FileName));
-                        }
-
-                    }
-                }
-                barProgress.EditValue = 0;
-                barProgress.Caption = "Idle";
-                barProgress.Visibility = BarItemVisibility.Never;
-                System.Windows.Forms.Application.DoEvents();
-            }
-            catch (Exception BDMException)
-            {
-                logger.Debug("Failed to program ECU: " + BDMException.Message);
-                frmInfoBox info = new frmInfoBox("Failed to program ECU: " + BDMException.Message);
-            }
-        }
-        #endregion
-
         private bool _softwareIsOpen = false;
         private bool _softwareIsOpenDetermined = false;
 
@@ -6101,17 +5785,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
-            {
-                if (_globalBDMOpened)
-                {
-                    BdmAdapter_Close();
-                }
-            }
-            catch (Exception E)
-            {
-                logger.Debug("Failed to close BDM: " + E.Message);
-            }
             if (m_CurrentWorkingProject != "")
             {
                 CloseProject();

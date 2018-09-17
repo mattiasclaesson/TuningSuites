@@ -533,13 +533,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="scripts\ERASET5.D32" />
-    <EmbeddedResource Include="scripts\eraset5.msg" />
-    <EmbeddedResource Include="scripts\flasht5.d32" />
-    <EmbeddedResource Include="scripts\flashT5.msg" />
-    <EmbeddedResource Include="scripts\prepA29.do" />
-    <EmbeddedResource Include="scripts\prepT5.do" />
-    <EmbeddedResource Include="scripts\prepT7.do" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -739,9 +732,6 @@
     </Content>
     <Content Include="quick_restart.ico" />
     <Content Include="SaabOpenTech.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="usb_bdm.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
