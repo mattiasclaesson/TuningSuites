@@ -810,7 +810,7 @@ namespace CommonSuite
                 case "m_Request":
                 case "MAF.m_AirInlet":
                 case "AirMassMast.m_Request":
-                    retval = "2000";
+                    retval = "2300";
                     break;
                 case "In.U_O2SensFront":
                     retval = "2000";
