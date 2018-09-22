@@ -10230,7 +10230,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             EditSelectedSymbol();
         }
 
-        private void xtraTabControl2_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
+        private void xtraTabControl1_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
         {
             // fill realtime table with other values to be able to fill the dashboard
             if (e.Page == xtraTabPage1)

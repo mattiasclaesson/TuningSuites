@@ -14422,11 +14422,6 @@ If boost regulation reports errors you can increase the difference between boost
 
         }
 
-        private void xtraTabControl1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void SwitchAFRMode()
         {
             // switch mode AFR/Lambda
