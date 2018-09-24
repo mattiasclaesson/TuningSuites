@@ -3333,44 +3333,38 @@ namespace T7
 
                 Range chartRange = ws.get_Range("A2", lowerRightCell);
                 xlChart.SetSourceData(chartRange, Type.Missing);
-                if (yarray.Length > 1)
+                if (yarray.Length > 1 && xarray.Length > 1)
                 {
                     xlChart.ChartType = XlChartType.xlSurface;
+                    xlChart.SurfaceGroup.Has3DShading = true;
                 }
+                xlChart.HasTitle = true;
+                xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
+                xlChart.HasLegend = false;
 
                 // Customize axes:
                 Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory, XlAxisGroup.xlPrimary);
                 xAxis.HasTitle = true;
-                xAxis.AxisTitle.Text = yaxisdescr;
-                try
-                {
-                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
-                    yAxis.HasTitle = true;
-                    yAxis.AxisTitle.Text = xaxisdescr;
-                }
-                catch (Exception E)
-                {
-                    logger.Debug("Failed to set y axis: " + E.Message);
-                }
+                xAxis.AxisTitle.Text = xaxisdescr;
 
+                if (yarray.Length > 1)
+                {
+                    try
+                    {
+                        Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
+                        yAxis.HasTitle = true;
+                        yAxis.AxisTitle.Text = yaxisdescr;
+                    }
+                    catch (Exception E)
+                    {
+                        logger.Debug(E, "Failed to set y axis");
+                    }
+                }
 
                 Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue, XlAxisGroup.xlPrimary);
                 zAxis.HasTitle = true;
                 zAxis.AxisTitle.Text = zaxisdescr;
 
-                // Add title:
-                xlChart.HasTitle = true;
-
-                xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
-
-                // Remove legend:
-                xlChart.HasLegend = false;
-                // add 3d shade
-                xlChart.SurfaceGroup.Has3DShading = true;
-                /*if (File.Exists(m_currentfile + "~" + mapname + ".xls"))
-                {
-
-                }*/
                 try
                 {
                     wb.SaveAs(m_currentfile + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
