@@ -4675,7 +4675,7 @@ namespace T8SuitePro
                     int columns = 8;
                     int rows = 8;
                     int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, Map_name, out columns, out rows);
-                    int address = (int)sh.Flash_start_address;
+                    int address = (int)GetSymbolAddress(m_symbols, Map_name);// (int)sh.Flash_start_address;
                     if (address != 0)
                     {
                         while (address > m_currentfile_size) address -= m_currentfile_size;
