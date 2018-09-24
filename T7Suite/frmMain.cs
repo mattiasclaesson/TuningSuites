@@ -2189,7 +2189,7 @@ namespace T7
                         /*string xdescr = string.Empty;
                         string ydescr = string.Empty;
                         string zdescr = string.Empty;
-                        GetAxisDescriptions(Filename, curSymbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                        GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                         tabdet.X_axis_name = xdescr;
                         tabdet.Y_axis_name = ydescr;
                         tabdet.Z_axis_name = zdescr;*/
@@ -2476,7 +2476,7 @@ namespace T7
                     /*string xdescr = string.Empty;
                     string ydescr = string.Empty;
                     string zdescr = string.Empty;
-                    GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                    GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                     tabdet.X_axis_name = xdescr;
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;*/
@@ -3255,7 +3255,7 @@ namespace T7
                 catch (Exception xlaE)
                 {
                     frmInfoBox info = new frmInfoBox("Failed to create office application interface");
-                    logger.Debug("Failed to create office application interface: " + xlaE.Message);
+                    logger.Debug(xlaE, "Failed to create office application interface");
                 }
 
                 // turn mapdata upside down
@@ -3265,7 +3265,7 @@ namespace T7
                 }
 
                 xla.Visible = true;
-                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(XlSheetType.xlWorksheet);
+                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet);
                 Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)xla.ActiveSheet;
                 ws.Name = "symboldata";
 
@@ -3282,8 +3282,8 @@ namespace T7
                 char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
                 string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
                 string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
+                
                 // Send single dimensional array to Excel:
-
                 Range rg1 = ws.get_Range("B2", "Z2");
                 double[] xarray = new double[nColumns];
                 double[] yarray = new double[nRows];
@@ -3325,18 +3325,13 @@ namespace T7
                 string xaxisdescr = "x-axis";
                 string yaxisdescr = "y-axis";
                 string zaxisdescr = "z-axis";
-                //GetAxisDescriptions(m_currentfile, m_symbols, mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
-                string x_axis = string.Empty;
-                string y_axis = string.Empty;
-                axestrans.GetAxisSymbols(mapname, out x_axis, out y_axis, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+                GetAxisDescriptions(mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
 
 
                 Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
                 rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit);
 
                 Range chartRange = ws.get_Range("A2", lowerRightCell);
-
                 xlChart.SetSourceData(chartRange, Type.Missing);
                 if (yarray.Length > 1)
                 {
@@ -3344,14 +3339,12 @@ namespace T7
                 }
 
                 // Customize axes:
-                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory,
-                    XlAxisGroup.xlPrimary);
+                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory, XlAxisGroup.xlPrimary);
                 xAxis.HasTitle = true;
                 xAxis.AxisTitle.Text = yaxisdescr;
                 try
                 {
-                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis,
-                        XlAxisGroup.xlPrimary);
+                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
                     yAxis.HasTitle = true;
                     yAxis.AxisTitle.Text = xaxisdescr;
                 }
@@ -3361,8 +3354,7 @@ namespace T7
                 }
 
 
-                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue,
-                    XlAxisGroup.xlPrimary);
+                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue, XlAxisGroup.xlPrimary);
                 zAxis.HasTitle = true;
                 zAxis.AxisTitle.Text = zaxisdescr;
 
@@ -3408,7 +3400,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to export to excel: " + E.Message);
+                logger.Debug(E, "Failed to export to excel");
             }
             Thread.CurrentThread.CurrentCulture = saved;
         }
@@ -3467,8 +3459,6 @@ namespace T7
                 {
                     SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
 
-                    //                    DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    //frmTableDetail tabdet = new frmTableDetail();
                     string Map_name = sh.SmartVarname;
                     int columns = 8;
                     int rows = 8;
@@ -3490,6 +3480,23 @@ namespace T7
                 frmInfoBox info = new frmInfoBox("No symbol selected in the primary symbol list");
             }
         }
+
+        private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
+        {
+            byte[] mapdatanew = new byte[mapdata.Length];
+            if (issixteenbit) numcolumns *= 2;
+            int internal_rows = mapdata.Length / numcolumns;
+            for (int tel = 0; tel < internal_rows; tel++)
+            {
+                for (int ctel = 0; ctel < numcolumns; ctel++)
+                {
+                    int orgoffset = (((internal_rows - 1) - tel) * numcolumns) + ctel;
+                    mapdatanew.SetValue(mapdata.GetValue(orgoffset), (tel * numcolumns) + ctel);
+                }
+            }
+            return mapdatanew;
+        }
+
         private System.Data.DataTable getDataFromXLS(string strFilePath)
         {
             try
@@ -3526,7 +3533,6 @@ namespace T7
             if (issixteenbit) datalength /= 2;
             int[] buffer = new int[datalength];
             int bcount = 0;
-            //            for (int rtel = 1; rtel < dt.Rows.Count; rtel++)
             for (int rtel = dt.Rows.Count; rtel >= 1; rtel--)
             {
                 try
@@ -3614,7 +3620,7 @@ namespace T7
                         // look if it is a valid symbolname
                         foreach (SymbolHelper sh in m_symbols)
                         {
-                            if (sh.Varname == mapname || sh.Userdescription == mapname)
+                            if (sh.SmartVarname == mapname)
                             {
                                 symbolfound = true;
                                 if (MessageBox.Show("Found valid symbol for import: " + mapname + ". Are you sure you want to overwrite the map in the binary?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -6344,11 +6350,22 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             return retval;
         }
 
-        private void GetAxisDescriptions(string filename, SymbolCollection curSymbols, string symbolname, out string x, out string y, out string z)
+        private void GetAxisDescriptions(string symbolname, out string x, out string y, out string z)
         {
             x = "x-axis";
             y = "y-axis";
             z = "z-axis";
+            SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
+            string x_axis = string.Empty;
+            string y_axis = string.Empty;
+            string x_axis_descr = string.Empty;
+            string y_axis_descr = string.Empty;
+            string z_axis_descr = string.Empty;
+            axestrans.GetAxisSymbols(symbolname, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
+
+            x = x_axis_descr;
+            y = y_axis_descr;
+            z = z_axis_descr;
         }
 
         private int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
@@ -6886,7 +6903,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 /*string xdescr = string.Empty;
                                 string ydescr = string.Empty;
                                 string zdescr = string.Empty;
-                                GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                                GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                                 tabdet.X_axis_name = xdescr;
                                 tabdet.Y_axis_name = ydescr;
                                 tabdet.Z_axis_name = zdescr;*/
@@ -7938,7 +7955,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                     /*string xdescr = string.Empty;
                     string ydescr = string.Empty;
                     string zdescr = string.Empty;
-                    GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                    GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                     tabdet.X_axis_name = xdescr;
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;*/
@@ -12770,22 +12787,6 @@ If boost regulation reports errors you can increase the difference between boost
                 logger.Debug(E.Message);
             }
         }
-        
-        private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
-        {
-            byte[] mapdatanew = new byte[mapdata.Length];
-            if (issixteenbit) numcolumns *= 2;
-            int internal_rows = mapdata.Length / numcolumns;
-            for (int tel = 0; tel < internal_rows; tel++)
-            {
-                for (int ctel = 0; ctel < numcolumns; ctel++)
-                {
-                    int orgoffset = (((internal_rows - 1) - tel) * numcolumns) + ctel;
-                    mapdatanew.SetValue(mapdata.GetValue(orgoffset), (tel * numcolumns) + ctel);
-                }
-            }
-            return mapdatanew;
-        }
 
         private void StartSRAMTableViewer()
         {
@@ -12961,7 +12962,7 @@ If boost regulation reports errors you can increase the difference between boost
                             /*string xdescr = string.Empty;
                             string ydescr = string.Empty;
                             string zdescr = string.Empty;
-                            GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                            GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                             tabdet.X_axis_name = xdescr;
                             tabdet.Y_axis_name = ydescr;
                             tabdet.Z_axis_name = zdescr;*/
@@ -13188,7 +13189,7 @@ If boost regulation reports errors you can increase the difference between boost
                     /*string xdescr = string.Empty;
                     string ydescr = string.Empty;
                     string zdescr = string.Empty;
-                    GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                    GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                     tabdet.X_axis_name = xdescr;
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;*/
@@ -15507,7 +15508,7 @@ If boost regulation reports errors you can increase the difference between boost
                     /*string xdescr = string.Empty;
                     string ydescr = string.Empty;
                     string zdescr = string.Empty;
-                    GetAxisDescriptions(m_currentfile, m_symbols, "BFuelCal.Map", out xdescr, out ydescr, out zdescr);
+                    GetAxisDescriptions("BFuelCal.Map", out xdescr, out ydescr, out zdescr);
                     tabdet.X_axis_name = xdescr;
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;*/

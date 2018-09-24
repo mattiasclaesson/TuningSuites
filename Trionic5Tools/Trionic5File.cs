@@ -2130,7 +2130,7 @@ namespace Trionic5Tools
             x = "X";
             y = "Y";
             z = "Z";
-            GetAxisDescriptions(m_currentFile, symbolname, out x, out y, out z);
+            GetAxisDescriptions(symbolname, out x, out y, out z);
         }
 
         public override void GetMapMatrixWitdhByName(string symbolname, out int columns, out int rows)
@@ -5147,7 +5147,7 @@ namespace Trionic5Tools
             return retval;
         }
 
-        public void GetAxisDescriptions(string filename, string symbolname, out string x, out string y, out string z)
+        public void GetAxisDescriptions(string symbolname, out string x, out string y, out string z)
         {
             x = "x-axis";
             y = "y-axis";

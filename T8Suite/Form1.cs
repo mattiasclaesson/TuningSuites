@@ -96,6 +96,7 @@ using NLog;
 using CommonSuite;
 using System.Xml;
 using TrionicCANLib.Checksum;
+using System.Globalization;
 
 namespace T8SuitePro
 {
@@ -1224,7 +1225,7 @@ namespace T8SuitePro
             logger.Debug("Double click seen");
         }
 
-        private void GetAxisDescriptions(string filename, SymbolCollection curSymbols, string symbolname, out string x, out string y, out string z)
+        private void GetAxisDescriptions(string symbolname, out string x, out string y, out string z)
         {
             x = "x-axis";
             y = "y-axis";
@@ -2770,7 +2771,7 @@ namespace T8SuitePro
                         string xdescr = string.Empty;
                         string ydescr = string.Empty;
                         string zdescr = string.Empty;
-                        GetAxisDescriptions(Filename, curSymbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                        GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                         tabdet.X_axis_name = xdescr;
                         tabdet.Y_axis_name = ydescr;
                         tabdet.Z_axis_name = zdescr;
@@ -2950,7 +2951,7 @@ namespace T8SuitePro
                     string xdescr = string.Empty;
                     string ydescr = string.Empty;
                     string zdescr = string.Empty;
-                    GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
+                    GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
                     tabdet.X_axis_name = xdescr;
                     tabdet.Y_axis_name = ydescr;
                     tabdet.Z_axis_name = zdescr;
@@ -4452,14 +4453,218 @@ namespace T8SuitePro
             }
         }
 
-        private void barButtonItem19_ItemClick(object sender, ItemClickEventArgs e)
+        private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
         {
-            StartExcelExport();
+            CultureInfo saved = Thread.CurrentThread.CurrentCulture;
+            //en-US
+            CultureInfo tci = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = tci;
+
+            try
+            {
+                bool isupsidedown = GetMapUpsideDown(mapname);
+                try
+                {
+                    if (xla == null)
+                    {
+                        xla = new Microsoft.Office.Interop.Excel.Application();
+                    }
+                }
+                catch (Exception xlaE)
+                {
+                    frmInfoBox info = new frmInfoBox("Failed to create office application interface");
+                    logger.Debug(xlaE, "Failed to create office application interface");
+                }
+
+                // turn mapdata upside down
+                if (isupsidedown)
+                {
+                    mapdata = TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
+                }
+
+                xla.Visible = true;
+                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet);
+                Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)xla.ActiveSheet;
+                ws.Name = "symboldata";
+
+                // Now create the chart.
+                ChartObjects chartObjs = (ChartObjects)ws.ChartObjects(Type.Missing);
+                ChartObject chartObj = chartObjs.Add(100, 400, 400, 300);
+                Microsoft.Office.Interop.Excel.Chart xlChart = chartObj.Chart;
+
+                int nRows = rows;
+                if (isSixteenbit) nRows /= 2;
+                int nColumns = cols;
+                string upperLeftCell = "B3";
+                int endRowNumber = System.Int32.Parse(upperLeftCell.Substring(1)) + nRows - 1;
+                char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
+                string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
+                string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
+                
+                // Send single dimensional array to Excel:
+                Range rg1 = ws.get_Range("B2", "Z2");
+                double[] xarray = new double[nColumns];
+                double[] yarray = new double[nRows];
+                ws.Cells[1, 1] = "Data for " + mapname;
+                for (int i = 0; i < xarray.Length; i++)
+                {
+                    if (xaxisvalues.Length > i)
+                    {
+                        xarray[i] = (int)xaxisvalues.GetValue(i);
+                    }
+                    else
+                    {
+                        xarray[i] = i;
+                    }
+                    //ws.Cells[i + 3, 1] = xarray[i];
+                    ws.Cells[2, 2 + i] = xarray[i];
+                }
+                for (int i = 0; i < yarray.Length; i++)
+                {
+                    if (yaxisvalues.Length > i)
+                    {
+                        if (isupsidedown)
+                        {
+                            yarray[i] = (int)yaxisvalues.GetValue((yarray.Length - 1) - i);
+                        }
+                        else
+                        {
+                            yarray[i] = (int)yaxisvalues.GetValue(i);
+                        }
+                    }
+                    else
+                    {
+                        yarray[i] = i;
+                    }
+                    ws.Cells[i + 3, 1] = yarray[i];
+                    //ws.Cells[2, 2 + i] = yarray[i];
+                }
+
+                string xaxisdescr = "x-axis";
+                string yaxisdescr = "y-axis";
+                string zaxisdescr = "z-axis";
+                GetAxisDescriptions(mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+                
+                
+                Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
+                rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit);
+
+                Range chartRange = ws.get_Range("A2", lowerRightCell);
+                xlChart.SetSourceData(chartRange, Type.Missing);
+                if (yarray.Length > 1)
+                {
+                    xlChart.ChartType = XlChartType.xlSurface;
+                }
+
+                // Customize axes:
+                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory, XlAxisGroup.xlPrimary);
+                xAxis.HasTitle = true;
+                xAxis.AxisTitle.Text = yaxisdescr;
+                try
+                {
+                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
+                    yAxis.HasTitle = true;
+                    yAxis.AxisTitle.Text = xaxisdescr;
+                }
+                catch (Exception E)
+                {
+                    logger.Debug("Failed to set y axis: " + E.Message);
+                }
+
+
+                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue, XlAxisGroup.xlPrimary);
+                zAxis.HasTitle = true;
+                zAxis.AxisTitle.Text = zaxisdescr;
+
+                // Add title:
+                xlChart.HasTitle = true;
+
+                xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
+
+                // Remove legend:
+                xlChart.HasLegend = false;
+                // add 3d shade
+                xlChart.SurfaceGroup.Has3DShading = true;
+                /*if (File.Exists(m_currentfile + "~" + mapname + ".xls"))
+                {
+
+                }*/
+                try
+                {
+                    wb.SaveAs(m_currentfile + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
+                }
+                catch (Exception sE)
+                {
+                    logger.Debug("Failed to save workbook: " + sE.Message);
+                }
+
+                /* This following code is used to create Excel default color indices:
+                for (int i = 0; i < 14; i++)
+                {
+                    string cellString = "A" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = i + 1;
+                    cellString = "B" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 14 + i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = 14 + i + 1;
+                    cellString = "C" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 2 * 14 + i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = 2 * 14 + i + 1;
+                    cellString = "D" + (i + 1).ToString();
+                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 3 * 14 + i + 1;
+                    ws.get_Range(cellString, cellString).Value2 = 3 * 14 + i + 1;
+                }*/
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to export to excel");
+            }
+            Thread.CurrentThread.CurrentCulture = saved;
         }
 
-        private void barButtonItem20_ItemClick(object sender, ItemClickEventArgs e)
+        private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
         {
-            ImportFileInExcelFormat();
+            double[,] dataArray = new double[nRows, nColumns];
+            double[] xarray = new double[nColumns];
+            for (int i = 0; i < xarray.Length; i++)
+            {
+                xarray[i] = -3.0f + i * 0.25f;
+            }
+            double[] yarray = xarray;
+
+            int mapindex = 0;
+            for (int i = 0; i < dataArray.GetLength(0); i++)
+            {
+                for (int j = 0; j < dataArray.GetLength(1); j++)
+                {
+                    if (isSixteenbit)
+                    {
+                        byte val1 = (byte)mapdata.GetValue(mapindex++);
+                        byte val2 = (byte)mapdata.GetValue(mapindex++);
+                        bool convertSign = false;
+                        if (val1 == 0xff)
+                        {
+                            val1 = 0;
+                            val2 = (byte)(0x100 - val2);
+                            convertSign = true;
+                        }
+                        int ival1 = Convert.ToInt32(val1);
+                        int ival2 = Convert.ToInt32(val2);
+                        double value = (ival1 * 256) + ival2;
+                        if (convertSign) value = -value;
+                        dataArray[i, j] = value;
+                    }
+                    else
+                    {
+                        byte val1 = (byte)mapdata.GetValue(mapindex++);
+                        int ival1 = Convert.ToInt32(val1);
+
+                        double value = ival1;
+                        dataArray[i, j] = value;
+                    }
+                }
+            }
+            return dataArray;
         }
 
         private void StartExcelExport()
@@ -4489,8 +4694,24 @@ namespace T8SuitePro
             }
             else
             {
-                MessageBox.Show("No symbol selected in the primary symbol list");
+                frmInfoBox info = new frmInfoBox("No symbol selected in the primary symbol list");
             }
+        }
+
+        private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
+        {
+            byte[] mapdatanew = new byte[mapdata.Length];
+            if (issixteenbit) numcolumns *= 2;
+            int internal_rows = mapdata.Length / numcolumns;
+            for (int tel = 0; tel < internal_rows; tel++)
+            {
+                for (int ctel = 0; ctel < numcolumns; ctel++)
+                {
+                    int orgoffset = (((internal_rows - 1) - tel) * numcolumns) + ctel;
+                    mapdatanew.SetValue(mapdata.GetValue(orgoffset), (tel * numcolumns) + ctel);
+                }
+            }
+            return mapdatanew;
         }
         private System.Data.DataTable getDataFromXLS(string strFilePath)
         {
@@ -4528,7 +4749,7 @@ namespace T8SuitePro
             if (issixteenbit) datalength /= 2;
             int[] buffer = new int[datalength];
             int bcount = 0;
-            for (int rtel = 1; rtel < dt.Rows.Count; rtel++)
+            for (int rtel = dt.Rows.Count; rtel >= 1; rtel--)
             {
                 try
                 {
@@ -4547,7 +4768,7 @@ namespace T8SuitePro
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Too much information in file, abort");
+                                        frmInfoBox info = new frmInfoBox("Too much information in file, abort");
                                         return;
                                     }
                                 }
@@ -4573,8 +4794,10 @@ namespace T8SuitePro
                         string bstr1 = "0";
                         string bstr2 = "0";
                         int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
-                        bstr1 = cellvalue.ToString("X4").Substring(0, 2);
-                        bstr2 = cellvalue.ToString("X4").Substring(2, 2);
+                        string svalue = cellvalue.ToString("X4");
+
+                        bstr1 = svalue.Substring(svalue.Length - 4, 2);
+                        bstr2 = svalue.Substring(svalue.Length - 2, 2);
                         data.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
                         data.SetValue(Convert.ToByte(bstr2, 16), cellcount++);
                     }
@@ -4588,7 +4811,6 @@ namespace T8SuitePro
                     }
                 }
                 savedatatobinary((int)GetSymbolAddress(m_symbols, symbolname), symbollength, data, m_currentfile, true);
-                //verifychecksum(false);
                 UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
             }
 
@@ -4655,7 +4877,7 @@ namespace T8SuitePro
                 }
                 catch (Exception E)
                 {
-                    MessageBox.Show("Failed to import map from excel: " + E.Message);
+                    frmInfoBox info = new frmInfoBox("Failed to import map from excel: " + E.Message);
                 }
             }
         }
@@ -4685,210 +4907,14 @@ namespace T8SuitePro
             finally { }
         }
 
-        private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
+        private void Actions_ExportMapToExcel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            byte[] mapdatanew = new byte[mapdata.Length];
-            if (issixteenbit) numcolumns *= 2;
-            int internal_rows = mapdata.Length / numcolumns;
-            for (int tel = 0; tel < internal_rows; tel++)
-            {
-                for (int ctel = 0; ctel < numcolumns; ctel++)
-                {
-                    int orgoffset = (((internal_rows - 1) - tel) * numcolumns) + ctel;
-                    mapdatanew.SetValue(mapdata.GetValue(orgoffset), (tel * numcolumns) + ctel);
-                }
-            }
-            return mapdatanew;
-        }
-        private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
-        {
-            try
-            {
-                bool isupsidedown = GetMapUpsideDown(mapname);
-                if (xla == null)
-                {
-                    xla = new Microsoft.Office.Interop.Excel.Application();
-                }
-
-                // turn mapdata upside down
-                if (isupsidedown)
-                {
-                    mapdata = TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
-                }
-
-                xla.Visible = true;
-                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet);
-                Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)xla.ActiveSheet;
-                ws.Name = "symboldata";
-
-                // Now create the chart.
-                ChartObjects chartObjs = (ChartObjects)ws.ChartObjects(Type.Missing);
-                ChartObject chartObj = chartObjs.Add(100, 400, 400, 300);
-                Chart xlChart = chartObj.Chart;
-
-                int nRows = rows;
-                if (isSixteenbit) nRows /= 2;
-                int nColumns = cols;
-                string upperLeftCell = "B3";
-                int endRowNumber = System.Int32.Parse(upperLeftCell.Substring(1)) + nRows - 1;
-                char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
-                string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
-                string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
-                // Send single dimensional array to Excel:
-                Range rg1 = ws.get_Range("B2", "Z2");
-                double[] xarray = new double[nColumns];
-                double[] yarray = new double[nRows];
-                ws.Cells[1, 1] = "Data for " + mapname;
-                for (int i = 0; i < xarray.Length; i++)
-                {
-                    if (xaxisvalues.Length > i)
-                    {
-                        xarray[i] = (int)xaxisvalues.GetValue(i);
-                    }
-                    else
-                    {
-                        xarray[i] = i;
-                    }
-                    //ws.Cells[i + 3, 1] = xarray[i];
-                    ws.Cells[2, 2 + i] = xarray[i];
-                }
-                for (int i = 0; i < yarray.Length; i++)
-                {
-                    if (yaxisvalues.Length > i)
-                    {
-                        if (isupsidedown)
-                        {
-                            yarray[i] = (int)yaxisvalues.GetValue((yarray.Length - 1) - i);
-                        }
-                        else
-                        {
-                            yarray[i] = (int)yaxisvalues.GetValue(i);
-                        }
-                    }
-                    else
-                    {
-                        yarray[i] = i;
-                    }
-                    ws.Cells[i + 3, 1] = yarray[i];
-                    //ws.Cells[2, 2 + i] = yarray[i];
-                }
-
-                string xaxisdescr = "x-axis";
-                string yaxisdescr = "y-axis";
-                string zaxisdescr = "z-axis";
-                GetAxisDescriptions(m_currentfile, m_symbols, mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
-                rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit);
-
-                Range chartRange = ws.get_Range("A2", lowerRightCell);
-                xlChart.SetSourceData(chartRange, Type.Missing);
-                if (yarray.Length > 1)
-                {
-                    xlChart.ChartType = XlChartType.xlSurface;
-                }
-
-                // Customize axes:
-                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory,
-                    XlAxisGroup.xlPrimary);
-                xAxis.HasTitle = true;
-                xAxis.AxisTitle.Text = yaxisdescr;
-                try
-                {
-                    Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis,
-                        XlAxisGroup.xlPrimary);
-                    yAxis.HasTitle = true;
-                    yAxis.AxisTitle.Text = xaxisdescr;
-                }
-                catch (Exception E)
-                {
-                    logger.Debug(E.Message);
-                }
-
-
-                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue,
-                    XlAxisGroup.xlPrimary);
-                zAxis.HasTitle = true;
-                zAxis.AxisTitle.Text = zaxisdescr;
-
-                // Add title:
-                xlChart.HasTitle = true;
-
-                xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
-
-                // Remove legend:
-                xlChart.HasLegend = false;
-                // add 3d shade
-                xlChart.SurfaceGroup.Has3DShading = true;
-                /*if (File.Exists(m_currentfile + "~" + mapname + ".xls"))
-                {
-
-                }*/
-                wb.SaveAs(m_currentfile + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
-
-                /* This following code is used to create Excel default color indices:
-                for (int i = 0; i < 14; i++)
-                {
-                    string cellString = "A" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = i + 1;
-                    cellString = "B" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 14 + i + 1;
-                    cellString = "C" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 2 * 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 2 * 14 + i + 1;
-                    cellString = "D" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 3 * 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 3 * 14 + i + 1;
-                }*/
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E, "Failed to export to excel");
-            }
-
+            StartExcelExport();
         }
 
-        private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
+        private void Actions_ImportMapFromExcel_ItemClick(object sender, ItemClickEventArgs e)
         {
-            double[,] dataArray = new double[nRows, nColumns];
-            double[] xarray = new double[nColumns];
-            for (int i = 0; i < xarray.Length; i++)
-            {
-                xarray[i] = -3.0f + i * 0.25f;
-            }
-            double[] yarray = xarray;
-
-            int mapindex = 0;
-            for (int i = 0; i < dataArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < dataArray.GetLength(1); j++)
-                {
-                    if (isSixteenbit)
-                    {
-                        byte val1 = (byte)mapdata.GetValue(mapindex++);
-                        byte val2 = (byte)mapdata.GetValue(mapindex++);
-                        if (val1 == 0xff)
-                        {
-                            val1 = 0;
-                            val2 = (byte)(0x100 - val2);
-                        }
-                        int ival1 = Convert.ToInt32(val1);
-                        int ival2 = Convert.ToInt32(val2);
-                        double value = (ival1 * 256) + ival2;
-                        dataArray[i, j] = value;
-                    }
-                    else
-                    {
-                        byte val1 = (byte)mapdata.GetValue(mapindex++);
-                        int ival1 = Convert.ToInt32(val1);
-
-                        double value = ival1;
-                        dataArray[i, j] = value;
-                    }
-                }
-            }
-            return dataArray;
+            ImportFileInExcelFormat();
         }
 
         private void barButtonItem22_ItemClick(object sender, ItemClickEventArgs e)
