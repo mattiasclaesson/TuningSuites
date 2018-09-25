@@ -3282,7 +3282,7 @@ namespace T7
                 char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
                 string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
                 string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
-                
+
                 // Send single dimensional array to Excel:
                 Range rg1 = ws.get_Range("B2", "Z2");
                 double[] xarray = new double[nColumns];
@@ -3292,7 +3292,7 @@ namespace T7
                 {
                     if (xaxisvalues.Length > i)
                     {
-                        xarray[i] = (int)xaxisvalues.GetValue(i);
+                        xarray[i] = ConvertSignedValue((int)xaxisvalues.GetValue(i));
                     }
                     else
                     {
@@ -3307,11 +3307,11 @@ namespace T7
                     {
                         if (isupsidedown)
                         {
-                            yarray[i] = (int)yaxisvalues.GetValue((yarray.Length - 1) - i);
+                            yarray[i] = ConvertSignedValue((int)yaxisvalues.GetValue((yarray.Length - 1) - i));
                         }
                         else
                         {
-                            yarray[i] = (int)yaxisvalues.GetValue(i);
+                            yarray[i] = ConvertSignedValue((int)yaxisvalues.GetValue(i));
                         }
                     }
                     else
@@ -3373,30 +3373,38 @@ namespace T7
                 {
                     logger.Debug("Failed to save workbook: " + sE.Message);
                 }
-
-
-                /* This following code is used to create Excel default color indices:
-                for (int i = 0; i < 14; i++)
-                {
-                    string cellString = "A" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = i + 1;
-                    cellString = "B" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 14 + i + 1;
-                    cellString = "C" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 2 * 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 2 * 14 + i + 1;
-                    cellString = "D" + (i + 1).ToString();
-                    ws.get_Range(cellString, cellString).Interior.ColorIndex = 3 * 14 + i + 1;
-                    ws.get_Range(cellString, cellString).Value2 = 3 * 14 + i + 1;
-                }*/
             }
             catch (Exception E)
             {
                 logger.Debug(E, "Failed to export to excel");
             }
             Thread.CurrentThread.CurrentCulture = saved;
+        }
+
+        private static double ConvertSignedValue(int values)
+        {
+            byte val1 = (byte)(values >> 8 & 0xff);
+            byte val2 = (byte)(values & 0xff);
+            return ConvertSignedValue(val1, val2);
+        }
+
+        private static double ConvertSignedValue(byte val1, byte val2)
+        {
+            bool convertSign = false;
+            if (val1 == 0xff)
+            {
+                val1 = 0;
+                val2 = (byte)(0x100 - val2);
+                convertSign = true;
+            }
+            int ival1 = Convert.ToInt32(val1);
+            int ival2 = Convert.ToInt32(val2);
+            double value = (ival1 * 256) + ival2;
+            if (convertSign)
+            {
+                value = -value;
+            }
+            return value;
         }
 
         private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
