@@ -100,6 +100,7 @@
     <Compile Include="CellHelperCollection.cs" />
     <Compile Include="Channels.cs" />
     <Compile Include="Crypto.cs" />
+    <Compile Include="ExcelXLS.cs" />
     <Compile Include="Forms\frmChecksum.cs">
       <SubType>Form</SubType>
     </Compile>

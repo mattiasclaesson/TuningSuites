@@ -3243,7 +3243,6 @@ namespace T7
 
             try
             {
-                bool isupsidedown = GetMapUpsideDown(mapname);
                 try
                 {
                     if (xla == null)
@@ -3257,11 +3256,7 @@ namespace T7
                     logger.Debug(xlaE, "Failed to create office application interface");
                 }
 
-                // turn mapdata upside down
-                if (isupsidedown)
-                {
-                    mapdata = TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
-                }
+                mapdata = ExcelXLS.TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
 
                 xla.Visible = true;
                 Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet);
@@ -3287,11 +3282,20 @@ namespace T7
                 double[] xarray = new double[nColumns];
                 double[] yarray = new double[nRows];
                 ws.Cells[1, 1] = "Data for " + mapname;
+
+                SymbolAxesTranslator sat = new SymbolAxesTranslator();
+                string xaxissymbol = sat.GetXaxisSymbol(mapname);
+                double xfactor = GetMapCorrectionFactor(xaxissymbol);
+                double xoffset = GetMapCorrectionOffset(xaxissymbol);
+
                 for (int i = 0; i < xarray.Length; i++)
                 {
                     if (xaxisvalues.Length > i)
                     {
-                        xarray[i] = ConvertSignedValue((int)xaxisvalues.GetValue(i));
+                        double xvalue = ExcelXLS.ConvertSignedValue((int)xaxisvalues.GetValue(i));
+                        xvalue *= xfactor;
+                        xvalue += xoffset;
+                        xarray[i] = Math.Round(xvalue, 2);
                     }
                     else
                     {
@@ -3303,14 +3307,7 @@ namespace T7
                 {
                     if (yaxisvalues.Length > i)
                     {
-                        if (isupsidedown)
-                        {
-                            yarray[i] = ConvertSignedValue((int)yaxisvalues.GetValue((yarray.Length - 1) - i));
-                        }
-                        else
-                        {
-                            yarray[i] = ConvertSignedValue((int)yaxisvalues.GetValue(i));
-                        }
+                        yarray[i] = ExcelXLS.ConvertSignedValue((int)yaxisvalues.GetValue((yarray.Length - 1) - i));
                     }
                     else
                     {
@@ -3319,14 +3316,11 @@ namespace T7
                     ws.Cells[i + 3, 1] = yarray[i];
                 }
 
-                string xaxisdescr = "x-axis";
-                string yaxisdescr = "y-axis";
-                string zaxisdescr = "z-axis";
-                GetAxisDescriptions(mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-
+                double factor = GetMapCorrectionFactor(mapname);
+                double offset = GetMapCorrectionOffset(mapname);
 
                 Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
-                rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit);
+                rg.Value2 = ExcelXLS.AddData(nRows, nColumns, mapdata, isSixteenbit, factor, offset);
 
                 Range chartRange = ws.get_Range("A2", lowerRightCell);
                 xlChart.SetSourceData(chartRange, Type.Missing);
@@ -3338,6 +3332,11 @@ namespace T7
                 xlChart.HasTitle = true;
                 xlChart.ChartTitle.Text = TranslateSymbolName(mapname);
                 xlChart.HasLegend = false;
+
+                string xaxisdescr;
+                string yaxisdescr;
+                string zaxisdescr;
+                GetAxisDescriptions(mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
 
                 // Customize axes:
                 Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory, XlAxisGroup.xlPrimary);
@@ -3378,66 +3377,6 @@ namespace T7
             Thread.CurrentThread.CurrentCulture = saved;
         }
 
-        private static double ConvertSignedValue(int values)
-        {
-            byte val1 = (byte)(values >> 8 & 0xff);
-            byte val2 = (byte)(values & 0xff);
-            return ConvertSignedValue(val1, val2);
-        }
-
-        private static double ConvertSignedValue(byte val1, byte val2)
-        {
-            bool convertSign = false;
-            if (val1 == 0xff)
-            {
-                val1 = 0;
-                val2 = (byte)(0x100 - val2);
-                convertSign = true;
-            }
-            int ival1 = Convert.ToInt32(val1);
-            int ival2 = Convert.ToInt32(val2);
-            double value = (ival1 * 256) + ival2;
-            if (convertSign)
-            {
-                value = -value;
-            }
-            return value;
-        }
-
-        private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit)
-        {
-            double[,] dataArray = new double[nRows, nColumns];
-            double[] xarray = new double[nColumns];
-            for (int i = 0; i < xarray.Length; i++)
-            {
-                xarray[i] = -3.0f + i * 0.25f;
-            }
-            double[] yarray = xarray;
-
-            int mapindex = 0;
-            for (int i = 0; i < dataArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < dataArray.GetLength(1); j++)
-                {
-                    if (isSixteenbit)
-                    {
-                        byte val1 = (byte)mapdata.GetValue(mapindex++);
-                        byte val2 = (byte)mapdata.GetValue(mapindex++);
-                        dataArray[i, j] = ConvertSignedValue(val1, val2);
-                    }
-                    else
-                    {
-                        byte val1 = (byte)mapdata.GetValue(mapindex++);
-                        int ival1 = Convert.ToInt32(val1);
-
-                        double value = ival1;
-                        dataArray[i, j] = value;
-                    }
-                }
-            }
-            return dataArray;
-        }
-
         private void StartExcelExport()
         {
             if (gridViewSymbols.SelectedRowsCount > 0)
@@ -3469,51 +3408,12 @@ namespace T7
             }
         }
 
-        private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
-        {
-            byte[] mapdatanew = new byte[mapdata.Length];
-            if (issixteenbit) numcolumns *= 2;
-            int internal_rows = mapdata.Length / numcolumns;
-            for (int tel = 0; tel < internal_rows; tel++)
-            {
-                for (int ctel = 0; ctel < numcolumns; ctel++)
-                {
-                    int orgoffset = (((internal_rows - 1) - tel) * numcolumns) + ctel;
-                    mapdatanew.SetValue(mapdata.GetValue(orgoffset), (tel * numcolumns) + ctel);
-                }
-            }
-            return mapdatanew;
-        }
-
-        private System.Data.DataTable getDataFromXLS(string strFilePath)
-        {
-            try
-            {
-                string strConnectionString = string.Empty;
-                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
-                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
-                cnCSV.Open();
-                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [symboldata$]", cnCSV);
-                OleDbDataAdapter daCSV = new OleDbDataAdapter();
-                daCSV.SelectCommand = cmdSelect;
-                System.Data.DataTable dtCSV = new System.Data.DataTable();
-                daCSV.Fill(dtCSV);
-                cnCSV.Close();
-                daCSV = null;
-                return dtCSV;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
-                return null;
-            }
-            finally { }
-        }
+       
 
         private void ImportExcelSymbol(string symbolname, string filename)
         {
             bool issixteenbit = false;
-            System.Data.DataTable dt = getDataFromXLS(openFileDialog2.FileName);
+            System.Data.DataTable dt = ExcelXLS.getDataFromXLS(openFileDialog2.FileName);
             if (isSixteenBitTable(symbolname)) issixteenbit = true;
             int symbollength = GetSymbolLength(m_symbols, symbolname);
             int datalength = symbollength;
@@ -3652,31 +3552,6 @@ namespace T7
                     frmInfoBox info = new frmInfoBox("Failed to import map from excel: " + E.Message);
                 }
             }
-        }
-
-        private System.Data.DataTable getDataFromXLSSymbolHelper(string strFilePath)
-        {
-            try
-            {
-                string strConnectionString = string.Empty;
-                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
-                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
-                cnCSV.Open();
-                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [Symbols$]", cnCSV);
-                OleDbDataAdapter daCSV = new OleDbDataAdapter();
-                daCSV.SelectCommand = cmdSelect;
-                System.Data.DataTable dtCSV = new System.Data.DataTable();
-                daCSV.Fill(dtCSV);
-                cnCSV.Close();
-                daCSV = null;
-                return dtCSV;
-            }
-            catch (Exception ex)
-            {
-                logger.Debug(ex.Message);
-                return null;
-            }
-            finally { }
         }
 
         private void Actions_ExportMapToExcel_ItemClick(object sender, ItemClickEventArgs e)
