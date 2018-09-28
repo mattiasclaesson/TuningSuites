@@ -299,6 +299,7 @@ namespace T5Suite2
             this.knockIndicationLoadLimitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.knockRegulationLoadLimitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.barExcelExport = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -473,9 +474,10 @@ namespace T5Suite2
             this.barItemCombiAdapter,
             this.btnHardcodedRPMLimit,
             this.barButtonItem12,
-            this.barIdcGenerate});
+            this.barIdcGenerate,
+            this.barExcelExport});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 156;
+            this.ribbonControl1.MaxItemId = 157;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonFile,
@@ -1907,6 +1909,7 @@ namespace T5Suite2
             this.ribbonPageGroup2.ItemLinks.Add(this.btnShowDynoGraph);
             this.ribbonPageGroup2.ItemLinks.Add(this.btnBinExaminor);
             this.ribbonPageGroup2.ItemLinks.Add(this.btnShowCompressorMap);
+            this.ribbonPageGroup2.ItemLinks.Add(this.barExcelExport);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             this.ribbonPageGroup2.Text = "Basic actions";
             // 
@@ -2981,6 +2984,13 @@ namespace T5Suite2
             this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Text = "Time to stay in knock mode after knock detection";
             this.timeToStayInKnockModeAfterKnockDetectionToolStripMenuItem.Click += new System.EventHandler(this.HandleMenuItem);
             // 
+            // barExcelExport
+            // 
+            this.barExcelExport.Caption = "Export map to Excel";
+            this.barExcelExport.Id = 156;
+            this.barExcelExport.Name = "barExcelExport";
+            this.barExcelExport.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barExcelExport_ItemClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3288,6 +3298,7 @@ namespace T5Suite2
         private DevExpress.XtraBars.BarButtonItem btnHardcodedRPMLimit;
         private DevExpress.XtraBars.BarButtonItem barButtonItem12;
         private DevExpress.XtraBars.BarButtonItem barIdcGenerate;
+        private DevExpress.XtraBars.BarButtonItem barExcelExport;
     }
 }
 

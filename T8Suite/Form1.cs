@@ -4456,7 +4456,6 @@ namespace T8SuitePro
         private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
         {
             CultureInfo saved = Thread.CurrentThread.CurrentCulture;
-            //en-US
             CultureInfo tci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = tci;
 
@@ -4516,7 +4515,6 @@ namespace T8SuitePro
                     {
                         xarray[i] = i;
                     }
-                    //ws.Cells[i + 3, 1] = xarray[i];
                     ws.Cells[2, 2 + i] = xarray[i];
                 }
                 for (int i = 0; i < yarray.Length; i++)
@@ -4537,7 +4535,6 @@ namespace T8SuitePro
                         yarray[i] = i;
                     }
                     ws.Cells[i + 3, 1] = yarray[i];
-                    //ws.Cells[2, 2 + i] = yarray[i];
                 }
 
                 string xaxisdescr = "x-axis";

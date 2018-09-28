@@ -133,6 +133,8 @@ using System.Media;
 using DevExpress.Skins;
 using NLog;
 using CommonSuite;
+using System.Globalization;
+using Microsoft.Office.Interop.Excel;
 
 namespace T5Suite2
 {
@@ -278,11 +280,12 @@ namespace T5Suite2
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private SuiteRegistry suiteRegistry = new T5SuiteRegistry();
+        private Microsoft.Office.Interop.Excel.Application xla;
 
         public Form1(string[] args)
         {
             _splash.Show();
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             _splash.SetProgressText("Initializing...");
 
             /*HWID _id = new HWID();
@@ -793,7 +796,7 @@ namespace T5Suite2
             {
                 if (m_appSettings.PlayCellProcessedSound)
                 {
-                    string sound2play = Application.StartupPath + "\\ping.wav";
+                    string sound2play = System.Windows.Forms.Application.StartupPath + "\\ping.wav";
                     if (File.Exists(sound2play))
                     {
                         sndplayer.SoundLocation = sound2play;
@@ -890,7 +893,7 @@ namespace T5Suite2
             {
                 m_trionicFile = new Trionic5File();
 
-                m_trionicFile.LibraryPath = Application.StartupPath + "\\Binaries";
+                m_trionicFile.LibraryPath = System.Windows.Forms.Application.StartupPath + "\\Binaries";
 
                 m_trionicFile.SetAutoUpdateChecksum(m_appSettings.AutoChecksum);
 
@@ -1023,7 +1026,7 @@ namespace T5Suite2
 
         private bool CheckFileInLibrary(string partnumber)
         {
-            string libPath = Application.StartupPath + "\\Binaries";
+            string libPath = System.Windows.Forms.Application.StartupPath + "\\Binaries";
             bool retval = false;
             if(Directory.Exists(libPath))
             {
@@ -1090,7 +1093,7 @@ namespace T5Suite2
             if (barStaticItem4.Caption != text)
             {
                 barStaticItem4.Caption = text;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
         }
 
@@ -1100,26 +1103,26 @@ namespace T5Suite2
             if (Convert.ToInt32(barEditItem1.EditValue) != progress)
             {
                 barEditItem1.EditValue = progress;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
             if (progress > 99)
             {
                 barEditItem1.EditValue = 0;
                 enableBar = false;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
             //logger.Debug("Perc: " + progress.ToString() + " enable: " + enableBar.ToString());
             if (barEditItem1.Enabled && !enableBar)
             {
                 barEditItem1.Caption = "---";
                 barEditItem1.Enabled = false;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
             if (!barEditItem1.Enabled && enableBar)
             {
                 barEditItem1.Caption = "Progress";
                 barEditItem1.Enabled = true;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
             
             //progressbar.EditValue = progress;
@@ -1308,12 +1311,12 @@ namespace T5Suite2
                                     //gridViewSymbols.SelectRows(rhandle, rhandle);
                                     gridViewSymbols.MakeRowVisible(rhandle, true);
                                     gridViewSymbols.FocusedRowHandle = rhandle;
-                                    Application.DoEvents(); //<GS-15042010>
+                                    System.Windows.Forms.Application.DoEvents(); //<GS-15042010>
                                     if (gridViewSymbols.IsRowVisible(rhandle) == RowVisibleState.Hidden)
                                     {
                                         gridViewSymbols.ActiveFilter.Clear(); // clear filter
                                         //Do again!
-                                        Application.DoEvents();
+                                        System.Windows.Forms.Application.DoEvents();
                                         dt = (SymbolCollection)gridSymbols.DataSource;
                                         int rtel2 = 0;
 
@@ -1725,7 +1728,7 @@ namespace T5Suite2
                 //int y = Screen.PrimaryScreen.WorkingArea.Height / 2 - dp.FloatSize.Height / 2;
                 int x = this.Left + this.Width / 2 - dp.FloatSize.Width / 2;
                 int y = this.Top + this.Height / 2 - dp.FloatSize.Height / 2;
-                System.Drawing.Point realfloatpoint = new Point(x, y);//this.PointToClient(new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 30, dockSymbols.Location.Y + 30));
+                System.Drawing.Point realfloatpoint = new System.Drawing.Point(x, y);//this.PointToClient(new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 30, dockSymbols.Location.Y + 30));
                 dp.FloatLocation = realfloatpoint;
 
                 dockManager1.EndUpdate();
@@ -1926,7 +1929,7 @@ namespace T5Suite2
         private void gridViewSymbols_DoubleClick(object sender, EventArgs e)
         {
             // test if we hit a datarow
-            Point p = gridSymbols.PointToClient(Cursor.Position);
+            System.Drawing.Point p = gridSymbols.PointToClient(Cursor.Position);
             GridHitInfo hitinfo = gridViewSymbols.CalcHitInfo(p);
             int[] selectedrows = gridViewSymbols.GetSelectedRows();
             if (hitinfo.InRow)
@@ -1969,7 +1972,7 @@ namespace T5Suite2
                 logger.Debug("Loaded working.RAM");
             }*/
             btnSwitchMode.Caption = "Connecting...";
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             if (m_appSettings.CanDevice == "Lawicel")
             {
                 CheckCanwakeup();
@@ -1996,7 +1999,7 @@ namespace T5Suite2
 
                 string swversion = _ecuConnection.GetSoftwareVersion();
                 btnSwitchMode.Caption = "Connected: " + swversion;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 logger.Debug("SW version: " + swversion);
                 if (swversion == "")
                 {
@@ -2007,7 +2010,7 @@ namespace T5Suite2
                     _ECUmode = OperationMode.ModeOffline;
                     _APPmode = OperationMode.ModeOffline;
                     SetOnlineButtons(false);
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                     return retval;
                 }
                 if (m_trionicFile != null)
@@ -2015,7 +2018,7 @@ namespace T5Suite2
                     if (m_trionicFile.GetSoftwareVersion() != swversion)
                     {
                         SetStatusText("Getting symboltable...");
-                        DataTable _symboltable = _ecuConnection.GetSymbolTable();
+                        System.Data.DataTable _symboltable = _ecuConnection.GetSymbolTable();
                         //_symboltable.WriteXml(Application.StartupPath + "\\" + _ecuConnection.Swversion + ".xml");
 
                         FillRealtimePool(RealtimeMonitoringType.Fuel, true);
@@ -2031,7 +2034,7 @@ namespace T5Suite2
                 else
                 {
                     SetStatusText("Getting symboltable...");
-                    DataTable _symboltable = _ecuConnection.GetSymbolTable();
+                    System.Data.DataTable _symboltable = _ecuConnection.GetSymbolTable();
                     //_symboltable.WriteXml(Application.StartupPath + "\\" + _ecuConnection.Swversion + ".xml");
                     FillRealtimePool(RealtimeMonitoringType.Fuel, true);
                     _ecuConnection.StopECUMonitoring();
@@ -2146,7 +2149,7 @@ namespace T5Suite2
                     _ECUmode = OperationMode.ModeOffline;
                     SetOnlineButtons(false);
                     UpdateOnlineOffLineTexts();
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                     frmInfoBox info = new frmInfoBox("Failed to open canbus connection!");
                 }
             }
@@ -2179,7 +2182,7 @@ namespace T5Suite2
         {
             if (!_connectionWasOpenedBefore)
             {
-                string Exename = Path.Combine(Application.StartupPath, "WakeupCANbus.exe");
+                string Exename = Path.Combine(System.Windows.Forms.Application.StartupPath, "WakeupCANbus.exe");
                 // see if we can spawn the exe called WakeupCANbus.exe
                 if (File.Exists(Exename))
                 {
@@ -2187,7 +2190,7 @@ namespace T5Suite2
                     startinfo.CreateNoWindow = true;
                     startinfo.WindowStyle = ProcessWindowStyle.Hidden;
                     //startinfo.UseShellExecute = false;
-                    startinfo.WorkingDirectory = Application.StartupPath;
+                    startinfo.WorkingDirectory = System.Windows.Forms.Application.StartupPath;
                     logger.Debug("Spawning WakeupCANbus.exe");
                     System.Diagnostics.Process conv_proc = System.Diagnostics.Process.Start(startinfo);
                     conv_proc.WaitForExit(10000); // wait for 30 seconds max
@@ -2345,7 +2348,7 @@ namespace T5Suite2
                 _ECUmode = OperationMode.ModeOffline;
                 SetOnlineButtons(false);
                 UpdateOnlineOffLineTexts();
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 frmInfoBox info = new frmInfoBox("Failed to open canbus connection!");
             }
         }
@@ -2415,7 +2418,7 @@ namespace T5Suite2
             // never show symbollist in online mode?
             ribbonControl1.Minimized = false;
             _ecuConnection.StopECUMonitoring();
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             SetStatusText("Getting knock counter snapshot");
             //<GS-09022011> get a snapshot of the knock counter map if that is required
             if (m_appSettings.KnockCounterSnapshot && props.IsTrionic55) // only for T5.5
@@ -3600,12 +3603,12 @@ namespace T5Suite2
 
                 ribbonControl1.SelectedPage = ribbonHelp;
                 btnSwitchMode.Enabled = false;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
             else
             {
                 ribbonControl1.SelectedPage = ribbonFile;
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
             }
             SetModeAndFilters();
             _splash.Hide();
@@ -3725,7 +3728,7 @@ namespace T5Suite2
             // show license input screen including the HWID
             frmLicense lic = new frmLicense();
             HWID _id = new HWID();
-            string computerID = _id.GetUniqueIdentifier(Application.StartupPath);
+            string computerID = _id.GetUniqueIdentifier(System.Windows.Forms.Application.StartupPath);
             lic.SetHWID(computerID);
             lic.ImmoValid = _immoValid;
 
@@ -3749,7 +3752,7 @@ namespace T5Suite2
                         rbnPageLogging.Visible = true;
                         ribbonControl1.SelectedPage = ribbonFile;
                         btnSwitchMode.Enabled = true;
-                        Application.DoEvents();
+                        System.Windows.Forms.Application.DoEvents();
                     }
                     else
                     {
@@ -4033,7 +4036,7 @@ namespace T5Suite2
         private void TransferMapsToNewBinary(string filename, Trionic5Resume resume)
         {
             IECUFile m_FileToTransferTo = new Trionic5File();
-            m_FileToTransferTo.LibraryPath = Application.StartupPath + "\\Binaries";
+            m_FileToTransferTo.LibraryPath = System.Windows.Forms.Application.StartupPath + "\\Binaries";
             m_FileToTransferTo.SetAutoUpdateChecksum(m_appSettings.AutoChecksum);
             
             m_FileToTransferTo.SelectFile(filename);
@@ -4853,7 +4856,7 @@ namespace T5Suite2
             SetStatusText("Start symbol parsing");
             SetTaskProgress(0, true);
             Trionic5File m_CompareToFile = new Trionic5File();
-            m_CompareToFile.LibraryPath = Application.StartupPath + "\\Binaries";
+            m_CompareToFile.LibraryPath = System.Windows.Forms.Application.StartupPath + "\\Binaries";
             m_CompareToFile.SetAutoUpdateChecksum(m_appSettings.AutoChecksum);
 
             m_CompareToFile.SelectFile(filename);
@@ -4929,7 +4932,7 @@ namespace T5Suite2
                 // available in repository?
                 //ParseFile(progress, filename, curSymbolCollection, curAddressLookupCollection);
                 Trionic5File m_CompareToFile = new Trionic5File();
-                m_CompareToFile.LibraryPath = Application.StartupPath + "\\Binaries";
+                m_CompareToFile.LibraryPath = System.Windows.Forms.Application.StartupPath + "\\Binaries";
                 m_CompareToFile.SetAutoUpdateChecksum(m_appSettings.AutoChecksum);
 
                 m_CompareToFile.onDecodeProgress += new IECUFile.DecodeProgress(m_CompareToFile_onDecodeProgress);
@@ -6719,7 +6722,7 @@ namespace T5Suite2
             }
             if (tunWiz.ShowDialog() == DialogResult.OK)
             {
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
                 Trionic5Tuner _tuner = new Trionic5Tuner();
                 _tuner.AutoUpdateChecksum = m_appSettings.AutoChecksum;
                 frmInfoBox info;
@@ -6863,7 +6866,7 @@ namespace T5Suite2
                     injWiz.Crankfactor = startInsp * 0.004F;
                     if (injWiz.ShowDialog() == DialogResult.OK)
                     {
-                        Application.DoEvents();
+                        System.Windows.Forms.Application.DoEvents();
                         // save data
                         // save battery correction map
                         byte[] batt_korr_new = injWiz.GetBatteryCorrectionMap();
@@ -6890,7 +6893,7 @@ namespace T5Suite2
                 frmE85Wizard e85Wiz = new frmE85Wizard();
                 if (e85Wiz.ShowDialog() == DialogResult.OK)
                 {
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                     if (m_CurrentWorkingProject != "")
                     {
                         if (!Directory.Exists(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups")) Directory.CreateDirectory(m_appSettings.ProjectFolder + "\\" + m_CurrentWorkingProject + "\\Backups");
@@ -7119,7 +7122,7 @@ namespace T5Suite2
                     string binfilename = m_appSettings.ProjectFolder + "\\" + MakeDirName(projectprops.ProjectName) + "\\" + Path.GetFileName(projectprops.BinaryFile);
                     File.Copy(projectprops.BinaryFile, binfilename);
                     // now create the projectproperties.xml in this new folder
-                    DataTable dtProps = new DataTable("T5PROJECT");
+                    System.Data.DataTable dtProps = new System.Data.DataTable("T5PROJECT");
                     dtProps.Columns.Add("CARMAKE");
                     dtProps.Columns.Add("CARMODEL");
                     dtProps.Columns.Add("CARMY");
@@ -7207,7 +7210,7 @@ namespace T5Suite2
             string m_currentfile = string.Empty;
             if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
             {
-                DataTable projectprops = new DataTable("T5PROJECT");
+                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
                 projectprops.Columns.Add("CARMAKE");
                 projectprops.Columns.Add("CARMODEL");
                 projectprops.Columns.Add("CARMY");
@@ -7239,7 +7242,7 @@ namespace T5Suite2
             bool retval = false;
             if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
             {
-                DataTable projectprops = new DataTable("T5PROJECT");
+                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
                 projectprops.Columns.Add("CARMAKE");
                 projectprops.Columns.Add("CARMODEL");
                 projectprops.Columns.Add("CARMY");
@@ -7262,7 +7265,7 @@ namespace T5Suite2
             string retval = retval = m_trionicFile.GetFileInfo().Filename;
             if (File.Exists(m_appSettings.ProjectFolder + "\\" + projectname + "\\projectproperties.xml"))
             {
-                DataTable projectprops = new DataTable("T5PROJECT");
+                System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
                 projectprops.Columns.Add("CARMAKE");
                 projectprops.Columns.Add("CARMODEL");
                 projectprops.Columns.Add("CARMY");
@@ -7287,7 +7290,7 @@ namespace T5Suite2
         {
             //let the user select a project from the Project folder. If none are present, let the user know
             if (!Directory.Exists(m_appSettings.ProjectFolder)) Directory.CreateDirectory(m_appSettings.ProjectFolder);
-            DataTable ValidProjects = new DataTable();
+            System.Data.DataTable ValidProjects = new System.Data.DataTable();
             ValidProjects.Columns.Add("Projectname");
             ValidProjects.Columns.Add("NumberBackups");
             ValidProjects.Columns.Add("NumberTransactions");
@@ -7301,7 +7304,7 @@ namespace T5Suite2
 
                 if (projectfiles.Length > 0)
                 {
-                    DataTable projectprops = new DataTable("T5PROJECT");
+                    System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
                     projectprops.Columns.Add("CARMAKE");
                     projectprops.Columns.Add("CARMODEL");
                     projectprops.Columns.Add("CARMY");
@@ -8668,7 +8671,7 @@ namespace T5Suite2
                         // decide which cells should be updated and which ones should be discarded
                         double[] diffinperc = m_AFRMaps.GetPercentualDifferences();
 
-                        DataTable dt = new DataTable();
+                        System.Data.DataTable dt = new System.Data.DataTable();
                         for (int i = 0; i < 16; i++)
                         {
                             dt.Columns.Add(i.ToString(), Type.GetType("System.Double"));
@@ -8696,7 +8699,7 @@ namespace T5Suite2
                         {
                             _ecuConnection.WriteSymbolData(m_trionicFileInformation.GetSymbolAddressSRAM(m_trionicFileInformation.GetIdleFuelMap()), m_trionicFileInformation.GetSymbolLength(m_trionicFileInformation.GetIdleFuelMap()), m_AFRMaps.GetIdleCurrentlyMutatedFuelMap());
                         }
-                        Application.DoEvents();
+                        System.Windows.Forms.Application.DoEvents();
 
                     }
                     ctrlRealtime1.SetAutoTuneButtonText("Autotune fuel");
@@ -8968,7 +8971,7 @@ namespace T5Suite2
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             // check if symbol selected and which one
-            Point p = gridSymbols.PointToClient(Cursor.Position);
+            System.Drawing.Point p = gridSymbols.PointToClient(Cursor.Position);
             GridHitInfo hitinfo = gridViewSymbols.CalcHitInfo(p);
             int[] selectedrows = gridViewSymbols.GetSelectedRows();
             if (hitinfo.InRow)
@@ -9000,7 +9003,7 @@ namespace T5Suite2
 
         private void viewFromSRAMFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Point p = gridSymbols.PointToClient(Cursor.Position);
+            System.Drawing.Point p = gridSymbols.PointToClient(Cursor.Position);
             GridHitInfo hitinfo = gridViewSymbols.CalcHitInfo(p);
             int[] selectedrows = gridViewSymbols.GetSelectedRows();
             if (hitinfo.InRow)
@@ -9367,7 +9370,7 @@ namespace T5Suite2
                     frmMatrixResult result = new frmMatrixResult();
                     result.SetViewType(type); // <GS-31032011> 0 = mean values, 1 = minimum values, 2 = maximum values
                     // parse the file again and add the points
-                    DataTable dtresult = new DataTable();
+                    System.Data.DataTable dtresult = new System.Data.DataTable();
                     // xmin = -0.8
                     // xmin = 2.01
                     double[] x_values = new double[16];
@@ -9509,7 +9512,7 @@ namespace T5Suite2
             }
         }
 
-        private void StartResultViewerForMatrix(double[] xaxis, double[]yaxis, string xname, string yname, string zname, DataTable dtdata, byte[] data)
+        private void StartResultViewerForMatrix(double[] xaxis, double[]yaxis, string xname, string yname, string zname, System.Data.DataTable dtdata, byte[] data)
         {
             dockManager1.BeginUpdate();
             DockPanel dp = dockManager1.AddPanel(DockingStyle.Right);
@@ -9567,14 +9570,14 @@ namespace T5Suite2
             dockManager1.EndUpdate();
         }
 
-        DataTable avgTable;
+        System.Data.DataTable avgTable;
 
-        private void AddPointToDataTable(DataTable dt, double x, double y, double z, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int type)
+        private void AddPointToDataTable(System.Data.DataTable dt, double x, double y, double z, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, int type)
         {
             // table is 16x16
             if (avgTable == null)
             {
-                avgTable = new DataTable();
+                avgTable = new System.Data.DataTable();
                 // needs to init
                 for (int i = 0; i < 16; i++)
                 {
@@ -9694,7 +9697,7 @@ namespace T5Suite2
 
                 //if (props.IsTrionic55)
                 {
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                     //logger.Debug("Starting with " + outputfile);
                     //Process.Start(Application.StartupPath + "\\TextEditor.exe", "\"" + outputfile + "\"");
                     DockPanel panel = dockManager1.AddPanel(DockingStyle.Right);
@@ -9704,7 +9707,7 @@ namespace T5Suite2
                     disasmcontrol.Dock = DockStyle.Fill;
                     panel.Controls.Add(disasmcontrol);
                     panel.Text = "T5Suite 2.0 Disassembler";
-                    Application.DoEvents();
+                    System.Windows.Forms.Application.DoEvents();
                     disasmcontrol.DisassembleFile(outputfile);
                 }
 
@@ -9797,7 +9800,7 @@ namespace T5Suite2
         {
             // show the about screen
             frmAbout about = new frmAbout();
-            about.SetVersion(Application.ProductVersion.ToString());
+            about.SetVersion(System.Windows.Forms.Application.ProductVersion.ToString());
             about.ShowDialog();
         }
 
@@ -10079,7 +10082,7 @@ namespace T5Suite2
         {
             // only possible when ori file is present
             // get the partnumber from the file
-            CompareToFile(Application.StartupPath + "\\Binaries\\" + props.Partnumber + ".bin");
+            CompareToFile(System.Windows.Forms.Application.StartupPath + "\\Binaries\\" + props.Partnumber + ".bin");
         }
 
         private void gridViewSymbols_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
@@ -10299,7 +10302,7 @@ namespace T5Suite2
                 File.Copy(file2Process, tempRebuildFile);
                 // now do all the transactions newer than this file and older than the selected date time
                 IECUFile m_RebuildFile = new Trionic5File();
-                m_RebuildFile.LibraryPath = Application.StartupPath + "\\Binaries";
+                m_RebuildFile.LibraryPath = System.Windows.Forms.Application.StartupPath + "\\Binaries";
 
                 IECUFileInformation m_RebuildFileInformation = new Trionic5FileInformation();
                 
@@ -10367,7 +10370,7 @@ namespace T5Suite2
         private void EditProjectProperties(string project)
         {
             // edit current project properties
-            DataTable projectprops = new DataTable("T5PROJECT");
+            System.Data.DataTable projectprops = new System.Data.DataTable("T5PROJECT");
             projectprops.Columns.Add("CARMAKE");
             projectprops.Columns.Add("CARMODEL");
             projectprops.Columns.Add("CARMY");
@@ -10402,7 +10405,7 @@ namespace T5Suite2
                 }
                 // delete the original XML file
                 File.Delete(m_appSettings.ProjectFolder + "\\" + project + "\\projectproperties.xml");
-                DataTable dtProps = new DataTable("T5PROJECT");
+                System.Data.DataTable dtProps = new System.Data.DataTable("T5PROJECT");
                 dtProps.Columns.Add("CARMAKE");
                 dtProps.Columns.Add("CARMODEL");
                 dtProps.Columns.Add("CARMY");
@@ -10836,7 +10839,7 @@ namespace T5Suite2
             {
                 if (m_trionicFile.Exists())
                 {
-                    DataTable dtReport = m_trionicFile.CheckForAnomalies();
+                    System.Data.DataTable dtReport = m_trionicFile.CheckForAnomalies();
                     TuningReport tuningrep = new TuningReport();
                     tuningrep.ReportTitle = "Anomaly report";
                     tuningrep.SetDataSource(dtReport);
@@ -10953,7 +10956,7 @@ namespace T5Suite2
 
         private void HandleMenuItem(object sender, EventArgs e)
         {
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             if (sender is ToolStripMenuItem)
             {
                 ToolStripMenuItem tsmi = (ToolStripMenuItem)sender;
@@ -11051,7 +11054,7 @@ namespace T5Suite2
         {
             if (_ECUmode == OperationMode.ModeOnline)
             {
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
 
                 // write zeros to knock_count_cylx and knock_count_map
                 byte[] cleardata = new byte[m_trionicFileInformation.GetSymbolLength("Knock_count_map")];
@@ -11089,7 +11092,7 @@ namespace T5Suite2
 
         private void ShowFloatingLog(string filename)
         {
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             System.Drawing.Point p = this.PointToClient(new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 10, dockSymbols.Location.Y + 55));
             DevExpress.XtraBars.Docking.DockPanel dp = dockManager1.AddPanel(p);
             dp.MakeFloat(p);
@@ -11131,7 +11134,7 @@ namespace T5Suite2
                 if (m_trionicFile.Exists())
                 {
                     MapSensorType mapsensor = m_trionicFile.GetMapSensorType(true);
-                    DataTable dtReport = new DataTable();//m_trionicFile.CheckForAnomalies();
+                    System.Data.DataTable dtReport = new System.Data.DataTable();//m_trionicFile.CheckForAnomalies();
                     dtReport.Columns.Add("Description");
 
                     dtReport.Rows.Add("");
@@ -11448,7 +11451,7 @@ namespace T5Suite2
             //_error
             if (m_trionicFile != null && _ecuConnection.Opened)
             {
-                DataTable dt = new DataTable();
+                System.Data.DataTable dt = new System.Data.DataTable();
                 dt.Columns.Add("Symbol");
                 dt.Columns.Add("Value", Type.GetType("System.Int32"));
                 foreach (SymbolHelper sh in m_trionicFileInformation.SymbolCollection)
@@ -11479,7 +11482,7 @@ namespace T5Suite2
         void codes_onClearErrorCodes(object sender, EventArgs e)
         {
             // clear all DTC codes
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             byte[] zerobyte = new byte[1];
             zerobyte.SetValue((byte)0x00, 0);
             if (m_trionicFile != null)
@@ -11507,7 +11510,7 @@ namespace T5Suite2
                 frmDTCCodes codes = (frmDTCCodes)sender;
                 if (m_trionicFile != null && _ecuConnection.Opened)
                 {
-                    DataTable dt = new DataTable();
+                    System.Data.DataTable dt = new System.Data.DataTable();
                     dt.Columns.Add("Symbol");
                     dt.Columns.Add("Value", Type.GetType("System.Int32"));
                     foreach (SymbolHelper sh in m_trionicFileInformation.SymbolCollection)
@@ -12358,7 +12361,7 @@ namespace T5Suite2
             {
                 if (m_appSettings.PlayCellProcessedSound)
                 {
-                    string sound2play = Application.StartupPath + "\\ping.wav";
+                    string sound2play = System.Windows.Forms.Application.StartupPath + "\\ping.wav";
                     if (File.Exists(sound2play))
                     {
                         sndplayer.SoundLocation = sound2play;
@@ -12768,7 +12771,7 @@ namespace T5Suite2
 
         private void btnReleaseNotes_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StartReleaseNotesViewer(m_msiUpdater.GetReleaseNotes(), Application.ProductVersion.ToString());
+            StartReleaseNotesViewer(m_msiUpdater.GetReleaseNotes(), System.Windows.Forms.Application.ProductVersion.ToString());
         }
 
         private void btnHardcodedRPMLimit_ItemClick(object sender, ItemClickEventArgs e)
@@ -12973,6 +12976,286 @@ namespace T5Suite2
             {
                 IdaProIdcFile.create(m_appSettings.Lastfilename, m_trionicFileInformation, m_trionicFile);
             }
+        }
+
+        private void barExcelExport_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartExcelExport();
+        }
+
+        private void StartExcelExport()
+        {
+            if (gridViewSymbols.SelectedRowsCount > 0)
+            {
+                int[] selrows = gridViewSymbols.GetSelectedRows();
+                if (selrows.Length > 0)
+                {
+                    SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
+
+                    string Map_name = sh.SmartVarname;
+                    int columns = 8;
+                    int rows = 8;
+                    m_trionicFile.GetMapMatrixWitdhByName(Map_name, out columns, out rows);
+                    int address = (int)sh.Flash_start_address;
+                    if (address != 0)
+                    {
+                        while (address > m_trionicFileInformation.Filelength) address -= m_trionicFileInformation.Filelength;
+                        int length = sh.Length;
+                        byte[] mapdata = m_trionicFile.ReadData((uint)address, (uint)length);
+                        int[] xaxis = m_trionicFile.GetXaxisValues(m_trionicFileInformation.Filename, Map_name);
+                        int[] yaxis = m_trionicFile.GetYaxisValues(m_trionicFileInformation.Filename, Map_name);
+
+                        ExportToExcel(Map_name, address, length, mapdata, columns, rows, m_trionicFile.IsTableSixteenBits(Map_name), xaxis, yaxis);
+                    }
+                }
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("No symbol selected in the primary symbol list");
+            }
+        }
+
+        private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
+        {
+            CultureInfo saved = Thread.CurrentThread.CurrentCulture;
+            CultureInfo tci = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = tci;
+
+            try
+            {
+                bool isupsidedown = true;//GetMapUpsideDown(mapname);
+                try
+                {
+                    if (xla == null)
+                    {
+                        xla = new Microsoft.Office.Interop.Excel.Application();
+                    }
+                }
+                catch (Exception xlaE)
+                {
+                    frmInfoBox info = new frmInfoBox("Failed to create office application interface");
+                    logger.Debug(xlaE, "Failed to create office application interface");
+                }
+
+                // turn mapdata upside down
+                if (isupsidedown)
+                {
+                    mapdata = TurnMapUpsideDown(mapdata, cols, rows, isSixteenbit);
+                }
+
+                xla.Visible = true;
+                Microsoft.Office.Interop.Excel.Workbook wb = xla.Workbooks.Add(Microsoft.Office.Interop.Excel.XlSheetType.xlWorksheet);
+                Microsoft.Office.Interop.Excel.Worksheet ws = (Microsoft.Office.Interop.Excel.Worksheet)xla.ActiveSheet;
+                ws.Name = "symboldata";
+
+                // Now create the chart.
+                ChartObjects chartObjs = (ChartObjects)ws.ChartObjects(Type.Missing);
+                ChartObject chartObj = chartObjs.Add(100, 400, 400, 300);
+                Microsoft.Office.Interop.Excel.Chart xlChart = chartObj.Chart;
+
+                int nRows = rows;
+                if (isSixteenbit) nRows /= 2;
+                int nColumns = cols;
+                string upperLeftCell = "B3";
+                int endRowNumber = System.Int32.Parse(upperLeftCell.Substring(1)) + nRows - 1;
+                char endColumnLetter = System.Convert.ToChar(Convert.ToInt32(upperLeftCell[0]) + nColumns - 1);
+                string upperRightCell = System.String.Format("{0}{1}", endColumnLetter, System.Int32.Parse(upperLeftCell.Substring(1)));
+                string lowerRightCell = System.String.Format("{0}{1}", endColumnLetter, endRowNumber);
+
+                // Send single dimensional array to Excel:
+                Range rg1 = ws.get_Range("B2", "Z2");
+                double[] xarray = new double[nColumns];
+                double[] yarray = new double[nRows];
+                ws.Cells[1, 1] = "Data for " + mapname;
+
+                string xaxisdescr;
+                string yaxisdescr;
+                string zaxisdescr;
+                m_trionicFile.GetMapAxisDescriptions(mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
+                // alt1
+                //double xfactor = 1;
+                //double xoffset = 0;
+                //if (xaxisdescr == "MAP" || xaxisdescr == "Pressure error (bar)")
+                //{
+                //    xfactor = 0.01F;
+                //    xoffset = -1;
+                //}
+                
+                //alt2
+                SymbolAxesTranslator sat = new SymbolAxesTranslator();
+                string xaxissymbol = sat.GetXaxisSymbol(mapname);
+                double xfactor = m_trionicFile.GetCorrectionFactorForMap(xaxissymbol);
+                double xoffset = m_trionicFile.GetOffsetForMap(xaxissymbol);
+
+                for (int i = 0; i < xarray.Length; i++)
+                {
+                    if (xaxisvalues.Length > i)
+                    {
+                        double xvalue = ConvertSignedValue((int)xaxisvalues.GetValue(i));
+                        xvalue *= xfactor;
+                        xvalue += xoffset;
+                        xarray[i] = Math.Round(xvalue, 2);
+                    }
+                    else
+                    {
+                        xarray[i] = i;
+                    }
+                    ws.Cells[2, 2 + i] = xarray[i];
+                }
+                for (int i = 0; i < yarray.Length; i++)
+                {
+                    if (yaxisvalues.Length > i)
+                    {
+                        if (isupsidedown)
+                        {
+                            yarray[i] = ConvertSignedValue((int)yaxisvalues.GetValue((yarray.Length - 1) - i));
+                        }
+                        else
+                        {
+                            yarray[i] = ConvertSignedValue((int)yaxisvalues.GetValue(i));
+                        }
+                    }
+                    else
+                    {
+                        yarray[i] = i;
+                    }
+                    ws.Cells[i + 3, 1] = yarray[i];
+                }
+
+                double factor = m_trionicFile.GetCorrectionFactorForMap(mapname);
+                double offset = m_trionicFile.GetOffsetForMap(mapname);
+
+                Range rg = ws.get_Range(upperLeftCell, lowerRightCell);
+                rg.Value2 = AddData(nRows, nColumns, mapdata, isSixteenbit, factor, offset);
+
+                Range chartRange = ws.get_Range("A2", lowerRightCell);
+                xlChart.SetSourceData(chartRange, Type.Missing);
+                if (yarray.Length > 1 && xarray.Length > 1)
+                {
+                    xlChart.ChartType = XlChartType.xlSurface;
+                    xlChart.SurfaceGroup.Has3DShading = true;
+                }
+                xlChart.HasTitle = true;
+                xlChart.ChartTitle.Text = mapname;
+                xlChart.HasLegend = false;
+
+                // Customize axes:
+                Axis xAxis = (Axis)xlChart.Axes(XlAxisType.xlCategory, XlAxisGroup.xlPrimary);
+                xAxis.HasTitle = true;
+                xAxis.AxisTitle.Text = xaxisdescr;
+
+                if (yarray.Length > 1)
+                {
+                    try
+                    {
+                        Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
+                        yAxis.HasTitle = true;
+                        yAxis.AxisTitle.Text = yaxisdescr;
+                    }
+                    catch (Exception E)
+                    {
+                        logger.Debug(E, "Failed to set y axis");
+                    }
+                }
+
+                Axis zAxis = (Axis)xlChart.Axes(XlAxisType.xlValue, XlAxisGroup.xlPrimary);
+                zAxis.HasTitle = true;
+                zAxis.AxisTitle.Text = zaxisdescr;
+
+                try
+                {
+                    wb.SaveAs(m_trionicFileInformation.Filename + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
+                }
+                catch (Exception sE)
+                {
+                    logger.Debug("Failed to save workbook: " + sE.Message);
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to export to excel");
+            }
+            Thread.CurrentThread.CurrentCulture = saved;
+        }
+
+        private static double ConvertSignedValue(int values)
+        {
+            byte val1 = (byte)(values >> 8 & 0xff);
+            byte val2 = (byte)(values & 0xff);
+            return ConvertSignedValue(val1, val2);
+        }
+
+        private static double ConvertSignedValue(byte val1, byte val2)
+        {
+            bool convertSign = false;
+            if (val1 == 0xff)
+            {
+                val1 = 0;
+                val2 = (byte)(0x100 - val2);
+                convertSign = true;
+            }
+            int ival1 = Convert.ToInt32(val1);
+            int ival2 = Convert.ToInt32(val2);
+            double value = (ival1 * 256) + ival2;
+            if (convertSign)
+            {
+                value = -value;
+            }
+            return value;
+        }
+
+        private double[,] AddData(int nRows, int nColumns, byte[] mapdata, bool isSixteenbit, double factor, double offset)
+        {
+            double[,] dataArray = new double[nRows, nColumns];
+            double[] xarray = new double[nColumns];
+            for (int i = 0; i < xarray.Length; i++)
+            {
+                xarray[i] = -3.0f + i * 0.25f;
+            }
+            double[] yarray = xarray;
+
+            int mapindex = 0;
+            for (int i = 0; i < dataArray.GetLength(0); i++)
+            {
+                for (int j = 0; j < dataArray.GetLength(1); j++)
+                {
+                    if (isSixteenbit)
+                    {
+                        byte val1 = (byte)mapdata.GetValue(mapindex++);
+                        byte val2 = (byte)mapdata.GetValue(mapindex++);
+                        dataArray[i, j] = ConvertSignedValue(val1, val2);
+                    }
+                    else
+                    {
+                        byte val1 = (byte)mapdata.GetValue(mapindex++);
+                        int ival1 = Convert.ToInt32(val1);
+
+                        double value = ival1;
+                        
+                        value *= factor;
+                        value += offset;
+
+                        dataArray[i, j] = Math.Round(value, 2);
+                    }
+                }
+            }
+            return dataArray;
+        }
+
+        private byte[] TurnMapUpsideDown(byte[] mapdata, int numcolumns, int numrows, bool issixteenbit)
+        {
+            byte[] mapdatanew = new byte[mapdata.Length];
+            if (issixteenbit) numcolumns *= 2;
+            int internal_rows = mapdata.Length / numcolumns;
+            for (int tel = 0; tel < internal_rows; tel++)
+            {
+                for (int ctel = 0; ctel < numcolumns; ctel++)
+                {
+                    int orgoffset = (((internal_rows - 1) - tel) * numcolumns) + ctel;
+                    mapdatanew.SetValue(mapdata.GetValue(orgoffset), (tel * numcolumns) + ctel);
+                }
+            }
+            return mapdatanew;
         }
     }
 }

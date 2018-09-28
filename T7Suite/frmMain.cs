@@ -3238,7 +3238,6 @@ namespace T7
         private void ExportToExcel(string mapname, int address, int length, byte[] mapdata, int cols, int rows, bool isSixteenbit, int[] xaxisvalues, int[] yaxisvalues)
         {
             CultureInfo saved = Thread.CurrentThread.CurrentCulture;
-            //en-US
             CultureInfo tci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = tci;
 
@@ -3298,7 +3297,6 @@ namespace T7
                     {
                         xarray[i] = i;
                     }
-                    //ws.Cells[i + 3, 1] = xarray[i];
                     ws.Cells[2, 2 + i] = xarray[i];
                 }
                 for (int i = 0; i < yarray.Length; i++)
@@ -3319,7 +3317,6 @@ namespace T7
                         yarray[i] = i;
                     }
                     ws.Cells[i + 3, 1] = yarray[i];
-                    //ws.Cells[2, 2 + i] = yarray[i];
                 }
 
                 string xaxisdescr = "x-axis";
@@ -3426,18 +3423,7 @@ namespace T7
                     {
                         byte val1 = (byte)mapdata.GetValue(mapindex++);
                         byte val2 = (byte)mapdata.GetValue(mapindex++);
-                        bool convertSign = false;
-                        if (val1 == 0xff)
-                        {
-                            val1 = 0;
-                            val2 = (byte)(0x100 - val2);
-                            convertSign = true;
-                        }
-                        int ival1 = Convert.ToInt32(val1);
-                        int ival2 = Convert.ToInt32(val2);
-                        double value = (ival1 * 256) + ival2;
-                        if (convertSign) value = -value;
-                        dataArray[i, j] = value;
+                        dataArray[i, j] = ConvertSignedValue(val1, val2);
                     }
                     else
                     {
