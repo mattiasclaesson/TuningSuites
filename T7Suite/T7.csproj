@@ -378,12 +378,6 @@
     <Compile Include="frmSRAMSymbolHexView.Designer.cs">
       <DependentUpon>frmSRAMSymbolHexView.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSymbolSelect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSymbolSelect.designer.cs">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmSymbolSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -484,9 +478,6 @@
     <EmbeddedResource Include="frmSplash.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmSplash.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSymbolSelect.resx">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSymbolSelection.resx">
       <DependentUpon>frmSymbolSelection.cs</DependentUpon>

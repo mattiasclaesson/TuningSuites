@@ -233,12 +233,6 @@
     <Compile Include="frmMatrixSelection.Designer.cs">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSymbolSelect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSymbolSelect.Designer.cs">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmSymbolSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -422,10 +416,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatrixSelection.resx">
       <DependentUpon>frmMatrixSelection.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSymbolSelect.resx">
-      <DependentUpon>frmSymbolSelect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSymbolSelection.resx">

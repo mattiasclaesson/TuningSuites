@@ -3491,7 +3491,6 @@ namespace T7
             {
                 string strConnectionString = string.Empty;
                 strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
-                //MessageBox.Show(strConnectionString);
                 OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
                 cnCSV.Open();
                 OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [symboldata$]", cnCSV);
