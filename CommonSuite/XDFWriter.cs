@@ -64,7 +64,7 @@ namespace CommonSuite
         
     }
 
-    
+    // Support for Tuner Pro xdf files
     class XDFWriter
     {
         private StreamWriter sw;
