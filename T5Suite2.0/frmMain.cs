@@ -135,6 +135,7 @@ using NLog;
 using CommonSuite;
 using System.Globalization;
 using Microsoft.Office.Interop.Excel;
+using System.Data.OleDb;
 
 namespace T5Suite2
 {
@@ -12978,11 +12979,6 @@ namespace T5Suite2
             }
         }
 
-        private void barExcelExport_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            StartExcelExport();
-        }
-
         private void StartExcelExport()
         {
             if (gridViewSymbols.SelectedRowsCount > 0)
@@ -13072,16 +13068,7 @@ namespace T5Suite2
                 string yaxisdescr;
                 string zaxisdescr;
                 m_trionicFile.GetMapAxisDescriptions(mapname, out xaxisdescr, out yaxisdescr, out zaxisdescr);
-                // alt1
-                //double xfactor = 1;
-                //double xoffset = 0;
-                //if (xaxisdescr == "MAP" || xaxisdescr == "Pressure error (bar)")
-                //{
-                //    xfactor = 0.01F;
-                //    xoffset = -1;
-                //}
                 
-                //alt2
                 SymbolAxesTranslator sat = new SymbolAxesTranslator();
                 string xaxissymbol = sat.GetXaxisSymbol(mapname);
                 double xfactor = m_trionicFile.GetCorrectionFactorForMap(xaxissymbol);
@@ -13256,6 +13243,210 @@ namespace T5Suite2
                 }
             }
             return mapdatanew;
+        }
+
+        private System.Data.DataTable getDataFromXLS(string strFilePath)
+        {
+            try
+            {
+                string strConnectionString = string.Empty;
+                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
+                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
+                cnCSV.Open();
+                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [symboldata$]", cnCSV);
+                OleDbDataAdapter daCSV = new OleDbDataAdapter();
+                daCSV.SelectCommand = cmdSelect;
+                System.Data.DataTable dtCSV = new System.Data.DataTable();
+                daCSV.Fill(dtCSV);
+                cnCSV.Close();
+                daCSV = null;
+                return dtCSV;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
+                return null;
+            }
+            finally { }
+        }
+
+        private void ImportExcelSymbol(string symbolname, string filename)
+        {
+            bool issixteenbit = false;
+            System.Data.DataTable dt = getDataFromXLS(openFileDialog2.FileName);
+            if (m_trionicFile.IsTableSixteenBits(symbolname)) issixteenbit = true;
+            int symbollength = m_trionicFileInformation.GetSymbolLength(symbolname);
+            int datalength = symbollength;
+            if (issixteenbit) datalength /= 2;
+            int[] buffer = new int[datalength];
+            int bcount = 0;
+            for (int rtel = dt.Rows.Count; rtel >= 1; rtel--)
+            {
+                try
+                {
+                    int idx = 0;
+                    foreach (object o in dt.Rows[rtel].ItemArray)
+                    {
+                        if (idx > 0)
+                        {
+                            if (o != null)
+                            {
+                                if (o != DBNull.Value)
+                                {
+                                    if (bcount < buffer.Length)
+                                    {
+                                        buffer.SetValue(Convert.ToInt32(o), bcount++);
+                                    }
+                                    else
+                                    {
+                                        frmInfoBox info = new frmInfoBox("Too much information in file, abort");
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        idx++;
+                    }
+                }
+                catch (Exception E)
+                {
+                    logger.Debug("ImportExcelSymbol: " + E.Message);
+                }
+
+            }
+            if (bcount >= datalength)
+            {
+                byte[] data = new byte[symbollength];
+                int cellcount = 0;
+                if (issixteenbit)
+                {
+                    for (int dcnt = 0; dcnt < buffer.Length; dcnt++)
+                    {
+                        string bstr1 = "0";
+                        string bstr2 = "0";
+                        int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
+                        string svalue = cellvalue.ToString("X4");
+
+                        bstr1 = svalue.Substring(svalue.Length - 4, 2);
+                        bstr2 = svalue.Substring(svalue.Length - 2, 2);
+                        data.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
+                        data.SetValue(Convert.ToByte(bstr2, 16), cellcount++);
+                    }
+                }
+                else
+                {
+                    for (int dcnt = 0; dcnt < buffer.Length; dcnt++)
+                    {
+                        int cellvalue = Convert.ToInt32(buffer.GetValue(dcnt));
+                        data.SetValue(Convert.ToByte(cellvalue.ToString()), cellcount++);
+                    }
+                }
+                m_trionicFile.WriteData(data, (uint)m_trionicFileInformation.GetSymbolAddressFlash(symbolname));
+                m_trionicFile.UpdateChecksum();
+            }
+
+
+        }
+
+        private void ImportFileInExcelFormat()
+        {
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    string mapname = string.Empty;
+                    int tildeindex = openFileDialog2.FileName.LastIndexOf("~");
+                    bool symbolfound = false;
+                    if (tildeindex > 0)
+                    {
+                        tildeindex++;
+                        mapname = openFileDialog2.FileName.Substring(tildeindex, openFileDialog2.FileName.Length - tildeindex);
+                        mapname = mapname.Replace(".xls", "");
+                        mapname = mapname.Replace(".XLS", "");
+                        mapname = mapname.Replace(".Xls", "");
+                        // look if it is a valid symbolname
+                        foreach (SymbolHelper sh in m_trionicFileInformation.SymbolCollection)
+                        {
+                            if (sh.SmartVarname == mapname)
+                            {
+                                symbolfound = true;
+                                if (MessageBox.Show("Found valid symbol for import: " + mapname + ". Are you sure you want to overwrite the map in the binary?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                {
+                                    // ok, overwrite info in binary
+                                }
+                                else
+                                {
+                                    mapname = string.Empty; // do nothing
+                                }
+                            }
+                        }
+                        if (!symbolfound)
+                        {
+                            // ask user for symbol designation
+                            frmSymbolSelect frmselect = new frmSymbolSelect(m_trionicFileInformation.SymbolCollection);
+                            if (frmselect.ShowDialog() == DialogResult.OK)
+                            {
+                                mapname = frmselect.SelectedSymbol;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        // ask user for symbol designation
+                        frmSymbolSelect frmselect = new frmSymbolSelect(m_trionicFileInformation.SymbolCollection);
+                        if (frmselect.ShowDialog() == DialogResult.OK)
+                        {
+                            mapname = frmselect.SelectedSymbol;
+                        }
+
+                    }
+                    if (mapname != string.Empty)
+                    {
+                        ImportExcelSymbol(mapname, openFileDialog2.FileName);
+                    }
+
+                }
+                catch (Exception E)
+                {
+                    frmInfoBox info = new frmInfoBox("Failed to import map from excel: " + E.Message);
+                }
+            }
+        }
+
+        private System.Data.DataTable getDataFromXLSSymbolHelper(string strFilePath)
+        {
+            try
+            {
+                string strConnectionString = string.Empty;
+                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
+                OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
+                cnCSV.Open();
+                OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [Symbols$]", cnCSV);
+                OleDbDataAdapter daCSV = new OleDbDataAdapter();
+                daCSV.SelectCommand = cmdSelect;
+                System.Data.DataTable dtCSV = new System.Data.DataTable();
+                daCSV.Fill(dtCSV);
+                cnCSV.Close();
+                daCSV = null;
+                return dtCSV;
+            }
+            catch (Exception ex)
+            {
+                logger.Debug(ex.Message);
+                return null;
+            }
+            finally { }
+        }
+
+        private void barExcelExport_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartExcelExport();
+        }
+
+        private void barExcelImport_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ImportFileInExcelFormat();
         }
     }
 }
