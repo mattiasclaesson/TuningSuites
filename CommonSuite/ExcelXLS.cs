@@ -100,7 +100,7 @@ namespace CommonSuite
             try
             {
                 string strConnectionString = string.Empty;
-                strConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""";
+                strConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + strFilePath + @";Extended Properties=""Excel 12.0 Macro;HDR=Yes;""";
                 OleDbConnection cnCSV = new OleDbConnection(strConnectionString);
                 cnCSV.Open();
                 OleDbCommand cmdSelect = new OleDbCommand(@"SELECT * FROM [symboldata$]", cnCSV);
