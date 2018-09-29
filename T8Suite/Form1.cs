@@ -97,6 +97,7 @@ using CommonSuite;
 using System.Xml;
 using TrionicCANLib.Checksum;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace T8SuitePro
 {
@@ -4561,11 +4562,12 @@ namespace T8SuitePro
                 xAxis.HasTitle = true;
                 xAxis.AxisTitle.Text = xaxisdescr;
 
+                Axis yAxis = null;
                 if (yarray.Length > 1)
                 {
                     try
                     {
-                        Axis yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
+                        yAxis = (Axis)xlChart.Axes(XlAxisType.xlSeriesAxis, XlAxisGroup.xlPrimary);
                         yAxis.HasTitle = true;
                         yAxis.AxisTitle.Text = yaxisdescr;
                     }
@@ -4581,16 +4583,46 @@ namespace T8SuitePro
 
                 try
                 {
-                    wb.SaveAs(m_currentfile + "~" + mapname + ".xls", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
+                    string filename = m_currentfile + "~" + mapname + ".xls";
+                    if (File.Exists(filename))
+                    {
+                        File.Delete(filename);
+                    }
+                    xla.DisplayAlerts = false;
+                    wb.SaveCopyAs(filename);
+                    //wb.SaveAs(filename, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, null, null, false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, false, null, null, null, null);
                 }
                 catch (Exception sE)
                 {
-                    logger.Debug("Failed to save workbook: " + sE.Message);
+                    logger.Debug(sE, "Failed to save workbook");
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(xAxis);
+                    if (yAxis != null)
+                    {
+                        Marshal.ReleaseComObject(yAxis);
+                    }
+                    Marshal.ReleaseComObject(zAxis);
+                    Marshal.ReleaseComObject(chartObjs);
+                    Marshal.ReleaseComObject(chartObj);
+                    Marshal.ReleaseComObject(xlChart);
+                    Marshal.ReleaseComObject(rg1);
+                    Marshal.ReleaseComObject(rg);
+                    Marshal.ReleaseComObject(chartRange);
+                    Marshal.ReleaseComObject(ws);
+                    wb.Close();
+                    Marshal.ReleaseComObject(wb);
                 }
             }
             catch (Exception E)
             {
                 logger.Debug(E, "Failed to export to excel");
+            }
+            finally
+            {
+                xla.Quit();
+                Marshal.ReleaseComObject(xla);
             }
             Thread.CurrentThread.CurrentCulture = saved;
         }
