@@ -3364,7 +3364,7 @@ namespace T7
 
                 try
                 {
-                    string filename = m_trionicFileInformation.Filename + "~" + mapname + ".xls";
+                    string filename = m_currentfile + "~" + mapname + ".xls";
                     if (File.Exists(filename))
                     {
                         File.Delete(filename);

@@ -13,16 +13,17 @@ using System.Drawing.Drawing2D;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using System.Diagnostics;
 using Trionic5Tools;
+using CommonSuite;
+using NLog;
 using Nevron.GraphicsCore;
 using Nevron.Chart.WinForm;
 using Nevron.Chart;
-using CommonSuite;
 
 namespace Trionic5Controls
 {
     public partial class MapViewerEx : /*DevExpress.XtraEditors.XtraUserControl */ IMapViewer
     {
-
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private IECUFile m_trionic_file = new Trionic5File();
         private bool m_issixteenbit = false;
         private int m_TableWidth = 8;
@@ -40,22 +41,6 @@ namespace Trionic5Controls
         private ViewSize m_vs = ViewSize.NormalView;
         private bool m_OnlineMode = false;
         private bool m_OverlayVisible = true;
-        private bool m_autoUpdateChecksum = false;
-
-        public override event IMapViewer.ViewerClose onClose;
-        public override event IMapViewer.AxisEditorRequested onAxisEditorRequested;
-        public override event IMapViewer.ReadDataFromSRAM onReadFromSRAM;
-        public override event IMapViewer.WriteDataToSRAM onWriteToSRAM;
-        public override event IMapViewer.ViewTypeChanged onViewTypeChanged;
-        public override event IMapViewer.GraphSelectionChanged onGraphSelectionChanged;
-        public override event IMapViewer.SurfaceGraphViewChanged onSurfaceGraphViewChanged;
-        public override event IMapViewer.SurfaceGraphViewChangedEx onSurfaceGraphViewChangedEx;
-        public override event IMapViewer.NotifySaveSymbol onSymbolSave;
-        public override event IMapViewer.SplitterMoved onSplitterMoved;
-        public override event IMapViewer.SelectionChanged onSelectionChanged;
-        public override event IMapViewer.NotifyAxisLock onAxisLock;
-        public override event IMapViewer.NotifySliderMove onSliderMove;
-        public override event IMapViewer.CellLocked onCellLocked;
 
         private bool m_clearData = false;
 
@@ -65,33 +50,49 @@ namespace Trionic5Controls
             set { m_clearData = value; }
         }
 
-        public override bool AutoUpdateChecksum
-        {
-            get { return m_autoUpdateChecksum; }
-            set { m_autoUpdateChecksum = value; }
-        }
-
         public override bool OnlineMode
         {
             get { return m_OnlineMode; }
             set
             {
                 m_OnlineMode = value;
-                Console.WriteLine("RefreshMeshGraph on online mode");
+                logger.Debug("RefreshMeshGraph on online mode");
                 if (m_OnlineMode)
                 {
-                    //                    surfaceGraphViewer1.ShowinBlue = true;
-
                     RefreshMeshGraph();
                     UpdateChartControlSlice(GetDataFromGridView(false));
                     ShowTable(m_TableWidth, m_issixteenbit);
                 }
                 else
                 {
-                    //                    surfaceGraphViewer1.ShowinBlue = false;
                     RefreshMeshGraph();
                     UpdateChartControlSlice(GetDataFromGridView(false));
                     ShowTable(m_TableWidth, m_issixteenbit);
+                }
+            }
+        }
+
+        private bool _isCompareViewer = false;
+
+        public override bool IsCompareViewer
+        {
+            get { return _isCompareViewer; }
+            set
+            {
+                _isCompareViewer = value;
+                if (_isCompareViewer)
+                {
+                    gridView1.OptionsBehavior.Editable = false; // don't let the user edit a compare viewer
+                    toolStripButton3.Enabled = false;
+                    toolStripTextBox1.Enabled = false;
+                    toolStripComboBox1.Enabled = false;
+                    smoothSelectionToolStripMenuItem.Enabled = false;
+                    pasteSelectedCellsToolStripMenuItem.Enabled = false;
+                    exportMapToolStripMenuItem.Enabled = false;
+                    simpleButton2.Enabled = false;
+                    simpleButton3.Enabled = false;
+                    btnSaveToRAM.Enabled = false;
+                    btnReadFromRAM.Enabled = false;
                 }
             }
         }
@@ -100,7 +101,6 @@ namespace Trionic5Controls
         {
             gridControl1.DataSource = dt;
         }
-
 
         public override void SetViewSize(ViewSize vs)
         {
@@ -128,7 +128,6 @@ namespace Trionic5Controls
                 this.Font = new Font("Tahoma", 6);
                 gridView1.Appearance.Row.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
                 gridView1.Appearance.Row.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-                //                TryToLaunchInputScreen();
             }
         }
 
@@ -190,10 +189,9 @@ namespace Trionic5Controls
         }
 
         private string m_filename;
-        //private bool m_isHexMode = true;
         private bool m_isRedWhite = false;
         private int m_textheight = 12;
-        private string m_xformatstringforhex = "X4";
+        private string m_xformatstringforhex;
         private bool m_isDragging = false;
         private int _mouse_drag_x = 0;
         private int _mouse_drag_y = 0;
@@ -214,7 +212,7 @@ namespace Trionic5Controls
                     }
                     catch (Exception E)
                     {
-                        Console.WriteLine(E.Message);
+                        logger.Debug(E, "SliderPosition");
                     }
                 }
             }
@@ -251,23 +249,11 @@ namespace Trionic5Controls
         {
             get
             {
-                //_max_y_axis_value = ((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValueInternal;
-
                 return _max_y_axis_value;
             }
             set
             {
                 _max_y_axis_value = value;
-                /*if (_max_y_axis_value > 0)
-                {
-                    ((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValueInternal = (_max_y_axis_value + correction_offset) * correction_factor;
-                }
-                else 
-                {
-                    // set to autoscale
-                    ((XYDiagram)chartControl1.Diagram).AxisY.Range.Auto = true;
-                }*/
-                //surfaceGraphViewer1.
             }
         }
 
@@ -433,7 +419,6 @@ namespace Trionic5Controls
                 groupControl1.Text = "Symbol data [" + m_map_name + "]";
                 if (m_map_name == "TargetAFR" || m_map_name == "FeedbackAFR" || m_map_name == "FeedbackvsTargetAFR" || m_map_name == "IdleTargetAFR" || m_map_name == "IdleFeedbackAFR" || m_map_name == "IdleFeedbackvsTargetAFR" || m_map_name == "IgnitionLockMap")
                 {
-                    //surfaceGraphViewer1.ShowinBlue = true;
                     m_OnlineMode = true;
                 }
             }
@@ -498,145 +483,44 @@ namespace Trionic5Controls
             set { y_axisvalues = value; }
         }
 
-        private bool _isCompareViewer = false;
+        public override event IMapViewer.ViewerClose onClose;
+        public override event IMapViewer.AxisEditorRequested onAxisEditorRequested;
+        public override event IMapViewer.ReadDataFromSRAM onReadFromSRAM;
+        public override event IMapViewer.WriteDataToSRAM onWriteToSRAM;
+        public override event IMapViewer.ViewTypeChanged onViewTypeChanged;
+        public override event IMapViewer.GraphSelectionChanged onGraphSelectionChanged;
+        public override event IMapViewer.SurfaceGraphViewChanged onSurfaceGraphViewChanged;
+        public override event IMapViewer.SurfaceGraphViewChangedEx onSurfaceGraphViewChangedEx;
+        public override event IMapViewer.NotifySaveSymbol onSymbolSave;
+        public override event IMapViewer.SplitterMoved onSplitterMoved;
+        public override event IMapViewer.SelectionChanged onSelectionChanged;
+        public override event IMapViewer.NotifyAxisLock onAxisLock;
+        public override event IMapViewer.NotifySliderMove onSliderMove;
+        public override event IMapViewer.CellLocked onCellLocked;
 
-        public override bool IsCompareViewer
+        private bool m_autoUpdateChecksum = false;
+        public override bool AutoUpdateChecksum
         {
-            get { return _isCompareViewer; }
-            set
-            {
-                _isCompareViewer = value;
-                if (_isCompareViewer)
-                {
-                    gridView1.OptionsBehavior.Editable = false; // don't let the user edit a compare viewer
-                    toolStripButton3.Enabled = false;
-                    toolStripTextBox1.Enabled = false;
-                    toolStripComboBox1.Enabled = false;
-                    smoothSelectionToolStripMenuItem.Enabled = false;
-                    pasteSelectedCellsToolStripMenuItem.Enabled = false;
-                    exportMapToolStripMenuItem.Enabled = false;
-                    simpleButton2.Enabled = false;
-                    simpleButton3.Enabled = false;
-                    btnSaveToRAM.Enabled = false;
-                    btnReadFromRAM.Enabled = false;
-                }
-            }
+            get { return m_autoUpdateChecksum; }
+            set { m_autoUpdateChecksum = value; }
         }
-
-        /*public delegate void AxisEditorRequested(object sender, AxisEditorRequestedEventArgs e);
-        public event MapViewerEx.AxisEditorRequested onAxisEditorRequested;
-
-        public delegate void ReadDataFromSRAM(object sender, ReadFromSRAMEventArgs e);
-        public event MapViewerEx.ReadDataFromSRAM onReadFromSRAM;
-        public delegate void WriteDataToSRAM(object sender, WriteToSRAMEventArgs e);
-        public event MapViewerEx.WriteDataToSRAM onWriteToSRAM;
-
-        public delegate void ViewTypeChanged(object sender, ViewTypeChangedEventArgs e);
-        public event MapViewerEx.ViewTypeChanged onViewTypeChanged;
-
-
-        public delegate void GraphSelectionChanged(object sender, GraphSelectionChangedEventArgs e);
-        public event MapViewerEx.GraphSelectionChanged onGraphSelectionChanged;
-
-        public delegate void SurfaceGraphViewChanged(object sender, SurfaceGraphViewChangedEventArgs e);
-        public event MapViewerEx.SurfaceGraphViewChanged onSurfaceGraphViewChanged;
-
-        public delegate void NotifySaveSymbol(object sender, SaveSymbolEventArgs e);
-        public event MapViewerEx.NotifySaveSymbol onSymbolSave;
-
-        public delegate void SplitterMoved(object sender, SplitterMovedEventArgs e);
-        public event MapViewerEx.SplitterMoved onSplitterMoved;
-
-        public delegate void SelectionChanged(object sender, CellSelectionChangedEventArgs e);
-        public event MapViewerEx.SelectionChanged onSelectionChanged;
-
-        public delegate void NotifyAxisLock(object sender, AxisLockEventArgs e);
-        public event MapViewerEx.NotifyAxisLock onAxisLock;
-
-        public delegate void NotifySliderMove(object sender, SliderMoveEventArgs e);
-        public event MapViewerEx.NotifySliderMove onSliderMove;
-
-
-        
-        public delegate void ViewerClose(object sender, EventArgs e);
-        public event MapViewerEx.ViewerClose onClose;
-        */
-        private void AddLogItem(string item)
-        {
-            /*using (StreamWriter sw = new StreamWriter(System.Windows.Forms.Application.StartupPath + "\\MapViewerEx.log", true))
-            {
-                sw.WriteLine(item);
-            }*/
-        }
-
-
 
         public MapViewerEx()
         {
             try
             {
-                //AddLogItem("Starting mapviewerEx initialization");
+                logger.Debug("Starting MapViewerEx initialization");
                 InitializeComponent();
-                //AddLogItem("MapviewerEx components initialized");
-                //surfaceGraphViewer1.onGraphChanged += new SurfaceGraphViewer.GraphChangedEvent(surfaceGraphViewer1_onGraphChanged);
-                //AddLogItem("Eventhandler attached to surfacegraphviewer");
-
                 toolStripComboBox1.SelectedIndex = 0;
                 toolStripComboBox2.SelectedIndex = 0;
-                //AddLogItem("Selected indices set for comboboxes");
-                //string[] datamembers = new string[1];
-                //AddLogItem("Clearing valuedatamembers for chartcontrol");
-                //chartControl1.Series[0].ValueDataMembers.Clear();
-                //AddLogItem("Setting first datamember to 0");
-                //datamembers.SetValue("Y", 0);
-                //AddLogItem("Setting datamembers as valuedatamembers in chartcontrol");
-                //chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
-                //AddLogItem("Finished constructor of mapviewerEx");
-                //Try to init the chart!!!
                 nChartControl1.MouseWheel += new MouseEventHandler(nChartControl1_MouseWheel);
                 nChartControl1.MouseDown +=new MouseEventHandler(nChartControl1_MouseDown);
                 nChartControl1.MouseUp += new MouseEventHandler(nChartControl1_MouseUp);
-                /*if (dragTool != null)
-                {
-                    dragTool.Drag -= new EventHandler(OnViewChange);
-                    dragTool = null;
-                }
-
-                nChartControl1.Controller.Tools.Clear();
-
-                switch (DragModeComboBox.SelectedIndex)
-                {
-                    // Trackball
-                    case 1:
-                        dragTool = new NTrackballTool();
-                        break;
-                    // Zoom 
-                    case 2:
-                        dragTool = new NZoomTool();
-                        break;
-                    // Offset
-                    case 3:
-                        dragTool = new NOffsetTool();
-                        break;
-                }
-
-                if (dragTool != null)
-                {
-                    dragTool.Drag += new EventHandler(OnViewChange);
-                    nChartControl1.Controller.Tools.Add(dragTool);
-                }
-                */
-                /*nChartControl1.MouseDown += new MouseEventHandler(nChartControl1_MouseDown);
-
-                nChartControl1.MouseMove += new MouseEventHandler(nChartControl1_MouseMove);*/
-
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E, "MapViewerEx init");
             }
-            /*            chartControl1.Series[0].ArgumentDataMember = "X";*/
-
         }
 
         void nChartControl1_MouseUp(object sender, MouseEventArgs e)
@@ -648,10 +532,7 @@ namespace Trionic5Controls
                 dragTool = new NTrackballTool();
                 nChartControl1.Controller.Tools.Add(dragTool);
             }
-            //<GS-07062010>
             CastSurfaceGraphChangedEventEx(nChartControl1.Charts[0].Projection.XDepth, nChartControl1.Charts[0].Projection.YDepth, nChartControl1.Charts[0].Projection.Zoom, nChartControl1.Charts[0].Projection.Rotation, nChartControl1.Charts[0].Projection.Elevation);
-
-
         }
 
         
@@ -668,8 +549,6 @@ namespace Trionic5Controls
                 NDragTool dragTool = null;
                 dragTool = new NOffsetTool();
                 nChartControl1.Controller.Tools.Add(dragTool);
-                //dragTool.BeginDragMouseCommand.MouseButton = MouseButtons.Right;
-                //dragTool.EndDragMouseCommand.MouseButton = MouseButtons.Right;
             }
 
         }
@@ -687,7 +566,6 @@ namespace Trionic5Controls
                 nChartControl1.Charts[0].Projection.Zoom -= 5;
                 nChartControl1.Refresh();
             }
-            //<GS-07062010>
             CastSurfaceGraphChangedEventEx(nChartControl1.Charts[0].Projection.XDepth, nChartControl1.Charts[0].Projection.YDepth, nChartControl1.Charts[0].Projection.Zoom, nChartControl1.Charts[0].Projection.Rotation, nChartControl1.Charts[0].Projection.Elevation);
         }
 
@@ -750,7 +628,6 @@ namespace Trionic5Controls
             else if (symbolname.StartsWith("Shift_up_load_hyst!")) retval = true;
             else if (symbolname.StartsWith("Fload_tab!")) retval = true;
 
-
             return retval;
         }
 
@@ -759,7 +636,6 @@ namespace Trionic5Controls
             double m_realValue;
             btnReadFromRAM.Enabled = true;
             m_MaxValueInTable = 0;
-            //if (m_isHexMode)
             if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 int lenvals = m_map_length;
@@ -783,8 +659,6 @@ namespace Trionic5Controls
                     int numberrows = (int)(m_map_length / tablewidth);
                     if (issixteenbits) numberrows /= 2;
                     int map_offset = 0;
-                    /* if (numberrows > 0)
-                     {*/
                     // aantal kolommen = 8
 
                     dt.Columns.Clear();
@@ -798,8 +672,6 @@ namespace Trionic5Controls
 
                         for (int i = 0; i < numberrows; i++)
                         {
-                            //ListViewItem lvi = new ListViewItem();
-                            //lvi.UseItemStyleForSubItems = false;
                             object[] objarr = new object[tablewidth];
                             int b;
                             for (int j = 0; j < tablewidth; j++)
@@ -809,11 +681,10 @@ namespace Trionic5Controls
                                 b += (byte)m_map_content.GetValue(map_offset++);
                                 if (b > 32000)
                                 {
-                                    // b ^= 0xFFFF;
                                     b = 65536 - b;
                                     b = -b;
                                 }
-                                if (/*m_map_name == "TargetAFR" || m_map_name == "FeedbackAFR" || */ m_map_name == "FeedbackvsTargetAFR" || m_map_name == "IdleFeedbackvsTargetAFR")
+                                if (m_map_name == "FeedbackvsTargetAFR" || m_map_name == "IdleFeedbackvsTargetAFR")
                                 {
                                     if (b > 200)
                                     {
@@ -851,15 +722,6 @@ namespace Trionic5Controls
                                 }
                                 if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                 {
-                                    // correct with 1.6
-                                    if (MapIsScalableFor3Bar(m_map_name))
-                                    {
-                                        b *= 200;
-                                        b /= 100;
-                                    }
-                                }
-                                if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
-                                {
                                     // correct with 2.0
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
@@ -876,18 +738,12 @@ namespace Trionic5Controls
                                 if (!_isCompareViewer) m_realValue += correction_offset;
                                 if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                 if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
-                                // TEST
-                                //b = (int)(correction_factor * (double)b);
-                                //b = (int)(correction_offset + (double)b);
-                                // TEST
-                                //if (m_isHexMode)
                                 if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X4"), j);
                                 }
                                 else if (m_viewtype == SuiteViewType.ASCII)
                                 {
-                                    //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
                                     try
                                     {
@@ -903,10 +759,7 @@ namespace Trionic5Controls
                                 {
                                     objarr.SetValue(b.ToString(), j);
                                 }
-                                //lvi.SubItems.Add(b.ToString("X4"));
-                                //lvi.SubItems[j + 1].BackColor = Color.FromArgb((int)(b / 256), 255 - (int)(b / 256), 0);
                             }
-                            //listView2.Items.Add(lvi);
                             if (m_isUpsideDown)
                             {
                                 System.Data.DataRow r = dt.NewRow();
@@ -918,7 +771,7 @@ namespace Trionic5Controls
                                 dt.Rows.Add(objarr);
                             }
                         }
-                        // en dan het restant nog in een nieuwe rij zetten
+                        // and then put the remainder in a new row. is this really used?
                         if (map_offset < m_map_length)
                         {
                             object[] objarr = new object[tablewidth];
@@ -926,7 +779,6 @@ namespace Trionic5Controls
                             int sicnt = 0;
                             for (int v = map_offset; v < m_map_length - 1; v++)
                             {
-                                //b = (byte)m_map_content.GetValue(map_offset++);
                                 if (map_offset <= m_map_content.Length - 1)
                                 {
                                     b = (byte)m_map_content.GetValue(map_offset++);
@@ -934,7 +786,6 @@ namespace Trionic5Controls
                                     b += (byte)m_map_content.GetValue(map_offset++);
                                     if (b > 32000)
                                     {
-                                        //b ^= 0xFFFF;
                                         b = 65536 - b;
 
                                         b = -b;
@@ -968,15 +819,6 @@ namespace Trionic5Controls
                                     }
                                     if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                     {
-                                        // correct with 1.6
-                                        if (MapIsScalableFor3Bar(m_map_name))
-                                        {
-                                            b *= 200;
-                                            b /= 100;
-                                        }
-                                    }
-                                    if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
-                                    {
                                         // correct with 2.0
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
@@ -985,25 +827,19 @@ namespace Trionic5Controls
                                         }
                                     }
                                     if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                    // TEST
-                                    //b = (int)(correction_factor * (double)b);
-                                    //b = (int)(correction_offset + (double)b);
-
-                                    // TEST
                                     m_realValue = b;
                                     m_realValue *= correction_factor;
                                     if (!_isCompareViewer) m_realValue += correction_offset;
                                     if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                     if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
 
-                                    //                                    if (m_isHexMode)
+
                                     if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
                                     }
                                     else if (m_viewtype == SuiteViewType.ASCII)
                                     {
-                                        //objarr.SetValue(b.ToString("X4"), j);
                                         // show as ascii characters
                                         objarr.SetValue(Convert.ToChar(b), sicnt);
                                     }
@@ -1013,13 +849,7 @@ namespace Trionic5Controls
                                     }
                                 }
                                 sicnt++;
-                                //lvi.SubItems[lvi.SubItems.Count - 1].BackColor = Color.FromArgb((int)(b / 256), 255 - (int)(b / 256), 0);
                             }
-                            /*for (int t = 0; t < (tablewidth - 1) - sicnt; t++)
-                            {
-                                lvi.SubItems.Add("");
-                            }*/
-                            //listView2.Items.Add(lvi);
                             if (m_isUpsideDown)
                             {
                                 System.Data.DataRow r = dt.NewRow();
@@ -1044,6 +874,16 @@ namespace Trionic5Controls
                             for (int j = 0; j < (tablewidth); j++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
+
+                                if (m_map_name == "I_kyl_st!" || m_map_name == "I_luft_st!" || m_map_name == "Last_temp_st!")
+                                {
+                                    if (b > 128)
+                                    {
+                                        b = 256 - b;
+                                        b = -b;
+                                    }
+                                }
+
                                 if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
                                 {
                                     // correct with 1.2
@@ -1073,15 +913,6 @@ namespace Trionic5Controls
                                 }
                                 else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
                                 {
-                                    // correct with 1.6
-                                    if (MapIsScalableFor3Bar(m_map_name))
-                                    {
-                                        b *= 200;
-                                        b /= 100;
-                                    }
-                                }
-                                else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
-                                {
                                     // correct with 2.0
                                     if (MapIsScalableFor3Bar(m_map_name))
                                     {
@@ -1090,27 +921,28 @@ namespace Trionic5Controls
                                     }
                                 }
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                // TEST
-                                //b = (byte)(correction_factor * (double)b);
-                                //b = (byte)(correction_offset + (double)b);
                                 m_realValue = b;
                                 m_realValue *= correction_factor;
                                 if (!_isCompareViewer) m_realValue += correction_offset;
                                 if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                 if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
 
-                                // TEST
 
-                                //if (m_isHexMode)
                                 if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), j);
                                 }
                                 else if (m_viewtype == SuiteViewType.ASCII)
                                 {
-                                    //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
-                                    objarr.SetValue(Convert.ToChar(b), j);
+                                    try
+                                    {
+                                        objarr.SetValue(Convert.ToChar(b), j);
+                                    }
+                                    catch (Exception E)
+                                    {
+                                        logger.Debug(E, "ASCII");
+                                    }
                                 }
                                 else
                                 {
@@ -1129,13 +961,13 @@ namespace Trionic5Controls
                                 dt.Rows.Add(objarr);
                             }
                         }
-                        // en dan het restant nog in een nieuwe rij zetten
+                        // and then put the remainder in a new row. is this really used?
                         if (map_offset < m_map_length)
                         {
                             object[] objarr = new object[tablewidth];
                             byte b;
                             int sicnt = 0;
-                            for (int v = map_offset; v < m_map_length /*- 1*/; v++)
+                            for (int v = map_offset; v < m_map_length; v++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
                                 if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
@@ -1175,25 +1007,19 @@ namespace Trionic5Controls
                                     }
                                 }
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                // TEST
-                                //b = (byte)(correction_factor * (double)b);
-                                //b = (byte)(correction_offset + (double)b);
+
                                 m_realValue = b;
                                 m_realValue *= correction_factor;
                                 if (!_isCompareViewer) m_realValue += correction_offset;
                                 if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                 if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
 
-                                // TEST
-
-                                //if (m_isHexMode)
                                 if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), sicnt);
                                 }
                                 else if (m_viewtype == SuiteViewType.ASCII)
                                 {
-                                    //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
                                     objarr.SetValue(Convert.ToChar(b), sicnt);
                                 }
@@ -1228,162 +1054,23 @@ namespace Trionic5Controls
                     }
                 }
 
-
-                // set axis
-                // scale to 3 bar?
-                int indicatorwidth = -1;
-                for (int i = 0; i < y_axisvalues.Length; i++)
-                {
-                    string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
-                    if (m_viewtype == SuiteViewType.Hexadecimal)
-                    {
-                        yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
-                    }
-                    if (m_y_axis_name == "MAP")
-                    {
-                        if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
-                        {
-                            int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
-                            tempval *= 120;
-                            tempval /= 100;
-                            //                                y_axisvalues.SetValue(tempval, i);
-                            yval = tempval.ToString("X4");
-                        }
-                        else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
-                        {
-                            int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
-                            tempval *= 140;
-                            tempval /= 100;
-                            //                                y_axisvalues.SetValue(tempval, i);
-                            yval = tempval.ToString("X4");
-                        }
-                        else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
-                        {
-                            int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
-                            tempval *= 160;
-                            tempval /= 100;
-                            //                                y_axisvalues.SetValue(tempval, i);
-                            yval = tempval.ToString("X4");
-                        }
-                        else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
-                        {
-                            int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
-                            tempval *= 200;
-                            tempval /= 100;
-                            //                                y_axisvalues.SetValue(tempval, i);
-                            yval = tempval.ToString("X4");
-                        }
-                    }
-
-                    Graphics g = gridControl1.CreateGraphics();
-                    SizeF size = g.MeasureString(yval, this.Font);
-                    if (size.Width > indicatorwidth) indicatorwidth = (int)size.Width;
-                    m_textheight = (int)size.Height;
-                    g.Dispose();
-
-                }
+                SizeF size = MaximumYAxisSize();
+                m_textheight = (int)size.Height;
+                int indicatorwidth = (int)size.Width;
                 if (indicatorwidth > 0)
                 {
                     gridView1.IndicatorWidth = indicatorwidth + 6; // keep margin
                 }
 
-                int maxxval = 0;
-                for (int i = 0; i < x_axisvalues.Length; i++)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
-                    int xval = Convert.ToInt32(x_axisvalues.GetValue(i));
-
-                    if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
-                    {
-                        if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
-                        {
-                            int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
-                            tempval *= 120;
-                            tempval /= 100;
-                            //x_axisvalues.SetValue(tempval, i);
-                            xval = tempval;
-                        }
-                        else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
-                        {
-                            int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
-                            tempval *= 140;
-                            tempval /= 100;
-                            //x_axisvalues.SetValue(tempval, i);
-                            xval = tempval;
-                        }
-                        else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
-                        {
-                            int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
-                            tempval *= 160;
-                            tempval /= 100;
-                            //x_axisvalues.SetValue(tempval, i);
-                            xval = tempval;
-                        }
-                        else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
-                        {
-                            int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
-                            tempval *= 200;
-                            tempval /= 100;
-                            xval = tempval;
-                        }
-
-                    }
-
-                    if (xval > maxxval) maxxval = xval;
+                    m_xformatstringforhex = HexadecimalFormatXAxis();
                 }
-                if (maxxval <= 255) m_xformatstringforhex = "X2";
             }
-
-            /*surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-            surfaceGraphViewer1.Map_name = m_map_name;
-            surfaceGraphViewer1.X_axis = x_axisvalues;
-            surfaceGraphViewer1.Y_axis = y_axisvalues;
-            surfaceGraphViewer1.X_axis_descr = X_axis_name;
-            surfaceGraphViewer1.Y_axis_descr = Y_axis_name;
-            surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
-            surfaceGraphViewer1.Map_length = m_map_length;
-            surfaceGraphViewer1.Map_content = m_map_content;
-
-            surfaceGraphViewer1.Map_original_content = m_map_original_content;
-            surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
-
-            surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
-            surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-            surfaceGraphViewer1.Pov_d = 0.3;
-            SetViewTypeParams(m_vs);
-            
-            surfaceGraphViewer1.IsUpsideDown = true;
-            surfaceGraphViewer1.NormalizeData();
-            XYDiagram diag = ((XYDiagram)chartControl1.Diagram);
-            diag.AxisX.Title.Text = Y_axis_name;
-            diag.AxisY.Title.Text = Z_axis_name;
-            diag.AxisX.Title.Visible = true;
-            diag.AxisY.Title.Visible = true;
-
-            chartControl1.Visible = true;*/
 
             if (m_TableWidth > 1)
             {
                 xtraTabControl1.SelectedTabPage = xtraTabPage1;
-                //surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-                //surfaceGraphViewer1.Map_name = m_map_name;
-                //surfaceGraphViewer1.X_axis = x_axisvalues;
-                //surfaceGraphViewer1.Y_axis = y_axisvalues;
-                //surfaceGraphViewer1.X_axis_descr = X_axis_name;
-                //surfaceGraphViewer1.Y_axis_descr = Y_axis_name;
-                //surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
-                //surfaceGraphViewer1.Map_length = m_map_length;
-                //surfaceGraphViewer1.Map_content = m_map_content;
-
-                //surfaceGraphViewer1.Map_original_content = m_map_original_content;
-                //surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
-
-                //surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
-                //surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-                //surfaceGraphViewer1.Pov_d = 0.3;
-                SetViewTypeParams(m_vs);
-                //surfaceGraphViewer1.IsUpsideDown = true;
-
-                //surfaceGraphViewer1.NormalizeData();
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = x_axisvalues.Length - 1;
                 labelControl8.Text = X_axis_name + " values";
@@ -1647,35 +1334,9 @@ namespace Trionic5Controls
             else if (m_TableWidth == 1)
             {
                 xtraTabControl1.SelectedTabPage = xtraTabPage2;
-                //surfaceGraphViewer1.Visible = false;
-                //chartControl1.;
-                /*** test ***/
-                //surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-                //surfaceGraphViewer1.Map_name = m_map_name;
-                //surfaceGraphViewer1.X_axis = x_axisvalues;
-                //surfaceGraphViewer1.Y_axis = y_axisvalues;
-                //surfaceGraphViewer1.X_axis_descr = X_axis_name;
-                //surfaceGraphViewer1.Y_axis_descr = Y_axis_name;
-                //surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
-                //surfaceGraphViewer1.Map_length = m_map_length;
-                //surfaceGraphViewer1.Map_content = m_map_content;
-
-                //surfaceGraphViewer1.Map_original_content = m_map_original_content;
-                //surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
-
-                //surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
-                //surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-                //surfaceGraphViewer1.Pov_d = 0.3;
-                SetViewTypeParams(m_vs);
-                //surfaceGraphViewer1.IsUpsideDown = true;
-                //surfaceGraphViewer1.NormalizeData();
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = x_axisvalues.Length - 1;
                 labelControl8.Text = X_axis_name + " values";
-
-                /*** end test ***/
-
-
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = 0;
                 trackBarControl1.Enabled = false;
@@ -1765,21 +1426,9 @@ namespace Trionic5Controls
                         valcount++;
                     }
                 }
-                //chartControl1.Series[0].Label.Text = m_map_name;
-                /*chartControl1.Series[0].LegendText = m_map_name;
-                chartControl1.DataSource = chartdt;
-                string[] datamembers = new string[1];
-                chartControl1.Series[0].ValueDataMembers.Clear();
-                datamembers.SetValue("Y", 0);
-                chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
-                chartControl1.Series[0].ArgumentDataMember = "X";
-                chartControl1.Visible = true;*/
-
-
             }
-            // <GS-09032010> nieuw voor 2d nevron chart
             Init2dChart();
-            UpdateChartControlSlice(GetDataFromGridView(false)); //<GS-26102010>
+            UpdateChartControlSlice(GetDataFromGridView(false));
             m_trackbarBlocked = false;
 
         }
@@ -2042,23 +1691,6 @@ namespace Trionic5Controls
             }
         }
 
-        private void SetViewTypeParams(ViewSize vs)
-        {
-            if (vs == ViewSize.ExtraSmallView)
-            {
-                //surfaceGraphViewer1.Pov_d = 0.18;
-                //surfaceGraphViewer1.Pan_y = 20;
-                //surfaceGraphViewer1.Pan_x = 20;
-            }
-            else if (vs == ViewSize.SmallView)
-            {
-                //surfaceGraphViewer1.Pov_d = 0.25;
-                //surfaceGraphViewer1.Pan_y = 20;
-                //surfaceGraphViewer1.Pan_x = 20;
-            }
-
-        }
-
         private void UpdateChartControlSlice(byte[] data)
         {
 
@@ -2317,7 +1949,6 @@ namespace Trionic5Controls
                     value *= 1.6F;
                     value *= correction_factor;
                     value += correction_offset;
-
                 }
                 else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
                 {
@@ -2326,10 +1957,114 @@ namespace Trionic5Controls
                     value *= 2.0F;
                     value *= correction_factor;
                     value += correction_offset;
-
                 }
             }
             return value;
+        }
+
+		private SizeF MaximumYAxisSize()
+        {
+            SizeF result = new SizeF(0,0);
+            for (int i = 0; i < y_axisvalues.Length; i++)
+            {
+                string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
+                if (m_viewtype == SuiteViewType.Hexadecimal)
+                {
+                    yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
+                }
+                if (m_y_axis_name == "MAP")
+                {
+                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 120;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 140;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 160;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 200;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                }
+
+                Graphics g = gridControl1.CreateGraphics();
+                SizeF size = g.MeasureString(yval, this.Font);
+                g.Dispose();
+                if (size.Width > result.Width)
+                {
+                    result = size;
+                }
+            }
+            return result;
+        }
+
+        private string HexadecimalFormatXAxis()
+        {
+            string result = "X4";
+            int maxxval = 0;
+            for (int i = 0; i < x_axisvalues.Length; i++)
+            {
+                int xval = Convert.ToInt32(x_axisvalues.GetValue(i));
+
+                if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
+                {
+                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 120;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 140;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 160;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 200;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                }
+
+                if (xval > maxxval)
+                {
+                    maxxval = xval;
+                }
+            }
+            if (maxxval <= 255)
+            {
+                result = "X2";
+            }
+            return result;
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -2405,6 +2140,7 @@ namespace Trionic5Controls
                 _boostadaptrpmupto = value;
             }
         }
+
         int _knockadaptrpmfrom = 0;
 
         public override int KnockAdaptionRpmFrom
@@ -2532,7 +2268,6 @@ namespace Trionic5Controls
             }
         }
 
-
         private void gridView1_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
         {
             //  if mapname is Insp_mat or Fuel_knock_map indicate open/closed loop operation
@@ -2547,7 +2282,6 @@ namespace Trionic5Controls
                     {
                         int b = 0;
                         int cellvalue = 0;
-                        //if (m_isHexMode)
                         if (m_viewtype == SuiteViewType.ASCII) return;
 
                         if (m_viewtype == SuiteViewType.Hexadecimal)
@@ -2579,8 +2313,6 @@ namespace Trionic5Controls
                             green = 255 - red;
                             blue = 255 - red;
                             c = Color.FromArgb(red, green, blue);
-                            // if (b == 0) c = Color.Transparent;
-
                         }
                         else if (!m_isRedWhite)
                         {
@@ -2619,7 +2351,6 @@ namespace Trionic5Controls
                                     pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y), 3);
                                     e.Graphics.FillPolygon(Brushes.Yellow, pnts, System.Drawing.Drawing2D.FillMode.Winding);
                                 }
-
                             }
                             if (m_values_changed_highlight_ecu != null)
                             {
@@ -2650,16 +2381,10 @@ namespace Trionic5Controls
                                 if (_isCompareViewer) dispvalue = (float)((float)cellvalue * (float)correction_factor);
                                 else dispvalue = (float)((float)cellvalue * (float)correction_factor) + (float)correction_offset;
                                 if (m_viewtype != SuiteViewType.Hexadecimal)
-                                //if (!m_isHexMode)
                                 {
                                     if (m_map_name.StartsWith("Ign_map_0!") || m_map_name.StartsWith("Ign_map_4!"))
                                     {
                                         e.DisplayText = dispvalue.ToString("F1") + "\u00b0";
-                                        /*if (dispvalue < 0)
-                                        {
-                                            Console.WriteLine("Negative value:  " + cellvalue.ToString());
-
-                                        }*/
                                     }
                                     else if (m_map_name.StartsWith("Reg_kon_mat"))
                                     {
@@ -2680,10 +2405,6 @@ namespace Trionic5Controls
                                     {
                                         e.DisplayText = dispvalue.ToString("F2");
                                     }
-                                }
-                                else
-                                {
-                                    //e.DisplayText = dispvalue.ToString();
                                 }
                             }
                             else if (m_map_name.StartsWith("Reg_kon_mat"))
@@ -2711,7 +2432,7 @@ namespace Trionic5Controls
                                         int mapopenloop = (int)turbo_press_tab[(open_loop.Length - e.RowHandle) - 1];
                                         if (mapopenloop > mapvalue)
                                         {
-                                            int pos = (e.Bounds.Width ) - 12;
+                                            int pos = (e.Bounds.Width) - 12;
                                             int ypos = (e.Bounds.Height / 2) - 5;
                                             if (pos >= 0)
                                             {
@@ -2815,7 +2536,7 @@ namespace Trionic5Controls
                                 Console.WriteLine("Failed to mark cell as locked: " + E.Message);
                             }
                         }
-                    
+
                         if (m_map_name == "Insp_mat!" || m_map_name == "Inj_map_0!" || m_map_name == "Ign_map_0!" || m_map_name == "TargetAFR" || m_map_name == "FeedbackAFR" || m_map_name == "FeedbackvsTargetAFR" || m_map_name == "IdleTargetAFR" || m_map_name == "IdleFeedbackAFR" || m_map_name == "IdleFeedbackvsTargetAFR" || m_map_name == "IgnitionLockMap")
                         {
                             try
@@ -2834,11 +2555,11 @@ namespace Trionic5Controls
                                             Pen p = new Pen(Brushes.Black, 2);
                                             e.Graphics.DrawRectangle(p, e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
                                             p.Dispose();
-                                            //  DrawHighlight(e.Graphics, e.Bounds);
+                                          //  DrawHighlight(e.Graphics, e.Bounds);
                                         }
                                     }
                                 }
-                                
+
                                 if (_knockadaptloadfrom != 0 || _knockadaptloadupto != 0 || _knockadaptrpmfrom != 0 || _knockadaptrpmupto != 0)
                                 {
                                     int mapvalue = x_axisvalues[e.Column.AbsoluteIndex];
@@ -2857,7 +2578,7 @@ namespace Trionic5Controls
                                     if (e.Column.AbsoluteIndex == x_axisvalues.Length - 1)
                                     {
                                         int rpmvalue = y_axisvalues[y_axisvalues.Length - e.RowHandle - 1];
-                                        if (rpmvalue >= _boostadaptrpmfrom && rpmvalue <= _boostadaptrpmupto )
+                                        if (rpmvalue >= _boostadaptrpmfrom && rpmvalue <= _boostadaptrpmupto)
                                         {
                                             Pen p = new Pen(Brushes.White, 1);
                                             e.Graphics.DrawRectangle(p, e.Bounds.X + 2, e.Bounds.Y + 2, e.Bounds.Width - 5, e.Bounds.Height - 5);
@@ -2866,14 +2587,12 @@ namespace Trionic5Controls
                                     }
 
                                 }
-
                                 if (m_map_name.StartsWith("Feedback"))
                                 {
                                     if (afr_counter != null)
                                     {
                                         // fetch correct counter
                                         int current_afrcounter = (int)afr_counter[(afr_counter.Length - ((e.RowHandle + 1) * m_TableWidth)) + e.Column.AbsoluteIndex];
-                                        //current_afrcounter /= 10;
                                         if (current_afrcounter > 255) current_afrcounter = 255;
                                         if (current_afrcounter != 0)
                                         {
@@ -2883,27 +2602,6 @@ namespace Trionic5Controls
                                             e.Graphics.DrawRectangle(p, e.Bounds.X + 2, e.Bounds.Y + 2, e.Bounds.Width - 5, e.Bounds.Height - 5);
                                             p.Dispose();
                                         }
-                                        /*if (current_afrcounter < 100)
-                                        {
-                                            // one star
-                                        }
-                                        else if (current_afrcounter < 200)
-                                        {
-                                            // two stars
-                                        }
-                                        else if (current_afrcounter < 300)
-                                        {
-                                            // three stars
-                                        }
-                                        else if (current_afrcounter < 400)
-                                        {
-                                            // four stars
-                                        }
-                                        else
-                                        {
-                                            // five stars
-                                        }*/
-
                                     }
                                 }
                             }
@@ -2926,12 +2624,9 @@ namespace Trionic5Controls
                                         int mapopenloop = (int)open_loop_knock[(open_loop_knock.Length - e.RowHandle) - 1];
                                         if (mapopenloop > mapvalue)
                                         {
-                                            //e.Graphics.FillEllipse(Brushes.Black, e.Bounds.X, e.Bounds.Y, e.Bounds.X + 10, e.Bounds.Y+10);
-                                            //e.Graphics.FillEllipse(Brushes.Yellow, e.Bounds.X+2, e.Bounds.Y+2, 4,4);
                                             Pen p = new Pen(Brushes.Black, 2);
                                             e.Graphics.DrawRectangle(p, e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
                                             p.Dispose();
-                                            //  DrawHighlight(e.Graphics, e.Bounds);
                                         }
                                     }
                                 }
@@ -2940,67 +2635,7 @@ namespace Trionic5Controls
                             {
                                 Console.WriteLine(E.Message);
                             }
-
                         }
-                        /*else if (m_map_name == "Ign_map_0!" ||m_map_name == "Ign_map_2!" ||m_map_name == "Ign_map_4!" )
-                        {
-                            try
-                            {
-                                if (open_loop != null)
-                                {
-                                    if (open_loop.Length > 0)
-                                    {
-                                        int mapvalue = x_axisvalues[e.Column.AbsoluteIndex];
-                                        int rpmvalue = y_axisvalues[e.RowHandle];
-                                        int mapopenloop = (int)open_loop[(open_loop.Length - e.RowHandle) - 1];
-                                        if (mapopenloop > mapvalue)
-                                        {
-                                            //e.Graphics.FillEllipse(Brushes.Black, e.Bounds.X, e.Bounds.Y, e.Bounds.X + 10, e.Bounds.Y+10);
-                                            //e.Graphics.FillEllipse(Brushes.Yellow, e.Bounds.X+2, e.Bounds.Y+2, 4,4);
-                                            Pen p = new Pen(Brushes.Black, 2);
-                                            e.Graphics.DrawRectangle(p, e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
-                                            p.Dispose();
-                                            //  DrawHighlight(e.Graphics, e.Bounds);
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                Console.WriteLine(E.Message);
-                            }
-
-                        }
-                        else if (m_map_name == "Tryck_mat!" || m_map_name == "Tryck_mat_a!")
-                        {
-                            try
-                            {
-                                if (open_loop != null)
-                                {
-                                    if (open_loop.Length > 0)
-                                    {
-                                        int mapvalue = Convert.ToInt32(e.CellValue);
-                                        int rpmvalue = y_axisvalues[e.RowHandle];
-                                        int mapopenloop = (int)open_loop[(open_loop.Length - e.RowHandle) - 1];
-                                        if (mapopenloop > mapvalue)
-                                        {
-                                            //e.Graphics.FillEllipse(Brushes.Black, e.Bounds.X, e.Bounds.Y, e.Bounds.X + 10, e.Bounds.Y+10);
-                                            //e.Graphics.FillEllipse(Brushes.Yellow, e.Bounds.X+2, e.Bounds.Y+2, 4,4);
-                                            Pen p = new Pen(Brushes.Black, 2);
-                                            e.Graphics.DrawRectangle(p, e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
-                                            p.Dispose();
-                                            //  DrawHighlight(e.Graphics, e.Bounds);
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception E)
-                            {
-                                Console.WriteLine(E.Message);
-                            }
-
-                        }*/
-
                     }
                 }
 
@@ -3014,7 +2649,7 @@ namespace Trionic5Controls
                     }
                 }
 
-        }
+            }
             catch (Exception E)
             {
                 Console.WriteLine(E.Message);
@@ -3023,7 +2658,6 @@ namespace Trionic5Controls
 
         private void DrawHighlight(Graphics g, Rectangle clientRectangle)
         {
-
             clientRectangle.Height = clientRectangle.Height >> 1;
             clientRectangle.Inflate(-2, -2);
             Color color = Color.FromArgb(100, 0xff, 0xff, 0xff);
@@ -3157,21 +2791,17 @@ namespace Trionic5Controls
                                                         cellvalue *= 100;
                                                         cellvalue /= 160;
                                                     }
-                                                    else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
+                                                }
+                                                else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
+                                                {
+                                                    // convert back to normal value
+                                                    if (MapIsScalableFor3Bar(m_map_name))
                                                     {
-                                                        // convert back to normal value
-                                                        if (MapIsScalableFor3Bar(m_map_name))
-                                                        {
-                                                            cellvalue *= 100;
-                                                            cellvalue /= 200;
-                                                        }
+                                                        cellvalue *= 100;
+                                                        cellvalue /= 200;
                                                     }
                                                 }
                                             }
-                                            /*if (cellvalue < 0)
-                                            {
-                                                Console.WriteLine("value < 0");
-                                            }*/
                                             bstr1 = cellvalue.ToString("X8").Substring(4, 2);
                                             bstr2 = cellvalue.ToString("X8").Substring(6, 2);
                                             retval.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
@@ -3179,7 +2809,6 @@ namespace Trionic5Controls
                                         }
                                         else
                                         {
-                                            //if (m_isHexMode)
                                             if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
                                                 //double v = Convert.ToDouble(o);
@@ -3225,7 +2854,6 @@ namespace Trionic5Controls
                                                         v /= 200;
                                                     }
                                                 }
-                                                //retval.SetValue(Convert.ToByte((int)Math.Floor(v)), cellcount++);
                                                 retval.SetValue(Convert.ToByte((int)Math.Ceiling(v)), cellcount++);
                                             }
                                         }
@@ -3255,7 +2883,6 @@ namespace Trionic5Controls
                                             Int32 cellvalue = 0;
                                             string bstr1 = "0";
                                             string bstr2 = "0";
-                                            //if (m_isHexMode)
                                             if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
                                                 cellvalue = Convert.ToInt32(o.ToString(), 16);
@@ -3311,22 +2938,14 @@ namespace Trionic5Controls
                                             bstr2 = cellvalue.ToString("X8").Substring(6, 2);
                                             retval.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
                                             retval.SetValue(Convert.ToByte(bstr2, 16), cellcount++);
-                                            /*                                        bstr1 = cellvalue.ToString("X4").Substring(0, 2);
-                                                                                    bstr2 = cellvalue.ToString("X4").Substring(2, 2);
-                                                                                    retval.SetValue(Convert.ToByte(bstr1, 16), cellcount++);
-                                                                                    retval.SetValue(Convert.ToByte(bstr2, 16), cellcount++);*/
                                         }
                                         else
                                         {
-                                            //                                        if (m_isHexMode)
                                             if (m_viewtype == SuiteViewType.Hexadecimal)
                                             {
-
-                                                //double v = Convert.ToDouble(o);
                                                 try
                                                 {
                                                     int iv = Convert.ToInt32(o.ToString(), 16);
-                                                    //int iv = (int)Math.Floor(v);
                                                     retval.SetValue(Convert.ToByte(iv.ToString()), cellcount++);
                                                 }
                                                 catch (Exception cE)
@@ -3478,7 +3097,6 @@ namespace Trionic5Controls
                     numberofrows /= 2;
                 }
                 rowhandle = (numberofrows - 1) - rowhandle;
-                //surfaceGraphViewer1.HighlightSelectionInGraph(colindex, rowhandle);
             }
             else
             {
@@ -3644,54 +3262,12 @@ namespace Trionic5Controls
             }
             if (index_x >= 0 && index_y == -1) index_y = 0; // 2d ook weer kunnen geven
             else if (index_x == -1 && index_y >= 0) index_x = 0; // 2d ook weer kunnen geven
-                 
+
             if (index_x >= 0 && index_y >= 0)
             {
                 HighlightCell(index_x, index_y);
             }
         }
-        /*        private void UpdateLiveView()
-                {
-                    int index_x = -1;
-                    int index_y = -1;
-                    // depends on the axis descriptions in the current map
-                    // Finish this method!
-                    if (m_x_axis_name == "MAP")
-                    {
-                        // get the index in the xaxis based on boost level
-                        index_x = LookUpIndexAxisMAPMap(_boost, x_axisvalues);
-                    }
-                    if (m_x_axis_name == "Pressure error (bar)")
-                    {
-                        // get the index in the xaxis based on boost level
-                        double boost_error = Math.Abs(_boost - _boostTarget);
-                        index_x = LookUpIndexAxisMAPMapRegLast(boost_error, x_axisvalues);
-                    }
-                    else if (m_x_axis_name == "RPM")
-                    {
-                        index_x = LookUpIndexAxisRPMMap(_rpm, x_axisvalues);
-                    }
-                    else if (m_x_axis_name == "TPS" || m_x_axis_name == "Throttle position")
-                    {
-                        index_x = LookUpIndexAxisTPSMap(_tps, x_axisvalues);
-                    }
-                    if (m_y_axis_name == "MAP")
-                    {
-                        index_y = LookUpIndexAxisMAPMap(_boost, y_axisvalues);
-                    }
-                    else if (m_y_axis_name == "RPM")
-                    {
-                        index_y = LookUpIndexAxisRPMMap(_rpm, y_axisvalues);
-                    }
-                    else if (m_y_axis_name == "TPS" || m_x_axis_name == "Throttle position")
-                    {
-                        index_y = LookUpIndexAxisTPSMap(_tps, y_axisvalues);
-                    }
-                    if (index_x >= 0 && index_y >= 0)
-                    {
-                        HighlightCell(index_x, index_y);
-                    }
-                }*/
 
         private double _rpm = 0;
 
@@ -3737,7 +3313,6 @@ namespace Trionic5Controls
                 }
             }
         }
-
 
         private double _coolant = 0;
 
@@ -3876,444 +3451,6 @@ namespace Trionic5Controls
             }
         }
 
-        /*public class AxisLockEventArgs : System.EventArgs
-        {
-            private int _y_axis_max_value;
-            private string _mapname;
-            private string _filename;
-            private int _lock_mode;
-
-            public int AxisMaxValue
-            {
-                get
-                {
-                    return _y_axis_max_value;
-                }
-            }
-
-            public int LockMode
-            {
-                get
-                {
-                    return _lock_mode;
-                }
-            }
-
-            public string SymbolName
-            {
-                get
-                {
-                    return _mapname;
-                }
-            }
-
-
-            public string Filename
-            {
-                get
-                {
-                    return _filename;
-                }
-            }
-
-            public AxisLockEventArgs(int max_value, int lockmode, string mapname, string filename)
-            {
-                this._y_axis_max_value = max_value;
-                this._lock_mode = lockmode;
-                this._mapname = mapname;
-                this._filename = filename;
-            }
-        }
-
-        public class SliderMoveEventArgs : System.EventArgs
-        {
-            private int _slider_position;
-            private string _mapname;
-            private string _filename;
-
-            public int SliderPosition
-            {
-                get
-                {
-                    return _slider_position;
-                }
-            }
-
-            public string SymbolName
-            {
-                get
-                {
-                    return _mapname;
-                }
-            }
-
-
-            public string Filename
-            {
-                get
-                {
-                    return _filename;
-                }
-            }
-
-            public SliderMoveEventArgs(int slider_position, string mapname, string filename)
-            {
-                this._slider_position = slider_position;
-                this._mapname = mapname;
-                this._filename = filename;
-            }
-        }
-
-        public class SplitterMovedEventArgs : System.EventArgs
-        {
-            private int _splitdistance;
-
-            public int Splitdistance
-            {
-                get { return _splitdistance; }
-                set { _splitdistance = value; }
-            }
-
-
-            private int _panel1height;
-
-            public int Panel1height
-            {
-                get { return _panel1height; }
-                set { _panel1height = value; }
-            }
-            private int _panel2height;
-
-            public int Panel2height
-            {
-                get { return _panel2height; }
-                set { _panel2height = value; }
-            }
-            private bool _panel1collapsed;
-
-            public bool Panel1collapsed
-            {
-                get { return _panel1collapsed; }
-                set { _panel1collapsed = value; }
-            }
-            private bool _panel2collapsed;
-
-            public bool Panel2collapsed
-            {
-                get { return _panel2collapsed; }
-                set { _panel2collapsed = value; }
-            }
-
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            public SplitterMovedEventArgs(int panel1height, int panel2height, int splitdistance, bool panel1collapsed, bool panel2collapsed, string mapname)
-            {
-                this._splitdistance = splitdistance;
-                this._panel1collapsed = panel1collapsed;
-                this._panel1height = panel1height;
-                this._panel2collapsed = panel2collapsed;
-                this._panel2height = panel2height;
-                this._mapname = mapname;
-            }
-        }
-
-        public class CellSelectionChangedEventArgs : System.EventArgs
-        {
-            private int _rowhandle;
-
-            public int Rowhandle
-            {
-                get { return _rowhandle; }
-                set { _rowhandle = value; }
-            }
-            private int _colindex;
-
-            public int Colindex
-            {
-                get { return _colindex; }
-                set { _colindex = value; }
-            }
-
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            public CellSelectionChangedEventArgs(int rowhandle, int colindex, string mapname)
-            {
-                this._rowhandle = rowhandle;
-                this._colindex = colindex;
-                this._mapname = mapname;
-            }
-
-        }
-
-        public enum AxisIdent : int
-        {
-            X_Axis = 0,
-            Y_Axis = 1,
-            Z_Axis = 2
-        }
-
-        public class ReadFromSRAMEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            public ReadFromSRAMEventArgs(string mapname)
-            {
-                this._mapname = mapname;
-            }
-        }
-
-        public class WriteToSRAMEventArgs : System.EventArgs
-        {
-            private byte[] _data;
-
-            public byte[] Data
-            {
-                get { return _data; }
-                set { _data = value; }
-            }
-
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            public WriteToSRAMEventArgs(string mapname, byte[] data)
-            {
-                this._mapname = mapname;
-                this._data = data;
-            }
-        }*/
-
-
-        /* public class AxisEditorRequestedEventArgs : System.EventArgs
-         {
-             private string _mapname;
-
-             public string Mapname
-             {
-                 get { return _mapname; }
-                 set { _mapname = value; }
-             }
-
-             private string _filename;
-
-             public string Filename
-             {
-                 get { return _filename; }
-                 set { _filename = value; }
-             }
-
-             private AxisIdent _axisident;
-
-             public AxisIdent Axisident
-             {
-                 get { return _axisident; }
-                 set { _axisident = value; }
-             }
-
-             public AxisEditorRequestedEventArgs(AxisIdent ident, string mapname, string filename)
-             {
-                 this._axisident = ident;
-                 this._mapname = mapname;
-                 this._filename = filename;
-             }
-         }
-
-         public class ViewTypeChangedEventArgs : System.EventArgs
-         {
-             private string _mapname;
-
-             public string Mapname
-             {
-                 get { return _mapname; }
-                 set { _mapname = value; }
-             }
-
-             private ViewType _view;
-
-             public ViewType View
-             {
-                 get { return _view; }
-                 set { _view = value; }
-             }
-
-
-             public ViewTypeChangedEventArgs(ViewType view, string mapname)
-             {
-                 this._view = view;
-                 this._mapname = mapname;
-             }
-         }*/
-
-        /*public class GraphSelectionChangedEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            private int _tabpageindex;
-
-            public int Tabpageindex
-            {
-                get { return _tabpageindex; }
-                set { _tabpageindex = value; }
-            }
-
-            
-            public GraphSelectionChangedEventArgs(int tabpageindex, string mapname)
-            {
-                this._tabpageindex = tabpageindex;
-                this._mapname = mapname;
-            }
-        }
-
-
-        public class SurfaceGraphViewChangedEventArgs : System.EventArgs
-        {
-            private string _mapname;
-
-            public string Mapname
-            {
-                get { return _mapname; }
-                set { _mapname = value; }
-            }
-
-            private int _pov_x;
-
-            public int Pov_x
-            {
-                get { return _pov_x; }
-                set { _pov_x = value; }
-            }
-            private int _pov_y;
-
-            public int Pov_y
-            {
-                get { return _pov_y; }
-                set { _pov_y = value; }
-            }
-            private int _pov_z;
-
-            public int Pov_z
-            {
-                get { return _pov_z; }
-                set { _pov_z = value; }
-            }
-            private int _pan_x;
-
-            public int Pan_x
-            {
-                get { return _pan_x; }
-                set { _pan_x = value; }
-            }
-            private int _pan_y;
-
-            public int Pan_y
-            {
-                get { return _pan_y; }
-                set { _pan_y = value; }
-            }
-            private double _pov_d;
-
-            public double Pov_d
-            {
-                get { return _pov_d; }
-                set { _pov_d = value; }
-            }
-
-            public SurfaceGraphViewChangedEventArgs(int povx, int povy, int povz, int panx, int pany, double povd, string mapname)
-            {
-                this._pan_x = panx;
-                this._pan_y = pany;
-                this._pov_d = povd;
-                this._pov_x = povx;
-                this._pov_y = povy;
-                this._pov_z = povz;
-                this._mapname = mapname;
-            }
-        }*/
-
-        /*public class SaveSymbolEventArgs : System.EventArgs
-        {
-            private int _address;
-            private int _length;
-            private byte[] _mapdata;
-            private string _mapname;
-            private string _filename;
-
-            public int SymbolAddress
-            {
-                get
-                {
-                    return _address;
-                }
-            }
-
-            public int SymbolLength
-            {
-                get
-                {
-                    return _length;
-                }
-            }
-            public byte[] SymbolDate
-            {
-                get
-                {
-                    return _mapdata;
-                }
-            }
-            public string SymbolName
-            {
-                get
-                {
-                    return _mapname;
-                }
-            }
-
-
-            public string Filename
-            {
-                get
-                {
-                    return _filename;
-                }
-            }
-            public SaveSymbolEventArgs(int address, int length, byte[] mapdata, string mapname, string filename)
-            {
-                this._address = address;
-                this._length = length;
-                this._mapdata = mapdata;
-                this._mapname = mapname;
-                this._filename = filename;
-            }
-        }*/
-
         private void groupControl2_Paint(object sender, PaintEventArgs e)
         {
 
@@ -4364,14 +3501,10 @@ namespace Trionic5Controls
                 else
                 {
                     StartChartUpdateTimer();
-                    //   UpdateChartControlSlice(GetDataFromGridView(false));
                 }
             }
             if (m_DirectSRAMWriteOnSymbolChange)
             {
-                // calculate address to update!
-                //int addresstoupdate = m_map_sramaddress;
-                //addresstoupdate += e.row
                 CastWriteToSRAM();
             }
         }
@@ -4407,7 +3540,6 @@ namespace Trionic5Controls
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        //if (IsHexMode)
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
@@ -4606,7 +3738,6 @@ namespace Trionic5Controls
                                         {
                                             if (value > 510) value = 510;
                                         }
-
                                     }
                                     else
                                     {
@@ -4636,7 +3767,6 @@ namespace Trionic5Controls
                             {
                                 //if (m_viewtype != SuiteViewType.Easy3Bar && m_viewtype != SuiteViewType.Decimal3Bar)
                                 if (m_viewtype == SuiteViewType.ASCII || m_viewtype == SuiteViewType.Decimal || m_viewtype == SuiteViewType.Easy)
-
                                 {
                                     if (value > 0xFF) value = 0xFF;
                                 }
@@ -4660,7 +3790,6 @@ namespace Trionic5Controls
                                         {
                                             if (value > 510) value = 510;
                                         }
-
                                     }
                                     else
                                     {
@@ -4679,7 +3808,6 @@ namespace Trionic5Controls
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        //if (IsHexMode)
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
@@ -4723,7 +3851,6 @@ namespace Trionic5Controls
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        //if (IsHexMode)
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
 
@@ -4759,14 +3886,12 @@ namespace Trionic5Controls
                                         {
                                             if (value > 510) value = 510;
                                         }
-
                                     }
                                     else
                                     {
                                         value = 0xFF;
                                     }
                                 }
-
                                 gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
                             }
                             if (value > m_MaxValueInTable) m_MaxValueInTable = value;
@@ -4813,7 +3938,6 @@ namespace Trionic5Controls
                                         {
                                             if (value > 510) value = 510;
                                         }
-
                                     }
                                     else
                                     {
@@ -4875,9 +3999,6 @@ namespace Trionic5Controls
         {
             if (e.RowHandle >= 0)
             {
-
-                //  e.Painter.DrawCaption(new DevExpress.Utils.Drawing.ObjectInfoArgs(new DevExpress.Utils.Drawing.GraphicsCache(e.Graphics)), "As waarde", this.Font, Brushes.MidnightBlue, e.Bounds, null);
-                // e.Cache.DrawString("As waarde", this.Font, Brushes.MidnightBlue, e.Bounds, new StringFormat());
                 try
                 {
                     if (y_axisvalues.Length > 0)
@@ -5036,26 +4157,12 @@ namespace Trionic5Controls
                                         Console.WriteLine(cE.Message);
                                     }
                                 }
-                                /*if (m_map_name.StartsWith("P_fors") || m_map_name.StartsWith("I_fors") || m_map_name.StartsWith("D_fors"))
-                                {
-                                    try
-                                    {
-                                        float v = (float)Convert.ToDouble(xvalue);
-                                        v *= (float)0.01F;
-                                        xvalue = v.ToString("F2");
-                                    }
-                                    catch (Exception cE)
-                                    {
-                                        Console.WriteLine(cE.Message);
-                                    }
-                                }*/
                             }
 
                             Rectangle r = new Rectangle(e.Bounds.X + 1, e.Bounds.Y + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
                             e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
                             System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                             e.Graphics.FillRectangle(gb, e.Bounds);
-                            //e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, r);
                             e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, new PointF(e.Bounds.X + 3, e.Bounds.Y + 1 + (e.Bounds.Height - m_textheight) / 2));
                             e.Handled = true;
                         }
@@ -5173,37 +4280,6 @@ namespace Trionic5Controls
         private void timer3_Tick(object sender, EventArgs e)
         {
             UpdateChartControlSlice(GetDataFromGridView(false));
-
-/*            DataTable chartdt = new DataTable();
-            chartdt.Columns.Add("X", Type.GetType("System.Double"));
-            chartdt.Columns.Add("Y", Type.GetType("System.Double"));
-            double valcount = 0;
-            byte[] content = GetDataFromGridView(false);
-            if (m_issixteenbit)
-            {
-                for (int t = 0; t < content.Length; t += 2)
-                {
-                    double value = Convert.ToDouble(content.GetValue((content.Length - 1) - (t + 1))) * 256;
-                    value += Convert.ToDouble(content.GetValue((content.Length - 1) - (t)));
-                    chartdt.Rows.Add(valcount++, value);
-                }
-            }
-            else
-            {
-                for (int t = 0; t < m_map_length; t++)
-                {
-                    double value = Convert.ToDouble(content.GetValue((content.Length - 1) - t));
-                    chartdt.Rows.Add(valcount++, value);
-                }
-            }
-            /*chartControl1.DataSource = chartdt;
-            string[] datamembers = new string[1];
-            chartControl1.Series[0].ValueDataMembers.Clear();
-            datamembers.SetValue("Y", 0);
-            chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
-            chartControl1.Series[0].ArgumentDataMember = "X";
-            chartControl1.Invalidate();*/
-            //<GS-09032010> convert to Nevron chart 2d
             timer3.Enabled = false;
         }
 
@@ -5309,17 +4385,13 @@ namespace Trionic5Controls
             }
             catch (Exception E)
             {
-                Console.WriteLine("Failed to refresh mesh chart: " + E.Message);
+                logger.Debug(E, "Failed to refresh mesh chart");
             }
         }
 
         private void timer2_Tick(object sender, EventArgs e)
-        {
-            // surfaceGraphViewer1.Map_content = GetDataFromGridView(false);
-            //surfaceGraphViewer1.IsUpsideDown = false;
-            //surfaceGraphViewer1.NormalizeData();
-            // update other viewers as well... 
-            Console.WriteLine("RefreshMeshGraph on timer2");
+        { 
+            logger.Debug("RefreshMeshGraph on timer2");
             RefreshMeshGraph();
 
             timer2.Enabled = false;
@@ -5450,53 +4522,10 @@ namespace Trionic5Controls
 
         private void chartControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            /*if (m_isDragging)
-            {
-                int delta_y = e.Y - _mouse_drag_y;
-                if (Math.Abs(delta_y) > 0)//be able to hover!
-                {
-                    _mouse_drag_y = e.Y;
-                    _mouse_drag_x = e.X;
-
-                    
-                    double yaxissize = (double)((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValue - (double)((XYDiagram)chartControl1.Diagram).AxisY.Range.MinValue;
-
-                    double yaxissizepxls = chartControl1.Height - (((XYDiagram)chartControl1.Diagram).Padding.Top + ((XYDiagram)chartControl1.Diagram).Padding.Bottom) - (chartControl1.Margin.Top + chartControl1.Margin.Bottom);
-                    yaxissizepxls -= 64;//(yaxissizepxls / 6);
-                    //chartControl1.d
-                    double deltavalue = delta_y * (yaxissize / yaxissizepxls);
-                    //deltavalue -= correction_offset;
-                    //deltavalue *= 1 / correction_factor;
-                    //Console.WriteLine("Delta: " + deltavalue.ToString());
-                    if (_sp_dragging != null)
-                    {
-                        double curval = Convert.ToDouble(_sp_dragging.Values.GetValue(0));
-                        double newvalue = (curval - deltavalue);
-                        // if (newvalue < 0) newvalue = 0;
-                        //Console.WriteLine("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
-                        _sp_dragging.Values.SetValue(newvalue, 0);
-                        DataTable dt = (DataTable)chartControl1.DataSource;
-                        foreach (DataRow dr in dt.Rows)
-                        {
-                            if (dr[0].ToString() == _sp_dragging.Argument)
-                            {
-                                dr[1] = newvalue;
-                                // zet ook de betreffende waarde in de tabel!
-                                SetDataValueInMap(_sp_dragging.Argument, newvalue);
-                                //Console.WriteLine("Written: " + _sp_dragging.Argument + " : " + newvalue);
-                                //sp.Values.SetValue(curval - 1, 0);
-                                //chartControl1.Invalidate();
-                            }
-                        }
-
-                    }
-                }
-            }*/
         }
 
         private void surfaceGraphViewer1_KeyDown(object sender, KeyEventArgs e)
         {
-
         }
 
         private void groupControl1_DoubleClick(object sender, EventArgs e)
@@ -5506,54 +4535,34 @@ namespace Trionic5Controls
 
         private void simpleButton7_Click(object sender, EventArgs e)
         {
-            // surfaceGraphViewer1.ZoomIn();
             nChartControl1.Charts[0].Projection.Zoom += 5;
             nChartControl1.Refresh();
-
-
         }
 
         private void simpleButton6_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.ZoomOut();
             nChartControl1.Charts[0].Projection.Zoom -= 5;
             nChartControl1.Refresh();
         }
 
         private void simpleButton4_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.TurnLeft();
             nChartControl1.Charts[0].Projection.Rotation += 5;
             nChartControl1.Refresh();
         }
 
         private void simpleButton5_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.TurnRight();
             nChartControl1.Charts[0].Projection.Rotation -= 5;
             nChartControl1.Refresh();
         }
 
         private void gridView1_SelectionChanged(object sender, DevExpress.Data.SelectionChangedEventArgs e)
         {
-            /* DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-             if (cellcollection.Length == 1)
-             {
-                 gridView1.ShowEditor();
-             }*/
         }
 
         private void gridView1_CustomRowCellEdit(object sender, DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventArgs e)
         {
-            /*DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-            if (cellcollection.Length == 1)
-            {
-                e.RepositoryItem = MapViewerCellEdit;
-            }
-            else
-            {
-                e.RepositoryItem = null;
-            }*/
         }
 
         private void MapViewerCellEdit_KeyDown(object sender, KeyEventArgs e)
@@ -5648,7 +4657,6 @@ namespace Trionic5Controls
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
-                    //if (IsHexMode)
                     if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
@@ -5680,156 +4688,7 @@ namespace Trionic5Controls
                     }
 
                 }
-                /*else if (e.KeyCode == Keys.PageUp)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
-                            value += 0x10;
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-                            if (m_issixteenbit)
-                            {
-                                if (value > 0xFFFF) value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                if (value > 0xFF) value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                        }
-                        else
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value += 10;
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-                            if (m_issixteenbit)
-                            {
-                                if (value > 0xFFFF) value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                if (value > 0xFF) value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-
-                        }
-                    }
-                }
-                else if (e.KeyCode == Keys.PageDown)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
-                            value -= 0x10;
-                            if (value < 0) value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                        }
-                        else
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value -= 10;
-                            if (value < 0) value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-
-                        }
-                    }
-                }
-                else if (e.KeyCode == Keys.Home)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-
-                            int value = 0xFFFF;
-                            if (m_issixteenbit)
-                            {
-                                value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-
-                        }
-                        else
-                        {
-                            int value = 0xFFFF;
-                            if (m_issixteenbit)
-                            {
-                                value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-
-                        }
-                    }
-                }
-                else if (e.KeyCode == Keys.End)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-                            int value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                        }
-                        else
-                        {
-                            int value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-
-                        }
-                    }
-                }*/
             }
-
         }
 
         private void CopySelectionToClipboard()
@@ -5852,7 +4711,7 @@ namespace Trionic5Controls
                 }
                 chc.Add(ch);
             }
-            string serialized = ((int)m_viewtype).ToString();//string.Empty;
+            string serialized = ((int)m_viewtype).ToString();
             foreach (CellHelper ch in chc)
             {
                 serialized += ch.Columnindex.ToString() + ":" + ch.Rowhandle.ToString() + ":" + ch.Value.ToString() + ":~";
@@ -5863,7 +4722,7 @@ namespace Trionic5Controls
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E, "CopySelectionToClipboard");
             }
         }
 
@@ -5892,7 +4751,6 @@ namespace Trionic5Controls
 
         private void atCurrentlySelectedLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Clipboard.ContainsData("System.Object");
             DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
             if (cellcollection.Length >= 1)
             {
@@ -5947,7 +4805,6 @@ namespace Trionic5Controls
                                     {
                                         if (vtclip == SuiteViewType.Hexadecimal)
                                         {
-                                            //gridView1.SetRowCellValue(rowhandle, gridView1.Columns[colindex], ivalue.ToString("X"));
                                             gridView1.SetRowCellValue(rowhandlefrom + (rowhandle - originalrowoffset), gridView1.Columns[colindexfrom + (colindex - originalcolumnoffset)], ivalue.ToString("X"));
                                         }
                                         else
@@ -5980,7 +4837,6 @@ namespace Trionic5Controls
                 string serialized = Clipboard.GetText();
                 try
                 {
-                    //   Console.WriteLine(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                     SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
@@ -5997,7 +4853,6 @@ namespace Trionic5Controls
                         {
                             int rowhandle = Convert.ToInt32(vals.GetValue(1));
                             int colindex = Convert.ToInt32(vals.GetValue(0));
-                            //int value = Convert.ToInt32(vals.GetValue(2));
                             int ivalue = 0;
                             double dvalue = 0;
                             if (vtclip == SuiteViewType.Hexadecimal)
@@ -6055,7 +4910,6 @@ namespace Trionic5Controls
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            //            m_isHexMode = !m_isHexMode;
             if (m_viewtype != SuiteViewType.Hexadecimal) m_viewtype = SuiteViewType.Hexadecimal;
             else m_viewtype = m_previousviewtype;
             ShowTable(m_TableWidth, m_issixteenbit);
@@ -6071,13 +4925,10 @@ namespace Trionic5Controls
             return d;
         }
 
-        //Mathematics operation
-
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             try
             {
-
                 double _workvalue = ConvertToDouble(toolStripTextBox1.Text);
                 DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
                 if (cellcollection.Length > 0)
@@ -6120,7 +4971,6 @@ namespace Trionic5Controls
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -6138,7 +4988,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 78642) value = 78642;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6151,7 +5000,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6170,7 +5018,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 91749) value = 91749;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6183,7 +5030,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6202,7 +5048,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 104856) value = 104856;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6215,7 +5060,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6234,7 +5078,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 131070) value = 131070;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6247,7 +5090,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6273,7 +5115,6 @@ namespace Trionic5Controls
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -6293,14 +5134,12 @@ namespace Trionic5Controls
                                         {
                                             dvalue /= correction_factor;
                                         }
-                                        //value = (int)dvalue;
                                         value = (int)Math.Round(dvalue);
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 78642) value = 78642;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6313,7 +5152,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                // if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6334,14 +5172,12 @@ namespace Trionic5Controls
                                         {
                                             dvalue /= correction_factor;
                                         }
-                                        //value = (int)dvalue;
                                         value = (int)Math.Round(dvalue);
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 91749) value = 91749;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6354,7 +5190,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                // if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6375,14 +5210,12 @@ namespace Trionic5Controls
                                         {
                                             dvalue /= correction_factor;
                                         }
-                                        //value = (int)dvalue;
                                         value = (int)Math.Round(dvalue);
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 104856) value = 104856;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6395,7 +5228,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                // if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6416,14 +5248,12 @@ namespace Trionic5Controls
                                         {
                                             dvalue /= correction_factor;
                                         }
-                                        //value = (int)dvalue;
                                         value = (int)Math.Round(dvalue);
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 131070) value = 131070;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6436,7 +5266,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                // if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6467,7 +5296,6 @@ namespace Trionic5Controls
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -6491,7 +5319,6 @@ namespace Trionic5Controls
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -6510,7 +5337,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 78642) value = 78642;
-                                                // if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6523,7 +5349,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6543,7 +5368,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 91749) value = 91749;
-                                                // if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6556,7 +5380,6 @@ namespace Trionic5Controls
                                             if (m_issixteenbit)
                                             {
                                                 if (value > 0xFFFF) value = 0xFFFF;
-                                                //if (value < 0) value = 0;
                                             }
                                             else
                                             {
@@ -6645,6 +5468,7 @@ namespace Trionic5Controls
                                         }
                                         //value = (int)dvalue;
                                         value = (int)Math.Round(dvalue);
+
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
@@ -6669,7 +5493,7 @@ namespace Trionic5Controls
                                             dvalue /= correction_factor;
                                         }
                                         //value = (int)dvalue;
-                                        value = (int)Math.Round(dvalue); 
+                                        value = (int)Math.Round(dvalue);
                                         if (MapIsScalableFor3Bar(m_map_name))
                                         {
                                             if (m_issixteenbit)
@@ -6841,11 +5665,9 @@ namespace Trionic5Controls
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         if (_workvalue != 0)
                                         {
-
                                             double tempvalue = value;
                                             tempvalue /= _workvalue; // was (int)Math.Round(_workvalue)
                                             value = (int)tempvalue;
-
                                         }
                                         if (m_issixteenbit)
                                         {
@@ -7664,7 +6486,6 @@ namespace Trionic5Controls
                     splitContainer1.Panel1Collapsed = false;
                     splitContainer1.Panel2Collapsed = false;
                 }
-
             }
             CastSplitterMovedEvent();
         }
@@ -7807,7 +6628,6 @@ namespace Trionic5Controls
 
         private void popupContainerEdit1_CustomDisplayText(object sender, DevExpress.XtraEditors.Controls.ConvertEditValueEventArgs e)
         {
-            //            e.Value = System.IO.Path.GetFileName(m_filename) + " : " + m_map_name + " flash address : " + m_map_address.ToString("X6") + " sram address : " + m_map_sramaddress.ToString("X4");
         }
 
         private void gridView1_SelectionChanged_1(object sender, DevExpress.Data.SelectionChangedEventArgs e)
@@ -7826,7 +6646,6 @@ namespace Trionic5Controls
 
                 }
             }
-
         }
 
         private bool m_split_dragging = false;
@@ -7848,12 +6667,10 @@ namespace Trionic5Controls
 
         private void splitContainer1_MouseUp(object sender, MouseEventArgs e)
         {
-
         }
 
         private void splitContainer1_MouseLeave(object sender, EventArgs e)
         {
-
         }
 
 
@@ -7862,7 +6679,6 @@ namespace Trionic5Controls
             try
             {
                 m_prohibitgraphchange = true;
-                //surfaceGraphViewer1.Pov_d = pov_d;
                 m_prohibitgraphchange = false;
             }
             catch (Exception E)
@@ -7876,14 +6692,12 @@ namespace Trionic5Controls
             try
             {
                 m_prohibitgraphchange = true;
-                //surfaceGraphViewer1.SetView(pov_x, pov_y, pov_z, pan_x, pan_y, pov_d);
                 m_prohibitgraphchange = false;
             }
             catch (Exception E)
             {
                 Console.WriteLine(E.Message);
             }
-
         }
 
         public override void SetSurfaceGraphViewEx(float depthx, float depthy, float zoom, float rotation, float elevation)
@@ -7908,43 +6722,6 @@ namespace Trionic5Controls
         {
             // refresh the mapviewer with the values like selected
             if (m_prohibit_viewchange) return;
-            /*switch (toolStripComboBox3.SelectedIndex)
-            {
-                case -1:
-                case 0:
-                    m_viewtype = SuiteViewType.Hexadecimal;
-                    break;
-                case 1:
-                    m_viewtype = SuiteViewType.Decimal;
-                    break;
-                case 2:
-                    m_viewtype = SuiteViewType.Easy;
-                    break;
-                case 3:
-                    m_viewtype = SuiteViewType.Decimal3Bar;
-                    break;
-                case 4:
-                    m_viewtype = SuiteViewType.Easy3Bar;
-                    break;
-                case 5:
-                    m_viewtype = SuiteViewType.Decimal35Bar;
-                    break;
-                case 6:
-                    m_viewtype = SuiteViewType.Easy35Bar;
-                    break;
-                case 7:
-                    m_viewtype = SuiteViewType.Decimal4Bar;
-                    break;
-                case 8:
-                    m_viewtype = SuiteViewType.Easy4Bar;
-                    break;
-                case 9:
-                    m_viewtype = SuiteViewType.ASCII;
-                    break;
-                default:
-                    m_viewtype = SuiteViewType.Hexadecimal;
-                    break;
-            }*/
             m_viewtype = (SuiteViewType)toolStripComboBox3.SelectedIndex;
             ReShowTable();
             CastViewTypeChangedEvent();
@@ -7952,7 +6729,6 @@ namespace Trionic5Controls
 
         private void gridView1_CellValueChanging(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
-
         }
 
         private bool MapSupportsNegativeValues(string mapname)
@@ -8217,7 +6993,7 @@ namespace Trionic5Controls
                     {
                         double dvalue = Convert.ToDouble(e.Value);
                         int value = 0;
-                        if (m_viewtype == SuiteViewType.Easy4Bar)
+                        if (m_viewtype == SuiteViewType.Easy5Bar)
                         {
                             if (gridView1.ActiveEditor != null)
                             {
@@ -8297,11 +7073,6 @@ namespace Trionic5Controls
                                 Console.WriteLine(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
-                                /*                                if(value < 0)
-                                                                {
-                                                                    value ^= 0xffffff;
-                                                                    value = -value;
-                                                                }*/
                             }
                             else
                             {
@@ -8558,7 +7329,7 @@ namespace Trionic5Controls
                     //int value = Convert.ToInt32(Convert.ToString(e.Value));
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_viewtype == SuiteViewType.Easy4Bar)
+                    if (m_viewtype == SuiteViewType.Easy5Bar)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -8686,21 +7457,6 @@ namespace Trionic5Controls
 
         private void gridView1_ShownEditor(object sender, EventArgs e)
         {
-            /*
-            GridView view = sender as GridView;
-            if (view.FocusedColumn.FieldName == "CityCode" && view.ActiveEditor is LookUpEdit)
-            {
-                Text = view.ActiveEditor.Parent.Name;
-                DevExpress.XtraEditors.LookUpEdit edit;
-                edit = (LookUpEdit)view.ActiveEditor;
-
-                DataTable table = edit.Properties.LookUpData.DataSource as DataTable;
-                clone = new DataView(table);
-                DataRow row = view.GetDataRow(view.FocusedRowHandle);
-                clone.RowFilter = "[CountryCode] = " + row["CountryCode"].ToString();
-                edit.Properties.LookUpData.DataSource = clone;
-            }
-            */
             try
             {
                 if (m_viewtype == SuiteViewType.Easy || m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Easy5Bar)
@@ -8728,9 +7484,6 @@ namespace Trionic5Controls
         {
             if (this.Visible)
             {
-                // surfaceGraphViewer1.RefreshView() ;
-                //Console.WriteLine("RefreshMeshGraph on visible changed");
-
                 //RefreshMeshGraph();
             }
         }
@@ -8738,7 +7491,6 @@ namespace Trionic5Controls
         internal void ClearSelection()
         {
             gridView1.ClearSelection();
-            //surfaceGraphViewer1.HighlightInGraph(-1, -1);
         }
 
         private int m_selectedrowhandle = -1;
@@ -8847,7 +7599,6 @@ namespace Trionic5Controls
                 lockCellsToolStripMenuItem.Visible = false;
                 unlockCellsToolStripMenuItem.Visible = false;
             }
-
         }
 
         private void editXaxisSymbolToolStripMenuItem_Click(object sender, EventArgs e)
@@ -9016,8 +7767,6 @@ namespace Trionic5Controls
 
                             m_map_content = GetDataFromGridView(m_isUpsideDown);
 
-
-
                             //double diffvaluex = (top_rightvalue - top_leftvalue) / (max_column - min_column - 1);
                             //double diffvaluey = (top_rightvalue - top_leftvalue) / (max_column - min_column - 1);
                         }
@@ -9030,8 +7779,6 @@ namespace Trionic5Controls
 
         private void groupControl1_MouseHover(object sender, EventArgs e)
         {
-
-
         }
 
 
@@ -9080,170 +7827,6 @@ namespace Trionic5Controls
             else if (value == 10) gridView1_KeyDown(this, new KeyEventArgs(Keys.PageUp));
             else if (value == -1) gridView1_KeyDown(this, new KeyEventArgs(Keys.Subtract));
             else if (value == -10) gridView1_KeyDown(this, new KeyEventArgs(Keys.PageDown));
-        }
-
-        private void asPreferredSettingInT5DashboardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ExportMapToDashBoard();
-            // export data with a setting name
-        }
-
-        /*private void TryToLaunchInputScreen()
-        {
-            if (File.Exists(Application.StartupPath + "\\T5Softkeys.exe"))
-            {
-                // launch it
-                Process.Start(Application.StartupPath + "\\T5Softkeys.exe");
-
-            }
-        }*/
-
-        public override void LoadSymbol(string symbolname, IECUFile trionic_file, string sramfile)
-        {
-            m_trionic_file = trionic_file;
-            //Set correctly
-            this.IsUpsideDown = true; // always?
-            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
-            {
-                if (sh.Varname == symbolname)
-                {
-                    // get data from it
-                    IECUFile file = new Trionic5File();
-                    file.SetAutoUpdateChecksum(m_autoUpdateChecksum);
-                    file.SelectFile(m_trionic_file.GetFileInfo().Filename);
-                    //byte[] symboldata = file.ReadData((uint)sh.Flash_start_address, (uint)sh.Length);
-                    byte[] symboldata = file.ReadDataFromFile(sramfile, (uint)sh.Start_address, (uint)sh.Length);
-
-                    //byte[] symboldata = file.readdatafromfile(m_trionic_file.GetFileInfo().Filename, sh.Flash_start_address, sh.Length);
-                    this.Map_content = symboldata;
-                    this.Map_length = symboldata.Length;
-                    this.Filename = sramfile;//m_trionic_file.GetFileInfo().Filename;
-                    if (m_trionic_file.IsTableSixteenBits(symbolname))
-                    {
-                        //this.Map_length /= 2;
-                    }
-                    this.Map_name = symbolname;
-                    this.Correction_factor = m_trionic_file.GetCorrectionFactorForMap(symbolname);
-                    this.correction_offset = m_trionic_file.GetOffsetForMap(symbolname);
-                    this.SetViewSize(ViewSize.NormalView);
-                    //this.Viewtype = SuiteViewType.Easy;
-                    // set axis information
-                    SymbolAxesTranslator sat = new SymbolAxesTranslator();
-                    sat.GetXaxisSymbol(symbolname);
-                    sat.GetYaxisSymbol(symbolname);
-                    this.X_axisvalues = m_trionic_file.GetMapXaxisValues(symbolname);
-                    this.Y_axisvalues = m_trionic_file.GetMapYaxisValues(symbolname);
-                    string x = string.Empty;
-                    string y = string.Empty;
-                    string z = string.Empty;
-
-                    m_trionic_file.GetMapAxisDescriptions(symbolname, out x, out y, out z);
-
-                    this.X_axis_name = x;
-                    this.Y_axis_name = y;
-                    this.Z_axis_name = z;
-                    int columns = 1;
-                    int rows = 1;
-                    m_trionic_file.GetMapMatrixWitdhByName(symbolname, out columns, out rows);
-                    this.ShowTable(columns, m_trionic_file.IsTableSixteenBits(symbolname));
-
-                    break;
-                }
-            }
-        }
-
-
-        public override void LoadSymbol(string symbolname, IECUFile trionic_file)
-        {
-            // autonomous
-            m_trionic_file = trionic_file;
-            this.IsUpsideDown = true; // always?
-            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
-            {
-                if (sh.Varname == symbolname)
-                {
-                    // get data from it
-                    IECUFile file = new Trionic5File();
-                    file.SetAutoUpdateChecksum(m_autoUpdateChecksum);
-                    file.SelectFile(m_trionic_file.GetFileInfo().Filename);
-                    byte[] symboldata = file.ReadData((uint)sh.Flash_start_address, (uint)sh.Length);
-                    //byte[] symboldata = file.readdatafromfile(m_trionic_file.GetFileInfo().Filename, sh.Flash_start_address, sh.Length);
-                    this.Map_content = symboldata;
-                    this.Map_length = symboldata.Length;
-                    this.Filename = m_trionic_file.GetFileInfo().Filename;
-                    if (m_trionic_file.IsTableSixteenBits(symbolname))
-                    {
-                        //this.Map_length /= 2;
-                    }
-                    this.Map_name = symbolname;
-                    this.Correction_factor = m_trionic_file.GetCorrectionFactorForMap(symbolname);
-                    this.correction_offset = m_trionic_file.GetOffsetForMap(symbolname);
-                    this.SetViewSize(ViewSize.NormalView);
-                    //this.Viewtype = SuiteViewType.Easy;
-                    // set axis information
-                    SymbolAxesTranslator sat = new SymbolAxesTranslator();
-                    sat.GetXaxisSymbol(symbolname);
-                    sat.GetYaxisSymbol(symbolname);
-                    this.X_axisvalues = m_trionic_file.GetMapXaxisValues(symbolname);
-                    this.Y_axisvalues = m_trionic_file.GetMapYaxisValues(symbolname);
-                    string x = string.Empty;
-                    string y = string.Empty;
-                    string z = string.Empty;
-
-                    m_trionic_file.GetMapAxisDescriptions(symbolname, out x, out y, out z);
-
-                    this.X_axis_name = x;
-                    this.Y_axis_name = y;
-                    this.Z_axis_name = z;
-                    int columns = 1;
-                    int rows = 1;
-                    m_trionic_file.GetMapMatrixWitdhByName(symbolname, out columns, out rows);
-                    this.ShowTable(columns, m_trionic_file.IsTableSixteenBits(symbolname));
-
-                    break;
-                }
-            }
-
-        }
-
-        public override int DetermineWidth()
-        {
-            return 600;
-        }
-
-        private void simpleButton1_Click_1(object sender, EventArgs e)
-        {
-            CastCloseEvent();
-        }
-
-        private void btnToggleOverlay_Click(object sender, EventArgs e)
-        {
-            // do/don't show the graph overlay
-            m_OverlayVisible = !m_OverlayVisible;
-            RefreshMeshGraph();
-
-        }
-        private void toolStripComboBox3_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                // see if there's a selection being made
-                gridView1.ClearSelection();
-                string strValue = toolStripComboBox3.Text;
-                char[] sep = new char[1];
-                sep.SetValue(' ', 0);
-                string[] strValues = strValue.Split(sep);
-                foreach (string strval in strValues)
-                {
-                    double dblres;
-                    if (Double.TryParse(strval, out dblres))
-                    {
-                        SelectCellsWithValue(dblres);
-                    }
-                }
-                gridView1.Focus();
-
-            }
         }
 
         private void ExportMapToDashBoard()
@@ -9349,6 +7932,159 @@ namespace Trionic5Controls
             }
         }
 
+        private void asPreferredSettingInT5DashboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportMapToDashBoard();
+        }
+
+        public override void LoadSymbol(string symbolname, IECUFile trionic_file, string sramfile)
+        {
+            m_trionic_file = trionic_file;
+            //Set correctly
+            this.IsUpsideDown = true; // always?
+            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
+            {
+                if (sh.Varname == symbolname)
+                {
+                    // get data from it
+                    IECUFile file = new Trionic5File();
+                    file.SetAutoUpdateChecksum(m_autoUpdateChecksum);
+                    file.SelectFile(m_trionic_file.GetFileInfo().Filename);
+                    //byte[] symboldata = file.ReadData((uint)sh.Flash_start_address, (uint)sh.Length);
+                    byte[] symboldata = file.ReadDataFromFile(sramfile, (uint)sh.Start_address, (uint)sh.Length);
+
+                    //byte[] symboldata = file.readdatafromfile(m_trionic_file.GetFileInfo().Filename, sh.Flash_start_address, sh.Length);
+                    this.Map_content = symboldata;
+                    this.Map_length = symboldata.Length;
+                    this.Filename = sramfile;
+                    if (m_trionic_file.IsTableSixteenBits(symbolname))
+                    {
+                        //this.Map_length /= 2;
+                    }
+                    this.Map_name = symbolname;
+                    this.Correction_factor = m_trionic_file.GetCorrectionFactorForMap(symbolname);
+                    this.correction_offset = m_trionic_file.GetOffsetForMap(symbolname);
+                    //Set correctly
+                    this.SetViewSize(ViewSize.NormalView);
+                    //this.Viewtype = SuiteViewType.Easy;
+                    // set axis information
+                    SymbolAxesTranslator sat = new SymbolAxesTranslator();
+                    sat.GetXaxisSymbol(symbolname);
+                    sat.GetYaxisSymbol(symbolname);
+                    this.X_axisvalues = m_trionic_file.GetMapXaxisValues(symbolname);
+                    this.Y_axisvalues = m_trionic_file.GetMapYaxisValues(symbolname);
+                    string x = string.Empty;
+                    string y = string.Empty;
+                    string z = string.Empty;
+
+                    m_trionic_file.GetMapAxisDescriptions(symbolname, out x, out y, out z);
+
+                    this.X_axis_name = x;
+                    this.Y_axis_name = y;
+                    this.Z_axis_name = z;
+                    int columns = 1;
+                    int rows = 1;
+                    m_trionic_file.GetMapMatrixWitdhByName(symbolname, out columns, out rows);
+                    this.ShowTable(columns, m_trionic_file.IsTableSixteenBits(symbolname));
+
+                    break;
+                }
+            }
+        }
+
+        public override void LoadSymbol(string symbolname, IECUFile trionic_file)
+        {
+            // autonomous
+            m_trionic_file = trionic_file;
+            this.IsUpsideDown = true; // always?
+            foreach (SymbolHelper sh in m_trionic_file.GetFileInfo().SymbolCollection)
+            {
+                if (sh.Varname == symbolname)
+                {
+                    // get data from it
+                    IECUFile file = new Trionic5File();
+                    file.SetAutoUpdateChecksum(m_autoUpdateChecksum);
+                    file.SelectFile(m_trionic_file.GetFileInfo().Filename);
+                    byte[] symboldata = file.ReadData((uint)sh.Flash_start_address, (uint)sh.Length);
+                    //byte[] symboldata = file.readdatafromfile(m_trionic_file.GetFileInfo().Filename, sh.Flash_start_address, sh.Length);
+                    this.Map_content = symboldata;
+                    this.Map_length = symboldata.Length;
+                    this.Filename = m_trionic_file.GetFileInfo().Filename;
+                    if (m_trionic_file.IsTableSixteenBits(symbolname))
+                    {
+                        //this.Map_length /= 2;
+                    }
+                    this.Map_name = symbolname;
+                    this.Correction_factor = m_trionic_file.GetCorrectionFactorForMap(symbolname);
+                    this.correction_offset = m_trionic_file.GetOffsetForMap(symbolname);
+                    this.SetViewSize(ViewSize.NormalView);
+                    //this.Viewtype = SuiteViewType.Easy;
+                    // set axis information
+                    SymbolAxesTranslator sat = new SymbolAxesTranslator();
+                    sat.GetXaxisSymbol(symbolname);
+                    sat.GetYaxisSymbol(symbolname);
+                    this.X_axisvalues = m_trionic_file.GetMapXaxisValues(symbolname);
+                    this.Y_axisvalues = m_trionic_file.GetMapYaxisValues(symbolname);
+                    string x = string.Empty;
+                    string y = string.Empty;
+                    string z = string.Empty;
+
+                    m_trionic_file.GetMapAxisDescriptions(symbolname, out x, out y, out z);
+
+                    this.X_axis_name = x;
+                    this.Y_axis_name = y;
+                    this.Z_axis_name = z;
+                    int columns = 1;
+                    int rows = 1;
+                    m_trionic_file.GetMapMatrixWitdhByName(symbolname, out columns, out rows);
+                    this.ShowTable(columns, m_trionic_file.IsTableSixteenBits(symbolname));
+
+                    break;
+                }
+            }
+        }
+
+        public override int DetermineWidth()
+        {
+            return 600;
+        }
+
+        private void simpleButton1_Click_1(object sender, EventArgs e)
+        {
+            CastCloseEvent();
+        }
+
+        private void btnToggleOverlay_Click(object sender, EventArgs e)
+        {
+            // do/don't show the graph overlay
+            m_OverlayVisible = !m_OverlayVisible;
+            RefreshMeshGraph();
+
+        }
+
+        private void toolStripComboBox3_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // see if there's a selection being made
+                gridView1.ClearSelection();
+                string strValue = toolStripComboBox3.Text;
+                char[] sep = new char[1];
+                sep.SetValue(' ', 0);
+                string[] strValues = strValue.Split(sep);
+                foreach (string strval in strValues)
+                {
+                    double dblres;
+                    if (Double.TryParse(strval, out dblres))
+                    {
+                        SelectCellsWithValue(dblres);
+                    }
+                }
+                gridView1.Focus();
+
+            }
+        }
+
         private void SelectCellsWithValue(double value)
         {
             for (int rh = 0; rh < gridView1.RowCount; rh++)
@@ -9381,6 +8117,7 @@ namespace Trionic5Controls
 
         private void clearDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // clear data if it is a feedback afr map
             m_clearData = true;
             CastSaveEvent();
         }
@@ -9389,7 +8126,7 @@ namespace Trionic5Controls
         {
             // lock cells (depends on type of map loaded)
             DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-            
+
             foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
             {
                 // cast cell locked event
