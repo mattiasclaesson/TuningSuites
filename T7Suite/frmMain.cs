@@ -9037,9 +9037,13 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 trionic7.setCANDevice(CANBusAdapter.J2534);
             }
 
-            if (m_appSettings.Adapter != string.Empty)
+            if (!string.IsNullOrEmpty(m_appSettings.Adapter))
             {
                 trionic7.SetSelectedAdapter(m_appSettings.Adapter);
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("Check settings, no CAN adapter has been selected!");
             }
         }
 

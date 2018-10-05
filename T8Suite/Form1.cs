@@ -14730,9 +14730,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 t8can.setCANDevice(CANBusAdapter.J2534);
             }
 
-            if (m_appSettings.Adapter != string.Empty)
+            if (!string.IsNullOrEmpty(m_appSettings.Adapter))
             {
                 t8can.SetSelectedAdapter(m_appSettings.Adapter);
+            }
+            else
+            {
+                frmInfoBox info = new frmInfoBox("Check settings, no CAN adapter has been selected!");
             }
         }
     }
