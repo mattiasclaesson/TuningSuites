@@ -14,8 +14,9 @@ namespace T7
 {
     public partial class ctrlAirmassResult : DevExpress.XtraEditors.XtraUserControl
     {
-        private const int TORQUE_LIMIT_350NM = 350;
-        private const int TORQUE_LIMIT_400NM = 400;
+        private const int TORQUE_LIMIT_AUTO = 350; // TCM limiter
+        private const int TORQUE_LIMIT_MANUAL = 400; // ECU hardcoded limiter
+        private const int NO_TORQUE_LIMIT = 1000;
 
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -406,14 +407,17 @@ namespace T7
         {
             TrqLimiter = AirmassLimitType.TorqueLimiterGear;
             int LimitedAirMass = requestedairmass;
-            int torque;
-            if (isCarAutomatic.Checked)
+            int torque = NO_TORQUE_LIMIT;
+            if (hasFirmwareLimit.Checked)
             {
-                torque = TORQUE_LIMIT_350NM;
-            }
-            else
-            {
-                torque = TORQUE_LIMIT_400NM; // Basefile hardcoded limiter
+                if (isCarAutomatic.Checked)
+                {
+                    torque = TORQUE_LIMIT_AUTO;
+                }
+                else
+                {
+                    torque = TORQUE_LIMIT_MANUAL;
+                }
             }
                 
             if (E85Automatic && isFuelE85.Checked && isCarAutomatic.Checked)
@@ -1677,6 +1681,11 @@ namespace T7
         }
 
         private void spinEdit1_EditValueChanged(object sender, EventArgs e)
+        {
+            Calculate();
+        }
+
+        private void hasFirmwareLimit_CheckedChanged(object sender, EventArgs e)
         {
             Calculate();
         }

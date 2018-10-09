@@ -57,6 +57,7 @@ namespace T7
             this.tabCompressormap = new DevExpress.XtraTab.XtraTabPage();
             this.ctrlCompressorMap1 = new T7.ctrlCompressorMap();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.hasFirmwareLimit = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.useTrionicCalculationForTorque = new DevExpress.XtraEditors.CheckEdit();
@@ -114,6 +115,7 @@ namespace T7
             this.tabCompressormap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hasFirmwareLimit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).BeginInit();
@@ -146,7 +148,7 @@ namespace T7
             // 
             this.xtraTabPage1.Controls.Add(this.gridControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(793, 350);
+            this.xtraTabPage1.Size = new System.Drawing.Size(797, 353);
             this.xtraTabPage1.Text = "Table view";
             // 
             // gridControl1
@@ -158,7 +160,7 @@ namespace T7
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(793, 350);
+            this.gridControl1.Size = new System.Drawing.Size(797, 353);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -187,7 +189,7 @@ namespace T7
             this.xtraTabPage2.Controls.Add(this.checkEdit8);
             this.xtraTabPage2.Controls.Add(this.chartControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(793, 350);
+            this.xtraTabPage2.Size = new System.Drawing.Size(797, 353);
             this.xtraTabPage2.Text = "Dyno graph view";
             // 
             // showFuelFlow
@@ -313,7 +315,7 @@ namespace T7
             // 
             this.tabCompressormap.Controls.Add(this.ctrlCompressorMap1);
             this.tabCompressormap.Name = "tabCompressormap";
-            this.tabCompressormap.Size = new System.Drawing.Size(793, 350);
+            this.tabCompressormap.Size = new System.Drawing.Size(797, 353);
             this.tabCompressormap.Text = "Compressor map";
             // 
             // ctrlCompressorMap1
@@ -358,7 +360,7 @@ namespace T7
         5500,
         6000,
         6500};
-            this.ctrlCompressorMap1.Size = new System.Drawing.Size(793, 350);
+            this.ctrlCompressorMap1.Size = new System.Drawing.Size(797, 353);
             this.ctrlCompressorMap1.TabIndex = 0;
             this.ctrlCompressorMap1.onRefreshData += new T7.ctrlCompressorMap.RefreshData(this.ctrlCompressorMap1_onRefreshData);
             // 
@@ -366,6 +368,7 @@ namespace T7
             // 
             this.groupControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupControl2.Controls.Add(this.hasFirmwareLimit);
             this.groupControl2.Controls.Add(this.labelControl17);
             this.groupControl2.Controls.Add(this.labelControl18);
             this.groupControl2.Controls.Add(this.useTrionicCalculationForTorque);
@@ -399,6 +402,16 @@ namespace T7
             this.groupControl2.Size = new System.Drawing.Size(799, 156);
             this.groupControl2.TabIndex = 3;
             this.groupControl2.Text = "Options";
+            // 
+            // hasFirmwareLimit
+            // 
+            this.hasFirmwareLimit.EditValue = true;
+            this.hasFirmwareLimit.Location = new System.Drawing.Point(252, 24);
+            this.hasFirmwareLimit.Name = "hasFirmwareLimit";
+            this.hasFirmwareLimit.Properties.Caption = "Firmware limited";
+            this.hasFirmwareLimit.Size = new System.Drawing.Size(177, 19);
+            this.hasFirmwareLimit.TabIndex = 29;
+            this.hasFirmwareLimit.CheckedChanged += new System.EventHandler(this.hasFirmwareLimit_CheckedChanged);
             // 
             // labelControl17
             // 
@@ -796,6 +809,7 @@ namespace T7
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
             this.groupControl2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hasFirmwareLimit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayPowerInkW.Properties)).EndInit();
@@ -861,5 +875,6 @@ namespace T7
         private DevExpress.XtraEditors.LabelControl labelControl17;
         private DevExpress.XtraEditors.LabelControl labelControl18;
         private DevExpress.XtraEditors.CheckEdit showFuelFlow;
+        private DevExpress.XtraEditors.CheckEdit hasFirmwareLimit;
     }
 }

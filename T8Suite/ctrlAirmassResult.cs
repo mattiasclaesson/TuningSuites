@@ -13,8 +13,9 @@ namespace T8SuitePro
 {
     public partial class ctrlAirmassResult : DevExpress.XtraEditors.XtraUserControl
     {
-        private const int TORQUE_LIMIT_350NM = 3500;
-        private const int TORQUE_LIMIT_400NM = 4000;
+        private const int TORQUE_LIMIT_AUTO = 3500; // TCM limiter
+        private const int TORQUE_LIMIT_MANUAL = 4000; // ECU hardcoded limiter
+        private const int NO_TORQUE_LIMIT = 10000;
 
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -286,14 +287,17 @@ namespace T8SuitePro
         {
             TrqLimiter = AirmassLimitType.TorqueLimiterGear;
             int LimitedAirMass = requestedairmass;
-            int torque;
-            if (isCarAutomatic.Checked)
+            int torque = NO_TORQUE_LIMIT;
+            if (hasFirmwareLimit.Checked)
             {
-                torque = TORQUE_LIMIT_350NM;
-            }
-            else
-            {
-                torque = TORQUE_LIMIT_400NM; // Basefile hardcoded limiter
+                if (isCarAutomatic.Checked)
+                {
+                    torque = TORQUE_LIMIT_AUTO;
+                }
+                else
+                {
+                    torque = TORQUE_LIMIT_MANUAL;
+                }
             }
 
             if (isFuelE85.Checked)
@@ -1527,6 +1531,11 @@ namespace T8SuitePro
         }
 
         private void spinEdit1_EditValueChanged(object sender, EventArgs e)
+        {
+            Calculate();
+        }
+
+        private void hasFirmwareLimit_CheckedChanged(object sender, EventArgs e)
         {
             Calculate();
         }

@@ -57,6 +57,7 @@ namespace T8SuitePro
             this.tabCompressormap = new DevExpress.XtraTab.XtraTabPage();
             this.ctrlCompressorMap1 = new T8SuitePro.ctrlCompressorMap();
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
+            this.hasFirmwareLimit = new DevExpress.XtraEditors.CheckEdit();
             this.isCarHighOutput = new DevExpress.XtraEditors.CheckEdit();
             this.useTrionicCalculationForTorque = new DevExpress.XtraEditors.CheckEdit();
             this.displayTorqueInLBFT = new DevExpress.XtraEditors.CheckEdit();
@@ -110,6 +111,7 @@ namespace T8SuitePro
             this.tabCompressormap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hasFirmwareLimit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarHighOutput.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).BeginInit();
@@ -362,6 +364,7 @@ namespace T8SuitePro
             // 
             this.groupControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupControl2.Controls.Add(this.hasFirmwareLimit);
             this.groupControl2.Controls.Add(this.isCarHighOutput);
             this.groupControl2.Controls.Add(this.useTrionicCalculationForTorque);
             this.groupControl2.Controls.Add(this.displayTorqueInLBFT);
@@ -391,6 +394,16 @@ namespace T8SuitePro
             this.groupControl2.Size = new System.Drawing.Size(799, 156);
             this.groupControl2.TabIndex = 3;
             this.groupControl2.Text = "Options";
+            // 
+            // hasFirmwareLimit
+            // 
+            this.hasFirmwareLimit.EditValue = true;
+            this.hasFirmwareLimit.Location = new System.Drawing.Point(252, 24);
+            this.hasFirmwareLimit.Name = "hasFirmwareLimit";
+            this.hasFirmwareLimit.Properties.Caption = "Firmware limited";
+            this.hasFirmwareLimit.Size = new System.Drawing.Size(177, 19);
+            this.hasFirmwareLimit.TabIndex = 28;
+            this.hasFirmwareLimit.CheckedChanged += new System.EventHandler(this.hasFirmwareLimit_CheckedChanged);
             // 
             // isCarHighOutput
             // 
@@ -745,6 +758,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
             this.groupControl2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hasFirmwareLimit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.isCarHighOutput.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.useTrionicCalculationForTorque.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.displayTorqueInLBFT.Properties)).EndInit();
@@ -806,5 +820,6 @@ namespace T8SuitePro
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
 		private DevExpress.XtraEditors.CheckEdit showFuelFlow;
         private DevExpress.XtraEditors.CheckEdit isCarHighOutput;
+        private DevExpress.XtraEditors.CheckEdit hasFirmwareLimit;
     }
 }
