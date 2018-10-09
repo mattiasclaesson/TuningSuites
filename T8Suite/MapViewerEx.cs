@@ -15,10 +15,9 @@ using NLog;
 
 namespace T8SuitePro
 {
-
-
     public partial class MapViewerEx : /*DevExpress.XtraEditors.XtraUserControl */ IMapViewer
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private bool m_issixteenbit = false;
         private int m_TableWidth = 8;
         private bool m_datasourceMutated = false;
@@ -34,7 +33,6 @@ namespace T8SuitePro
         private bool m_OverlayVisible = true;
         private double m_realMaxValue = -65535;
         private double m_realMinValue = 65535;
-        private Logger logger = LogManager.GetCurrentClassLogger();
 
         private double m_Yaxiscorrectionfactor = 1;
 
@@ -59,9 +57,51 @@ namespace T8SuitePro
             set { open_loop = value; }
         }
 
+        private bool m_OnlineMode = false;
+
+        public override bool OnlineMode
+        {
+            get { return m_OnlineMode; }
+            set
+            {
+                m_OnlineMode = value;
+                logger.Debug("RefreshMeshGraph on online mode");
+                if (m_OnlineMode)
+                {
+                }
+                else
+                {
+                    RefreshMeshGraph();
+                    UpdateChartControlSlice(GetDataFromGridView(false));
+                    ShowTable(m_TableWidth, m_issixteenbit);
+                }
+            }
+        }
+
+        private bool _isCompareViewer = false;
+
+        public override bool IsCompareViewer
+        {
+            get { return _isCompareViewer; }
+            set
+            {
+                _isCompareViewer = value;
+                if (_isCompareViewer)
+                {
+                    gridView1.OptionsBehavior.Editable = false; // don't let the user edit a compare viewer
+                    toolStripButton3.Enabled = false;
+                    toolStripTextBox1.Enabled = false;
+                    toolStripComboBox1.Enabled = false;
+                    smoothSelectionToolStripMenuItem.Enabled = false;
+                    pasteSelectedCellsToolStripMenuItem.Enabled = false;
+                    simpleButton2.Enabled = false;
+                }
+            }
+        }
+
         public override void SetViewSize(ViewSize vs)
         {
-            m_vs = vs; 
+            m_vs = vs;
             if (vs == ViewSize.SmallView)
             {
                 gridView1.PaintStyleName = "UltraFlat";
@@ -78,8 +118,16 @@ namespace T8SuitePro
                 gridView1.Appearance.Row.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
                 gridView1.Appearance.Row.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             }
+            else if (vs == ViewSize.TouchscreenView)
+            {
+                gridView1.PaintStyleName = "UltraFlat";
+                gridView1.Appearance.Row.Font = new Font("Tahoma", 6);
+                this.Font = new Font("Tahoma", 6);
+                gridView1.Appearance.Row.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+                gridView1.Appearance.Row.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            }
         }
-        
+
         private SymbolCollection m_SymbolCollection = new SymbolCollection();
 
         public override SymbolCollection mapSymbolCollection
@@ -158,46 +206,32 @@ namespace T8SuitePro
         }
 
         private string m_filename;
-        //private bool m_isHexMode = true;
         private bool m_isRedWhite = false;
         private int m_textheight = 12;
-        private string m_xformatstringforhex = "X4";
-        //private bool m_isDragging = false;
+        private string m_xformatstringforhex;
         private int _mouse_drag_x = 0;
         private int _mouse_drag_y = 0;
         private bool m_prohibitlock_change = false;
-
-        private bool _isCompareViewer = false;
-
-        public override bool IsCompareViewer
-        {
-            get { return _isCompareViewer; }
-            set
-            {
-                _isCompareViewer = value;
-                if (_isCompareViewer)
-                {
-                    gridView1.OptionsBehavior.Editable = false; // don't let the user edit a compare viewer
-                    toolStripButton3.Enabled = false;
-                    toolStripTextBox1.Enabled = false;
-                    toolStripComboBox1.Enabled = false;
-                    smoothSelectionToolStripMenuItem.Enabled = false;
-                    pasteSelectedCellsToolStripMenuItem.Enabled = false;
-                    //exportMapToolStripMenuItem.Enabled = false;
-                    simpleButton2.Enabled = false;
-//                    simpleButton3.Enabled = false;
-                    //btnSaveToRAM.Enabled = false;
-                    //btnReadFromRAM.Enabled = false;
-                }
-            }
-        }
 
         private bool m_tableVisible = false;
 
         public override int SliderPosition
         {
             get { return (int)trackBarControl1.EditValue; }
-            set { trackBarControl1.EditValue = value; }
+            set
+            {
+                if (trackBarControl1 != null)
+                {
+                    try
+                    {
+                        trackBarControl1.EditValue = value;
+                    }
+                    catch (Exception E)
+                    {
+                        logger.Debug(E, "SliderPosition");
+                    }
+                }
+            }
         }
 
         public override bool TableVisible
@@ -231,21 +265,11 @@ namespace T8SuitePro
         {
             get
             {
-                //_max_y_axis_value = ((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValueInternal;
                 return _max_y_axis_value;
             }
-            set { 
+            set
+            {
                 _max_y_axis_value = value;
-                /*if (_max_y_axis_value > 0)
-                {
-                    ((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValueInternal = (_max_y_axis_value + correction_offset) * correction_factor;
-                }
-                else 
-                {
-                    // set to autoscale
-                    ((XYDiagram)chartControl1.Diagram).AxisY.Range.Auto = true;
-                }*/
-                //surfaceGraphViewer1.
             }
         }
 
@@ -254,28 +278,15 @@ namespace T8SuitePro
         public override bool IsRAMViewer
         {
             get { return m_isRAMViewer; }
-            set
-            {
-                m_isRAMViewer = value;
-                // Also when software is open
-//                simpleButton8.Enabled = m_isRAMViewer;
-//                simpleButton9.Enabled = m_isRAMViewer;
-            }
+            set { m_isRAMViewer = value; }
         }
 
         private bool m_isOpenSoftware = false;
 
-
         public override bool IsOpenSoftware
         {
             get { return m_isOpenSoftware; }
-            set
-            {
-                m_isOpenSoftware = value;
-                // Also when software is open
-//                simpleButton8.Enabled = m_isOpenSoftware;
-//                simpleButton9.Enabled = m_isOpenSoftware;
-            }
+            set { m_isOpenSoftware = value; }
         }
 
         private bool m_isUpsideDown = false;
@@ -409,7 +420,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to refresh mesh chart: " + E.Message);
+                logger.Debug(E, "Failed to refresh mesh chart");
             }
         }
 
@@ -578,12 +589,6 @@ namespace T8SuitePro
             set { m_isRedWhite = value; }
         }
 
-        /*public bool IsHexMode
-        {
-            get { return m_isHexMode; }
-            set { m_isHexMode = value; }
-        }*/
-
         public override string Filename
         {
             get { return m_filename; }
@@ -596,6 +601,15 @@ namespace T8SuitePro
             get { return m_datasourceMutated; }
             set { m_datasourceMutated = value; }
         }
+
+        private bool m_UseNewCompare = false;
+
+        public override bool UseNewCompare
+        {
+            get { return m_UseNewCompare; }
+            set { m_UseNewCompare = value; }
+        }
+
         private bool m_SaveChanges = false;
 
         public override bool SaveChanges
@@ -625,40 +639,6 @@ namespace T8SuitePro
         {
             get { return m_map_original_content; }
             set { m_map_original_content = value; }
-        }
-        private bool m_UseNewCompare = false;
-
-        public override bool UseNewCompare
-        {
-            get { return m_UseNewCompare; }
-            set { m_UseNewCompare = value; }
-        }
-
-        private bool m_OnlineMode = false;
-
-        public override bool OnlineMode
-        {
-            get { return m_OnlineMode; }
-            set
-            {
-                m_OnlineMode = value;
-                logger.Debug("RefreshMeshGraph on online mode");
-                if (m_OnlineMode)
-                {
-                    //                    surfaceGraphViewer1.ShowinBlue = true;
-
-                    //RefreshMeshGraph();
-                    //UpdateChartControlSlice(GetDataFromGridView(false));
-                    //ShowTable(m_TableWidth, m_issixteenbit);
-                }
-                else
-                {
-                    //                    surfaceGraphViewer1.ShowinBlue = false;
-                    RefreshMeshGraph();
-                    UpdateChartControlSlice(GetDataFromGridView(false));
-                    ShowTable(m_TableWidth, m_issixteenbit);
-                }
-            }
         }
 
         private bool _autoUpdateIfSRAM = false;
@@ -733,7 +713,6 @@ namespace T8SuitePro
             set
             {
                 m_map_cat = value;
-                //.Text = m_map_descr;
             }
         }
 
@@ -774,41 +753,6 @@ namespace T8SuitePro
             set { y_axisvalues = value; }
         }
 
-        /*public delegate void AxisEditorRequested(object sender, AxisEditorRequestedEventArgs e);
-        public event MapViewerEx.AxisEditorRequested onAxisEditorRequested;
-
-        public delegate void ReadDataFromSRAM(object sender, ReadFromSRAMEventArgs e);
-        public event MapViewerEx.ReadDataFromSRAM onReadFromSRAM;
-        public delegate void WriteDataToSRAM(object sender, WriteToSRAMEventArgs e);
-        public event MapViewerEx.WriteDataToSRAM onWriteToSRAM;
-
-        public delegate void ViewTypeChanged(object sender, ViewTypeChangedEventArgs e);
-        public event MapViewerEx.ViewTypeChanged onViewTypeChanged;
-
-
-        public delegate void GraphSelectionChanged(object sender, GraphSelectionChangedEventArgs e);
-        public event MapViewerEx.GraphSelectionChanged onGraphSelectionChanged;
-
-        public delegate void SurfaceGraphViewChanged(object sender, SurfaceGraphViewChangedEventArgs e);
-        public event MapViewerEx.SurfaceGraphViewChanged onSurfaceGraphViewChanged;
-
-        public delegate void NotifySaveSymbol(object sender, SaveSymbolEventArgs e);
-        public event MapViewerEx.NotifySaveSymbol onSymbolSave;
-
-        public delegate void SplitterMoved(object sender, SplitterMovedEventArgs e);
-        public event MapViewerEx.SplitterMoved onSplitterMoved;
-
-        public delegate void SelectionChanged(object sender, CellSelectionChangedEventArgs e);
-        public event MapViewerEx.SelectionChanged onSelectionChanged;
-
-        public delegate void NotifyAxisLock(object sender, AxisLockEventArgs e);
-        public event MapViewerEx.NotifyAxisLock onAxisLock;
-
-        public delegate void NotifySliderMove(object sender, SliderMoveEventArgs e);
-        public event MapViewerEx.NotifySliderMove onSliderMove;
-        
-        public delegate void ViewerClose(object sender, EventArgs e);
-        public event MapViewerEx.ViewerClose onClose;*/
         public override event IMapViewer.ViewerClose onClose;
         public override event IMapViewer.AxisEditorRequested onAxisEditorRequested;
         public override event IMapViewer.ReadDataFromSRAM onReadFromSRAM;
@@ -828,7 +772,6 @@ namespace T8SuitePro
         public MapViewerEx()
         {
             InitializeComponent();
-            //surfaceGraphViewer1.onGraphChanged += new SurfaceGraphViewer.GraphChangedEvent(surfaceGraphViewer1_onGraphChanged);
             toolStripComboBox1.SelectedIndex = 0;
             toolStripComboBox2.SelectedIndex = 0;
 
@@ -837,15 +780,6 @@ namespace T8SuitePro
             nChartControl1.MouseUp += new MouseEventHandler(nChartControl1_MouseUp);
 
             gridView1.MouseMove += new MouseEventHandler(gridView1_MouseMove);
-            
-            /*string[] datamembers = new string[1];
-            chartControl1.Series[0].ValueDataMembers.Clear();
-            datamembers.SetValue("Y", 0);
-            
-            chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
-            timer4.Enabled = false;*/
-/*            chartControl1.Series[0].ArgumentDataMember = "X";*/
-
         }
 
         void gridView1_MouseMove(object sender, MouseEventArgs e)
@@ -865,23 +799,8 @@ namespace T8SuitePro
                 dragTool = new NTrackballTool();
                 nChartControl1.Controller.Tools.Add(dragTool);
             }
-            //<GS-07062010>
             CastSurfaceGraphChangedEventEx(nChartControl1.Charts[0].Projection.XDepth, nChartControl1.Charts[0].Projection.YDepth, nChartControl1.Charts[0].Projection.Zoom, nChartControl1.Charts[0].Projection.Rotation, nChartControl1.Charts[0].Projection.Elevation);
-
-
         }
-
-        private void CastSurfaceGraphChangedEventEx(float xdepth, float ydepth, float zoom, float rotation, float elevation)
-        {
-            if (onSurfaceGraphViewChangedEx != null)
-            {
-                if (!m_prohibitgraphchange)
-                {
-                    onSurfaceGraphViewChangedEx(this, new SurfaceGraphViewChangedEventArgsEx(xdepth, ydepth, zoom, rotation, elevation, m_map_name));
-                }
-            }
-        }
-
 
         void nChartControl1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -895,8 +814,6 @@ namespace T8SuitePro
                 NDragTool dragTool = null;
                 dragTool = new NOffsetTool();
                 nChartControl1.Controller.Tools.Add(dragTool);
-                //dragTool.BeginDragMouseCommand.MouseButton = MouseButtons.Right;
-                //dragTool.EndDragMouseCommand.MouseButton = MouseButtons.Right;
             }
 
         }
@@ -914,8 +831,18 @@ namespace T8SuitePro
                 nChartControl1.Charts[0].Projection.Zoom -= 5;
                 nChartControl1.Refresh();
             }
-            //<GS-07062010>
             CastSurfaceGraphChangedEventEx(nChartControl1.Charts[0].Projection.XDepth, nChartControl1.Charts[0].Projection.YDepth, nChartControl1.Charts[0].Projection.Zoom, nChartControl1.Charts[0].Projection.Rotation, nChartControl1.Charts[0].Projection.Elevation);
+        }
+
+        private void CastSurfaceGraphChangedEventEx(float xdepth, float ydepth, float zoom, float rotation, float elevation)
+        {
+            if (onSurfaceGraphViewChangedEx != null)
+            {
+                if (!m_prohibitgraphchange)
+                {
+                    onSurfaceGraphViewChangedEx(this, new SurfaceGraphViewChangedEventArgsEx(xdepth, ydepth, zoom, rotation, elevation, m_map_name));
+                }
+            }
         }
 
         void surfaceGraphViewer1_onGraphChanged(object sender, SurfaceGraphViewer.GraphChangedEventArgs e)
@@ -940,7 +867,6 @@ namespace T8SuitePro
             double m_realValue;
 
             m_MaxValueInTable = 0;
-            //if (m_isHexMode)
             if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 int lenvals = m_map_length;
@@ -964,8 +890,6 @@ namespace T8SuitePro
                     int numberrows = (int)(m_map_length / tablewidth);
                     if (issixteenbits) numberrows /= 2;
                     int map_offset = 0;
-                    /* if (numberrows > 0)
-                     {*/
                     // aantal kolommen = 8
 
                     dt.Columns.Clear();
@@ -979,8 +903,6 @@ namespace T8SuitePro
 
                         for (int i = 0; i < numberrows; i++)
                         {
-                            //ListViewItem lvi = new ListViewItem();
-                            //lvi.UseItemStyleForSubItems = false;
                             object[] objarr = new object[tablewidth];
                             int b;
                             for (int j = 0; j < tablewidth; j++)
@@ -988,26 +910,11 @@ namespace T8SuitePro
                                 b = (byte)m_map_content.GetValue(map_offset++);
                                 b *= 256;
                                 b += (byte)m_map_content.GetValue(map_offset++);
-                                /*if ( (b & 0x8000) > 0)
-                                {
-                                    //valtot = 0x10000 - valtot;
-                                    b &= 0x7FFF;
-                                    b = -b;
-                                }*/
                                 if (b > 0xF000)
                                 {
-                                    //b ^= 0xFFFF;
                                     b = 0x10000 - b;
                                     b = -b;
                                 }
-                                // TEST!!!
-                                /* else if ((b & 0x8000) > 0)
-                                 {
-                                     //valtot = 0x10000 - valtot;
-                                     b &= 0x7FFF;
-                                     b = -b;
-                                 }*/
-
                                 
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
                                 m_realValue = b;
@@ -1015,18 +922,12 @@ namespace T8SuitePro
                                 if (!_isCompareViewer) m_realValue += correction_offset;
                                 if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                 if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
-                                // TEST
-                                //b = (int)(correction_factor * (double)b);
-                                //b = (int)(correction_offset + (double)b);
-                                // TEST
-                                //if (m_isHexMode)
                                 if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X4"), j);
                                 }
                                 else if (m_viewtype == SuiteViewType.ASCII)
                                 {
-                                    //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
                                     try
                                     {
@@ -1042,10 +943,7 @@ namespace T8SuitePro
                                 {
                                     objarr.SetValue(b.ToString(), j);
                                 }
-                                //lvi.SubItems.Add(b.ToString("X4"));
-                                //lvi.SubItems[j + 1].BackColor = Color.FromArgb((int)(b / 256), 255 - (int)(b / 256), 0);
                             }
-                            //listView2.Items.Add(lvi);
                             if (m_isUpsideDown)
                             {
                                 System.Data.DataRow r = dt.NewRow();
@@ -1057,7 +955,7 @@ namespace T8SuitePro
                                 dt.Rows.Add(objarr);
                             }
                         }
-                        // en dan het restant nog in een nieuwe rij zetten
+                        // and then put the remainder in a new row. is this really used?
                         if (map_offset < m_map_length)
                         {
                             object[] objarr = new object[tablewidth];
@@ -1065,7 +963,6 @@ namespace T8SuitePro
                             int sicnt = 0;
                             for (int v = map_offset; v < m_map_length - 1; v++)
                             {
-                                //b = (byte)m_map_content.GetValue(map_offset++);
                                 if (map_offset <= m_map_content.Length - 1)
                                 {
                                     b = (byte)m_map_content.GetValue(map_offset++);
@@ -1073,49 +970,21 @@ namespace T8SuitePro
                                     b += (byte)m_map_content.GetValue(map_offset++);
                                     if (b > 0xF000)
                                     {
-                                        //                                        b ^= 0xFFFF;
                                         b = 0x10000 - b;
-
                                         b = -b;
                                     }
-                                    /*if (b > 0x10000)
-                                    {
-                                        b ^= 0xFFFF;
-                                        b = -b;
-                                    }*/
-                                    // TEST!!!
-                                    /*  else if ((b & 0x8000) > 0)
-                                      {
-                                          //valtot = 0x10000 - valtot;
-                                          b &= 0x7FFF;
-                                          b = -b;
-                                      }*/
-                                    /*if ((b & 0x8000) > 0)
-                                    {
-                                        //valtot = 0x10000 - valtot;
-                                        b &= 0x7FFF;
-                                        b = -b;
-                                    }*/
                                     if (b > m_MaxValueInTable) m_MaxValueInTable = b;
                                     m_realValue = b;
                                     m_realValue *= correction_factor;
                                     if (!_isCompareViewer) m_realValue += correction_offset;
                                     if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                     if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
-                                    // TEST
-                                    //b = (int)(correction_factor * (double)b);
-                                    //b = (int)(correction_offset + (double)b);
-
-                                    // TEST
-
-                                    //                                    if (m_isHexMode)
                                     if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
                                     }
                                     else if (m_viewtype == SuiteViewType.ASCII)
                                     {
-                                        //objarr.SetValue(b.ToString("X4"), j);
                                         // show as ascii characters
                                         objarr.SetValue(Convert.ToChar(b), sicnt);
                                     }
@@ -1125,13 +994,7 @@ namespace T8SuitePro
                                     }
                                 }
                                 sicnt++;
-                                //lvi.SubItems[lvi.SubItems.Count - 1].BackColor = Color.FromArgb((int)(b / 256), 255 - (int)(b / 256), 0);
                             }
-                            /*for (int t = 0; t < (tablewidth - 1) - sicnt; t++)
-                            {
-                                lvi.SubItems.Add("");
-                            }*/
-                            //listView2.Items.Add(lvi);
                             if (m_isUpsideDown)
                             {
                                 System.Data.DataRow r = dt.NewRow();
@@ -1162,22 +1025,23 @@ namespace T8SuitePro
                                 if (!_isCompareViewer) m_realValue += correction_offset;
                                 if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                 if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
-                                // TEST
-                                //b = (byte)(correction_factor * (double)b);
-                                //b = (byte)(correction_offset + (double)b);
 
-                                // TEST
 
-                                //if (m_isHexMode)
                                 if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), j);
                                 }
                                 else if (m_viewtype == SuiteViewType.ASCII)
                                 {
-                                    //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
-                                    objarr.SetValue(Convert.ToChar(b), j);
+                                    try
+                                    {
+                                        objarr.SetValue(Convert.ToChar(b), j);
+                                    }
+                                    catch (Exception E)
+                                    {
+                                        logger.Debug(E, "ASCII");
+                                    }
                                 }
                                 else
                                 {
@@ -1196,13 +1060,13 @@ namespace T8SuitePro
                                 dt.Rows.Add(objarr);
                             }
                         }
-                        // en dan het restant nog in een nieuwe rij zetten
+                        // and then put the remainder in a new row. is this really used?
                         if (map_offset < m_map_length)
                         {
                             object[] objarr = new object[tablewidth];
                             byte b;
                             int sicnt = 0;
-                            for (int v = map_offset; v < m_map_length /*- 1*/; v++)
+                            for (int v = map_offset; v < m_map_length; v++)
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
@@ -1211,20 +1075,13 @@ namespace T8SuitePro
                                 if (!_isCompareViewer) m_realValue += correction_offset;
                                 if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                 if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
-                                // TEST
-                                //b = (byte)(correction_factor * (double)b);
-                                //b = (byte)(correction_offset + (double)b);
 
-                                // TEST
-
-                                //if (m_isHexMode)
                                 if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), sicnt);
                                 }
                                 else if (m_viewtype == SuiteViewType.ASCII)
                                 {
-                                    //objarr.SetValue(b.ToString("X4"), j);
                                     // show as ascii characters
                                     objarr.SetValue(Convert.ToChar(b), sicnt);
                                 }
@@ -1259,116 +1116,28 @@ namespace T8SuitePro
                     }
                 }
 
-
-                // set axis
-                // scale to 3 bar?
-                int indicatorwidth = -1;
-                for (int i = 0; i < y_axisvalues.Length; i++)
-                {
-                    string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
-                    if (m_viewtype == SuiteViewType.Hexadecimal)
-                    {
-                        yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
-                    }
-                    if (m_y_axis_name == "MAP")
-                    {
-                    }
-                    Graphics g = gridControl1.CreateGraphics();
-                    SizeF size = g.MeasureString(yval, this.Font);
-                    if (size.Width > indicatorwidth) indicatorwidth = (int)size.Width;
-                    m_textheight = (int)size.Height;
-                    g.Dispose();
-
-                }
+                SizeF size = MaximumYAxisSize();
+                m_textheight = (int)size.Height;
+                int indicatorwidth = (int)size.Width;
                 if (indicatorwidth > 0)
                 {
                     gridView1.IndicatorWidth = indicatorwidth + 6; // keep margin
                 }
 
-                int maxxval = 0;
-                for (int i = 0; i < x_axisvalues.Length; i++)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
-                    int xval = Convert.ToInt32(x_axisvalues.GetValue(i));
-                    if (xval > 0xF000)
-                    {
-                        //xval ^= 0xFFFF;
-                        xval = 0x10000 - xval;
-                        xval = -xval;
-                        x_axisvalues.SetValue(xval, i);
-                    }
-
-                    /* if (xval > 0x10000)
-                     {
-                         xval ^= 0xFFFF;
-                         xval = -xval;
-                     }
-                     else if ((xval & 0x8000) > 0)
-                     {
-                         //valtot = 0x10000 - valtot;
-                         xval &= 0x7FFF;
-                         xval = -xval;
-                     }*/
-
-                    if (xval > maxxval) maxxval = xval;
+                    m_xformatstringforhex = HexadecimalFormatXAxis();
                 }
-                if (maxxval <= 255) m_xformatstringforhex = "X2";
             }
-/*
-            surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-            surfaceGraphViewer1.Map_name = m_map_name;
-            surfaceGraphViewer1.X_axis = x_axisvalues;
-            surfaceGraphViewer1.Y_axis = y_axisvalues;
-            surfaceGraphViewer1.X_axis_descr = X_axis_name;
-            surfaceGraphViewer1.Y_axis_descr = Y_axis_name;
-            surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
-            surfaceGraphViewer1.Map_length = m_map_length;
-            surfaceGraphViewer1.Map_content = m_map_content;
 
-            surfaceGraphViewer1.Map_original_content = m_map_original_content;
-            surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
-
-            surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
-            surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-            surfaceGraphViewer1.Pov_d = 0.3;
-            SetViewTypeParams(m_vs);
-
-            surfaceGraphViewer1.IsUpsideDown = true;
-            surfaceGraphViewer1.NormalizeData();
-            XYDiagram diag = ((XYDiagram)chartControl1.Diagram);
-            diag.AxisX.Title.Text = Y_axis_name;
-            diag.AxisY.Title.Text = Z_axis_name;
-            diag.AxisX.Title.Visible = true;
-            diag.AxisY.Title.Visible = true;
-
-            chartControl1.Visible = true;
-            */
             if (m_TableWidth > 1)
             {
                 xtraTabControl1.SelectedTabPage = xtraTabPage1;
-               /* surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-                surfaceGraphViewer1.Map_name = m_map_name;
-                surfaceGraphViewer1.X_axis = x_axisvalues;
-                surfaceGraphViewer1.Y_axis = y_axisvalues;
-                surfaceGraphViewer1.X_axis_descr = X_axis_name;
-                surfaceGraphViewer1.Y_axis_descr = Y_axis_name;
-                surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
-                surfaceGraphViewer1.Map_length = m_map_length;
-                surfaceGraphViewer1.Map_content = m_map_content;
-                surfaceGraphViewer1.Map_original_content = m_map_original_content;
-                surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
-
-                surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
-                surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-                //                surfaceGraphViewer1.Pov_d = 0.3;
-                surfaceGraphViewer1.Pov_d = 0.3;*/
-                SetViewTypeParams(m_vs);
-                //surfaceGraphViewer1.IsUpsideDown = true;
-
-                //surfaceGraphViewer1.NormalizeData();
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = x_axisvalues.Length - 1;
                 labelControl8.Text = X_axis_name + " values";
                 trackBarControl1.Value = 0;
+
                 nChartControl1.Settings.ShapeRenderingMode = ShapeRenderingMode.HighSpeed;
                 nChartControl1.Controller.Tools.Add(new NSelectorTool());
                 nChartControl1.Controller.Tools.Add(new NTrackballTool());
@@ -1380,8 +1149,6 @@ namespace T8SuitePro
 
                 // setup chart
                 logger.Debug("Number of charts: " + nChartControl1.Charts.Count.ToString());
-
-
 
                 NChart chart = nChartControl1.Charts[0];
                 nChartControl1.Legends.Clear();
@@ -1402,15 +1169,6 @@ namespace T8SuitePro
                 scaleConfiguratorX.MaxTickCount = dt.Rows.Count;
                 scaleConfiguratorX.MajorTickMode = MajorTickMode.AutoMaxCount;
 
-
-                // nieuw
-                /*NLinearScaleConfigurator scaleConfiguratorX = new NLinearScaleConfigurator();
-                chart.Axis(StandardAxis.PrimaryX).ScaleConfigurator = scaleConfiguratorX;
-                scaleConfiguratorX.MajorGridStyle.SetShowAtWall(ChartWallType.Floor, true);
-                scaleConfiguratorX.MajorGridStyle.SetShowAtWall(ChartWallType.Back, true);
-                scaleConfiguratorX.RoundToTickMax = false;
-                scaleConfiguratorX.RoundToTickMin = false;*/
-
                 NScaleTitleStyle titleStyleX = (NScaleTitleStyle)scaleConfiguratorX.Title;
                 titleStyleX.Text = m_y_axis_name;
                 //<GS-08032010> as waarden nog omzetten indien noodzakelijk (MAP etc)
@@ -1422,7 +1180,7 @@ namespace T8SuitePro
                     string yvalue = y_axisvalues.GetValue(t).ToString();
                     scaleConfiguratorX.Labels.Add(yvalue);
                 }
-            
+
                 NStandardScaleConfigurator scaleConfiguratorY = (NStandardScaleConfigurator)chart.Axis(StandardAxis.Depth).ScaleConfigurator;
                 scaleConfiguratorY.MajorTickMode = MajorTickMode.AutoMaxCount;
                 scaleConfiguratorY.MaxTickCount = dt.Columns.Count;
@@ -1541,49 +1299,13 @@ namespace T8SuitePro
                 surface.FillStyle.SetTransparencyPercent(25);
                 surface.FrameMode = SurfaceFrameMode.MeshContour;
                 RefreshMeshGraph();
-
-                //byte[] bts = GetDataFromGridView(false);
-                //UpdateChartControlSlice(bts);
-
-                /*
-                x = "MAP";
-                y = "RPM";
-                z = "Degrees";
-                 */
             }
             else if (m_TableWidth == 1)
             {
                 xtraTabControl1.SelectedTabPage = xtraTabPage2;
-                //surfaceGraphViewer1.Visible = false;
-                //chartControl1.;
-                /*** test ***/
-                /*surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
-
-                surfaceGraphViewer1.Map_name = m_map_name;
-                surfaceGraphViewer1.X_axis = x_axisvalues;
-                surfaceGraphViewer1.Y_axis = y_axisvalues;
-                surfaceGraphViewer1.X_axis_descr = X_axis_name;
-                surfaceGraphViewer1.Y_axis_descr = Y_axis_name;
-                surfaceGraphViewer1.Z_axis_descr = Z_axis_name;
-                surfaceGraphViewer1.Map_length = m_map_length;
-                surfaceGraphViewer1.Map_content = m_map_content;
-                surfaceGraphViewer1.Map_original_content = m_map_original_content;
-                surfaceGraphViewer1.Map_compare_content = m_map_compare_content;
-
-                surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
-                surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-                //surfaceGraphViewer1.Pov_d = 0.3;
-                surfaceGraphViewer1.Pov_d = 0.3;*/
-                SetViewTypeParams(m_vs);
-                //surfaceGraphViewer1.IsUpsideDown = true;
-                //surfaceGraphViewer1.NormalizeData();
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = x_axisvalues.Length - 1;
                 labelControl8.Text = X_axis_name + " values";
-
-                /*** end test ***/
-
-
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = 0;
                 trackBarControl1.Enabled = false;
@@ -1616,23 +1338,12 @@ namespace T8SuitePro
                         valcount++;
                     }
                 }
-                //chartControl1.Series[0].Label.Text = m_map_name;
-                /*chartControl1.Series[0].LegendText = m_map_name;
-                chartControl1.DataSource = chartdt;
-                string[] datamembers = new string[1];
-                chartControl1.Series[0].ValueDataMembers.Clear();
-                datamembers.SetValue("Y", 0);
-                chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
-                chartControl1.Series[0].ArgumentDataMember = "X";
-                chartControl1.Visible = true;*/
             }
             Init2dChart();
             m_trackbarBlocked = false;
 
             if (this.m_map_address >= 0x100000 || (m_isOpenSoftware && m_isRAMViewer))
             {
-                //this.m_isRAMViewer = true;
-                //this.OnlineMode = true;
                 if (_autoUpdateIfSRAM)
                 {
                     timer5.Interval = _autoUpdateInterval * 1000;
@@ -1699,11 +1410,6 @@ namespace T8SuitePro
             styleSheet.Apply(nChartControl2.Document);
         }
 
-        private void SetViewTypeParams(ViewSize vs)
-        {
-
-        }
-
         private void UpdateChartControlSlice(byte[] data)
         {
 
@@ -1716,7 +1422,6 @@ namespace T8SuitePro
             try
             {
                 labelControl9.Text = X_axis_name + " [" + x_axisvalues.GetValue((int)trackBarControl1.Value).ToString() + "]";
-                
             }
             catch (Exception E)
             {
@@ -1744,7 +1449,6 @@ namespace T8SuitePro
                     }
                     value *= correction_factor;
                     value += correction_offset;
-                    //value = ConvertForThreeBarSensor(value);
                     if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
                     
 
@@ -1760,7 +1464,6 @@ namespace T8SuitePro
                     double value = Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth))));
                     value *= correction_factor;
                     value += correction_offset;
-                    //value = ConvertForThreeBarSensor(value);
 
                     if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
                     
@@ -1768,12 +1471,6 @@ namespace T8SuitePro
                     valcount++;
                 }
             }
-
-            //chartControl1.Series[0].Label.Text = m_map_name;
-            /*chartControl1.Series[0].LegendText = m_map_name;
-            chartControl1.DataSource = chartdt;
-            //chartControl1.Series[0].PointOptions.PointView = PointView.ArgumentAndValues;
-            chartControl1.Invalidate();*/
 
             NChart chart = nChartControl2.Charts[0];
             //NSeries series = (NSeries)chart.Series[0];
@@ -1786,51 +1483,6 @@ namespace T8SuitePro
             {
                 line = (NSmoothLineSeries)chart.Series[0];
             }
-            // set length of axis
-            //NStandardScaleConfigurator scaleConfiguratorX = (NStandardScaleConfigurator)chart.Axis(StandardAxis.PrimaryX).ScaleConfigurator;
-            //scaleConfiguratorX.MajorTickMode = MajorTickMode.AutoMaxCount;
-            //NScaleTitleStyle titleStyleX = (NScaleTitleStyle)scaleConfiguratorX.Title;
-            //titleStyleX.Text = m_y_axis_name;
-            //<GS-08032010> as waarden nog omzetten indien noodzakelijk (MAP etc)
-            //scaleConfiguratorX.AutoLabels = true;
-            //series.HorizontalAxes = y_axisvalues;
-            //scaleConfiguratorX.Labels.Clear();
-            /*for (int t = y_axisvalues.Length - 1; t >= 0; t--)
-            {
-                string yvalue = y_axisvalues.GetValue(t).ToString();
-                if (m_y_axis_name == "MAP" || m_y_axis_name == "Pressure error (bar)")
-                {
-                    try
-                    {
-                        float v = (float)Convert.ToDouble(yvalue);
-                        if (m_viewtype == ViewType.Easy3Bar)
-                        {
-                            v *= 1.2F;
-                        }
-                        else if (m_viewtype == ViewType.Easy35Bar)
-                        {
-                            v *= 1.4F;
-                        }
-                        else if (m_viewtype == ViewType.Easy4Bar)
-                        {
-                            v *= 1.6F;
-                        }
-                        v *= (float)0.01F;
-                        if (m_y_axis_name == "MAP")
-                        {
-                            v -= 1;
-                        }
-                        yvalue = v.ToString("F2");
-                    }
-                    catch (Exception cE)
-                    {
-                        logger.Debug(cE.Message);
-                    }
-                }
-                scaleConfiguratorX.Labels.Add(yvalue);
-                logger.Debug("Added axis label: " + yvalue);
-
-            }*/
             line.ClearDataPoints();
             foreach (DataRow dr in chartdt.Rows)
             {
@@ -1840,8 +1492,117 @@ namespace T8SuitePro
                 //logger.Debug("Added value: " + dr["Y"].ToString());
             }
             nChartControl2.Refresh();
+        }
 
+		private SizeF MaximumYAxisSize()
+        {
+            SizeF result = new SizeF(0,0);
+            for (int i = 0; i < y_axisvalues.Length; i++)
+            {
+                string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
+                if (m_viewtype == SuiteViewType.Hexadecimal)
+                {
+                    yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
+                }
+                if (m_y_axis_name == "MAP")
+                {
+                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 120;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 140;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 160;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 200;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                }
 
+                Graphics g = gridControl1.CreateGraphics();
+                SizeF size = g.MeasureString(yval, this.Font);
+                g.Dispose();
+                if (size.Width > result.Width)
+                {
+                    result = size;
+                }
+            }
+            return result;
+        }
+
+        private string HexadecimalFormatXAxis()
+        {
+            string result = "X4";
+            int maxxval = 0;
+            for (int i = 0; i < x_axisvalues.Length; i++)
+            {
+                int xval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                if (xval > 0xF000)
+                {
+                    xval = 0x10000 - xval;
+                    xval = -xval;
+                    x_axisvalues.SetValue(xval, i);
+                }
+
+                if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
+                {
+                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 120;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 140;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 160;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 200;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                }
+
+                if (xval > maxxval)
+                {
+                    maxxval = xval;
+                }
+            }
+            if (maxxval <= 255)
+            {
+                result = "X2";
+            }
+            return result;
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -1908,7 +1669,6 @@ namespace T8SuitePro
                     {
                         int b = 0;
                         int cellvalue = 0;
-                        //if (m_isHexMode)
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             b = Convert.ToInt32(e.CellValue.ToString(), 16);
@@ -1938,8 +1698,6 @@ namespace T8SuitePro
                             green = 255 - red;
                             blue = 255 - red;
                             c = Color.FromArgb(red, green, blue);
-                            // if (b == 0) c = Color.Transparent;
-
                         }
                         else if (!m_isRedWhite)
                         {
@@ -1970,16 +1728,10 @@ namespace T8SuitePro
                             {
                                 dispvalue = (float)((float)cellvalue * (float)correction_factor) + (float)correction_offset;
                                 if (m_viewtype != SuiteViewType.Hexadecimal)
-                                //if (!m_isHexMode)
                                 {
                                     if (m_map_name.StartsWith("Ign_map_0!") || m_map_name.StartsWith("Ign_map_4!"))
                                     {
                                         e.DisplayText = dispvalue.ToString("F1") + "\u00b0";
-                                        /*if (dispvalue < 0)
-                                        {
-                                            logger.Debug("Negative value:  " + cellvalue.ToString());
-
-                                        }*/
                                     }
                                     else if (m_map_name.StartsWith("Reg_kon_mat"))
                                     {
@@ -1989,10 +1741,6 @@ namespace T8SuitePro
                                     {
                                         e.DisplayText = dispvalue.ToString("F2");
                                     }
-                                }
-                                else
-                                {
-                                    //e.DisplayText = dispvalue.ToString();
                                 }
                             }
                             else if (m_map_name.StartsWith("Reg_kon_mat"))
@@ -2042,10 +1790,11 @@ namespace T8SuitePro
                             {
                                 logger.Debug(E.Message);
                             }
-
                         }
                     }
                 }
+
+                // draw realtime highlight!
                 if (m_selectedrowhandle >= 0 && m_selectedcolumnindex >= 0)
                 {
                     if (e.RowHandle == m_selectedrowhandle && e.Column.AbsoluteIndex == m_selectedcolumnindex)
@@ -2093,26 +1842,19 @@ namespace T8SuitePro
         {
             m_datasourceMutated = true;
             simpleButton2.Enabled = true;
-//            simpleButton3.Enabled = true;
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
         {
             ShowTable(m_TableWidth, m_issixteenbit);
             m_datasourceMutated = false;
-            //simpleButton2.Enabled = false;
-//            simpleButton3.Enabled = false;
         }
 
         private void saveToFile_Click(object sender, EventArgs e)
         {
-            //if (m_isRAMViewer) return;
-            //else
-            //{
                 m_SaveChanges = true;
                 m_datasourceMutated = false;
                 CastSaveEvent();
-            //}
         }
 
         private byte[] GetDataFromGridView(bool upsidedown)
@@ -2344,8 +2086,6 @@ namespace T8SuitePro
                     splitContainer1.Panel1Collapsed = false;
 
                     splitContainer1.SplitterDistance = splitdistance;
-                  //  splitContainer1.Panel1.Height = panel1height;
-                  //  splitContainer1.Panel2.Height = panel2height;
                 }
 
                 m_prohibitsplitchange = false;
@@ -2365,8 +2105,6 @@ namespace T8SuitePro
                 byte[] mutateddata = GetDataFromGridView(m_isUpsideDown);
                 onSymbolSave(this, new SaveSymbolEventArgs(m_map_address, m_map_length, mutateddata, m_map_name, Filename));
                 m_datasourceMutated = false;
-                //simpleButton2.Enabled = false;
-//                simpleButton3.Enabled = false;
             }
             else
             {
@@ -2382,7 +2120,7 @@ namespace T8SuitePro
                 // haal eerst de data uit de tabel van de gridview
                 if (!m_prohibitsplitchange)
                 {
-                    onSplitterMoved(this, new SplitterMovedEventArgs(splitContainer1.Panel1.Height, splitContainer1.Panel2.Height,splitContainer1.SplitterDistance ,splitContainer1.Panel1Collapsed, splitContainer1.Panel2Collapsed, m_map_name));
+                    onSplitterMoved(this, new SplitterMovedEventArgs(splitContainer1.Panel1.Height, splitContainer1.Panel2.Height, splitContainer1.SplitterDistance, splitContainer1.Panel1Collapsed, splitContainer1.Panel2Collapsed, m_map_name));
                 }
             }
             else
@@ -2420,7 +2158,6 @@ namespace T8SuitePro
             
             m_datasourceMutated = true;
             simpleButton2.Enabled = true;
-//            simpleButton3.Enabled = true;
             if (nChartControl1.Visible)
             {
                 StartSurfaceChartUpdateTimer();
@@ -2434,7 +2171,6 @@ namespace T8SuitePro
                 else
                 {
                     StartChartUpdateTimer();
-                    //   UpdateChartControlSlice(GetDataFromGridView(false));
                 }
             }
         }
@@ -2469,7 +2205,6 @@ namespace T8SuitePro
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        //if (IsHexMode)
                         if(m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
@@ -2577,7 +2312,7 @@ namespace T8SuitePro
                         else
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value+=10;
+                            value += 10;
                             if (value > m_MaxValueInTable) m_MaxValueInTable = value;
                             if (m_issixteenbit)
                             {
@@ -2599,11 +2334,10 @@ namespace T8SuitePro
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        //if (IsHexMode)
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
-                            value-=0x10;
+                            value -= 0x10;
                             if (!m_issixteenbit)
                             {
                                 if (value < 0) value = 0;
@@ -2620,7 +2354,7 @@ namespace T8SuitePro
                         else
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value-=10;
+                            value -= 10;
                             if (!m_issixteenbit)
                             {
                                 if (value < 0) value = 0;
@@ -2643,7 +2377,6 @@ namespace T8SuitePro
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        //if (IsHexMode)
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
 
@@ -2722,9 +2455,6 @@ namespace T8SuitePro
         {
             if (e.RowHandle >= 0)
             {
-                
-              //  e.Painter.DrawCaption(new DevExpress.Utils.Drawing.ObjectInfoArgs(new DevExpress.Utils.Drawing.GraphicsCache(e.Graphics)), "As waarde", this.Font, Brushes.MidnightBlue, e.Bounds, null);
-               // e.Cache.DrawString("As waarde", this.Font, Brushes.MidnightBlue, e.Bounds, new StringFormat());
                 try
                 {
                     if (y_axisvalues.Length > 0)
@@ -2777,7 +2507,6 @@ namespace T8SuitePro
                             e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
                             System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                             e.Graphics.FillRectangle(gb, e.Bounds);
-                            //e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, r);
                             e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, new PointF(e.Bounds.X + 3, e.Bounds.Y + 1 + (e.Bounds.Height - m_textheight) / 2));
                             e.Handled = true;
                         }
@@ -2818,7 +2547,6 @@ namespace T8SuitePro
 
         private void chartControl1_CustomDrawSeriesPoint(object sender, CustomDrawSeriesPointEventArgs e)
         {
-            
         }
 
         private void chartControl1_ObjectHotTracked(object sender, HotTrackEventArgs e)
@@ -2858,18 +2586,12 @@ namespace T8SuitePro
             else
             {
                 toolTipController1.HideHint();
-                
             }
 
         }
 
         private void chartControl1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-           /* object[] objs = chartControl1.HitTest(e.X, e.Y);
-            foreach (object o in objs)
-            {
-                logger.Debug("Double clicked: " + o.ToString());
-            }*/
         }
 
         private SeriesPoint _sp_dragging;
@@ -2878,7 +2600,6 @@ namespace T8SuitePro
         {
             if (e.Button == MouseButtons.Left)
             {
-                //m_isDragging = true;
                 timer4.Enabled = true;
                 _mouse_drag_x = e.X;
                 _mouse_drag_y = e.Y;
@@ -2895,36 +2616,6 @@ namespace T8SuitePro
         private void timer3_Tick(object sender, EventArgs e)
         {
             UpdateChartControlSlice(GetDataFromGridView(false));
-
-           /* DataTable chartdt = new DataTable();
-            chartdt.Columns.Add("X", Type.GetType("System.Double"));
-            chartdt.Columns.Add("Y", Type.GetType("System.Double"));
-            double valcount = 0;
-            byte[] content = GetDataFromGridView(false);
-            if (m_issixteenbit)
-            {
-                for (int t = 0; t < content.Length; t += 2)
-                {
-                    double value = Convert.ToDouble(content.GetValue((content.Length - 1) - (t + 1))) * 256;
-                    value += Convert.ToDouble(content.GetValue((content.Length - 1) - (t)));
-                    chartdt.Rows.Add(valcount++, value);
-                }
-            }
-            else
-            {
-                for (int t = 0; t < m_map_length; t++)
-                {
-                    double value = Convert.ToDouble(content.GetValue((content.Length - 1) - t));
-                    chartdt.Rows.Add(valcount++, value);
-                }
-            }
-            chartControl1.DataSource = chartdt;
-            string[] datamembers = new string[1];
-            chartControl1.Series[0].ValueDataMembers.Clear();
-            datamembers.SetValue("Y", 0);
-            chartControl1.Series[0].ValueDataMembers.AddRange(datamembers);
-            chartControl1.Series[0].ArgumentDataMember = "X";
-            chartControl1.Invalidate();*/
             timer3.Enabled = false;
         }
 
@@ -2943,6 +2634,7 @@ namespace T8SuitePro
 
         private void timer2_Tick(object sender, EventArgs e)
         {
+            logger.Debug("RefreshMeshGraph on timer2");
             RefreshMeshGraph();
 
             timer2.Enabled = false;
@@ -2975,12 +2667,7 @@ namespace T8SuitePro
         {
             if (xtraTabControl1.SelectedTabPage == xtraTabPage1)
             {
-                // 3d graph
-                //surfaceGraphViewer1.Map_content = GetDataFromGridView(false);
-                //surfaceGraphViewer1.IsUpsideDown = false;
-                //surfaceGraphViewer1.NormalizeData();
                 logger.Debug("RefreshMeshGraph on tabindex changed");
-
                 RefreshMeshGraph();
             }
             else
@@ -2992,12 +2679,10 @@ namespace T8SuitePro
 
         private void chartControl1_CustomDrawSeries(object sender, CustomDrawSeriesEventArgs e)
         {
-            
         }
 
         private void chartControl1_MouseUp(object sender, MouseEventArgs e)
         {
-            //m_isDragging = false;
             _sp_dragging = null;
             timer4.Enabled = false;
         }
@@ -3023,68 +2708,24 @@ namespace T8SuitePro
                 // single column graph.. 
                 int numberofrows = m_map_length;
                 if (m_issixteenbit) numberofrows /= 2;
-                rowhandle = (numberofrows -1)- Convert.ToInt32(yaxisvalue);
+                rowhandle = (numberofrows - 1) - Convert.ToInt32(yaxisvalue);
             }
             if (rowhandle != -1)
             {
-                double newvalue = (datavalue - correction_offset) * (1/correction_factor);
+                double newvalue = (datavalue - correction_offset) * (1 / correction_factor);
                 if (newvalue >= 0)
                 {
                     gridView1.SetRowCellValue(rowhandle, gridView1.Columns[(int)trackBarControl1.Value], Math.Round(newvalue));
                 }
             }
-            
         }
 
         private void chartControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            /*if (m_isDragging)
-            {
-                int delta_y = e.Y - _mouse_drag_y;
-                if (Math.Abs(delta_y) > 0)//be able to hover!
-                {
-                    _mouse_drag_y = e.Y;
-                    _mouse_drag_x = e.X;
-
-                    
-                    double yaxissize = (double)((XYDiagram)chartControl1.Diagram).AxisY.Range.MaxValue - (double)((XYDiagram)chartControl1.Diagram).AxisY.Range.MinValue;
-
-                    double yaxissizepxls = chartControl1.Height - (((XYDiagram)chartControl1.Diagram).Padding.Top + ((XYDiagram)chartControl1.Diagram).Padding.Bottom) - (chartControl1.Margin.Top + chartControl1.Margin.Bottom);
-                    yaxissizepxls -= 64;//(yaxissizepxls / 6);
-                    //chartControl1.d
-                    double deltavalue = delta_y * (yaxissize / yaxissizepxls);
-                    //deltavalue -= correction_offset;
-                    //deltavalue *= 1 / correction_factor;
-                    //logger.Debug("Delta: " + deltavalue.ToString());
-                    if (_sp_dragging != null)
-                    {
-                        double curval = Convert.ToDouble(_sp_dragging.Values.GetValue(0));
-                        double newvalue = (curval - deltavalue);
-                        // if (newvalue < 0) newvalue = 0;
-                        //logger.Debug("Current: " + curval.ToString() + " delta: " + deltavalue.ToString() + " new: " + newvalue.ToString());
-                        _sp_dragging.Values.SetValue(newvalue, 0);
-                        DataTable dt = (DataTable)chartControl1.DataSource;
-                        foreach (DataRow dr in dt.Rows)
-                        {
-                            if (dr[0].ToString() == _sp_dragging.Argument)
-                            {
-                                dr[1] = newvalue;
-                                // zet ook de betreffende waarde in de tabel!
-                                SetDataValueInMap(_sp_dragging.Argument, newvalue);
-                                //logger.Debug("Written: " + _sp_dragging.Argument + " : " + newvalue);
-                                //sp.Values.SetValue(curval - 1, 0);
-                                //chartControl1.Invalidate();
-                            }
-                        }
-
-                    }
-                }
-            }*/
         }
 
         private void surfaceGraphViewer1_KeyDown(object sender, KeyEventArgs e)
         {
-           
         }
 
         private void groupControl1_DoubleClick(object sender, EventArgs e)
@@ -3094,52 +2735,34 @@ namespace T8SuitePro
 
         private void simpleButton7_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.ZoomIn();
             nChartControl1.Charts[0].Projection.Zoom += 5;
             nChartControl1.Refresh();
         }
 
         private void simpleButton6_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.ZoomOut();
             nChartControl1.Charts[0].Projection.Zoom -= 5;
             nChartControl1.Refresh();
         }
 
         private void simpleButton4_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.TurnLeft();
             nChartControl1.Charts[0].Projection.Rotation += 5;
             nChartControl1.Refresh();
         }
 
         private void simpleButton5_Click(object sender, EventArgs e)
         {
-            //surfaceGraphViewer1.TurnRight();
             nChartControl1.Charts[0].Projection.Rotation -= 5;
             nChartControl1.Refresh();
         }
 
         private void gridView1_SelectionChanged(object sender, DevExpress.Data.SelectionChangedEventArgs e)
         {
-           /* DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-            if (cellcollection.Length == 1)
-            {
-                gridView1.ShowEditor();
-            }*/            
         }
 
         private void gridView1_CustomRowCellEdit(object sender, DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventArgs e)
         {
-             /*DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-             if (cellcollection.Length == 1)
-             {
-                 e.RepositoryItem = MapViewerCellEdit;
-             }
-             else
-             {
-                 e.RepositoryItem = null;
-             }*/
         }
 
         private void MapViewerCellEdit_KeyDown(object sender, KeyEventArgs e)
@@ -3193,7 +2816,6 @@ namespace T8SuitePro
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
-                    //if (IsHexMode)
                     if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
@@ -3225,156 +2847,7 @@ namespace T8SuitePro
                     }
 
                 }
-                /*else if (e.KeyCode == Keys.PageUp)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
-                            value += 0x10;
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-                            if (m_issixteenbit)
-                            {
-                                if (value > 0xFFFF) value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                if (value > 0xFF) value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                        }
-                        else
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value += 10;
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-                            if (m_issixteenbit)
-                            {
-                                if (value > 0xFFFF) value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                if (value > 0xFF) value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-
-                        }
-                    }
-                }
-                else if (e.KeyCode == Keys.PageDown)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
-                            value -= 0x10;
-                            if (value < 0) value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                        }
-                        else
-                        {
-                            int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value -= 10;
-                            if (value < 0) value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-
-                        }
-                    }
-                }
-                else if (e.KeyCode == Keys.Home)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-
-                            int value = 0xFFFF;
-                            if (m_issixteenbit)
-                            {
-                                value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-
-                        }
-                        else
-                        {
-                            int value = 0xFFFF;
-                            if (m_issixteenbit)
-                            {
-                                value = 0xFFFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                value = 0xFF;
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            if (value > m_MaxValueInTable) m_MaxValueInTable = value;
-
-                        }
-                    }
-                }
-                else if (e.KeyCode == Keys.End)
-                {
-                    e.Handled = true;
-                    foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-                    {
-                        if (IsHexMode)
-                        {
-                            int value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X4"));
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString("X2"));
-                            }
-                        }
-                        else
-                        {
-                            int value = 0;
-                            if (m_issixteenbit)
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-                            else
-                            {
-                                gridView1.SetRowCellValue(gc.RowHandle, gc.Column, value.ToString());
-                            }
-
-                        }
-                    }
-                }*/
             }
-
         }
 
         private void CopySelectionToClipboard()
@@ -3438,7 +2911,6 @@ namespace T8SuitePro
 
         private void atCurrentlySelectedLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           // Clipboard.ContainsData("System.Object");
             DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
             if (cellcollection.Length >= 1)
             {
@@ -3493,7 +2965,6 @@ namespace T8SuitePro
                                     {
                                         if (vtclip == SuiteViewType.Hexadecimal)
                                         {
-                                            //gridView1.SetRowCellValue(rowhandle, gridView1.Columns[colindex], ivalue.ToString("X"));
                                             gridView1.SetRowCellValue(rowhandlefrom + (rowhandle - originalrowoffset), gridView1.Columns[colindexfrom + (colindex - originalcolumnoffset)], ivalue.ToString("X"));
                                         }
                                         else
@@ -3526,7 +2997,6 @@ namespace T8SuitePro
                 string serialized = Clipboard.GetText();
                 try
                 {
-                    //   logger.Debug(serialized);
                     int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                     SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
@@ -3543,7 +3013,6 @@ namespace T8SuitePro
                         {
                             int rowhandle = Convert.ToInt32(vals.GetValue(1));
                             int colindex = Convert.ToInt32(vals.GetValue(0));
-                            //int value = Convert.ToInt32(vals.GetValue(2));
                             int ivalue = 0;
                             double dvalue = 0;
                             if (vtclip == SuiteViewType.Hexadecimal)
@@ -3601,7 +3070,6 @@ namespace T8SuitePro
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-//            m_isHexMode = !m_isHexMode;
             if (m_viewtype != SuiteViewType.Hexadecimal) m_viewtype = SuiteViewType.Hexadecimal;
             else m_viewtype = m_previousviewtype;
             ShowTable(m_TableWidth, m_issixteenbit);
@@ -3653,7 +3121,6 @@ namespace T8SuitePro
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -3678,7 +3145,6 @@ namespace T8SuitePro
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -3708,7 +3174,6 @@ namespace T8SuitePro
                                         if (m_issixteenbit)
                                         {
                                             if (value > 0xFFFF) value = 0xFFFF;
-                                            //if (value < 0) value = 0;
                                         }
                                         else
                                         {
@@ -4314,11 +3779,6 @@ namespace T8SuitePro
                                 logger.Debug(gridView1.ActiveEditor.IsModified.ToString());
                                 dvalue = Convert.ToDouble(gridView1.ActiveEditor.EditValue);
                                 value = Convert.ToInt32((dvalue - correction_offset) / correction_factor);
-/*                                if(value < 0)
-                                {
-                                    value ^= 0xffffff;
-                                    value = -value;
-                                }*/
                             }
                             else
                             {
@@ -4424,21 +3884,6 @@ namespace T8SuitePro
 
         private void gridView1_ShownEditor(object sender, EventArgs e)
         {
-            /*
-            GridView view = sender as GridView;
-            if (view.FocusedColumn.FieldName == "CityCode" && view.ActiveEditor is LookUpEdit)
-            {
-                Text = view.ActiveEditor.Parent.Name;
-                DevExpress.XtraEditors.LookUpEdit edit;
-                edit = (LookUpEdit)view.ActiveEditor;
-
-                DataTable table = edit.Properties.LookUpData.DataSource as DataTable;
-                clone = new DataView(table);
-                DataRow row = view.GetDataRow(view.FocusedRowHandle);
-                clone.RowFilter = "[CountryCode] = " + row["CountryCode"].ToString();
-                edit.Properties.LookUpData.DataSource = clone;
-            }
-            */
             if (m_viewtype == SuiteViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
@@ -4457,55 +3902,18 @@ namespace T8SuitePro
 
         private void MapViewer_VisibleChanged(object sender, EventArgs e)
         {
-            if (this.Visible)
-            {
-                //surfaceGraphViewer1.RefreshView() ;
-            }
         }
 
         internal void ClearSelection()
         {
             gridView1.ClearSelection();
-            //surfaceGraphViewer1.HighlightInGraph(-1, -1);
         }
 
         private int m_selectedrowhandle = -1;
         private int m_selectedcolumnindex = -1;
 
-
         public override void HighlightCell(int tpsindex, int rpmindex)
         {
-            /*
-          //  gridView1.BeginUpdate();
-            try
-            {
-                // controleer of het verandert is
-                DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-                if (cellcollection.Length > 1)
-                {
-                    gridView1.ClearSelection();
-                }
-                else if (cellcollection.Length == 1)
-                {
-                    // normal situation
-                    DevExpress.XtraGrid.Views.Base.GridCell cell = (DevExpress.XtraGrid.Views.Base.GridCell)cellcollection.GetValue(0);
-                    if (cell.RowHandle != (15 - rpmindex) || cell.Column.AbsoluteIndex != tpsindex)
-                    {
-                        gridView1.ClearSelection();
-                        gridView1.SelectCell(15 - rpmindex, gridView1.Columns[tpsindex]);
-                    }
-                }
-                else
-                {
-                    gridView1.SelectCell(15 - rpmindex, gridView1.Columns[tpsindex]);
-                }
-                surfaceGraphViewer1.HighlightInGraph(tpsindex, rpmindex);
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-          //  gridView1.EndUpdate();*/
 
             //  gridView1.BeginUpdate();
             try
@@ -4787,17 +4195,13 @@ namespace T8SuitePro
 
                             m_map_content = GetDataFromGridView(m_isUpsideDown);
 
-
-
                             //double diffvaluex = (top_rightvalue - top_leftvalue) / (max_column - min_column - 1);
                             //double diffvaluey = (top_rightvalue - top_leftvalue) / (max_column - min_column - 1);
                         }
                     }
 
                 }
-//                simpleButton3.Enabled = false;
             }
-
         }
 
         private void simpleButton9_Click(object sender, EventArgs e)

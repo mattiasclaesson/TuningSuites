@@ -129,7 +129,7 @@ namespace Trionic5Controls
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 8;
             this.simpleButton2.Text = "Save";
-            this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click);
+            this.simpleButton2.Click += new System.EventHandler(this.saveToFile_Click);
             // 
             // groupControl1
             // 

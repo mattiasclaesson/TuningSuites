@@ -2,35 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Data;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Drawing.Drawing2D;
-using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using System.Diagnostics;
-using Trionic5Tools;
-using CommonSuite;
-using NLog;
+using Nevron.Chart;
 using Nevron.GraphicsCore;
 using Nevron.Chart.WinForm;
-using Nevron.Chart;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using CommonSuite;
+using NLog;
+using Trionic5Tools;
 
 namespace Trionic5Controls
 {
     public partial class MapViewerEx : /*DevExpress.XtraEditors.XtraUserControl */ IMapViewer
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-        private IECUFile m_trionic_file = new Trionic5File();
         private bool m_issixteenbit = false;
         private int m_TableWidth = 8;
         private bool m_datasourceMutated = false;
         private int m_MaxValueInTable = 0;
-        private double m_realMaxValue = -65535;
-        private double m_realMinValue = 65535;
         private bool m_prohibitcellchange = false;
         private bool m_prohibitsplitchange = false;
         private bool m_prohibitgraphchange = false;
@@ -39,16 +33,20 @@ namespace Trionic5Controls
         private bool m_prohibit_viewchange = false;
         private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
-        private bool m_OnlineMode = false;
         private bool m_OverlayVisible = true;
+        private double m_realMaxValue = -65535;
+        private double m_realMinValue = 65535;
+
+        private IECUFile m_trionic_file = new Trionic5File();
 
         private bool m_clearData = false;
-
         public override bool ClearData
         {
             get { return m_clearData; }
             set { m_clearData = value; }
         }
+
+        private bool m_OnlineMode = false;
 
         public override bool OnlineMode
         {
@@ -156,6 +154,34 @@ namespace Trionic5Controls
                 m_prohibit_viewchange = true;
                 toolStripComboBox3.SelectedIndex = (int)m_viewtype;
                 m_prohibit_viewchange = false;
+            }
+        }
+
+        int[] afr_counter;
+
+        public override int[] Afr_counter
+        {
+            get { return afr_counter; }
+            set { afr_counter = value; }
+        }
+
+        private void ShowHitInfo(GridHitInfo hi)
+        {
+            if (hi.InRowCell)
+            {
+
+                if (afr_counter != null)
+                {
+                    // fetch correct counter
+                    int current_afrcounter = (int)afr_counter[(afr_counter.Length - ((hi.RowHandle + 1) * m_TableWidth)) + hi.Column.AbsoluteIndex];
+                    // show number of measurements in balloon
+                    string detailline = "# measurements: " + current_afrcounter.ToString();
+                    toolTipController1.ShowHint(detailline, "Information", Cursor.Position);
+                }
+            }
+            else
+            {
+                toolTipController1.HideHint();
             }
         }
 
@@ -300,6 +326,99 @@ namespace Trionic5Controls
             }
         }
 
+        private void RefreshMeshGraph()
+        {
+            try
+            {
+                NChart chart = nChartControl1.Charts[0];
+                NMeshSurfaceSeries surface = null;
+                NMeshSurfaceSeries surface2 = null;
+                NMeshSurfaceSeries surface3 = null;
+                if (chart.Series.Count == 0)
+                {
+                    surface = (NMeshSurfaceSeries)chart.Series.Add(SeriesType.MeshSurface);
+                }
+                else
+                {
+                    surface = (NMeshSurfaceSeries)chart.Series[0];
+                    if (chart.Series.Count > 1)
+                    {
+                        surface2 = (NMeshSurfaceSeries)chart.Series[1];
+                        if (chart.Series.Count > 2)
+                        {
+                            surface3 = (NMeshSurfaceSeries)chart.Series[2];
+                        }
+                    }
+                }
+
+                surface.Palette.Clear();
+                double diff = m_realMaxValue - m_realMinValue;
+                if (m_OnlineMode)
+                {
+                    surface.Palette.Add(m_realMinValue, Color.Wheat);
+                    surface.Palette.Add(m_realMinValue + 0.25 * diff, Color.LightBlue);
+                    surface.Palette.Add(m_realMinValue + 0.50 * diff, Color.SteelBlue);
+                    surface.Palette.Add(m_realMinValue + 0.75 * diff, Color.Blue);
+                    surface.Palette.Add(m_realMinValue + diff, Color.DarkBlue);
+
+                }
+                else
+                {
+                    surface.Palette.Add(m_realMinValue, Color.Green);
+                    surface.Palette.Add(m_realMinValue + 0.25 * diff, Color.Yellow);
+                    surface.Palette.Add(m_realMinValue + 0.50 * diff, Color.Orange);
+                    surface.Palette.Add(m_realMinValue + 0.75 * diff, Color.OrangeRed);
+                    surface.Palette.Add(m_realMinValue + diff, Color.Red);
+                }
+                surface.PaletteSteps = 4;
+                surface.AutomaticPalette = false;
+
+                FillData(surface);
+                // hier
+                if (surface2 != null)
+                {
+                    surface2.Palette.Clear();
+                    surface2.Palette.Add(-255, Color.YellowGreen);
+                    surface2.Palette.Add(255, Color.YellowGreen);
+                    surface2.AutomaticPalette = false;
+                    //surface2.FillStyle = new NColorFillStyle(Color.YellowGreen);
+                    //surface2.FillMode = SurfaceFillMode.CustomColors;
+                    FillDataOriginal(surface2);
+                    if (!m_OverlayVisible)
+                    {
+                        surface2.Visible = false;
+                    }
+                    else
+                    {
+                        surface2.Visible = true;
+                    }
+
+                }
+                if (surface3 != null)
+                {
+                    surface3.Palette.Clear();
+                    surface3.Palette.Add(-255, Color.BlueViolet);
+                    surface3.Palette.Add(255, Color.BlueViolet);
+                    surface3.AutomaticPalette = false;
+                    //surface3.FillStyle = new NColorFillStyle(Color.BlueViolet);
+                    //surface3.FillMode = SurfaceFillMode.CustomColors;
+
+                    FillDataCompare(surface3);
+                    if (!m_OverlayVisible)
+                    {
+                        surface3.Visible = false;
+                    }
+                }
+
+                nChartControl1.Refresh();
+                logger.Debug("Chartcontrol refreshed");
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to refresh mesh chart");
+            }
+        }
+
         public override bool IsRedWhite
         {
             get { return m_isRedWhite; }
@@ -339,10 +458,7 @@ namespace Trionic5Controls
         public override byte[] Map_content
         {
             get { return m_map_content; }
-            set
-            {
-                m_map_content = value;
-            }
+            set { m_map_content = value; }
         }
 
         public override void InitEditValues()
@@ -509,7 +625,6 @@ namespace Trionic5Controls
         {
             try
             {
-                logger.Debug("Starting MapViewerEx initialization");
                 InitializeComponent();
                 toolStripComboBox1.SelectedIndex = 0;
                 toolStripComboBox2.SelectedIndex = 0;
@@ -535,8 +650,6 @@ namespace Trionic5Controls
             CastSurfaceGraphChangedEventEx(nChartControl1.Charts[0].Projection.XDepth, nChartControl1.Charts[0].Projection.YDepth, nChartControl1.Charts[0].Projection.Zoom, nChartControl1.Charts[0].Projection.Rotation, nChartControl1.Charts[0].Projection.Elevation);
         }
 
-        
-
         void nChartControl1_MouseMove(object sender, MouseEventArgs e)
         {
         }
@@ -561,7 +674,7 @@ namespace Trionic5Controls
                 nChartControl1.Charts[0].Projection.Zoom += 5;
                 nChartControl1.Refresh();
             }
-            else 
+            else
             {
                 nChartControl1.Charts[0].Projection.Zoom -= 5;
                 nChartControl1.Refresh();
@@ -580,7 +693,6 @@ namespace Trionic5Controls
             }
         }
 
-
         void surfaceGraphViewer1_onGraphChanged(object sender, SurfaceGraphViewer.GraphChangedEventArgs e)
         {
             CastSurfaceGraphChangedEvent(e.Pov_x, e.Pov_y, e.Pov_z, e.Pan_x, e.Pan_y, e.Pov_d);
@@ -591,7 +703,7 @@ namespace Trionic5Controls
             bool retval = false;
             if (simpleButton2.Enabled)
             {
-                simpleButton2_Click(this, EventArgs.Empty);
+                saveToFile_Click(this, EventArgs.Empty);
                 retval = true;
             }
             return retval;
@@ -832,8 +944,6 @@ namespace Trionic5Controls
                                     if (!_isCompareViewer) m_realValue += correction_offset;
                                     if (m_realValue > m_realMaxValue) m_realMaxValue = m_realValue;
                                     if (m_realValue < m_realMinValue) m_realMinValue = m_realValue;
-
-
                                     if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
@@ -1007,7 +1117,6 @@ namespace Trionic5Controls
                                     }
                                 }
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-
                                 m_realValue = b;
                                 m_realValue *= correction_factor;
                                 if (!_isCompareViewer) m_realValue += correction_offset;
@@ -1076,8 +1185,6 @@ namespace Trionic5Controls
                 labelControl8.Text = X_axis_name + " values";
                 trackBarControl1.Value = 0;
 
-                // new for chartcontrol from Nevron <GS-08032010>
-
                 nChartControl1.Settings.ShapeRenderingMode = ShapeRenderingMode.HighSpeed;
                 nChartControl1.Controller.Tools.Add(new NSelectorTool());
                 nChartControl1.Controller.Tools.Add(new NTrackballTool());
@@ -1088,7 +1195,7 @@ namespace Trionic5Controls
                 title.TextStyle.FillStyle = new NColorFillStyle(Color.FromArgb(68, 90, 108));
 
                 // setup chart
-                //Console.WriteLine("Number of charts: " + nChartControl1.Charts.Count.ToString());
+                logger.Debug("Number of charts: " + nChartControl1.Charts.Count.ToString());
 
                 NChart chart = nChartControl1.Charts[0];
                 nChartControl1.Legends.Clear();
@@ -1108,15 +1215,6 @@ namespace Trionic5Controls
                 NStandardScaleConfigurator scaleConfiguratorX = (NStandardScaleConfigurator)chart.Axis(StandardAxis.PrimaryX).ScaleConfigurator;
                 scaleConfiguratorX.MaxTickCount = dt.Rows.Count;
                 scaleConfiguratorX.MajorTickMode = MajorTickMode.AutoMaxCount;
-
-
-                // nieuw
-                /*NLinearScaleConfigurator scaleConfiguratorX = new NLinearScaleConfigurator();
-                chart.Axis(StandardAxis.PrimaryX).ScaleConfigurator = scaleConfiguratorX;
-                scaleConfiguratorX.MajorGridStyle.SetShowAtWall(ChartWallType.Floor, true);
-                scaleConfiguratorX.MajorGridStyle.SetShowAtWall(ChartWallType.Back, true);
-                scaleConfiguratorX.RoundToTickMax = false;
-                scaleConfiguratorX.RoundToTickMin = false;*/
 
                 NScaleTitleStyle titleStyleX = (NScaleTitleStyle)scaleConfiguratorX.Title;
                 titleStyleX.Text = m_y_axis_name;
@@ -1161,7 +1259,6 @@ namespace Trionic5Controls
                         }
                     }
                     scaleConfiguratorX.Labels.Add(yvalue);
-
                 }
                 NStandardScaleConfigurator scaleConfiguratorY = (NStandardScaleConfigurator)chart.Axis(StandardAxis.Depth).ScaleConfigurator;
                 scaleConfiguratorY.MajorTickMode = MajorTickMode.AutoMaxCount;
@@ -1216,20 +1313,6 @@ namespace Trionic5Controls
                 titleStyleZ.Text = m_z_axis_name;
 
                 scaleConfiguratorZ.AutoLabels = true;
-                /*scaleConfiguratorZ.
-                for (int t = 0; t < 10; t++)
-                {
-                    float currval = (float)(t * (m_realMaxValue - m_realMinValue)) / 10;
-                    scaleConfiguratorZ.Labels.Add(currval.ToString("F2"));
-                }*/
-                /*ordinalScale = (NOrdinalScaleConfigurator)chart.Axis(StandardAxis.Depth).ScaleConfigurator;
-                ordinalScale.MajorGridStyle.SetShowAtWall(ChartWallType.Floor, true);
-                ordinalScale.MajorGridStyle.SetShowAtWall(ChartWallType.Left, true);
-                ordinalScale.DisplayDataPointsBetweenTicks = false;*/
-
-                // set the axis
-
-
 
                 NMeshSurfaceSeries surface = null;
                 if (chart.Series.Count == 0)
@@ -1328,8 +1411,6 @@ namespace Trionic5Controls
                 surface.FillStyle.SetTransparencyPercent(25);
                 surface.FrameMode = SurfaceFrameMode.MeshContour;
                 RefreshMeshGraph();
-                //ApplyLayoutTemplate(0, chart, title, nChartControl1.Legends[0]);
-                // end new for chartcontrol from Nevron <GS-08032010>
             }
             else if (m_TableWidth == 1)
             {
@@ -1430,7 +1511,6 @@ namespace Trionic5Controls
             Init2dChart();
             UpdateChartControlSlice(GetDataFromGridView(false));
             m_trackbarBlocked = false;
-
         }
 
         private void Init2dChart()
@@ -1746,7 +1826,7 @@ namespace Trionic5Controls
             }
             catch (Exception E)
             {
-                Console.WriteLine("value: " + (int)trackBarControl1.Value + " " + E.Message);
+                logger.Debug("value: " + (int)trackBarControl1.Value + " " + E.Message);
             }
 
             int numberofrows = data.Length / m_TableWidth;
@@ -1849,12 +1929,6 @@ namespace Trionic5Controls
                 }
             }
 
-            //chartControl1.Series[0].Label.Text = m_map_name;
-            /*chartControl1.Series[0].LegendText = m_map_name;
-            chartControl1.DataSource = chartdt;
-            //chartControl1.Series[0].PointOptions.PointView = PointView.ArgumentAndValues;
-            chartControl1.Invalidate();*/
-
             NChart chart = nChartControl2.Charts[0];
             //NSeries series = (NSeries)chart.Series[0];
             NSmoothLineSeries line = null;
@@ -1866,58 +1940,13 @@ namespace Trionic5Controls
             {
                 line = (NSmoothLineSeries)chart.Series[0];
             }
-            // set length of axis
-            //NStandardScaleConfigurator scaleConfiguratorX = (NStandardScaleConfigurator)chart.Axis(StandardAxis.PrimaryX).ScaleConfigurator;
-            //scaleConfiguratorX.MajorTickMode = MajorTickMode.AutoMaxCount;
-            //NScaleTitleStyle titleStyleX = (NScaleTitleStyle)scaleConfiguratorX.Title;
-            //titleStyleX.Text = m_y_axis_name;
-            //<GS-08032010> as waarden nog omzetten indien noodzakelijk (MAP etc)
-            //scaleConfiguratorX.AutoLabels = true;
-            //series.HorizontalAxes = y_axisvalues;
-            //scaleConfiguratorX.Labels.Clear();
-            /*for (int t = y_axisvalues.Length - 1; t >= 0; t--)
-            {
-                string yvalue = y_axisvalues.GetValue(t).ToString();
-                if (m_y_axis_name == "MAP" || m_y_axis_name == "Pressure error (bar)")
-                {
-                    try
-                    {
-                        float v = (float)Convert.ToDouble(yvalue);
-                        if (m_viewtype == SuiteViewType.Easy3Bar)
-                        {
-                            v *= 1.2F;
-                        }
-                        else if (m_viewtype == SuiteViewType.Easy35Bar)
-                        {
-                            v *= 1.4F;
-                        }
-                        else if (m_viewtype == SuiteViewType.Easy4Bar)
-                        {
-                            v *= 1.6F;
-                        }
-                        v *= (float)0.01F;
-                        if (m_y_axis_name == "MAP")
-                        {
-                            v -= 1;
-                        }
-                        yvalue = v.ToString("F2");
-                    }
-                    catch (Exception cE)
-                    {
-                        Console.WriteLine(cE.Message);
-                    }
-                }
-                scaleConfiguratorX.Labels.Add(yvalue);
-                Console.WriteLine("Added axis label: " + yvalue);
-
-            }*/
             line.ClearDataPoints();
             foreach (DataRow dr in chartdt.Rows)
             {
                 //<GS-09032010> fill second 2d chart here
                 //series.Values.Add(dr["Y"]);
                 line.AddDataPoint(new NDataPoint(Convert.ToDouble(dr["X"]), Convert.ToDouble(dr["Y"])));
-                //Console.WriteLine("Added value: " + dr["Y"].ToString());
+                //logger.Debug("Added value: " + dr["Y"].ToString());
             }
             nChartControl2.Refresh();
         }
@@ -2103,14 +2132,6 @@ namespace Trionic5Controls
                 m_SaveChanges = false;
                 CastCloseEvent();
             }
-        }
-
-        int[] afr_counter;
-
-        public override int[] Afr_counter
-        {
-            get { return afr_counter; }
-            set { afr_counter = value; }
         }
 
         int _boostadaptrpmfrom = 0;
@@ -2633,7 +2654,7 @@ namespace Trionic5Controls
                             }
                             catch (Exception E)
                             {
-                                Console.WriteLine(E.Message);
+                                logger.Debug(E.Message);
                             }
                         }
                     }
@@ -2648,11 +2669,10 @@ namespace Trionic5Controls
                         e.Graphics.FillRectangle(sbsb, e.Bounds);
                     }
                 }
-
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -2720,7 +2740,7 @@ namespace Trionic5Controls
             InitEditValues();
         }
 
-        private void simpleButton2_Click(object sender, EventArgs e)
+        private void saveToFile_Click(object sender, EventArgs e)
         {
             if (m_isRAMViewer) return;
             else
@@ -2733,7 +2753,6 @@ namespace Trionic5Controls
 
         private byte[] GetDataFromGridView(bool upsidedown)
         {
-
             byte[] retval = new byte[m_map_length];
             try
             {
@@ -2862,7 +2881,6 @@ namespace Trionic5Controls
                             }
                         }
                     }
-
                 }
                 else
                 {
@@ -3080,7 +3098,7 @@ namespace Trionic5Controls
             }
             else
             {
-                Console.WriteLine("onAxisLock not registered");
+                logger.Debug("onAxisLock not registered");
             }
         }
 
@@ -3100,7 +3118,7 @@ namespace Trionic5Controls
             }
             else
             {
-                //Console.WriteLine("onSelectionChanged not registered!");
+                logger.Debug("onSelectionChanged not registered!");
             }
 
         }
@@ -3368,7 +3386,7 @@ namespace Trionic5Controls
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3393,15 +3411,13 @@ namespace Trionic5Controls
                     splitContainer1.Panel1Collapsed = false;
 
                     splitContainer1.SplitterDistance = splitdistance;
-                    //  splitContainer1.Panel1.Height = panel1height;
-                    //  splitContainer1.Panel2.Height = panel2height;
                 }
 
                 m_prohibitsplitchange = false;
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
         }
 
@@ -3419,7 +3435,7 @@ namespace Trionic5Controls
             }
             else
             {
-                Console.WriteLine("onSymbolSave not registered!");
+                logger.Debug("onSymbolSave not registered!");
             }
 
         }
@@ -3436,7 +3452,7 @@ namespace Trionic5Controls
             }
             else
             {
-                Console.WriteLine("onSplitterMoved not registered!");
+                logger.Debug("onSplitterMoved not registered!");
             }
 
         }
@@ -4074,7 +4090,7 @@ namespace Trionic5Controls
                 }
                 catch (Exception E)
                 {
-                    Console.WriteLine(E.Message);
+                    logger.Debug(E.Message);
                 }
             }
         }
@@ -4171,7 +4187,7 @@ namespace Trionic5Controls
             }
             catch (Exception E)
             {
-                Console.WriteLine(E.Message);
+                logger.Debug(E.Message);
             }
 
         }
@@ -4203,7 +4219,6 @@ namespace Trionic5Controls
 
         private void chartControl1_CustomDrawSeriesPoint(object sender, CustomDrawSeriesPointEventArgs e)
         {
-
         }
 
         private void chartControl1_ObjectHotTracked(object sender, HotTrackEventArgs e)
@@ -4243,18 +4258,12 @@ namespace Trionic5Controls
             else
             {
                 toolTipController1.HideHint();
-
             }
 
         }
 
         private void chartControl1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            /* object[] objs = chartControl1.HitTest(e.X, e.Y);
-             foreach (object o in objs)
-             {
-                 Console.WriteLine("Double clicked: " + o.ToString());
-             }*/
         }
 
         private SeriesPoint _sp_dragging;
@@ -4296,101 +4305,8 @@ namespace Trionic5Controls
             }
         }
 
-        private void RefreshMeshGraph()
-        {
-            try
-            {
-                NChart chart = nChartControl1.Charts[0];
-                NMeshSurfaceSeries surface = null;
-                NMeshSurfaceSeries surface2 = null;
-                NMeshSurfaceSeries surface3 = null;
-                if (chart.Series.Count == 0)
-                {
-                    surface = (NMeshSurfaceSeries)chart.Series.Add(SeriesType.MeshSurface);
-                }
-                else
-                {
-                    surface = (NMeshSurfaceSeries)chart.Series[0];
-                    if (chart.Series.Count > 1)
-                    {
-                        surface2 = (NMeshSurfaceSeries)chart.Series[1];
-                        if (chart.Series.Count > 2)
-                        {
-                            surface3 = (NMeshSurfaceSeries)chart.Series[2];
-                        }
-                    }
-                }
-
-                surface.Palette.Clear();
-                double diff = m_realMaxValue - m_realMinValue;
-                if (m_OnlineMode)
-                {
-                    surface.Palette.Add(m_realMinValue, Color.Wheat);
-                    surface.Palette.Add(m_realMinValue + 0.25 * diff, Color.LightBlue);
-                    surface.Palette.Add(m_realMinValue + 0.50 * diff, Color.SteelBlue);
-                    surface.Palette.Add(m_realMinValue + 0.75 * diff, Color.Blue);
-                    surface.Palette.Add(m_realMinValue + diff, Color.DarkBlue);
-
-                }
-                else
-                {
-                    surface.Palette.Add(m_realMinValue, Color.Green);
-                    surface.Palette.Add(m_realMinValue + 0.25 * diff, Color.Yellow);
-                    surface.Palette.Add(m_realMinValue + 0.50 * diff, Color.Orange);
-                    surface.Palette.Add(m_realMinValue + 0.75 * diff, Color.OrangeRed);
-                    surface.Palette.Add(m_realMinValue + diff, Color.Red);
-                }
-                surface.PaletteSteps = 4;
-                surface.AutomaticPalette = false;
-
-                FillData(surface);
-                // hier
-                if (surface2 != null)
-                {
-                    surface2.Palette.Clear();
-                    surface2.Palette.Add(-255, Color.YellowGreen);
-                    surface2.Palette.Add(255, Color.YellowGreen);
-                    surface2.AutomaticPalette = false;
-                    //surface2.FillStyle = new NColorFillStyle(Color.YellowGreen);
-                    //surface2.FillMode = SurfaceFillMode.CustomColors;
-                    FillDataOriginal(surface2);
-                    if (!m_OverlayVisible)
-                    {
-                        surface2.Visible = false;
-                    }
-                    else
-                    {
-                        surface2.Visible = true;
-                    }
-
-                }
-                if (surface3 != null)
-                {
-                    surface3.Palette.Clear();
-                    surface3.Palette.Add(-255, Color.BlueViolet);
-                    surface3.Palette.Add(255, Color.BlueViolet);
-                    surface3.AutomaticPalette = false;
-                    //surface3.FillStyle = new NColorFillStyle(Color.BlueViolet);
-                    //surface3.FillMode = SurfaceFillMode.CustomColors;
-
-                    FillDataCompare(surface3);
-                    if (!m_OverlayVisible)
-                    {
-                        surface3.Visible = false;
-                    }
-                }
-
-                nChartControl1.Refresh();
-                //Console.WriteLine("Chartcontrol refreshed");
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E, "Failed to refresh mesh chart");
-            }
-        }
-
         private void timer2_Tick(object sender, EventArgs e)
-        { 
+        {
             logger.Debug("RefreshMeshGraph on timer2");
             RefreshMeshGraph();
 
@@ -4424,12 +4340,7 @@ namespace Trionic5Controls
         {
             if (xtraTabControl1.SelectedTabPage == xtraTabPage1)
             {
-                // 3d graph
-                //surfaceGraphViewer1.Map_content = GetDataFromGridView(false);
-                //surfaceGraphViewer1.IsUpsideDown = false;
-                //surfaceGraphViewer1.NormalizeData();
-                Console.WriteLine("RefreshMeshGraph on tabindex changed");
-
+                logger.Debug("RefreshMeshGraph on tabindex changed");
                 RefreshMeshGraph();
             }
             else
@@ -4441,7 +4352,6 @@ namespace Trionic5Controls
 
         private void chartControl1_CustomDrawSeries(object sender, CustomDrawSeriesEventArgs e)
         {
-
         }
 
         private void chartControl1_MouseUp(object sender, MouseEventArgs e)
@@ -4449,9 +4359,7 @@ namespace Trionic5Controls
             m_isDragging = false;
             _sp_dragging = null;
             timer4.Enabled = false;
-            //<GS-07062010>
             CastSurfaceGraphChangedEventEx(nChartControl1.Charts[0].Projection.XDepth, nChartControl1.Charts[0].Projection.YDepth, nChartControl1.Charts[0].Projection.Zoom, nChartControl1.Charts[0].Projection.Rotation, nChartControl1.Charts[0].Projection.Elevation);
-
         }
 
         private int GetRowForAxisValue(string axisvalue)
@@ -4517,7 +4425,6 @@ namespace Trionic5Controls
                     gridView1.SetRowCellValue(rowhandle, gridView1.Columns[(int)trackBarControl1.Value], Math.Round(newvalue));
                 }
             }
-
         }
 
         private void chartControl1_MouseMove(object sender, MouseEventArgs e)
@@ -4763,7 +4670,7 @@ namespace Trionic5Controls
                     if (Clipboard.ContainsText())
                     {
                         string serialized = Clipboard.GetText();
-                        //   Console.WriteLine(serialized);
+                        //   logger.Debug(serialized);
                         int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
                         SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
@@ -4815,7 +4722,7 @@ namespace Trionic5Controls
                                     }
                                     catch (Exception E)
                                     {
-                                        Console.WriteLine(E.Message);
+                                        logger.Debug(E.Message);
                                     }
                                 }
                             }
@@ -4825,7 +4732,7 @@ namespace Trionic5Controls
                 }
                 catch (Exception pasteE)
                 {
-                    Console.WriteLine(pasteE.Message);
+                    logger.Debug(pasteE.Message);
                 }
             }
         }
@@ -4884,7 +4791,7 @@ namespace Trionic5Controls
                                 }
                                 catch (Exception E)
                                 {
-                                    Console.WriteLine(E.Message);
+                                    logger.Debug(E.Message);
                                 }
                             }
                         }
@@ -4893,7 +4800,7 @@ namespace Trionic5Controls
                 }
                 catch (Exception pasteE)
                 {
-                    Console.WriteLine(pasteE.Message);
+                    logger.Debug(pasteE.Message);
                 }
             }
         }
@@ -7781,26 +7688,6 @@ namespace Trionic5Controls
         {
         }
 
-
-        private void ShowHitInfo(GridHitInfo hi)
-        {
-            if (hi.InRowCell)
-            {
-
-                if (afr_counter != null)
-                {
-                    // fetch correct counter
-                    int current_afrcounter = (int)afr_counter[(afr_counter.Length - ((hi.RowHandle + 1) * m_TableWidth)) + hi.Column.AbsoluteIndex];
-                    // show number of measurements in balloon
-                    string detailline = "# measurements: " + current_afrcounter.ToString();
-                    toolTipController1.ShowHint(detailline, "Information", Cursor.Position);
-                }
-            }
-            else
-            {
-                toolTipController1.HideHint();
-            }
-        }
 
         private void groupControl1_MouseMove(object sender, MouseEventArgs e)
         {
