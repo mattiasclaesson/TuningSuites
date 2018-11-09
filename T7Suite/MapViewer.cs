@@ -76,8 +76,8 @@ namespace T7
         private bool m_prohibitcellchange = false;
         private bool m_prohibitsplitchange = false;
         private bool m_prohibitgraphchange = false;
-        private SuiteViewType m_ViewType = SuiteViewType.Hexadecimal;
-        private SuiteViewType m_previousViewType = SuiteViewType.Easy;
+        private SuiteViewType m_viewtype = SuiteViewType.Hexadecimal;
+        private SuiteViewType m_previousviewtype = SuiteViewType.Easy;
         private bool m_prohibit_viewchange = false;
         private bool m_trackbarBlocked = true;
         private ViewSize m_vs = ViewSize.NormalView;
@@ -107,7 +107,7 @@ namespace T7
 
         public override void SetViewSize(ViewSize vs)
         {
-            m_vs = vs; 
+            m_vs = vs;
             if (vs == ViewSize.SmallView)
             {
                 gridView1.PaintStyleName = "UltraFlat";
@@ -124,8 +124,16 @@ namespace T7
                 gridView1.Appearance.Row.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
                 gridView1.Appearance.Row.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             }
+            else if (vs == ViewSize.TouchscreenView)
+            {
+                gridView1.PaintStyleName = "UltraFlat";
+                gridView1.Appearance.Row.Font = new Font("Tahoma", 6);
+                this.Font = new Font("Tahoma", 6);
+                gridView1.Appearance.Row.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+                gridView1.Appearance.Row.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            }
         }
-        
+
         private SymbolCollection m_SymbolCollection = new SymbolCollection();
 
         public override SymbolCollection mapSymbolCollection
@@ -136,13 +144,41 @@ namespace T7
 
         public override SuiteViewType Viewtype
         {
-            get { return m_ViewType; }
+            get { return m_viewtype; }
             set
             {
-                m_ViewType = value;
+                m_viewtype = value;
                 m_prohibit_viewchange = true;
-                toolStripComboBox3.SelectedIndex = (int)m_ViewType;
+                toolStripComboBox3.SelectedIndex = (int)m_viewtype;
                 m_prohibit_viewchange = false;
+            }
+        }
+
+        int[] afr_counter;
+
+        public override int[] Afr_counter
+        {
+            get { return afr_counter; }
+            set { afr_counter = value; }
+        }
+
+        private void ShowHitInfo(GridHitInfo hi)
+        {
+            if (hi.InRowCell)
+            {
+
+                if (afr_counter != null)
+                {
+                    // fetch correct counter
+                    int current_afrcounter = (int)afr_counter[(afr_counter.Length - ((hi.RowHandle + 1) * m_TableWidth)) + hi.Column.AbsoluteIndex];
+                    // show number of measurements in balloon
+                    string detailline = "# measurements: " + current_afrcounter.ToString();
+                    toolTipController1.ShowHint(detailline, "Information", Cursor.Position);
+                }
+            }
+            else
+            {
+                toolTipController1.HideHint();
             }
         }
 
@@ -178,7 +214,7 @@ namespace T7
         private string m_filename;
         private bool m_isRedWhite = false;
         private int m_textheight = 12;
-        private string m_xformatstringforhex = "X4";
+        private string m_xformatstringforhex;
         private bool m_isDragging = false;
         private int _mouse_drag_x = 0;
         private int _mouse_drag_y = 0;
@@ -541,34 +577,6 @@ namespace T7
             }
         }
 
-        int[] afr_counter;
-
-        public override int[] Afr_counter
-        {
-            get { return afr_counter; }
-            set { afr_counter = value; }
-        }
-
-        private void ShowHitInfo(GridHitInfo hi)
-        {
-            if (hi.InRowCell)
-            {
-
-                if (afr_counter != null)
-                {
-                    // fetch correct counter
-                    int current_afrcounter = (int)afr_counter[(afr_counter.Length - ((hi.RowHandle + 1) * m_TableWidth)) + hi.Column.AbsoluteIndex];
-                    // show number of measurements in balloon
-                    string detailline = "# measurements: " + current_afrcounter.ToString();
-                    toolTipController1.ShowHint(detailline, "Information", Cursor.Position);
-                }
-            }
-            else
-            {
-                toolTipController1.HideHint();
-            }
-        }
-
         void surfaceGraphViewer1_onGraphChanged(object sender, SurfaceGraphViewer.GraphChangedEventArgs e)
         {
             CastSurfaceGraphChangedEvent(e.Pov_x, e.Pov_y, e.Pov_z, e.Pan_x, e.Pan_y, e.Pov_d);
@@ -594,7 +602,7 @@ namespace T7
             lblXaxis.Text = m_x_axis_name;
             lblYaxis.Text = m_y_axis_name;
             lblZaxis.Text = m_z_axis_name;
-            if (m_ViewType == SuiteViewType.Hexadecimal)
+            if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 lblFlashAddress.Text = "0x" + m_map_address.ToString("X6");
                 lblSRAMAddress.Text = "0x" + m_map_sramaddress.ToString("X4");
@@ -653,11 +661,11 @@ namespace T7
                                     b = -b;
                                 }
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                if (m_ViewType == SuiteViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X4"), j);
                                 }
-                                else if (m_ViewType == SuiteViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     // show as ascii characters
                                     try
@@ -701,17 +709,15 @@ namespace T7
                                     b += (byte)m_map_content.GetValue(map_offset++);
                                     if (b > 0xF000)
                                     {
-                                        //                                        b ^= 0xFFFF;
                                         b = 0x10000 - b;
-
                                         b = -b;
                                     }
                                     if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         objarr.SetValue(b.ToString("X4"), sicnt);
                                     }
-                                    else if (m_ViewType == SuiteViewType.ASCII)
+                                    else if (m_viewtype == SuiteViewType.ASCII)
                                     {
                                         // show as ascii characters
                                         objarr.SetValue(Convert.ToChar(b), sicnt);
@@ -748,14 +754,21 @@ namespace T7
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                if (m_ViewType == SuiteViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), j);
                                 }
-                                else if (m_ViewType == SuiteViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     // show as ascii characters
-                                    objarr.SetValue(Convert.ToChar(b), j);
+                                    try
+                                    {
+                                        objarr.SetValue(Convert.ToChar(b), j);
+                                    }
+                                    catch (Exception E)
+                                    {
+                                        logger.Debug(E, "ASCII");
+                                    }
                                 }
                                 else
                                 {
@@ -784,11 +797,11 @@ namespace T7
                             {
                                 b = (byte)m_map_content.GetValue(map_offset++);
                                 if (b > m_MaxValueInTable) m_MaxValueInTable = b;
-                                if (m_ViewType == SuiteViewType.Hexadecimal)
+                                if (m_viewtype == SuiteViewType.Hexadecimal)
                                 {
                                     objarr.SetValue(b.ToString("X2"), sicnt);
                                 }
-                                else if (m_ViewType == SuiteViewType.ASCII)
+                                else if (m_viewtype == SuiteViewType.ASCII)
                                 {
                                     // show as ascii characters
                                     objarr.SetValue(Convert.ToChar(b), sicnt);
@@ -824,59 +837,18 @@ namespace T7
                     }
                 }
 
-
-                // set axis
-                // scale to 3 bar?
-                int indicatorwidth = -1;
-                for (int i = 0; i < y_axisvalues.Length; i++)
-                {
-                    string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
-                    if (m_ViewType == SuiteViewType.Hexadecimal)
-                    {
-                        yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
-                    }
-                    if (m_y_axis_name == "MAP")
-                    {
-                    }
-                    Graphics g = gridControl1.CreateGraphics();
-                    SizeF size = g.MeasureString(yval, this.Font);
-                    if (size.Width > indicatorwidth) indicatorwidth = (int)size.Width;
-                    m_textheight = (int)size.Height;
-                    g.Dispose();
-
-                }
+                SizeF size = MaximumYAxisSize();
+                m_textheight = (int)size.Height;
+                int indicatorwidth = (int)size.Width;
                 if (indicatorwidth > 0)
                 {
                     gridView1.IndicatorWidth = indicatorwidth + 6; // keep margin
                 }
 
-                int maxxval = 0;
-                for (int i = 0; i < x_axisvalues.Length; i++)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
-                    int xval = Convert.ToInt32(x_axisvalues.GetValue(i));
-                    if (xval > 0xF000)
-                    {
-                        //xval ^= 0xFFFF;
-                        xval = 0x10000 - xval;
-                        xval = -xval;
-                        x_axisvalues.SetValue(xval, i);
-                    }
-
-                    /* if (xval > 0x10000)
-                     {
-                         xval ^= 0xFFFF;
-                         xval = -xval;
-                     }
-                     else if ((xval & 0x8000) > 0)
-                     {
-                         //valtot = 0x10000 - valtot;
-                         xval &= 0x7FFF;
-                         xval = -xval;
-                     }*/
-
-                    if (xval > maxxval) maxxval = xval;
+                    m_xformatstringforhex = HexadecimalFormatXAxis();
                 }
-                if (maxxval <= 255) m_xformatstringforhex = "X2";
             }
 
             surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
@@ -937,20 +909,12 @@ namespace T7
                 byte[] bts = GetDataFromGridView(false);
                 UpdateChartControlSlice(bts);
 
-                /*
-                x = "MAP";
-                y = "RPM";
-                z = "Degrees";
-                 */
             }
             else if (m_TableWidth == 1)
             {
                 xtraTabControl1.SelectedTabPage = xtraTabPage2;
-                //surfaceGraphViewer1.Visible = false;
-                //chartControl1.;
-                /*** test ***/
-                surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
 
+                surfaceGraphViewer1.IsRedWhite = m_isRedWhite;
                 surfaceGraphViewer1.Map_name = m_map_name;
                 surfaceGraphViewer1.X_axis = x_axisvalues;
                 surfaceGraphViewer1.Y_axis = y_axisvalues;
@@ -964,18 +928,14 @@ namespace T7
 
                 surfaceGraphViewer1.NumberOfColumns = m_TableWidth;
                 surfaceGraphViewer1.IsSixteenbit = m_issixteenbit;
-                //surfaceGraphViewer1.Pov_d = 0.3;
                 surfaceGraphViewer1.Pov_d = 0.3;
                 SetSuiteViewTypeParams(m_vs);
                 surfaceGraphViewer1.IsUpsideDown = true;
                 surfaceGraphViewer1.NormalizeData();
+
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = x_axisvalues.Length - 1;
                 labelControl8.Text = X_axis_name + " values";
-
-                /*** end test ***/
-
-
                 trackBarControl1.Properties.Minimum = 0;
                 trackBarControl1.Properties.Maximum = 0;
                 trackBarControl1.Enabled = false;
@@ -1008,7 +968,6 @@ namespace T7
                         valcount++;
                     }
                 }
-                //chartControl1.Series[0].Label.Text = m_map_name;
                 chartControl1.Series[0].LegendText = m_map_name;
                 chartControl1.DataSource = chartdt;
                 string[] datamembers = new string[1];
@@ -1056,7 +1015,7 @@ namespace T7
             chartdt.Columns.Add("X", Type.GetType("System.Double"));
             chartdt.Columns.Add("Y", Type.GetType("System.Double"));
             double valcount = 0;
-            int offsetinmap = (int)trackBarControl1.Value ;
+            int offsetinmap = (int)trackBarControl1.Value; 
 
             try
             {
@@ -1067,7 +1026,7 @@ namespace T7
             }
             catch (Exception E)
             {
-                logger.Debug("value: " + (int)trackBarControl1.Value + " "+ E.Message);
+                logger.Debug("value: " + (int)trackBarControl1.Value + " " + E.Message);
             }
 
             int numberofrows = data.Length / m_TableWidth;
@@ -1113,15 +1072,120 @@ namespace T7
                 }
             }
 
-            //chartControl1.Series[0].Label.Text = m_map_name;
             chartControl1.Series[0].LegendText = m_map_name;
             chartControl1.DataSource = chartdt;
-
-           
-            //chartControl1.Series[0].PointOptions.PointView = PointView.ArgumentAndValues;
             chartControl1.Invalidate();
+        }
 
+		private SizeF MaximumYAxisSize()
+        {
+            SizeF result = new SizeF(0,0);
+            for (int i = 0; i < y_axisvalues.Length; i++)
+            {
+                string yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString();
+                if (m_viewtype == SuiteViewType.Hexadecimal)
+                {
+                    yval = Convert.ToInt32(y_axisvalues.GetValue(i)).ToString("X4");
+                }
+                if (m_y_axis_name == "MAP")
+                {
+                    if (m_viewtype == SuiteViewType.Easy3Bar || m_viewtype == SuiteViewType.Decimal3Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 120;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy35Bar || m_viewtype == SuiteViewType.Decimal35Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 140;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy4Bar || m_viewtype == SuiteViewType.Decimal4Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 160;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                    else if (m_viewtype == SuiteViewType.Easy5Bar || m_viewtype == SuiteViewType.Decimal5Bar)
+                    {
+                        int tempval = Convert.ToInt32(y_axisvalues.GetValue(i));
+                        tempval *= 200;
+                        tempval /= 100;
+                        yval = tempval.ToString("X4");
+                    }
+                }
 
+                Graphics g = gridControl1.CreateGraphics();
+                SizeF size = g.MeasureString(yval, this.Font);
+                g.Dispose();
+                if (size.Width > result.Width)
+                {
+                    result = size;
+                }
+            }
+            return result;
+        }
+
+        private string HexadecimalFormatXAxis()
+        {
+            string result = "X4";
+            int maxxval = 0;
+            for (int i = 0; i < x_axisvalues.Length; i++)
+            {
+                int xval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                if (xval > 0xF000)
+                {
+                    xval = 0x10000 - xval;
+                    xval = -xval;
+                    x_axisvalues.SetValue(xval, i);
+                }
+
+                if (m_x_axis_name == "MAP" || m_x_axis_name == "Pressure error (bar)")
+                {
+                    if (m_viewtype == SuiteViewType.Decimal3Bar || m_viewtype == SuiteViewType.Easy3Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 120;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal35Bar || m_viewtype == SuiteViewType.Easy35Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 140;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal4Bar || m_viewtype == SuiteViewType.Easy4Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 160;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                    else if (m_viewtype == SuiteViewType.Decimal5Bar || m_viewtype == SuiteViewType.Easy5Bar)
+                    {
+                        int tempval = Convert.ToInt32(x_axisvalues.GetValue(i));
+                        tempval *= 200;
+                        tempval /= 100;
+                        xval = tempval;
+                    }
+                }
+
+                if (xval > maxxval)
+                {
+                    maxxval = xval;
+                }
+            }
+            if (maxxval <= 255)
+            {
+                result = "X2";
+            }
+            return result;
         }
 
         private void simpleButton1_Click(object sender, EventArgs e)
@@ -1187,7 +1251,7 @@ namespace T7
                     {
                         int b = 0;
                         int cellvalue = 0;
-                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             b = Convert.ToInt32(e.CellValue.ToString(), 16);
                             cellvalue = b;
@@ -1238,14 +1302,14 @@ namespace T7
                             SolidBrush sb = new SolidBrush(c);
                             e.Graphics.FillRectangle(sb, e.Bounds);
                         }
-                        if (m_ViewType == SuiteViewType.Easy )
+                        if (m_viewtype == SuiteViewType.Easy )
                         {
                             float dispvalue = 0;
                             dispvalue = (float)cellvalue;
                             if (correction_offset != 0 || correction_factor != 1)
                             {
                                 dispvalue = (float)((float)cellvalue * (float)correction_factor) + (float)correction_offset;
-                                if (m_ViewType != SuiteViewType.Hexadecimal)
+                                if (m_viewtype != SuiteViewType.Hexadecimal)
                                 {
                                     if (m_map_name.StartsWith("Ign_map_0!") || m_map_name.StartsWith("Ign_map_4!"))
                                     {
@@ -1268,7 +1332,6 @@ namespace T7
                         }
                         if (X_axis_name.ToLower() == "mg/c" && Y_axis_name.ToLower() == "rpm")
                         {
-
                             try
                             {
                                 if (open_loop != null)
@@ -1298,7 +1361,7 @@ namespace T7
                                                 pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y + (e.Bounds.Height / 2)), 2);
                                                 pnts.SetValue(new Point(e.Bounds.X + e.Bounds.Width, e.Bounds.Y), 3);
                                                 e.Graphics.FillPolygon(Brushes.SeaGreen, pnts, System.Drawing.Drawing2D.FillMode.Winding);
-                                            }                                            
+                                            }
                                         }
                                     }
                                 }
@@ -1307,10 +1370,11 @@ namespace T7
                             {
                                 logger.Debug(E.Message);
                             }
-
                         }
                     }
                 }
+
+                // draw realtime highlight!
                 if (m_selectedrowhandle >= 0 && m_selectedcolumnindex >= 0)
                 {
                     if (e.RowHandle == m_selectedrowhandle && e.Column.AbsoluteIndex == m_selectedcolumnindex)
@@ -1325,6 +1389,7 @@ namespace T7
                 logger.Debug(E.Message);
             }
         }
+
         private int GetOpenLoopValue(int index)
         {
             index = (y_axisvalues.Length - 1) - index;
@@ -1349,6 +1414,7 @@ namespace T7
             retval = (int)y_axisvalues.GetValue(index);
             return retval;
         }
+
         private void gridView1_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
         {
             m_datasourceMutated = true;
@@ -1363,13 +1429,9 @@ namespace T7
 
         private void saveToFile_Click(object sender, EventArgs e)
         {
-            //if (m_isRAMViewer) return;
-            //else
-            //{
-                m_SaveChanges = true;
-                m_datasourceMutated = false;
-                CastSaveEvent();
-            //}
+            m_SaveChanges = true;
+            m_datasourceMutated = false;
+            CastSaveEvent();
         }
 
         private byte[] GetDataFromGridView(bool upsidedown)
@@ -1395,7 +1457,7 @@ namespace T7
                                         Int32 cellvalue = 0;
                                         string bstr1 = "0";
                                         string bstr2 = "0";
-                                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             cellvalue = Convert.ToInt32(o.ToString(), 16);
                                         }
@@ -1410,7 +1472,7 @@ namespace T7
                                     }
                                     else
                                     {
-                                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             int iv = Convert.ToInt32(o.ToString(), 16);//(int)Math.Floor(v);
                                             retval.SetValue(Convert.ToByte(iv), cellcount++);
@@ -1448,7 +1510,7 @@ namespace T7
                                         string bstr1 = "0";
                                         string bstr2 = "0";
                                         //if (m_isHexMode)
-                                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             cellvalue = Convert.ToInt32(o.ToString(), 16);
                                         }
@@ -1468,7 +1530,7 @@ namespace T7
                                     else
                                     {
 //                                        if (m_isHexMode)
-                                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                                        if (m_viewtype == SuiteViewType.Hexadecimal)
                                         {
                                             
                                             //double v = Convert.ToDouble(o);
@@ -1594,8 +1656,6 @@ namespace T7
                     splitContainer1.Panel1Collapsed = false;
 
                     splitContainer1.SplitterDistance = splitdistance;
-                  //  splitContainer1.Panel1.Height = panel1height;
-                  //  splitContainer1.Panel2.Height = panel2height;
                 }
 
                 m_prohibitsplitchange = false;
@@ -1630,7 +1690,7 @@ namespace T7
                 // haal eerst de data uit de tabel van de gridview
                 if (!m_prohibitsplitchange)
                 {
-                    onSplitterMoved(this, new SplitterMovedEventArgs(splitContainer1.Panel1.Height, splitContainer1.Panel2.Height,splitContainer1.SplitterDistance ,splitContainer1.Panel1Collapsed, splitContainer1.Panel2Collapsed, m_map_name));
+                    onSplitterMoved(this, new SplitterMovedEventArgs(splitContainer1.Panel1.Height, splitContainer1.Panel2.Height, splitContainer1.SplitterDistance, splitContainer1.Panel1Collapsed, splitContainer1.Panel2Collapsed, m_map_name));
                 }
             }
             else
@@ -1659,7 +1719,6 @@ namespace T7
             
             m_datasourceMutated = true;
             simpleButton2.Enabled = true;
-            //simpleButton3.Enabled = true;
             if (surfaceGraphViewer1.Visible)
             {
                 StartSurfaceChartUpdateTimer();
@@ -1673,9 +1732,7 @@ namespace T7
                 else
                 {
                     StartChartUpdateTimer();
-                    //   UpdateChartControlSlice(GetDataFromGridView(false));
                 }
-
             }
         }
 
@@ -1709,7 +1766,7 @@ namespace T7
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        if(m_ViewType == SuiteViewType.Hexadecimal)
+                        if(m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value++;
@@ -1752,7 +1809,7 @@ namespace T7
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value--;
@@ -1796,7 +1853,7 @@ namespace T7
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
                         //if (IsHexMode)
-                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value += 0x10;
@@ -1838,7 +1895,7 @@ namespace T7
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value-=0x10;
@@ -1881,7 +1938,7 @@ namespace T7
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
 
                             int value = 0xFFFF;
@@ -1923,7 +1980,7 @@ namespace T7
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        if (m_ViewType == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = 0;
                             if (m_issixteenbit)
@@ -1970,7 +2027,7 @@ namespace T7
                                 // dan andere waarde nemen
                                 yvalue = y_axisvalues.GetValue(e.RowHandle).ToString();
                             }
-                            if (m_ViewType == SuiteViewType.Hexadecimal)
+                            if (m_viewtype == SuiteViewType.Hexadecimal)
                             {
                                 yvalue = Convert.ToInt32(/*y_axisvalues.GetValue(e.RowHandle)*/y_axisvalues.GetValue((y_axisvalues.Length - 1) - e.RowHandle)).ToString("X4");
                             }
@@ -2002,7 +2059,7 @@ namespace T7
                         if (x_axisvalues.Length > e.Column.VisibleIndex)
                         {
                             string xvalue = x_axisvalues.GetValue(e.Column.VisibleIndex).ToString();
-                            if (m_ViewType == SuiteViewType.Hexadecimal)
+                            if (m_viewtype == SuiteViewType.Hexadecimal)
                             {
                                 xvalue = Convert.ToInt32(x_axisvalues.GetValue(e.Column.VisibleIndex)).ToString(m_xformatstringforhex);
                             }
@@ -2010,7 +2067,6 @@ namespace T7
                             e.Graphics.DrawRectangle(Pens.LightSteelBlue, r);
                             System.Drawing.Drawing2D.LinearGradientBrush gb = new System.Drawing.Drawing2D.LinearGradientBrush(e.Bounds, e.Appearance.BackColor2, e.Appearance.BackColor2, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                             e.Graphics.FillRectangle(gb, e.Bounds);
-                            //e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, r);
                             e.Graphics.DrawString(xvalue, this.Font, Brushes.MidnightBlue, new PointF(e.Bounds.X + 3, e.Bounds.Y + 1 + (e.Bounds.Height - m_textheight) / 2));
                             e.Handled = true;
                         }
@@ -2051,7 +2107,6 @@ namespace T7
 
         private void chartControl1_CustomDrawSeriesPoint(object sender, CustomDrawSeriesPointEventArgs e)
         {
-            
         }
 
         private void chartControl1_ObjectHotTracked(object sender, HotTrackEventArgs e)
@@ -2091,7 +2146,6 @@ namespace T7
             else
             {
                 toolTipController1.HideHint();
-                
             }
 
         }
@@ -2186,8 +2240,8 @@ namespace T7
         {
             if (onViewTypeChanged != null)
             {
-                onViewTypeChanged(this, new ViewTypeChangedEventArgs(m_ViewType, m_map_name));
-                m_previousViewType = m_ViewType;
+                onViewTypeChanged(this, new ViewTypeChangedEventArgs(m_viewtype, m_map_name));
+                m_previousviewtype = m_viewtype;
             }
         }
 
@@ -2217,7 +2271,6 @@ namespace T7
 
         private void chartControl1_CustomDrawSeries(object sender, CustomDrawSeriesEventArgs e)
         {
-            
         }
 
         private void chartControl1_MouseUp(object sender, MouseEventArgs e)
@@ -2354,7 +2407,7 @@ namespace T7
                     e.SuppressKeyPress = true;
                     e.Handled = true;
 
-                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
                         value++;
@@ -2394,7 +2447,7 @@ namespace T7
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
-                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
                     {
                         int value = Convert.ToInt32(txtedit.Text, 16);
                         value--;
@@ -2430,36 +2483,37 @@ namespace T7
 
         private void CopySelectionToClipboard()
         {
-            DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-            CellHelperCollection chc = new CellHelperCollection();
-            foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
-            {
-                CellHelper ch = new CellHelper();
-                ch.Rowhandle = gc.RowHandle;
-                ch.Columnindex = gc.Column.AbsoluteIndex;
-                object o = gridView1.GetRowCellValue(gc.RowHandle, gc.Column);
-                if (m_ViewType == SuiteViewType.Hexadecimal)
-                {
-                    ch.Value = Convert.ToInt32(o.ToString(), 16);
-                }
-                else
-                {
-                    ch.Value = Convert.ToInt32(o);
-                }
-                chc.Add(ch);
-            }
-            string serialized = ((int)m_ViewType).ToString();
-            foreach (CellHelper ch in chc)
-            {
-                serialized += ch.Columnindex.ToString() + ":" + ch.Rowhandle.ToString() + ":" + ch.Value.ToString() + ":~";
-            }
             try
             {
+                DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
+                CellHelperCollection chc = new CellHelperCollection();
+                foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
+                {
+                    CellHelper ch = new CellHelper();
+                    ch.Rowhandle = gc.RowHandle;
+                    ch.Columnindex = gc.Column.AbsoluteIndex;
+                    object o = gridView1.GetRowCellValue(gc.RowHandle, gc.Column);
+                    if (m_viewtype == SuiteViewType.Hexadecimal)
+                    {
+                        ch.Value = Convert.ToInt32(o.ToString(), 16);
+                    }
+                    else
+                    {
+                        ch.Value = Convert.ToInt32(o);
+                    }
+                    chc.Add(ch);
+                }
+                string serialized = ((int)m_viewtype).ToString();
+                foreach (CellHelper ch in chc)
+                {
+                    serialized += ch.Columnindex.ToString() + ":" + ch.Rowhandle.ToString() + ":" + ch.Value.ToString() + ":~";
+                }
+
                 Clipboard.SetText(serialized);
             }
             catch (Exception E)
             {
-                logger.Debug(E, "CopySelectionToClipboard");
+                logger.Debug(E.Message);
             }
         }
 
@@ -2501,8 +2555,8 @@ namespace T7
                     {
                         string serialized = Clipboard.GetText();
                         //   logger.Debug(serialized);
-                        int SuiteViewTypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
-                        SuiteViewType vtclip = (SuiteViewType)SuiteViewTypeinclipboard;
+                        int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
+                        SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                         serialized = serialized.Substring(1);
                         char[] sep = new char[1];
                         sep.SetValue('~', 0);
@@ -2574,8 +2628,8 @@ namespace T7
                 string serialized = Clipboard.GetText();
                 try
                 {
-                    int SuiteViewTypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
-                    SuiteViewType vtclip = (SuiteViewType)SuiteViewTypeinclipboard;
+                    int viewtypeinclipboard = Convert.ToInt32(serialized.Substring(0, 1));
+                    SuiteViewType vtclip = (SuiteViewType)viewtypeinclipboard;
                     serialized = serialized.Substring(1);
 
                     char[] sep = new char[1];
@@ -2647,8 +2701,8 @@ namespace T7
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            if (m_ViewType != SuiteViewType.Hexadecimal) m_ViewType = SuiteViewType.Hexadecimal;
-            else m_ViewType = m_previousViewType;
+            if (m_viewtype != SuiteViewType.Hexadecimal) m_viewtype = SuiteViewType.Hexadecimal;
+            else m_viewtype = m_previousviewtype;
             ShowTable(m_TableWidth, m_issixteenbit);
         }
 
@@ -2668,7 +2722,7 @@ namespace T7
                                 try
                                 {
                                     int value = 0;
-                                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         value += (int)Math.Round(_workvalue);
@@ -2691,7 +2745,7 @@ namespace T7
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_ViewType == SuiteViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value += (int)Math.Round(_workvalue);
@@ -2706,7 +2760,7 @@ namespace T7
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_ViewType == SuiteViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         dvalue *= correction_factor;
@@ -2744,7 +2798,7 @@ namespace T7
                                 try
                                 {
                                     int value = 0;
-                                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         value *= (int)Math.Round(_workvalue);
@@ -2766,7 +2820,7 @@ namespace T7
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_ViewType == SuiteViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         value *= (int)Math.Round(_workvalue);
@@ -2781,7 +2835,7 @@ namespace T7
                                         }
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
-                                    else if (m_ViewType == SuiteViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         dvalue *= correction_factor;
@@ -2822,7 +2876,7 @@ namespace T7
                                 try
                                 {
                                     int value = 0;
-                                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column).ToString(), 16);
                                         if (_workvalue != 0)
@@ -2847,7 +2901,7 @@ namespace T7
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString("X2"));
                                         }
                                     }
-                                    else if (m_ViewType == SuiteViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         value = Convert.ToInt32(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         if (_workvalue != 0)
@@ -2866,7 +2920,7 @@ namespace T7
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, value.ToString());
                                     }
                                     
-                                    else if (m_ViewType == SuiteViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = Convert.ToDouble(gridView1.GetRowCellValue(cell.RowHandle, cell.Column));
                                         dvalue *= correction_factor;
@@ -2908,7 +2962,7 @@ namespace T7
                                 try
                                 {
                                     double value = _workvalue;
-                                    if (m_ViewType == SuiteViewType.Hexadecimal)
+                                    if (m_viewtype == SuiteViewType.Hexadecimal)
                                     {
                                         if (m_issixteenbit)
                                         {
@@ -2930,7 +2984,7 @@ namespace T7
                                             gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString("X2"));
                                         }
                                     }
-                                    else if (m_ViewType == SuiteViewType.Decimal)
+                                    else if (m_viewtype == SuiteViewType.Decimal)
                                     {
                                         if (m_issixteenbit)
                                         {
@@ -2946,7 +3000,7 @@ namespace T7
                                         gridView1.SetRowCellValue(cell.RowHandle, cell.Column, dvalue.ToString());
                                     }
                                     
-                                    else if (m_ViewType == SuiteViewType.Easy)
+                                    else if (m_viewtype == SuiteViewType.Easy)
                                     {
                                         double dvalue = _workvalue;
                                         dvalue -= correction_offset;
@@ -3246,10 +3300,6 @@ namespace T7
             }
         }
 
-        public override void SetSurfaceGraphViewEx(float depthx, float depthy, float zoom, float rotation, float elevation)
-        {
-        }
-
         public override void SetSurfaceGraphView(int pov_x, int pov_y, int pov_z, int pan_x, int pan_y, double pov_d)
         {
             try
@@ -3264,6 +3314,10 @@ namespace T7
             }
         }
 
+        public override void SetSurfaceGraphViewEx(float depthx, float depthy, float zoom, float rotation, float elevation)
+        {
+        }
+
         private void toolStripComboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             // refresh the mapviewer with the values like selected
@@ -3272,19 +3326,19 @@ namespace T7
             {
                 case -1:
                 case 0:
-                    m_ViewType = SuiteViewType.Hexadecimal;
+                    m_viewtype = SuiteViewType.Hexadecimal;
                     break;
                 case 1:
-                    m_ViewType = SuiteViewType.Decimal;
+                    m_viewtype = SuiteViewType.Decimal;
                     break;
                 case 2:
-                    m_ViewType = SuiteViewType.Easy;
+                    m_viewtype = SuiteViewType.Easy;
                     break;
                 case 3:
-                    m_ViewType = SuiteViewType.ASCII;
+                    m_viewtype = SuiteViewType.ASCII;
                     break;
                 default:
-                    m_ViewType = SuiteViewType.Hexadecimal;
+                    m_viewtype = SuiteViewType.Hexadecimal;
                     break;
             }
             ReShowTable();
@@ -3300,7 +3354,7 @@ namespace T7
         {
             if (m_issixteenbit)
             {
-                if (m_ViewType == SuiteViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     try
                     {
@@ -3323,7 +3377,7 @@ namespace T7
                 {
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_ViewType == SuiteViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Easy)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -3361,7 +3415,7 @@ namespace T7
             }
             else
             {
-                if (m_ViewType == SuiteViewType.Hexadecimal)
+                if (m_viewtype == SuiteViewType.Hexadecimal)
                 {
                     try
                     {
@@ -3382,7 +3436,7 @@ namespace T7
                 {
                     double dvalue = Convert.ToDouble(e.Value);
                     int value = 0;
-                    if (m_ViewType == SuiteViewType.Easy)
+                    if (m_viewtype == SuiteViewType.Easy)
                     {
                         if (gridView1.ActiveEditor != null)
                         {
@@ -3428,7 +3482,7 @@ namespace T7
         private float ConvertToEasyValue(float editorvalue)
         {
             float retval = editorvalue;
-            if (m_ViewType == SuiteViewType.Easy )
+            if (m_viewtype == SuiteViewType.Easy )
             {
                 retval = (float)((float)editorvalue * (float)correction_factor) + (float)correction_offset;
             }
@@ -3437,7 +3491,7 @@ namespace T7
 
         private void gridView1_ShownEditor(object sender, EventArgs e)
         {
-            if (m_ViewType == SuiteViewType.Easy )
+            if (m_viewtype == SuiteViewType.Easy )
             {
                 gridView1.ActiveEditor.EditValue = ConvertToEasyValue((float)Convert.ToDouble(gridView1.ActiveEditor.EditValue)).ToString("F2");
                 logger.Debug("Started editor with value: " + gridView1.ActiveEditor.EditValue.ToString());
@@ -3470,41 +3524,8 @@ namespace T7
         private int m_selectedrowhandle = -1;
         private int m_selectedcolumnindex = -1;
 
-
         public override void HighlightCell(int tpsindex, int rpmindex)
         {
-            /*
-          //  gridView1.BeginUpdate();
-            try
-            {
-                // controleer of het verandert is
-                DevExpress.XtraGrid.Views.Base.GridCell[] cellcollection = gridView1.GetSelectedCells();
-                if (cellcollection.Length > 1)
-                {
-                    gridView1.ClearSelection();
-                }
-                else if (cellcollection.Length == 1)
-                {
-                    // normal situation
-                    DevExpress.XtraGrid.Views.Base.GridCell cell = (DevExpress.XtraGrid.Views.Base.GridCell)cellcollection.GetValue(0);
-                    if (cell.RowHandle != (15 - rpmindex) || cell.Column.AbsoluteIndex != tpsindex)
-                    {
-                        gridView1.ClearSelection();
-                        gridView1.SelectCell(15 - rpmindex, gridView1.Columns[tpsindex]);
-                    }
-                }
-                else
-                {
-                    gridView1.SelectCell(15 - rpmindex, gridView1.Columns[tpsindex]);
-                }
-                surfaceGraphViewer1.HighlightInGraph(tpsindex, rpmindex);
-            }
-            catch (Exception E)
-            {
-                logger.Debug(E.Message);
-            }
-          //  gridView1.EndUpdate();*/
-
             //  gridView1.BeginUpdate();
             try
             {
@@ -3623,7 +3644,7 @@ namespace T7
 
         private void smoothSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (m_ViewType == SuiteViewType.Hexadecimal)
+            if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 MessageBox.Show("Smoothing cannot be done in Hex view!");
                 return;
@@ -3731,23 +3752,18 @@ namespace T7
 
                             m_map_content = GetDataFromGridView(m_isUpsideDown);
 
-
-
                             //double diffvaluex = (top_rightvalue - top_leftvalue) / (max_column - min_column - 1);
                             //double diffvaluey = (top_rightvalue - top_leftvalue) / (max_column - min_column - 1);
                         }
                     }
 
                 }
-                //simpleButton3.Enabled = false;
             }
-
         }
 
         private void simpleButton9_Click(object sender, EventArgs e)
         {
             CastReadFromSRAM();
-            // switch to ramviewer!
         }
 
         private void simpleButton8_Click(object sender, EventArgs e)
@@ -3839,7 +3855,6 @@ namespace T7
         {
             // refresh data from binary file!.. switch to non ram viewer!
             CastReadEvent();
-
-        }      
+        }
     }
 }
