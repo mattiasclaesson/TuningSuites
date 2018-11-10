@@ -2414,7 +2414,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.11.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:CommonSuite, Version=1.0.12.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_5DBF2979EE44E0C1C3FC5956884FF59D"
@@ -3618,15 +3618,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{93134241-8C08-4EC1-BFC6-CD185D82CC09}"
-        "PackageCode" = "8:{D2F673B2-505B-4966-BF6E-12FB08F62978}"
+        "ProductCode" = "8:{EF60F7BB-9688-40F3-BD4B-1A8040F443AF}"
+        "PackageCode" = "8:{A1CB0DC9-03B5-49FF-8B4A-967025227E81}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.45"
+        "ProductVersion" = "8:0.1.46"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.trionictuning.com"
