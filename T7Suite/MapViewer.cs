@@ -845,10 +845,7 @@ namespace T7
                     gridView1.IndicatorWidth = indicatorwidth + 6; // keep margin
                 }
 
-                if (m_viewtype == SuiteViewType.Hexadecimal)
-                {
-                    m_xformatstringforhex = HexadecimalFormatXAxis();
-                }
+                m_xformatstringforhex = HexadecimalFormatXAxis();
             }
 
             surfaceGraphViewer1.IsRedWhite = m_isRedWhite;

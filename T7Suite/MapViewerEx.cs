@@ -757,7 +757,6 @@ namespace T7
         public override event IMapViewer.NotifyAxisLock onAxisLock;
         public override event IMapViewer.NotifySliderMove onSliderMove;
 
-
         public MapViewerEx()
         {
             InitializeComponent();
@@ -1113,10 +1112,7 @@ namespace T7
                     gridView1.IndicatorWidth = indicatorwidth + 6; // keep margin
                 }
 
-                if (m_viewtype == SuiteViewType.Hexadecimal)
-                {
-                    m_xformatstringforhex = HexadecimalFormatXAxis();
-                }
+                m_xformatstringforhex = HexadecimalFormatXAxis();
             }
 
             if (m_TableWidth > 1)
@@ -1709,7 +1705,7 @@ namespace T7
                             SolidBrush sb = new SolidBrush(c);
                             e.Graphics.FillRectangle(sb, e.Bounds);
                         }
-                        if (m_viewtype == SuiteViewType.Easy )
+                        if (m_viewtype == SuiteViewType.Easy)
                         {
                             float dispvalue = 0;
                             dispvalue = (float)cellvalue;
@@ -2173,7 +2169,7 @@ namespace T7
                     e.SuppressKeyPress = true;
                     foreach (DevExpress.XtraGrid.Views.Base.GridCell gc in cellcollection)
                     {
-                        if(m_viewtype == SuiteViewType.Hexadecimal)
+                        if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
                             value++;
