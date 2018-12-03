@@ -437,10 +437,6 @@ namespace T8SuitePro
                             int indexinmap = ((row * colcount) + col) * 2;
                             Int32 ivalue = Convert.ToInt32(m_map_original_content[indexinmap]) * 256;
                             ivalue += Convert.ToInt32(m_map_original_content[indexinmap + 1]);
-
-                            //Int32 diffivalue = Convert.ToInt32(m_map_content[indexinmap]) * 256;
-                            //diffivalue += Convert.ToInt32(m_map_content[indexinmap + 1]);
-                            //if (diffivalue != 0)
                             {
                                 if (ivalue > 32000)
                                 {
@@ -456,15 +452,12 @@ namespace T8SuitePro
                                 }
                                 surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                             }
-                            //logger.Debug(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
                         }
                         else
                         {
 
                             int indexinmap = ((row * colcount) + col);
                             Int32 ivalue = Convert.ToInt32(m_map_original_content[indexinmap]);
-                            //Int32 diffivalue = Convert.ToInt32(m_map_content[indexinmap]);
-                            //if (diffivalue != 0)
                             {
                                 double value = ivalue;
                                 if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
@@ -474,8 +467,6 @@ namespace T8SuitePro
                                 }
                                 surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                             }
-                            //logger.Debug(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
-
                         }
                     }
                     catch (Exception E)
@@ -500,9 +491,6 @@ namespace T8SuitePro
                         int indexinmap = ((row * colcount) + col) * 2;
                         Int32 ivalue = Convert.ToInt32(m_map_compare_content[indexinmap]) * 256;
                         ivalue += Convert.ToInt32(m_map_compare_content[indexinmap + 1]);
-                        //Int32 diffivalue = Convert.ToInt32(m_map_content[indexinmap]) * 256;
-                        //diffivalue += Convert.ToInt32(m_map_content[indexinmap + 1]);
-                        //if (diffivalue != 0)
                         {
                             if (ivalue > 32000)
                             {
@@ -517,16 +505,12 @@ namespace T8SuitePro
                             }
                             surface.Data.SetValue((rowcount - 1) - row, col, value, (rowcount - 1) - row, col);
                         }
-                        //logger.Debug(surface.Name + ": " + row.ToString() + " " + col.ToString() + " value: " + value.ToString());
-
                     }
                     else
                     {
 
                         int indexinmap = ((row * colcount) + col);
                         Int32 ivalue = Convert.ToInt32(m_map_compare_content[indexinmap]);
-                        //Int32 diffivalue = Convert.ToInt32(m_map_content[indexinmap]);
-                        //if (diffivalue != 0)
                         {
                             double value = ivalue;
                             if (m_viewtype != SuiteViewType.Decimal && m_viewtype != SuiteViewType.Hexadecimal && m_viewtype != SuiteViewType.ASCII)
@@ -1445,8 +1429,10 @@ namespace T8SuitePro
                     }
                     value *= correction_factor;
                     value += correction_offset;
-                    if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
-                    
+                    if (y_axisvalues.Length > valcount)
+					{
+						yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+					}                    
 
                     chartdt.Rows.Add(yval, value);
                     valcount++;
@@ -1460,8 +1446,10 @@ namespace T8SuitePro
                     double value = Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth))));
                     value *= correction_factor;
                     value += correction_offset;
-
-                    if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+                    if (y_axisvalues.Length > valcount)
+					{
+						yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+					}
                     
                     chartdt.Rows.Add(yval, value);
                     valcount++;
@@ -3651,7 +3639,6 @@ namespace T8SuitePro
             {
                 logger.Debug(E.Message);
             }
-
         }
 
         public override void SetSurfaceGraphViewEx(float depthx, float depthy, float zoom, float rotation, float elevation)
@@ -3669,7 +3656,6 @@ namespace T8SuitePro
             {
                 logger.Debug("SetSurfaceGraphViewEx:" + E.Message);
             }
-
         }
 
         private void toolStripComboBox3_SelectedIndexChanged(object sender, EventArgs e)

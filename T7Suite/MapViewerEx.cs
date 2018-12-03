@@ -1435,8 +1435,10 @@ namespace T7
                     }
                     value *= correction_factor;
                     value += correction_offset;
-                    if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
-                    
+                    if (y_axisvalues.Length > valcount)
+					{
+						yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+					}                    
 
                     chartdt.Rows.Add(yval, value);
                     valcount++;
@@ -1450,8 +1452,10 @@ namespace T7
                     double value = Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth))));
                     value *= correction_factor;
                     value += correction_offset;
-
-                    if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+                    if (y_axisvalues.Length > valcount)
+					{
+						yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+					}
                     
                     chartdt.Rows.Add(yval, value);
                     valcount++;

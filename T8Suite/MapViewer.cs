@@ -1038,7 +1038,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug("value: " + (int)trackBarControl1.Value + " "+ E.Message);
+                logger.Debug("value: " + (int)trackBarControl1.Value + " " + E.Message);
             }
 
             int numberofrows = data.Length / m_TableWidth;
@@ -1050,11 +1050,11 @@ namespace T8SuitePro
 
             if (m_issixteenbit)
             {
-                for (int t = (numberofrows-1); t >= 0; t --)
+                for (int t = (numberofrows - 1); t >= 0; t--)
                 {
                     double yval = valcount;
-                    double value = Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth*2)))) * 256;
-                    value += Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth*2)) + 1));
+                    double value = Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth * 2)))) * 256;
+                    value += Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth * 2)) + 1));
                     // TEST!!!
                     if (value > 32000)
                     {
@@ -1063,8 +1063,10 @@ namespace T8SuitePro
                     }
                     value *= correction_factor;
                     value += correction_offset;
-
-                    if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+                    if (y_axisvalues.Length > valcount)
+					{
+						yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+					}                    
 
                     chartdt.Rows.Add(yval, value);
                     valcount++;
@@ -1072,13 +1074,17 @@ namespace T8SuitePro
             }
             else
             {
-                for (int t = (numberofrows-1); t >=0; t--)
+                for (int t = (numberofrows - 1); t >= 0; t--)
                 {
                     double yval = valcount;
                     double value = Convert.ToDouble(data.GetValue(offsetinmap + (t * (m_TableWidth))));
                     value *= correction_factor;
                     value += correction_offset;
-                    if (y_axisvalues.Length > valcount) yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+                    if (y_axisvalues.Length > valcount)
+					{
+						yval = Convert.ToDouble((int)y_axisvalues.GetValue((int)valcount));
+					}
+                    
                     chartdt.Rows.Add(yval, value);
                     valcount++;
                 }
@@ -1890,7 +1896,7 @@ namespace T8SuitePro
                         else
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value+=10;
+                            value += 10;
                             if (value > m_MaxValueInTable) m_MaxValueInTable = value;
                             if (m_issixteenbit)
                             {
@@ -1915,7 +1921,7 @@ namespace T8SuitePro
                         if (m_viewtype == SuiteViewType.Hexadecimal)
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString(), 16);
-                            value-=0x10;
+                            value -= 0x10;
                             if (!m_issixteenbit)
                             {
                                 if (value < 0) value = 0;
@@ -1932,7 +1938,7 @@ namespace T8SuitePro
                         else
                         {
                             int value = Convert.ToInt32(gridView1.GetRowCellValue(gc.RowHandle, gc.Column).ToString());
-                            value-=10;
+                            value -= 10;
                             if (!m_issixteenbit)
                             {
                                 if (value < 0) value = 0;
@@ -2318,17 +2324,16 @@ namespace T8SuitePro
                 // single column graph.. 
                 int numberofrows = m_map_length;
                 if (m_issixteenbit) numberofrows /= 2;
-                rowhandle = (numberofrows -1)- Convert.ToInt32(yaxisvalue);
+                rowhandle = (numberofrows - 1) - Convert.ToInt32(yaxisvalue);
             }
             if (rowhandle != -1)
             {
-                double newvalue = (datavalue - correction_offset) * (1/correction_factor);
+                double newvalue = (datavalue - correction_offset) * (1 / correction_factor);
                 if (newvalue >= 0)
                 {
                     gridView1.SetRowCellValue(rowhandle, gridView1.Columns[(int)trackBarControl1.Value], Math.Round(newvalue));
                 }
             }
-            
         }
 
         private void chartControl1_MouseMove(object sender, MouseEventArgs e)
