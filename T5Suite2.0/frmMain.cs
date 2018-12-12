@@ -285,6 +285,9 @@ namespace T5Suite2
 
         public Form1(string[] args)
         {
+            System.Windows.Forms.Application.ThreadException += Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             _splash.Show();
             System.Windows.Forms.Application.DoEvents();
             _splash.SetProgressText("Initializing...");
@@ -372,6 +375,16 @@ namespace T5Suite2
                     m_commandLineFile = args[0].ToUpper();
                 }
             }
+        }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs u)
+        {
+            logger.Trace(u.ExceptionObject);
+        }
+
+        void Application_ThreadException(object sender, ThreadExceptionEventArgs t)
+        {
+            logger.Trace(t.Exception);
         }
 
         private void CreateECUConnection()
