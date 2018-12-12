@@ -152,6 +152,9 @@ namespace T8SuitePro
 
         public Form1(string[] args)
         {
+            System.Windows.Forms.Application.ThreadException += Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             m_appSettings = new AppSettings(suiteRegistry);
             symbolColors = new SymbolColors(suiteRegistry);
 
@@ -199,6 +202,16 @@ namespace T8SuitePro
             splash.Close();
 
             SystemFileAssociation.Create(@"SystemFileAssociations\.bin\shell\Edit in T8 Suite\command");
+        }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs u)
+        {
+            logger.Trace(u.ExceptionObject);
+        }
+
+        void Application_ThreadException(object sender, ThreadExceptionEventArgs t)
+        {
+            logger.Trace(t.Exception);
         }
 
         void t8can_onWriteProgress(object sender, ITrionic.WriteProgressEventArgs e)
