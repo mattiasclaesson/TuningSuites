@@ -189,7 +189,7 @@ namespace T7
             this.xtraTabPage2.Controls.Add(this.checkEdit8);
             this.xtraTabPage2.Controls.Add(this.chartControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(797, 353);
+            this.xtraTabPage2.Size = new System.Drawing.Size(793, 350);
             this.xtraTabPage2.Text = "Dyno graph view";
             // 
             // showFuelFlow
@@ -315,7 +315,7 @@ namespace T7
             // 
             this.tabCompressormap.Controls.Add(this.ctrlCompressorMap1);
             this.tabCompressormap.Name = "tabCompressormap";
-            this.tabCompressormap.Size = new System.Drawing.Size(797, 353);
+            this.tabCompressormap.Size = new System.Drawing.Size(793, 350);
             this.tabCompressormap.Text = "Compressor map";
             // 
             // ctrlCompressorMap1
@@ -360,7 +360,7 @@ namespace T7
         5500,
         6000,
         6500};
-            this.ctrlCompressorMap1.Size = new System.Drawing.Size(797, 353);
+            this.ctrlCompressorMap1.Size = new System.Drawing.Size(793, 350);
             this.ctrlCompressorMap1.TabIndex = 0;
             this.ctrlCompressorMap1.onRefreshData += new T7.ctrlCompressorMap.RefreshData(this.ctrlCompressorMap1_onRefreshData);
             // 

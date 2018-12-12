@@ -1035,6 +1035,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BAAE1F5D4EEE4B66A4D1CB0CFA198B84"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_BF2D12EA1E9EBD408E55BADD8ABC7ADB"
         "OwnerKey" = "8:_6F820B8014DE4A9F9FA66725E3B6203E"
         "MsmSig" = "8:_UNDEFINED"
@@ -1725,7 +1731,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6888.25229, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:ProCharts, Version=1.0.6920.36597, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_038BBC9082718C1627EE1A6822C93811"
@@ -3591,15 +3597,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T7Suite"
-        "ProductCode" = "8:{1318F2DD-0D7F-42B1-99EC-7EFF21674428}"
-        "PackageCode" = "8:{DB451C35-3E06-44EE-8BCC-AEE71B68E03B}"
+        "ProductCode" = "8:{6E695359-CA6D-4D81-AC8F-84B08DD67840}"
+        "PackageCode" = "8:{A7F7D2D2-2466-4956-BD4A-2FE69C3D3A8A}"
         "UpgradeCode" = "8:{9C2F3019-BC14-4E3F-A0CC-87BFB3182E7D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.52"
+        "ProductVersion" = "8:0.1.53"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.trionictuning.com"
@@ -4136,6 +4142,20 @@
         }
         "MergeModule"
         {
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_BAAE1F5D4EEE4B66A4D1CB0CFA198B84"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC100_CRT_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
         }
         "ProjectOutput"
         {
