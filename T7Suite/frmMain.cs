@@ -9054,6 +9054,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
             {
                 trionic7.SetSelectedAdapter(m_appSettings.Adapter);
             }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
+            {
+            }
             else
             {
                 frmInfoBox info = new frmInfoBox("Check settings, no CAN adapter has been selected!");
