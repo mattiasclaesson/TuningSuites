@@ -12511,8 +12511,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 info.Show();
                 info.SetECUHardwareDescription(t8can.GetECUDescription());
                 info.SetECUHardware(t8can.GetECUHardware());
-                info.SetECUHardwareType(t8can.RequestECUInfo(0x97, ""));
-                info.SetECUHardwareSupplierID(t8can.RequestECUInfo(0x92, ""));
+                info.SetECUHardwareType(t8can.RequestECUInfoAsString(0x97));
+                info.SetECUHardwareSupplierID(t8can.RequestECUInfoAsString(0x92));
                 info.SetECUBuildDate(t8can.GetBuildDate());
                 info.SetECUSerialNumber(t8can.GetSerialNumber());
                 info.SetECUSAABPartnumber(t8can.GetSaabPartnumber());
@@ -12521,15 +12521,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 info.SetCalibrationSet(t8can.GetCalibrationSet());
                 info.SetCodefileVersion(t8can.GetCodefileVersion());
                 info.SetSoftwareVersion(t8can.GetSoftwareVersion());
-                info.SetSoftwareVersionFile(t8can.RequestECUInfo(0x0F, ""));
-                info.SetSoftwareID1(t8can.RequestECUInfo(0xC1, ""));
-                info.SetSoftwareID2(t8can.RequestECUInfo(0xC2, ""));
-                info.SetSoftwareID3(t8can.RequestECUInfo(0xC3, ""));
-                info.SetSoftwareID4(t8can.RequestECUInfo(0xC4, ""));
-                info.SetSoftwareID5(t8can.RequestECUInfo(0xC5, ""));
-                info.SetSoftwareID6(t8can.RequestECUInfo(0xC6, ""));
+                info.SetSoftwareVersionFile(t8can.RequestECUInfoAsString(0x0F));
+                info.SetSoftwareID1(t8can.RequestECUInfoAsString(0xC1));
+                info.SetSoftwareID2(t8can.RequestECUInfoAsString(0xC2));
+                info.SetSoftwareID3(t8can.RequestECUInfoAsString(0xC3));
+                info.SetSoftwareID4(t8can.RequestECUInfoAsString(0xC4));
+                info.SetSoftwareID5(t8can.RequestECUInfoAsString(0xC5));
+                info.SetSoftwareID6(t8can.RequestECUInfoAsString(0xC6));
                 info.SetVIN(t8can.GetVehicleVIN());
-                info.SetEngineType(t8can.RequestECUInfo(0x0C, ""));
+                info.SetEngineType(t8can.RequestECUInfoAsString(0x0C));
                 info.SetSpeedLimit(t8can.GetTopSpeed() + " km/h");
                 m_prohibitReading = false;
             }
@@ -14746,6 +14746,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             if (!string.IsNullOrEmpty(m_appSettings.Adapter))
             {
                 t8can.SetSelectedAdapter(m_appSettings.Adapter);
+            }
+            else if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
+            {
             }
             else
             {
