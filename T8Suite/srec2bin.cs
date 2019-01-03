@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CommonSuite;
 using NLog;
+using System.Text;
 
 namespace T8SuitePro
 {
@@ -21,6 +22,7 @@ namespace T8SuitePro
                 outputfile = Path.GetDirectoryName(filename);
                 outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(filename) + ".bin");
                 int bytecount = 0;
+                ulong currentaddress = 0;
                 FileStream fswrite = new FileStream(outputfile, FileMode.Create);
                 BinaryWriter binwrite = new BinaryWriter(fswrite);
 
@@ -28,7 +30,71 @@ namespace T8SuitePro
                 {
                     while ((readline = streamread.ReadLine()) != null)
                     {
-                        if (readline.StartsWith("S2") && readline.Length > 75)
+                        // S0210000415050544F4F4C5F435F455F50000002000000000048FFFFFFFF001D00BAAD
+                        // 0 Record. The type of record is 'S0' (0x5330). The address field is unused and will be filled with zeros (0x0000). 
+                        // The header information within the data field is divided into the following subfields.
+                        //  mname is char[20] and is the module name.
+                        //  ver is char[2] and is the version number.
+                        //  rev is char[2] and is the revision number.
+                        //  description is char[0-36] and is a text comment.
+                        // Each of the subfields is composed of ASCII bytes whose associated characters, when paired, represent one byte 
+                        // hexadecimal values in the case of the version and revision numbers, or represent the hexadecimal values of the
+                        // ASCII characters comprising the module name and description.
+                        if (readline.StartsWith("S0"))
+                        {
+                            Int32 count = Int32.Parse(readline.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                            Int32 expectedNumberOfCharacters = 2*count - 2 - 4;
+                            string data = readline.Substring(8, expectedNumberOfCharacters);
+
+                            StringBuilder mname = new StringBuilder(20);
+                            if (data.Length > 20)
+                            {
+                                for (int i = 0; i < 20; i += 2)
+                                {
+                                    string hs = data.Substring(i, 2);
+                                    mname.Append(Convert.ToChar(Convert.ToUInt32(hs, 16)));
+                                }
+                            }
+
+                            Int32 version = 0;
+                            if (data.Length > 22)
+                            {
+                                version = Int32.Parse(readline.Substring(20, 2), System.Globalization.NumberStyles.HexNumber);
+                            }
+
+                            Int32 revision = 0;
+                            if (data.Length > 24)
+                            {
+                                revision = Int32.Parse(readline.Substring(22, 2), System.Globalization.NumberStyles.HexNumber);
+                            }
+
+                            logger.Debug("Found S0 record count: {0} mname: {1} version: {2} revision: {3}", count, mname, version, revision);
+                        }
+                        // S319000200006A293624473D6D1877691341396C23ED473258D460
+                        else if (readline.StartsWith("S3"))
+                        {
+                            Int32 count = Int32.Parse(readline.Substring(2,2), System.Globalization.NumberStyles.HexNumber);
+                            //logger.Debug("Found S3 record count: {0}", count);
+
+                            UInt64 address = Convert.ToUInt64(readline.Substring(4, 8), 16);
+                            while (address - currentaddress > 0)
+                            {
+                                binwrite.Write((byte)0);
+                                bytecount++;
+                                currentaddress++;
+                            }
+
+                            Int32 expectedNumberOfCharacters = 2 * count - 2 - 8;
+                            readhex = readline.Substring(12, expectedNumberOfCharacters);
+                            for (int t = 0; t < expectedNumberOfCharacters; t += 2)
+                            {
+                                byte b = Convert.ToByte(readhex.Substring(t, 2), 16);
+                                binwrite.Write(b);
+                                bytecount++;
+                                currentaddress++;
+                            }
+                        }
+                        else if (readline.StartsWith("S2") && readline.Length > 75)
                         {
                             Int32 address = Convert.ToInt32(readline.Substring(4, 6), 16);
                             if (address < 0x100000)
@@ -42,39 +108,47 @@ namespace T8SuitePro
                                 }
                             }
 
-                           // logger.Debug("S2: " + bytecount.ToString());
+                            // logger.Debug("S2: " + bytecount.ToString());
                         }
                         else if (readline.StartsWith("S2") && readline.Length > 43)
                         {
-                             Int32 address = Convert.ToInt32(readline.Substring(4, 6), 16);
-                             if (address < 0x100000)
-                             {
-                                 readhex = readline.Substring(10, 32);
-                                 for (int t = 0; t < 32; t += 2)
-                                 {
-                                     byte b = Convert.ToByte(readhex.Substring(t, 2), 16);
-                                     binwrite.Write(b);
-                                     bytecount++;
-                                 }
-                             }
-                           // logger.Debug("S2: " + bytecount.ToString());
+                            Int32 address = Convert.ToInt32(readline.Substring(4, 6), 16);
+                            if (address < 0x100000)
+                            {
+                                readhex = readline.Substring(10, 32);
+                                for (int t = 0; t < 32; t += 2)
+                                {
+                                    byte b = Convert.ToByte(readhex.Substring(t, 2), 16);
+                                    binwrite.Write(b);
+                                    bytecount++;
+                                }
+                            }
+                            // logger.Debug("S2: " + bytecount.ToString());
                         }
                         else if (readline.StartsWith("S1") && readline.Length > 41 && readline.Length <= 44)
                         {
-                             //Int32 address = Convert.ToInt32(readline.Substring(4, 6), 16);
-                             //if (address < 0x100000)
-                             {
-                                 readhex = readline.Substring(8, 32);
-                                 for (int t = 0; t < 32; t += 2)
-                                 {
-                                     byte b = Convert.ToByte(readhex.Substring(t, 2), 16);
-                                     binwrite.Write(b);
-                                     bytecount++;
-                                 }
-                             }
+                            //Int32 address = Convert.ToInt32(readline.Substring(4, 6), 16);
+                            //if (address < 0x100000)
+                            {
+                                readhex = readline.Substring(8, 32);
+                                for (int t = 0; t < 32; t += 2)
+                                {
+                                    byte b = Convert.ToByte(readhex.Substring(t, 2), 16);
+                                    binwrite.Write(b);
+                                    bytecount++;
+                                }
+                            }
                             //logger.Debug("S1: " + bytecount.ToString());
                         }
 
+                    }
+
+                    // pad
+                    while (currentaddress < 0x100000)
+                    {
+                        binwrite.Write((byte)0);
+                        bytecount++;
+                        currentaddress++;
                     }
                 }
                 logger.Debug("Bytes written: " + bytecount.ToString());
