@@ -19,7 +19,7 @@ namespace CommonSuite
         private const Int32 FROM_BASE_16 = 16;
         private const byte ZERO = 0;
 
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        static private Logger logger = LogManager.GetCurrentClassLogger();
 
         public bool ConvertSrecToBin(string filename, ulong size, out string newfilename)
         {
@@ -78,6 +78,8 @@ namespace CommonSuite
                             }
 
                             logger.Debug("Found S0 record count: {0} mname: {1} version: {2} revision: {3}", count, mname, version, revision);
+
+                            VerifyCheckSum(readline, count);
                         }
                         // S11F00007C0802A6900100049421FFF07C6C1B787C8C23783C6000003863000026
                         else if (readline.StartsWith("S1"))
@@ -117,6 +119,27 @@ namespace CommonSuite
             return false;
         }
 
+        private static void VerifyCheckSum(string readline, Int32 count)
+        {
+            byte calculatedCheckSum = 0;
+            Int32 allCheckSumCharacters = 2 * count + COUNT_LENGTH - CHECKSUM_LENGTH;
+            string checkData = readline.Substring(2, allCheckSumCharacters);
+            for (int i = 0; i < allCheckSumCharacters; i += 2)
+            {
+                string hs = checkData.Substring(i, 2);
+                calculatedCheckSum += Convert.ToByte(hs, FROM_BASE_16);
+            }
+            calculatedCheckSum = (byte)(255 - calculatedCheckSum);
+
+            Int32 expectedCheckSum = Int32.Parse(readline.Substring(RECORD_TYPE_LENGTH + allCheckSumCharacters, CHECKSUM_LENGTH), System.Globalization.NumberStyles.HexNumber);
+            if (calculatedCheckSum != expectedCheckSum)
+            {
+                string error = string.Format("Line {0} Calculated checksum {1}, expected checksum {2}", readline, calculatedCheckSum, expectedCheckSum);
+                logger.Error(error);
+                throw new Exception(error);
+            }
+        }
+
         private static void DecodeDataField(string readline, ref int bytecount, ref ulong currentaddress, BinaryWriter binwrite, Int32 addressLength)
         {
             Int32 count = Int32.Parse(readline.Substring(2, COUNT_LENGTH), System.Globalization.NumberStyles.HexNumber);
@@ -139,6 +162,8 @@ namespace CommonSuite
                 bytecount++;
                 currentaddress++;
             }
+
+            VerifyCheckSum(readline, count);
         }
 
         public bool ConvertBinToSrec(string filename, ulong size)
