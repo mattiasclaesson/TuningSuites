@@ -78,26 +78,28 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Data.OleDb;
+using System.Xml;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Microsoft.Office.Interop.Excel;
+using DevExpress.XtraBars.Docking;
 using DevExpress.XtraBars;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using System.Data.OleDb;
-using Microsoft.Office.Interop.Excel;
-using PSTaskDialog;
-using DevExpress.XtraBars.Docking;
-using System.Threading;
-using RealtimeGraph;
 using DevExpress.Skins;
+using NLog;
+
+using PSTaskDialog;
+using RealtimeGraph;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.GZip;
 using WidebandSupport;
 using TrionicCANLib;
 using TrionicCANLib.API;
-using NLog;
-using CommonSuite;
-using System.Xml;
 using TrionicCANLib.Checksum;
-using System.Globalization;
-using System.Runtime.InteropServices;
+using TrionicCANLib.Firmware;
+using CommonSuite;
 
 namespace T8SuitePro
 {
@@ -1185,9 +1187,9 @@ namespace T8SuitePro
                 string filename = string.Empty;
                 if (ofd.FileName.ToUpper().EndsWith("S19"))
                 {
-                    srec2bin cvt = new srec2bin();
+                    Srecord cvt = new Srecord();
 
-                    cvt.ConvertSrecToBin(ofd.FileName, out filename);
+                    cvt.ConvertSrecToBin(ofd.FileName, FileT8.Length, out filename);
                 }
                 else
                 {
@@ -3876,8 +3878,8 @@ namespace T8SuitePro
             sfd1.Title = "Export file to motorola S19 format...";
             if (sfd1.ShowDialog() == DialogResult.OK)
             {
-                srec2bin srec = new srec2bin();
-                srec.ConvertBinToSrec(m_currentfile, sfd1.FileName);
+                Srecord srec = new Srecord();
+                srec.ConvertBinToSrec(m_currentfile, FileT8.Length, sfd1.FileName);
             }
         }
 

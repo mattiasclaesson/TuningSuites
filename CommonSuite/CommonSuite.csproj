@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="LogFile.cs" />
     <Compile Include="LogWorks.cs" />
+    <Compile Include="Srecord.cs" />
     <Compile Include="SymbolColors.cs" />
     <Compile Include="CSVGenerator.cs" />
     <Compile Include="DifGenerator.cs" />

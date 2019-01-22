@@ -885,7 +885,7 @@ namespace T5Suite2
                 string filename = string.Empty;
                 if (ofd.FileName.ToUpper().EndsWith("S19"))
                 {
-                    srec2bin cvt = new srec2bin();
+                    SrecordT5 cvt = new SrecordT5();
                     
                     cvt.ConvertSrecToBin(ofd.FileName, out filename);
                 }
@@ -9960,7 +9960,7 @@ namespace T5Suite2
                     {
                         m_trionicFile.UpdateChecksum();
 
-                        srec2bin sr = new srec2bin();
+                        SrecordT5 sr = new SrecordT5();
                         sr.ConvertBinToSrec(m_trionicFileInformation.Filename);
                         // and copy it to the target directory
                         string fromfile = Path.GetDirectoryName(m_trionicFileInformation.Filename) + "\\" + Path.GetFileNameWithoutExtension(m_trionicFileInformation.Filename) + ".S19";
@@ -9993,7 +9993,7 @@ namespace T5Suite2
                     {
                         m_trionicFile.UpdateChecksum();
 
-                        srec2bin sr = new srec2bin();
+                        SrecordT5 sr = new SrecordT5();
                         sr.ConvertBinToSrec(m_trionicFileInformation.Filename);
                         // and copy it to the target directory
                         string fromfile = Path.GetDirectoryName(m_trionicFileInformation.Filename) + "\\" + Path.GetFileNameWithoutExtension(m_trionicFileInformation.Filename) + ".S19";
@@ -10026,7 +10026,7 @@ namespace T5Suite2
                     {
                         m_trionicFile.UpdateChecksum();
 
-                        srec2bin sr = new srec2bin();
+                        SrecordT5 sr = new SrecordT5();
                         sr.ConvertBinToSrec(m_trionicFileInformation.Filename);
                         // and copy it to the target directory
                         string fromfile = Path.GetDirectoryName(m_trionicFileInformation.Filename) + "\\" + Path.GetFileNameWithoutExtension(m_trionicFileInformation.Filename) + ".S19";
@@ -11565,7 +11565,7 @@ namespace T5Suite2
                         if (!m_trionicFile.ValidateChecksum()) m_trionicFile.UpdateChecksum();
                         if (sfd.FileName.ToUpper().EndsWith("S19"))
                         {
-                            srec2bin convert = new srec2bin();
+                            SrecordT5 convert = new SrecordT5();
                             if (!convert.ConvertBinToSrec(m_trionicFileInformation.Filename, sfd.FileName))
                             {
                                 frmInfoBox info = new frmInfoBox("Failed to convert file to S19 format");

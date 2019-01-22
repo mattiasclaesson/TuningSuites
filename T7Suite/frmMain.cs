@@ -103,6 +103,7 @@ using RealtimeGraph;
 using CommonSuite;
 using TrionicCANLib.API;
 using TrionicCANLib.Checksum;
+using TrionicCANLib.Firmware;
 using WidebandSupport;
 using NLog;
 using T7.Parser;
@@ -592,8 +593,8 @@ namespace T7
             sfd1.Title = "Export file to motorola S19 format...";
             if (sfd1.ShowDialog() == DialogResult.OK)
             {
-                srec2bin srec = new srec2bin();
-                srec.ConvertBinToSrec(m_currentfile, sfd1.FileName);
+                Srecord srec = new Srecord();
+                srec.ConvertBinToSrec(m_currentfile, FileT7.Length, sfd1.FileName);
             }
         }
 
@@ -5808,9 +5809,9 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             if (filename.ToUpper().EndsWith(".S19"))
             {
                 m_fileiss19 = true;
-                srec2bin convert = new srec2bin();
+                Srecord convert = new Srecord();
                 string convertedfile = string.Empty;
-                if (convert.ConvertSrecToBin(filename, out convertedfile))
+                if (convert.ConvertSrecToBin(filename, FileT7.Length, out convertedfile))
                 {
                     filename = convertedfile;
                 }
@@ -13381,8 +13382,8 @@ If boost regulation reports errors you can increase the difference between boost
                                 if (m_fileiss19)
                                 {
                                     // automatisch terugschrijven
-                                    srec2bin cnvrt = new srec2bin();
-                                    cnvrt.ConvertBinToSrec(m_currentfile);
+                                    Srecord cnvrt = new Srecord();
+                                    cnvrt.ConvertBinToSrec(m_currentfile, FileT7.Length);
                                 }
 
                             }
@@ -13393,14 +13394,14 @@ If boost regulation reports errors you can increase the difference between boost
                                 if (m_fileiss19)
                                 {
                                     // automatisch terugschrijven
-                                    srec2bin cnvrt = new srec2bin();
-                                    cnvrt.ConvertBinToSrec(m_currentfile);
+                                    Srecord cnvrt = new Srecord();
+                                    cnvrt.ConvertBinToSrec(m_currentfile, FileT7.Length);
                                 }
                             }
                         }
 
-                        srec2bin sr = new srec2bin();
-                        sr.ConvertBinToSrec(m_currentfile);
+                        Srecord sr = new Srecord();
+                        sr.ConvertBinToSrec(m_currentfile, FileT7.Length);
                         // and copy it to the target directory
                         string fromfile = Path.GetDirectoryName(m_currentfile) + "\\" + Path.GetFileNameWithoutExtension(m_currentfile) + ".S19";
                         string destfile = Path.GetDirectoryName(m_appSettings.Write_ecubatchfile) + "\\TO_ECU.S19";

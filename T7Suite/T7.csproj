@@ -537,7 +537,6 @@
     <Compile Include="SRAMCompareResults.designer.cs">
       <DependentUpon>SRAMCompareResults.cs</DependentUpon>
     </Compile>
-    <Compile Include="srec2bin.cs" />
     <Compile Include="Plot3D\Surface3DRenderer.cs" />
     <Compile Include="SurfaceGraphViewer.cs">
       <SubType>UserControl</SubType>
