@@ -5811,7 +5811,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 m_fileiss19 = true;
                 Srecord convert = new Srecord();
                 string convertedfile = string.Empty;
-                if (convert.ConvertSrecToBin(filename, FileT7.Length, out convertedfile))
+                if (convert.ConvertSrecToBin(filename, FileT7.Length, out convertedfile, true))
                 {
                     filename = convertedfile;
                 }
