@@ -1189,7 +1189,7 @@ namespace T8SuitePro
                 {
                     Srecord cvt = new Srecord();
 
-                    cvt.ConvertSrecToBin(ofd.FileName, FileT8.Length, out filename);
+                    cvt.ConvertSrecToBin(ofd.FileName, FileT8.Length, out filename, true);
                 }
                 else
                 {
@@ -13305,10 +13305,20 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         newFile[i] = binFile[i];
                     }
                     // open gbf file
-                    OpenFileDialog ofd2 = new OpenFileDialog() { Filter = "TIS T8 files|*.gbf", Title = "Choose a TIS T8 file to build the new file with", Multiselect = false };
+                    OpenFileDialog ofd2 = new OpenFileDialog() { Filter = "TIS T8 files|*.gbf;*.s19", Title = "Choose a TIS T8 file to build the new file with", Multiselect = false };
                     if (ofd2.ShowDialog() == DialogResult.OK)
                     {
                         string gbfFileName = ofd2.FileName;
+                        if (gbfFileName.ToUpper().EndsWith("S19"))
+                        {
+                            Srecord cvt = new Srecord();
+
+                            string outputFile;
+                            cvt.ConvertSrecToBin(gbfFileName, FileT8.Length, out outputFile, false);
+
+                            gbfFileName = outputFile;
+                        }
+
                         try
                         {
                             byte[] dataBuffer = new byte[4096];

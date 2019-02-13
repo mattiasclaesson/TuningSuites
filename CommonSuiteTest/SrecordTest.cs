@@ -73,7 +73,7 @@ namespace CommonSuiteTest
             const string inputS19Filename = "t7.s19";
             string actualBinFilename;
             Srecord srecord = new Srecord();
-            srecord.ConvertSrecToBin(inputS19Filename, FileT7.Length, out actualBinFilename);
+            srecord.ConvertSrecToBin(inputS19Filename, FileT7.Length, out actualBinFilename, true);
 
             Assert.AreEqual("t7.bin", actualBinFilename);
             Assert.IsTrue(File.Exists(actualBinFilename));
@@ -90,7 +90,24 @@ namespace CommonSuiteTest
             const string inputS19Filename = "t8_application.s19";
             string actualBinFilename;
             Srecord srecord = new Srecord();
-            srecord.ConvertSrecToBin(inputS19Filename, FileT8.Length, out actualBinFilename);
+            srecord.ConvertSrecToBin(inputS19Filename, FileT8.Length, out actualBinFilename, true);
+
+            Assert.AreEqual("t8_application.bin", actualBinFilename);
+            Assert.IsTrue(File.Exists(actualBinFilename));
+            FileInfo info = new FileInfo(actualBinFilename);
+            Assert.AreEqual(FileT8.Length, info.Length);
+        }
+
+        /// <summary>
+        ///A test for Convert AppTool T8 s19 file to bin without padding
+        ///</summary>
+        [TestMethod(), DeploymentItem("Resources//t8_application.s19")]
+        public void ConvertAppToolT8s19NoPad()
+        {
+            const string inputS19Filename = "t8_application.s19";
+            string actualBinFilename;
+            Srecord srecord = new Srecord();
+            srecord.ConvertSrecToBin(inputS19Filename, FileT8.Length, out actualBinFilename, false);
 
             Assert.AreEqual("t8_application.bin", actualBinFilename);
             Assert.IsTrue(File.Exists(actualBinFilename));

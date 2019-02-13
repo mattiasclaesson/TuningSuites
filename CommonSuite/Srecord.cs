@@ -21,7 +21,7 @@ namespace CommonSuite
 
         static private Logger logger = LogManager.GetCurrentClassLogger();
 
-        public bool ConvertSrecToBin(string filename, ulong size, out string newfilename)
+        public bool ConvertSrecToBin(string filename, ulong size, out string newfilename, bool pad)
         {
             string readline = string.Empty;
             newfilename = string.Empty;
@@ -84,26 +84,28 @@ namespace CommonSuite
                         // S11F00007C0802A6900100049421FFF07C6C1B787C8C23783C6000003863000026
                         else if (readline.StartsWith("S1"))
                         {
-                            DecodeDataField(readline, ref bytecount, ref currentaddress, binwrite, S1_ADDRESS_LENGTH);
+                            DecodeDataField(readline, ref bytecount, ref currentaddress, binwrite, S1_ADDRESS_LENGTH, pad);
                         }
                         // S214000000FFFFEFFC0004A478000418420004185810
                         else if (readline.StartsWith("S2"))
                         {
-                            DecodeDataField(readline, ref bytecount, ref currentaddress, binwrite, S2_ADDRESS_LENGTH);
+                            DecodeDataField(readline, ref bytecount, ref currentaddress, binwrite, S2_ADDRESS_LENGTH, pad);
                         }
                         // S319000200006A293624473D6D1877691341396C23ED473258D460
                         else if (readline.StartsWith("S3"))
                         {
-                            DecodeDataField(readline, ref bytecount, ref currentaddress, binwrite, S3_ADDRESS_LENGTH);
+                            DecodeDataField(readline, ref bytecount, ref currentaddress, binwrite, S3_ADDRESS_LENGTH, pad);
                         }
                     }
 
-                    // pad
-                    while (currentaddress < size)
+                    if (pad)
                     {
-                        binwrite.Write(ZERO);
-                        bytecount++;
-                        currentaddress++;
+                        while (currentaddress < size)
+                        {
+                            binwrite.Write(ZERO);
+                            bytecount++;
+                            currentaddress++;
+                        }
                     }
                 }
                 logger.Debug("Bytes written: " + bytecount.ToString());
@@ -140,17 +142,19 @@ namespace CommonSuite
             }
         }
 
-        private static void DecodeDataField(string readline, ref int bytecount, ref ulong currentaddress, BinaryWriter binwrite, Int32 addressLength)
+        private static void DecodeDataField(string readline, ref int bytecount, ref ulong currentaddress, BinaryWriter binwrite, Int32 addressLength, bool pad)
         {
             Int32 count = Int32.Parse(readline.Substring(2, COUNT_LENGTH), System.Globalization.NumberStyles.HexNumber);
 
             UInt64 address = Convert.ToUInt64(readline.Substring(RECORD_TYPE_LENGTH + COUNT_LENGTH, addressLength), FROM_BASE_16);
-            // Pad before address if needed
-            while (address - currentaddress > 0)
+            if (pad)
             {
-                binwrite.Write(ZERO);
-                bytecount++;
-                currentaddress++;
+                while (address - currentaddress > 0)
+                {
+                    binwrite.Write(ZERO);
+                    bytecount++;
+                    currentaddress++;
+                }
             }
 
             Int32 expectedNumberOfCharacters = 2 * count - CHECKSUM_LENGTH - addressLength;
