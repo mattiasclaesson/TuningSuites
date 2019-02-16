@@ -112,7 +112,7 @@ namespace CommonSuiteTest
             Assert.AreEqual("t8_application.bin", actualBinFilename);
             Assert.IsTrue(File.Exists(actualBinFilename));
             FileInfo info = new FileInfo(actualBinFilename);
-            Assert.AreEqual(FileT8.Length, info.Length);
+            Assert.AreEqual(678801, info.Length);
         }
     }
 }

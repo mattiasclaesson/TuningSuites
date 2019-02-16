@@ -1,6 +1,6 @@
 @echo off
-set T8.version=0.1.49.0
-set SetupT8Suite.version=0.1.49
+set T8.version=0.1.50.0
+set SetupT8Suite.version=0.1.50
 set TrionicCANLib.version=0.1.56.0
 set AquaGauge.version=1.5.7.0
 set ICSharpCode.TextEditor.version=3.0.0.3437
@@ -17,4 +17,4 @@ set LibUsbDotNet.version=2.2.8.104
 set PSTaskDialog.version=1.0.0.0
 set ICSharpCode.SharpZipLib=0.86.0.518
 set Wideband.version=1.0.2.0
-set CommonSuite.version=1.0.13.0
+set CommonSuite.version=1.0.14.0
