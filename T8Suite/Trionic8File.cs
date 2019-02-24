@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using BlowFishCS;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
+using TrionicCANLib.Firmware;
 
 namespace T8SuitePro
 {
@@ -1240,6 +1241,21 @@ namespace T8SuitePro
             // Secondly load the .xml file with same path and filename as the .bin file. 
             string xmlfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".xml");
             return TryToLoadAdditionalXMLSymbols(xmlfile, collection);
+        }
+
+        public static bool IsSoftwareOpen(SymbolCollection symbols)
+        {
+            foreach (SymbolHelper sh in symbols)
+            {
+                if (sh.Flash_start_address > FileT8.Length && sh.Length > 0x100 && sh.Length < 0x400)
+                {
+                    if (sh.SmartVarname == "BFuelCal.LambdaOneFacMap" || sh.SmartVarname == "KnkFuelCal.fi_MaxOffsetMap" || sh.SmartVarname == "AirCtrlCal.RegMap")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

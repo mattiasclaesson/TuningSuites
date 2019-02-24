@@ -3627,7 +3627,7 @@ namespace T7
             // after verifying that this ramdump matches the selected binary.
             // this can result in a compare between flash maps and the sram map values
             m_currentsramfile = filename;
-            barStaticItem1.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
+            barSRAMFilename.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
 
         }
 
@@ -5188,7 +5188,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             _softwareIsOpen = false;
             _softwareIsOpenDetermined = false;
             m_currentsramfile = string.Empty; // geen sramfile erbij
-            barStaticItem1.Caption = "";
+            barSRAMFilename.Caption = "";
             barFilenameText.Caption = "";
 
             FileInfo fi = new FileInfo(filename);
@@ -5805,7 +5805,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
         {
             m_fileiss19 = false;
             m_currentsramfile = string.Empty; // geen sramfile erbij
-            barStaticItem1.Caption = "";
+            barSRAMFilename.Caption = "";
             if (filename.ToUpper().EndsWith(".S19"))
             {
                 m_fileiss19 = true;

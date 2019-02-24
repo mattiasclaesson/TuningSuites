@@ -8,6 +8,7 @@ using CommonSuite;
 using NLog;
 using TrionicCANLib.Checksum;
 using System.Diagnostics;
+using TrionicCANLib.Firmware;
 
 namespace T7
 {
@@ -341,8 +342,6 @@ namespace T7
             return retval;
         }
 
-        private static int m_Filelength = 0x80000;
-
         private string m_fileName = string.Empty;
 
         public string FileName
@@ -370,7 +369,6 @@ namespace T7
         {
             m_fileName = filename;
             FileInfo fi = new FileInfo(filename);
-            m_Filelength = (int)fi.Length;
             symbol_collection = new SymbolCollection();
             try
             {
@@ -564,19 +562,17 @@ namespace T7
 
         public static bool IsSoftwareOpen(SymbolCollection symbols)
         {
-            bool retval = false;
             foreach (SymbolHelper sh in symbols)
             {
-                if (sh.Flash_start_address > m_Filelength && sh.Length > 0x100 && sh.Length < 0x400)
+                if (sh.Flash_start_address > FileT7.Length && sh.Length > 0x100 && sh.Length < 0x400)
                 {
-                    if (sh.Varname == "BFuelCal.Map" || sh.Varname == "IgnNormCal.Map" || sh.Varname == "AirCtrlCal.map" ||
-                        sh.Userdescription == "BFuelCal.Map" || sh.Userdescription == "IgnNormCal.Map" || sh.Userdescription == "AirCtrlCal.map")
+                    if (sh.SmartVarname == "BFuelCal.Map" || sh.SmartVarname == "IgnNormCal.Map" || sh.SmartVarname == "AirCtrlCal.map")
                     {
-                        retval = true; // found maps > 0x100 in size in sram
+                        return true;
                     }
                 }
             }
-            return retval;
+            return false;
         }
 
         static private void ImportSymbols(System.Data.DataTable dt, SymbolCollection collection, int LanguageID)

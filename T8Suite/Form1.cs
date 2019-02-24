@@ -552,7 +552,7 @@ namespace T8SuitePro
         {
             bool symbolsLoaded = false;
             m_currentsramfile = string.Empty; // geen sramfile erbij
-            barStaticItem1.Caption = "";
+            barSRAMFilename.Caption = "";
             barFilenameText.Caption = "";
             symbol_collection = new SymbolCollection();
 
@@ -582,6 +582,16 @@ namespace T8SuitePro
                 Trionic8File.TryToExtractPackedBinary(filename, out symbol_collection);
                 // try to load additional symboltranslations that the user entered
                 symbolsLoaded = Trionic8File.TryToLoadAdditionalBinSymbols(filename, symbol_collection);
+
+                try
+                {
+                    _softwareIsOpenDetermined = false;
+                    IsSoftwareOpenAndUpdateCaption();
+                }
+                catch (Exception E)
+                {
+                    logger.Debug(E);
+                }
             }
             catch (Exception E)
             {
@@ -615,6 +625,29 @@ namespace T8SuitePro
             }
 
             return true;
+        }
+
+        private bool _softwareIsOpen = false;
+        private bool _softwareIsOpenDetermined = false;
+
+        private bool IsSoftwareOpenAndUpdateCaption()
+        {
+            if (_softwareIsOpenDetermined) return _softwareIsOpen;
+
+            _softwareIsOpen = Trionic8File.IsSoftwareOpen(m_symbols);
+            _softwareIsOpenDetermined = true;
+
+            if (_softwareIsOpen)
+            {
+                barStaticOpenClosed.Caption = "Open/dev binary";
+                btnAutoTune.Visible = true;
+            }
+            else
+            {
+                barStaticOpenClosed.Caption = "Normal binary";
+                btnAutoTune.Visible = false;
+            }
+            return _softwareIsOpen;
         }
 
         private void SetProgressIdle()
@@ -11687,7 +11720,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // after verifying that this ramdump matches the selected binary.
             // this can result in a compare between flash maps and the sram map values
             m_currentsramfile = filename;
-            barStaticItem1.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
+            barSRAMFilename.Caption = "SRAM: " + Path.GetFileNameWithoutExtension(m_currentsramfile);
 
         }
 
