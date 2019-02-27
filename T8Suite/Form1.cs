@@ -1288,6 +1288,11 @@ namespace T8SuitePro
             logger.Debug("Double click seen");
         }
 
+        private int GetOpenFileOffset()
+        {
+            return (int)FileT8.SRAMAddress - 0x7902C;
+        }
+
         private void GetAxisDescriptions(string symbolname, out string x, out string y, out string z)
         {
             x = "x-axis";
@@ -1334,6 +1339,11 @@ namespace T8SuitePro
             {
                 if (sh.SmartVarname == symbolname)
                 {
+                    if (IsSoftwareOpenAndUpdateCaption() && IsSymbolCalibration(symbolname) && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
+                    {
+                        return sh.Flash_start_address - GetOpenFileOffset();
+                    }
+
                     return sh.Flash_start_address;
                 }
             }
@@ -2198,17 +2208,16 @@ namespace T8SuitePro
                                 }
                                 else
                                 {
-                                    address -= (int)FileT8.SRAMAddress;
-
                                     if (IsSoftwareOpenAndUpdateCaption())
                                     {
-                                        address += 0x7902C;//0x78A2C 0x78DEC;// GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
+                                        address -= GetOpenFileOffset();
                                         tabdet.Map_address = address;
                                         tabdet.IsOpenSoftware = true;
                                         mapdata = readdatafromfile(m_currentfile, address, length);
                                     }
                                     else
                                     {
+                                        address -= (int)FileT8.SRAMAddress;
                                         mapdata = readdatafromfile(m_currentfile, address, length);
                                     }
                                 }
