@@ -1230,7 +1230,6 @@ namespace T8SuitePro
                 }
                 OpenFile(filename);
             }
-            //if (m_currentfile != string.Empty) LoadRealtimeTable();
         }
 
         private void gridViewSymbols_DoubleClick(object sender, EventArgs e)
@@ -1250,17 +1249,32 @@ namespace T8SuitePro
                         if (sh == null)
                             return;
 
-                        if (sh.Flash_start_address > m_currentfile_size)
+                        if (IsSoftwareOpenAndUpdateCaption()) // <GS-09082010> if it is open software, get data from flash instead of sram
                         {
-                            logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
-                            if (RealtimeCheckAndConnect())
+                            // Should we start a viewer in realtime mode or in offline mode?
+                            if (m_RealtimeConnectedToECU)
                             {
                                 ShowRealtimeMapFromECU(sh.SmartVarname);
+                            }
+                            else
+                            {
+                                StartTableViewer(ECUMode.Offline);
                             }
                         }
                         else
                         {
-                            StartTableViewer();
+                            if (sh.Flash_start_address > m_currentfile_size)
+                            {
+                                logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
+                                if (RealtimeCheckAndConnect())
+                                {
+                                    ShowRealtimeMapFromECU(sh.SmartVarname);
+                                }
+                            }
+                            else
+                            {
+                                StartTableViewer(ECUMode.Auto);
+                            }
                         }
                     }
                 }
@@ -1934,7 +1948,13 @@ namespace T8SuitePro
             
         }
 
-        private void StartTableViewer()
+        public enum ECUMode : int
+        {
+            Offline,
+            Auto
+        }
+
+        private void StartTableViewer(ECUMode mode)
         {
             if (gridViewSymbols.SelectedRowsCount > 0)
             {
@@ -1953,7 +1973,6 @@ namespace T8SuitePro
                     if (sh.Flash_start_address == 0 && sh.Start_address == 0)
                         return;
 
-                    //DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                     if (sh == null) return;
 
                     if (sh.BitMask > 0)
@@ -1962,11 +1981,6 @@ namespace T8SuitePro
                         StartBitMaskViewer(sh);
                         return;
                     }
-                    /*if (sh.Flash_start_address > m_currentfile_size && !m_RealtimeConnectedToECU)
-                    {
-                        MessageBox.Show("Symbol outside of flash boundary, probably SRAM only symbol");
-                        return;
-                    }*/
 
                     string varname = sh.SmartVarname;
                     DockPanel dockPanel;
@@ -1987,9 +2001,9 @@ namespace T8SuitePro
                     {
                         logger.Debug(E.Message);
                     }
+
                     if (!pnlfound)
                     {
-                        //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
                         dockManager1.BeginUpdate();
                         try
                         {
@@ -2028,7 +2042,6 @@ namespace T8SuitePro
                             if (!m_appSettings.NewPanelsFloating)
                             {
                                 dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-
                                 if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
                                 {
                                     int dw = 650;
@@ -2124,13 +2137,11 @@ namespace T8SuitePro
                                     {
                                         dockPanel.FloatSize = new Size(dw, 850);
                                         tabdet.SetSplitter(0, 0, 250, false, false);
-                                        //tabdet.SetSurfaceGraphZoom(0.4);
                                     }
                                     else
                                     {
 
                                         dockPanel.FloatSize = new Size(dw, 450);
-                                        //dockPanel.FloatSize = new Size(550, 450);
                                     }
                                 }
                                 else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
@@ -2146,12 +2157,9 @@ namespace T8SuitePro
                                     {
                                         dockPanel.FloatSize = new Size(dw, 700);
                                         tabdet.SetSplitter(0, 0, 320, false, false);
-                                        // tabdet.SetSurfaceGraphZoom(0.5);
                                     }
                                     else
                                     {
-                                        // dockPanel.FloatSize = new Size(450, 450);
-
                                         dockPanel.FloatSize = new Size(dw, 450);
                                     }
                                 }
@@ -2162,13 +2170,6 @@ namespace T8SuitePro
                             }
                             dockPanel.Tag = m_currentfile;
 
-                            /*string xdescr = string.Empty;
-                            string ydescr = string.Empty;
-                            string zdescr = string.Empty;
-                            GetAxisDescriptions(m_currentfile, m_symbols, tabdet.Map_name, out xdescr, out ydescr, out zdescr);
-                            tabdet.X_axis_name = xdescr;
-                            tabdet.Y_axis_name = ydescr;
-                            tabdet.Z_axis_name = zdescr;*/
                             int columns = 8;
                             int rows = 8;
                             int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
@@ -2181,24 +2182,59 @@ namespace T8SuitePro
                             int sramaddress = 0;// Convert.ToInt32(dr.Row["SRAMADDRESS"].ToString());
                             if (address != 0)
                             {
+                                logger.Debug("address: " + address.ToString("X8"));
 
-                                while (address > m_currentfile_size)
-                                    address -= m_currentfile_size;
-                                
                                 tabdet.Map_address = address;
                                 tabdet.Map_sramaddress = sramaddress;
                                 int length = Convert.ToInt32(sh.Length);
                                 tabdet.Map_length = length;
-                                byte[] mapdata = readdatafromfile(m_currentfile, address, length);
+
+                                byte[] mapdata = new byte[sh.Length];
+                                mapdata.Initialize();
+                                if (address < FileT8.SRAMAddress)
+                                {
+                                    logger.Debug("read data from file");
+                                    mapdata = readdatafromfile(m_currentfile, address, length);
+                                }
+                                else
+                                {
+                                    address -= (int)FileT8.SRAMAddress;
+
+                                    if (IsSoftwareOpenAndUpdateCaption())
+                                    {
+                                        address += 0x7902C;//0x78A2C 0x78DEC;// GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
+                                        tabdet.Map_address = address;
+                                        tabdet.IsOpenSoftware = true;
+                                        mapdata = readdatafromfile(m_currentfile, address, length);
+                                    }
+                                    else
+                                    {
+                                        mapdata = readdatafromfile(m_currentfile, address, length);
+                                    }
+                                }
+
+                                logger.Debug("mapdata len: " + mapdata.Length.ToString("X4"));
+
                                 tabdet.Map_content = mapdata;
+
                                 tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                                 tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                                 tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
 
-                                if (m_RealtimeConnectedToECU)
+                                if (mode == ECUMode.Auto)
                                 {
-                                    tabdet.IsRAMViewer = true;
-                                    tabdet.OnlineMode = true;
+                                    if ((m_RealtimeConnectedToECU))
+                                    {
+                                        if (m_appSettings.UseNewMapViewer)
+                                        {
+                                            tabdet.OnlineMode = true;
+                                        }
+                                        tabdet.IsRAMViewer = true;
+                                    }
+                                    else
+                                    {
+                                        tabdet.IsRAMViewer = false;
+                                    }
                                 }
 
                                 tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
@@ -2752,7 +2788,7 @@ namespace T8SuitePro
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
 
-                            StartTableViewer();
+                            StartTableViewer(ECUMode.Auto);
                             break;
                         }
                         catch (Exception E)
@@ -3892,7 +3928,7 @@ namespace T8SuitePro
         {
             if (e.KeyCode == Keys.Enter)
             {
-                StartTableViewer();
+                gridViewSymbols_DoubleClick(this, EventArgs.Empty);
             }
             else if (e.Control && e.KeyCode == Keys.C)
             {

@@ -5990,7 +5990,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                         if (sh == null)
                             return;
 
-                        if (IsSoftwareOpenAndUpdateCaption()) // <GS-09082010> if it is open software, get data from flash instead of sram
+                        if (IsSoftwareOpenAndUpdateCaption())
                         {   
                             // Should we start a viewer in realtime mode or in offline mode?
                             if (m_RealtimeConnectedToECU)
@@ -6600,20 +6600,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
                         if (sh.Flash_start_address == 0 && sh.Start_address == 0)
                             return;
 
-                        //DataRowView dr = (DataRowView)gridViewSymbols.GetRow((int)selrows.GetValue(0));
                         if (sh == null) return;
-                        /*if (sh.Flash_start_address > m_currentfile_size)
-                        {
-                            MessageBox.Show("Symbol outside of flash boundary, probably SRAM only symbol");
-                            return;
-                        }*/
 
                         string varname = sh.SmartVarname;
                         DockPanel dockPanel;
-                        //DockPanel sramdockPanel;
                         bool pnlfound = false;
-                        //bool srampnlfound = false;
-
                         try
                         {
                             foreach (DockPanel pnl in dockManager1.Panels)
@@ -6627,23 +6618,15 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         dockPanel.Show();
                                     }
                                 }
-                                /* if (pnl.Text == "SRAM Symbol: " + varname + " [" + Path.GetFileName(m_currentfile) + "]")
-                                 {
-                                     sramdockPanel = pnl;
-                                     srampnlfound = true;
-                                     //sramdockPanel.Show();
-                                     // nog data verversen?
-                                 }*/
                             }
                         }
                         catch (Exception E)
                         {
                             logger.Debug(E.Message);
                         }
+
                         if (!pnlfound)
                         {
-                            //dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                            logger.Debug("Begin update");
                             dockManager1.BeginUpdate();
                             try
                             {
@@ -6666,10 +6649,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 tabdet.Z_axis_name = z_axis_descr;
                                 tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
                                 tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
-
-                                //tabdet.Yaxiscorrectionfactor = GetMapCorrectionFactor(y_axis);
-                                //tabdet.Xaxiscorrectionfactor = GetMapCorrectionFactor(x_axis);
-                                //tabdet.close
                                 // z, y and z axis to do
                                 if (!m_appSettings.NewPanelsFloating)
                                 {
@@ -6769,13 +6748,11 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         {
                                             dockPanel.FloatSize = new Size(dw, 850);
                                             tabdet.SetSplitter(0, 0, 250, false, false);
-                                            //tabdet.SetSurfaceGraphZoom(0.4);
                                         }
                                         else
                                         {
 
                                             dockPanel.FloatSize = new Size(dw, 450);
-                                            //dockPanel.FloatSize = new Size(550, 450);
                                         }
                                     }
                                     else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
@@ -6791,12 +6768,9 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                         {
                                             dockPanel.FloatSize = new Size(dw, 700);
                                             tabdet.SetSplitter(0, 0, 320, false, false);
-                                            // tabdet.SetSurfaceGraphZoom(0.5);
                                         }
                                         else
                                         {
-                                            // dockPanel.FloatSize = new Size(450, 450);
-
                                             dockPanel.FloatSize = new Size(dw, 450);
                                         }
                                     }
@@ -6807,42 +6781,36 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 }
                                 dockPanel.Tag = m_currentfile;
                                 dockPanel.ClosedPanel += new DockPanelEventHandler(dockPanel_ClosedPanel);
-                                /*string xdescr = string.Empty;
-                                string ydescr = string.Empty;
-                                string zdescr = string.Empty;
-                                GetAxisDescriptions(tabdet.Map_name, out xdescr, out ydescr, out zdescr);
-                                tabdet.X_axis_name = xdescr;
-                                tabdet.Y_axis_name = ydescr;
-                                tabdet.Z_axis_name = zdescr;*/
+
                                 int columns = 8;
                                 int rows = 8;
                                 int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
                                 int address = Convert.ToInt32(sh.Flash_start_address);
+
                                 int sramaddress = 0;// Convert.ToInt32(dr.Row["SRAMADDRESS"].ToString());
                                 if (address != 0)
                                 {
                                     logger.Debug("address: " + address.ToString("X8"));
 
-                                    //while (address > m_currentfile_size) address -= m_currentfile_size;
-
                                     tabdet.Map_address = address;
                                     tabdet.Map_sramaddress = sramaddress;
                                     int length = Convert.ToInt32(sh.Length);
                                     tabdet.Map_length = length;
+
                                     byte[] mapdata = new byte[sh.Length];
                                     mapdata.Initialize();
-                                    if (address < 0x0F00000)
+                                    if (address < 0x0F00000) // FileT7.SRAMAddress
                                     {
                                         logger.Debug("read data from file");
                                         mapdata = readdatafromfile(m_currentfile, address, length);
                                     }
                                     else
                                     {
-                                        if (IsSoftwareOpenAndUpdateCaption()/*length > 0x10*/)
+                                        if (IsSoftwareOpenAndUpdateCaption())
                                         {
                                             address = address - GetOpenFileOffset();// 0xEFFC34; // this should autodetect!!!
                                             tabdet.Map_address = address;
-                                            tabdet.IsOpenSoftware = _softwareIsOpen;
+                                            tabdet.IsOpenSoftware = true;
                                             mapdata = readdatafromfile(m_currentfile, address, length);
                                         }
                                     }
@@ -6855,9 +6823,6 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                                     tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
 
-                                    //                                    m_connectedToECU = true;
-
-                                    //<GS-07102010>
                                     if (mode == ECUMode.Auto)
                                     {
                                         if ((m_RealtimeConnectedToECU))
@@ -7704,15 +7669,33 @@ TorqueCal.M_IgnInflTroqMap 8*/
                             gridViewSymbols.MakeRowVisible(rhandle, true);
                             gridViewSymbols.FocusedRowHandle = rhandle;
 
-                            if (IsSoftwareOpenAndUpdateCaption()) // <GS-09082010> if it is open software, get data from flash instead of sram
+                            if (IsSoftwareOpenAndUpdateCaption())
                             {
+                                // Should we start a viewer in realtime mode or in offline mode?
                                 if (m_RealtimeConnectedToECU)
                                 {
-                                    sh.Symbol_number = GetSymbolNumberFromRealtimeList(sh.Symbol_number, sh.Varname);
+                                    ShowRealtimeMapFromECU(sh.SmartVarname);
+                                }
+                                else
+                                {
+                                    StartTableViewer(ECUMode.Offline);
                                 }
                             }
-
-                            StartTableViewer(ECUMode.Auto);
+                            else
+                            {
+                                if (sh.Flash_start_address > m_currentfile_size)
+                                {
+                                    logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
+                                    if (RealtimeCheckAndConnect())
+                                    {
+                                        ShowRealtimeMapFromECU(sh.SmartVarname);
+                                    }
+                                }
+                                else
+                                {
+                                    StartTableViewer(ECUMode.Auto);
+                                }
+                            }
                             break;
                         }
                         catch (Exception E)
