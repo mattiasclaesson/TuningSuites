@@ -8,6 +8,7 @@ using System.IO;
 using DevExpress.XtraCharts;
 using CommonSuite;
 using NLog;
+using TrionicCANLib.Firmware;
 
 namespace T8SuitePro
 {
@@ -116,6 +117,23 @@ namespace T8SuitePro
             InitializeComponent();
         }
 
+        private bool _softwareIsOpen = false;
+        private bool _softwareIsOpenDetermined = false;
+
+        private bool IsSoftwareOpen()
+        {
+            if (_softwareIsOpenDetermined) return _softwareIsOpen;
+
+            _softwareIsOpen = Trionic8File.IsSoftwareOpen(m_symbols);
+            _softwareIsOpenDetermined = true;
+            return _softwareIsOpen;
+        }
+
+        private int GetOpenFileOffset()
+        {
+            return (int)FileT8.SRAMAddress - 0x7902C;
+        }
+
         private static int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
@@ -136,7 +154,14 @@ namespace T8SuitePro
             {
                 if (sh.SmartVarname == tablename)
                 {
-                    address = (int)sh.Flash_start_address;
+                    if (IsSoftwareOpen() && sh.Length < 0x400 && sh.Flash_start_address > FileT8.Length)
+                    {
+                        address = (int)sh.Flash_start_address - GetOpenFileOffset();
+                    }
+                    else
+                    {
+                        address = (int)sh.Flash_start_address;
+                    }
                     length = sh.Length;
                     break;
                 }
@@ -165,7 +190,14 @@ namespace T8SuitePro
             {
                 if (sh.SmartVarname == tablename)
                 {
-                    address = (int)sh.Flash_start_address;
+                    if (IsSoftwareOpen() && sh.Length < 0x400 && sh.Flash_start_address > FileT8.Length)
+                    {
+                        address = (int)sh.Flash_start_address - GetOpenFileOffset();
+                    }
+                    else
+                    {
+                        address = (int)sh.Flash_start_address;
+                    }
                     length = sh.Length;
                     break;
                 }
