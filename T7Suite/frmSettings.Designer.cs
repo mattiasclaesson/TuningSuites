@@ -750,6 +750,7 @@ namespace T7
             "LC1",
             "LM2",
             "ZT2",
+            "STAG",
             "AEM"});
             this.cbWidebandDevice.Size = new System.Drawing.Size(121, 20);
             this.cbWidebandDevice.TabIndex = 32;
