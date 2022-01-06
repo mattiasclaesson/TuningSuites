@@ -689,7 +689,8 @@ namespace T8SuitePro
             "LC1",
             "LM2",
             "ZT2",
-            "AEM"});
+            "AEM",
+            "STAG"});
             this.cbWidebandDevice.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbWidebandDevice.Size = new System.Drawing.Size(121, 20);
             this.cbWidebandDevice.TabIndex = 36;
