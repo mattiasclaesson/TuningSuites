@@ -2803,12 +2803,14 @@ namespace T8SuitePro
                                 this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Never;
                                 this.barButtonItem15.Visibility = BarItemVisibility.Never;
                                 this.barButtonItem16.Visibility = BarItemVisibility.Never;
+                                this.btnFFFuelCalTempEnrichFacMap.Visibility = BarItemVisibility.Never;
                             }
                             else
                             {
                                 this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Always;
                                 this.barButtonItem15.Visibility = BarItemVisibility.Always;
                                 this.barButtonItem16.Visibility = BarItemVisibility.Always;
+                                this.btnFFFuelCalTempEnrichFacMap.Visibility = BarItemVisibility.Always;
                             }
 
                         }
