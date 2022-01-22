@@ -4304,9 +4304,29 @@ namespace T8SuitePro
             StartTableViewer("KnkFuelCal.EnrichmentMap");
         }
 
-        private void btnFuelCalTempEnrichFacMap_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnBFuelCalTempEnrichFacMap_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartTableViewer("BFuelCal.TempEnrichFacMap");
+        }
+
+        private void btnFFFuelCalTempEnrichFacMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("FFFuelCal.TempEnrichFacMap");
+        }
+
+        private void btnInjCorrCalInjectorConst_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("InjCorrCal.InjectorConst");
+        }
+
+        private void btnInjCorrCalBattCorrTab_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("InjCorrCal.BattCorrTab");
+        }
+
+        private void btnFuelCalLambda1FacMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.Lambda1FacMap");
         }
 
         private void btnMaxAirmassMapManual_ItemClick(object sender, ItemClickEventArgs e)
