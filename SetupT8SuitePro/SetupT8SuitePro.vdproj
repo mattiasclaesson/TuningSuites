@@ -93,6 +93,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_12EC7A5E73B7451EB8E9B771649DCC1C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_17364AE5318C4249A6081865B292B194"
         "OwnerKey" = "8:_2501F8CD56F14E15861AA14CF71FB1C9"
         "MsmSig" = "8:_UNDEFINED"
@@ -1131,6 +1137,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_CCCC67A4FD8D4199A81EF5337A11DCC3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_CE13E02981994E1B929B20341D3A4C39"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1754,6 +1766,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_12EC7A5E73B7451EB8E9B771649DCC1C"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\3bar_sensors_one.t8x"
+            "TargetName" = "8:3bar_sensors_one.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_17364AE5318C4249A6081865B292B194"
@@ -3287,6 +3319,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CCCC67A4FD8D4199A81EF5337A11DCC3"
+            {
+            "SourcePath" = "8:..\\TuningPacks\\3bar_sensors_both.t8x"
+            "TargetName" = "8:3bar_sensors_both.t8x"
+            "Tag" = "8:"
+            "Folder" = "8:_AB3A08ACBF7D47B6B727B10B341F5E54"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE13E02981994E1B929B20341D3A4C39"
             {
             "SourcePath" = "8:..\\TuningPacks\\B207R_Suite_St1_MY03-06.t8x"
@@ -3311,7 +3363,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.56.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:TrionicCANLib, Version=0.1.58.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_CE6E20271E49607FC269A508820315E9"
@@ -3673,15 +3725,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:T8SuitePro"
-        "ProductCode" = "8:{8FAA3E44-64D0-415A-9A0C-0F28576ACCC8}"
-        "PackageCode" = "8:{748D4FC9-65DB-4530-9443-74BC9689FB8D}"
+        "ProductCode" = "8:{2370FF91-2CB5-4020-9646-A49C600282BA}"
+        "PackageCode" = "8:{42CC45C5-C350-4C8C-97FF-AD1907B1B2A8}"
         "UpgradeCode" = "8:{D1B8E08D-7E0E-4F1D-89D4-7AA63766CCF6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.53"
+        "ProductVersion" = "8:0.1.54"
         "Manufacturer" = "8:MattiasC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://www.trionictuning.com"
