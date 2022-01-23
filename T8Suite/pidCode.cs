@@ -317,34 +317,6 @@ namespace T8SuitePro
                 }
             }
 
-            /*
-            public override string DisplayName
-            {
-                get
-                {
-                    PidHelper emp = this.collection[index];
-                    // Chriva
-                    return (string)(emp.PID);
-                }
-            }
-            */
-            /*
-            public override string Description
-            {
-                get
-                {
-                    PidHelper emp = this.collection[index];
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(emp.PID);
-                    sb.Append(", ");
-                    // sb.Append(emp.AddressSRAM);
-                    sb.Append(", ");
-                    // sb.Append(emp.Value);
-                    // chriva
-                    return sb.ToString();
-                }
-            }*/
-
             public override object GetValue(object component)
             {
                 return this.collection[index];
@@ -354,12 +326,6 @@ namespace T8SuitePro
             {
                 get { return false; }
             }
-
-            /*
-            public override string Name
-            {
-                get { return "#" + index.ToString(); }
-            }*/
 
             public override Type PropertyType
             {
