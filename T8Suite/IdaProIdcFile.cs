@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using CommonSuite;
+using System.Text.RegularExpressions;
 
 namespace T8SuitePro
 {
@@ -11,6 +12,8 @@ namespace T8SuitePro
     {
         protected internal static void create(string filename, SymbolCollection symbols)
         {
+            bool BinIsOpen = Trionic8File.IsSoftwareOpen;
+            int capCount = 1;
             string outputfile = Path.GetDirectoryName(filename);
             outputfile = Path.Combine(outputfile, Path.GetFileNameWithoutExtension(filename) + "-autogen.idc");
             using (StreamWriter sw = new StreamWriter(outputfile))
@@ -69,9 +72,19 @@ namespace T8SuitePro
                 sw.WriteLine("   SegRename(0X0,\"ROM\");                   ");
                 sw.WriteLine("   SegClass (0X0,\"CODE\");                  ");
                 sw.WriteLine("   SetSegmentType(0X0,2);                    ");
+                // Regular SRAM
                 sw.WriteLine("   SegCreate(0X100000,0X108000,0X0,0,0,0);   ");
                 sw.WriteLine("   SegRename(0X100000,\"RAM_FSRAM\");        ");
                 sw.WriteLine("   SegClass (0X100000,\"\");                 ");
+                // Extended, development SRAM
+                if (BinIsOpen == true)
+                {
+                    // In reality, they come in 128 and 256k flawours. (most often 128k)
+                    // Generate a 256k block for both for now.
+                    sw.WriteLine("   SegCreate(0X140000,0X180000,0X0,0,0,0);   ");
+                    sw.WriteLine("   SegRename(0X140000,\"RAM_DEVRAM\");       ");
+                    sw.WriteLine("   SegClass (0X140000,\"\");                 ");
+                }
                 sw.WriteLine("   SegCreate(0XFFF000,0XFFF400,0X0,0,0,0);   ");
                 sw.WriteLine("   SegRename(0XFFF000,\"QADC64\");           ");
                 sw.WriteLine("   SegClass (0XFFF000,\"\");                 ");
@@ -149,13 +162,46 @@ namespace T8SuitePro
                 foreach (SymbolHelper sh in symbols)
                 {
                     string name = sh.SmartVarname;
-                    if (sh.Flash_start_address > 0x100000)
+
+                    // Space and tabs are very much NOT liked by IDA
+                    name.Replace(" ", "");
+                    name.Replace("	", "");
+
+                    // Replace anything else that is not liked with a _
+                    name = Regex.Replace(name, "[^A-Za-z0-9]", "_");
+
+                    // No other option. It won't transfer the name at all if it's too long
+                    if (name.Length > 30)
                     {
-                        sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", name.Replace(" ", "_"), sh.Start_address.ToString("X"), sh.Length.ToString("X")));
+                        name.Remove(30, name.Length - 30);
+                        name += "_" + capCount++.ToString();
+                    }
+                    else if (name.Length == 0)
+                    {
+                        name = "noname_" + capCount++.ToString();
+                    }
+
+                    // Catch borked flash address.
+                    // -:Only a SRAM symbol can be added in this case:-
+                    if (sh.Flash_start_address >= 0x100000)
+                    {
+                        sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", name, sh.Flash_start_address.ToString("X"), sh.Length.ToString("X")));
                     }
                     else
                     {
-                        sw.WriteLine(String.Format("   namevar(\"ROM_{0}\", 0x{1}, 0x{2});", name.Replace(" ", "_"), sh.Flash_start_address.ToString("X"), sh.Length.ToString("X")));
+                        // -:Try to add both:-
+
+                        // Flash symbol
+                        if (sh.Flash_start_address > 0)
+                        {
+                            sw.WriteLine(String.Format("   namevar(\"ROM_{0}\", 0x{1}, 0x{2});", name, sh.Flash_start_address.ToString("X"), sh.Length.ToString("X")));
+                        }
+
+                        // SRAM symbol
+                        if (sh.Start_address >= 0x100000)
+                        {
+                            sw.WriteLine(String.Format("   namevar(\"RAM_{0}\", 0x{1}, 0x{2});", name, sh.Start_address.ToString("X"), sh.Length.ToString("X")));
+                        }
                     }
                 }
 

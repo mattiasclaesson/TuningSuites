@@ -616,5 +616,19 @@ namespace T8SuitePro
                 ceLegionBootloader.Checked = value;
             }
         }
+
+        // Prefer dynamic retrieval of live data
+        // Massive boost to sample rate if the binary is compatible
+        public bool PreferDynamicLiveData
+        {
+            get
+            {
+                return cePreferDynamicMethod.Checked;
+            }
+            set
+            {
+                cePreferDynamicMethod.Checked = value;
+            }
+        }
     }
 }

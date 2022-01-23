@@ -117,23 +117,6 @@ namespace T8SuitePro
             InitializeComponent();
         }
 
-        private bool _softwareIsOpen = false;
-        private bool _softwareIsOpenDetermined = false;
-
-        private bool IsSoftwareOpen()
-        {
-            if (_softwareIsOpenDetermined) return _softwareIsOpen;
-
-            _softwareIsOpen = Trionic8File.IsSoftwareOpen(m_symbols);
-            _softwareIsOpenDetermined = true;
-            return _softwareIsOpen;
-        }
-
-        private int GetOpenFileOffset()
-        {
-            return (int)FileT8.SRAMAddress - 0x7902C;
-        }
-
         private static int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
@@ -154,17 +137,22 @@ namespace T8SuitePro
             {
                 if (sh.SmartVarname == tablename)
                 {
-                    if (IsSoftwareOpen() && sh.Length < 0x400 && sh.Flash_start_address > FileT8.Length)
-                    {
-                        address = (int)sh.Flash_start_address - GetOpenFileOffset();
-                    }
-                    else
-                    {
-                        address = (int)sh.Flash_start_address;
-                    }
                     length = sh.Length;
+                    address = (int)sh.Flash_start_address;
+
+                    // This is a catch-all to prevent errors
+                    if (address < 0x020000 || (address + length) > FileT8.Length)
+                    {
+                        return new byte[] { 0 };
+                    }
+
                     break;
                 }
+            }
+
+            if (length == 0)
+            {
+                return new byte[] { 0 };
             }
 
             byte[] retval = new byte[length];
@@ -190,17 +178,22 @@ namespace T8SuitePro
             {
                 if (sh.SmartVarname == tablename)
                 {
-                    if (IsSoftwareOpen() && sh.Length < 0x400 && sh.Flash_start_address > FileT8.Length)
-                    {
-                        address = (int)sh.Flash_start_address - GetOpenFileOffset();
-                    }
-                    else
-                    {
-                        address = (int)sh.Flash_start_address;
-                    }
                     length = sh.Length;
+                    address = (int)sh.Flash_start_address;
+
+                    // This is a catch-all to prevent errors
+                    if (address < 0x020000 || (address + length) > FileT8.Length)
+                    {
+                        return new int[] { 0 };
+                    }
+
                     break;
                 }
+            }
+
+            if (length < 2)
+            {
+                return new int[] { 0 };
             }
 
             int[] retval = new int[length / 2];
@@ -1442,6 +1435,8 @@ namespace T8SuitePro
 
         string m_current_comparefilename = string.Empty;
         SymbolCollection Compare_symbol_collection = new SymbolCollection();
+        PidCollection Compare_pid_collection = new PidCollection();
+        PidCollection Compare_tem_collection = new PidCollection();
 
         private int CalculateInjectorDCusingPulseWidth(int airmass, int rpm)
         {
@@ -1504,7 +1499,7 @@ namespace T8SuitePro
                     return;
                 }
 
-                Trionic8File.TryToExtractPackedBinary(m_current_comparefilename, out Compare_symbol_collection);
+                Trionic8File.TryToExtractPackedBinary(m_current_comparefilename, out Compare_symbol_collection, out Compare_pid_collection, out Compare_tem_collection);
                 // try to load additional symboltranslations that the user entered
                 Trionic8File.TryToLoadAdditionalBinSymbols(m_current_comparefilename, Compare_symbol_collection);
 

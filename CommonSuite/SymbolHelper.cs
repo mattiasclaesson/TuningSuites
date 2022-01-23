@@ -79,6 +79,13 @@ namespace CommonSuite
             set { symbol_type = value; }
         }
 
+        int symbol_extendedtype = 0;
+        public int Symbol_extendedtype
+        {
+            get { return symbol_extendedtype; }
+            set { symbol_extendedtype = value; }
+        }
+
         int internal_address = 0x00000;
         public int Internal_address
         {

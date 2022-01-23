@@ -87,9 +87,12 @@ using Microsoft.Office.Interop.Excel;
 using DevExpress.XtraBars.Docking;
 using DevExpress.XtraBars;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraGrid.Controls;
+using DevExpress.XtraGrid.Columns;
+using System.Linq;
 using DevExpress.Skins;
 using NLog;
-
 using PSTaskDialog;
 using RealtimeGraph;
 using ICSharpCode.SharpZipLib.Core;
@@ -127,6 +130,8 @@ namespace T8SuitePro
         private SuiteRegistry suiteRegistry = new T8SuiteRegistry();
         AppSettings m_appSettings;
         public static SymbolCollection m_symbols = new SymbolCollection();
+        public static PidCollection m_pids = null;
+        public static PidCollection m_tems = null;
         int m_currentMapHelperRowHandle = -1;
         private frmMapHelper m_mapHelper = new frmMapHelper();
         private string m_currentMapname = string.Empty;
@@ -149,7 +154,8 @@ namespace T8SuitePro
         private string logworksstring = LogWorks.GetLogWorksPathFromRegistry();
         public ChecksumDelegate.ChecksumUpdate m_ShouldUpdateChecksum;
         private static Logger logger = LogManager.GetCurrentClassLogger();
-
+        private bool bypassDynSymbolMode = false;
+        private bool forceDynSymbolRefresh = true;
         private enum CalibrationType { Old, New };
 
         public Form1(string[] args)
@@ -555,6 +561,8 @@ namespace T8SuitePro
             barSRAMFilename.Caption = "";
             barFilenameText.Caption = "";
             symbol_collection = new SymbolCollection();
+            btnTemEdit.Enabled = false;
+            m_tems = null;
 
             if (!Trionic8File.ValidateTrionic8File(filename))
             {
@@ -579,7 +587,8 @@ namespace T8SuitePro
 
                 System.Windows.Forms.Application.DoEvents();
 
-                Trionic8File.TryToExtractPackedBinary(filename, out symbol_collection);
+                Trionic8File.TryToExtractPackedBinary(filename, out symbol_collection, out m_pids, out m_tems);
+
                 // try to load additional symboltranslations that the user entered
                 symbolsLoaded = Trionic8File.TryToLoadAdditionalBinSymbols(filename, symbol_collection);
 
@@ -612,6 +621,11 @@ namespace T8SuitePro
                 logger.Debug(E.Message);
             }
 
+            if (m_tems != null && m_tems.Count > 1)
+            {
+                btnTemEdit.Enabled = true;
+            }
+
             SetProgress("Loading data into view... ");
             SetProgressPercentage(95);
             System.Windows.Forms.Application.DoEvents();
@@ -634,7 +648,7 @@ namespace T8SuitePro
         {
             if (_softwareIsOpenDetermined) return _softwareIsOpen;
 
-            _softwareIsOpen = Trionic8File.IsSoftwareOpen(m_symbols);
+            _softwareIsOpen = Trionic8File.IsSoftwareOpen;
             _softwareIsOpenDetermined = true;
 
             if (_softwareIsOpen)
@@ -681,13 +695,52 @@ namespace T8SuitePro
             logger.Trace(descr);
         }
 
+        private static bool m_searchstate = false;
+        private static bool m_filterstate = false;
+        private static void onColFilterChange(object sender, EventArgs e)
+        {
+            GridView view = sender as GridView;
+
+            if (view != null)
+            {
+                if (m_searchstate == true)
+                {
+                    view.ActiveFilterEnabled = m_filterstate;
+                }
+                else
+                {
+                    m_filterstate = view.ActiveFilterEnabled;
+                }
+            }
+
+            m_searchstate = false;
+        }
+
+        private static void onFindFilterChange(object sender, EventArgs e)
+        {
+            m_searchstate = true;
+        }
+
         private void SetDefaultFilters()
         {
-            DevExpress.XtraGrid.Columns.ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo(@"([Flash_start_address] > 0 AND [Flash_start_address] < 1048576)", "Only symbols within binary");
+            ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000' AND [Flash_start_address] < 1048576", "Only symbols within binary");
+            ColumnFilterInfo lvefltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000' AND [Start_address] > 1048575", "Only live-tuneable symbols");
             gridViewSymbols.ActiveFilter.Clear();
-            gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
-            /*** set filter ***/
-            gridViewSymbols.ActiveFilterEnabled = true;
+            m_filterstate = gridViewSymbols.ActiveFilterEnabled = true;
+
+            var findControl = gridViewSymbols.GridControl.Controls.OfType<FindControl>().FirstOrDefault();
+            if (findControl == null)
+            {
+                gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
+            }
+            else
+            {
+                // Pushed from behind so the last one will be the visible one
+                gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, lvefltr);
+                gridViewSymbols.ActiveFilter.Add(gcSymbolsAddress, fltr);
+                findControl.FindEdit.EditValueChanged += onFindFilterChange;
+                gridViewSymbols.ColumnFilterChanged += onColFilterChange;
+            }
         }
 
         private int GetAddrTableOffsetBySymbolTable(string filename)
@@ -1249,32 +1302,17 @@ namespace T8SuitePro
                         if (sh == null)
                             return;
 
-                        if (IsSoftwareOpenAndUpdateCaption()) // <GS-09082010> if it is open software, get data from flash instead of sram
+                        if (sh.Flash_start_address >= m_currentfile_size)
                         {
-                            // Should we start a viewer in realtime mode or in offline mode?
-                            if (m_RealtimeConnectedToECU)
+                            logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
+                            if (RealtimeCheckAndConnect())
                             {
                                 ShowRealtimeMapFromECU(sh.SmartVarname);
-                            }
-                            else
-                            {
-                                StartTableViewer(ECUMode.Offline);
                             }
                         }
                         else
                         {
-                            if (sh.Flash_start_address > m_currentfile_size)
-                            {
-                                logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
-                                if (RealtimeCheckAndConnect())
-                                {
-                                    ShowRealtimeMapFromECU(sh.SmartVarname);
-                                }
-                            }
-                            else
-                            {
-                                StartTableViewer(ECUMode.Auto);
-                            }
+                            StartTableViewer(ECUMode.Auto);
                         }
                     }
                 }
@@ -1286,11 +1324,6 @@ namespace T8SuitePro
             }
             System.Windows.Forms.Application.DoEvents();
             logger.Debug("Double click seen");
-        }
-
-        private int GetOpenFileOffset()
-        {
-            return (int)FileT8.SRAMAddress - 0x7902C;
         }
 
         private void GetAxisDescriptions(string symbolname, out string x, out string y, out string z)
@@ -1321,42 +1354,18 @@ namespace T8SuitePro
             z = z_axis_descr;
         }
 
-        private int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
-        {
-            foreach (SymbolHelper sh in curSymbolCollection)
-            {
-                if (sh.SmartVarname == symbolname)
-                {
-                    return sh.Length;
-                }
-            }
-            return 0;
-        }
-
         private Int64 GetSymbolAddress(SymbolCollection curSymbolCollection, string symbolname)
         {
             foreach (SymbolHelper sh in curSymbolCollection)
             {
                 if (sh.SmartVarname == symbolname)
                 {
-                    if (IsSoftwareOpenAndUpdateCaption() && IsSymbolCalibration(symbolname) && sh.Length < 0x400 && sh.Flash_start_address > m_currentfile_size)
+                    if (sh.Flash_start_address >= m_currentfile_size)
                     {
-                        return sh.Flash_start_address - GetOpenFileOffset();
+                        return 0;
                     }
 
                     return sh.Flash_start_address;
-                }
-            }
-            return 0;
-        }
-
-        private int GetSymbolNumber(SymbolCollection curSymbolCollection, string symbolname)
-        {
-            foreach (SymbolHelper sh in curSymbolCollection)
-            {
-                if (sh.SmartVarname == symbolname)
-                {
-                    return sh.Symbol_number;
                 }
             }
             return 0;
@@ -1369,6 +1378,30 @@ namespace T8SuitePro
                 if (sh.SmartVarname == symbolname)
                 {
                     return sh.Start_address;
+                }
+            }
+            return 0;
+        }
+
+        private int GetSymbolLength(SymbolCollection curSymbolCollection, string symbolname)
+        {
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == symbolname)
+                {
+                    return sh.Length;
+                }
+            }
+            return 0;
+        }
+
+        private int GetSymbolNumber(SymbolCollection curSymbolCollection, string symbolname)
+        {
+            foreach (SymbolHelper sh in curSymbolCollection)
+            {
+                if (sh.SmartVarname == symbolname)
+                {
+                    return sh.Symbol_number;
                 }
             }
             return 0;
@@ -1538,7 +1571,6 @@ namespace T8SuitePro
             return returnvalue;
         }
 
-
         private double ConvertToDouble(string v)
         {
             double d = 0;
@@ -1693,7 +1725,6 @@ namespace T8SuitePro
             }
             return retval;
         }
-
 
         private int[] GetXaxisValues(string filename, SymbolCollection curSymbols, string symbolname)
         {
@@ -2184,12 +2215,13 @@ namespace T8SuitePro
                             int rows = 8;
                             int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
                             int address = Convert.ToInt32(sh.Flash_start_address);
+                            int sramaddress = Convert.ToInt32(sh.Start_address);
 
                             if (tabdet.X_axisvalues.Length > 1) columns = tabdet.X_axisvalues.Length;
                             if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
                             tablewidth = columns;
 
-                            int sramaddress = 0;// Convert.ToInt32(dr.Row["SRAMADDRESS"].ToString());
+                            
                             if (address != 0)
                             {
                                 logger.Debug("address: " + address.ToString("X8"));
@@ -2201,6 +2233,8 @@ namespace T8SuitePro
 
                                 byte[] mapdata = new byte[sh.Length];
                                 mapdata.Initialize();
+
+
                                 if (address < FileT8.SRAMAddress)
                                 {
                                     logger.Debug("read data from file");
@@ -2208,18 +2242,7 @@ namespace T8SuitePro
                                 }
                                 else
                                 {
-                                    if (IsSoftwareOpenAndUpdateCaption())
-                                    {
-                                        address -= GetOpenFileOffset();
-                                        tabdet.Map_address = address;
-                                        tabdet.IsOpenSoftware = true;
-                                        mapdata = readdatafromfile(m_currentfile, address, length);
-                                    }
-                                    else
-                                    {
-                                        address -= (int)FileT8.SRAMAddress;
-                                        mapdata = readdatafromfile(m_currentfile, address, length);
-                                    }
+                                    logger.Debug("StartTableViewer: Tried wrong open");
                                 }
 
                                 logger.Debug("mapdata len: " + mapdata.Length.ToString("X4"));
@@ -2251,6 +2274,11 @@ namespace T8SuitePro
                                 tabdet.Dock = DockStyle.Fill;
                                 tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
                                 tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
+
+                                tabdet.onWriteToSRAM += new IMapViewer.WriteDataToSRAM(tabdet_onWriteToSRAM);
+                                tabdet.onReadFromSRAM += new IMapViewer.ReadDataFromSRAM(tabdet_onReadFromSRAM);
+
+
                                 tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                                 tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
                                 tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
@@ -2264,6 +2292,7 @@ namespace T8SuitePro
                                 //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
                                 //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
                                 //tabdet.onAxisEditorRequested += new MapViewer.AxisEditorRequested(tabdet_onAxisEditorRequested);
+
                                 bool isDocked = false;
                                 dockPanel.Text = "Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(m_currentfile) + "]";
                                 if (m_appSettings.AutoDockSameSymbol)
@@ -2405,12 +2434,12 @@ namespace T8SuitePro
             int rows = 8;
             int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
             int address = Convert.ToInt32(symaddress);
+            int sramaddress = Convert.ToInt32(GetSymbolAddressSRAM(m_symbols, tabdet.Map_name));
 
             if (tabdet.X_axisvalues.Length > 1) columns = tabdet.X_axisvalues.Length;
             if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
             tablewidth = columns;
 
-            int sramaddress = 0;// Convert.ToInt32(dr.Row["SRAMADDRESS"].ToString());
             if (address != 0)
             {
 
@@ -2438,7 +2467,20 @@ namespace T8SuitePro
                 //TODO: Implement
                 if (t8can.isOpen())
                 {
-                    bool success = false;
+                    byte[] bdat = t8can.readMemoryNew((int)sh.Flash_start_address, 2, 2, false);
+
+                    if (bdat != null)
+                    {
+                        data = Convert.ToUInt32(bdat[0]) * 256;
+                        data += Convert.ToUInt32(bdat[1]);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Symbol outside of flash boundary and failed to read symbol from ECU");
+                        return;
+                    }
+
+                    /*
                     byte[] bdat = t8can.readMemory((int)sh.Flash_start_address, 2, out success);
                     if (success)
                     {
@@ -2449,7 +2491,7 @@ namespace T8SuitePro
                     {
                         MessageBox.Show("Symbol outside of flash boundary and failed to read symbol from ECU");
                         return;
-                    }
+                    }*/
                 }
                 else
                 {
@@ -2483,6 +2525,7 @@ namespace T8SuitePro
                 byte b2 = Convert.ToByte(view.Data - (int)b1 * 256);
                 bdata.SetValue(b1, 0);
                 bdata.SetValue(b2, 1);
+
                 if (sh.Flash_start_address > m_currentfile_size)
                 {
                     // save to ECU ... if possible
@@ -3549,6 +3592,10 @@ namespace T8SuitePro
                         {
                             t8header.UpdateVinAndImmoCode();
                         }
+                        if (frminfo.ChangeSoftwareVersion)
+                        {
+                            t8header.UpdateSoftwareVersion();
+                        }
                         // We don't want this code atm, it's a bit unsafe
 #if (DEBUG)
                         t8header.UpdatePIarea();
@@ -4371,7 +4418,7 @@ namespace T8SuitePro
             {
                 foreach (SymbolHelper sh in m_symbols)
                 {
-                    if (sh.Start_address > 0x0100000)
+                    if (sh.Start_address >= 0x0100000)
                     {
                         _symbols.Add(sh);
                     }
@@ -4421,6 +4468,7 @@ namespace T8SuitePro
             set.AdapterType = m_appSettings.AdapterType;
             set.Adapter = m_appSettings.Adapter;
             set.UseLegionBootloader = m_appSettings.UseLegionBootloader;
+            set.PreferDynamicLiveData = m_appSettings.PreferDynamicLiveData;
 
             if (set.ShowDialog() == DialogResult.OK)
             {
@@ -4459,6 +4507,7 @@ namespace T8SuitePro
                 m_appSettings.AdapterType = set.AdapterType;
                 m_appSettings.Adapter = set.Adapter;
                 m_appSettings.UseLegionBootloader = set.UseLegionBootloader;
+                m_appSettings.PreferDynamicLiveData = set.PreferDynamicLiveData;
 
                 SetupMeasureAFRorLambda();
                 SetupDocking();
@@ -4504,10 +4553,12 @@ namespace T8SuitePro
                 gcSymbolsAddress.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gcSymbolsAddress.DisplayFormat.FormatString = "X6";
                 gcSymbolsAddress.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
+                gcSymbolsSramAddress.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                gcSymbolsSramAddress.DisplayFormat.FormatString = "X6";
+                gcSymbolsSramAddress.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
                 gcSymbolsLength.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gcSymbolsLength.DisplayFormat.FormatString = "X6";
                 gcSymbolsLength.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
-
                 gcSymbolsBitmask.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gcSymbolsBitmask.DisplayFormat.FormatString = "X6";
                 gcSymbolsBitmask.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
@@ -4517,6 +4568,9 @@ namespace T8SuitePro
                 gcSymbolsAddress.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gcSymbolsAddress.DisplayFormat.FormatString = "";
                 gcSymbolsAddress.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
+                gcSymbolsSramAddress.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                gcSymbolsSramAddress.DisplayFormat.FormatString = "";
+                gcSymbolsSramAddress.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
                 gcSymbolsLength.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gcSymbolsLength.DisplayFormat.FormatString = "";
                 gcSymbolsLength.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
@@ -10573,7 +10627,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         }
 
         private bool m_RealtimeConnectedToECU = false;
-        private bool m_prohibitReading = false;
+        private volatile bool m_prohibitReading = false; // This is while-read and MUST be volatile. Do not change!
         private bool m_enableRealtimeTimer = false;
         private bool _soundAllowed = true;
         private System.Media.SoundPlayer sndplayer;
@@ -10590,7 +10644,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if (!m_prohibitReading)
                     {
                         t8can.StallKeepAlive = true;
-                        GetSRAMVarsFromTable();
+
+
+                        if (m_appSettings.m_PreferDynamicLiveData)
+                        {
+                            // "Smart" method
+                            if (bypassDynSymbolMode == false &&
+                                GetSRAMVarsFromTableDynamic() == false)
+                            {
+                                logger.Debug("Forcing readByAddress for the duration of this session");
+                                bypassDynSymbolMode = true;
+                            }
+
+                            if (bypassDynSymbolMode == true)
+                            {
+                                // GetSRAMVarsFromTablePackedSymbols();
+                                GetSRAMVarsFromTableOld();
+                            }
+                        }
+                        else
+                        {
+                            GetSRAMVarsFromTableOld();
+                        }
 
                         if (m_appSettings.UseWidebandLambda || m_appSettings.UseDigitalWidebandLambda)
                         {
@@ -10604,6 +10679,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         {
                             btnAutoTune.Enabled = false;
                         }
+
+                        // This fixed some weid session terminations thrown by the ECU
+                        // t8can.StallKeepAlive = false;
                     }
                     else
                     {
@@ -10618,8 +10696,696 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             tmrRealtime.Enabled = m_enableRealtimeTimer;
         }
 
-        //TODO: Adjust for Trionic 8
-        private void GetSRAMVarsFromTable()
+        private void ReadExternalSensors(System.Data.DataTable dt)
+        {
+            // <GS-29072010> if the combiadapter is in use 
+            // and the user configured to use ADCs or thermoinput, get the values
+            if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
+            {
+                if (m_appSettings.Useadc1)
+                {
+                    float adc = t8can.GetADCValue(0);
+                    double convertedADvalue = Math.Round(ConvertADCValue(0, adc), 2);
+                    string channelName = m_appSettings.Adc1channelname;
+                    AddToRealtimeTable(dt, channelName, "ADC channel 1", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc1lowvalue / 1000, m_appSettings.Adc1highvalue / 1000, 0, 0, 0, 1);
+                }
+                if (m_appSettings.Useadc2)
+                {
+                    float adc = t8can.GetADCValue(1);
+                    double convertedADvalue = Math.Round(ConvertADCValue(1, adc), 2);
+                    string channelName = m_appSettings.Adc2channelname;
+                    AddToRealtimeTable(dt, channelName, "ADC channel 2", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc2lowvalue / 1000, m_appSettings.Adc2highvalue / 1000, 0, 0, 0, 1);
+                }
+                if (m_appSettings.Useadc3)
+                {
+                    float adc = t8can.GetADCValue(2);
+                    double convertedADvalue = Math.Round(ConvertADCValue(2, adc), 2);
+                    string channelName = m_appSettings.Adc3channelname;
+                    AddToRealtimeTable(dt, channelName, "ADC channel 3", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc3lowvalue / 1000, m_appSettings.Adc3highvalue / 1000, 0, 0, 0, 1);
+                }
+                if (m_appSettings.Useadc4)
+                {
+                    float adc = t8can.GetADCValue(3);
+                    double convertedADvalue = Math.Round(ConvertADCValue(3, adc), 2);
+                    string channelName = m_appSettings.Adc4channelname;
+                    AddToRealtimeTable(dt, channelName, "ADC channel 4", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc4lowvalue / 1000, m_appSettings.Adc4highvalue / 1000, 0, 0, 0, 1);
+                }
+                if (m_appSettings.Useadc5)
+                {
+                    float adc = t8can.GetADCValue(4);
+                    double convertedADvalue = Math.Round(ConvertADCValue(4, adc), 2);
+                    string channelName = m_appSettings.Adc5channelname;
+                    AddToRealtimeTable(dt, channelName, "ADC channel 5", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc5lowvalue / 1000, m_appSettings.Adc5highvalue / 1000, 0, 0, 0, 1);
+                }
+                if (m_appSettings.Usethermo)
+                {
+                    float temperature = t8can.GetThermoValue();
+                    string channelName = m_appSettings.Thermochannelname;
+                    AddToRealtimeTable(dt, channelName, "Thermo channel", 0, temperature, 0, 1, 0, 0, 1023, 0, 0, 0, 1);
+                }
+            }
+
+            // read afr from wideband on serial port
+            if (m_appSettings.UseDigitalWidebandLambda && wbReader != null)
+            {
+                float afr = (float)wbReader.LatestReading;
+                float lambda = afr / 14.7F;
+                digitalDisplayControl6.DigitText = afr.ToString("F1");
+                if (AfrViewMode == AFRViewType.AFRMode)
+                {
+                    linearGauge2.Value = afr;
+                }
+                else
+                {
+                    linearGauge2.Value = lambda;
+                }
+                if (m_appSettings.MeasureAFRInLambda)
+                {
+                    //FIXME LogWidebandAFR(lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                    AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, Math.Round(lambda, 2), 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
+                }
+                else
+                {
+                    //FIXME LogWidebandAFR(afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+                    AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, Math.Round(afr, 2), 0, 1, 0, 10, 20, 0, 0, 0, 1);
+                }
+                //FIXME ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
+            }
+        }
+
+        // Helper struct for packed retreival of symbols
+        private struct dynItem
+        {
+            public UInt16 idx;
+            public int size;
+            public int address;
+            public string name;
+            public byte[] data;
+        };
+
+        private int dynLastCount = 0;
+        private int dynTotalSize = 0;
+        private List<dynItem> ecuDynamicList = new List<dynItem>();
+
+        private bool GetSRAMVarsFromTableDynamic()
+        {
+            bool retval = true;
+            if (m_prohibitReading) return retval;
+
+            if (gridRealtime.DataSource != null)
+            {
+                _sw.Reset();
+                _sw.Start();
+                System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
+                dt.BeginLoadData();
+                string symbolName;
+
+                if (forceDynSymbolRefresh == true || dynLastCount != ecuDynamicList.Count)
+                {
+                    dynTotalSize = 0;
+                    forceDynSymbolRefresh = false;
+                    ecuDynamicList.Clear();
+ 
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        symbolName = dr["SymbolName"].ToString();
+
+                        if (symbolName == "KnockCyl1" ||
+                            symbolName == "KnockCyl2" ||
+                            symbolName == "KnockCyl3" ||
+                            symbolName == "KnockCyl4" ||
+                            symbolName == "KnkCntCyl1" ||
+                            symbolName == "KnkCntCyl2" ||
+                            symbolName == "KnkCntCyl3" ||
+                            symbolName == "KnkCntCyl4" ||
+                            symbolName == "MisfCyl11" ||
+                            symbolName == "MisfCyl12" ||
+                            symbolName == "MisfCyl13" ||
+                            symbolName == "MisfCyl14" ||
+                            symbolName == m_appSettings.Adc1channelname ||
+                            symbolName == m_appSettings.Adc2channelname ||
+                            symbolName == m_appSettings.Adc3channelname ||
+                            symbolName == m_appSettings.Adc4channelname ||
+                            symbolName == m_appSettings.Adc5channelname ||
+                            symbolName == m_appSettings.Thermochannelname ||
+                            symbolName == "Wideband")
+                        {
+                            continue;
+                        }
+
+                        int len = Convert.ToInt32(dr["Length"]);
+                        int adr = Convert.ToInt32(dr["SRAMAddress"]);
+                        int idx = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
+
+                        if (len > 0 && len <= 16 &&
+                            adr >= 0x100000 &&
+                            idx >= 0 && idx < 65536)
+                        {
+                            ecuDynamicList.Add(new dynItem { idx = (UInt16)idx, size = len, address = adr, name = symbolName, data = new byte[len] });
+                            dynTotalSize += len;
+                        }
+                    }
+
+                    if (ecuDynamicList.Count == 0)
+                    {
+                        // Force a new refresh since there are no symbols at the moment
+                        forceDynSymbolRefresh = true;
+                    }
+                    else
+                    {
+                        List<Trionic8.dynAddrHelper> adrList = new List<Trionic8.dynAddrHelper>();
+                        for (int i = 0; i < ecuDynamicList.Count; i++)
+                        {
+                            adrList.Add(new Trionic8.dynAddrHelper { address = ecuDynamicList[i].address, size = (byte)ecuDynamicList[i].size });
+                        }
+
+                        if (t8can.ConfigureDynamicListByAddress(adrList) == false)
+                        {
+                            ecuDynamicList.Clear();
+                            retval = false;
+                        }
+                    }                
+                }
+
+                if (ecuDynamicList.Count > 0)
+                {
+                    byte[] buf = t8can.ReadDynamicSymbols();
+                    if (buf == null || buf.Length != dynTotalSize)
+                    {
+                        retval = false;
+                        logger.Debug("Could not fetch dynamic data");
+                    }
+                    else
+                    {
+                        int pos = 0;
+                        for (int i = 0; i < ecuDynamicList.Count; i++)
+                        {
+                            for (int d = 0; d < ecuDynamicList[i].size; d++)
+                            {
+                                ecuDynamicList[i].data[d] = buf[pos++];
+                            }
+                        }
+                    }
+                }
+
+                dynLastCount = 0;
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    symbolName = dr["SymbolName"].ToString();
+
+                    if (symbolName == "KnockCyl1" ||
+                        symbolName == "KnockCyl2" ||
+                        symbolName == "KnockCyl3" ||
+                        symbolName == "KnockCyl4" ||
+                        symbolName == "KnkCntCyl1" ||
+                        symbolName == "KnkCntCyl2" ||
+                        symbolName == "KnkCntCyl3" ||
+                        symbolName == "KnkCntCyl4" ||
+                        symbolName == "MisfCyl11" ||
+                        symbolName == "MisfCyl12" ||
+                        symbolName == "MisfCyl13" ||
+                        symbolName == "MisfCyl14" ||
+                        symbolName == m_appSettings.Adc1channelname ||
+                        symbolName == m_appSettings.Adc2channelname ||
+                        symbolName == m_appSettings.Adc3channelname ||
+                        symbolName == m_appSettings.Adc4channelname ||
+                        symbolName == m_appSettings.Adc5channelname ||
+                        symbolName == m_appSettings.Thermochannelname ||
+                        symbolName == "Wideband")
+                    {
+                        continue;
+                    }
+
+                    int symNum = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
+                    double value = 0;
+                    byte[] buffer = null;
+
+                    if (dynLastCount < ecuDynamicList.Count &&
+                        symbolName == ecuDynamicList[dynLastCount].name &&
+                            symNum == ecuDynamicList[dynLastCount].idx)
+                    {
+                        buffer = ecuDynamicList[dynLastCount].data;
+                    }
+
+                    dynLastCount++;
+
+                    if (buffer != null)
+                    {
+                        if (buffer.Length == 1)
+                        {
+                            value = Convert.ToInt32(buffer.GetValue(0));
+                        }
+                        else if (buffer.Length == 2)
+                        {
+                            value = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                        }
+                        else if (buffer.Length == 4)
+                        {
+                            value = (Convert.ToInt32(buffer.GetValue(0)) * 256 * 256 * 256) + (Convert.ToInt32(buffer.GetValue(1)) * 256 * 256) + (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                        }
+                        //double realvalue = (double)value;
+                        if (symbolName == "ActualIn.T_Engine" ||
+                            symbolName == "ActualIn.T_AirInlet" ||
+                            symbolName == "Out.fi_Ignition" ||
+                            symbolName == "Out.M_EngTrqAct" ||
+                            symbolName == "ECMStat.P_Engine" ||
+                            symbolName == "IgnMastProt.fi_Offset" ||
+                            symbolName == "Lambda.LambdaInt" ||
+                            symbolName == "MAF.m_AirInlet" ||
+                            symbolName == "AdpFuelProt.MulFuelAdapt" ||
+                            symbolName == "ECMStat.p_Diff" ||
+                            symbolName == "BoostProt.PFac" ||
+                            symbolName == "BoostProt.IFac" ||
+                            symbolName == "BoostProt.LoadDiff" ||
+                            symbolName == "IgnKnk.fi_MeanKnock" ||
+                            symbolName == "Ign.fi_OtherOff" ||
+                            symbolName == "IgnJerkProt.fi_Offset")
+                        {
+                            if (value > 32000) value = -(65536 - value); // negatief maken
+                        }
+
+                        else if (symbolName == "KnkDet.KnockCyl") // 4 length
+                        {
+                            int knkcountcyl1 = 0;
+                            int knkcountcyl2 = 0;
+                            int knkcountcyl3 = 0;
+                            int knkcountcyl4 = 0;
+                            if (buffer.Length == 4)
+                            {
+                                knkcountcyl1 = Convert.ToInt32(buffer.GetValue(0));
+                                knkcountcyl2 = Convert.ToInt32(buffer.GetValue(1));
+                                knkcountcyl3 = Convert.ToInt32(buffer.GetValue(2));
+                                knkcountcyl4 = Convert.ToInt32(buffer.GetValue(3));
+                                UpdateRealtimeInformationInTable(dt, "KnockCyl1", (float)knkcountcyl1);
+                                UpdateRealtimeInformationInTable(dt, "KnockCyl2", (float)knkcountcyl2);
+                                UpdateRealtimeInformationInTable(dt, "KnockCyl3", (float)knkcountcyl3);
+                                UpdateRealtimeInformationInTable(dt, "KnockCyl4", (float)knkcountcyl4);
+                            }
+
+                        }
+                        else if (symbolName == "KnkDetAdap.KnkCntCyl") // 8 length
+                        {
+                            int knkcountcyl1 = 0;
+                            int knkcountcyl2 = 0;
+                            int knkcountcyl3 = 0;
+                            int knkcountcyl4 = 0;
+                            if (buffer.Length == 8)
+                            {
+                                knkcountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                                knkcountcyl2 = (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                                knkcountcyl3 = (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
+                                knkcountcyl4 = (Convert.ToInt32(buffer.GetValue(6)) * 256) + Convert.ToInt32(buffer.GetValue(7));
+                                UpdateRealtimeInformationInTable(dt, "KnkCntCyl1", (float)knkcountcyl1);
+                                UpdateRealtimeInformationInTable(dt, "KnkCntCyl2", (float)knkcountcyl2);
+                                UpdateRealtimeInformationInTable(dt, "KnkCntCyl3", (float)knkcountcyl3);
+                                UpdateRealtimeInformationInTable(dt, "KnkCntCyl4", (float)knkcountcyl4);
+                            }
+
+                        }
+                        else if (symbolName == "MisfAdap.N_MisfCountCyl") // 8 length
+                        {
+                            int miscountcyl1 = 0;
+                            int miscountcyl2 = 0;
+                            int miscountcyl3 = 0;
+                            int miscountcyl4 = 0;
+                            if (buffer.Length == 8)
+                            {
+                                miscountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                                miscountcyl2 = (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                                miscountcyl3 = (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
+                                miscountcyl4 = (Convert.ToInt32(buffer.GetValue(6)) * 256) + Convert.ToInt32(buffer.GetValue(7));
+                                UpdateRealtimeInformationInTable(dt, "MisfCyl1", (float)miscountcyl1);
+                                UpdateRealtimeInformationInTable(dt, "MisfCyl2", (float)miscountcyl2);
+                                UpdateRealtimeInformationInTable(dt, "MisfCyl3", (float)miscountcyl3);
+                                UpdateRealtimeInformationInTable(dt, "MisfCyl4", (float)miscountcyl4);
+                            }
+                        }
+                        value *= Convert.ToDouble(dr["Correction"]);
+                        value += Convert.ToDouble(dr["Offset"]);
+                        dr["Value"] = value;
+
+                        try
+                        {
+                            if (Convert.ToDouble(dr["Peak"]) < value) dr["Peak"] = value;
+                        }
+                        catch (Exception peakE)
+                        {
+                            logger.Debug("Failed to set peak: " + peakE.Message);
+                        }
+                        // update realtime info
+                        UpdateRealtimeInformation(symbolName, (float)value);
+                        try
+                        {
+                            CheckSoundsToPlay(symbolName, value);
+                        }
+                        catch (Exception E)
+                        {
+                            logger.Debug(E.Message);
+                        }
+                    }
+                    else
+                    {
+                        forceDynSymbolRefresh = true;
+                        logger.Debug("Failed to read SRAM, symbol: " + symbolName + " address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8") + " length: " + Convert.ToInt32(dr["Length"]));
+                        System.Windows.Forms.Application.DoEvents();
+                    }
+
+                    Thread.Sleep(0);//<GS-11022010>
+                }
+
+                ReadExternalSensors(dt);
+
+                //logger.Debug("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                LogRealTimeInformation(dt);
+                UpdateOpenViewers();
+
+                //<GS-06012011> maybe move the fps counter timer here!
+                _sw.Stop();
+                // update fps indicator
+                float secs = _sw.ElapsedMilliseconds / 1000F;
+                secs = 1 / secs;
+                if (float.IsInfinity(secs)) secs = 1;
+                UpdateRealtimeInformation("FPSCounter", secs);
+
+                dt.EndLoadData();
+            }
+
+            return retval;
+        }
+
+        // 4-5 fps
+        private bool GetSRAMVarsFromTablePackedSymbols()
+        {
+            bool retval = true;
+            if (m_prohibitReading) return retval;
+
+            if (gridRealtime.DataSource != null)
+            {
+                _sw.Reset();
+                _sw.Start();
+                System.Data.DataTable dt = (System.Data.DataTable)gridRealtime.DataSource;
+                dt.BeginLoadData();
+                int totSize = 0;
+                double value;
+                string symbolName;
+                List<dynItem> locPackLst = new List<dynItem>();
+
+                // Collect what to fetch
+                foreach (DataRow dr in dt.Rows)
+                {
+                    symbolName = dr["SymbolName"].ToString();
+
+                    if (symbolName == "KnockCyl1" ||
+                        symbolName == "KnockCyl2" ||
+                        symbolName == "KnockCyl3" ||
+                        symbolName == "KnockCyl4" ||
+                        symbolName == "KnkCntCyl1" ||
+                        symbolName == "KnkCntCyl2" ||
+                        symbolName == "KnkCntCyl3" ||
+                        symbolName == "KnkCntCyl4" ||
+                        symbolName == "MisfCyl11" ||
+                        symbolName == "MisfCyl12" ||
+                        symbolName == "MisfCyl13" ||
+                        symbolName == "MisfCyl14" ||
+                        symbolName == m_appSettings.Adc1channelname ||
+                        symbolName == m_appSettings.Adc2channelname ||
+                        symbolName == m_appSettings.Adc3channelname ||
+                        symbolName == m_appSettings.Adc4channelname ||
+                        symbolName == m_appSettings.Adc5channelname ||
+                        symbolName == m_appSettings.Thermochannelname ||
+                        symbolName == "Wideband")
+                    {
+                        break;
+                    }
+
+                    int length = Convert.ToInt32(dr["Length"]);
+                    int address = Convert.ToInt32(dr["SRAMAddress"]);
+                    int index = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
+
+                    if (length > 0 && length <= 16 &&
+                        address >= 0x100000 &&
+                        index >= 0 && index < 65536)
+                    {
+                        locPackLst.Add(new dynItem { idx = (UInt16)index, size = length, address = address, name = symbolName });
+                        totSize += length;
+                    }
+                }
+
+                if (locPackLst.Count > 0)
+                {
+                    locPackLst.Sort((s1, s2) => s1.address.CompareTo(s2.address));
+
+                    int maxTotLen = 12;
+
+                    // == 0 This is the only symbol
+                    //  > 0 Fetch the next symbol from this offset and increment index
+                    byte[] tagList = new byte[locPackLst.Count + 1];
+
+                    tagList[0] = 0;
+                    tagList[locPackLst.Count] = 0;
+
+                    for (int i = 0; i < locPackLst.Count; i++)
+                    {
+                        int totLen = 0;
+                        for (int ex = i; (ex + 1) < locPackLst.Count; ex++)
+                        {
+                            tagList[ex + 1] = 0;
+                            int deltaToNextEnd = ((locPackLst[ex+1].address - locPackLst[ex].address) + locPackLst[ex+1].size);
+
+                            if ((deltaToNextEnd + totLen) <= maxTotLen && // Total length is not exceeded
+                                (locPackLst[ex].address + locPackLst[ex].size) <= locPackLst[ex+1].address) // Paranoia. Overlap is under no condition ok
+                            {
+                                totLen += deltaToNextEnd;
+                                tagList[ex] = (byte)(locPackLst[ex+1].address - locPackLst[ex].address);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        
+                        if (tagList[i] > 0)
+                        {
+                            logger.Debug("Doing packed fetch");
+                            byte[] buf = t8can.readMemoryNew(locPackLst[i].address, totLen, maxTotLen, false);
+
+                            if (buf == null)
+                            {
+                                logger.Debug("Could not fetch packed frame");
+                            }
+                            else
+                            {
+                                int offset = 0;
+
+                                while (tagList[i] > 0)
+                                {
+                                    if ((locPackLst[i].size + offset) <= buf.Length)
+                                    {
+                                        dynItem itm = locPackLst[i];
+                                        itm.data = new byte[locPackLst[i].size];
+                                        for (int s = 0; s < locPackLst[i].size; s++)
+                                        {
+                                            itm.data[s] = buf[offset + s];
+                                        }
+                                        locPackLst[i] = itm;
+                                    }
+                                    else
+                                    {
+                                        logger.Debug("Array out of bounds!");
+                                    }
+                                    offset += (locPackLst[i+1].address - locPackLst[i].address);
+                                    i++;
+                                } 
+
+                                if ((locPackLst[i].size + offset) <= buf.Length)
+                                {
+                                    dynItem itm = locPackLst[i];
+                                    itm.data = new byte[locPackLst[i].size];
+                                    for (int s = 0; s < locPackLst[i].size; s++)
+                                    {
+                                        itm.data[s] = buf[offset + s];
+                                    }
+                                    locPackLst[i] = itm;
+                                }
+                                else
+                                {
+                                    logger.Debug("Array out of bounds!");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            dynItem itm = locPackLst[i];
+                            itm.data = t8can.readMemoryNew(locPackLst[i].address, locPackLst[i].size, 0x40, false);
+                            locPackLst[i] = itm;
+                        }
+                    }                
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        byte[] buffer = null;
+                        symbolName = dr["SymbolName"].ToString();
+                        int symNum = Convert.ToInt32(dr["ConvertedSymbolnumber"]);
+                        value = 0;
+
+                        for (int i = 0; i < locPackLst.Count; i++)
+                        {
+                            if (symbolName == locPackLst[i].name &&
+                                symNum == locPackLst[i].idx)
+                            {
+                                buffer = locPackLst[i].data;
+                                break;
+                            }
+
+                        }
+
+                        if (buffer != null)
+                        {
+                            if (buffer.Length == 1)
+                            {
+                                value = Convert.ToInt32(buffer.GetValue(0));
+                            }
+                            else if (buffer.Length == 2)
+                            {
+                                value = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                            }
+                            else if (buffer.Length == 4)
+                            {
+                                value = (Convert.ToInt32(buffer.GetValue(0)) * 256 * 256 * 256) + (Convert.ToInt32(buffer.GetValue(1)) * 256 * 256) + (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                            }
+                            //double realvalue = (double)value;
+                            if (symbolName == "ActualIn.T_Engine" ||
+                                symbolName == "ActualIn.T_AirInlet" ||
+                                symbolName == "Out.fi_Ignition" ||
+                                symbolName == "Out.M_EngTrqAct" ||
+                                symbolName == "ECMStat.P_Engine" ||
+                                symbolName == "IgnMastProt.fi_Offset" ||
+                                symbolName == "Lambda.LambdaInt" ||
+                                symbolName == "MAF.m_AirInlet" ||
+                                symbolName == "AdpFuelProt.MulFuelAdapt" ||
+                                symbolName == "ECMStat.p_Diff" ||
+                                symbolName == "BoostProt.PFac" ||
+                                symbolName == "BoostProt.IFac" ||
+                                symbolName == "BoostProt.LoadDiff" ||
+                                symbolName == "IgnKnk.fi_MeanKnock" ||
+                                symbolName == "Ign.fi_OtherOff" ||
+                                symbolName == "IgnJerkProt.fi_Offset")
+                            {
+                                if (value > 32000) value = -(65536 - value); // negatief maken
+                            }
+
+                            else if (symbolName == "KnkDet.KnockCyl") // 4 length
+                            {
+                                int knkcountcyl1 = 0;
+                                int knkcountcyl2 = 0;
+                                int knkcountcyl3 = 0;
+                                int knkcountcyl4 = 0;
+                                if (buffer.Length == 4)
+                                {
+                                    knkcountcyl1 = Convert.ToInt32(buffer.GetValue(0));
+                                    knkcountcyl2 = Convert.ToInt32(buffer.GetValue(1));
+                                    knkcountcyl3 = Convert.ToInt32(buffer.GetValue(2));
+                                    knkcountcyl4 = Convert.ToInt32(buffer.GetValue(3));
+                                    UpdateRealtimeInformationInTable(dt, "KnockCyl1", (float)knkcountcyl1);
+                                    UpdateRealtimeInformationInTable(dt, "KnockCyl2", (float)knkcountcyl2);
+                                    UpdateRealtimeInformationInTable(dt, "KnockCyl3", (float)knkcountcyl3);
+                                    UpdateRealtimeInformationInTable(dt, "KnockCyl4", (float)knkcountcyl4);
+                                }
+
+                            }
+                            else if (symbolName == "KnkDetAdap.KnkCntCyl") // 8 length
+                            {
+                                int knkcountcyl1 = 0;
+                                int knkcountcyl2 = 0;
+                                int knkcountcyl3 = 0;
+                                int knkcountcyl4 = 0;
+                                if (buffer.Length == 8)
+                                {
+                                    knkcountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                                    knkcountcyl2 = (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                                    knkcountcyl3 = (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
+                                    knkcountcyl4 = (Convert.ToInt32(buffer.GetValue(6)) * 256) + Convert.ToInt32(buffer.GetValue(7));
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl1", (float)knkcountcyl1);
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl2", (float)knkcountcyl2);
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl3", (float)knkcountcyl3);
+                                    UpdateRealtimeInformationInTable(dt, "KnkCntCyl4", (float)knkcountcyl4);
+                                }
+
+                            }
+                            else if (symbolName == "MisfAdap.N_MisfCountCyl") // 8 length
+                            {
+                                int miscountcyl1 = 0;
+                                int miscountcyl2 = 0;
+                                int miscountcyl3 = 0;
+                                int miscountcyl4 = 0;
+                                if (buffer.Length == 8)
+                                {
+                                    miscountcyl1 = (Convert.ToInt32(buffer.GetValue(0)) * 256) + Convert.ToInt32(buffer.GetValue(1));
+                                    miscountcyl2 = (Convert.ToInt32(buffer.GetValue(2)) * 256) + Convert.ToInt32(buffer.GetValue(3));
+                                    miscountcyl3 = (Convert.ToInt32(buffer.GetValue(4)) * 256) + Convert.ToInt32(buffer.GetValue(5));
+                                    miscountcyl4 = (Convert.ToInt32(buffer.GetValue(6)) * 256) + Convert.ToInt32(buffer.GetValue(7));
+                                    UpdateRealtimeInformationInTable(dt, "MisfCyl1", (float)miscountcyl1);
+                                    UpdateRealtimeInformationInTable(dt, "MisfCyl2", (float)miscountcyl2);
+                                    UpdateRealtimeInformationInTable(dt, "MisfCyl3", (float)miscountcyl3);
+                                    UpdateRealtimeInformationInTable(dt, "MisfCyl4", (float)miscountcyl4);
+                                }
+                            }
+                            value *= Convert.ToDouble(dr["Correction"]);
+                            value += Convert.ToDouble(dr["Offset"]);
+                            dr["Value"] = value;
+
+                            try
+                            {
+                                if (Convert.ToDouble(dr["Peak"]) < value) dr["Peak"] = value;
+                            }
+                            catch (Exception peakE)
+                            {
+                                logger.Debug("Failed to set peak: " + peakE.Message);
+                            }
+                            // update realtime info
+                            UpdateRealtimeInformation(symbolName, (float)value);
+                            try
+                            {
+                                CheckSoundsToPlay(symbolName, value);
+                            }
+                            catch (Exception E)
+                            {
+                                logger.Debug(E.Message);
+                            }
+                        }
+                        else
+                        {
+                            logger.Debug("Failed to read SRAM, symbol: " + symbolName + " address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8") + " length: " + Convert.ToInt32(dr["Length"]));
+                            System.Windows.Forms.Application.DoEvents();
+                        }
+
+                        Thread.Sleep(0);//<GS-11022010>
+                    }
+                }
+
+                ReadExternalSensors(dt);
+
+                //logger.Debug("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
+                LogRealTimeInformation(dt);
+                UpdateOpenViewers();
+
+                //<GS-06012011> maybe move the fps counter timer here!
+                _sw.Stop();
+                // update fps indicator
+                float secs = _sw.ElapsedMilliseconds / 1000F;
+                secs = 1 / secs;
+                if (float.IsInfinity(secs)) secs = 1;
+                UpdateRealtimeInformation("FPSCounter", secs);
+
+                dt.EndLoadData();
+            }
+
+            return true;
+        }
+
+        private void GetSRAMVarsFromTableOld()
         {
             //logger.Debug("GetSRAMVarsFromTable started");
             if (gridRealtime.DataSource != null)
@@ -10682,19 +11448,20 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         symbolName == m_appSettings.Thermochannelname ||
                         symbolName == "Wideband")
                     {
-                        break;
+                        continue;
                     }
 
                     //logger.Debug("Start reading " + symbolName + " at address: " + Convert.ToInt32(dr["SRAMAddress"]).ToString("X8"));
                     //if (symbolnumber > 0)
                     {
-                        byte[] buffer = new byte[1];
+                        byte[] buffer = null;
 
-                        bool _success = false;
+                        // bool _success = false;
                         //buffer = ReadSymbolFromSRAM((uint)symbolnumber, symbolName, Convert.ToUInt32(dr["SRAMAddress"]), Convert.ToInt32(dr["Length"]), out _success);
                         if (Convert.ToInt32(dr["SRAMAddress"]) > 0)
                         {
-                            buffer = t8can.readMemory(Convert.ToInt32(dr["SRAMAddress"]), Convert.ToInt32(dr["Length"]), out _success);
+                            // buffer = t8can.readMemory(Convert.ToInt32(dr["SRAMAddress"]), Convert.ToInt32(dr["Length"]), out _success);
+                            buffer = t8can.readMemoryNew(Convert.ToInt32(dr["SRAMAddress"]), Convert.ToInt32(dr["Length"]), 0x40, false);
                         }
                         else
                         {
@@ -10708,7 +11475,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                          }
                          logger.Debug(symbolName + " = " + dbg + "buflen: " + buffer.Length.ToString() + " " + _success.ToString());
                          */
-                        if (_success)
+                        if (buffer != null)
                         {
 
 
@@ -10835,83 +11602,12 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     }
                     Thread.Sleep(0);//<GS-11022010>
                 }
-                // <GS-29072010> if the combiadapter is in use 
-                // and the user configured to use ADCs or thermoinput, get the values
-                if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.COMBI))
-                {
-                    if (m_appSettings.Useadc1)
-                    {
-                        float adc = t8can.GetADCValue(0);
-                        double convertedADvalue = Math.Round(ConvertADCValue(0, adc), 2);
-                        string channelName = m_appSettings.Adc1channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 1", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc1lowvalue / 1000, m_appSettings.Adc1highvalue / 1000, 0, 0, 0, 1);
-                    }
-                    if (m_appSettings.Useadc2)
-                    {
-                        float adc = t8can.GetADCValue(1);
-                        double convertedADvalue = Math.Round(ConvertADCValue(1, adc), 2);
-                        string channelName = m_appSettings.Adc2channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 2", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc2lowvalue / 1000, m_appSettings.Adc2highvalue / 1000, 0, 0, 0, 1);
-                    }
-                    if (m_appSettings.Useadc3)
-                    {
-                        float adc = t8can.GetADCValue(2);
-                        double convertedADvalue = Math.Round(ConvertADCValue(2, adc), 2);
-                        string channelName = m_appSettings.Adc3channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 3", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc3lowvalue / 1000, m_appSettings.Adc3highvalue / 1000, 0, 0, 0, 1);
-                    }
-                    if (m_appSettings.Useadc4)
-                    {
-                        float adc = t8can.GetADCValue(3);
-                        double convertedADvalue = Math.Round(ConvertADCValue(3, adc), 2);
-                        string channelName = m_appSettings.Adc4channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 4", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc4lowvalue / 1000, m_appSettings.Adc4highvalue / 1000, 0, 0, 0, 1);
-                    }
-                    if (m_appSettings.Useadc5)
-                    {
-                        float adc = t8can.GetADCValue(4);
-                        double convertedADvalue = Math.Round(ConvertADCValue(4, adc), 2);
-                        string channelName = m_appSettings.Adc5channelname;
-                        AddToRealtimeTable(dt, channelName, "ADC channel 5", 0, convertedADvalue, 0, 1, 0, m_appSettings.Adc5lowvalue / 1000, m_appSettings.Adc5highvalue / 1000, 0, 0, 0, 1);
-                    }
-                    if (m_appSettings.Usethermo)
-                    {
-                        float temperature = t8can.GetThermoValue();
-                        string channelName = m_appSettings.Thermochannelname;
-                        AddToRealtimeTable(dt, channelName, "Thermo channel", 0, temperature, 0, 1, 0, 0, 1023, 0, 0, 0, 1);
-                    }
-                }
 
-                // read afr from wideband on serial port
-                if (m_appSettings.UseDigitalWidebandLambda && wbReader != null)
-                {
-                    float afr = (float)wbReader.LatestReading;
-                    float lambda = afr / 14.7F;
-                    digitalDisplayControl6.DigitText = afr.ToString("F1");
-                    if (AfrViewMode == AFRViewType.AFRMode)
-                    {
-                        linearGauge2.Value = afr;
-                    }
-                    else
-                    {
-                        linearGauge2.Value = lambda;
-                    }
-                    if (m_appSettings.MeasureAFRInLambda)
-                    {
-                        //FIXME LogWidebandAFR(lambda, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                        AddToRealtimeTable(dt, "Wideband", "Lambda value (wbO2)", 0, Math.Round(lambda,2), 0, 1, 0.0001, 0, 0, 0, 0, 0, 1);
-                    }
-                    else
-                    {
-                        //FIXME LogWidebandAFR(afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                        AddToRealtimeTable(dt, "Wideband", "AFR value (wbO2)", 0, Math.Round(afr,2), 0, 1, 0, 10, 20, 0, 0, 0, 1);
-                    }
-                    //FIXME ProcessAutoTuning((float)afr, _currentEngineStatus.CurrentRPM, _currentEngineStatus.CurrentAirmassPerCombustion);
-                }
+                ReadExternalSensors(dt);
 
                 //logger.Debug("Updated in " + _sw.ElapsedMilliseconds.ToString() + " ms");
                 LogRealTimeInformation(dt);
-                //UpdateOpenViewers(); FIXME
+                UpdateOpenViewers();
 
                 //<GS-06012011> maybe move the fps counter timer here!
                 _sw.Stop();
@@ -10925,10 +11621,103 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
+        //TODO: adjust for Trionic 8
+        private void UpdateIgnitionMap()
+        {
+            int airmassindex = 0;
+            int rpmindex = 0;
+            // IgnNormCal.Map has
+            //X: IgnNormCal.m_AirXSP // airmass
+            //Y: IgnNormCal.n_EngYSP // engine speed
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnAbsCal.n_EngNormYSP", 1);
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnAbsCal.m_AirNormXSP", 1);
+            UpdateDocksWithName("IgnAbsCal.fi_NormalMAP", airmassindex, rpmindex);
+            UpdateDocksWithName("IgnAbsCal.fi_lowOctanMAP", airmassindex, rpmindex);
+            UpdateDocksWithName("IgnAbsCal.fi_highOctanMAP", airmassindex, rpmindex);
+
+            //IgnE85Cal.fi_AbsMap has:
+            // same, leave it
+            //UpdateDocksWithName("IgnE85Cal.fi_AbsMap", airmassindex, rpmindex);
+            //KnkFuelCal.fi_MapMaxOff has
+            //X: KnkFuelCal.m_AirXSP //airmass
+            //Y: BstKnkCal.n_EngYSP // engine speed
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "BstKnkCal.n_EngYSP", 1);
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "KnkFuelCal.m_AirXSP", 1);
+            UpdateDocksWithName("KnkFuelCal.fi_MaxOffsetMap", airmassindex, rpmindex);
+            //IgnKnkCal.IndexMap has
+            // X: IgnKnkCal.m_AirXSP (airmass)
+            // Y: IgnKnkCal.n_EngYSP (engine speed)
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnKnkCal.n_EngYSP", 1);
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnKnkCal.m_AirXSP", 1);
+            UpdateDocksWithName("IgnKnkCal.IndexMap", airmassindex, rpmindex);
+            //KnkDetCal.RefFactorMap
+            // X: KnkDetCal.m_AirXSP (airmass)
+            // Y: KnkDetCal.n_EngYSP (engine speed)
+            //rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "KnkDetCal.n_EngYSP", 1);
+            //airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "KnkDetCal.m_AirXSP", 1);
+            //UpdateDocksWithName("KnkDetCal.RefFactorMap", airmassindex, rpmindex);
+        }
+
+        //TODO: adjust for Trionic 8
+        private void UpdateInjectionMap()
+        {
+            int airmassindex = 0;
+            int rpmindex = 0;
+
+            //BFuelCal.Map has
+            //X: BFuelCal.AirXSP (airmass)
+            //Y: BFuelCal.RpmYSP (engine speed)
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "BFuelCal.RpmYSP", 1);
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "BFuelCal.AirXSP", 1);
+            UpdateDocksWithName("BFuelCal.LambdaOneFacMap", airmassindex, rpmindex);
+            //BFuelCal.StartMap has
+            //X: BFuelCal.AirXSP (airmass)
+            //Y: BFuelCal.RpmYSP (engine speed)
+            // uses the same as BFuelCal.Map, so leave it
+            //UpdateDocksWithName("BFuelCal.StartMap", airmassindex, rpmindex);
+            //KnkFuelCal.EnrichmentMap has
+            //X: IgnKnkCal.m_AirXSP // airmass
+            //Y: IgnKnkCal.n_EngYSP // engine speed
+            //rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnKnkCal.n_EngYSP", 1);
+            //airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnKnkCal.m_AirXSP", 1);
+            //UpdateDocksWithName("KnkFuelCal.EnrichmentMap", airmassindex, rpmindex);
+        }
+
+        //TODO: adjust for Trionic 8
+        private void UpdateAirmassMap()
+        {
+            int airmassindex = 0;
+            int torqueindex = 0;
+            int rpmindex = 0;
+            int tpsindex = 0;
+
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "PedalMapCal.n_EngineMap", 1);
+            tpsindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentThrottlePosition, "PedalMapCal.X_PedalMap", 0.1);
+            UpdateDocksWithName("PedalMapCal.Trq_RequestMap", rpmindex, tpsindex);
+
+            torqueindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentEngineTorque, "TrqMastCal.Trq_EngXSP", 1);
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "TrqMastCal.n_EngineYSP", 1);
+            UpdateDocksWithName("TrqMastCal.m_AirTorqMap", torqueindex, rpmindex);
+
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "TrqMastCal.m_AirXSP", 1);
+            UpdateDocksWithName("TrqMastCal.Trq_NominalMap", airmassindex, rpmindex);
+
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "AirCrtlCal.SetLoadXSP", 1);
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "AirCrtlCal.n_EngYSP", 1);
+            UpdateDocksWithName("AirCrtlCal.RegMap", airmassindex, rpmindex);
+
+            string xaxisstr = "BstKnkCal.OffsetXSP";
+            if (!SymbolExists(xaxisstr)) xaxisstr = "BstKnkCal.fi_offsetXSP";
+            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "BstKnkCal.n_EngYSP", 1);
+            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentIgnitionOffset, xaxisstr, 0.1);
+            UpdateDocksWithName("BstKnkCal.MaxAirmass", airmassindex, rpmindex);
+            UpdateDocksWithName("BstKnkCal.MaxAirmassAu", airmassindex, rpmindex);
+        }
+
         private void UpdateOpenViewers()
         {
-            UpdateInjectionMap();
             UpdateIgnitionMap();
+            UpdateInjectionMap();
             UpdateAirmassMap();
         }
 
@@ -10943,6 +11732,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             int return_index = -1;
             double min_difference = 10000000;
+
+            if (SymbolExists(symbolname) == false)
+            {
+                return -1;
+            }
 
             byte[] axisvalues = readdatafromfile(m_currentfile, (int)GetSymbolAddress(m_symbols, symbolname), GetSymbolLength(m_symbols, symbolname));
             if (isSixteenBitTable(symbolname))
@@ -10984,54 +11778,13 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             return return_index;
         }
 
-        //TODO: adjust for Trionic 8
-        private void UpdateAirmassMap()
-        {
-            int airmassindex = 0;
-            int torqueindex = 0;
-            int rpmindex = 0;
-            int tpsindex = 0;
-            //PedalMapCal.m_RequestMap has 
-            // X: PedalMapCal.n_EngineMap (rpm)
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "PedalMapCal.n_EngineMap", 1);
-            // Y: PedalMapCal.X_PedalMap (tps)
-            tpsindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentThrottlePosition, "PedalMapCal.X_PedalMap", 0.1);
-            UpdateDocksWithName("PedalMapCal.Trq_RequestMap", rpmindex, tpsindex);
-
-            //TorqueCal.m_AirTorqMap has
-            // X: TorqueCal.M_EngXSP
-            torqueindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentEngineTorque, "TrqMastCal.Trq_EngXSP", 1);
-            // Y: TorqueCal.n_EngYSP
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "TrqMastCal.n_EngYSP", 1);
-            UpdateDocksWithName("TrqMastCal.m_AirTorqMap", torqueindex, rpmindex);
-
-            //TorqueCal.M_NominalMap has
-            //X: TorqueCal.m_AirXSP
-            //Y: TorqueCal.n_EngYSP // same, so leave that out
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "TrqMastCal.m_AirXSP", 1);
-            UpdateDocksWithName("TrqMastCal.Trq_NominalMap", airmassindex, rpmindex);
-
-            //BoostCal.RegMap has:
-            //X: BoostCal.SetLoadXSP (airmass)
-            //Y: BoostCal.n_EngSP (rpm)
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "AirCrtlCal.n_EngYSP", 1);
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "AirCrtlCal.SetLoadXSP", 1);
-            UpdateDocksWithName("AirCrtlCal.RegMap", airmassindex, rpmindex);
-
-            //BstKnkCal.MaxAirmass
-            //BstKnkCal.MaxAirmassAu
-            //X: BstKnkCal.OffsetXSP // special because all negative
-            //Y: BstKnkCal.n_EngYSP
-            string xaxisstr = "BstKnkCal.OffsetXSP";
-            if (!SymbolExists(xaxisstr)) xaxisstr = "BstKnkCal.fi_offsetXSP";
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "BstKnkCal.n_EngYSP", 1);
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentIgnitionOffset, xaxisstr, 0.1);
-            UpdateDocksWithName("BstKnkCal.MaxAirmass", airmassindex, rpmindex);
-            UpdateDocksWithName("BstKnkCal.MaxAirmassAu", airmassindex, rpmindex);
-        }
-
         private void UpdateDocksWithName(string symbolname, int xindex, int yindex)
         {
+            if (SymbolExists(symbolname) == false || xindex < 0 || yindex < 0)
+            {
+                return;
+            }
+
             try
             {
                 foreach (DockPanel pnl in dockManager1.Panels)
@@ -11084,69 +11837,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 logger.Debug(E.Message);
             }
-        }
-
-        //TODO: adjust for Trionic 8
-        private void UpdateIgnitionMap()
-        {
-
-            int airmassindex = 0;
-            int rpmindex = 0;
-            // IgnNormCal.Map has
-            //X: IgnNormCal.m_AirXSP // airmass
-            //Y: IgnNormCal.n_EngYSP // engine speed
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnAbsCal.n_EngNormYSP", 1);
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnAbsCal.m_AirNormXSP", 1);
-            UpdateDocksWithName("IgnAbsCal.fi_NormalMAP", airmassindex, rpmindex);
-            UpdateDocksWithName("IgnAbsCal.fi_lowOctanMAP", airmassindex, rpmindex);
-            UpdateDocksWithName("IgnAbsCal.fi_highOctanMAP", airmassindex, rpmindex);
-            //IgnE85Cal.fi_AbsMap has:
-            // same, leave it
-            //UpdateDocksWithName("IgnE85Cal.fi_AbsMap", airmassindex, rpmindex);
-            //KnkFuelCal.fi_MapMaxOff has
-            //X: KnkFuelCal.m_AirXSP //airmass
-            //Y: BstKnkCal.n_EngYSP // engine speed
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "BstKnkCal.n_EngYSP", 1);
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "KnkFuelCal.m_AirXSP", 1);
-            UpdateDocksWithName("KnkFuelCal.fi_MaxOffsetMap", airmassindex, rpmindex);
-            //IgnKnkCal.IndexMap has
-            // X: IgnKnkCal.m_AirXSP (airmass)
-            // Y: IgnKnkCal.n_EngYSP (engine speed)
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnKnkCal.n_EngYSP", 1);
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnKnkCal.m_AirXSP", 1);
-            UpdateDocksWithName("IgnKnkCal.IndexMap", airmassindex, rpmindex);
-            //KnkDetCal.RefFactorMap
-            // X: KnkDetCal.m_AirXSP (airmass)
-            // Y: KnkDetCal.n_EngYSP (engine speed)
-            //rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "KnkDetCal.n_EngYSP", 1);
-            //airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "KnkDetCal.m_AirXSP", 1);
-            //UpdateDocksWithName("KnkDetCal.RefFactorMap", airmassindex, rpmindex);
-
-        }
-
-        //TODO: adjust for Trionic 8
-        private void UpdateInjectionMap()
-        {
-            int airmassindex = 0;
-            int rpmindex = 0;
-
-            //BFuelCal.Map has
-            //X: BFuelCal.AirXSP (airmass)
-            //Y: BFuelCal.RpmYSP (engine speed)
-            rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "BFuelCal.RpmYSP", 1);
-            airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "BFuelCal.AirXSP", 1);
-            UpdateDocksWithName("BFuelCal.LambdaOneFacMap", airmassindex, rpmindex);
-            //BFuelCal.StartMap has
-            //X: BFuelCal.AirXSP (airmass)
-            //Y: BFuelCal.RpmYSP (engine speed)
-            // uses the same as BFuelCal.Map, so leave it
-            //UpdateDocksWithName("BFuelCal.StartMap", airmassindex, rpmindex);
-            //KnkFuelCal.EnrichmentMap has
-            //X: IgnKnkCal.m_AirXSP // airmass
-            //Y: IgnKnkCal.n_EngYSP // engine speed
-            //rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnKnkCal.n_EngYSP", 1);
-            //airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnKnkCal.m_AirXSP", 1);
-            //UpdateDocksWithName("KnkFuelCal.EnrichmentMap", airmassindex, rpmindex);
         }
 
         private void LogRealTimeInformation(System.Data.DataTable dt)
@@ -12055,51 +12745,72 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
         }
 
+        // This function WILL return null if it failed. Make sure to check for that
         private byte[] ReadMapFromSRAM(SymbolHelper sh)
         {
             m_prohibitReading = true;
-            bool success = false;
-            int blockSize = 0x40;
 
-            // we need security access for this
-
+            barProgress.EditValue = 0;
+            barProgress.Caption = "Reading map from SRAM";
+            barProgress.Visibility = BarItemVisibility.Always;
+            System.Windows.Forms.Application.DoEvents();
 
             logger.Debug("reading from address: " + sh.Start_address.ToString("X8") + " len: " + sh.Length.ToString());
-            byte[] mapvalues = new byte[sh.Length];
-            if (sh.Length < blockSize)
+            byte[] mapvalues = t8can.readMemoryNew((int)sh.Start_address, sh.Length, 0x40, true);
+
+            m_prohibitReading = false;
+
+            if (mapvalues == null)
             {
-                mapvalues = t8can.readMemory((int)sh.Start_address, sh.Length, out success);
-                logger.Debug("ReadMapFromSRAM: " + success.ToString());
+                barProgress.Caption = "Could not read SRAM";
             }
             else
             {
-                // 0x80 bytes at a time
-                int nrReads = sh.Length / blockSize;
-                if (sh.Length % blockSize > 0) nrReads++;
-                int idx = 0;
-                for (int i = 0; i < nrReads; i++)
-                {
-                    int address2read = (int)sh.Start_address + (i * blockSize);
-                    int length2read = blockSize;
-                    byte[] blockBytes = t8can.readMemory(address2read, length2read, out success);
-                    Thread.Sleep(1);
-                    logger.Debug("ReadMapFromSRAM: " + success.ToString());
-                    // copy bytes to complete buffer
-                    for (int j = 0; j < length2read; j++)
-                    {
-                        if (idx < mapvalues.Length)
-                        {
-                            mapvalues[idx++] = blockBytes[j];
-                        }
-                    }
-                }
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Idle";
+                barProgress.Visibility = BarItemVisibility.Never;
             }
-            m_prohibitReading = false;
+            
+            System.Windows.Forms.Application.DoEvents();
             return mapvalues;
+        }
+
+        private void WriteMapToSRAM(string symbolname, byte[] data)
+        {
+            bool succ = false;
+            barProgress.EditValue = 0;
+            barProgress.Caption = "Writing map to SRAM";
+            barProgress.Visibility = BarItemVisibility.Always;
+            System.Windows.Forms.Application.DoEvents();
+
+            uint sramAddress = (uint)GetSymbolAddressSRAM(m_symbols, symbolname);
+            int symbolindex = GetSymbolNumberFromRealtimeList(GetSymbolNumber(m_symbols, symbolname), symbolname);
+            if (symbolindex >= 0)
+            {
+                succ = t8can.writeMemoryNew((int)sramAddress, data, 0x40, true);
+            }
+            else
+            {
+                logger.Debug("Could not retrieve index of symbol " + symbolname);
+            }
+
+            if (succ != true)
+            {
+                barProgress.Caption = "Could not write SRAM";
+            }
+            else
+            {
+                barProgress.EditValue = 0;
+                barProgress.Caption = "Idle";
+                barProgress.Visibility = BarItemVisibility.Never;
+            }
+            
+            System.Windows.Forms.Application.DoEvents();
         }
 
         void tabdet_onReadFromSRAM(object sender, IMapViewer.ReadFromSRAMEventArgs e)
         {
+            // MessageBox.Show("On read sram");
             // read data from SRAM through CAN bus and refresh the viewer with it
             bool writepossible = false;
             try
@@ -12122,6 +12833,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                     try
                                     {
                                         byte[] result = ReadMapFromSRAM(shs);
+                                        if (result == null)
+                                        {
+                                            break;
+                                        }
                                         int rows = 0;
                                         int cols = 0;
                                         foreach (DockPanel pnl in dockManager1.Panels)
@@ -12229,16 +12944,15 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             {
                 logger.Debug("Failed to read MAP from SRAM: " + E.Message);
             }
+            // Why? Let the read function handle that
             m_prohibitReading = false;
         }
 
-        private void WriteMapToSRAM(string mapname, byte[] data)
-        {
-            //TODO: Implement SRAM writing for Trionic 8
-        }
+
 
         void tabdet_onWriteToSRAM(object sender, IMapViewer.WriteToSRAMEventArgs e)
         {
+            // MessageBox.Show("tabdet_onWriteToSRAM");
             // write data to SRAM, check for valid connection first
             bool writepossible = false;
             try
@@ -12252,7 +12966,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         try
                         {
 
-
+                            // MessageBox.Show("tabdet_onWriteToSRAM");
                             WriteMapToSRAM(e.Mapname, e.Data);
                         }
                         catch (Exception E)
@@ -12272,300 +12986,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             }
             m_prohibitReading = false;
         }
-
-        private void StartSRAMTableViewer()
-        {
-            if (gridViewSymbols.SelectedRowsCount > 0)
-            {
-                int[] selrows = gridViewSymbols.GetSelectedRows();
-                if (selrows.Length > 0)
-                {
-                    SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    DockPanel dockPanel;
-                    bool pnlfound = false;
-                    foreach (DockPanel pnl in dockManager1.Panels)
-                    {
-                        if (pnl.Text == "SRAM Symbol: " + sh.Varname + " [" + Path.GetFileName(m_currentsramfile) + "]")
-                        {
-                            dockPanel = pnl;
-                            pnlfound = true;
-                            dockPanel.Show();
-                        }
-                    }
-                    if (!pnlfound)
-                    {
-                        dockManager1.BeginUpdate();
-                        try
-                        {
-                            dockPanel = dockManager1.AddPanel(new System.Drawing.Point(-500, -500));
-                            if (m_appSettings.ShowGraphs)
-                            {
-                                dockPanel.FloatSize = new Size(650, 700);
-                            }
-                            else
-                            {
-                                dockPanel.FloatSize = new Size(650, 450);
-                            }
-                            dockPanel.Tag = m_currentsramfile;
-                            IMapViewer tabdet = MapViewerFactory.Get(m_appSettings);
-                            tabdet.Filename = m_currentsramfile;
-                            tabdet.Map_name = sh.Varname;
-                            tabdet.Map_descr = TranslateSymbolName(tabdet.Map_name);
-                            tabdet.Map_cat = XDFCategories.Undocumented;
-                            tabdet.X_axisvalues = GetXaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
-                            tabdet.Y_axisvalues = GetYaxisValues(m_currentfile, m_symbols, tabdet.Map_name);
-
-                            if (!m_appSettings.NewPanelsFloating)
-                            {
-                                dockPanel = dockManager1.AddPanel(DockingStyle.Right);
-                                if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
-                                {
-                                    int dw = 650;
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    if (dw < 400) dw = 400;
-                                    if (m_appSettings.ShowGraphs)
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 900);
-                                    }
-                                    else
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 500);
-                                    }
-                                }
-                                else if (m_appSettings.DefaultViewSize == ViewSize.SmallView)
-                                {
-                                    int dw = 550;
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    if (dw < 380) dw = 380;
-                                    if (m_appSettings.ShowGraphs)
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 850);
-                                    }
-                                    else
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 450);
-                                    }
-                                }
-                                else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
-                                {
-                                    int dw = 450;
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 30);
-                                    }
-                                    if (dw < 380) dw = 380;
-                                    if (m_appSettings.ShowGraphs)
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 700);
-                                    }
-                                    else
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 450);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                System.Drawing.Point floatpoint = this.PointToClient(new System.Drawing.Point(dockSymbols.Location.X + dockSymbols.Width + 30, dockSymbols.Location.Y + 30));
-
-                                dockPanel = dockManager1.AddPanel(floatpoint);
-                                if (m_appSettings.DefaultViewSize == ViewSize.NormalView)
-                                {
-                                    int dw = 650;
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    if (dw < 400) dw = 400;
-                                    if (m_appSettings.ShowGraphs)
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 900);
-                                        tabdet.SetSplitter(0, 0, 280, false, false);
-
-                                    }
-                                    else
-                                    {
-
-                                        dockPanel.FloatSize = new Size(dw, 500);
-                                    }
-                                }
-                                else if (m_appSettings.DefaultViewSize == ViewSize.SmallView)
-                                {
-                                    int dw = 550;
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                    }
-                                    if (dw < 380) dw = 380;
-                                    if (m_appSettings.ShowGraphs)
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 850);
-                                        tabdet.SetSplitter(0, 0, 250, false, false);
-                                        //tabdet.SetSurfaceGraphZoom(0.4);
-                                    }
-                                    else
-                                    {
-
-                                        dockPanel.FloatSize = new Size(dw, 450);
-                                        //dockPanel.FloatSize = new Size(550, 450);
-                                    }
-                                }
-                                else if (m_appSettings.DefaultViewSize == ViewSize.ExtraSmallView)
-                                {
-                                    int dw = 450;
-                                    if (tabdet.X_axisvalues.Length > 0)
-                                    {
-                                        dw = 30 + ((tabdet.X_axisvalues.Length + 1) * 30);
-                                    }
-                                    if (dw < 380) dw = 380;
-                                    if (m_appSettings.ShowGraphs)
-                                    {
-                                        dockPanel.FloatSize = new Size(dw, 700);
-                                        tabdet.SetSplitter(0, 0, 320, false, false);
-                                        // tabdet.SetSurfaceGraphZoom(0.5);
-                                    }
-                                    else
-                                    {
-                                        // dockPanel.FloatSize = new Size(450, 450);
-
-                                        dockPanel.FloatSize = new Size(dw, 450);
-                                    }
-                                }
-                                floatpoint = new System.Drawing.Point(Screen.PrimaryScreen.WorkingArea.Size.Width / 2 - dockPanel.FloatSize.Width / 2, Screen.PrimaryScreen.WorkingArea.Size.Height / 2 - dockPanel.FloatSize.Height / 2);
-                                while ((floatpoint.X < (dockSymbols.Width + 20)) && ((floatpoint.X + dockSymbols.Width) < Screen.PrimaryScreen.WorkingArea.Size.Width)) floatpoint.X++;
-                                dockPanel.FloatLocation = floatpoint;
-
-                            }
-
-                            SymbolAxesTranslator axestrans = new SymbolAxesTranslator();
-                            string x_axis = string.Empty;
-                            string y_axis = string.Empty;
-                            string x_axis_descr = string.Empty;
-                            string y_axis_descr = string.Empty;
-                            string z_axis_descr = string.Empty;
-                            axestrans.GetAxisSymbols(tabdet.Map_name, out x_axis, out y_axis, out x_axis_descr, out y_axis_descr, out z_axis_descr);
-                            // Check if there are duplicates
-                            string alt_axis = "";
-                            char axis_x_or_y = 'X';
-                            if (SymbolDictionary.doesDuplicateExist(tabdet.Map_name, out axis_x_or_y, out alt_axis))
-                            {
-                                // Check if the current loaded axis exist in the file
-                                if (!SymbolExists(x_axis))
-                                {
-                                    x_axis = alt_axis;
-                                }
-                            }
-
-                            tabdet.X_axis_name = x_axis_descr;
-                            tabdet.Y_axis_name = y_axis_descr;
-                            tabdet.Z_axis_name = z_axis_descr;
-
-
-                            int columns = 8;
-                            int rows = 8;
-                            int tablewidth = GetTableMatrixWitdhByName(m_currentfile, m_symbols, tabdet.Map_name, out columns, out rows);
-                            int address = (int)sh.Flash_start_address;
-                            int sramaddress = (int)sh.Start_address;
-                            if (sramaddress != 0)
-                            {
-                                tabdet.Map_address = address;
-                                tabdet.Map_sramaddress = sramaddress;
-                                int length = sh.Length;
-                                tabdet.Map_length = length;
-                                byte[] mapdata = readdatafromSRAMfile(m_currentsramfile, sramaddress, length);
-                                tabdet.Map_content = mapdata;
-                                tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
-                                tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
-                                tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                                tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
-                                //TryToAddOpenLoopTables(tabdet);
-
-                                tabdet.IsRAMViewer = true;
-                                tabdet.Dock = DockStyle.Fill;
-                                //tabdet.onSymbolSave += new MapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
-                                tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
-                                //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
-                                //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
-                                //tabdet.onSelectionChanged += new MapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                                //tabdet.onSplitterMoved += new MapViewer.SplitterMoved(tabdet_onSplitterMoved);
-                                //tabdet.onSurfaceGraphViewChanged += new MapViewer.SurfaceGraphViewChanged(tabdet_onSurfaceGraphViewChanged);
-                                //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
-                                //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
-                                tabdet.onReadFromSRAM += new IMapViewer.ReadDataFromSRAM(tabdet_onReadFromSRAM);
-                                tabdet.onWriteToSRAM += new IMapViewer.WriteDataToSRAM(tabdet_onWriteToSRAM);
-
-                                tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
-                                tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                                tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
-
-                                //dockPanel.DockAsTab(dockPanel1);
-                                dockPanel.Text = "SRAM Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(m_currentsramfile) + "]";
-                                bool isDocked = false;
-                                if (m_appSettings.AutoDockSameSymbol)
-                                {
-                                    foreach (DockPanel pnl in dockManager1.Panels)
-                                    {
-                                        if (pnl.Text.StartsWith("SRAM Symbol: " + tabdet.Map_name) && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                        {
-                                            dockPanel.DockAsTab(pnl, 0);
-                                            isDocked = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (!isDocked)
-                                {
-                                    if (m_appSettings.AutoDockSameFile)
-                                    {
-                                        foreach (DockPanel pnl in dockManager1.Panels)
-                                        {
-                                            if ((string)pnl.Tag == m_currentsramfile && pnl != dockPanel && (pnl.Visibility == DockVisibility.Visible))
-                                            {
-                                                dockPanel.DockAsTab(pnl, 0);
-                                                isDocked = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (!isDocked)
-                                {
-                                    dockPanel.DockTo(DockingStyle.Right, 0);
-                                    if (m_appSettings.AutoSizeNewWindows)
-                                    {
-                                        if (tabdet.X_axisvalues.Length > 0)
-                                        {
-                                            dockPanel.Width = 30 + ((tabdet.X_axisvalues.Length + 1) * 35);
-                                        }
-                                        else
-                                        {
-                                            //dockPanel.Width = this.Width - dockSymbols.Width - 10;
-                                        }
-                                    }
-                                    if (dockPanel.Width < 400) dockPanel.Width = 400;
-
-                                }
-                                dockPanel.Controls.Add(tabdet);
-                            }
-                        }
-                        catch (Exception newdockE)
-                        {
-                            logger.Debug(newdockE.Message);
-                        }
-                        dockManager1.EndUpdate();
-                    }
-                }
-            }
-
-        }
-
+        
         private void readFromSRAMFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (gridViewSymbols.FocusedRowHandle >= 0)
@@ -13261,6 +13682,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         if (symbolnumber >= 0)
                         {
                             byte[] result = ReadMapFromSRAM(sh);
+                            if (result == null)
+                            {
+                                break;
+                            }
                             logger.Debug("read " + result.Length.ToString() + " bytes from SRAM!");
                             StartTableViewer(symbolname);
                             try
@@ -14099,10 +14524,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
             public bool compatibelSoftware(string software)
             {
+                if (software.Length < 1) return false;
                 int v = Convert.ToInt32(software[1]);
 
                 // Check if software is compatible with bintype
-                if (v < 'C' || software.Substring(0, 6) == "FC01_O")
+                if (v < 'C' || (software.Length >= 6 && software.Substring(0, 6) == "FC01_O"))
                 {
                     if (!(WizBinType == BinaryType.OldBin || WizBinType == BinaryType.BothBin))
                         return false;
@@ -14424,6 +14850,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // Connect at accesslevel01, need to close connection if already open
             RealtimeDisconnectAndHide();
 
+            // Mode has changed so the state of dynamic symbols is no longer known
+            forceDynSymbolRefresh = true;
+
             try
             {
                 SetCanAdapter();
@@ -14490,6 +14919,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             // Connect at accesslevel01, need to close connection if already open
             RealtimeDisconnectAndHide();
+
+            // Mode has changed so the state of dynamic symbols is no longer known
+            forceDynSymbolRefresh = true;
 
             try
             {
@@ -14797,7 +15229,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 m_realtimeAddresses.Columns.Add("SymbolName");
                 m_realtimeAddresses.Columns.Add("SymbolNumber", System.Type.GetType("System.Int32"));
                 m_realtimeAddresses.Columns.Add("VarName");
-
                 barConnectedECUName.Caption = t8can.GetSoftwareVersion();
             }
         }
@@ -14806,6 +15237,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             t8can.SecurityLevel = AccessLevel.AccessLevelFD;
             t8can.OnlyPBus = m_appSettings.OnlyPBus;
+
+            // Mode has changed so the state of dynamic symbols is no longer known
+            forceDynSymbolRefresh = true;
+
             if (m_appSettings.AdapterType == EnumHelper.GetDescription(CANBusAdapter.LAWICEL))
             {
                 t8can.setCANDevice(CANBusAdapter.LAWICEL);
@@ -14843,6 +15278,134 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             else
             {
                 frmInfoBox info = new frmInfoBox("Check settings, no CAN adapter has been selected!");
+            }
+        }
+
+        private void btnPidEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_symbols == null)
+            {
+                logger.Debug("btnPidEdit_ItemClick: No open file. Aborting");
+                MessageBox.Show("Please open a Trionic 8 file before playing with this feature");
+                return;
+            }
+            else if (m_pids == null)
+            {
+                logger.Debug("btnPidEdit_ItemClick: No pid table. Creating a new empty one");
+                m_pids = new PidCollection();
+            }
+
+            frmPID pidEdit = new frmPID();
+            pidEdit.ShowDialog();
+
+            if (pidEdit.DialogResult == DialogResult.OK)
+            {
+                // Do each pid individually (there will be more pids in the future but from different tables)
+                byte[] data = new byte[7];
+                m_pids = pidEdit.pids.CopyOf();
+
+                if (m_pids != null && m_pids.Count > 0)
+                {
+                    foreach (PidHelper ph in m_pids)
+                    {
+                        // [u16 pid, u32(u16) symbol index, u8 flags, u8 pad]
+                        int address = ph.FileAddress;
+                        string pidstr = ph.PID;
+                        int pid = -1;
+                        int idx = ph.SymbolIndex;
+
+                        try
+                        {
+                            pid = Int32.Parse(pidstr, System.Globalization.NumberStyles.HexNumber);
+                        }
+                        catch (Exception E)
+                        {
+                            logger.Debug("Parse string exception: " + E);
+                            pid = -1;
+                        }
+
+                        data[0] = (byte)(pid >> 8);
+                        data[1] = (byte)pid;
+                        data[2] = (byte)(idx >> 24);
+                        data[3] = (byte)(idx >> 16);
+                        data[4] = (byte)(idx >> 8);
+                        data[5] = (byte)idx;
+                        data[6] = ph.PackedFlags;
+
+                        if (address >= 0x20000 && (address + data.Length) <= 0x100000 &&
+                            pid >= 0 && pid < 65536 &&
+                            idx > 0 && idx < 65536) // Name table is not present so it has to be 1 or higher
+                        {
+                            savedatatobinary(address, data.Length, data, m_currentfile, false, "");
+                        }
+                    }
+                    UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
+                }
+            }
+        }
+
+        private void btnTemEdit_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (m_symbols == null)
+            {
+                logger.Debug("btnTemEdit_ItemClick: No open file. Aborting");
+                MessageBox.Show("Please open a Trionic 8 file before playing with this feature");
+                return;
+            }
+            else if (m_tems == null)
+            {
+                logger.Debug("btnTemEdit_ItemClick: No tem table. Creating a new empty one");
+                m_tems = new PidCollection();
+            }
+
+            frmTEM temEdit = new frmTEM();
+            temEdit.ShowDialog();
+
+            if (temEdit.DialogResult == DialogResult.OK)
+            {
+                byte[] data = new byte[6];
+                m_tems = temEdit.tems.CopyOf();
+
+                if (m_tems != null && m_tems.Count > 0)
+                {
+                    foreach (PidHelper ph in m_tems)
+                    {
+                        // [u16 symbol index, u8[4] name]
+                        int address = ph.FileAddress;
+                        int idx = ph.SymbolIndex;
+                        int readCount = 0;
+
+                        data[0] = (byte)(idx >> 8);
+                        data[1] = (byte)idx;
+
+                        // Kinda overkill but strings are never to be trusted
+                        try
+                        {
+                            for (int i = 0; i < ph.PID.Length && i < 4; i++)
+                            {
+                                data[i + 2] = (byte)ph.PID[i];
+                                readCount++;
+                            }
+                        }
+                        catch (Exception E)
+                        {
+                            logger.Debug("TEM emit parse string exception: " + E);
+                        }
+
+                        // Pad unused space with zeroes
+                        for (int i = readCount; i < 4; i++)
+                        {
+                            data[i + 2] = 0;
+                        }
+
+                        if (address >= 0x20000 && (address + data.Length) <= 0x100000 &&
+                            idx > 0 && idx < 65536) // Name table is not present so it has to be 1 or higher
+                        {
+                            savedatatobinary(address, data.Length, data, m_currentfile, false, "");
+                        }
+                    }
+                    UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
+                }
             }
         }
     }

@@ -824,7 +824,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                                 break;
                             case 0x08:
                                 // Disabled
-                                //piarea[i++] = Convert.ToByte(m_SoftwareVersion[f]);
+                                // piarea[i++] = Convert.ToByte(m_SoftwareVersion[f]);
                                 i++;
                                 break;
                             case 0xC1:
@@ -840,6 +840,195 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                     }
                 }
             } while (i < piarea.Length - 1);
+
+            for (int t = 0; t < piarea.Length; t++)
+            {
+                piarea[t] ^= 0x21;
+                piarea[t] -= 0xD6;
+            }
+
+            savedatatobinary(checksumAreaOffset, piarea.Length, piarea, m_fileName);
+        }
+
+        internal byte[] ReadContainer(byte[] decodedpiArea, byte id)
+        {
+            if (decodedpiArea == null) return null;
+
+            int pos = 0;
+            while ((pos + 2) <= decodedpiArea.Length)
+            {
+                uint len = decodedpiArea[pos++];
+                uint type = decodedpiArea[pos++];
+                if (len == 0xF7 && type == 0xF7) break;
+
+                if (type == id && len > 0)
+                {
+                    if (len + pos > decodedpiArea.Length)
+                    {
+                        logger.Debug("Pi container out of range: " + (len + pos).ToString("D") + " / " + decodedpiArea.Length.ToString("D"));
+                        return null;
+                    }
+
+                    byte[] retContainer = new byte[len];
+                    for (int i = 0; i < len; i++)
+                    {
+                        retContainer[i] = decodedpiArea[pos++];
+                    }
+                    return retContainer;
+                }
+                else
+                {
+                    pos += (int)len;
+                }
+            
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// This is only to be used for explicit saving where the container is to be created if it's not present
+        /// </summary>
+        /// <param name="decodedpiArea">Input buffer</param>
+        /// <param name="id">Id of the target container</param>
+        /// <param name="containerdata">Actual string that is to be stored</param>
+        /// <param name="createLen">Explicit length if the container has to be created (Can be set to 0 if you want the string length to be the deciding factor)</param>
+        /// <returns>null or output buffer since "PoINtErS ArE NoT COnDoNed iN c#"...</returns>
+        internal static byte[] StoreStringContainer(byte[] decodedpiArea, byte id, string containerdata, int createLen)
+        {
+            bool found = false;
+            int pos = 0;
+            uint len = 0;
+            uint type = 0;
+
+            if (decodedpiArea == null ||
+                createLen > 255 || createLen < 0 ||
+                (containerdata != null && containerdata.Length > 255))
+            {
+                return null;
+            }
+
+            while ((pos + 2) <= decodedpiArea.Length)
+            {
+                len = decodedpiArea[pos++];
+                type = decodedpiArea[pos++];
+                if (len == 0xF7 && type == 0xF7)
+                {
+                    pos -= 2;
+                    break;
+                }
+
+                if (type == id)
+                {
+                    found = true;
+                    break;
+                }
+                else
+                {
+                    pos += (int)len;
+                }
+            }
+
+            // Item must be created
+            if (found == false)
+            {
+                int strLen = 0;
+                int free = 0;
+                int origPos = pos;
+                while (pos < decodedpiArea.Length)
+                {
+                    if (decodedpiArea[pos] != 0xf7) break;
+                    free++;
+                    pos++;
+                }
+
+                // Not enough room for data + header
+                if ((createLen + 2) > free ||
+                    (createLen == 0 && containerdata != null && (containerdata.Length + 2) > free))
+                {
+                    return null;
+                }
+
+                if (createLen == 0 && containerdata != null)
+                {
+                    createLen = containerdata.Length;
+                }
+
+                decodedpiArea[origPos++] = (byte)createLen;
+                decodedpiArea[origPos++] = id;
+
+                // Strings are evil
+                try
+                {
+                    if (containerdata != null)
+                    {
+                        strLen = containerdata.Length;
+                        for (int i = 0; i < strLen && i < createLen; i++)
+                        {
+                            decodedpiArea[origPos++] = (byte)containerdata[i];
+                        }
+                    }
+
+                    for (int i = strLen; i < createLen; i++)
+                    {
+                        decodedpiArea[origPos++] = (byte)' ';
+                    }
+                }
+                catch (Exception E)
+                {
+                    return null;
+                }
+
+                return decodedpiArea;
+            }
+            else
+            {
+                // Something is clearly wrong with this header
+                if ((pos + len) > decodedpiArea.Length)
+                {
+                    return null;
+                }
+
+                // Strings are evil
+                int strLen = 0;
+                try
+                {
+                    if (containerdata != null)
+                    {
+                        strLen = containerdata.Length;
+                        for (int i = 0; i < strLen && i < len; i++)
+                        {
+                            decodedpiArea[pos++] = (byte)containerdata[i];
+                        }
+                    }
+                    for (int i = strLen; i < len; i++)
+                    {
+                        decodedpiArea[pos++] = (byte)' ';
+                    }
+                }
+                catch (Exception E)
+                {
+                    return null;
+                }
+                return decodedpiArea;
+            }
+        }
+
+        // Very much junk code that is just enough to make it work
+        internal void UpdateSoftwareVersion()
+        {
+            if (m_fileName == "") return;
+            int checksumAreaOffset = ChecksumT8.GetChecksumAreaOffset(m_fileName);
+            int endOfPIArea = GetEmptySpaceStartFrom(m_fileName, checksumAreaOffset);
+            byte[] piarea = readdatafromfile(m_fileName, checksumAreaOffset, endOfPIArea - checksumAreaOffset + 1);
+
+            for (int t = 0; t < piarea.Length; t++)
+            {
+                piarea[t] += 0xD6;
+                piarea[t] ^= 0x21;
+            }
+
+            piarea = StoreStringContainer(piarea, 0x08, m_SoftwareVersion, 30);
+            if (piarea == null) return;
 
             for (int t = 0; t < piarea.Length; t++)
             {
