@@ -181,17 +181,6 @@ namespace T8SuitePro
         {
             public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destType)
             {
-                /*
-                if (destType == typeof(string) && value is PidHelper)
-                {
-                    // Cast the value to an Employee type
-                    PidHelper pp = (PidHelper)value;
-
-                    // chriva
-                    // return pp.Symbol + ", " + pp.AddressSRAM + ", " + pp.Value;
-                    // return "Fixme";
-                    return pp.PID.ToString("X4");
-                }*/
                 return base.ConvertTo(context, culture, value, destType);
             }
         }
