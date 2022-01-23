@@ -666,7 +666,7 @@ namespace T8SuitePro
             this.simpleButton8.Size = new System.Drawing.Size(90, 23);
             this.simpleButton8.TabIndex = 15;
             this.simpleButton8.Text = "Save to ECU";
-            this.simpleButton8.Visible = false;
+            // this.simpleButton8.Visible = false;
             this.simpleButton8.Click += new System.EventHandler(this.simpleButton8_Click);
             // 
             // simpleButton9
@@ -677,7 +677,7 @@ namespace T8SuitePro
             this.simpleButton9.Size = new System.Drawing.Size(90, 23);
             this.simpleButton9.TabIndex = 16;
             this.simpleButton9.Text = "Read from ECU";
-            this.simpleButton9.Visible = false;
+            // this.simpleButton9.Visible = false;
             this.simpleButton9.Click += new System.EventHandler(this.simpleButton9_Click);
             // 
             // simpleButton10

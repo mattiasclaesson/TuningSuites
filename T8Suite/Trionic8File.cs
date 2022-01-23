@@ -440,19 +440,44 @@ namespace T8SuitePro
             return retval;
         }
 
-        static private int GetAddrTableOffset(string filename)
+        private static int CountNq(string filename, int offset)
         {
-            int addrtaboffset = GetStartOfAddressTableOffset(filename);
-            logger.Debug("addrtaboffset: " + addrtaboffset.ToString("X8"));
-            int NqNqNqOffset = GetLastNqStringFromOffset(addrtaboffset - 0x100, filename);
-            logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
-
-            int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
-            logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
-            int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4, filename);
-            int retval = NqNqNqOffset + 21;
-            logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
-            return retval;
+            int cnt = 0;
+            if (filename != string.Empty)
+            {
+                if (File.Exists(filename))
+                {
+                    FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                    BinaryReader br = new BinaryReader(fs);
+                    try
+                    {
+                        fs.Seek(offset, SeekOrigin.Begin);
+                        int state = 0;
+                        while (fs.Position > (offset - 8) && fs.Position > 0 && cnt < 3)
+                        {
+                            switch (state)
+                            {
+                                case 0:
+                                    if (br.ReadByte() != 0x4E) return cnt;
+                                    state++;
+                                    break;
+                                case 1:
+                                    if (br.ReadByte() != 0x71) return cnt;
+                                    state = 0;
+                                    cnt++;
+                                    fs.Position -= 4;
+                                    break;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        logger.Debug("Failed to retrieve Nq count from: " + offset.ToString("X6"));
+                    }
+                    fs.Close();
+                }
+            }
+            return cnt;
         }
 
         static private int GetAddrTableOffsetBySymbolTable(string filename)
@@ -461,10 +486,16 @@ namespace T8SuitePro
             logger.Debug("EndOfSymbolTable: " + addrtaboffset.ToString("X8"));
             int NqNqNqOffset = GetFirstNqStringFromOffset(addrtaboffset, filename);
             logger.Debug("NqNqNqOffset: " + NqNqNqOffset.ToString("X8"));
-
             int symbtaboffset = GetAddressFromOffset(NqNqNqOffset, filename);
             logger.Debug("symbtaboffset: " + symbtaboffset.ToString("X8"));
+
+            int nqCount = CountNq(filename, NqNqNqOffset - 2);
+            logger.Debug("Nq count: " + nqCount.ToString("X8"));
+            m_addressoffset = GetAddressFromOffset(NqNqNqOffset - ((nqCount * 2) + 6), filename);
+            logger.Debug("AddressOffset: " + m_addressoffset.ToString("X8"));
+
             int symbtablength = GetLengthFromOffset(NqNqNqOffset + 4, filename);
+
             int retval = NqNqNqOffset + 21;
             logger.Debug("symbtablength: " + symbtablength.ToString("X8"));
             return retval;
@@ -916,11 +947,614 @@ namespace T8SuitePro
             return retval;
         }
 
-        static public bool TryToExtractPackedBinary(string filename, out SymbolCollection symbolCollection)
+        private static bool DetermineOpen_FromSymbolNames(SymbolCollection symbols)
+        {
+            foreach (SymbolHelper sh in symbols)
+            {
+                if (sh.Internal_address >= FileT8.Length &&
+                    sh.Length > 0x100 && sh.Length <= 0x400)
+                {
+                    if (sh.SmartVarname == "BFuelCal.LambdaOneFacMap" ||
+                        sh.SmartVarname == "KnkFuelCal.fi_MaxOffsetMap" ||
+                        sh.SmartVarname == "AirCtrlCal.RegMap")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool DetermineOpen_FromSymbolAddress(SymbolCollection symbols)
+        {
+            try
+            {
+                if (symbols != null)
+                {
+                    for (int i = 0; i < symbols.Count; i++)
+                    {
+                        SymbolHelper sh = symbols[(i)];
+                        if (sh.Internal_address >= (0x100000 + 32768))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to detect binary type");
+            }
+            return false;
+        }
+
+        private static bool DetermineOpen_FromData(byte[] data)
+        {
+            byte[] addrPat = { 0x20,0x3C,0x00, 0x14, 0x00, 0x00 };
+            byte[] addrMsk = { 0xf1,0xbf,0xff, 0xff, 0xff, 0x00 };
+            uint pos = 0x20000;
+
+            while ((pos + addrMsk.Length) <= data.Length)
+            {
+                if (MatchPattern(data, pos, addrPat, addrMsk) == true)
+                {
+                    return true;
+                }
+
+                pos += 2;
+            }
+            return false;
+        }
+
+        static private void DetermineBinaryOpenness(SymbolCollection symbols, byte[] data)
+        {
+            const int MinRequiredLevel = 2;
+            int level = 0;
+            
+
+            // Determine open/closed by looking at symbol names
+            if (DetermineOpen_FromSymbolNames(symbols) == true)
+            {
+                level++;
+            }
+
+            // Determine open/closed by looking at symbol address
+            if (DetermineOpen_FromSymbolAddress(symbols) == true)
+            {
+                level++;
+            }
+
+            // This one has extra weight since the address should be present in a LOT of places
+            if (DetermineOpen_FromData(data) == false)
+            {
+                level--;
+            }
+            else
+            {
+                level++;
+            }
+
+            logger.Debug("Binary openness level: " + level.ToString());
+            m_openbin = (level >= MinRequiredLevel);
+        }
+
+        private static bool m_openbin = false;
+        public static bool IsSoftwareOpen
+        {   get { return m_openbin; } }
+
+        // This symbol has different meaning and usage depending on if the binary is open or closed!!
+        // As such, it's better to translate everything in one place and only work on translated symbols
+        private static int m_addressoffset = 0;
+
+        /// <summary>
+        /// Translate a symbol's internal address to corresponding Flash and SRAM address
+        /// </summary>
+        /// <param name="symbols">Symbol list</param>
+        /// <param name="pOffset">Primary offset</param>
+        /// <param name="sOffset">Secondary offset</param>
+        static private void TranslateAddressOffsets(SymbolCollection symbols, int PriOffset, int SecOffset)
+        {
+            try
+            {
+                if (symbols != null)
+                {
+                    for (int i = 0; i < symbols.Count; i++)
+                    {
+                        SymbolHelper sh = symbols[(i)];
+
+                        // Make this GO AWAY!
+                        // Only symbols with VALID flash data should have an address in flash
+                        sh.Flash_start_address = sh.Internal_address;
+
+                        /*
+                        // Flash only symbol
+                        if ((sh.Internal_address + sh.Length) <= 0x100000)
+                        {
+                            sh.Flash_start_address = sh.Internal_address;
+                        }
+                        // Sram and maybe flash
+                        else */if (sh.Internal_address >= 0x100000)
+                        {
+                            // SRAM address
+                            sh.Start_address = sh.Internal_address;
+
+                            // NVDM symbols on open binaries are tagged with 0xff.
+                            // The type mask should ideally be checked some more since some combinations are invalid
+                            if (sh.Symbol_type != 0xff && (sh.Symbol_type & 0x22) > 0)
+                            {
+                                int actAddress = 0;
+
+                                // Normal binary, use the primary offset
+                                if (m_openbin == false)
+                                {
+                                    if ((sh.Internal_address + sh.Length) <= (0x100000 + 32768) &&
+                                        sh.Internal_address >= PriOffset)
+                                    {
+                                        actAddress = sh.Internal_address - PriOffset;
+                                    }
+                                }
+                                // Open binary, offsets are switched up
+                                else
+                                {
+                                    // Internal SRAM, use the secondary offset
+                                    if ((sh.Internal_address + sh.Length) <= (0x100000 + 32768) &&
+                                        sh.Internal_address >= SecOffset)
+                                    {
+                                        actAddress = sh.Internal_address - SecOffset;
+                                    }
+
+                                    // External SRAM, use the primary offset
+                                    else if (sh.Internal_address >= (0x100000 + 32768) &&
+                                             sh.Internal_address >= PriOffset)
+                                    {
+                                        actAddress = sh.Internal_address - PriOffset;
+                                    }
+                                }
+
+                                // Real address must be within range
+                                if ((actAddress + sh.Length) <= 0x100000)
+                                {
+                                    sh.Flash_start_address = actAddress;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                logger.Debug(E, "Failed to translate addresses");
+            }
+        }
+
+        // This method is _NOT_ range safe. Use caution
+        private static uint readU32(byte[] data, uint pos)
+        {
+            uint value = (uint)data[pos] * 256 * 256 * 256;
+            value += (uint)data[pos + 1] * 256 * 256;
+            value += (uint)data[pos + 2] * 256;
+            value += (uint)data[pos + 3];
+            return value;
+        }
+
+        private static bool MatchPattern(byte[] data, uint pos, byte[] pat, byte[] msk)
+        {
+            bool found = false;
+
+            if ((pos + msk.Length) <= data.Length)
+            {
+                found = true;
+                for (int i = 0; i < msk.Length; i++)
+                {
+                    if ((data[pos + i] & msk[i]) != (pat[i] & msk[i]))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return found;
+        }
+
+        private static bool ReadAddressPair(byte[] data, uint pos, out uint addr1, out uint addr2)
+        {
+            byte[] addrPat = { 0x20,0x3C,0x00 };
+            byte[] addrMsk = { 0xf1,0xbf,0xff };
+
+            addr1 = 0;
+            addr2 = 0;
+
+            if (MatchPattern(data, pos, addrPat, addrMsk) == true &&
+                MatchPattern(data, pos + 6, addrPat, addrMsk) == true &&
+                (pos + 12) <= data.Length)
+            {
+                addr1 = readU32(data, pos + 2);
+                addr2 = readU32(data, pos + 8);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static int DecodeDataCpy(byte[] data, uint pos)
+        {
+            uint addr1, addr2;
+
+            // Skip link and register backup
+            pos += 8;
+
+            if (ReadAddressPair(data, pos, out addr1, out addr2) == true)
+            {
+                // Most open bins:
+                if (addr1 >= 0x100000 && addr1 < 0x108000 && // Must be within regular sram
+                    addr2 < 0x100000) // Must be within flash
+                {
+                    return (int)(addr1 - addr2);
+                }
+
+                // Very early open bins are organised in another way
+                // Fix...
+                // Or not? Further disassembling seem to indicate they're not even copying symbols to normal sram
+            }
+
+            return 0;
+        }
+
+        private static int DetermineSecondaryOffset(byte[] data)
+        {
+            uint initFunc = readU32(data, 0x20004);
+
+            // Read direct address
+            if (initFunc >= 0x20008 &&
+                initFunc <= (0x100000 - 6) &&
+                (initFunc & 1) == 0)
+            {
+                // in "INIT"
+                // Expect jsr xxxx
+                if (data[initFunc] == 0x4e &&
+                    data[initFunc + 1] == 0xb9 &&
+                    data[initFunc + 2] == 0x00)
+                {
+                    // Make sure that jsr is sane
+                    uint nextJump = readU32(data, initFunc + 2);
+                    if (nextJump >= 0x20008 &&
+                        nextJump <= (0x100000 - 6) &&
+                        (nextJump & 1) == 0)
+                    {
+                        // in "_init"
+                        // Expect jsr xxxx
+                        if (data[nextJump] == 0x4e &&
+                            data[nextJump + 1] == 0xb9 &&
+                            data[nextJump + 2] == 0x00)
+                        {
+                            // Make sure that jsr is sane
+                            nextJump = readU32(data, nextJump + 2);
+
+                            if (nextJump >= 0x20008 &&
+                                (nextJump & 1) == 0)
+                            {
+                                // In data init??
+                                // (This method is range safe)
+                                return DecodeDataCpy(data, nextJump);
+                            }
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private static bool PrimaryPidTableIsHealthy(byte[] data, int pos, int count)
+        {
+            byte[] pidPat =
+            {
+                0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00
+            };
+            byte[] PidMsk =
+            {
+                0x00, 0x00,
+                0xff, 0xff, 0x00, 0x00,
+                0x00, 0xff
+            };
+
+            for (int i = 0; i < count; i++)
+            {
+                if (MatchPattern(data, (uint)pos, pidPat, PidMsk) == false)
+                {
+                    logger.Debug("PID at " + pos.ToString("X6") + " is not healthy");
+                    return false;
+                }
+                pos += 8;
+            }
+            return true;
+        }
+
+        private static void LoadPrimaryPidTable(byte[] data, int pos, int count, out PidCollection pidCollection)
+        {
+            pidCollection = new PidCollection();
+            int index = 0;
+            for (int i = 0; i < count; i++)
+            {
+                PidHelper ph = new PidHelper();
+                ph.FileAddress = pos;
+                ph.Index = index++;
+                ph.PID = (data[pos] << 8 | data[pos + 1]).ToString("X4");
+                ph.SymbolIndex = (data[pos + 4] << 8 | data[pos + 5]);
+                ph.PackedFlags = data[pos + 6];
+                pidCollection.Add(ph);
+                pos += 8;
+            }
+        }
+
+        private static void LocatePrimaryPidTable_Fallback(byte[] data, out PidCollection pidCollection)
+        {
+            pidCollection = null;
+            int pos = 0x20144;
+
+            byte[] pidPat =
+            {
+                0x20, 0x6F, 0x00, 0x10,             // 28 6F 00 10          movea.l $10(sp),a4
+                0x4E, 0xB9, 0x00, 0x00, 0x00, 0x00, // 4E B9 00 0B 79 74    jsr     sub_B7974
+                0x20, 0x7C, 0x00, 0x00, 0x00, 0x00, // 2A 7C 00 03 33 74    movea.l #$33374,a5
+                0x48, 0x78, 0x00, 0x00,             // 48 78 06 4B          pea     ($64B).w
+                0x48, 0x78, 0x00, 0x00,             // 48 78 02 6C          pea     (620).w
+                0x42, 0xa7,                         // 42 A7                clr.l   -(sp)
+                0x2F, 0x08,                         // 2F 0D                move.l  a5,-(sp)
+                0x4E, 0xB9, 0x00, 0x00, 0x00, 0x00, // 4E B9 00 05 76 58    jsr     sub_57658
+                0x20, 0x00,                         // 22 00                move.l  d0,d1
+                0x4F, 0xEF, 0x00, 0x10,             // 4F EF 00 10          lea     $10(sp),sp
+                0x70, 0xFF,                         // 70 FF                moveq   #$FFFFFFFF,d0
+                0xB0, 0x80,                         // B0 81                cmp.l   d1,d0
+                0x67, 0x00                          // 67 14                beq.s   loc_4F3B0
+            };
+            byte[] PidMsk =
+            {
+                0xf1, 0xff, 0xff, 0xff,             // 28 6F 00 10          movea.l $10(sp),a4
+                0xff, 0xff, 0xff, 0xf0, 0x00, 0x01, // 4E B9 00 05 76 58    jsr     000xxxxx // Must be even address
+                0xf1, 0xff, 0xff, 0xf0, 0x00, 0x01, // 2A 7C 00 03 33 74    movea.l #$00 0x xx xx,a5 // Must be even address
+                0xff, 0xff, 0x00, 0x00,             // 48 78 06 4B          pea     (xxxx).w
+                0xff, 0xff, 0x00, 0x00,             // 48 78 02 6C          pea     (xxxx).w
+                0xff, 0xff,                         // 42 A7                clr.l   -(sp)
+                0xff, 0xf8,                         // 2F 0D                move.l  a5,-(sp)
+                0xff, 0xff, 0xff, 0xf0, 0x00, 0x01, // 4E B9 00 05 76 58    jsr     000xxxxx // Must be even address
+                0xf1, 0xf8,                         // 22 00                move.l  d*,d*
+                0xff, 0xff, 0xff, 0xff,             // 4F EF 00 10          lea     $10(sp),sp
+                0xf1, 0xFF,                         // 70 FF                moveq   #$FFFFFFFF,d*
+                0xf1, 0xf8,                         // B0 81                cmp.l   d*,d*
+                0xff, 0x00                          // 67 14                beq.x   xx
+            };
+
+            logger.Debug("Attempting search for primary pid table; Secondary method");
+
+            while (pos < data.Length)
+            {
+                if (MatchPattern(data, (uint)pos, pidPat, PidMsk))
+                {
+                    int count = (data[pos + 22] << 8 | data[pos + 23]);
+                    int table = (int)readU32(data, (uint)pos + 12);
+                    int fromReg = (data[pos + 10] >> 1) & 7;
+                    int toReg = data[pos + 27] & 7;
+
+                    logger.Debug("Secondary match at " + pos.ToString("X6"));
+                    // logger.Debug("From reg: " + fromReg.ToString());
+                    // logger.Debug("To reg: " + toReg.ToString());
+
+                    if (table >= 0x20144 && (table + (count * 8) <= 0x100000) &&
+                        count > 0 && count < 10000 && fromReg == toReg &&
+                        PrimaryPidTableIsHealthy(data, table, count))
+                    {
+                        LoadPrimaryPidTable(data, table, count, out pidCollection);
+                        return;
+                    }
+                    else
+                    {
+                        logger.Debug("Pid table missmatch at " + pos.ToString("X6"));
+                        pos += pidPat.Length;
+                    }
+                }
+                else
+                {
+                    pos += 2;
+                }
+            }
+
+            logger.Debug("PID search failed");
+        }
+
+        private static void LocatePrimaryPidTable(byte[] data, out PidCollection pidCollection)
+        {
+            pidCollection = null;
+            int pos = 0x20144;
+
+            byte[] pidPat =
+            {
+                0x4a, 0x00,                         // 4a 07                tst.b   d7
+                0x67, 0x00, 0x00, 0x00,             // 67 00 00 BC          beq.w   loc_4F434
+                0x48, 0x78, 0x00, 0x00,             // 48 78 06 4B          pea     ($64B).w
+                0x48, 0x78, 0x00, 0x00,             // 48 78 02 6C          pea     (620).w
+                0x42, 0xa7,                         // 42 A7                clr.l   -(sp)
+                0x2F, 0x3C, 0x00, 0x00, 0x00, 0x00, // 2F 3C 00 09 50 74    move.l  #$95074,-(sp)
+                0x4E, 0xB9, 0x00, 0x00, 0x00, 0x00, // 4E B9 00 05 76 58    jsr     sub_57658
+                0x20, 0x00,                         // 22 00                move.l  d0,d1
+                0x4F, 0xEF, 0x00, 0x10,             // 4F EF 00 10          lea     $10(sp),sp
+                0x70, 0xFF,                         // 70 FF                moveq   #$FFFFFFFF,d0
+                0xB0, 0x80,                         // B0 81                cmp.l   d1,d0
+                0x67, 0x00                          // 67 14                beq.s   loc_4F3B0
+            };
+            byte[] PidMsk =
+            {       
+                0xff, 0xf8,                         // 4a 07                tst.b   d*
+                0xff, 0xff, 0x00, 0x00,             // 67 00 00 BC          beq.w   xxxx
+                0xff, 0xff, 0x00, 0x00,             // 48 78 06 4B          pea     (xxxx).w
+                0xff, 0xff, 0x00, 0x00,             // 48 78 02 6C          pea     (xxxx).w
+                0xff, 0xff,                         // 42 A7                clr.l   -(sp)
+                0xff, 0xff, 0xff, 0xf0, 0x00, 0x01, // 2F 3C 00 09 50 74    move.l  #xxxxxxxx,-(sp)
+                0xff, 0xff, 0xff, 0xf0, 0x00, 0x01, // 4E B9 00 05 76 58    jsr     xxxxxxxx
+                0xf1, 0xf8,                         // 22 00                move.l  d*,d*
+                0xff, 0xff, 0xff, 0xff,             // 4F EF 00 10          lea     $10(sp),sp
+                0xf1, 0xFF,                         // 70 FF                moveq   #$FFFFFFFF,d*
+                0xf1, 0xf8,                         // B0 81                cmp.l   d*,d*
+                0xff, 0x00                          // 67 14                beq.x   xx
+            };
+
+            logger.Debug("Attempting search for primary pid table; Primary method");
+
+            while (pos < data.Length)
+            {
+                if (MatchPattern(data, (uint)pos, pidPat, PidMsk))
+                {
+                    int count = (data[pos + 12] << 8 | data[pos + 13]);
+                    int table = (int)readU32(data, (uint)pos + 18);
+
+                    if (table >= 0x20144 && (table + (count * 8) <= 0x100000) &&
+                        count > 0 && count < 10000 &&
+                        PrimaryPidTableIsHealthy(data, table, count))
+                    {
+                        LoadPrimaryPidTable(data, table, count, out pidCollection);
+                        return;
+                    }
+                    else
+                    {
+                        logger.Debug("Pid table missmatch at " + pos.ToString("X6"));
+                        pos += pidPat.Length;
+                    }
+                }
+                else
+                {
+                    pos += 2;
+                }
+            }
+
+            logger.Debug("Primary method failed");
+            LocatePrimaryPidTable_Fallback(data, out pidCollection);
+        }
+
+        private static bool OkayTemCharacter(byte ch)
+        {
+            // It's very likely that TEM won't allow more than A - Z, a - z, numeric values, space and maybe one or two special characters.
+            // The limits are currently not known so only a lazy boundary check is performed.
+            if ((ch == 0 || ch >= 0x20) && ch < 0x7f)
+                return true;
+            return false;
+        }
+
+        private static void LocateTemTable(byte[] data, out PidCollection temCollection)
+        {
+            temCollection = null;
+            int pos = 0x20144;
+            // The ECU may or may not care about what the symbol is so perhaps it's better to perform a pattern scan of the code and retrieve tables that way?
+            // 4E (71)  00 00   4F 46 46 00  (0000 "OFF" 0)
+            // 4E (75)  00 00   4F 46 46 00
+            byte[] TemPat =
+            {
+                0x4e, 0x71,
+                0x00, 0x00, 0x4f, 0x46, 0x46, 0x00 
+            };
+            byte[] TemMsk =
+            {
+                0xff, 0xfb, // Allow 71 or 75
+                0xff, 0xff, 0xdf, 0xdf, 0xdf, 0xdf // Allow either combo of upper/lower case and 00 or 20 as terminator
+            };
+
+            while (pos < data.Length)
+            {
+                if (MatchPattern(data, (uint)pos, TemPat, TemMsk))
+                {
+                    pos += 2;
+                    int count = 0;
+                    int tpos = pos;
+
+                    logger.Debug("Found TEM table at " + pos.ToString("X6"));
+
+                    while ((tpos + 6) <= data.Length)
+                    {
+                        // Abort due to symbol index. 16383 seem like a reasonable limit.
+                        if ((data[tpos] & 0xc0) > 0)
+                        {
+                            // logger.Debug("Abort due to index " + tpos.ToString("X6"));
+                            break;
+                        }
+
+                        // Check for usable chars
+                        if (OkayTemCharacter(data[tpos + 2]) == false ||
+                            OkayTemCharacter(data[tpos + 3]) == false ||
+                            OkayTemCharacter(data[tpos + 4]) == false ||
+                            OkayTemCharacter(data[tpos + 5]) == false)
+                        {
+                            // logger.Debug("Abort due to char " + tpos.ToString("X6"));
+                            break;
+                        }
+                        tpos += 6;
+                        count++;
+                    }
+
+                    logger.Debug("TEM count " + count.ToString());
+
+                    if (count > 4)
+                    {
+                        temCollection = new PidCollection();
+                        int index = 0;
+                        for (int i = 0; i < count; i++)
+                        {
+                            PidHelper ph = new PidHelper();
+                            ph.FileAddress = pos;
+                            ph.SymbolIndex = (data[pos] << 8 | data[pos + 1]);
+                            ph.PID = "";
+                            ph.Index = index++;
+
+                            // A range check has already been performed but let's be a little chicken shit about it
+                            try
+                            {
+                                for (int c = 0; c < 4; c++)
+                                {
+                                    if (data[pos + 2 + c] < 0x20) break;
+                                    ph.PID += (char)data[pos + 2 + c];
+                                }
+                            }
+                            catch (Exception E)
+                            {
+                                logger.Debug("TEM collect parse string exception: " + E);
+                            }
+
+                            temCollection.Add(ph);
+                            pos += 6;
+                        }
+                        // Protect the first symbol
+                        temCollection[0].IsProtected = true;
+                        return;
+                    }
+                    else
+                    {
+                        logger.Debug("Count too small");
+                        pos += (TemPat.Length - 2);
+                    }
+                }
+                else
+                {
+                    pos += 2;
+                }
+            }
+
+            logger.Debug("No Usable TEM table in this binary");
+        }
+
+        private static void LoadPidTables(byte[] data, out PidCollection pidCollection, out PidCollection temCollection)
+        {
+            LocatePrimaryPidTable(data, out pidCollection);
+            // -:Implement secondary table:-
+            LocateTemTable(data, out temCollection);
+        }
+
+        static public bool TryToExtractPackedBinary(string filename, out SymbolCollection symbolCollection, out PidCollection pidCollection, out PidCollection temCollection)
         {
             symbolCollection = null;
+            pidCollection = null;
+            temCollection = null;
             string[] allSymbolNames;
             int symboltableoffset;
+            int SecondaryOffset = 0;
 
             int realAddressTableOffset = GetAddrTableOffsetBySymbolTable(filename) + 7;
             logger.Debug("Real address table offset: " + realAddressTableOffset.ToString("X8"));
@@ -948,6 +1582,20 @@ namespace T8SuitePro
             }
 
             AddNamesToSymbols(symbolCollection, allSymbolNames);
+
+            byte[] data = readdatafromfile(filename, 0, 0x100000);
+
+            DetermineBinaryOpenness(symbolCollection, data);
+
+            if (m_openbin == true)
+            {
+                SecondaryOffset = DetermineSecondaryOffset(data);
+                logger.Debug("Open bin secondary offset: " + SecondaryOffset.ToString("X6"));
+            }
+
+            TranslateAddressOffsets(symbolCollection, m_addressoffset, SecondaryOffset);
+
+            LoadPidTables(data, out pidCollection, out temCollection);
 
             CastProgressEvent("Idle", 0);
             return true;
@@ -1097,11 +1745,12 @@ namespace T8SuitePro
 
                             SymbolHelper sh = new SymbolHelper();
                             sh.Symbol_type = Convert.ToInt32(bytes.GetValue(7));
+                            sh.Symbol_extendedtype = Convert.ToInt32(bytes.GetValue(8));
                             sh.Varname = "Symbolnumber " + symbolCollection.Count.ToString();
-                            sh.Symbol_number = symbolCollection.Count;
-                            sh.Symbol_number_ECU = symbolCollection.Count;
-                            sh.Flash_start_address = internal_address;
-                            sh.Start_address = internal_address;
+                            // The name table symbol is skipped but we need the true, actual count for some stuff to function correctly (pid, tem, read symbol by index)
+                            sh.Symbol_number = symbolCollection.Count + 1;
+                            sh.Symbol_number_ECU = symbolCollection.Count + 1;
+                            sh.Internal_address = (int)internal_address;
                             sh.Length = symbollength;
                             sh.BitMask = bitmask;
 
@@ -1241,21 +1890,6 @@ namespace T8SuitePro
             // Secondly load the .xml file with same path and filename as the .bin file. 
             string xmlfile = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename) + ".xml");
             return TryToLoadAdditionalXMLSymbols(xmlfile, collection);
-        }
-
-        public static bool IsSoftwareOpen(SymbolCollection symbols)
-        {
-            foreach (SymbolHelper sh in symbols)
-            {
-                if (sh.Flash_start_address > FileT8.Length && sh.Length > 0x100 && sh.Length < 0x400)
-                {
-                    if (sh.SmartVarname == "BFuelCal.LambdaOneFacMap" || sh.SmartVarname == "KnkFuelCal.fi_MaxOffsetMap" || sh.SmartVarname == "AirCtrlCal.RegMap")
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
     }
 }

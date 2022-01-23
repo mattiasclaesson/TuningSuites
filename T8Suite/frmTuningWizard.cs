@@ -29,7 +29,12 @@ namespace T8SuitePro
                     T8Header t8header = new T8Header();
                     t8header.init(in_m_currentfile);
                     softwareVersion = t8header.SoftwareVersion.Trim();
-                    this.lblSoftwareVersion.Text = softwareVersion.Substring(0, 4);
+                    if (softwareVersion.Length > 4)
+                        this.lblSoftwareVersion.Text = softwareVersion.Substring(0, 4);
+                    else if (softwareVersion.Length > 0)
+                        this.lblSoftwareVersion.Text = softwareVersion;
+                    else
+                        this.lblSoftwareVersion.Text = "nAn!";
                 }
             }
             // List all compatible tuning packages
@@ -38,7 +43,6 @@ namespace T8SuitePro
                     this.listTuningActions.Items.Add(t);
             if (this.listTuningActions.ItemCount <= 0)
                 this.wizSelectActionPage.AllowNext = false;
-
         }
 
         private void wizardTuning_NextClick(object sender, DevExpress.XtraWizard.WizardCommandButtonClickEventArgs e)

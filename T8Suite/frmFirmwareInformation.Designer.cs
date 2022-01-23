@@ -368,6 +368,7 @@ namespace T8SuitePro
             this.labelControl2.Size = new System.Drawing.Size(82, 13);
             this.labelControl2.TabIndex = 2;
             this.labelControl2.Text = "Software version";
+            this.labelControl2.DoubleClick += new System.EventHandler(this.labelControl2_DoubleClick);
             // 
             // textEdit1
             // 

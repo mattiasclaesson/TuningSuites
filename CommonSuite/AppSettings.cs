@@ -1649,6 +1649,16 @@ namespace CommonSuite
             }
         }
 
+        public bool m_PreferDynamicLiveData = true;
+        public bool PreferDynamicLiveData
+        {
+            get { return m_PreferDynamicLiveData; }
+            set
+            {
+                m_PreferDynamicLiveData = value;
+                SaveRegistrySetting("PreferDynamicLiveData", m_PreferDynamicLiveData);
+            }
+        }
         #endregion
 
         private void SaveRegistrySetting(string key, string value)
@@ -1840,6 +1850,7 @@ namespace CommonSuite
                 saveSettings.SetValue("MapDetectionActive", m_MapDetectionActive);
                 saveSettings.SetValue("Showpopupmap", m_Showpopupmap);
                 saveSettings.SetValue("UseLegionBootloader", m_UseLegionBootloader);
+                saveSettings.SetValue("PreferDynamicLiveData", m_PreferDynamicLiveData);
             }
         }
 
@@ -2451,6 +2462,10 @@ namespace CommonSuite
                             else if (a == "UseLegionBootloader")
                             {
                                 m_UseLegionBootloader = Convert.ToBoolean(Settings.GetValue(a).ToString());
+                            }
+                            else if (a == "PreferDynamicLiveData")
+                            {
+                                m_PreferDynamicLiveData = Convert.ToBoolean(Settings.GetValue(a).ToString());
                             }
                         }
                         catch (Exception E)

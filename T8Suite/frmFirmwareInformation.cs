@@ -61,6 +61,7 @@ namespace T8SuitePro
             }
         }
 
+        // Software version
         public string SoftwareID
         {
             get
@@ -72,10 +73,32 @@ namespace T8SuitePro
             set
             {
                 textEdit2.Text = value;
-                textEdit2.Properties.MaxLength = value.Length;
+                if (_changeSoftwareVersion == false)
+                {
+                    textEdit2.Properties.MaxLength = value.Length;
+                }
             }
         }
+        
+        private bool _changeSoftwareVersion = false;
+        public bool ChangeSoftwareVersion
+        {
+            get { return _changeSoftwareVersion; }
+            set { _changeSoftwareVersion = value; }
+        }
 
+
+        private void labelControl2_DoubleClick(object sender, EventArgs e)
+        {
+            if (_changeSoftwareVersion == false)
+            {
+                // Let t8header handle this while saving. There could be some idiosyncrasies about lengths in different software versions that would just create a mess in here
+                textEdit2.Properties.MaxLength = 0;
+                _changeSoftwareVersion = true;
+                // On normal binaries this is not a problem but open ones usually don't have that string at all (ie it must be created)
+                frmInfoBox info = new frmInfoBox("Warning: T8Suite only has experimental support for replacing software version string");
+            }
+        }
 
         public string SerialNumber
         {
@@ -258,7 +281,6 @@ namespace T8SuitePro
         {
             EnableVinAndImmo();
             _changeVINAndImmo = true;
-
         }
 
         private void simpleButton2_Click(object sender, EventArgs e)
@@ -304,7 +326,5 @@ namespace T8SuitePro
             browser.SetData(dt);
             browser.ShowDialog();
         }
-
-
     }
 }

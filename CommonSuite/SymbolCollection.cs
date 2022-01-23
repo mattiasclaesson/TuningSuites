@@ -31,12 +31,25 @@ namespace CommonSuite
         public int Add(SymbolHelper value)
         {
             return (List.Add(value));
-
         }
 
         public int IndexOf(SymbolHelper value)
         {
             return (List.IndexOf(value));
+        }
+
+        public SymbolHelper SymbolWithIndex(int idx)
+        {
+            foreach (SymbolHelper sh in this)
+            {
+                if (idx == sh.Symbol_number_ECU) return sh;
+            }
+
+            SymbolHelper _sh = new SymbolHelper();
+            _sh.Varname = "Symbol not present in table";
+            _sh.Description = "Symbol not present in table";
+            _sh.Userdescription = "Symbol not present in table";
+            return _sh;
         }
 
         public void Insert(int index, SymbolHelper value)
