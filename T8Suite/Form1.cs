@@ -4331,6 +4331,16 @@ namespace T8SuitePro
             StartTableViewer("BFuelCal.Lambda1FacMap");
         }
 
+        private void btnBFuelCalmAirJerkTab_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.m_AirJerkTab");
+        }
+
+        private void btnBFuelCalJerkEnrichFacTab_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.JerkEnrichFacTab");
+        }
+
         private void btnMaxAirmassMapManual_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartTableViewer("BstKnkCal.MaxAirmass");
