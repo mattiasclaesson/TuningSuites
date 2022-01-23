@@ -2827,7 +2827,7 @@ namespace T8SuitePro
                             }
                         }
                     }
-                    // Roffe was here
+                    // New style of toggling buttons on toolbar
                     ShowBtnIfSymbolInBin("FFFuelCal.TempEnrichFacMAP", this.btnFFFuelCalTempEnrichFacMap);
                     ShowBtnIfSymbolInBin("BFuelCal.Lambda1FacMap", this.btnFuelCalLambda1FacMap);
                     ShowBtnIfSymbolInBin("BFuelCal.m_AirJerkTab", this.btnBFuelCalmAirJerkTab);
