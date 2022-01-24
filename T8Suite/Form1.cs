@@ -2728,6 +2728,21 @@ namespace T8SuitePro
             SetupDocking();
             LoadMyMaps();
         }
+
+        private void ShowBtnIfSymbolInBin(string symbolname, DevExpress.XtraBars.BarButtonItem btn )
+        {
+            SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
+            foreach (SymbolHelper sh in sc)
+            {
+                if (sh.SmartVarname == symbolname)
+                {
+                    btn.Visibility = BarItemVisibility.Always;
+                    return;
+                }
+            }
+            btn.Visibility = BarItemVisibility.Never;
+        }
+
         private void DynamicTuningMenu()
         {
             //
@@ -2808,11 +2823,15 @@ namespace T8SuitePro
                             {
                                 this.btnFlexFuelLimiter.Visibility = BarItemVisibility.Always;
                                 this.barButtonItem15.Visibility = BarItemVisibility.Always;
-                                this.barButtonItem16.Visibility = BarItemVisibility.Always;
+                                this.barButtonItem16.Visibility = BarItemVisibility.Always;                                
                             }
-
                         }
                     }
+                    // New style of toggling buttons on toolbar
+                    ShowBtnIfSymbolInBin("FFFuelCal.TempEnrichFacMAP", this.btnFFFuelCalTempEnrichFacMap);
+                    ShowBtnIfSymbolInBin("BFuelCal.Lambda1FacMap", this.btnFuelCalLambda1FacMap);
+                    ShowBtnIfSymbolInBin("BFuelCal.m_AirJerkTab", this.btnBFuelCalmAirJerkTab);
+                    ShowBtnIfSymbolInBin("BFuelCal.JerkEnrichFacTab", this.btnBFuelCalJerkEnrichFacTab);
                 }
             }
         }
@@ -4302,6 +4321,41 @@ namespace T8SuitePro
         private void btnFuelKnockMap_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartTableViewer("KnkFuelCal.EnrichmentMap");
+        }
+
+        private void btnBFuelCalTempEnrichFacMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.TempEnrichFacMap");
+        }
+
+        private void btnFFFuelCalTempEnrichFacMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("FFFuelCal.TempEnrichFacMAP");
+        }
+
+        private void btnInjCorrCalInjectorConst_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("InjCorrCal.InjectorConst");
+        }
+
+        private void btnInjCorrCalBattCorrTab_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("InjCorrCal.BattCorrTab");
+        }
+
+        private void btnFuelCalLambda1FacMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.Lambda1FacMap");
+        }
+
+        private void btnBFuelCalmAirJerkTab_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.m_AirJerkTab");
+        }
+
+        private void btnBFuelCalJerkEnrichFacTab_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("BFuelCal.JerkEnrichFacTab");
         }
 
         private void btnMaxAirmassMapManual_ItemClick(object sender, ItemClickEventArgs e)
