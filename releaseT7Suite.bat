@@ -16,9 +16,5 @@ xcopy SetupT7Suite\Release\setup.exe z:\T7Suite\%T7.version%\
 echo ^<?xml version="1.0" encoding="utf-8"?^>  > z:\T7Suite\version.xml
 echo ^<t7suitepro version="%T7.version%"/^> >> z:\T7Suite\version.xml
 
-echo ----------------------------------------------------
-git changes
-echo ----------------------------------------------------
-
 git tag T7suite_v%T7.version%
 git tag SetupT7suite_v%SetupT7Suite.version%

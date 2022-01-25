@@ -16,9 +16,5 @@ xcopy SetupT8SuitePro\Release\setup.exe z:\T8Suite\%T8.version%\
 echo ^<?xml version="1.0" encoding="utf-8"?^>  > z:\T8Suite\version.xml
 echo ^<t8suitepro version="%T8.version%"/^> >> z:\T8Suite\version.xml
 
-echo ----------------------------------------------------
-git changes
-echo ----------------------------------------------------
-
 git tag T8suite_v%T8.version%
 git tag SetupT8suite_v%SetupT8Suite.version%

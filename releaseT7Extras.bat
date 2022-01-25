@@ -2,7 +2,7 @@ call SetupT7Extras\version.bat
 devenv T7.sln /Rebuild Release /project SetupT7Extras
 
 pushd SetupT7Extras\Release\
-"C:\Program Files (x86)\hashutils-1.3.0-redist\bin.x86-32\md5sum.exe" T7Extras.msi >> T7Extras.md5
+"C:\md5sum.exe" T7Extras.msi >> T7Extras.md5
 popd
 
 mkdir z:\T7Extras\%T7Extras.version%

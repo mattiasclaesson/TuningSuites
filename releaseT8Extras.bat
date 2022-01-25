@@ -2,7 +2,7 @@ call SetupT8Extras\version.bat
 devenv T8.sln /Rebuild Release /project SetupT8Extras
 
 pushd SetupT8Extras\Release\
-"C:\Program Files (x86)\hashutils-1.3.0-redist\bin.x86-32\md5sum.exe" T8Extras.msi >> T8Extras.md5
+"C:\md5sum.exe" T8Extras.msi >> T8Extras.md5
 popd
 
 mkdir z:\T8Extras\%T8Extras.version%
