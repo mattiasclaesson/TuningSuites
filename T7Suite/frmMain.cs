@@ -7674,7 +7674,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                 // Should we start a viewer in realtime mode or in offline mode?
                                 if (m_RealtimeConnectedToECU)
                                 {
-                                    ShowRealtimeMapFromECU(sh.SmartVarname);
+                                    // ShowRealtimeMapFromECU(sh.SmartVarname);
+                                    StartTableViewer(ECUMode.Auto);
                                 }
                                 else
                                 {
@@ -7688,7 +7689,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
                                     logger.Debug("Retrieving stuff from SRAM at address: " + sh.Flash_start_address.ToString("X6"));
                                     if (RealtimeCheckAndConnect())
                                     {
-                                        ShowRealtimeMapFromECU(sh.SmartVarname);
+                                        // ShowRealtimeMapFromECU(sh.SmartVarname);
+                                        StartTableViewer(ECUMode.Auto);
                                     }
                                 }
                                 else
