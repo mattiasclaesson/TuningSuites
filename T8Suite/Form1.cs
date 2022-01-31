@@ -7822,9 +7822,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 int foundS1 = 0;
                 int foundS2 = 0;
                 byte[] bSearch = new byte[] {};
+                bool[] searchMask = new bool[] {};
                 byte[] bReplace = new byte[] {};
                 byte[][][] myCheckHeadAndTail = new byte[][][] {};
                 List<byte[][]> headTailList = new List<byte[][]>();
+                string[] replaceString = new string[] {};
 
                 // Validate input
                 int count_in = 0;
@@ -7847,7 +7849,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if ((count_in != 2 || count_in != count_out || count_in_br != 1 || count_in_br != count_out_br || count_st != 2 || count_cm < 2))
                     {
                         _name = "FAIL IN REP VALIDATION: " + searchReplace.Substring(0, 6) + "...";
-                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        srp = new SearchReplacePattern(bSearch, searchMask, bReplace, replaceString, myCheckHeadAndTail);
                         return;
                     }
                 }
@@ -7856,7 +7858,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     if ((count_in < 6 || count_in != count_out || count_st != 2 || count_cm < 4))
                     {
                         _name = "FAIL IN SnR VALIDATION: " + searchReplace.Substring(0, 6) + "...";
-                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        srp = new SearchReplacePattern(bSearch, searchMask, bReplace, replaceString, myCheckHeadAndTail);
                         return;
                     }
                 }
@@ -7895,7 +7897,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         bSearch = new byte[] { };
                         bReplace = new byte[] { };
                         _name = _name + " failing for unknown reason";
-                        srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                        srp = new SearchReplacePattern(bSearch, searchMask, bReplace, replaceString, myCheckHeadAndTail);
                         return;
                     }
                 }
@@ -7905,9 +7907,17 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     replaceSymbolsWithBytes(ref searchString);
 
                     bSearch = new byte[searchString.Length];
+                    searchMask = new bool[searchString.Length];
                     for (int i = 0; i < searchString.Length; i++)
                     {
-                        bSearch[i] = Convert.ToByte(searchString[i].Trim(), 16);
+                        if (searchString[i].Contains("?"))
+                        {
+                            searchMask[i] = true;
+                        }
+                        else
+                        {
+                            bSearch[i] = Convert.ToByte(searchString[i].Trim(), 16);
+                        }
                     }
                 }
                 inputStr = inputStr.Remove(0, foundS2 + 2);
@@ -7915,13 +7925,28 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 // Extract replace pattern
                 foundS1 = inputStr.IndexOf('{') + 1;
                 foundS2 = inputStr.IndexOf('}');
-                string [] replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
+                replaceString = inputStr.Substring(foundS1, foundS2 - foundS1).Split(',');
                 replaceSymbolsWithBytes(ref replaceString);
 
                 bReplace = new byte[replaceString.Length];
                 for (int i = 0; i < replaceString.Length; i++)
                 {
-                    bReplace[i] = Convert.ToByte(replaceString[i].Trim(), 16);
+                    if (!replaceString[i].Contains("@"))
+                    {
+                        bReplace[i] = Convert.ToByte(replaceString[i].Trim(), 16);
+                    }
+                    else
+                    {
+                        int index = Convert.ToInt32(replaceString[i].Substring(1).Trim());
+                        if (index < 0 || index >= replaceString.Length)
+                        {
+                            bSearch = new byte[] { };
+                            bReplace = new byte[] { };
+                            _name = _name + " failing due to " + replaceString[i] + " index out of bounds";
+                            srp = new SearchReplacePattern(bSearch, searchMask, bReplace, replaceString, myCheckHeadAndTail);
+                            return;
+                        }
+                    }
                 }
 
                 // Check that the search and replace match in length
@@ -7930,7 +7955,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     bSearch = new byte[] {};
                     bReplace = new byte[] {};
                     _name = _name + " failing due to mismatch in length";
-                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                    srp = new SearchReplacePattern(bSearch, searchMask, bReplace, replaceString, myCheckHeadAndTail);
                     return;
                 }
 
@@ -8053,7 +8078,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     {
                         myCheckHeadAndTail[i] = headTailList[i];
                     }
-                    srp = new SearchReplacePattern(bSearch, bReplace, myCheckHeadAndTail);
+                    srp = new SearchReplacePattern(bSearch, searchMask, bReplace, replaceString, myCheckHeadAndTail);
                 }
                 else
                 {
@@ -8325,13 +8350,17 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
         {
             public int ReplaceAddress;
             public byte[] SearchPattern;
+            public bool[] SearchMask;
             public byte[] ReplaceWith;
+            public string[] ReplaceString;
             public byte[][][] CheckHeadAndTail; //(Head XXYY and Tail AABB) or (Head ZZWW and Tail CCDD) or ...
-            public SearchReplacePattern(byte[] _SearchPattern, byte[] _ReplaceWith, byte[][][] _CheckHeadAndTail)
+            public SearchReplacePattern(byte[] _SearchPattern, bool[] _SearchMask, byte[] _ReplaceWith, string[] _ReplaceString, byte[][][] _CheckHeadAndTail)
             {
                 ReplaceAddress = 0;
                 SearchPattern = _SearchPattern;
+                SearchMask = _SearchMask;
                 ReplaceWith = _ReplaceWith;
+                ReplaceString = _ReplaceString;
                 CheckHeadAndTail = _CheckHeadAndTail;
             }
 
@@ -8370,7 +8399,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                 bool match = true;
                 for (int k = 0; k < srp.SearchPattern.Length; k++)
                 {
-                    if (data[i + k] != srp.SearchPattern[k])
+                    if (data[i + k] != srp.SearchPattern[k] && !srp.SearchMask[k])
                     {
                         match = false;
                         break;
@@ -8412,15 +8441,30 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                             }
                         }
 
-                        if (match && headmatch && tailmatch)
+                        if (headmatch && tailmatch)
                         {
-                            // Do the actual replacement
-                            matches++;
+                            // Store
+                            byte[] storeFound = new byte[srp.SearchPattern.Length];
                             for (int j = 0; j < srp.SearchPattern.Length; j++)
                             {
-                                data[i + j] = srp.ReplaceWith[j];
-
+                                storeFound[j] = data[i + j];
                             }
+
+                            // Do the actual replacement
+                            for (int j = 0; j < srp.SearchPattern.Length; j++)
+                            {
+                                // @ replace a byte with stored search result by providing the index to the desired byte
+                                if (srp.ReplaceString[j].Contains("@"))
+                                {
+                                    int index = Convert.ToInt32(srp.ReplaceString[j].Substring(1).Trim());
+                                    data[i + j] = storeFound[index];
+                                }
+                                else
+                                {
+                                    data[i + j] = srp.ReplaceWith[j];
+                                }
+                            }
+                            matches++;
                             break;
                         }
                     }
