@@ -106,26 +106,12 @@ namespace T8SuitePro
         {
             if (IsHexMode)
             {
-                
                 gridColumn2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gridColumn2.DisplayFormat.FormatString = "X6";
                 gridColumn2.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
                 gridColumn3.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gridColumn3.DisplayFormat.FormatString = "X6";
                 gridColumn3.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
-                gridColumn4.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn4.DisplayFormat.FormatString = "X6";
-                gridColumn4.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
-                gridColumn5.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn5.DisplayFormat.FormatString = "X6";
-                gridColumn5.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
-                gridColumn12.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn12.DisplayFormat.FormatString = "X6";
-                gridColumn12.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
-                gridColumn13.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn13.DisplayFormat.FormatString = "X6";
-                gridColumn13.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
-
             }
             else
             {
@@ -135,21 +121,22 @@ namespace T8SuitePro
                 gridColumn3.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gridColumn3.DisplayFormat.FormatString = "";
                 gridColumn3.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
-                gridColumn4.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn4.DisplayFormat.FormatString = "";
-                gridColumn4.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
-                gridColumn5.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn5.DisplayFormat.FormatString = "";
-                gridColumn5.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
-                gridColumn12.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn12.DisplayFormat.FormatString = "";
-                gridColumn12.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
-                gridColumn13.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridColumn13.DisplayFormat.FormatString = "";
-                gridColumn13.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
             }
-        }
 
+            // Lengths and counts are always easier to read in decimal mode
+            gridColumn4.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            gridColumn4.DisplayFormat.FormatString = "";
+            gridColumn4.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
+            gridColumn5.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            gridColumn5.DisplayFormat.FormatString = "";
+            gridColumn5.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
+            gridColumn12.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            gridColumn12.DisplayFormat.FormatString = "";
+            gridColumn12.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
+            gridColumn13.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            gridColumn13.DisplayFormat.FormatString = "";
+            gridColumn13.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.Value;
+        }
 
         public CompareResults()
         {

@@ -1054,6 +1054,7 @@ namespace T8SuitePro
         /// <param name="sOffset">Secondary offset</param>
         static private void TranslateAddressOffsets(SymbolCollection symbols, int PriOffset, int SecOffset)
         {
+            logger.Debug("Offset: " + PriOffset.ToString("X6"));
             try
             {
                 if (symbols != null)
@@ -1078,9 +1079,9 @@ namespace T8SuitePro
                             // SRAM address
                             sh.Start_address = sh.Internal_address;
 
-                            // NVDM symbols on open binaries are tagged with 0xff.
-                            // The type mask should ideally be checked some more since some combinations are invalid
-                            if (sh.Symbol_type != 0xff && (sh.Symbol_type & 0x22) > 0)
+                            // NVDM symbols are tagged with 0xff.
+                            // Adaption symbols are sometimes tagged as being cal (which is definitely not true) so these must be masked off
+                            if (sh.Symbol_type != 0xff && (sh.Symbol_type & 0x22) == 0x02)
                             {
                                 int actAddress = 0;
 
@@ -1112,7 +1113,7 @@ namespace T8SuitePro
                                 }
 
                                 // Real address must be within range
-                                if ((actAddress + sh.Length) <= 0x100000)
+                                if ((actAddress + sh.Length) <= 0x100000 && actAddress > 0)
                                 {
                                     sh.Flash_start_address = actAddress;
                                 }

@@ -2245,7 +2245,7 @@ namespace T8SuitePro
                                     logger.Debug("StartTableViewer: Tried wrong open");
                                 }
 
-                                logger.Debug("mapdata len: " + mapdata.Length.ToString("X4"));
+                                logger.Debug("mapdata len: " + mapdata.Length.ToString());
 
                                 tabdet.Map_content = mapdata;
 
@@ -2729,7 +2729,7 @@ namespace T8SuitePro
             LoadMyMaps();
         }
 
-        private void ShowBtnIfSymbolInBin(string symbolname, DevExpress.XtraBars.BarButtonItem btn )
+        private void ShowBtnIfSymbolInBin(string symbolname, DevExpress.XtraBars.BarButtonItem btn)
         {
             SymbolCollection sc = (SymbolCollection)gridControlSymbols.DataSource;
             foreach (SymbolHelper sh in sc)
@@ -3329,7 +3329,6 @@ namespace T8SuitePro
 
                         dockPanel.Width = 700;
 
-
                         SymbolCollection compare_symbols = new SymbolCollection();
 
                         logger.Debug("Opening compare file");
@@ -3358,6 +3357,9 @@ namespace T8SuitePro
                         dt.Columns.Add("Userdescription");
                         dt.Columns.Add("MissingInOriFile", Type.GetType("System.Boolean"));
                         dt.Columns.Add("MissingInCompareFile", Type.GetType("System.Boolean"));
+
+                        compareResults.ShowAddressesInHex = m_appSettings.ShowAddressesInHex;
+                        compareResults.SetFilterMode(m_appSettings.ShowAddressesInHex);
 
                         double diffperc = 0;
                         int diffabs = 0;
@@ -12701,7 +12703,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                         tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                         tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-
                         tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
 
                         tabdet.IsRAMViewer = true;
@@ -12908,7 +12909,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
 
         void tabdet_onReadFromSRAM(object sender, IMapViewer.ReadFromSRAMEventArgs e)
         {
-            // MessageBox.Show("On read sram");
             // read data from SRAM through CAN bus and refresh the viewer with it
             bool writepossible = false;
             try
@@ -12930,6 +12930,7 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                 {
                                     try
                                     {
+                                        IMapViewer tabdet = (IMapViewer)sender;
                                         byte[] result = ReadMapFromSRAM(shs);
                                         if (result == null)
                                         {
@@ -12950,9 +12951,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                         {
                                                             vwr.Map_content = result;
                                                             GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
+                                                            if (tabdet.X_axisvalues.Length > 1) cols = tabdet.X_axisvalues.Length;
+                                                            if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
                                                             vwr.IsRAMViewer = false;
                                                             vwr.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                            if ((m_RealtimeConnectedToECU) /*|| m_appSettings.DebugMode*/)
+                                                            if (m_RealtimeConnectedToECU)
                                                             {
                                                                 vwr.OnlineMode = true;
                                                                 vwr.IsRAMViewer = true;
@@ -12975,9 +12978,11 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                                 {
                                                                     vwr2.Map_content = result;
                                                                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
+                                                                    if (tabdet.X_axisvalues.Length > 1) cols = tabdet.X_axisvalues.Length;
+                                                                    if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
                                                                     vwr2.IsRAMViewer = false;
                                                                     vwr2.ShowTable(cols, isSixteenBitTable(e.Mapname));
-                                                                    if ((m_RealtimeConnectedToECU) /*|| m_appSettings.DebugMode*/)
+                                                                    if (m_RealtimeConnectedToECU)
                                                                     {
                                                                         vwr2.OnlineMode = true;
                                                                         vwr2.IsRAMViewer = true;
@@ -13002,6 +13007,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                                                                 {
                                                                     vwr3.Map_content = result;
                                                                     GetTableMatrixWitdhByName(m_currentfile, m_symbols, e.Mapname, out cols, out rows);
+                                                                    if (tabdet.X_axisvalues.Length > 1) cols = tabdet.X_axisvalues.Length;
+                                                                    if (tabdet.Y_axisvalues.Length > 1) rows = tabdet.Y_axisvalues.Length;
                                                                     vwr3.IsRAMViewer = false;
                                                                     vwr3.ShowTable(cols, isSixteenBitTable(e.Mapname));
                                                                     if ((m_RealtimeConnectedToECU) /*|| m_appSettings.DebugMode*/)
@@ -13045,8 +13052,6 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
             // Why? Let the read function handle that
             m_prohibitReading = false;
         }
-
-
 
         void tabdet_onWriteToSRAM(object sender, IMapViewer.WriteToSRAMEventArgs e)
         {
