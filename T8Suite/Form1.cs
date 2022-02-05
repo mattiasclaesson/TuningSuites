@@ -2011,10 +2011,8 @@ namespace T8SuitePro
                     }
 
                     SymbolHelper sh = (SymbolHelper)gridViewSymbols.GetRow((int)selrows.GetValue(0));
-                    if (sh.Flash_start_address == 0 && sh.Start_address == 0)
+                    if (sh == null || (sh.Flash_start_address == 0 && sh.Start_address == 0))
                         return;
-
-                    if (sh == null) return;
 
                     if (sh.BitMask > 0)
                     {
@@ -2242,7 +2240,7 @@ namespace T8SuitePro
                                 }
                                 else
                                 {
-                                    logger.Debug("StartTableViewer: Tried wrong open");
+                                    // logger.Debug("StartTableViewer: Tried wrong open");
                                 }
 
                                 logger.Debug("mapdata len: " + mapdata.Length.ToString());
@@ -2272,16 +2270,22 @@ namespace T8SuitePro
                                 tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
 
                                 tabdet.Dock = DockStyle.Fill;
-                                tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+
+                                if (address > 0 && address < 0x100000)
+                                {
+                                    tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+                                    tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
+                                }
+
+                                if (sramaddress >= 0x100000)
+                                {
+                                    tabdet.onWriteToSRAM += new IMapViewer.WriteDataToSRAM(tabdet_onWriteToSRAM);
+                                    tabdet.onReadFromSRAM += new IMapViewer.ReadDataFromSRAM(tabdet_onReadFromSRAM);
+                                }
+
                                 tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
-
-                                tabdet.onWriteToSRAM += new IMapViewer.WriteDataToSRAM(tabdet_onWriteToSRAM);
-                                tabdet.onReadFromSRAM += new IMapViewer.ReadDataFromSRAM(tabdet_onReadFromSRAM);
-
-
                                 tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                                 tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                                tabdet.onSymbolRead += new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
                                 tabdet.onAxisEditorRequested += new IMapViewer.AxisEditorRequested(tabdet_onAxisEditorRequested);
 
                                 //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
