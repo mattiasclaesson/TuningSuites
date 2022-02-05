@@ -2838,7 +2838,7 @@ namespace T8SuitePro
 
         private void StartTableViewer(string symbolname)
         {
-            if (GetSymbolAddress(m_symbols, symbolname) > 0)
+            if (GetSymbolAddress(m_symbols, symbolname) > 0 || GetSymbolAddressSRAM(m_symbols, symbolname) >= 0x100000)
             {
                 gridViewSymbols.ActiveFilter.Clear(); // clear filter
                 gridViewSymbols.ApplyFindFilter("");
