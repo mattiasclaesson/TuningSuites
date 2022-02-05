@@ -1054,7 +1054,6 @@ namespace T8SuitePro
         /// <param name="sOffset">Secondary offset</param>
         static private void TranslateAddressOffsets(SymbolCollection symbols, int PriOffset, int SecOffset)
         {
-            logger.Debug("Offset: " + PriOffset.ToString("X6"));
             try
             {
                 if (symbols != null)
