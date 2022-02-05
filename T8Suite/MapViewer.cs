@@ -619,6 +619,10 @@ namespace T8SuitePro
             lblXaxis.Text = m_x_axis_name;
             lblYaxis.Text = m_y_axis_name;
             lblZaxis.Text = m_z_axis_name;
+            simpleButton2.Enabled = (onSymbolSave != null); // Save to file
+            simpleButton10.Enabled = (onSymbolRead != null); // Read from file
+            simpleButton8.Enabled = (onWriteToSRAM != null); // Save to ECU
+            simpleButton9.Enabled = (onReadFromSRAM != null); // Read from ECU
             if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 lblFlashAddress.Text = "0x" + m_map_address.ToString("X6");
@@ -1213,7 +1217,7 @@ namespace T8SuitePro
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            if (!m_isRAMViewer)
+            if (!m_isRAMViewer && simpleButton2.Enabled)
             {
                 if (m_datasourceMutated)
                 {

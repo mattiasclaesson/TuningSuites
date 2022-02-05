@@ -847,8 +847,11 @@ namespace T8SuitePro
         public override void ShowTable(int tablewidth, bool issixteenbits)
         {
             double m_realValue;
-
             m_MaxValueInTable = 0;
+            simpleButton2.Enabled = (onSymbolSave != null); // Save to file
+            simpleButton10.Enabled = (onSymbolRead != null); // Read from file
+            simpleButton8.Enabled = (onWriteToSRAM != null); // Save to ECU
+            simpleButton9.Enabled = (onReadFromSRAM != null); // Read from ECU
             if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 int lenvals = m_map_length;
@@ -1591,7 +1594,7 @@ namespace T8SuitePro
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            if (!m_isRAMViewer)
+            if (!m_isRAMViewer && simpleButton2.Enabled)
             {
                 if (m_datasourceMutated)
                 {
