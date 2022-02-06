@@ -843,12 +843,14 @@ namespace T8SuitePro
             return retval;
         }
 
-
         public override void ShowTable(int tablewidth, bool issixteenbits)
         {
             double m_realValue;
-
             m_MaxValueInTable = 0;
+            simpleButton2.Enabled = (onSymbolSave != null); // Save to file
+            simpleButton10.Enabled = (onSymbolRead != null); // Read from file
+            simpleButton8.Enabled = (onWriteToSRAM != null); // Save to ECU
+            simpleButton9.Enabled = (onReadFromSRAM != null); // Read from ECU
             if (m_viewtype == SuiteViewType.Hexadecimal)
             {
                 int lenvals = m_map_length;
@@ -859,7 +861,6 @@ namespace T8SuitePro
                 int lenvals = m_map_length;
                 if (issixteenbits) lenvals /= 2;
             }
-
 
             m_TableWidth = tablewidth;
             m_issixteenbit = issixteenbits;
@@ -1591,7 +1592,7 @@ namespace T8SuitePro
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
-            if (!m_isRAMViewer)
+            if (!m_isRAMViewer && simpleButton2.Enabled)
             {
                 if (m_datasourceMutated)
                 {
@@ -1819,7 +1820,7 @@ namespace T8SuitePro
         private void gridView1_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
         {
             m_datasourceMutated = true;
-            simpleButton2.Enabled = true;
+            simpleButton2.Enabled = (onSymbolSave != null);
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
@@ -2119,7 +2120,7 @@ namespace T8SuitePro
         {
             
             m_datasourceMutated = true;
-            simpleButton2.Enabled = true;
+            simpleButton2.Enabled = (onSymbolSave != null);
             if (nChartControl1.Visible)
             {
                 StartSurfaceChartUpdateTimer();
