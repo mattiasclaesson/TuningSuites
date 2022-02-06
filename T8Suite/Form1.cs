@@ -2831,6 +2831,10 @@ namespace T8SuitePro
                     ShowBtnIfSymbolInBin("BFuelCal.Lambda1FacMap", this.btnFuelCalLambda1FacMap);
                     ShowBtnIfSymbolInBin("BFuelCal.m_AirJerkTab", this.btnBFuelCalmAirJerkTab);
                     ShowBtnIfSymbolInBin("BFuelCal.JerkEnrichFacTab", this.btnBFuelCalJerkEnrichFacTab);
+                    ShowBtnIfSymbolInBin("IgnAbsCal.fi_NormalGasMAP", this.btnIgnAbsCalFiNormalGasMap);
+                    ShowBtnIfSymbolInBin("IgnAbsCal.fi_IgnMBTGasMAP", this.btnIgnAbsCalFiIgnMBTGasMap);
+                    ShowBtnIfSymbolInBin("TrqMastCal.Trq_NominalGasMap", this.btnTrqMastCalTrqNominalGasMap);
+                    ShowBtnIfSymbolInBin("TrqMastCal.m_AirTorqGasMap", this.btnTrqMastCalmAirTorqGasMap);
                 }
             }
         }
@@ -4351,6 +4355,26 @@ namespace T8SuitePro
         private void btnBFuelCalmAirJerkTab_ItemClick(object sender, ItemClickEventArgs e)
         {
             StartTableViewer("BFuelCal.m_AirJerkTab");
+        }
+
+        private void btnIgnAbsCalFiNormalGasMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("IgnAbsCal.fi_NormalGasMAP");
+        }
+
+        private void btnIgnAbsCalFiIgnMBTGasMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("IgnAbsCal.fi_IgnMBTGasMAP");
+        }
+
+        private void btnTrqMastCalTrqNominalGasMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("TrqMastCal.Trq_NominalGasMap");
+        }
+
+        private void btnTrqMastCalmAirTorqGasMap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartTableViewer("TrqMastCal.m_AirTorqGasMap");
         }
 
         private void btnBFuelCalJerkEnrichFacTab_ItemClick(object sender, ItemClickEventArgs e)
