@@ -2267,10 +2267,6 @@ namespace T8SuitePro
                                     }
                                 }
 
-                                tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
-
-                                tabdet.Dock = DockStyle.Fill;
-
                                 if (address > 0 && address < 0x100000)
                                 {
                                     tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
@@ -2287,7 +2283,6 @@ namespace T8SuitePro
                                 tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                                 tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
                                 tabdet.onAxisEditorRequested += new IMapViewer.AxisEditorRequested(tabdet_onAxisEditorRequested);
-
                                 //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
                                 //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
                                 //tabdet.onSelectionChanged += new MapViewer.SelectionChanged(tabdet_onSelectionChanged);
@@ -2296,6 +2291,8 @@ namespace T8SuitePro
                                 //tabdet.onGraphSelectionChanged += new MapViewer.GraphSelectionChanged(tabdet_onGraphSelectionChanged);
                                 //tabdet.onViewTypeChanged += new MapViewer.ViewTypeChanged(tabdet_onViewTypeChanged);
                                 //tabdet.onAxisEditorRequested += new MapViewer.AxisEditorRequested(tabdet_onAxisEditorRequested);
+                                tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
+                                tabdet.Dock = DockStyle.Fill;
 
                                 bool isDocked = false;
                                 dockPanel.Text = "Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(m_currentfile) + "]";
@@ -2446,7 +2443,6 @@ namespace T8SuitePro
 
             if (address != 0)
             {
-
                 while (address > m_currentfile_size) address -= m_currentfile_size;
                 tabdet.Map_address = address;
                 tabdet.Map_sramaddress = sramaddress;
@@ -2459,7 +2455,6 @@ namespace T8SuitePro
                 tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
                 tabdet.ShowTable(tablewidth, isSixteenBitTable(tabdet.Map_name));
             }
-
         }
 
         private void StartBitMaskViewer(SymbolHelper sh)
@@ -2957,13 +2952,13 @@ namespace T8SuitePro
                             tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                             tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                             tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
-                            tabdet.Dock = DockStyle.Fill;
-                            tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+                            // tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
+                            // tabdet.onSymbolRead +=new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
                             tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
                             tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                             tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-                            //tabdet.onSymbolRead +=new IMapViewer.NotifyReadSymbol(tabdet_onSymbolRead);
+                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
+                            tabdet.Dock = DockStyle.Fill;
                             //dockPanel.DockAsTab(dockPanel1);
                             dockPanel.Text = "Symbol: " + SymbolName + " [" + Path.GetFileName(Filename) + "]";
                             //dockPanel.DockTo(dockManager1, DevExpress.XtraBars.Docking.DockingStyle.Right, 0);
@@ -3167,13 +3162,12 @@ namespace T8SuitePro
                             tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                             tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                             tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
-                            tabdet.Dock = DockStyle.Fill;
                             tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
                             tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
                             tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                             tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
-
+                            tabdet.ShowTable(columns, isSixteenBitTable(SymbolName));
+                            tabdet.Dock = DockStyle.Fill;
                             //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
                             //tabdet.onSliderMove += new MapViewer.NotifySliderMove(tabdet_onSliderMove);
                             //tabdet.onSelectionChanged += new MapViewer.SelectionChanged(tabdet_onSelectionChanged);
@@ -8788,11 +8782,10 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                     tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                     tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                    tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
 
                     tabdet.IsRAMViewer = true;
                     tabdet.OnlineMode = true;
-                    tabdet.Dock = DockStyle.Fill;
+
                     //tabdet.onSymbolSave += new MapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
                     tabdet.onSymbolSave += new IMapViewer.NotifySaveSymbol(tuningpackage_onSymbolSave);
                     tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
@@ -8803,6 +8796,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                     tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
                     //dockPanel.DockAsTab(dockPanel1);
                     dockPanel.Text = "Tuning package symbol: " + tabdet.Map_name + " [" + Path.GetFileName(filename) + "]";
+                    tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
+                    tabdet.Dock = DockStyle.Fill;
+
                     bool isDocked = false;
                     if (m_appSettings.AutoDockSameSymbol)
                     {
@@ -12707,11 +12703,9 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         tabdet.Correction_factor = GetMapCorrectionFactor(tabdet.Map_name);
                         tabdet.Correction_offset = GetMapCorrectionOffset(tabdet.Map_name);
                         tabdet.IsUpsideDown = GetMapUpsideDown(tabdet.Map_name);
-                        tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
 
                         tabdet.IsRAMViewer = true;
                         tabdet.OnlineMode = true;
-                        tabdet.Dock = DockStyle.Fill;
                         //tabdet.onSymbolSave += new MapViewer.NotifySaveSymbol(tabdet_onSymbolSave);
                         tabdet.onClose += new IMapViewer.ViewerClose(tabdet_onClose);
                         //tabdet.onAxisLock += new MapViewer.NotifyAxisLock(tabdet_onAxisLock);
@@ -12726,6 +12720,8 @@ TrqMastCal.m_AirTorqMap -> 325 Nm = 1300 mg/c             * */
                         tabdet.onSelectionChanged += new IMapViewer.SelectionChanged(tabdet_onSelectionChanged);
                         tabdet.onSurfaceGraphViewChangedEx += new IMapViewer.SurfaceGraphViewChangedEx(mv_onSurfaceGraphViewChangedEx);
                         tabdet.onSurfaceGraphViewChanged += new IMapViewer.SurfaceGraphViewChanged(mv_onSurfaceGraphViewChanged);
+                        tabdet.ShowTable(columns, isSixteenBitTable(tabdet.Map_name));
+                        tabdet.Dock = DockStyle.Fill;
 
                         dockPanel.Text = "SRAM Symbol: " + tabdet.Map_name + " [" + Path.GetFileName(filename) + "]";
                         bool isDocked = false;

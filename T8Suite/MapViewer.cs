@@ -1445,7 +1445,7 @@ namespace T8SuitePro
         private void gridView1_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
         {
             m_datasourceMutated = true;
-            simpleButton2.Enabled = true;
+            simpleButton2.Enabled = (onSymbolSave != null);
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
@@ -1743,9 +1743,9 @@ namespace T8SuitePro
 
         private void gridView1_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
-            
             m_datasourceMutated = true;
-            simpleButton2.Enabled = true;
+            simpleButton2.Enabled = (onSymbolSave != null);
+
             if (surfaceGraphViewer1.Visible)
             {
                 StartSurfaceChartUpdateTimer();

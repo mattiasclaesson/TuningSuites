@@ -843,7 +843,6 @@ namespace T8SuitePro
             return retval;
         }
 
-
         public override void ShowTable(int tablewidth, bool issixteenbits)
         {
             double m_realValue;
@@ -862,7 +861,6 @@ namespace T8SuitePro
                 int lenvals = m_map_length;
                 if (issixteenbits) lenvals /= 2;
             }
-
 
             m_TableWidth = tablewidth;
             m_issixteenbit = issixteenbits;
@@ -1822,7 +1820,7 @@ namespace T8SuitePro
         private void gridView1_RowUpdated(object sender, DevExpress.XtraGrid.Views.Base.RowObjectEventArgs e)
         {
             m_datasourceMutated = true;
-            simpleButton2.Enabled = true;
+            simpleButton2.Enabled = (onSymbolSave != null);
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
@@ -2122,7 +2120,7 @@ namespace T8SuitePro
         {
             
             m_datasourceMutated = true;
-            simpleButton2.Enabled = true;
+            simpleButton2.Enabled = (onSymbolSave != null);
             if (nChartControl1.Visible)
             {
                 StartSurfaceChartUpdateTimer();
