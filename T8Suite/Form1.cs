@@ -723,8 +723,17 @@ namespace T8SuitePro
 
         private void SetDefaultFilters()
         {
-            ColumnFilterInfo fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000' AND [Flash_start_address] < 1048576", "Only symbols within binary");
-            ColumnFilterInfo lvefltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000' AND [Start_address] > 1048575", "Only live-tuneable symbols");
+            ColumnFilterInfo fltr, lvefltr;
+            if (m_appSettings.ShowAddressesInHex)
+            {
+                fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000' AND [Flash_start_address] < 100000", "Only symbols within binary");
+                lvefltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Length] <> '000000' AND [Start_address] >= 100000", "Only live-tuneable symbols");
+            }
+            else
+            {
+                fltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Flash_start_address] LIKE '0_____' AND [Length] <> '000000' AND [Flash_start_address] < 1048576", "Only symbols within binary");
+                lvefltr = new DevExpress.XtraGrid.Columns.ColumnFilterInfo("[Length] <> '000000' AND [Start_address] > 1048575", "Only live-tuneable symbols");
+            }
             gridViewSymbols.ActiveFilter.Clear();
             m_filterstate = gridViewSymbols.ActiveFilterEnabled = true;
 
