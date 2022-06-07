@@ -1851,6 +1851,28 @@ namespace T7
                     y_axis = "BFuelCal.T_WWCompSP";
                     y_axis_description = "Temp °C";
                     break;
+                case "MyrtilosCal.Pop_IgnTab":
+                    y_axis = "MyrtilosCal.Pop_TimeSP";
+                    y_axis_description = "delay(ms)";
+                    z_axis_description = "° BDTC";
+                    break;
+                case "MyrtilosCal.Pop_FFacTab":
+                    y_axis = "MyrtilosCal.Pop_TimeSP";
+                    y_axis_description = "delay(ms)";
+                    z_axis_description = "ExtraFF (1024=100%)";
+                    break;
+                case "MyrtilosCal.WBL_FFAdjStepTab":
+                    y_axis = "MyrtilosCal.WBL_LambdaDiffSP";
+                    y_axis_description = "Diff Lambda vs Target";
+                    z_axis_description = "ExtraFF step";
+                    break;
+                case "MyrtilosCal.Fuel_GasMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Fuel correction factor";
+                    break;	
             }
             if(z_axis_description.StartsWith("0")) z_axis_description = "z-axis";
             if(x_axis_description.StartsWith("0")) x_axis_description = "x-axis";

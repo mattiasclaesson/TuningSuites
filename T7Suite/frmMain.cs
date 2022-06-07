@@ -5907,6 +5907,18 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
                 barButtonItem69.Caption = "Startup VE map";
             }
 
+            if (GetSymbolAddress(m_symbols, "MyrtilosCal.Fuel_GasMap") > 0 ||
+                GetSymbolAddress(m_symbols, "BFuelCal.GasMap") > 0)
+            {
+                barButtonItem82.Enabled = true;
+                barButtonItem82.Visibility = BarItemVisibility.Always;
+            }
+            else
+            {
+                barButtonItem82.Enabled = false;
+                barButtonItem82.Visibility = BarItemVisibility.Never;
+            }
+
             DynamicTuningMenu();
 
             System.Windows.Forms.Application.DoEvents();
@@ -6121,25 +6133,80 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             multiplier = GetMapCorrectionFactor(y_axis);
             if (symbolname == "TorqueCal.M_ManGearLim" || symbolname == "TorqueCal.M_CabGearLim")
             {
-                retval = new int[6];
-                retval.SetValue(-1, 0);
-                retval.SetValue(1, 1);
-                retval.SetValue(2, 2);
-                retval.SetValue(3, 3);
-                retval.SetValue(4, 4);
-                retval.SetValue(5, 5);
-                return retval;
+                if (GetSymbolLength(curSymbols, symbolname) == 14)
+                {
+                    // 6-gear
+                    retval = new int[7];
+                    retval.SetValue(-1, 0);
+                    retval.SetValue(1, 1);
+                    retval.SetValue(2, 2);
+                    retval.SetValue(3, 3);
+                    retval.SetValue(4, 4);
+                    retval.SetValue(5, 5);
+                    retval.SetValue(6, 6);
+                    return retval;
+                }
+                else
+                {
+                    // 5-gear
+                    retval = new int[6];
+                    retval.SetValue(-1, 0);
+                    retval.SetValue(1, 1);
+                    retval.SetValue(2, 2);
+                    retval.SetValue(3, 3);
+                    retval.SetValue(4, 4);
+                    retval.SetValue(5, 5);
+                    return retval;
+                }
             }
             if (symbolname == "GearCal.Ratio" || symbolname == "GearCal")
             {
-                retval = new int[5];
-                retval.SetValue(1, 0);
-                retval.SetValue(2, 1);
-                retval.SetValue(3, 2);
-                retval.SetValue(4, 3);
-                retval.SetValue(5, 4);
-                
-                return retval;
+                if (GetSymbolLength(curSymbols, symbolname) == 12)
+                {
+                    retval = new int[6];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    retval.SetValue(6, 5);
+                    return retval;
+                }
+                else
+                {
+                    retval = new int[5];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    return retval;
+                }
+
+            }
+            if (symbolname == "GearCal.Range")
+            {
+                if (GetSymbolLength(curSymbols, symbolname) == 12)
+                {
+                    retval = new int[6];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    retval.SetValue(6, 5);
+                    return retval;
+                }
+                else
+                {
+                    retval = new int[5];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    return retval;
+                }
 
             }
             if (symbolname == "BstMetCal.BoostMeter")
@@ -6381,6 +6448,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             else if (symbolname == "MissfCal.DetectLoadLevel") columns = 5;
             else if (symbolname == "KnkDetCal.RefFactorMap") columns = 16;
             else if (symbolname == "BFuelCal.Map") columns = 18;
+            else if (symbolname == "MyrtilosCal.Fuel_GasMap") columns = 18;
             else if (symbolname == "BFuelCal.StartMap") columns = 18;
             else if (symbolname == "BFuelCal.E85Map") columns = 18;
             else if (symbolname == "BFuelCal2.Map") columns = 18;
@@ -6559,6 +6627,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
             bool retval = true;
             if (symbolname == "KnkDetCal.RefFactorMap") retval = false;
             else if (symbolname == "BFuelCal.Map") retval = false;
+            else if (symbolname == "MyrtilosCal.Fuel_GasMap") retval = false;
             else if (symbolname == "BFuelCal.StartMap") retval = false;
             else if (symbolname == "BFuelCal.E85Map") retval = false;
             else if (symbolname == "BFuelCal2.Map") retval = false;
@@ -19024,6 +19093,18 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             frmTuningWizard frmTunWiz = new frmTuningWizard(this, m_currentfile);
             frmTunWiz.ShowDialog();
+        }
+
+        private void barButtonItem82_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (GetSymbolAddress(m_symbols, "MyrtilosCal.Fuel_GasMap") > 0)
+            {
+                StartAViewer("MyrtilosCal.Fuel_GasMap");
+            }
+            else if (GetSymbolAddress(m_symbols, "BFuelCal.GasMap") > 0)
+            {
+                StartAViewer("BFuelCal.GasMap");
+            }
         }
     }
 }
