@@ -1557,7 +1557,7 @@ namespace T7
                     z_axis_description = "g/s";
                     break;
                 case "PedalMapCal.X_AutFacTab":
-                    y_axis = "PedalMapCal.v_VehManSP";
+                    y_axis = "PedalMapCal.v_VehAutSP";
                     y_axis_description = "km/h";
                     z_axis_description = "0";
                     break;
@@ -1872,7 +1872,14 @@ namespace T7
                     x_axis_description = "mg/c";
                     y_axis_description = "rpm";
                     z_axis_description = "Fuel correction factor";
-                    break;	
+                    break;
+                case "BFuelCal.GasMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Fuel correction factor";
+                    break;
             }
             if(z_axis_description.StartsWith("0")) z_axis_description = "z-axis";
             if(x_axis_description.StartsWith("0")) x_axis_description = "x-axis";

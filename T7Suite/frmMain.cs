@@ -6448,6 +6448,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             else if (symbolname == "MissfCal.DetectLoadLevel") columns = 5;
             else if (symbolname == "KnkDetCal.RefFactorMap") columns = 16;
             else if (symbolname == "BFuelCal.Map") columns = 18;
+            else if (symbolname == "BFuelCal.GasMap") columns = 18;
             else if (symbolname == "MyrtilosCal.Fuel_GasMap") columns = 18;
             else if (symbolname == "BFuelCal.StartMap") columns = 18;
             else if (symbolname == "BFuelCal.E85Map") columns = 18;
@@ -6456,7 +6457,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             //else if (symbolname == "TorqueCal.M_IgnInflTorqMap") columns = 18;
             else if (symbolname == "TCompCal.EnrFacMap") columns = 8;
             else if (symbolname == "TCompCal.EnrFacE85Map") columns = 8;
-
             else if (symbolname == "TCompCal.EnrFacAutMap") columns = 8;
             else if (symbolname == "AftSt2ExtraCal.EnrFacMap") columns = 15;
             else if (symbolname == "AftSt2ExtraCal.EnrMapE85") columns = 7;
@@ -6627,7 +6627,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
             bool retval = true;
             if (symbolname == "KnkDetCal.RefFactorMap") retval = false;
             else if (symbolname == "BFuelCal.Map") retval = false;
-            else if (symbolname == "MyrtilosCal.Fuel_GasMap") retval = false;
+            else if (symbolname == "BFuelCal.GasMap") retval = false;
+            else if (symbolname == "MyrtilosCal.Fuel_GasMap") retval = false;  
             else if (symbolname == "BFuelCal.StartMap") retval = false;
             else if (symbolname == "BFuelCal.E85Map") retval = false;
             else if (symbolname == "BFuelCal2.Map") retval = false;
@@ -11822,6 +11823,8 @@ If boost regulation reports errors you can increase the difference between boost
             // uses the same as BFuelCal.Map, so leave it
             UpdateDocksWithName("BFuelCal.StartMap", airmassindex, rpmindex);
             UpdateDocksWithName("BFuelCal.E85Map", airmassindex, rpmindex);
+            UpdateDocksWithName("MyrtilosCal.Fuel_GasMap", airmassindex, rpmindex);
+            UpdateDocksWithName("BFuelCal.GasMap", airmassindex, rpmindex);
             //KnkFuelCal.EnrichmentMap has
             //X: IgnKnkCal.m_AirXSP // airmass
             //Y: IgnKnkCal.n_EngYSP // engine speed
@@ -15818,6 +15821,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "BFuelCal.Map");
                 AddToSymbolCollection(scToExport, "BFuelCal.StartMap");
                 AddToSymbolCollection(scToExport, "BFuelCal.E85Map");
+                AddToSymbolCollection(scToExport, "MyrtilosCal.Fuel_GasMap");
+                AddToSymbolCollection(scToExport, "BFuelCal.GasMap");
                 AddToSymbolCollection(scToExport, "BFuelCal.AirXSP");
                 AddToSymbolCollection(scToExport, "BFuelCal.RpmYSP");
                 AddToSymbolCollection(scToExport, "InjCorrCal.BattCorrSP");
@@ -17443,6 +17448,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         AddToSymbolCollection(scToExport, "BFuelCal.Map");
                         AddToSymbolCollection(scToExport, "BFuelCal.StartMap");
                         AddToSymbolCollection(scToExport, "BFuelCal.E85Map");
+                        AddToSymbolCollection(scToExport, "MyrtilosCal.Fuel_GasMap");
+                        AddToSymbolCollection(scToExport, "BFuelCal.GasMap");
                         AddToSymbolCollection(scToExport, "BFuelCal.AirXSP");
                         AddToSymbolCollection(scToExport, "BFuelCal.RpmYSP");
                         AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
