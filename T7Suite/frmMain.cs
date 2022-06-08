@@ -11851,6 +11851,10 @@ If boost regulation reports errors you can increase the difference between boost
             airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnNormCal.m_AirXSP", 1);
             UpdateDocksWithName("IgnNormCal.Map", airmassindex, rpmindex);
 
+            //IgnNormCal.GasMap has:
+            // same, leave it
+            UpdateDocksWithName("IgnNormCal.GasMap", airmassindex, rpmindex);
+
             //IgnE85Cal.fi_AbsMap has:
             // same, leave it
             UpdateDocksWithName("IgnE85Cal.fi_AbsMap", airmassindex, rpmindex);
