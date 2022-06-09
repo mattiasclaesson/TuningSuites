@@ -6585,6 +6585,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 returnvalue = 1;
                 if (symbolname == "KnkSoundRedCal.fi_OffsMap") returnvalue = 0.1;
                 else if (symbolname == "IgnE85Cal.fi_AbsMap") returnvalue = 0.1;
+                else if (symbolname == "IgnNormCal.GasMap") returnvalue = 0.1;
                 else if (symbolname == "BstKnkCal.OffsetXSP") returnvalue = 0.1;
                 //else if (symbolname == "IgnNormCal.Map") returnvalue = 0.1;
                 else if (symbolname == "MAFCal.cd_ThrottleMap") returnvalue = 0.0009765625;
@@ -15811,6 +15812,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
                 AddToSymbolCollection(scToExport, "IgnNormCal.Map");
                 AddToSymbolCollection(scToExport, "IgnE85Cal.fi_AbsMap");
+                AddToSymbolCollection(scToExport, "IgnNormCal.GasMap");
                 AddToSymbolCollection(scToExport, "IgnNormCal.m_AirXSP");
                 AddToSymbolCollection(scToExport, "IgnNormCal.n_EngYSP");
                 AddToSymbolCollection(scToExport, "IgnKnkCal.IndexMap");
@@ -17436,6 +17438,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
                         AddToSymbolCollection(scToExport, "IgnNormCal.Map");
                         AddToSymbolCollection(scToExport, "IgnE85Cal.fi_AbsMap");
+                        AddToSymbolCollection(scToExport, "IgnNormCal.GasMap");
                         AddToSymbolCollection(scToExport, "IgnNormCal.m_AirXSP");
                         AddToSymbolCollection(scToExport, "IgnNormCal.n_EngYSP");
                         AddToSymbolCollection(scToExport, "IgnKnkCal.IndexMap");
