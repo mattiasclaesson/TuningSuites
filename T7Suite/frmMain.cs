@@ -5895,29 +5895,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 LoadRealtimeTable(Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt"));
             }
-            // <GS-07072011> If the opened file is a BioPower file, then BFuelCal.StartMap = the actual fuel E85 map
-            if (IsBinaryBiopower())
-            {
-                barButtonItem67.Caption = "Petrol VE Map";
-                barButtonItem69.Caption = "E85 VE Map";
-            }
-            else
-            {
-                barButtonItem67.Caption = "VE map";
-                barButtonItem69.Caption = "Startup VE map";
-            }
-
-            if (GetSymbolAddress(m_symbols, "MyrtilosCal.Fuel_GasMap") > 0 ||
-                GetSymbolAddress(m_symbols, "BFuelCal.GasMap") > 0)
-            {
-                barButtonItem82.Enabled = true;
-                barButtonItem82.Visibility = BarItemVisibility.Always;
-            }
-            else
-            {
-                barButtonItem82.Enabled = false;
-                barButtonItem82.Visibility = BarItemVisibility.Never;
-            }
 
             DynamicTuningMenu();
 
@@ -18635,30 +18612,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 if (File.Exists(m_currentfile))
                 {
-                    if (IsBinaryB308TrionicV6())
-                    {
-                        barButtonItem2.Visibility = BarItemVisibility.Always;
-                        barButtonItem3.Visibility = BarItemVisibility.Always;
-                        barButtonItem27.Visibility = BarItemVisibility.Always;
-                    }
-                    else
-                    {
-                        barButtonItem2.Visibility = BarItemVisibility.Never;
-                        barButtonItem3.Visibility = BarItemVisibility.Never;
-                        barButtonItem27.Visibility = BarItemVisibility.Never;
-                    }
-                    
-                    if (IsSymbolInBinary("BoostCal.RegMap"))
-                    {
-                        ribbonPageGroup22.Visible = true;
-                    }
-                    else
-                    {
-                        ribbonPageGroup22.Visible = false;
-                    }
-
                     if (IsBinaryBiopower())
                     {
+                        barButtonItem67.Caption = "Petrol VE Map";
+                        barButtonItem69.Caption = "E85 VE Map";
                         barButtonItem37.Visibility = BarItemVisibility.Always;
                         barButtonItem65.Visibility = BarItemVisibility.Always;
                         if (IsSymbolInBinary("TorqueCal.M_EngMaxE85TabAut"))
@@ -18672,9 +18629,33 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     else
                     {
+                        barButtonItem67.Caption = "VE map";
+                        barButtonItem69.Caption = "Startup VE map";
                         barButtonItem95.Visibility = BarItemVisibility.Never;
                         barButtonItem37.Visibility = BarItemVisibility.Never;
                         barButtonItem65.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsBinaryB308TrionicV6())
+                    {
+                        barButtonItem2.Visibility = BarItemVisibility.Always;
+                        barButtonItem3.Visibility = BarItemVisibility.Always;
+                        barButtonItem27.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem2.Visibility = BarItemVisibility.Never;
+                        barButtonItem3.Visibility = BarItemVisibility.Never;
+                        barButtonItem27.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("BoostCal.RegMap"))
+                    {
+                        ribbonPageGroup22.Visible = true;
+                    }
+                    else
+                    {
+                        ribbonPageGroup22.Visible = false;
                     }
 
                     if (IsSymbolInBinary("TorqueCal.M_CabGearLim"))
@@ -18684,6 +18665,25 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     else
                     {
                         barButtonItem54.Visibility =  BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("IgnNormCal.GasMap"))
+                    {
+                        barButtonItem90.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem90.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("MyrtilosCal.Fuel_GasMap") ||
+                        IsSymbolInBinary("BFuelCal.GasMap"))
+                    {
+                        barButtonItem82.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem82.Visibility = BarItemVisibility.Never;
                     }
                 }
             }
@@ -19116,6 +19116,11 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 StartAViewer("BFuelCal.GasMap");
             }
+        }
+
+        private void barButtonItem90_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("IgnNormCal.GasMap");
         }
     }
 }
