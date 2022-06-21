@@ -1880,6 +1880,20 @@ namespace T7
                     y_axis_description = "rpm";
                     z_axis_description = "Fuel correction factor";
                     break;
+                case "MyrtilosAdap.WBLambda_FeedbackMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "WBL Lambda feedback";
+                    break;
+                case "MyrtilosAdap.WBLambda_FFMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Active Fueling factor";
+                    break;
             }
             if(z_axis_description.StartsWith("0")) z_axis_description = "z-axis";
             if(x_axis_description.StartsWith("0")) x_axis_description = "x-axis";

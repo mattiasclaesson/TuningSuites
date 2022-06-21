@@ -11801,8 +11801,14 @@ If boost regulation reports errors you can increase the difference between boost
             // uses the same as BFuelCal.Map, so leave it
             UpdateDocksWithName("BFuelCal.StartMap", airmassindex, rpmindex);
             UpdateDocksWithName("BFuelCal.E85Map", airmassindex, rpmindex);
-            UpdateDocksWithName("MyrtilosCal.Fuel_GasMap", airmassindex, rpmindex);
             UpdateDocksWithName("BFuelCal.GasMap", airmassindex, rpmindex);
+            //Special maps has
+            //X: BFuelCal.AirXSP (airmass)
+            //Y: BFuelCal.RpmYSP (engine speed)
+            // uses the same as BFuelCal.Map, so leave it
+            UpdateDocksWithName("MyrtilosCal.Fuel_GasMap", airmassindex, rpmindex);
+            UpdateDocksWithName("MyrtilosAdap.WBLambda_FeedbackMap", airmassindex, rpmindex);
+            UpdateDocksWithName("MyrtilosAdap.WBLambda_FFMap", airmassindex, rpmindex);
             //KnkFuelCal.EnrichmentMap has
             //X: IgnKnkCal.m_AirXSP // airmass
             //Y: IgnKnkCal.n_EngYSP // engine speed
