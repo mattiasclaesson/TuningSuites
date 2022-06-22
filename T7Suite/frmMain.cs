@@ -6201,7 +6201,16 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             int number = yaxislength;
             if (yaxislength > 0)
             {
-                byte[] axisdata = readdatafromfile(filename, yaxisaddress, yaxislength);
+                byte[] axisdata;
+                if (yaxisaddress < 0x0F00000 || !IsSoftwareOpenAndUpdateCaption())
+                {
+                    axisdata = readdatafromfile(m_currentfile, yaxisaddress, yaxislength);
+                }
+                else
+                {
+                    axisdata = readdatafromfile(m_currentfile, yaxisaddress - m_currentSramOffset, yaxislength);
+                }
+
                 if (issixteenbit) number /= 2;
                 retval = new int[number];
                 int offset = 0;
@@ -6266,7 +6275,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             int number = xaxislength;
             if (xaxislength > 0)
             {
-                byte[] axisdata = readdatafromfile(filename,xaxisaddress, xaxislength);
+                byte[] axisdata;
+                if (xaxisaddress < 0x0F00000 || !IsSoftwareOpenAndUpdateCaption())
+                {
+                    axisdata = readdatafromfile(m_currentfile, xaxisaddress, xaxislength);
+                }
+                else
+                {
+                    axisdata = readdatafromfile(m_currentfile, xaxisaddress - m_currentSramOffset, xaxislength);
+                }
                 if (issixteenbit) number /= 2;
                 retval = new int[number];
                 int offset = 0;
