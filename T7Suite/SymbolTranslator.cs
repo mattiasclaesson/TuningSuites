@@ -15037,6 +15037,13 @@ namespace T7
                     //
 
                     break;
+                case "MyrtilosCal.Fuel_GasMap":
+                case "BFuelCal.GasMap":
+                    description = "Gas Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                    break;
+                case "MyrtilosAdap.WBLambda_FeedbackMap":
+                    description = "Wideband Lambda feedback map. Resolution is 0.001 (0.1%).";
+                    break;
             }
             return description;
         }
@@ -34187,6 +34194,13 @@ namespace T7
                         break;
                     case "VIOS_ResetType":
                         description = "Last containg of Reset Status Register. Reference MC68332 SIM manual page 4-9. MSB bit 7 - External reset bit 6 - Powerup Reset bit 5 - Watchdog reset bit 4 - Halt Monitor reset bit 3 - Not Used bit 2 - Loss of clock reset bit 1 - System reset LSB bit 0 - Test submodule reset ] ";
+                        break;
+                    case "MyrtilosCal.Fuel_GasMap":
+                    case "BFuelCal.GasMap":
+                        description = "Gas Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                        break;
+                    case "MyrtilosAdap.WBLambda_FeedbackMap":
+                        description = "Wideband Lambda feedback map. Resolution is 0.001 (0.1%).";
                         break;
                 }
 
