@@ -1340,18 +1340,16 @@ namespace T7
 
                     break;
                 case "DisplAdap.LamScannerTab1":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. ";
+                case "DisplAdap.LamScannerTab2":
+                case "DisplAdap.LamScannerTab3":
+                case "DisplAdap.LamScannerTab4":
+                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. Resolution is 0.01 (1%).";
                     //category = XDFCategories.DisplAdap;
 
                     break;
                 case "CruiseCal.M_GradientPos":
                     description = "Aangezochte gradiënt voor positieve veranderingen koppel eenheid motorkoppel / s. Resolutie is 1 Nm / s. ";
                     //category = XDFCategories.CruiseCal;
-
-                    break;
-                case "DisplAdap.LamScannerTab3":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. ";
-                    //category = XDFCategories.DisplAdap;
 
                     break;
                 case "FlashSave.RpmMaxFreeze":
@@ -1362,11 +1360,6 @@ namespace T7
                 case "BoostCal.PIDYSP":
                     description = "Motortoerental afhing ondersteuning voor P, I en D constanten kaarten. Resolutie is 1 tpm. ";
                     //category = XDFCategories.BoostCal;
-
-                    break;
-                case "DisplAdap.LamScannerTab2":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. ";
-                    //category = XDFCategories.DisplAdap;
 
                     break;
                 case "BoostCal.PIDXSP":
@@ -29416,17 +29409,10 @@ namespace T7
 
                         break;
                     case "DisplAdap.LamScannerTab1":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. ";
-
-
-                        break;
                     case "DisplAdap.LamScannerTab2":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. ";
-
-
-                        break;
                     case "DisplAdap.LamScannerTab3":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. ";
+                    case "DisplAdap.LamScannerTab4":
+                        description = "Convertiontable for calculation of scanner lambda value used for development. Resolution is 0.01 (1%).";
 
 
                         break;
