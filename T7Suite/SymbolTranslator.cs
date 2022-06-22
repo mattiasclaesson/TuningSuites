@@ -15044,6 +15044,9 @@ namespace T7
                 case "MyrtilosAdap.WBLambda_FeedbackMap":
                     description = "Wideband Lambda feedback map. Resolution is 0.001 (0.1%).";
                     break;
+                case "MyrtilosAdap.WBLambda_FFMap":
+                    description = "Extra fuel factor. Normalised at 1024. (fuel * extra fuel factor)/1024";
+                    break;
             }
             return description;
         }
@@ -34201,6 +34204,9 @@ namespace T7
                         break;
                     case "MyrtilosAdap.WBLambda_FeedbackMap":
                         description = "Wideband Lambda feedback map. Resolution is 0.001 (0.1%).";
+                        break;
+                    case "MyrtilosAdap.WBLambda_FFMap":
+                        description = "Extra fuel factor. Normalised at 1024. (fuel * extra fuel factor)/1024";
                         break;
                 }
 
