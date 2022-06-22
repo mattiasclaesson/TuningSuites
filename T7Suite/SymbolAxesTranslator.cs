@@ -1639,16 +1639,9 @@ namespace T7
                     z_axis_description = "°";
                     break;*/
                 case "DisplAdap.LamScannerTab1":
-                    y_axis = "DisplAdap.AD_ScannerSP";
-                    y_axis_description = "AD";
-                    z_axis_description = "Lam";
-                    break;
                 case "DisplAdap.LamScannerTab2":
-                    y_axis = "DisplAdap.AD_ScannerSP";
-                    y_axis_description = "AD";
-                    z_axis_description = "Lam";
-                    break;
                 case "DisplAdap.LamScannerTab3":
+                case "DisplAdap.LamScannerTab4":
                     y_axis = "DisplAdap.AD_ScannerSP";
                     y_axis_description = "AD";
                     z_axis_description = "Lam";
