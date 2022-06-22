@@ -1343,7 +1343,7 @@ namespace T7
                 case "DisplAdap.LamScannerTab2":
                 case "DisplAdap.LamScannerTab3":
                 case "DisplAdap.LamScannerTab4":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. Resolution is 0.01 (1%).";
+                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling.";
                     //category = XDFCategories.DisplAdap;
 
                     break;
@@ -29412,7 +29412,7 @@ namespace T7
                     case "DisplAdap.LamScannerTab2":
                     case "DisplAdap.LamScannerTab3":
                     case "DisplAdap.LamScannerTab4":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. Resolution is 0.01 (1%).";
+                        description = "Convertiontable for calculation of scanner lambda value used for development.";
 
 
                         break;
