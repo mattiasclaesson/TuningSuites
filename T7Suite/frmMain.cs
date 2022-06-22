@@ -6413,6 +6413,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             if (symbolname.Contains("Cal3.")) return true;
             if (symbolname.Contains("Cal4.")) return true;
             if (symbolname.StartsWith("X_Acc")) return true;
+            if (symbolname.StartsWith("DisplAdap.")) return true;
             return false;
         }
 
