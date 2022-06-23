@@ -1844,6 +1844,15 @@ namespace T7
                     y_axis = "BFuelCal.T_WWCompSP";
                     y_axis_description = "Temp °C";
                     break;
+                case "BFuelCal.GasMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Fuel correction factor";
+                    break;
+
+                // Custom maps
                 case "MyrtilosCal.Pop_IgnTab":
                     y_axis = "MyrtilosCal.Pop_TimeSP";
                     y_axis_description = "delay(ms)";
@@ -1860,13 +1869,6 @@ namespace T7
                     z_axis_description = "ExtraFF step";
                     break;
                 case "MyrtilosCal.Fuel_GasMap":
-                    x_axis = "BFuelCal.AirXSP";
-                    y_axis = "BFuelCal.RpmYSP";
-                    x_axis_description = "mg/c";
-                    y_axis_description = "rpm";
-                    z_axis_description = "Fuel correction factor";
-                    break;
-                case "BFuelCal.GasMap":
                     x_axis = "BFuelCal.AirXSP";
                     y_axis = "BFuelCal.RpmYSP";
                     x_axis_description = "mg/c";
