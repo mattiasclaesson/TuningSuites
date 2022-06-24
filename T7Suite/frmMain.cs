@@ -1891,6 +1891,13 @@ namespace T7
             }
         }
 
+        private bool ShouldCompareSymbol(SymbolHelper sh)
+        {
+            if (sh.Varname == "SymbolNames" || sh.Userdescription == "SymbolNames") return false;
+            if (sh.Varname == "LocalID" || sh.Userdescription == "LocalID") return false;
+            return true;
+        }
+
         private void CompareToFile(string filename)
         {
             if (m_symbols.Count > 0)
@@ -1997,7 +2004,7 @@ namespace T7
                                 string originalName = sh_org.Varname;
                                 if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
 
-                                if (compareName.Equals(originalName) && compareName != String.Empty)
+                                if (compareName.Equals(originalName) && compareName != String.Empty && ShouldCompareSymbol(sh_org))
                                 {
                                     if (compareStartAddress > 0 && compareStartAddress < 0x80000)
                                     {
@@ -3024,6 +3031,8 @@ namespace T7
             bool retval = false;
             if (sh.Varname.Contains(".") || sh.Userdescription.Contains(".")) retval = true;
             if (sh.Varname == "MapChkCal.ST_Enable" || sh.Userdescription == "MapChkCal.ST_Enable") retval = false;
+            if (sh.Varname == "SymbolNames" || sh.Userdescription == "SymbolNames") retval = false;
+            if (sh.Varname == "LocalID" || sh.Userdescription == "LocalID") retval = false;
             return retval;
         }
 
