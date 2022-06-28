@@ -638,6 +638,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
+                    DynamicTuningMenu();
                     IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E)
@@ -672,6 +673,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
+                    DynamicTuningMenu();
                     IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
@@ -706,6 +708,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
+                    DynamicTuningMenu();
                     IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
