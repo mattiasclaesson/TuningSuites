@@ -1340,18 +1340,16 @@ namespace T7
 
                     break;
                 case "DisplAdap.LamScannerTab1":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. ";
+                case "DisplAdap.LamScannerTab2":
+                case "DisplAdap.LamScannerTab3":
+                case "DisplAdap.LamScannerTab4":
+                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling.";
                     //category = XDFCategories.DisplAdap;
 
                     break;
                 case "CruiseCal.M_GradientPos":
                     description = "Aangezochte gradiënt voor positieve veranderingen koppel eenheid motorkoppel / s. Resolutie is 1 Nm / s. ";
                     //category = XDFCategories.CruiseCal;
-
-                    break;
-                case "DisplAdap.LamScannerTab3":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. ";
-                    //category = XDFCategories.DisplAdap;
 
                     break;
                 case "FlashSave.RpmMaxFreeze":
@@ -1362,11 +1360,6 @@ namespace T7
                 case "BoostCal.PIDYSP":
                     description = "Motortoerental afhing ondersteuning voor P, I en D constanten kaarten. Resolutie is 1 tpm. ";
                     //category = XDFCategories.BoostCal;
-
-                    break;
-                case "DisplAdap.LamScannerTab2":
-                    description = "Convertiontable voor de berekening van de scanner lambda-waarde wordt gebruikt voor ontwikkeling. ";
-                    //category = XDFCategories.DisplAdap;
 
                     break;
                 case "BoostCal.PIDXSP":
@@ -15036,6 +15029,22 @@ namespace T7
                     description = " Last containg of Reset Status Register. Reference MC68332 SIM manual page 4-9. MSB bit 7 - External reset bit 6 - Powerup Reset bit 5 - Watchdog reset bit 4 - Halt Monitor reset bit 3 - Not Used bit 2 - Loss of clock reset bit 1 - System reset LSB bit 0 - Test submodule reset ] ";
                     //
 
+                    break;
+                case "BFuelCal.GasMap":
+                    description = "Gas Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                    //
+
+                    break;
+
+                    // Custom maps
+                case "MyrtilosCal.Fuel_GasMap":
+                    description = "Gas Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                    break;
+                case "MyrtilosAdap.WBLambda_FeedbackMap":
+                    description = "Wideband Lambda feedback map. Resolution is 0.001 (0.1%).";
+                    break;
+                case "MyrtilosAdap.WBLambda_FFMap":
+                    description = "Extra fuel factor. Normalised at 1024. (fuel * extra fuel factor)/1024";
                     break;
             }
             return description;
@@ -29406,17 +29415,10 @@ namespace T7
 
                         break;
                     case "DisplAdap.LamScannerTab1":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. ";
-
-
-                        break;
                     case "DisplAdap.LamScannerTab2":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. ";
-
-
-                        break;
                     case "DisplAdap.LamScannerTab3":
-                        description = "Convertiontable for calculation of scanner lambda value used for development. ";
+                    case "DisplAdap.LamScannerTab4":
+                        description = "Convertiontable for calculation of scanner lambda value used for development.";
 
 
                         break;
@@ -34187,6 +34189,20 @@ namespace T7
                         break;
                     case "VIOS_ResetType":
                         description = "Last containg of Reset Status Register. Reference MC68332 SIM manual page 4-9. MSB bit 7 - External reset bit 6 - Powerup Reset bit 5 - Watchdog reset bit 4 - Halt Monitor reset bit 3 - Not Used bit 2 - Loss of clock reset bit 1 - System reset LSB bit 0 - Test submodule reset ] ";
+                        break;
+                    case "BFuelCal.GasMap":
+                        description = "Gas Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                        break;
+
+                    // Custom maps
+                    case "MyrtilosCal.Fuel_GasMap":
+                        description = "Gas Map for multiplicative fuel factor depending on load and engine speed. This map is used to compensate for volymetric efficiency and lambda enrichment on higher loads. Resolution is 0.01 (1%).";
+                        break;
+                    case "MyrtilosAdap.WBLambda_FeedbackMap":
+                        description = "Wideband Lambda feedback map. Resolution is 0.001 (0.1%).";
+                        break;
+                    case "MyrtilosAdap.WBLambda_FFMap":
+                        description = "Extra fuel factor. Normalised at 1024. (fuel * extra fuel factor)/1024";
                         break;
                 }
 

@@ -40,7 +40,7 @@ namespace RealtimeGraph
         private string _contextDescription = string.Empty;
         private string _selectedSymbol = string.Empty;
         private bool _panning = false;
-        private int _LegendLeftOffset = 75;
+        private const int _LegendLeftOffset = 125;
 
         public bool Panning
         {
@@ -249,7 +249,7 @@ namespace RealtimeGraph
             int numberofscales = 10;
             Color c = Color.FromArgb(175, Color.DimGray);
             Pen p = new Pen(c);
-            float sectionwidth = (float)(r.Width - 175) / numberofsections;
+            float sectionwidth = (float)(r.Width - (100 + _LegendLeftOffset)) / numberofsections;
             float scaleheight = (float)(r.Height - 100) / numberofscales;
             for (int xcount = 1; xcount < numberofsections; xcount++)
             {
@@ -257,7 +257,7 @@ namespace RealtimeGraph
             }
             for (int ycount = 1; ycount < numberofscales; ycount++)
             {
-                graphics.DrawLine(p, 100, ycount * scaleheight, r.Width - 75, ycount * scaleheight);
+                graphics.DrawLine(p, 100, ycount * scaleheight, r.Width - _LegendLeftOffset, ycount * scaleheight);
             }
             p.Dispose();
         }
@@ -411,7 +411,6 @@ namespace RealtimeGraph
 
         private void DrawYLines(Rectangle r, Graphics graphics)
         {
-
             Pen pen = new Pen(Color.FromArgb(100, Color.Wheat));
             SizeF stringsize = graphics.MeasureString("000", this.Font);
             int numberoflabels = /*30;*/ (r.Height - 100) / ((int)stringsize.Height + 20);
@@ -420,10 +419,9 @@ namespace RealtimeGraph
             //for (int ytel = 0; ytel < numberoflabels; ytel++)
             {
                 PointF p = new PointF(5,  (ytel * divisionpixels)/* ytel * ((float)stringsize.Height + 20)*/ /*- stringsize.Height/2*/);
-                graphics.DrawLine(pen, 100, p.Y, r.Width - 100, p.Y );
+                graphics.DrawLine(pen, 100, p.Y, r.Width - (_LegendLeftOffset + 25), p.Y);
             }
             pen.Dispose();
-
         }
 
         private void RedrawLabels()
@@ -611,12 +609,12 @@ namespace RealtimeGraph
                     int cnt = 0;
                     foreach (GraphMeasurement measurement in line.Measurements)
                     {
-                        float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                        float sectionwidth = (float)(r.Width - (100 + _LegendLeftOffset)) / (float)line.Maxpoints;
                         //float x1 = (float)(cnt - 1) * sectionwidth + 100;
                         //float x2 = (float)cnt * sectionwidth + 100;
                         float totalticks = _maxdt.Ticks - _mindt.Ticks;
-                        float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
-                        float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                        float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
+                        float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
                         
 
                         if (cnt > 0)
@@ -632,7 +630,7 @@ namespace RealtimeGraph
                                     {
                                         // next is still knock
                                         //x1ori = (float)(cnt - 1) * sectionwidth + 100;
-                                        x2ori = ((line.Measurements[cnt + 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;//(float)(cnt + 1) * sectionwidth + 100;
+                                        x2ori = ((line.Measurements[cnt + 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;//(float)(cnt + 1) * sectionwidth + 100;
 
                                     }
                                     else
@@ -682,12 +680,12 @@ namespace RealtimeGraph
                     int cnt = 0;
                     foreach (GraphMeasurement measurement in line.Measurements)
                     {
-                        float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                        float sectionwidth = (float)(r.Width - (100 + _LegendLeftOffset)) / (float)line.Maxpoints;
                         //float x1 = (float)(cnt - 1) * sectionwidth + 100;
                         //float x2 = (float)cnt * sectionwidth + 100;
                         float totalticks = _maxdt.Ticks - _mindt.Ticks;
-                        float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
-                        float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                        float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
+                        float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
 
                         //if (x1ori == 0) x1ori = x1;
                         
@@ -704,7 +702,7 @@ namespace RealtimeGraph
                                     {
                                         // next is still knock
                                         //x1ori = (float)(cnt - 1) * sectionwidth + 100;
-                                        x2ori = ((line.Measurements[cnt + 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;//(float)(cnt + 1) * sectionwidth + 100;
+                                        x2ori = ((line.Measurements[cnt + 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;//(float)(cnt + 1) * sectionwidth + 100;
 
                                     }
                                     else
@@ -756,10 +754,10 @@ namespace RealtimeGraph
                         //Console.WriteLine("  measurement " + measurement.Timestamp.ToString("HH:mm:ss") + " " + measurement.Value.ToString("F2"));
                         if (cnt > 0)
                         {
-                            float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                            float sectionwidth = (float)(r.Width - (100 + _LegendLeftOffset)) / (float)line.Maxpoints;
                             float totalticks = _maxdt.Ticks - _mindt.Ticks;
-                            float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
-                            float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                            float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
+                            float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
 
                             float y1 = (r.Height - 100) - (line.Measurements[cnt - 1].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
                             float y2 = (r.Height - 100) - (line.Measurements[cnt].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
@@ -848,7 +846,7 @@ namespace RealtimeGraph
 //            Console.WriteLine(e.Location.X.ToString() + " " + p.X.ToString());
             if (e.Button == MouseButtons.Left)
             {
-                if (e.Location.X > this.ClientRectangle.Width - 75)
+                if (e.Location.X > this.ClientRectangle.Width - _LegendLeftOffset)
                 {
                     if (m_allowconfig)
                     {
@@ -900,7 +898,7 @@ namespace RealtimeGraph
             _maxDateTimeDone = false;
 
             DateTime returnvalue = _centerDateTime;
-            int graphwidth = this.ClientRectangle.Width - 175;
+            int graphwidth = this.ClientRectangle.Width - (100 + _LegendLeftOffset);
             int positioningraph = x - 100;
             float percentage = (float)positioningraph / graphwidth;
             TimeSpan ts = new TimeSpan(_maxdt.Ticks - _mindt.Ticks);
@@ -1517,12 +1515,12 @@ namespace RealtimeGraph
                         if (cnt > 0)
                         {
                             //Console.WriteLine("  measurement " + measurement.Timestamp.ToString("HH:mm:ss") + " " + measurement.Value.ToString("F2"));
-                            float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                            float sectionwidth = (float)(r.Width - (100 + _LegendLeftOffset)) / (float)line.Maxpoints;
                             //float x1 = (float)(cnt - 1) * sectionwidth + 100;
                             //float x2 = (float)cnt * sectionwidth + 100;
                             float totalticks = _maxdt.Ticks - _mindt.Ticks;
-                            float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
-                            float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                            float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
+                            float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
 
                             float y1 = (r.Height - 100) - (line.Measurements[cnt - 1].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
                             float y2 = (r.Height - 100) - (line.Measurements[cnt].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
@@ -1569,12 +1567,12 @@ namespace RealtimeGraph
                         if (cnt > 0)
                         {
                             //Console.WriteLine("  measurement " + measurement.Timestamp.ToString("HH:mm:ss") + " " + measurement.Value.ToString("F2"));
-                            float sectionwidth = (float)(r.Width - 175) / (float)line.Maxpoints;
+                            float sectionwidth = (float)(r.Width - (100 + _LegendLeftOffset)) / (float)line.Maxpoints;
                             //float x1 = (float)(cnt - 1) * sectionwidth + 100;
                             //float x2 = (float)cnt * sectionwidth + 100;
                             float totalticks = _maxdt.Ticks - _mindt.Ticks;
-                            float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
-                            float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - 175) / totalticks) + 100;
+                            float x1 = ((line.Measurements[cnt - 1].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
+                            float x2 = ((line.Measurements[cnt].Timestamp.Ticks - _mindt.Ticks) * ((float)r.Width - (100 + _LegendLeftOffset)) / totalticks) + 100;
 
                             float y1 = (r.Height - 100) - (line.Measurements[cnt - 1].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
                             float y2 = (r.Height - 100) - (line.Measurements[cnt].Value - line.Minrange) / (line.Maxrange - line.Minrange) * (r.Height - 100);
@@ -1619,7 +1617,7 @@ namespace RealtimeGraph
                 _MouseX = e.X;
                 
                 // calculate time per pixel
-                int graphWidth = (this.Bounds.Width - 175);
+                int graphWidth = (this.Bounds.Width - (100 + _LegendLeftOffset));
                 double milliSeconds = GetDurationOfGraph().TotalMilliseconds;
                 double milliSecondsPerPixel = milliSeconds / (double)graphWidth;
                 double milliSecondsToShift = deltaX * milliSecondsPerPixel;
@@ -1717,7 +1715,7 @@ namespace RealtimeGraph
             Point p = PointToClient(e.Location);
             if (e.Button == MouseButtons.Left)
             {
-                if (e.Location.X > this.ClientRectangle.Width - 75)
+                if (e.Location.X > this.ClientRectangle.Width - _LegendLeftOffset)
                 {
                 }
                 // anders misschien inzoomen

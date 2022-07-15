@@ -1557,7 +1557,7 @@ namespace T7
                     z_axis_description = "g/s";
                     break;
                 case "PedalMapCal.X_AutFacTab":
-                    y_axis = "PedalMapCal.v_VehManSP";
+                    y_axis = "PedalMapCal.v_VehAutSP";
                     y_axis_description = "km/h";
                     z_axis_description = "0";
                     break;
@@ -1639,16 +1639,9 @@ namespace T7
                     z_axis_description = "°";
                     break;*/
                 case "DisplAdap.LamScannerTab1":
-                    y_axis = "DisplAdap.AD_ScannerSP";
-                    y_axis_description = "AD";
-                    z_axis_description = "Lam";
-                    break;
                 case "DisplAdap.LamScannerTab2":
-                    y_axis = "DisplAdap.AD_ScannerSP";
-                    y_axis_description = "AD";
-                    z_axis_description = "Lam";
-                    break;
                 case "DisplAdap.LamScannerTab3":
+                case "DisplAdap.LamScannerTab4":
                     y_axis = "DisplAdap.AD_ScannerSP";
                     y_axis_description = "AD";
                     z_axis_description = "Lam";
@@ -1850,6 +1843,51 @@ namespace T7
                 case "BFuelCal.WWCompAlphaTab":
                     y_axis = "BFuelCal.T_WWCompSP";
                     y_axis_description = "Temp °C";
+                    break;
+                case "BFuelCal.GasMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Fuel correction factor";
+                    break;
+
+                // Custom maps
+                case "MyrtilosCal.Pop_IgnTab":
+                    y_axis = "MyrtilosCal.Pop_TimeSP";
+                    y_axis_description = "delay(ms)";
+                    z_axis_description = "° BDTC";
+                    break;
+                case "MyrtilosCal.Pop_FFacTab":
+                    y_axis = "MyrtilosCal.Pop_TimeSP";
+                    y_axis_description = "delay(ms)";
+                    z_axis_description = "ExtraFF (1024=100%)";
+                    break;
+                case "MyrtilosCal.WBL_FFAdjStepTab":
+                    y_axis = "MyrtilosCal.WBL_LambdaDiffSP";
+                    y_axis_description = "Diff Lambda vs Target";
+                    z_axis_description = "ExtraFF step";
+                    break;
+                case "MyrtilosCal.Fuel_GasMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Fuel correction factor";
+                    break;
+                case "MyrtilosAdap.WBLambda_FeedbackMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "WBL Lambda feedback";
+                    break;
+                case "MyrtilosAdap.WBLambda_FFMap":
+                    x_axis = "BFuelCal.AirXSP";
+                    y_axis = "BFuelCal.RpmYSP";
+                    x_axis_description = "mg/c";
+                    y_axis_description = "rpm";
+                    z_axis_description = "Active Fueling factor";
                     break;
             }
             if(z_axis_description.StartsWith("0")) z_axis_description = "z-axis";

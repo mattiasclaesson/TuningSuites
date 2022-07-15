@@ -638,6 +638,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
+                    DynamicTuningMenu();
                     IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E)
@@ -672,6 +673,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
+                    DynamicTuningMenu();
                     IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
@@ -706,6 +708,7 @@ namespace T7
                 try
                 {
                     _softwareIsOpenDetermined = false;
+                    DynamicTuningMenu();
                     IsSoftwareOpenAndUpdateCaption();
                 }
                 catch (Exception E3)
@@ -1891,6 +1894,13 @@ namespace T7
             }
         }
 
+        private bool ShouldCompareSymbol(SymbolHelper sh)
+        {
+            if (sh.Varname == "SymbolNames" || sh.Userdescription == "SymbolNames") return false;
+            if (sh.Varname == "LocalID" || sh.Userdescription == "LocalID") return false;
+            return true;
+        }
+
         private void CompareToFile(string filename)
         {
             if (m_symbols.Count > 0)
@@ -1997,7 +2007,7 @@ namespace T7
                                 string originalName = sh_org.Varname;
                                 if (originalName.StartsWith("Symbolnumber")) originalName = sh_org.Userdescription;
 
-                                if (compareName.Equals(originalName) && compareName != String.Empty)
+                                if (compareName.Equals(originalName) && compareName != String.Empty && ShouldCompareSymbol(sh_org))
                                 {
                                     if (compareStartAddress > 0 && compareStartAddress < 0x80000)
                                     {
@@ -3024,6 +3034,8 @@ namespace T7
             bool retval = false;
             if (sh.Varname.Contains(".") || sh.Userdescription.Contains(".")) retval = true;
             if (sh.Varname == "MapChkCal.ST_Enable" || sh.Userdescription == "MapChkCal.ST_Enable") retval = false;
+            if (sh.Varname == "SymbolNames" || sh.Userdescription == "SymbolNames") retval = false;
+            if (sh.Varname == "LocalID" || sh.Userdescription == "LocalID") retval = false;
             return retval;
         }
 
@@ -5895,17 +5907,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             {
                 LoadRealtimeTable(Path.Combine(configurationFilesPath.FullName, "rtsymbols.txt"));
             }
-            // <GS-07072011> If the opened file is a BioPower file, then BFuelCal.StartMap = the actual fuel E85 map
-            if (IsBinaryBiopower())
-            {
-                barButtonItem67.Caption = "Petrol VE Map";
-                barButtonItem69.Caption = "E85 VE Map";
-            }
-            else
-            {
-                barButtonItem67.Caption = "VE map";
-                barButtonItem69.Caption = "Startup VE map";
-            }
 
             DynamicTuningMenu();
 
@@ -6121,25 +6122,80 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             multiplier = GetMapCorrectionFactor(y_axis);
             if (symbolname == "TorqueCal.M_ManGearLim" || symbolname == "TorqueCal.M_CabGearLim")
             {
-                retval = new int[6];
-                retval.SetValue(-1, 0);
-                retval.SetValue(1, 1);
-                retval.SetValue(2, 2);
-                retval.SetValue(3, 3);
-                retval.SetValue(4, 4);
-                retval.SetValue(5, 5);
-                return retval;
+                if (GetSymbolLength(curSymbols, symbolname) == 14)
+                {
+                    // 6-gear
+                    retval = new int[7];
+                    retval.SetValue(-1, 0);
+                    retval.SetValue(1, 1);
+                    retval.SetValue(2, 2);
+                    retval.SetValue(3, 3);
+                    retval.SetValue(4, 4);
+                    retval.SetValue(5, 5);
+                    retval.SetValue(6, 6);
+                    return retval;
+                }
+                else
+                {
+                    // 5-gear
+                    retval = new int[6];
+                    retval.SetValue(-1, 0);
+                    retval.SetValue(1, 1);
+                    retval.SetValue(2, 2);
+                    retval.SetValue(3, 3);
+                    retval.SetValue(4, 4);
+                    retval.SetValue(5, 5);
+                    return retval;
+                }
             }
             if (symbolname == "GearCal.Ratio" || symbolname == "GearCal")
             {
-                retval = new int[5];
-                retval.SetValue(1, 0);
-                retval.SetValue(2, 1);
-                retval.SetValue(3, 2);
-                retval.SetValue(4, 3);
-                retval.SetValue(5, 4);
-                
-                return retval;
+                if (GetSymbolLength(curSymbols, symbolname) == 12)
+                {
+                    retval = new int[6];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    retval.SetValue(6, 5);
+                    return retval;
+                }
+                else
+                {
+                    retval = new int[5];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    return retval;
+                }
+
+            }
+            if (symbolname == "GearCal.Range")
+            {
+                if (GetSymbolLength(curSymbols, symbolname) == 12)
+                {
+                    retval = new int[6];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    retval.SetValue(6, 5);
+                    return retval;
+                }
+                else
+                {
+                    retval = new int[5];
+                    retval.SetValue(1, 0);
+                    retval.SetValue(2, 1);
+                    retval.SetValue(3, 2);
+                    retval.SetValue(4, 3);
+                    retval.SetValue(5, 4);
+                    return retval;
+                }
 
             }
             if (symbolname == "BstMetCal.BoostMeter")
@@ -6157,7 +6213,16 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             int number = yaxislength;
             if (yaxislength > 0)
             {
-                byte[] axisdata = readdatafromfile(filename, yaxisaddress, yaxislength);
+                byte[] axisdata;
+                if (yaxisaddress < 0x0F00000 || !IsSoftwareOpenAndUpdateCaption())
+                {
+                    axisdata = readdatafromfile(m_currentfile, yaxisaddress, yaxislength);
+                }
+                else
+                {
+                    axisdata = readdatafromfile(m_currentfile, yaxisaddress - m_currentSramOffset, yaxislength);
+                }
+
                 if (issixteenbit) number /= 2;
                 retval = new int[number];
                 int offset = 0;
@@ -6222,7 +6287,15 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             int number = xaxislength;
             if (xaxislength > 0)
             {
-                byte[] axisdata = readdatafromfile(filename,xaxisaddress, xaxislength);
+                byte[] axisdata;
+                if (xaxisaddress < 0x0F00000 || !IsSoftwareOpenAndUpdateCaption())
+                {
+                    axisdata = readdatafromfile(m_currentfile, xaxisaddress, xaxislength);
+                }
+                else
+                {
+                    axisdata = readdatafromfile(m_currentfile, xaxisaddress - m_currentSramOffset, xaxislength);
+                }
                 if (issixteenbit) number /= 2;
                 retval = new int[number];
                 int offset = 0;
@@ -6352,6 +6425,7 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             if (symbolname.Contains("Cal3.")) return true;
             if (symbolname.Contains("Cal4.")) return true;
             if (symbolname.StartsWith("X_Acc")) return true;
+            if (symbolname.StartsWith("DisplAdap.")) return true;
             return false;
         }
 
@@ -6381,6 +6455,8 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             else if (symbolname == "MissfCal.DetectLoadLevel") columns = 5;
             else if (symbolname == "KnkDetCal.RefFactorMap") columns = 16;
             else if (symbolname == "BFuelCal.Map") columns = 18;
+            else if (symbolname == "BFuelCal.GasMap") columns = 18;
+            else if (symbolname == "MyrtilosCal.Fuel_GasMap") columns = 18;
             else if (symbolname == "BFuelCal.StartMap") columns = 18;
             else if (symbolname == "BFuelCal.E85Map") columns = 18;
             else if (symbolname == "BFuelCal2.Map") columns = 18;
@@ -6388,7 +6464,6 @@ LimEngCal.n_EngSP (might change into: LimEngCal.p_AirSP see http://forum.ecuproj
             //else if (symbolname == "TorqueCal.M_IgnInflTorqMap") columns = 18;
             else if (symbolname == "TCompCal.EnrFacMap") columns = 8;
             else if (symbolname == "TCompCal.EnrFacE85Map") columns = 8;
-
             else if (symbolname == "TCompCal.EnrFacAutMap") columns = 8;
             else if (symbolname == "AftSt2ExtraCal.EnrFacMap") columns = 15;
             else if (symbolname == "AftSt2ExtraCal.EnrMapE85") columns = 7;
@@ -6540,6 +6615,7 @@ TorqueCal.M_IgnInflTroqMap 8*/
                 returnvalue = 1;
                 if (symbolname == "KnkSoundRedCal.fi_OffsMap") returnvalue = 0.1;
                 else if (symbolname == "IgnE85Cal.fi_AbsMap") returnvalue = 0.1;
+                else if (symbolname == "IgnNormCal.GasMap") returnvalue = 0.1;
                 else if (symbolname == "BstKnkCal.OffsetXSP") returnvalue = 0.1;
                 //else if (symbolname == "IgnNormCal.Map") returnvalue = 0.1;
                 else if (symbolname == "MAFCal.cd_ThrottleMap") returnvalue = 0.0009765625;
@@ -6559,6 +6635,8 @@ TorqueCal.M_IgnInflTroqMap 8*/
             bool retval = true;
             if (symbolname == "KnkDetCal.RefFactorMap") retval = false;
             else if (symbolname == "BFuelCal.Map") retval = false;
+            else if (symbolname == "BFuelCal.GasMap") retval = false;
+            else if (symbolname == "MyrtilosCal.Fuel_GasMap") retval = false;  
             else if (symbolname == "BFuelCal.StartMap") retval = false;
             else if (symbolname == "BFuelCal.E85Map") retval = false;
             else if (symbolname == "BFuelCal2.Map") retval = false;
@@ -11753,6 +11831,14 @@ If boost regulation reports errors you can increase the difference between boost
             // uses the same as BFuelCal.Map, so leave it
             UpdateDocksWithName("BFuelCal.StartMap", airmassindex, rpmindex);
             UpdateDocksWithName("BFuelCal.E85Map", airmassindex, rpmindex);
+            UpdateDocksWithName("BFuelCal.GasMap", airmassindex, rpmindex);
+            //Special maps has
+            //X: BFuelCal.AirXSP (airmass)
+            //Y: BFuelCal.RpmYSP (engine speed)
+            // uses the same as BFuelCal.Map, so leave it
+            UpdateDocksWithName("MyrtilosCal.Fuel_GasMap", airmassindex, rpmindex);
+            UpdateDocksWithName("MyrtilosAdap.WBLambda_FeedbackMap", airmassindex, rpmindex);
+            UpdateDocksWithName("MyrtilosAdap.WBLambda_FFMap", airmassindex, rpmindex);
             //KnkFuelCal.EnrichmentMap has
             //X: IgnKnkCal.m_AirXSP // airmass
             //Y: IgnKnkCal.n_EngYSP // engine speed
@@ -11778,6 +11864,10 @@ If boost regulation reports errors you can increase the difference between boost
             rpmindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentRPM, "IgnNormCal.n_EngYSP", 1);
             airmassindex = LookUpIndexAxisRPMMap(_currentEngineStatus.CurrentAirmassPerCombustion, "IgnNormCal.m_AirXSP", 1);
             UpdateDocksWithName("IgnNormCal.Map", airmassindex, rpmindex);
+
+            //IgnNormCal.GasMap has:
+            // same, leave it
+            UpdateDocksWithName("IgnNormCal.GasMap", airmassindex, rpmindex);
 
             //IgnE85Cal.fi_AbsMap has:
             // same, leave it
@@ -15749,6 +15839,8 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "BFuelCal.Map");
                 AddToSymbolCollection(scToExport, "BFuelCal.StartMap");
                 AddToSymbolCollection(scToExport, "BFuelCal.E85Map");
+                AddToSymbolCollection(scToExport, "MyrtilosCal.Fuel_GasMap");
+                AddToSymbolCollection(scToExport, "BFuelCal.GasMap");
                 AddToSymbolCollection(scToExport, "BFuelCal.AirXSP");
                 AddToSymbolCollection(scToExport, "BFuelCal.RpmYSP");
                 AddToSymbolCollection(scToExport, "InjCorrCal.BattCorrSP");
@@ -15756,6 +15848,7 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                 AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
                 AddToSymbolCollection(scToExport, "IgnNormCal.Map");
                 AddToSymbolCollection(scToExport, "IgnE85Cal.fi_AbsMap");
+                AddToSymbolCollection(scToExport, "IgnNormCal.GasMap");
                 AddToSymbolCollection(scToExport, "IgnNormCal.m_AirXSP");
                 AddToSymbolCollection(scToExport, "IgnNormCal.n_EngYSP");
                 AddToSymbolCollection(scToExport, "IgnKnkCal.IndexMap");
@@ -17374,11 +17467,14 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                         AddToSymbolCollection(scToExport, "BFuelCal.Map");
                         AddToSymbolCollection(scToExport, "BFuelCal.StartMap");
                         AddToSymbolCollection(scToExport, "BFuelCal.E85Map");
+                        AddToSymbolCollection(scToExport, "MyrtilosCal.Fuel_GasMap");
+                        AddToSymbolCollection(scToExport, "BFuelCal.GasMap");
                         AddToSymbolCollection(scToExport, "BFuelCal.AirXSP");
                         AddToSymbolCollection(scToExport, "BFuelCal.RpmYSP");
                         AddToSymbolCollection(scToExport, "InjCorrCal.InjectorConst");
                         AddToSymbolCollection(scToExport, "IgnNormCal.Map");
                         AddToSymbolCollection(scToExport, "IgnE85Cal.fi_AbsMap");
+                        AddToSymbolCollection(scToExport, "IgnNormCal.GasMap");
                         AddToSymbolCollection(scToExport, "IgnNormCal.m_AirXSP");
                         AddToSymbolCollection(scToExport, "IgnNormCal.n_EngYSP");
                         AddToSymbolCollection(scToExport, "IgnKnkCal.IndexMap");
@@ -18555,30 +18651,10 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
             {
                 if (File.Exists(m_currentfile))
                 {
-                    if (IsBinaryB308TrionicV6())
-                    {
-                        barButtonItem2.Visibility = BarItemVisibility.Always;
-                        barButtonItem3.Visibility = BarItemVisibility.Always;
-                        barButtonItem27.Visibility = BarItemVisibility.Always;
-                    }
-                    else
-                    {
-                        barButtonItem2.Visibility = BarItemVisibility.Never;
-                        barButtonItem3.Visibility = BarItemVisibility.Never;
-                        barButtonItem27.Visibility = BarItemVisibility.Never;
-                    }
-                    
-                    if (IsSymbolInBinary("BoostCal.RegMap"))
-                    {
-                        ribbonPageGroup22.Visible = true;
-                    }
-                    else
-                    {
-                        ribbonPageGroup22.Visible = false;
-                    }
-
                     if (IsBinaryBiopower())
                     {
+                        barButtonItem67.Caption = "Petrol VE Map";
+                        barButtonItem69.Caption = "E85 VE Map";
                         barButtonItem37.Visibility = BarItemVisibility.Always;
                         barButtonItem65.Visibility = BarItemVisibility.Always;
                         if (IsSymbolInBinary("TorqueCal.M_EngMaxE85TabAut"))
@@ -18592,9 +18668,33 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     }
                     else
                     {
+                        barButtonItem67.Caption = "VE map";
+                        barButtonItem69.Caption = "Startup VE map";
                         barButtonItem95.Visibility = BarItemVisibility.Never;
                         barButtonItem37.Visibility = BarItemVisibility.Never;
                         barButtonItem65.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsBinaryB308TrionicV6())
+                    {
+                        barButtonItem2.Visibility = BarItemVisibility.Always;
+                        barButtonItem3.Visibility = BarItemVisibility.Always;
+                        barButtonItem27.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem2.Visibility = BarItemVisibility.Never;
+                        barButtonItem3.Visibility = BarItemVisibility.Never;
+                        barButtonItem27.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("BoostCal.RegMap"))
+                    {
+                        ribbonPageGroup22.Visible = true;
+                    }
+                    else
+                    {
+                        ribbonPageGroup22.Visible = false;
                     }
 
                     if (IsSymbolInBinary("TorqueCal.M_CabGearLim"))
@@ -18604,6 +18704,25 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
                     else
                     {
                         barButtonItem54.Visibility =  BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("IgnNormCal.GasMap"))
+                    {
+                        barButtonItem90.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem90.Visibility = BarItemVisibility.Never;
+                    }
+
+                    if (IsSymbolInBinary("MyrtilosCal.Fuel_GasMap") ||
+                        IsSymbolInBinary("BFuelCal.GasMap"))
+                    {
+                        barButtonItem82.Visibility = BarItemVisibility.Always;
+                    }
+                    else
+                    {
+                        barButtonItem82.Visibility = BarItemVisibility.Never;
                     }
                 }
             }
@@ -19024,6 +19143,23 @@ if (m_AFRMap != null && m_currentfile != string.Empty)
         {
             frmTuningWizard frmTunWiz = new frmTuningWizard(this, m_currentfile);
             frmTunWiz.ShowDialog();
+        }
+
+        private void barButtonItem82_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (GetSymbolAddress(m_symbols, "MyrtilosCal.Fuel_GasMap") > 0)
+            {
+                StartAViewer("MyrtilosCal.Fuel_GasMap");
+            }
+            else if (GetSymbolAddress(m_symbols, "BFuelCal.GasMap") > 0)
+            {
+                StartAViewer("BFuelCal.GasMap");
+            }
+        }
+
+        private void barButtonItem90_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartAViewer("IgnNormCal.GasMap");
         }
     }
 }
