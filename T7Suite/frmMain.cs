@@ -2465,11 +2465,10 @@ namespace T7
             else
             {
                 //show difference between SRAM and binary file
-                //StartCompareDifferenceViewer(e.SymbolName, e.Filename, e.SymbolAddress, e.SymbolLength);
-                StartSRAMToFlashCompareDifferenceViewer(e.SymbolName, e.Filename, m_currentfile, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), (int)GetSymbolAddress(m_symbols, e.SymbolName));
+                StartSRAMToFlashCompareDifferenceViewer(e.SymbolName, e.Filename, e.SymbolLength, (int)GetSymbolAddressSRAM(m_symbols, e.SymbolName), (int)GetSymbolAddress(m_symbols, e.SymbolName));
             }
         }
-        private void StartSRAMToFlashCompareDifferenceViewer(string SymbolName, string SRAMFilename, string FlashFilename, int SymbolLength, int SymbolAddressSRAM, int SymbolAddress)
+        private void StartSRAMToFlashCompareDifferenceViewer(string SymbolName, string SRAMFilename, int SymbolLength, int SymbolAddressSRAM, int SymbolAddress)
         {
             DockPanel dockPanel;
             bool pnlfound = false;
