@@ -722,6 +722,8 @@ namespace T8SuitePro
         private static byte[] UnpackSymbolnames(Stream stream)
         {
             byte[] bytes = null;
+            ZipConstants.DefaultCodePage = 850;
+
             using (ZipInputStream s = new ZipInputStream(stream))
             {
                 s.Password = "yii4uXXwser8";
