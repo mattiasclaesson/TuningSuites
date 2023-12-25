@@ -18,3 +18,10 @@ echo ^<t8suitepro version="%T8.version%"/^> >> z:\T8Suite\version.xml
 
 git tag T8suite_v%T8.version%
 git tag SetupT8suite_v%SetupT8Suite.version%
+
+git push --tags
+
+gh release create T8suite_v%T8.version%
+gh release upload T8suite_v%T8.version% SetupT8SuitePro\Release\T8Suite.zip
+gh release upload T8suite_v%T8.version% SetupT8SuitePro\Release\T8Suite.msi
+gh release upload T8suite_v%T8.version% SetupT8SuitePro\Release\T8Suite.md5
