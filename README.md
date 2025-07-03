@@ -16,6 +16,10 @@ The TxSuites also supports real-time view and can be used to predict the behavio
 * Microsoft Visual C++ 2010 Redistributable Package (x86)
 * Administrator rights
 
+
+Find the release here: 
+https://github.com/mattiasclaesson/TuningSuites/releases?q=T5SuiteII_v2.0.29&expanded=true
+
 Run the T5SuiteII.msi file.
 
 ## T7Suite
@@ -36,7 +40,13 @@ The T7Suite currently supports the following interfaces:
 * Kvaser HS
 * J2534 (Beta)
 
-Download zip and extract T7Suite.msi and setup.exe. Run the bootstrap file setup.exe.
+Find the release here: 
+https://github.com/mattiasclaesson/TuningSuites/releases?q=T7suite_v0.1.59.0&expanded=true
+
+Download zip and extract T7Suite.msi and setup.exe. 
+
+Run the bootstrap file setup.exe.
+
 Required frameworks will be verified and downloaded if need by the bootstrap file.
 
 ## T8Suite
@@ -56,12 +66,20 @@ The T8Suite currently supports the following interfaces:
 * Kvaser HS
 * J2534 (Beta)
 
-Download zip and extract T8Suite.msi and setup.exe. Run the bootstrap file setup.exe.
+Find the release here: 
+https://github.com/mattiasclaesson/TuningSuites/releases?q=T8suite_v0.1.59.0&expanded=true
+
+
+Download zip and extract T8Suite.msi and setup.exe. 
+
+Run the bootstrap file setup.exe.
+
 Required frameworks will be verified and downloaded if need by the bootstrap file.
 
 ## Extras 
-Download and install the T7Extras.msi package to get binary firmware files.
-Download and install the T8Extras.msi package to get binary firmware files.
+Download and install the T7Extras.msi package to get binary firmware files. https://github.com/mattiasclaesson/TuningSuites/releases?q=T7Extras_v1.0.1&expanded=true
+
+Download and install the T8Extras.msi package to get binary firmware files. https://github.com/mattiasclaesson/TuningSuites/releases?q=T8Extras_v1.0.0&expanded=true
 
 Logworks for log view can be downloaded from http://www.innovatemotorsports.com/
 Latest link: https://www.innovatemotorsports.com/pub/LogWorks3Setup.exe
