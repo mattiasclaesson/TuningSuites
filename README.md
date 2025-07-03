@@ -83,3 +83,6 @@ Download and install the T8Extras.msi package to get binary firmware files. http
 
 Logworks for log view can be downloaded from http://www.innovatemotorsports.com/
 Latest link: https://www.innovatemotorsports.com/pub/LogWorks3Setup.exe
+
+## Disclaimer
+This is Open Source software tools that pokes around in your car's control system. The authors of the tools shall not be held accountable for how you decide to use the tools. If you are not careful, you can easily brick your car with these tools so please use this software with care.
