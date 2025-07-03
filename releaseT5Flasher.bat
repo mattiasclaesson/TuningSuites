@@ -16,3 +16,9 @@ echo ^<t5canflasher version="%T5CanFlash.version%"/^> >> z:\T5CanFlasher\version
 git tag T5CanFlasher_v%T5CanFlasher.version%
 git tag T5CanLib_v%T5CanLib.version%
 git tag SetupT5CanFlash_v%T5CanFlash.version%
+
+git push --tags
+
+gh release create T5CanFlash_v%T5CanFlasher.version% --generate-notes --verify-tag
+gh release upload T5CanFlash_v%T5CanFlasher.version% T5CanFlash\Release\T5CanFlash.msi
+gh release upload T5CanFlash_v%T5CanFlasher.version% T5CanFlash\Release\T5CanFlash.md5
